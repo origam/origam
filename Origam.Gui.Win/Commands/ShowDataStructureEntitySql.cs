@@ -59,7 +59,7 @@ namespace Origam.Gui.Win.Commands
                 DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
                 builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
                 generator.PrettyFormat = true;
-                generator.generateConsoleUseSyntax = true;
+                generator.GenerateConsoleUseSyntax = true;
                 // parameter declarations
                 builder.AppendLine(
                     generator.SelectParameterDeclarationsSql(

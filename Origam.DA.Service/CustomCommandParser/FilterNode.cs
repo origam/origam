@@ -9,8 +9,7 @@ namespace Origam.DA.Service.CustomCommandParser
 {
     class FilterNode
     {
-        private readonly string nameLeftBracket;
-        private readonly string nameRightBracket;
+        private readonly SqlRenderer sqlRenderer;
         private readonly Dictionary<string, string> lookupExpressions;
         private readonly List<ColumnInfo> columns;
         private string[] splitValue;
@@ -62,7 +61,7 @@ namespace Origam.DA.Service.CustomCommandParser
         private string RenderedColumnName =>
             lookupExpressions.ContainsKey(ColumnName)
                 ? lookupExpressions[ColumnName]
-                : nameLeftBracket + ColumnName + nameRightBracket;
+                : sqlRenderer.NameLeftBracket + ColumnName + sqlRenderer.NameRightBracket;
 
 
         private string Operator => SplitValue?.Length > 1 
@@ -102,25 +101,20 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private readonly AbstractFilterRenderer renderer;
         private readonly List<ParameterData> parameterDataList;
-        private readonly string parameterReferenceChar;
-
-        public FilterNode(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
+        public FilterNode(SqlRenderer sqlRenderer,Dictionary<string,string> lookupExpressions, 
             List<ColumnInfo> columns,
-            AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList,
-            string parameterReferenceChar)
+            AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList)
         {
-            this.nameLeftBracket = nameLeftBracket;
-            this.nameRightBracket = nameRightBracket;
+            this.sqlRenderer = sqlRenderer;
             this.lookupExpressions = lookupExpressions;
             this.columns = columns;
             renderer = filterRenderer;
             this.parameterDataList = parameterDataList;
-            this.parameterReferenceChar = parameterReferenceChar;
         }
 
         private string GetParameterNameSql(string columnName)
         {
-            return parameterReferenceChar + columnName;
+            return sqlRenderer.ParameterReferenceChar + columnName;
         }
         
         private string ParameterName => ColumnName + "_" + Operator;
@@ -393,7 +387,7 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private string PrependWildCard(string value)
         {
-            if (!value.StartsWith(parameterReferenceChar))
+            if (!value.StartsWith(sqlRenderer.ParameterReferenceChar))
             {
                 throw new ArgumentException("Cannot prepend \"%\" to a value which is not a parameter");
             }
@@ -401,7 +395,7 @@ namespace Origam.DA.Service.CustomCommandParser
         } 
         private string AppendWildCard(string value)
         {
-            if (!value.StartsWith(parameterReferenceChar))
+            if (!value.StartsWith(sqlRenderer.ParameterReferenceChar))
             {
                 throw new ArgumentException("Cannot append \"%\" to a value which is not a parameter");
             }

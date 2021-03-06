@@ -32,18 +32,17 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service
 {
-    /// <summary>
-    /// Summary description for MsSqlCommandGenerator.
-    /// </summary>
     public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
     {
-        public MsSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker):
+        public MsSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker) :
             base(
                 trueValue: "1",
                 falseValue: "0",
-                detachedFieldPacker: detachedFieldPacker, 
-                sqlValueFormatter: new SQLValueFormatter("1", "0", (text) => text.Replace("%", "[%]").Replace("_", "[_]"))
-                , filterRenderer: new MsSqlFilterRenderer())
+                detachedFieldPacker: detachedFieldPacker,
+                sqlValueFormatter: new SQLValueFormatter("1", "0",
+                    (text) => text.Replace("%", "[%]").Replace("_", "[_]"))
+                , filterRenderer: new MsSqlFilterRenderer(),
+                new MsSqlRenderer())
         {
 
         }
@@ -58,7 +57,8 @@ namespace Origam.DA.Service
             return new SqlParameter();
         }
 
-        public override IDbCommand GetCommand(string cmdText, IDbConnection connection)
+        public override IDbCommand GetCommand(string cmdText,
+            IDbConnection connection)
         {
             return new SqlCommand(cmdText, connection as SqlConnection);
         }
@@ -73,43 +73,11 @@ namespace Origam.DA.Service
             return new SqlDataAdapter(command as SqlCommand);
         }
 
-        public override IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction)
+        public override IDbCommand GetCommand(string cmdText,
+            IDbConnection connection, IDbTransaction transaction)
         {
-            return new SqlCommand(cmdText, connection as SqlConnection, transaction as SqlTransaction);
-        }
-
-        public override IDbDataParameter BuildParameter(string paramName,
-            string sourceColumn, OrigamDataType dataType, DatabaseDataType dbDataType,
-            int dataLength, bool allowNulls)
-        {
-            SqlParameter sqlParam = new SqlParameter(
-                paramName,
-                ConvertDataType(dataType, dbDataType),
-                dataLength,
-                sourceColumn
-                );
-            sqlParam.IsNullable = allowNulls;
-            if (sqlParam.SqlDbType == SqlDbType.Decimal)
-            {
-                sqlParam.Precision = 28;
-                sqlParam.Scale = 10;
-            }
-            // Workaround: in .net 2.0 if NText is not -1, 
-            // sometimes the memo is truncated when storing to db
-            if (sqlParam.SqlDbType == SqlDbType.NVarChar && dataLength == 0)
-            {
-                sqlParam.Size = -1;
-            }
-            if (sqlParam.SqlDbType == SqlDbType.NText
-                || sqlParam.SqlDbType == SqlDbType.Text)
-            {
-                sqlParam.Size = -1;
-            }
-            if (sqlParam.SqlDbType == SqlDbType.Structured)
-            {
-                sqlParam.TypeName = "OrigamListValue";
-            }
-            return sqlParam;
+            return new SqlCommand(cmdText, connection as SqlConnection,
+                transaction as SqlTransaction);
         }
 
         public override void DeriveStoredProcedureParameters(IDbCommand command)
@@ -123,12 +91,14 @@ namespace Origam.DA.Service
                 {
                     continue;
                 }
+
                 string name = parameter.TypeName;
                 int index = name.IndexOf(".");
                 if (index == -1)
                 {
                     continue;
                 }
+
                 name = name.Substring(index + 1);
                 if (name.Contains("."))
                 {
@@ -139,27 +109,33 @@ namespace Origam.DA.Service
 
 
         #region Cloning
+
         public override DbDataAdapter CloneAdapter(DbDataAdapter adapter)
         {
             SqlDataAdapter newa = GetAdapter() as SqlDataAdapter;
             SqlDataAdapter sqla = adapter as SqlDataAdapter;
-            if (sqla == null) throw new ArgumentOutOfRangeException("adapter", adapter, ResourceUtils.GetString("InvalidAdapterType"));
+            if (sqla == null)
+                throw new ArgumentOutOfRangeException("adapter", adapter,
+                    ResourceUtils.GetString("InvalidAdapterType"));
 
             newa.AcceptChangesDuringFill = adapter.AcceptChangesDuringFill;
             newa.ContinueUpdateOnError = adapter.ContinueUpdateOnError;
-            newa.DeleteCommand = (SqlCommand)CloneCommand(sqla.DeleteCommand);
-            newa.InsertCommand = (SqlCommand)CloneCommand(sqla.InsertCommand);
+            newa.DeleteCommand = (SqlCommand) CloneCommand(sqla.DeleteCommand);
+            newa.InsertCommand = (SqlCommand) CloneCommand(sqla.InsertCommand);
             newa.MissingMappingAction = sqla.MissingMappingAction;
             newa.MissingSchemaAction = sqla.MissingSchemaAction;
-            newa.SelectCommand = (SqlCommand)CloneCommand(sqla.SelectCommand);
-            newa.UpdateCommand = (SqlCommand)CloneCommand(sqla.UpdateCommand);
+            newa.SelectCommand = (SqlCommand) CloneCommand(sqla.SelectCommand);
+            newa.UpdateCommand = (SqlCommand) CloneCommand(sqla.UpdateCommand);
 
             foreach (DataTableMapping tm in adapter.TableMappings)
             {
-                DataTableMapping newtm = new DataTableMapping(tm.SourceTable, tm.DataSetTable);
+                DataTableMapping newtm =
+                    new DataTableMapping(tm.SourceTable, tm.DataSetTable);
                 foreach (DataColumnMapping cm in tm.ColumnMappings)
                 {
-                    newtm.ColumnMappings.Add(new DataColumnMapping(cm.SourceColumn, cm.DataSetColumn));
+                    newtm.ColumnMappings.Add(
+                        new DataColumnMapping(cm.SourceColumn,
+                            cm.DataSetColumn));
                 }
 
                 newa.TableMappings.Add(newtm);
@@ -199,31 +175,13 @@ namespace Origam.DA.Service
             if (param.DbType != DbType.Binary) newp.Size = param.Size;
             newp.SourceColumn = param.SourceColumn;
             newp.SourceVersion = param.SourceVersion;
-            newp.SqlDbType = ((SqlParameter)param).SqlDbType;
-            newp.Offset = ((SqlParameter)param).Offset;
-            newp.TypeName = ((SqlParameter)param).TypeName;
+            newp.SqlDbType = ((SqlParameter) param).SqlDbType;
+            newp.Offset = ((SqlParameter) param).Offset;
+            newp.TypeName = ((SqlParameter) param).TypeName;
             return newp;
         }
-        #endregion
 
-        public override string DefaultDdlDataType(OrigamDataType columnType)
-        {
-            switch (columnType)
-            {
-                case OrigamDataType.Geography:
-                    return "geography";
-                case OrigamDataType.Memo:
-                    return "nvarchar(max)";
-                case OrigamDataType.Object:
-                    return "nvarchar(max)";
-                case OrigamDataType.Xml:
-                    return "nvarchar(max)";
-                case OrigamDataType.Blob:
-                    return "varbinary(max)";
-                default:
-                    return ConvertDataType(columnType, null).ToString();
-            }
-        }
+        #endregion
 
         public override OrigamDataType ToOrigamDataType(string ddlType)
         {
@@ -273,15 +231,162 @@ namespace Origam.DA.Service
             }
         }
 
+        public override string GetIndexName(IDataEntity entity,
+            DataEntityIndex index)
+        {
+            return index.Name;
+        }
 
-        public SqlDbType ConvertDataType(OrigamDataType columnType,
+        internal override string SqlDataType(IDataParameter Iparam)
+        {
+            SqlParameter param = Iparam as SqlParameter;
+            string result = param.SqlDbType.ToString();
+
+            if (param.DbType == DbType.String)
+            {
+                result += "(" + param.Size + ")";
+            }
+
+            return result;
+        }
+
+        internal override string FixAggregationDataType(OrigamDataType dataType,
+            string expression)
+        {
+            switch (dataType)
+            {
+                case OrigamDataType.UniqueIdentifier:
+                    return " CAST (" + expression + " AS NVARCHAR (36))";
+                case OrigamDataType.Boolean:
+                    return " CAST (" + expression + "  AS INT)";
+                default:
+                    return expression;
+            }
+        }
+
+        internal override string MergeSql(string tableName,
+            StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder,
+            StringBuilder updateBuilder, StringBuilder insertColumnsBuilder,
+            StringBuilder insertValuesBuilder)
+        {
+            StringBuilder sqlExpression = new StringBuilder();
+            return sqlExpression.AppendFormat(
+                "MERGE INTO {0} USING (SELECT {1}) AS src ON {2} WHEN MATCHED THEN UPDATE SET {3} WHEN NOT MATCHED THEN INSERT ({4}) VALUES ({5});",
+                tableName,
+                keysBuilder,
+                searchPredicatesBuilder,
+                updateBuilder,
+                insertColumnsBuilder,
+                insertValuesBuilder
+            ).ToString();
+        }
+
+        public override object Clone()
+        {
+            MsSqlCommandGenerator gen =
+                new MsSqlCommandGenerator(new DetachedFieldPackerMs());
+            return gen;
+        }
+
+        public override string CreateOutputTableSql(string tmptable)
+        {
+            return "";
+        }
+
+        public override string CreateDataStructureFooterSql(
+            List<string> tmptables)
+        {
+            return "";
+        }
+
+        internal override string ChangeColumnDef(FieldMappingItem field)
+        {
+            StringBuilder ddl = new StringBuilder();
+            ddl.Append(DdlDataType(field.DataType, field.DataLength,
+                field.MappedDataType));
+            if (field.AllowNulls)
+                ddl.Append(" NULL");
+            else
+                ddl.Append(" NOT NULL");
+            return ddl.ToString();
+        }
+
+        internal override string DropDefaultValue(FieldMappingItem field,
+            string constraintName)
+        {
+            return string.Format("ALTER TABLE {0} DROP CONSTRAINT {1};",
+                RenderExpression(field.ParentItem as TableMappingItem),
+                sqlRenderer.NameLeftBracket + constraintName +
+                sqlRenderer.NameRightBracket);
+        }
+
+        public override string FunctionDefinitionDdl(Function function)
+        {
+            if (function.FunctionType == OrigamFunctionType.Database)
+            {
+                StringBuilder builder =
+                    new StringBuilder("CREATE FUNCTION dbo.");
+                builder.Append(function.Name + "(");
+                int i = 0;
+                foreach (FunctionParameter parameter in function.ChildItems)
+                {
+                    if (i > 0) builder.Append(", ");
+                    builder.Append(ParameterDeclarationChar + parameter.Name +
+                                   " as ?");
+                    i++;
+                }
+
+                builder.Append(")" + Environment.NewLine);
+                builder.Append(
+                    "RETURNS " + DdlDataType(function.DataType, 0, null)
+                               + Environment.NewLine);
+                builder.Append("AS" + Environment.NewLine + "BEGIN" +
+                               Environment.NewLine);
+                builder.Append("DECLARE " + ParameterDeclarationChar +
+                               "result AS "
+                               + DdlDataType(function.DataType, 0, null) +
+                               Environment.NewLine);
+                builder.Append("RETURN " + sqlRenderer.ParameterReferenceChar +
+                               "result"
+                               + Environment.NewLine);
+                builder.Append("END");
+                return builder.ToString();
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    ResourceUtils.GetString("DDLForFunctionsOnly"));
+            }
+        }
+
+        public override string DefaultDdlDataType(OrigamDataType columnType)
+        {
+            switch (columnType)
+            {
+                case OrigamDataType.Geography:
+                    return "geography";
+                case OrigamDataType.Memo:
+                    return "nvarchar(max)";
+                case OrigamDataType.Object:
+                    return "nvarchar(max)";
+                case OrigamDataType.Xml:
+                    return "nvarchar(max)";
+                case OrigamDataType.Blob:
+                    return "varbinary(max)";
+                default:
+                    return ConvertDataType(columnType, null).ToString();
+            }
+        }
+
+        private SqlDbType ConvertDataType(OrigamDataType columnType,
             DatabaseDataType dbDataType)
         {
             if (dbDataType != null)
             {
-                return (SqlDbType)Enum.Parse(typeof(SqlDbType),
+                return (SqlDbType) Enum.Parse(typeof(SqlDbType),
                     dbDataType.MappedDatabaseTypeName);
             }
+
             switch (columnType)
             {
                 case OrigamDataType.Blob:
@@ -314,297 +419,48 @@ namespace Origam.DA.Service
                 case OrigamDataType.UniqueIdentifier:
                     return SqlDbType.UniqueIdentifier;
                 default:
-                    throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
+                    throw new NotSupportedException(
+                        ResourceUtils.GetString("UnsupportedType"));
             }
         }
 
-        public override string NameLeftBracket
+        public override IDbDataParameter BuildParameter(string paramName,
+            string sourceColumn, OrigamDataType dataType,
+            DatabaseDataType dbDataType,
+            int dataLength, bool allowNulls)
         {
-            get
+            SqlParameter sqlParam = new SqlParameter(
+                paramName,
+                ConvertDataType(dataType, dbDataType),
+                dataLength,
+                sourceColumn
+            );
+            sqlParam.IsNullable = allowNulls;
+            if (sqlParam.SqlDbType == SqlDbType.Decimal)
             {
-                return "[";
+                sqlParam.Precision = 28;
+                sqlParam.Scale = 10;
             }
-        }
 
-        public override string NameRightBracket
-        {
-            get
+            // Workaround: in .net 2.0 if NText is not -1, 
+            // sometimes the memo is truncated when storing to db
+            if (sqlParam.SqlDbType == SqlDbType.NVarChar && dataLength == 0)
             {
-                return "]";
+                sqlParam.Size = -1;
             }
-        }
 
-        public override string GetIndexName(IDataEntity entity, DataEntityIndex index)
-        {
-            return index.Name;
-        }
-
-        public override string ParameterDeclarationChar
-        {
-            get
+            if (sqlParam.SqlDbType == SqlDbType.NText
+                || sqlParam.SqlDbType == SqlDbType.Text)
             {
-                return "@";
+                sqlParam.Size = -1;
             }
-        }
 
-        public override string ParameterReferenceChar
-        {
-            get
+            if (sqlParam.SqlDbType == SqlDbType.Structured)
             {
-                return "@";
-            }
-        }
-
-        public override string StringConcatenationChar
-        {
-            get
-            {
-                return "+";
-            }
-        }
-
-
-        public override string SelectClause(string finalQuery, int top)
-        {
-            if (top == 0)
-            {
-                return "SELECT" + finalQuery;
-            }
-            else
-            {
-                return "SELECT TOP " + top.ToString() + finalQuery;
-            }
-        }
-
-        public override string ConvertGeoFromTextClause(string argument)
-        {
-            return "geography::STGeomFromText(" + argument + ", 4326)";
-        }
-
-        public override string ConvertGeoToTextClause(string argument)
-        {
-            return argument + ".STAsText()";
-        }
-
-        public override string FunctionDefinitionDdl(Function function)
-        {
-            if (function.FunctionType == OrigamFunctionType.Database)
-            {
-                StringBuilder builder = new StringBuilder("CREATE FUNCTION dbo.");
-                builder.Append(function.Name + "(");
-                int i = 0;
-                foreach (FunctionParameter parameter in function.ChildItems)
-                {
-                    if (i > 0) builder.Append(", ");
-                    builder.Append(ParameterDeclarationChar + parameter.Name + " as ?");
-                    i++;
-                }
-                builder.Append(")" + Environment.NewLine);
-                builder.Append("RETURNS " + DdlDataType(function.DataType, 0, null)
-                    + Environment.NewLine);
-                builder.Append("AS" + Environment.NewLine + "BEGIN" + Environment.NewLine);
-                builder.Append("DECLARE " + ParameterDeclarationChar + "result AS "
-                    + DdlDataType(function.DataType, 0, null) + Environment.NewLine);
-                builder.Append("RETURN " + ParameterReferenceChar + "result"
-                    + Environment.NewLine);
-                builder.Append("END");
-                return builder.ToString();
-            }
-            else
-            {
-                throw new InvalidOperationException(
-                    ResourceUtils.GetString("DDLForFunctionsOnly"));
-            }
-        }
-                
-        internal override string SqlDataType(IDataParameter Iparam)
-        {
-            SqlParameter param = Iparam as SqlParameter;
-            string result = param.SqlDbType.ToString();
-
-            if (param.DbType == DbType.String)
-            {
-                result += "(" + param.Size + ")";
+                sqlParam.TypeName = "OrigamListValue";
             }
 
-            return result;
-        }
-
-        internal override string FixAggregationDataType(OrigamDataType dataType, string expression)
-        {
-            switch (dataType)
-            {
-                case OrigamDataType.UniqueIdentifier:
-                    return " CAST (" + expression + " AS NVARCHAR (36))";
-                case OrigamDataType.Boolean:
-                    return " CAST (" + expression + "  AS INT)";
-                default:
-                    return expression;
-            }
-        }
-
-        internal override string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder)
-        {
-            StringBuilder sqlExpression = new StringBuilder();
-            return sqlExpression.AppendFormat("MERGE INTO {0} USING (SELECT {1}) AS src ON {2} WHEN MATCHED THEN UPDATE SET {3} WHEN NOT MATCHED THEN INSERT ({4}) VALUES ({5});",
-                tableName,
-                keysBuilder,
-                searchPredicatesBuilder,
-                updateBuilder,
-                insertColumnsBuilder,
-                insertValuesBuilder
-                ).ToString();
-        }
-        internal override string SequenceSql(string entityName, string primaryKeyName)
-        {
-            return "; SELECT @@IDENTITY AS " + primaryKeyName;
-        }
-        internal override string IsNullSql()
-        {
-            return "ISNULL";
-        }
-        internal override string CountAggregateSql()
-        {
-            return "COUNT_BIG";
-        }
-        public override object Clone()
-        {
-            MsSqlCommandGenerator gen = new MsSqlCommandGenerator(new DetachedFieldPackerMs());
-            return gen;
-        }
-
-        internal override string DeclareAsSql()
-        {
-            return "AS";
-        }
-        internal override string FunctionPrefixSql()
-        {
-            return "dbo.";
-        }
-        internal override string VarcharSql()
-        {
-            return "NVARCHAR";
-        }
-
-        internal override string LengthSql(string expresion)
-        {
-            return string.Format("LEN({0})", expresion);
-        }
-        internal override string TextSql(string expresion)
-        {
-            return string.Format("CAST ({0} AS {1} )", expresion, "NVARCHAR(MAX)");
-        }
-        internal override string DatePartSql(string datetype, string expresion)
-        {
-           return string.Format("DATEPART({0},{1})", datetype, expresion);
-        }
-        internal override string DateAddSql(DateTypeSql datepart, string number, string date)
-        {
-            return string.Format("DATEADD({0},{1},{2})", GetAddDateSql(datepart),number,date);
-        }
-
-        private string GetAddDateSql(DateTypeSql datepart)
-        {
-            switch (datepart)
-            {
-                case DateTypeSql.Second:
-                    return "s";
-                case DateTypeSql.Minute:
-                    return "mi";
-                case DateTypeSql.Hour:
-                    return "hh";
-                case DateTypeSql.Day:
-                    return "dd";
-                case DateTypeSql.Month:
-                    return "m";
-                case DateTypeSql.Year:
-                    return "yy";
-                default:
-                    throw new NotSupportedException("Unsuported in AddDateSql " + datepart.ToString());
-            }
-        }
-
-        internal override string DateDiffSql(DateTypeSql datepart, string startdate, string enddate)
-        {
-            return string.Format("DATEDIFF({0}, {1}, {2})", GetAddDateSql(datepart), startdate, enddate);
-        }
-        internal override string STDistanceSql(string point1, string point2)
-        {
-            return string.Format("{0}.STDistance({1})", point1, point2);
-        }
-        internal override string NowSql()
-        {
-            return "GETDATE()";
-        }
-        internal override string FreeTextSql(string columnsForSeach, string freetext_string, string languageForFullText)
-        {
-            if(string.IsNullOrEmpty(languageForFullText))
-            {
-                return string.Format("FREETEXT({0},{1})", columnsForSeach, freetext_string);
-            }
-            return string.Format("FREETEXT({0},{1},{2})", columnsForSeach,freetext_string,languageForFullText);
-        }
-        internal override string ContainsSql(string columnsForSeach, string freetext_string, string languageForFullText)
-        {
-            if (string.IsNullOrEmpty(languageForFullText))
-            {
-                return string.Format("CONTAINS({0},{1})", columnsForSeach, freetext_string);
-            }
-            return string.Format("CONTAINS({0},{1},{2})", columnsForSeach, freetext_string, languageForFullText);
-        }
-        internal override string LatLonSql(geoLatLonSql latLon, string expresion)
-        {
-            switch (latLon)
-            {
-                case geoLatLonSql.Lat:
-                    return string.Format("{0}.Lat", expresion);
-                case geoLatLonSql.Lon:
-                    return string.Format("{0}.Long", expresion);
-                default:
-                    throw new NotSupportedException("Unsuported in Latitude or Longtitude " + latLon.ToString());
-            }
-        }
-        internal override string ArraySql(string expresion1, string expresion2)
-        {
-            return string.Format("{0} IN (SELECT ListValue FROM {1} origamListValue)", expresion1,expresion2);
-        }
-        internal override string CreateDataStructureHeadSql()
-        {
-            return "";
-        }
-        public override string CreateOutputTableSql(string tmptable)
-        {
-            return "";
-        }
-        internal override string DeclareBegin()
-        {
-            return "";
-        }
-        public override string CreateDataStructureFooterSql(List<string> tmptables)
-        {
-            return "";
-        }
-        internal override string SetParameterSql(string name)
-        {
-            return string.Format("SET {0} = NULL{1}", name, Environment.NewLine);
-        }
-
-        internal override string ChangeColumnDef(FieldMappingItem field)
-        {
-            StringBuilder ddl = new StringBuilder();
-            ddl.Append(DdlDataType(field.DataType, field.DataLength, field.MappedDataType));
-            if (field.AllowNulls)
-                ddl.Append(" NULL");
-            else
-                ddl.Append(" NOT NULL");
-            return ddl.ToString();
-        }
-
-        internal override string DropDefaultValue(FieldMappingItem field, string constraintName)
-        {
-            return string.Format("ALTER TABLE {0} DROP CONSTRAINT {1};",
-                    RenderExpression(field.ParentItem as TableMappingItem),
-                    NameLeftBracket + constraintName + NameRightBracket);
+            return sqlParam;
         }
     }
 }

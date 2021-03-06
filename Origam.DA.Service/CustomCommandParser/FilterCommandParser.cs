@@ -31,12 +31,10 @@ namespace Origam.DA.Service.CustomCommandParser
     public class FilterCommandParser: ICustomCommandParser
     {
         private readonly List<ColumnInfo> columns;
-        private readonly string nameLeftBracket;
-        private readonly string nameRightBracket;
         private FilterNode root = null;
         private FilterNode currentNode = null;
         private readonly string whereFilterInput;
-        private readonly string parameterReferenceChar;
+        private readonly SqlRenderer sqlRenderer;
         private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
         private readonly AbstractFilterRenderer filterRenderer;
         private string sql;
@@ -78,24 +76,19 @@ namespace Origam.DA.Service.CustomCommandParser
             }
         }
 
-        public FilterCommandParser(string nameLeftBracket, string nameRightBracket, 
-            AbstractFilterRenderer filterRenderer, string whereFilterInput, 
-            string parameterReferenceChar, List<ColumnInfo> columns)
+        public FilterCommandParser(AbstractFilterRenderer filterRenderer, 
+            string whereFilterInput, SqlRenderer sqlRenderer, List<ColumnInfo> columns)
         {
-            this.nameLeftBracket = nameLeftBracket;
-            this.nameRightBracket = nameRightBracket;
             this.filterRenderer = filterRenderer;
             this.whereFilterInput = whereFilterInput;
-            this.parameterReferenceChar = parameterReferenceChar;
+            this.sqlRenderer = sqlRenderer;
             this.columns = columns;
         }
 
-        public FilterCommandParser(string nameLeftBracket, string nameRightBracket,
-            List<DataStructureColumn> dataStructureColumns,
+        public FilterCommandParser(List<DataStructureColumn> dataStructureColumns,
             AbstractFilterRenderer filterRenderer, string whereFilterInput, 
-            string parameterReferenceChar)
-        :this(nameLeftBracket, nameRightBracket, filterRenderer,
-            whereFilterInput, parameterReferenceChar, 
+            SqlRenderer sqlRenderer)
+        :this(filterRenderer, whereFilterInput, sqlRenderer,
             dataStructureColumns
                 .Select(column => new ColumnInfo
                 {
@@ -144,9 +137,8 @@ namespace Origam.DA.Service.CustomCommandParser
         private void AddNode()
         {
             FilterNode newNode = new FilterNode(
-                nameLeftBracket, nameRightBracket,
-                filterColumnExpressions, columns,
-                filterRenderer, ParameterDataList, parameterReferenceChar)
+                sqlRenderer, filterColumnExpressions,
+                columns, filterRenderer, ParameterDataList)
             {
                 Parent = currentNode
             };
