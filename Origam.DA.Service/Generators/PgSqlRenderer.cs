@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Text;
-using Npgsql;
-using NpgsqlTypes;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-using ResourceUtils = Origam.Schema.ResourceUtils;
 
 class PgSqlRenderer : SqlRenderer
 {

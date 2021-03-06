@@ -1,8 +1,4 @@
-﻿using System.Data;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-
-public abstract class SqlRenderer
+﻿public abstract class SqlRenderer
 {
     public abstract string NameLeftBracket { get; }
     public abstract string NameRightBracket { get; }

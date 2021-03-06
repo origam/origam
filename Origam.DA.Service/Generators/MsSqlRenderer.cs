@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Text;
-using Origam.Schema;
-using Origam.Schema.EntityModel;
-using ResourceUtils = Origam.Schema.ResourceUtils;
 
 public class MsSqlRenderer: SqlRenderer {
     

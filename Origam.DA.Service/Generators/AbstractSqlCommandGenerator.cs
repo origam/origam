@@ -1493,7 +1493,6 @@ namespace Origam.DA.Service
             }
             PrettyLine(sqlExpression);
             sqlExpression.Append("WHERE (");
-
             i = 0;
             foreach (DataStructureColumn column in primaryKeys)
             {
@@ -1506,9 +1505,7 @@ namespace Origam.DA.Service
                     NewValueParameterName(column, false)));
                 i++;
             }
-
             sqlExpression.Append(")");
-
             return sqlExpression.ToString();
         }
 
@@ -3920,23 +3917,14 @@ namespace Origam.DA.Service
         #region Conversions
         
         public abstract OrigamDataType ToOrigamDataType(string ddlType);
-        
-                    
-        // public string DdlDataType(OrigamDataType columnType, int dataLenght,
-        //     DatabaseDataType dbDataType)
-        // {
-        //     return sqlRenderer.DdlDataType(columnType, dataLenght, dbDataType);
-        // }
-        
-        
-        public string DdlDataType(OrigamDataType columnType, int dataLenght,
+        public string DdlDataType(OrigamDataType columnType, int dataLength,
             DatabaseDataType dbDataType)
         {
             switch (columnType)
             {
                 case OrigamDataType.String:
                     return DdlDataType(columnType, dbDataType)
-                           + "(" + dataLenght + ")";
+                           + "(" + dataLength + ")";
 
                 case OrigamDataType.Xml:
                     return DdlDataType(columnType, dbDataType);

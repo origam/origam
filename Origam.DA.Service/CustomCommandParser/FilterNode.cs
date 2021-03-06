@@ -101,7 +101,6 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private readonly AbstractFilterRenderer renderer;
         private readonly List<ParameterData> parameterDataList;
-
         public FilterNode(SqlRenderer sqlRenderer,Dictionary<string,string> lookupExpressions, 
             List<ColumnInfo> columns,
             AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList)
