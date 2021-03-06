@@ -1499,7 +1499,7 @@ namespace Origam.DA.Service
                 if (i > 0) sqlExpression.Append(" AND");
                 PrettyIndent(sqlExpression);
                 sqlExpression.Append(sqlRenderer.Array(
-                    sqlRenderer.NameLeftBracket + entity.Name +sqlRenderer.NameRightBracket
+                    sqlRenderer.NameLeftBracket + entity.Name + sqlRenderer.NameRightBracket
                     + "." + 
                     RenderExpression(column.Field, null, null, null, null), 
                     NewValueParameterName(column, false)));
