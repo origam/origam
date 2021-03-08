@@ -8,7 +8,6 @@ import {TableConfiguration} from "model/entities/TablePanelView/tableConfigurati
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 
 export function createConfigurationManager(configurationNodes: any, properties: IProperty[]) {
-
   if (configurationNodes.length === 0) {
     return new ConfigurationManager(
       [], TableConfiguration.createDefault(properties));
