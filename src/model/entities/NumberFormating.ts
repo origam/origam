@@ -76,7 +76,7 @@ export function formatNumber(
     return formatNumberWithLocale(customNumericFormat, value, locale);
   }
   if (dataType === "Currency" || dataType === "Float") {
-    return formatNumberWithLocale("### ###.00", value, locale);
+    return formatNumberWithLocale("### ###.00##########", value, locale);
   } else {
     return formatNumberWithLocale("### ###", value, locale);
   }
