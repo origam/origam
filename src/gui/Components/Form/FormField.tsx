@@ -56,7 +56,7 @@ export class FormField extends React.Component<{
         return {
           top: this.props.top,
           left: this.props.left - this.props.captionLength,
-          color: this.props.captionColor
+          color: this.props.captionColor,
         };
       case ICaptionPosition.Right:
         // 20 is expected checkbox width, might be needed to be set dynamically
@@ -64,13 +64,13 @@ export class FormField extends React.Component<{
         return {
           top: this.props.top,
           left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width,
-          color: this.props.captionColor
+          color: this.props.captionColor,
         };
       case ICaptionPosition.Top:
         return {
           top: this.props.top - 20, // TODO: Move this constant somewhere else...
           left: this.props.left,
-          color: this.props.captionColor
+          color: this.props.captionColor,
         };
     }
   }
@@ -97,15 +97,21 @@ export class FormField extends React.Component<{
     };
   }
 
-
-  renderEditorWithToolTip(){
+  renderEditorWithToolTip() {
     const toolTipStyle = this.formFieldStyle as any;
     toolTipStyle["position"] = "absolute";
 
     const editorStyle = this.formFieldStyle as any;
     editorStyle["position"] = "static";
-    return(
-      <Tooltip html={formatTooltipText(this.props.toolTip)} position={"top-start"} theme={"light"} distance={10} style={toolTipStyle}>
+    console.log("TTHTML:", this.props.toolTip, formatTooltipText(this.props.toolTip));
+    return (
+      <Tooltip
+        html={formatTooltipText(this.props.toolTip)}
+        position={"top-start"}
+        theme={"light"}
+        distance={10}
+        style={toolTipStyle}
+      >
         <div className={S.editor} style={editorStyle}>
           {this.props.editor}
         </div>
@@ -117,18 +123,18 @@ export class FormField extends React.Component<{
     const { props } = this;
     return (
       <>
-        {this.props.captionPosition !== ICaptionPosition.None && 
-        !this.props.hideCaption && (
+        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption && (
           <label className={S.caption} style={this.captionStyle}>
             {props.caption}
           </label>
         )}
-          {props.toolTip
-            ? this.renderEditorWithToolTip()
-            : <div className={S.editor} style={this.formFieldStyle}>
-               {props.editor}
-              </div>
-          }                   
+        {props.toolTip ? (
+          this.renderEditorWithToolTip()
+        ) : (
+          <div className={S.editor} style={this.formFieldStyle}>
+            {props.editor}
+          </div>
+        )}
       </>
     );
   }
