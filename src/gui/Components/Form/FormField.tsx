@@ -103,7 +103,7 @@ export class FormField extends React.Component<{
 
     const editorStyle = this.formFieldStyle as any;
     editorStyle["position"] = "static";
-    console.log("TTHTML:", this.props.toolTip, formatTooltipText(this.props.toolTip));
+
     return (
       <Tooltip
         html={formatTooltipText(this.props.toolTip)}
