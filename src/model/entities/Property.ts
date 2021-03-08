@@ -56,6 +56,7 @@ export class Property implements IProperty {
   style: any;
   controlPropertyId?: string;
   toolTip: string = null as any;
+  suppressEmptyColumns: boolean = false;
 
   linkToMenuId?: string = undefined;
   linkDependsOnValue: boolean = false;

@@ -10,7 +10,6 @@ export class DropdownEditorLookupListCache {
   }
 
   setCachedListRows(rows: any[][]) {
-    console.log("Will save to cache:", rows);
     this.cache.setLookupList(this.lookupId, rows);
   }
 

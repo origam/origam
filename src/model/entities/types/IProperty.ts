@@ -35,6 +35,7 @@ export interface IPropertyData {
   isLookupColumn: boolean;
   autoSort: boolean;
   toolTip: string;
+  suppressEmptyColumns: boolean;
 
   controlPropertyValue?: string;
   controlPropertyId?: string;
@@ -62,6 +63,7 @@ export interface IProperty extends IPropertyData {
   isLink: boolean;
   nameOverride: string | null | undefined;
   isFormField: boolean;
+  
 
   getPolymophicProperty(row: any[]): IProperty;
 

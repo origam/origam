@@ -267,6 +267,7 @@ export function FilterBuildDropdownEditor(props: {
     const bodyCellDriver = new TextCellDriver(1, dropdownEditorDataTable, dropdownEditorBehavior);
 
     drivers.drivers.push({
+      columnId: props.property.id,
       headerCellDriver: new DefaultHeaderCellDriver(props.property.name),
       bodyCellDriver,
     });
