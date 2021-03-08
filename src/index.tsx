@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "development") {
   axios.defaults.timeout = 3600000;
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
 
-  inspect({ iframe: false });
+  //inspect({ iframe: false });
 }
 
 (window as any).ORIGAM_CLIENT_REVISION_HASH = process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
