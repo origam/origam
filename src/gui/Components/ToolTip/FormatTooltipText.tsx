@@ -8,6 +8,19 @@ export function formatTooltipText(content: string | string[] | undefined) {
   const lines = Array.isArray(content)
     ? content.flatMap((line) => splitToLines(line))
     : splitToLines(content);
+  lines.push(
+    ["dsjfldskjfas",
+    "dsafdsafdsa",
+    "adsfdsafdsafdsaf",
+    "asdfdsafdsafdsaf",
+    "dsafdsafdsaf",
+    "adsfdsafdsafdsaf",
+    "adsfdsafdsafdsaf",
+    "adsfdsafdsaf",
+    "asdfdsafdsafdsafdsaf",
+    "dsafdsafdsafdsafdsa",
+    "dsafdsafdsafdsa"].join('-------------------')
+  );
   return formatToolTipLines(lines);
 }
 
@@ -16,10 +29,9 @@ function splitToLines(value: string) {
 }
 
 function formatToolTipLines(content: string[]) {
-  const equalLengthLines = content; //.flatMap((line) => line.match(/.{1,72}/g));
+  const equalLengthLines = content;
   const linesToShow =
     equalLengthLines.length > 10 ? equalLengthLines.slice(0, 9).concat(["..."]) : equalLengthLines;
-  console.log("/*/*/*", linesToShow);
   return (
     <div className={S.tooltipContent}>
       {linesToShow.map((line) => (
