@@ -205,7 +205,8 @@ export function XmlBuildDropdownEditor(props: {
           throw new Error("Unknown column type " + column);
       }
 
-      drivers.drivers.push({
+      drivers.allDrivers.push({
+        columnId: id,
         headerCellDriver: new DefaultHeaderCellDriver(name),
         bodyCellDriver,
       });

@@ -123,6 +123,9 @@ export function fixColumnWidth(width: number) {
 }
 
 function parseProperty(property: any, idx: number): IProperty {
+  /*if(property.attributes.ModelInstanceId === "24a345d9-e1aa-4bcf-9e60-f1f3bbcf4ac3") {
+    property.attributes.SuppressEmptyColumns = "true"
+  }*/
   const propertyObject = new Property({
     xmlNode: property,
     id: property.attributes.Id,
@@ -158,6 +161,7 @@ function parseProperty(property: any, idx: number): IProperty {
     columnWidth: fixColumnWidth(
       property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100
     ),
+    suppressEmptyColumns: property.attributes.SuppressEmptyColumns === "true",
     lookupId: property.attributes.LookupId,
     lookup: !property.attributes.LookupId
       ? undefined

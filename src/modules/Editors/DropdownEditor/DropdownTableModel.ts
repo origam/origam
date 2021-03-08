@@ -9,8 +9,7 @@ export class DropdownDataTable {
   constructor(
     private setup: () => DropdownEditorSetup,
     private dropdownEditorData: IDropdownEditorData
-  ) {
-  }
+  ) {}
 
   @observable.shallow allRows: any[][] = [];
   @observable filterPhrase: string = "";
@@ -45,6 +44,14 @@ export class DropdownDataTable {
   get rowCount() {
     return this.rows.length;
   }
+
+  /*get columnsWithNoData() {
+    for(let column of this.setup().visibleColumnNames) {
+      for(let i = 0; i < this.allRows.length; i++) {
+        if(this.allRows[i][column])
+      }
+    }
+  }*/
 
   getValue(dataRowIndex: number, dataColumnIndex: number) {
     return this.rows[dataRowIndex][dataColumnIndex];
@@ -122,12 +129,25 @@ export interface IBodyCellDriver {
 }
 
 export interface IDropdownColumnDriver {
+  columnId: string;
   headerCellDriver: IHeaderCellDriver;
   bodyCellDriver: IBodyCellDriver;
 }
 
 export class DropdownColumnDrivers {
-  drivers: IDropdownColumnDriver[] = [];
+  @observable
+  allDrivers: IDropdownColumnDriver[] = [];
+
+  driversFilter = (driver: IDropdownColumnDriver) => {
+    return true;
+  };
+
+  @computed
+  get drivers() {
+    return this.allDrivers.filter((driver) => {
+      return true;
+    });
+  }
 
   get driverCount() {
     return this.drivers.length;
@@ -140,31 +160,29 @@ export class DropdownColumnDrivers {
 
 export const IDropdownColumnDrivers = TypeSymbol<DropdownColumnDrivers>("IDropdownColumnDrivers");
 
-
 class Index {
-
   private items: IndexItem[] = [];
 
-  constructor(rows: any[][]){
-    if(rows.length > 0){
-      this.items = rows.map(row => new IndexItem(row));
+  constructor(rows: any[][]) {
+    if (rows.length > 0) {
+      this.items = rows.map((row) => new IndexItem(row));
     }
   }
-  search(phrase: string){
+  search(phrase: string) {
     const phraseLower = phrase.toLowerCase();
-    return this.items.filter(item => item.matches(phraseLower)).map(item => item.row);
+    return this.items.filter((item) => item.matches(phraseLower)).map((item) => item.row);
   }
 }
 
 class IndexItem {
-  private textInLower : string;
+  private textInLower: string;
   public row: any[];
-  constructor(row: any[]){
+  constructor(row: any[]) {
     this.row = row;
     this.textInLower = row.slice(1).join("").toLowerCase();
   }
 
-  matches(phraseInLower: string){
+  matches(phraseInLower: string) {
     return this.textInLower.includes(phraseInLower);
   }
 }

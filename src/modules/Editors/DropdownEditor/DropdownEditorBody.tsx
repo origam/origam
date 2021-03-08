@@ -1,5 +1,5 @@
-import { Observer } from "mobx-react";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Observer, observer } from "mobx-react";
+import React, { useContext, useEffect, useMemo, useState, createRef } from "react";
 import { CellMeasurer, CellMeasurerCache, GridCellProps, MultiGrid } from "react-virtualized";
 import { CtxCell } from "./Cells/CellsCommon";
 import S from "./Dropdown/Dropdown.module.scss";
@@ -36,11 +36,12 @@ export function DropdownEditorBody() {
   );
 }
 
-export function DropdownEditorTable() {
+export const DropdownEditorTable = observer(function DropdownEditorTable() {
   const drivers = useContext(CtxDropdownEditor).columnDrivers;
   const dataTable = useContext(CtxDropdownEditor).editorDataTable;
   const beh = useContext(CtxDropdownEditor).behavior;
   const rectCtrl = useContext(CtxDropdownCtrlRect);
+  const refMultiGrid = createRef<MultiGrid>();
 
   const [cache] = useState(
     () =>
@@ -66,109 +67,107 @@ export function DropdownEditorTable() {
 
   const [hoveredRowIndex, setHoveredRowIndex] = useState(-1);
 
-  return (
-    <Observer>
-      {() => {
-        function renderTableCell({ columnIndex, key, parent, rowIndex, style }: GridCellProps) {
-          return (
-            <CtxCell.Provider
-              key={key}
-              value={{ visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex }}
+  function renderTableCell({ columnIndex, key, parent, rowIndex, style }: GridCellProps) {
+    return (
+      <CtxCell.Provider
+        key={key}
+        value={{ visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex }}
+      >
+        <CellMeasurer
+          cache={cache}
+          columnIndex={columnIndex}
+          key={key}
+          parent={parent}
+          rowIndex={rowIndex}
+        >
+          {(hasHeader && rowIndex > 0) || !hasHeader ? (
+            <div
+              style={style}
+              className={cx({ isHoveredRow: rowIndex === hoveredRowIndex })}
+              onMouseOver={(evt) => {
+                setHoveredRowIndex(rowIndex);
+              }}
+              onMouseOut={(evt) => {
+                setHoveredRowIndex(-1);
+              }}
             >
-              <CellMeasurer
-                cache={cache}
-                columnIndex={columnIndex}
-                key={key}
-                parent={parent}
-                rowIndex={rowIndex}
-              >
-                {(hasHeader && rowIndex > 0) || !hasHeader ? (
-                  <div
-                    style={style}
-                    className={cx({ isHoveredRow: rowIndex === hoveredRowIndex })}
-                    onMouseOver={(evt) => {
-                      setHoveredRowIndex(rowIndex);
-                    }}
-                    onMouseOut={(evt) => {
-                      setHoveredRowIndex(-1);
-                    }}
-                  >
-                    <Observer>
-                      {() => (
-                        <>
-                          {drivers
-                            .getDriver(columnIndex)
-                            .bodyCellDriver.render(rowIndex - (hasHeader ? 1 : 0))}
-                        </>
-                      )}
-                    </Observer>
-                  </div>
-                ) : (
-                  <div style={style}>
-                    <Observer>
-                      {() => <>{drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
-                    </Observer>
-                  </div>
+              <Observer>
+                {() => (
+                  <>
+                    {drivers
+                      .getDriver(columnIndex)
+                      .bodyCellDriver.render(rowIndex - (hasHeader ? 1 : 0))}
+                  </>
                 )}
-              </CellMeasurer>
-            </CtxCell.Provider>
-          );
-        }
+              </Observer>
+            </div>
+          ) : (
+            <div style={style}>
+              <Observer>
+                {() => <>{drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
+              </Observer>
+            </div>
+          )}
+        </CellMeasurer>
+      </CtxCell.Provider>
+    );
+  }
 
-        const columnCount = drivers.driverCount;
-        const hasHeader = columnCount > 1;
-        const rowCount = dataTable.rowCount + (hasHeader ? 1 : 0);
+  const columnCount = drivers.driverCount;
+  const hasHeader = columnCount > 1;
+  const rowCount = dataTable.rowCount + (hasHeader ? 1 : 0);
 
-        let width = 0;
-        let columnWidthSum = 0;
-        let widths: number[] = [];
-        for (let i = 0; i < columnCount; i++) {
-          width = width + cache.columnWidth({ index: i });
-          widths.push(cache.columnWidth({ index: i }));
-          columnWidthSum = columnWidthSum + cache.columnWidth({ index: i });
-          if (width >= window.innerWidth - 100) {
-            width = window.innerWidth - 100;
-            break;
-          }
-        }
+  let width = 0;
+  let columnWidthSum = 0;
+  let widths: number[] = [];
+  for (let i = 0; i < columnCount; i++) {
+    width = width + cache.columnWidth({ index: i });
+    widths.push(cache.columnWidth({ index: i }));
+    columnWidthSum = columnWidthSum + cache.columnWidth({ index: i });
+    if (width >= window.innerWidth - 100) {
+      width = window.innerWidth - 100;
+      break;
+    }
+  }
 
-        width = Math.max(width + scrollbarSize.vert, rectCtrl.width!);
-        let columnGrowFactor = 1;
-        if (columnWidthSum > 0 && columnWidthSum < rectCtrl.width!) {
-          columnGrowFactor = (width - scrollbarSize.vert) / columnWidthSum;
-        }
-        widths = widths.map((w) => w * columnGrowFactor);
+  width = Math.max(width + scrollbarSize.vert, rectCtrl.width!);
+  let columnGrowFactor = 1;
+  if (columnWidthSum > 0 && columnWidthSum < rectCtrl.width!) {
+    columnGrowFactor = (width - scrollbarSize.vert) / columnWidthSum;
+  }
+  widths = widths.map((w) => w * columnGrowFactor);
 
-        let height = 0;
-        for (let i = 0; i < rowCount; i++) {
-          height = height + cache.rowHeight({ index: i });
-        }
-        height = Math.min(height, 300) + scrollbarSize.horiz;
+  let height = 0;
+  for (let i = 0; i < rowCount; i++) {
+    height = height + cache.rowHeight({ index: i });
+  }
+  height = Math.min(height, 300) + scrollbarSize.horiz;
 
-        return (
-          <MultiGrid
-            scrollToRow={beh.scrollToRowIndex}
-            scrollToAlignment="center"
-            onScrollbarPresenceChange={handleScrollbarPresenceChange}
-            classNameTopRightGrid={SE.table}
-            classNameBottomRightGrid={SE.table}
-            columnCount={columnCount}
-            rowCount={rowCount}
-            columnWidth={({ index }) => {
-              const cellWidth =
-                columnGrowFactor !== 1 ? widths[index] : cache.columnWidth({ index });
-              return cellWidth;
-            }}
-            rowHeight={rowHeight}
-            deferredMeasurementCache={cache}
-            fixedRowCount={hasHeader ? 1 : 0}
-            height={height}
-            width={width}
-            cellRenderer={renderTableCell}
-            onScroll={beh.handleScroll}
-          />
-        );
+  useEffect(() => {
+    refMultiGrid.current?.recomputeGridSize();
+  }, [width]);
+
+  return (
+    <MultiGrid
+      ref={refMultiGrid}
+      scrollToRow={beh.scrollToRowIndex}
+      scrollToAlignment="center"
+      onScrollbarPresenceChange={handleScrollbarPresenceChange}
+      classNameTopRightGrid={SE.table}
+      classNameBottomRightGrid={SE.table}
+      columnCount={columnCount}
+      rowCount={rowCount}
+      columnWidth={({ index }) => {
+        const cellWidth = columnGrowFactor !== 1 ? widths[index] : cache.columnWidth({ index });
+        return cellWidth;
       }}
-    </Observer>
+      rowHeight={rowHeight}
+      deferredMeasurementCache={cache}
+      fixedRowCount={hasHeader ? 1 : 0}
+      height={height}
+      width={width}
+      cellRenderer={renderTableCell}
+      onScroll={beh.handleScroll}
+    />
   );
-}
+});
