@@ -8,19 +8,6 @@ export function formatTooltipText(content: string | string[] | undefined) {
   const lines = Array.isArray(content)
     ? content.flatMap((line) => splitToLines(line))
     : splitToLines(content);
-  lines.push(
-    ["dsjfldskjfas",
-    "dsafdsafdsa",
-    "adsfdsafdsafdsaf",
-    "asdfdsafdsafdsaf",
-    "dsafdsafdsaf",
-    "adsfdsafdsafdsaf",
-    "adsfdsafdsafdsaf",
-    "adsfdsafdsaf",
-    "asdfdsafdsafdsafdsaf",
-    "dsafdsafdsafdsafdsa",
-    "dsafdsafdsafdsa"].join('-------------------')
-  );
   return formatToolTipLines(lines);
 }
 
