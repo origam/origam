@@ -72,3 +72,8 @@ body,
 .tippy-tooltip {
   max-height: 400px;
 }
+
+.leaflet-control-container,
+.leaflet-draw-actions a {
+  color: black !important;
+}
