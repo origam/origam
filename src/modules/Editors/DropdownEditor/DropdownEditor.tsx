@@ -123,6 +123,7 @@ export function XmlBuildDropdownEditor(props: {
       () => dropdownEditorSetup,
       dropdownEditorData
     );
+
     const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
       () => dropdownEditorSetup,
       lookupListCache
@@ -156,6 +157,11 @@ export function XmlBuildDropdownEditor(props: {
     const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
     let index = 0;
     const drivers = new DropdownColumnDrivers();
+    if (rat.SuppressEmptyColumns === "true") {
+      drivers.driversFilter = (driver) => {
+        return dropdownEditorDataTable.columnIdsWithNoData.indexOf(driver.columnId) < 0;
+      };
+    }
     for (let propertyXml of findStopping(props.xmlNode, (n) => n.name === "Property")) {
       index++;
       const attributes = propertyXml.attributes;
@@ -231,7 +237,7 @@ export function XmlBuildDropdownEditor(props: {
       parameters,
       dropdownType,
       cached,
-      searchByFirstColumnOnly,
+      searchByFirstColumnOnly
     );
 
     return {
@@ -239,7 +245,7 @@ export function XmlBuildDropdownEditor(props: {
       editorData: dropdownEditorData,
       columnDrivers: drivers,
       editorDataTable: dropdownEditorDataTable,
-      setup: dropdownEditorSetup
+      setup: dropdownEditorSetup,
     };
   });
 

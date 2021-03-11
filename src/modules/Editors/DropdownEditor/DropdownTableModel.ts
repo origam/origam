@@ -45,13 +45,19 @@ export class DropdownDataTable {
     return this.rows.length;
   }
 
-  /*get columnsWithNoData() {
-    for(let column of this.setup().visibleColumnNames) {
-      for(let i = 0; i < this.allRows.length; i++) {
-        if(this.allRows[i][column])
+  @computed
+  get columnIdsWithNoData() {
+    const result: string[] = [];
+    outer: for (let column of this.setup().visibleColumnNames) {
+      for (let i = 0; i < this.allRows.length; i++) {
+        if (this.allRows[i][this.setup().columnNameToIndex.get(column)!] !== null) {
+          continue outer;
+        }
       }
+      result.push(column);
     }
-  }*/
+    return result;
+  }
 
   getValue(dataRowIndex: number, dataColumnIndex: number) {
     return this.rows[dataRowIndex][dataColumnIndex];
@@ -145,7 +151,7 @@ export class DropdownColumnDrivers {
   @computed
   get drivers() {
     return this.allDrivers.filter((driver) => {
-      return true;
+      return this.driversFilter(driver);
     });
   }
 
