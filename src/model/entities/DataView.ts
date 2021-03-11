@@ -39,7 +39,7 @@ import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../modules/DataView/TableCursor";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 import {
   IInfiniteScrollLoader,
   InfiniteScrollLoader,
@@ -118,7 +118,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  setRowCount(rowCount: number){
+  setRowCount(rowCount: number) {
     this.rowCount = rowCount;
     this.dataTable.rowsAddedSinceSave = 0;
   }
@@ -127,16 +127,16 @@ export class DataView implements IDataView {
   rowCount: number | undefined;
 
   @computed
-  get totalRowCount(){
-    if(!this.rowCount){
+  get totalRowCount() {
+    if (!this.rowCount) {
       return undefined;
     }
     return this.rowCount + this.dataTable.rowsAddedSinceSave;
   }
 
   orderProperty: IProperty;
-  activateFormView: ((args: {saveNewState: boolean}) => Promise<any>) | undefined;
-  activateTableView: (()=> Promise<any>) | undefined;
+  activateFormView: ((args: { saveNewState: boolean }) => Promise<any>) | undefined;
+  activateTableView: (() => Promise<any>) | undefined;
 
   gridDimensions: IGridDimensions;
 
@@ -202,7 +202,7 @@ export class DataView implements IDataView {
     return this.selectedRowIds.has(id);
   }
 
-  appendRecords(rows: any[][]): void{
+  appendRecords(rows: any[][]): void {
     this.dataTable.appendRecords(rows);
     this.selectedRowIds.clear();
     this.selectAllCheckboxChecked =
@@ -213,8 +213,10 @@ export class DataView implements IDataView {
   async setRecords(rows: any[][]): Promise<any> {
     await this.dataTable.setRecords(rows);
     const filteredRows = this.dataTable.rows;
-    const filteredRowIds = filteredRows.map(row =>  this.dataTable.getRowId(row));
-    this.selectedRowIds = new Set(Array.from(this.selectedRowIds).filter(id => filteredRowIds.includes(id)));
+    const filteredRowIds = filteredRows.map((row) => this.dataTable.getRowId(row));
+    this.selectedRowIds = new Set(
+      Array.from(this.selectedRowIds).filter((id) => filteredRowIds.includes(id))
+    );
     this.selectAllCheckboxChecked =
       this.dataTable.rows.length !== 0 &&
       this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
@@ -224,8 +226,10 @@ export class DataView implements IDataView {
     const selectionMember = getSelectionMember(this);
     if (!!selectionMember) {
       const dataSourceField = getDataSourceFieldByName(this, selectionMember)!;
-      if(!dataSourceField){
-        throw new Error(`SelectionMember "${selectionMember}" was not found in data source. Make sure the SelectionMember value in ${this.modelInstanceId} is correct`);
+      if (!dataSourceField) {
+        throw new Error(
+          `SelectionMember "${selectionMember}" was not found in data source. Make sure the SelectionMember value in ${this.modelInstanceId} is correct`
+        );
       }
       const updatedRow = this.dataTable.getRowById(rowId)!;
       return this.dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
@@ -243,29 +247,29 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  clear(){
+  clear() {
     this.selectedRowIds.clear();
     this.dataTable.clear();
   }
 
   @action.bound
-  deleteRowAndSelectNext(row: any[]){
+  deleteRowAndSelectNext(row: any[]) {
     const id = this.dataTable.getRowId(row);
     let idToSelectNext = this.dataTable.getNextExistingRowId(id);
-    if (!idToSelectNext){
+    if (!idToSelectNext) {
       idToSelectNext = this.dataTable.getPrevExistingRowId(id);
     }
 
     this.selectedRowIds.delete(id);
     this.dataTable.deleteRow(row);
 
-    if(idToSelectNext){
+    if (idToSelectNext) {
       this.setSelectedRowId(idToSelectNext);
     }
   }
 
   @action.bound
-  substituteRecord(row: any[]){
+  substituteRecord(row: any[]) {
     const rowId = this.dataTable.getRowId(row);
     this.removeSelectedRowId(rowId);
     this.dataTable.substituteRecord(row);
@@ -418,7 +422,7 @@ export class DataView implements IDataView {
       return;
     }
     const ordering = getPropertyOrdering(this, this.orderMember);
-    if(ordering.ordering ===  IOrderByDirection.ASC) {
+    if (ordering.ordering === IOrderByDirection.ASC) {
       this.moveSelectedRowDownIndexwise();
     } else {
       this.moveSelectedRowUpIndexwise();
@@ -430,7 +434,7 @@ export class DataView implements IDataView {
       return;
     }
     const ordering = getPropertyOrdering(this, this.orderMember);
-    if(ordering.ordering ===  IOrderByDirection.ASC) {
+    if (ordering.ordering === IOrderByDirection.ASC) {
       this.moveSelectedRowUpIndexwise();
     } else {
       this.moveSelectedRowDownIndexwise();
@@ -453,7 +457,7 @@ export class DataView implements IDataView {
     nextRow[positionIndex] -= 1;
     this.dataTable.substituteRecord(selectedRow);
     this.dataTable.substituteRecord(nextRow);
-    this.dataTable.updateSortAndFilter({retainPreviousSelection: true});
+    this.dataTable.updateSortAndFilter({ retainPreviousSelection: true });
     this.dataTable.setDirtyValue(selectedRow, this.orderMember, selectedRow[positionIndex]);
     this.dataTable.setDirtyValue(nextRow, this.orderMember, nextRow[positionIndex]);
   }
@@ -474,16 +478,16 @@ export class DataView implements IDataView {
     previous[positionIndex] += 1;
     this.dataTable.substituteRecord(selectedRow);
     this.dataTable.substituteRecord(previous);
-    this.dataTable.updateSortAndFilter({retainPreviousSelection: true});
+    this.dataTable.updateSortAndFilter({ retainPreviousSelection: true });
     this.dataTable.setDirtyValue(selectedRow, this.orderMember, selectedRow[positionIndex]);
     this.dataTable.setDirtyValue(previous, this.orderMember, previous[positionIndex]);
   }
 
   @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
-    
+
     let newId = undefined;
-    if(selectedRowId){
+    if (selectedRowId) {
       newId = getGroupingConfiguration(this).isGrouping
         ? getGrouper(this).getNextRowId(selectedRowId)
         : getDataTable(this).getNextExistingRowId(selectedRowId);
@@ -497,7 +501,7 @@ export class DataView implements IDataView {
     const selectedRowId = getSelectedRowId(this);
 
     let newId = undefined;
-    if(selectedRowId){
+    if (selectedRowId) {
       newId = getGroupingConfiguration(this).isGrouping
         ? getGrouper(this).getPreviousRowId(selectedRowId)
         : getDataTable(this).getPrevExistingRowId(selectedRowId);
@@ -510,6 +514,7 @@ export class DataView implements IDataView {
   *navigateLookupLink(property: IProperty, row: any[]) {
     const columnId = property.id;
     const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
+    if (fieldIndex === undefined) return;
     const value = row[fieldIndex];
     const menuId = yield selectors.column.getLinkMenuId(property, value);
     let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
@@ -533,7 +538,7 @@ export class DataView implements IDataView {
   @action.bound onFieldChange(event: any, row: any[], property: IProperty, newValue: any) {
     if (!property.readOnly) {
       const currentValue = getDataTable(this).getCellValue(row, property);
-      if(newValue === currentValue){
+      if (newValue === currentValue) {
         return;
       }
       getDataTable(this).setFormDirtyValue(row, property.id, newValue);
@@ -586,7 +591,7 @@ export class DataView implements IDataView {
 
   @action.bound
   setSelectedRowId(id: string | undefined): void {
-    if(this.selectedRowId === id){
+    if (this.selectedRowId === id) {
       return;
     }
     this.selectedRowId = id;
@@ -632,11 +637,11 @@ export class DataView implements IDataView {
           rowsCount: getDataTable(this).allRows.length,
         }),
         (reData: { selectedRowId: string | undefined; rowsCount: number }) => {
-          if(getFormScreenLifecycle(this).rowSelectedReactionsDisabled(this)){
-            return
+          if (getFormScreenLifecycle(this).rowSelectedReactionsDisabled(this)) {
+            return;
           }
           if (reData.selectedRowId === undefined && reData.rowsCount > 0) {
-           this.reselectOrSelectFirst();
+            this.reselectOrSelectFirst();
           }
         },
         {
@@ -737,7 +742,7 @@ export class DataView implements IDataView {
         RowIds: [],
         LazyLoadedEntityInput: {
           SessionFormIdentifier: getSessionId(this),
-          Filter: getUserFilters({ctx: this}),
+          Filter: getUserFilters({ ctx: this }),
           MenuId: getMenuItemId(this),
           DataStructureEntityId: getDataStructureEntityId(this),
           Ordering: getUserOrdering(this),
