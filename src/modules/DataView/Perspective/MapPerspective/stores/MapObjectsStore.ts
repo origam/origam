@@ -66,6 +66,10 @@ export class MapObjectsStore {
 
   @computed
   get mapObjects() {
+    if (this.fldIdentifier === undefined) {
+      console.warn("field identifier is undefined");
+      return [];
+    }
     const result: IMapObject[] = [];
     if (this.setup.isReadOnlyView) {
       const tableRows = this.dataView.tableRows;
@@ -85,7 +89,7 @@ export class MapObjectsStore {
         }
       }
     } else {
-      const selectedRow = getSelectedRow(this.dataView);
+      let selectedRow = getSelectedRow(this.dataView);
       if (selectedRow) {
         const row = selectedRow;
         if (_.isArray(row) && this.fldLocationIndex && row[this.fldLocationIndex]) {
