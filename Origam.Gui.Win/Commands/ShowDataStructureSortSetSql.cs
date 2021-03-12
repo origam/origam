@@ -55,7 +55,7 @@ namespace Origam.Gui.Win.Commands
             AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             generator.PrettyFormat = true;
-            generator.generateConsoleUseSyntax = true;
+            generator.GenerateConsoleUseSyntax = true;
             bool displayPagingParameters = true;
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
             builder.AppendLine("-- SQL statements for data structure: " + ds.Name);

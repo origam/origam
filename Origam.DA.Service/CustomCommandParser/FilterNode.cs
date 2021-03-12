@@ -9,8 +9,7 @@ namespace Origam.DA.Service.CustomCommandParser
 {
     class FilterNode
     {
-        private readonly string nameLeftBracket;
-        private readonly string nameRightBracket;
+        private readonly SqlRenderer sqlRenderer;
         private readonly Dictionary<string, string> lookupExpressions;
         private readonly List<ColumnInfo> columns;
         private string[] splitValue;
@@ -62,13 +61,13 @@ namespace Origam.DA.Service.CustomCommandParser
         private string RenderedColumnName =>
             lookupExpressions.ContainsKey(ColumnName)
                 ? lookupExpressions[ColumnName]
-                : nameLeftBracket + ColumnName + nameRightBracket;
+                : sqlRenderer.NameLeftBracket + ColumnName + sqlRenderer.NameRightBracket;
 
 
         private string Operator => SplitValue?.Length > 1 
             ? SplitValue[1].Replace("\"","") 
             : null;
-        private string ColumnValue => ValueToOperand(SplitValue[2]);
+        private string ParameterValue => ValueToOperand(SplitValue[2]);
 
         private ColumnInfo Column =>
             columns
@@ -101,26 +100,23 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private readonly AbstractFilterRenderer renderer;
         private readonly List<ParameterData> parameterDataList;
-        private readonly string parameterReferenceChar;
-
-        public FilterNode(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
+        public FilterNode(SqlRenderer sqlRenderer,Dictionary<string,string> lookupExpressions, 
             List<ColumnInfo> columns,
-            AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList,
-            string parameterReferenceChar)
+            AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList)
         {
-            this.nameLeftBracket = nameLeftBracket;
-            this.nameRightBracket = nameRightBracket;
+            this.sqlRenderer = sqlRenderer;
             this.lookupExpressions = lookupExpressions;
             this.columns = columns;
             renderer = filterRenderer;
             this.parameterDataList = parameterDataList;
-            this.parameterReferenceChar = parameterReferenceChar;
         }
 
-        private string GetParameterName(string columnName)
+        private string GetParameterNameSql(string columnName)
         {
-            return parameterReferenceChar + columnName;
+            return sqlRenderer.ParameterReferenceChar + columnName;
         }
+        
+        private string ParameterName => ColumnName + "_" + Operator;
 
         private string ValueToOperand(string value)
         {
@@ -222,7 +218,7 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private string RenderNodeSql()
         {
-            string parameterName = GetParameterName(ColumnName);
+            string parameterName = GetParameterNameSql(ParameterName);
             var (operatorName, renderedColumnValue) =
                 GetRendererInput(Operator, parameterName);
             if (Children.Count == 0)
@@ -233,7 +229,7 @@ namespace Origam.DA.Service.CustomCommandParser
                                                 " to a filter node");
                 }
 
-                if (ColumnValue == null || ColumnValue.ToLower() == "null")
+                if (ParameterValue == null || ParameterValue.ToLower() == "null")
                 {
                     return renderer.BinaryOperator(
                         leftValue: RenderedColumnName,
@@ -241,7 +237,7 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
 
-                object value = ToDbValue(ColumnValue, Column.DataType);
+                object value = ToDbValue(ParameterValue, ParameterDataType);
                 if ((Operator == "eq" || Operator == "neq") &&
                     Column.DataType == OrigamDataType.Date &&
                     IsWholeDay((DateTime)value))
@@ -252,7 +248,7 @@ namespace Origam.DA.Service.CustomCommandParser
                 parameterDataList.Add(new ParameterData
                 (
                     columnName: ColumnName,
-                    parameterName: ColumnName,
+                    parameterName: ParameterName,
                     value: value,
                     dataType: ParameterDataType
                 ));
@@ -269,16 +265,16 @@ namespace Origam.DA.Service.CustomCommandParser
                 var parameterNames = GetRightHandValues()
                     .Select((value, i) =>
                     {
-                        string columnNameNumbered = ColumnName + "_" + i;
+                        string parameterNameNumbered = ParameterName + "_" + i;
                         parameterDataList.Add(new ParameterData
                             (
                                 columnName: ColumnName,
-                                parameterName: columnNameNumbered,
+                                parameterName: parameterNameNumbered,
                                 value: value,
                                 dataType: ParameterDataType
                             )
                         );
-                        return GetParameterName(columnNameNumbered);
+                        return GetParameterNameSql(parameterNameNumbered);
                     })
                     .ToArray();
                 return renderer.BinaryOperator(
@@ -335,21 +331,21 @@ namespace Origam.DA.Service.CustomCommandParser
             var (operatorName, _) =
                 GetRendererInput(actualOperator, ""); 
 
-            DateTime equalsDate = (DateTime)ToDbValue(ColumnValue, Column.DataType);
+            DateTime equalsDate = (DateTime)ToDbValue(ParameterValue, Column.DataType);
             DateTime startDate = new DateTime(equalsDate.Year, equalsDate.Month, equalsDate.Day);
             DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
             var parameterNames = new[] { startDate, endDate }
                 .Select((value, i) =>
                 {
-                    string columnNameNumbered = ColumnName + "_" + i;
+                    string parameterNameNumbered = ParameterName + "_" + i;
                     parameterDataList.Add(new ParameterData
                     (
                         columnName: ColumnName,
-                        parameterName: columnNameNumbered,
+                        parameterName: parameterNameNumbered,
                         value: value,
                         dataType: ParameterDataType
                     ));
-                    return GetParameterName(columnNameNumbered);
+                    return GetParameterNameSql(parameterNameNumbered);
                 })
                 .ToArray();
 
@@ -361,23 +357,23 @@ namespace Origam.DA.Service.CustomCommandParser
                 isColumnArray: Column.DataType == OrigamDataType.Array);
         }
 
-        private (string,string) GetRendererInput(string operatorName, string value)
+        private (string,string) GetRendererInput(string operatorName, string parameterName)
         {
             switch (operatorName)
             {
-                case "gt": return ("GreaterThan", value);
-                case "lt": return ("LessThan", value);
-                case "gte": return ("GreaterThanOrEqual", value);
-                case "lte": return ("LessThanOrEqual", value);
-                case "eq": return ("Equal", value);
-                case "neq": return ("NotEqual", value);
-                case "starts": return ("Like", AppendWildCard(value));
-                case "nstarts": return ("NotLike", AppendWildCard(value));
-                case "ends": return ("Like", PrependWildCard(value));
-                case "nends": return ("NotLike",  PrependWildCard(value));
+                case "gt": return ("GreaterThan", parameterName);
+                case "lt": return ("LessThan", parameterName);
+                case "gte": return ("GreaterThanOrEqual", parameterName);
+                case "lte": return ("LessThanOrEqual", parameterName);
+                case "eq": return ("Equal", parameterName);
+                case "neq": return ("NotEqual", parameterName);
+                case "starts": return ("Like", AppendWildCard(parameterName));
+                case "nstarts": return ("NotLike", AppendWildCard(parameterName));
+                case "ends": return ("Like", PrependWildCard(parameterName));
+                case "nends": return ("NotLike",  PrependWildCard(parameterName));
                 case "like":
-                case "contains": return ("Like", PrependWildCard(AppendWildCard(value)));
-                case "ncontains": return ("NotLike", PrependWildCard(AppendWildCard(value)));
+                case "contains": return ("Like", PrependWildCard(AppendWildCard(parameterName)));
+                case "ncontains": return ("NotLike", PrependWildCard(AppendWildCard(parameterName)));
                 case "null": return ("Equal", null);
                 case "nnull": return ("NotEqual", null);
                 case "between": return ("Between", null);
@@ -390,19 +386,19 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private string PrependWildCard(string value)
         {
-            if (!value.StartsWith(parameterReferenceChar))
+            if (!value.StartsWith(sqlRenderer.ParameterReferenceChar))
             {
                 throw new ArgumentException("Cannot prepend \"%\" to a value which is not a parameter");
             }
-            return "'%'+"+value;
+            return "'%'" + renderer.StringConcatenationChar + value;
         } 
         private string AppendWildCard(string value)
         {
-            if (!value.StartsWith(parameterReferenceChar))
+            if (!value.StartsWith(sqlRenderer.ParameterReferenceChar))
             {
                 throw new ArgumentException("Cannot append \"%\" to a value which is not a parameter");
             }
-            return value + "+'%'";
+            return value + renderer.StringConcatenationChar + "'%'";
         }
     }
 }

@@ -38,6 +38,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Server;
 using Origam.Workbench.Services;
 using System.Linq;
+using System.Web;
 
 namespace Origam.ServerCommon.Pages
 {
@@ -718,7 +719,8 @@ namespace Origam.ServerCommon.Pages
                         {
                             continue;
                         }
-                        string paramValue = requestPath[i + 1];
+                        string paramValue 
+                            = HttpUtility.UrlDecode(requestPath[i + 1]);
                         if (paramValue.EndsWith(".aspx") 
                             && (i == (requestPath.Length - 2)))
                         {

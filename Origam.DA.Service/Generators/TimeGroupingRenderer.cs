@@ -1,32 +1,55 @@
-﻿using System;
+﻿#region license
+/*
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
 
 namespace Origam.DA.Service.Generators
 {
     public class TimeGroupingRenderer
     {
-
         private readonly Func<ColumnRenderData, string> columnDataToSql;
         private readonly ColumnRenderData columnRenderData;
         private readonly string groupingUnit;
+        private readonly DatePartRenderer datePartRenderer;
 
         public TimeGroupingRenderer(ColumnRenderData columnRenderData,
-            Func<ColumnRenderData, string> columnDataToSql, string groupingUnit)
+            Func<ColumnRenderData, string> columnDataToSql, string groupingUnit,
+            SqlRenderer sqlRenderer)
         {
             this.columnRenderData = columnRenderData;
             this.columnDataToSql = columnDataToSql;
             this.groupingUnit = groupingUnit;
+            datePartRenderer = new DatePartRenderer(sqlRenderer);
         }
 
         public string RenderWithAliases()
         {
             return string.Join(", ", RenderExpression(
-                new SelectExpressionRenderer(columnDataToSql), columnRenderData, groupingUnit));
+                new SelectExpressionRenderer(columnDataToSql, datePartRenderer),
+                columnRenderData, groupingUnit));
         }
 
         public string[] RenderWithoutAliases()
         {
-            return RenderExpression(
-                new DatePartRenderer(), columnRenderData, groupingUnit);
+            return RenderExpression(datePartRenderer, columnRenderData, groupingUnit);
         }
 
         public static string[] GetColumnNames(string columnName, string groupingUnit)
@@ -98,11 +121,13 @@ namespace Origam.DA.Service.Generators
     class SelectExpressionRenderer: IColumnRenderer
     {
         private readonly Func<ColumnRenderData, string> columnDataToSql;
-        private readonly DatePartRenderer datePartRenderer = new DatePartRenderer();
+        private readonly DatePartRenderer datePartRenderer;
 
-        public SelectExpressionRenderer(Func<ColumnRenderData, string> columnDataToSql)
+        public SelectExpressionRenderer(Func<ColumnRenderData, string> columnDataToSql,
+            DatePartRenderer datePartRenderer)
         {
             this.columnDataToSql = columnDataToSql;
+            this.datePartRenderer = datePartRenderer;
         }
 
         public string Render(ColumnRenderData columnRenderData, string groupingUnit)
@@ -117,9 +142,16 @@ namespace Origam.DA.Service.Generators
     }    
     class DatePartRenderer: IColumnRenderer
     {
+        private readonly SqlRenderer sqlRenderer;
+
+        public DatePartRenderer(SqlRenderer sqlRenderer)
+        {
+            this.sqlRenderer = sqlRenderer;
+        }
+
         public string Render(ColumnRenderData columnRenderData, string groupingUnit)
         {
-            return $"DATEPART({groupingUnit.ToUpper()}, {columnRenderData.Expression})";
+            return sqlRenderer.DatePart(groupingUnit.ToUpper(), columnRenderData.Expression);
         }
     }  
     
