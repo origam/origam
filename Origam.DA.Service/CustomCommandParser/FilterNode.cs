@@ -84,8 +84,7 @@ namespace Origam.DA.Service.CustomCommandParser
                 }
 
                 if (Column.DataType == OrigamDataType.UniqueIdentifier &&
-                    Operator != "eq" && Operator != "neq" && Operator != "in" 
-                    && Operator != "nin")
+                    (Operator != "eq" || Operator != "neq"))
                 {
                     return OrigamDataType.String;
                 }
@@ -242,7 +241,7 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
 
-                object value = ToDbValue(renderedColumnValue, ParameterDataType);
+                object value = ToDbValue(ColumnValue, Column.DataType);
                 if ((Operator == "eq" || Operator == "neq") &&
                     Column.DataType == OrigamDataType.Date &&
                     IsWholeDay((DateTime)value))
