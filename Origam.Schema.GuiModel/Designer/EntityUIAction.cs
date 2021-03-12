@@ -22,9 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
@@ -32,18 +30,17 @@ using Origam.Schema.RuleModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.Extensions;
-using Origam.Schema.GuiModel.Designer;
-
-//using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.GuiModel
 {
 	/// <summary>
-	/// Summary description for EntitySecurityRule.
+	/// Version history:
+	/// 6.1.0 - Moved ScreenCondition and SectionCondition to child elements
+	/// 6.2.0 - Added ActionButtonPlacement.PanelMenu
 	/// </summary>
 	[SchemaItemDescription("UI Action", "UI Actions", 5)]
 	[XmlModelRoot(CategoryConst)]
-	[ClassMetaVersion("6.1.0")]
+	[ClassMetaVersion("6.2.0")]
 	public abstract class EntityUIAction : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "EntityUIAction";
@@ -115,10 +112,13 @@ namespace Origam.Schema.GuiModel
         [XmlAttribute("roles")]
 		public string Roles { get; set; } = "";
 
+		[Browsable(false)]
 		public IEnumerable<Guid> ScreenIds => ChildItems
 			.ToGeneric()
 			.OfType<ScreenCondition>()
 			.Select(reference => reference.ScreenId);
+
+		[Browsable(false)]
 		public IEnumerable<Guid> ScreenSectionIds  => ChildItems
 			.ToGeneric()
 			.OfType<ScreenSectionCondition>()
