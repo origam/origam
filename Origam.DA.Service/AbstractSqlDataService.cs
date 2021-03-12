@@ -594,7 +594,7 @@ namespace Origam.DA.Service
                     // in the place (from callers). So there is obviously some place,
                     // where this exception isn't caught. To identify such a place,
                     // full stack trace is printed here.
-                    log.Error("DBConcurrencyException occurred! See \"concurrencyLog\" logger (Debug mode) for more details");
+                    log.Error("DBConcurrencyException occurred! See \"Origam.DA.Service.ConcurrencyExceptionLogger\" logger (Debug mode) for more details");
                 }
                 if (concurrencyLog.IsDebugEnabled)
                 {

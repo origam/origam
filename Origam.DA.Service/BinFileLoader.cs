@@ -148,7 +148,7 @@ namespace Origam.DA.Service
                 {
                     log.Debug(
                         $"Loaded index file: {indexFile}, last modified: {indexFile.LastWriteTime}, " +
-                        ", tracker stats:\n" +
+                        "tracker stats:\n" +
                         itemTracker.GetStats());
                 }
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
