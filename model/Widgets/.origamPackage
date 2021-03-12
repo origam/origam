@@ -14,5 +14,8 @@
     <pr:packageReference
       x:id="e3000c9f-0d78-426c-9506-de91a6a56164"
       pr:referencedPackage="Attachments/.origamPackage#bb8c67fb-44c1-4b41-8fce-4d50cd5a759d" />
+    <pr:packageReference
+      x:id="e7134a68-c9ae-4f3e-884f-2c33b560ed3b"
+      pr:referencedPackage="Audit/.origamPackage#255eec22-89c5-479a-b48d-e7bc9baa564a" />
   </p:package>
 </x:file>
