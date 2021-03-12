@@ -37,13 +37,7 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 
         public PackageScriptContainer() 
         {
-            upgradeScripts.Add(new UpgradeScript(
-                new Version("6.0.0"), 
-                new Version("6.1.0"),
-                (node, doc) =>
-                {
-                    // class name will be changed automatically
-                }));
+            AddEmptyUpgrade("6.0.0", "6.1.0");
         }
     }    
 }

@@ -36,10 +36,7 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 
         public WebReportScriptContainer()
         {
-            upgradeScripts.Add(new UpgradeScript(
-                new Version("6.0.0"),
-                new Version("6.0.1"),
-                (node, doc) => { }));
+            AddEmptyUpgrade("6.0.0", "6.0.1");
         }
     }
 }

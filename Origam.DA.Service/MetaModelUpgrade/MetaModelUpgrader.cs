@@ -189,6 +189,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Version persistedClassVersion,
             Version currentClassVersion)
         {
+            // do not try to upgrade first versions
+            if (currentClassVersion.Equals(new Version("1.0.0")))
+            {
+                return;
+            }
             var upgradeScriptContainer = scriptLocator.TryFindByTypeName(className);
             if (upgradeScriptContainer == null)
             {

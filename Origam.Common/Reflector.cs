@@ -230,7 +230,7 @@ namespace Origam
                 classType = assembly.GetType(classname);
                 if (log.IsDebugEnabled && classType == null)
                 {
-                    log.DebugFormat("Can't resove type '{0}' from assembly path '{1}'",
+                    log.DebugFormat("Can't resolve type '{0}' from assembly path '{1}'",
                         classname + "," + assemblyName,
                         ComposeAssemblyPath(assemblyName));
                 }

@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Linq;
 
 namespace Origam.Schema.MenuModel
 {
@@ -28,7 +29,22 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	public class MenuSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 	{
-		public MenuSchemaItemProvider() {}
+		public MenuSchemaItemProvider() 
+		{
+			ChildItemTypes.Add(typeof(Menu));
+			ChildItemTypes.Add(typeof(ContextMenu));
+		}
+
+		/// <summary>
+		/// Returs the first child Menu, skipping all the ContextMenu types.
+		/// </summary>
+		public Menu MainMenu
+        {
+			get
+            {
+				return ChildItems.OfType<Menu>().FirstOrDefault();
+            }
+        }
 
 		#region ISchemaItemProvider Members
 		public override string RootItemType
@@ -77,36 +93,6 @@ namespace Origam.Schema.MenuModel
 				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
 				return null;
 			}
-		}
-
-		#endregion
-
-		#region ISchemaItemFactory Members
-
-		public override Type[] NewItemTypes
-		{
-			get
-			{
-				return new Type[1] {typeof(Menu)};
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			if(type == typeof(Menu))
-			{
-				Menu item = new Menu(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewMenu";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorMenuModelUnknownType"));
 		}
 
 		#endregion

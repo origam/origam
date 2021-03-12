@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -30,22 +30,22 @@ namespace Origam.Schema.MenuModel
 	/// <summary>
 	/// Summary description for Menu.
 	/// </summary>
-	[SchemaItemDescription("Menu", "home.png")]
-    [HelpTopic("Menu")]
+	[SchemaItemDescription("Context Menu", "home.png")]
+	[HelpTopic("Context+Menu")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
-    public class Menu : AbstractSchemaItem, ISchemaItemFactory
+	[ClassMetaVersion("1.0.0")]
+	public class ContextMenu : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "Menu";
 
-		public Menu() : base() { Init(); }
+		public ContextMenu() : base() { Init(); }
 
-		public Menu(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+		public ContextMenu(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
 
-		public Menu(Key primaryKey) : base(primaryKey)	{ Init(); }
+		public ContextMenu(Key primaryKey) : base(primaryKey) { Init(); }
 
 		private void Init()
-		{
+        {
 			ChildItemTypes.Add(typeof(Submenu));
 			ChildItemTypes.Add(typeof(FormReferenceMenuItem));
 			ChildItemTypes.Add(typeof(DataConstantReferenceMenuItem));
@@ -74,15 +74,6 @@ namespace Origam.Schema.MenuModel
 				return false;
 			}
 		}
-
-		#endregion
-
-		#region Properties
-
-		[Category("Menu Item")]
-		[EntityColumn("SS01")]
-		[XmlAttribute("displayName")]
-		public string DisplayName { get; set; }
 		#endregion
 	}
 }

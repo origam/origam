@@ -27,6 +27,7 @@ namespace Origam.Schema.GuiModel
 	public enum ActionButtonPlacement
 	{
 		Toolbar = 0,
-		PanelHeader = 1
+		PanelHeader = 1,
+		PanelMenu = 2
 	}
 }

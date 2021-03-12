@@ -44,26 +44,24 @@ namespace Origam.Workbench.Pads
 
 		private class FieldNameColumn : DataGridTextBoxColumn
 		{
-			private Services.SchemaService _schema = ServiceManager.Services.GetService(typeof(Services.SchemaService)) as Services.SchemaService;
-			private IPersistenceService _persistence;
 
 			public FieldNameColumn() : base()
 			{
-				_persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			}
 
 			protected override object GetColumnValueAtRow(CurrencyManager source, int rowNum)
 			{
 				Guid columnId = (Guid)base.GetColumnValueAtRow (source, rowNum);
-
-				Key key = new Key();
-				key.Add("Id", columnId);
-
 				AbstractSchemaItem item;
-
 				try
 				{
-					item = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), key) as AbstractSchemaItem;
+					SchemaService schema = ServiceManager.Services
+						.GetService<SchemaService>();
+					IPersistenceService persistence;
+					persistence = ServiceManager.Services
+						.GetService<IPersistenceService>();
+					item = persistence.SchemaProvider
+						.RetrieveInstance<AbstractSchemaItem>(columnId);
 				}
 				catch
 				{
@@ -72,11 +70,11 @@ namespace Origam.Workbench.Pads
 
 				if(item == null) return columnId;
 
-				if(item is ICaptionSchemaItem)
+				if(item is ICaptionSchemaItem captionItem)
 				{
-					if((item as ICaptionSchemaItem).Caption != null & (item as ICaptionSchemaItem).Caption != "")
+					if(!string.IsNullOrEmpty(captionItem.Caption))
 					{
-						return (item as ICaptionSchemaItem).Caption;
+						return captionItem.Caption;
 					}
 					else
 					{
@@ -88,17 +86,6 @@ namespace Origam.Workbench.Pads
 					return item.Name;
 				}
 			}
-
-			protected override void Dispose(bool disposing)
-			{
-				if(disposing)
-				{
-					_persistence = null;
-				}
-
-				base.Dispose (disposing);
-			}
-
 		}
 
 		private class ActionTypeColumn : DataGridTextBoxColumn

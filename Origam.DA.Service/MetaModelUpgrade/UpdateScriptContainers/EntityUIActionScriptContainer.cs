@@ -39,52 +39,58 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
             {"screen", "screenSection"};
             
 
-        public EntityUIActionScriptContainer() 
+        public EntityUIActionScriptContainer()
         {
             upgradeScripts.Add(new UpgradeScript(
-                new Version("6.0.0"), 
+                new Version("6.0.0"),
                 new Version("6.1.0"),
-                (node, doc) =>
+                UpgradeTo610()));
+            AddEmptyUpgrade("6.1.0", "6.2.0");
+        }
+
+        private Action<XElement, OrigamXDocument> UpgradeTo610()
+        {
+            return (node, doc) =>
+            {
+                XNamespace persistenceNamespace = GetPersistenceNamespace(node);
+                XNamespace asiNamespace = GetAbstractSchemaItemNamespace(node);
+
+                var screenAttribute = node
+                    .Attributes()
+                    .FirstOrDefault(attr => attr.Name.LocalName == "screen");
+                if (screenAttribute != null)
                 {
-                    XNamespace persistenceNamespace = GetPersistenceNamespace(node);
-                    XNamespace asiNamespace = GetAbstractSchemaItemNamespace(node);
-                    
-                    var screenAttribute = node
-                        .Attributes()
-                        .FirstOrDefault(attr => attr.Name.LocalName == "screen");
-                    if (screenAttribute != null)
-                    {
-                        string screenValue = screenAttribute.Value;
-                        screenAttribute.Remove();
-                    
-                        XNamespace srNamespace = "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0";
-                        doc.AddNamespace("sc",
-                            "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0");
-                        XElement screenConditionNode = new XElement( srNamespace.GetName("ScreenCondition"));
-                        screenConditionNode.SetAttributeValue(persistenceNamespace.GetName("id"), Guid.NewGuid().ToString());
-                        screenConditionNode.SetAttributeValue(asiNamespace.GetName("name"), "ScreenSectionCondition1");
-                        screenConditionNode.SetAttributeValue(srNamespace.GetName("screen"), screenValue);
-                        node.Add(screenConditionNode);  
-                    }
-                    
-                    var screenSectionAttribute = node
-                        .Attributes()
-                        .FirstOrDefault(attr => attr.Name.LocalName == "screenSection");
-                    if (screenSectionAttribute != null)
-                    {
-                        string screenSectionAttributeValue = screenSectionAttribute.Value;
-                        screenSectionAttribute.Remove();
-                        
-                        XNamespace ssrNamespace = "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenSectionCondition/6.0.0";
-                        doc.AddNamespace("ssc",
-                            "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenSectionCondition/6.0.0");
-                        XElement screenSectionConditionNode = new XElement( ssrNamespace.GetName("ScreenSectionCondition"));
-                        screenSectionConditionNode.SetAttributeValue(persistenceNamespace.GetName("id"), Guid.NewGuid().ToString());
-                        screenSectionConditionNode.SetAttributeValue(asiNamespace.GetName("name"), "ScreenSectionCondition1");
-                        screenSectionConditionNode.SetAttributeValue(ssrNamespace.GetName("screenSection"), screenSectionAttributeValue);
-                        node.Add(screenSectionConditionNode);
-                    }
-                }));
+                    string screenValue = screenAttribute.Value;
+                    screenAttribute.Remove();
+
+                    XNamespace srNamespace = "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0";
+                    doc.AddNamespace("sc",
+                        "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0");
+                    XElement screenConditionNode = new XElement(srNamespace.GetName("ScreenCondition"));
+                    screenConditionNode.SetAttributeValue(persistenceNamespace.GetName("id"), Guid.NewGuid().ToString());
+                    screenConditionNode.SetAttributeValue(asiNamespace.GetName("name"), "ScreenSectionCondition1");
+                    screenConditionNode.SetAttributeValue(srNamespace.GetName("screen"), screenValue);
+                    node.Add(screenConditionNode);
+                }
+
+                var screenSectionAttribute = node
+                    .Attributes()
+                    .FirstOrDefault(attr => attr.Name.LocalName == "screenSection");
+                if (screenSectionAttribute != null)
+                {
+                    string screenSectionAttributeValue = screenSectionAttribute.Value;
+                    screenSectionAttribute.Remove();
+
+                    XNamespace ssrNamespace = "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenSectionCondition/6.0.0";
+                    doc.AddNamespace("ssc",
+                        "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenSectionCondition/6.0.0");
+                    XElement screenSectionConditionNode = new XElement(ssrNamespace.GetName("ScreenSectionCondition"));
+                    screenSectionConditionNode.SetAttributeValue(persistenceNamespace.GetName("id"), Guid.NewGuid().ToString());
+                    screenSectionConditionNode.SetAttributeValue(asiNamespace.GetName("name"), "ScreenSectionCondition1");
+                    screenSectionConditionNode.SetAttributeValue(ssrNamespace.GetName("screenSection"), screenSectionAttributeValue);
+                    node.Add(screenSectionConditionNode);
+                }
+            };
         }
     }
 }

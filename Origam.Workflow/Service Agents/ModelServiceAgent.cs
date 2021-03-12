@@ -26,19 +26,20 @@ using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Services;
 using Origam.Workbench.Services;
+using System.Data;
 
 namespace Origam.Workflow
 {
-	/// <summary>
-	/// Summary description for WorkflowServiceAgent.
-	/// </summary>
-	public class ModelServiceAgent : AbstractServiceAgent
-	{
+    /// <summary>
+    /// Summary description for WorkflowServiceAgent.
+    /// </summary>
+    public class ModelServiceAgent : AbstractServiceAgent
+    {
         const string GENERATED_PACKAGE_ID = "3cfc0308-fd23-454c-9d7a-a00054e0b9b1";
         const string GENERATED_PACKAGE_NAME = "_generated";
-		public ModelServiceAgent()
-		{
-		}
+        public ModelServiceAgent()
+        {
+        }
 
         #region Private Methods
         private object GenerateSimpleModel(IDataDocument dataDocument)
@@ -58,7 +59,7 @@ namespace Origam.Workflow
                 foreach (var field in entity.GetOrigamFieldRows())
                 {
                     var column = EntityHelper.CreateColumn(table, field.Name,
-                        !field.IsMandatory, ConvertType(field.refOrigamDataTypeId.ToString()), 
+                        !field.IsMandatory, ConvertType(field.refOrigamDataTypeId.ToString()),
                         field.IsTextLengthNull() ? 0 : field.TextLength, field.Label, null, null, true);
                 }
             }
@@ -86,7 +87,7 @@ namespace Origam.Workflow
                 case "d7483b5f-cb08-4691-a886-67eb548cb3c2":
                     return OrigamDataType.Memo;
                 default:
-                    throw new ArgumentOutOfRangeException("origamDataTypeId", 
+                    throw new ArgumentOutOfRangeException("origamDataTypeId",
                         origamDataTypeId, "Invalid type");
             }
         }
@@ -94,30 +95,92 @@ namespace Origam.Workflow
 
         #region IServiceAgent Members
         private object _result;
-		public override object Result
-		{
-			get
-			{
-				return _result;
-			}
-		}
+        public override object Result
+        {
+            get
+            {
+                return _result;
+            }
+        }
 
-		public override void Run()
-		{
-			switch(this.MethodName)
-			{
-				case "GenerateSimpleModel":
-					// Check input parameters
-					if(! (this.Parameters["Data"] is IDataDocument))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorWorkflowNotGuid"));
-					
-					_result = this.GenerateSimpleModel((IDataDocument)this.Parameters["Data"]);
-					break;
+        public override void Run()
+        {
+            switch (MethodName)
+            {
+                case "GenerateSimpleModel":
+                    _result = GenerateSimpleModel(
+                        GetParameter<IDataDocument>("Data"));
+                    break;
 
-				default:
-					throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
-			}
-		}
-		#endregion
-	}
+                case "ElementAttribute":
+                    _result = ElementAttribute(
+                        GetParameter<Guid>("Id"),
+                        GetParameter<string>("AttributeName"));
+                    break;
+
+                case "ElementListByParent":
+                    _result = ElementList(
+                        GetParameter<Guid>("ParentId"),
+                        GetParameter<string>("ItemType"));
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException("MethodName",
+                        MethodName, ResourceUtils.GetString("InvalidMethodName"));
+            }
+        }
+
+        private string ElementAttribute(Guid id, string attributeName)
+        {
+            var persistence = ServiceManager.Services.GetService
+                <IPersistenceService>();
+            var element = persistence.SchemaProvider.RetrieveInstance
+                <AbstractSchemaItem>(id);
+            return Reflector.GetValue(element.GetType(), element, attributeName)?.ToString() ?? "";
+        }
+
+        private IDataDocument ElementList(Guid parentId, string itemType)
+        {
+            var persistence = ServiceManager.Services.GetService
+                <IPersistenceService>();
+            var parent = persistence.SchemaProvider.RetrieveInstance
+                <AbstractSchemaItem>(parentId);
+
+            DataSet data = new DataSet("ROOT");
+            DataTable table = new DataTable("Element");
+            table.Columns.Add("Id", typeof(Guid));
+            table.Columns.Add("Name", typeof(string));
+            data.Tables.Add(table);
+            foreach (AbstractSchemaItem item in parent.ChildItemsByType(itemType))
+            {
+                DataRow row = table.NewRow();
+                row["Id"] = item.Id;
+                var members = Reflector.FindMembers(item.GetType(), typeof(System.Xml.Serialization.XmlAttributeAttribute));
+                foreach (MemberAttributeInfo memberInfo in members)
+                {
+                    string name = memberInfo.MemberInfo.Name;
+                    Type type;
+                    switch (memberInfo.MemberInfo)
+                    {
+                        case System.Reflection.PropertyInfo propertyInfo:
+                            type = propertyInfo.PropertyType;
+                            break;
+                        case System.Reflection.FieldInfo fieldInfo:
+                            type = fieldInfo.FieldType;
+                            break;
+                        default:
+                            throw new Exception("Unknown type.");
+                    }
+                    if (!table.Columns.Contains(name))
+                    {
+                        table.Columns.Add(name, type);
+                    }
+                    row[name] = Reflector.GetValue(memberInfo.MemberInfo, item);
+                }
+                table.Rows.Add(row);
+            }
+            return DataDocumentFactory.New(data);
+        }
+        #endregion
+    }
 }

@@ -67,6 +67,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			propertyElement.SetAttribute("AllowReturnToForm", XmlConvert.ToString(lookup.ListMethod == null || lookup.AlwaysAllowReturnToForm));
 			propertyElement.SetAttribute("SearchByFirstColumnOnly", XmlConvert.ToString(lookup.SearchByFirstColumnOnly));
 			propertyElement.SetAttribute("AutoSort", XmlConvert.ToString(lookup.ListSortSet == null));
+			propertyElement.SetAttribute("SupportsServerSideSorting", 
+				XmlConvert.ToString(lookup.ValueMethod is DataStructureFilterSet));
 
 			string dropDownType = "EagerlyLoadedGrid";
 			if(lookup.IsTree && lookup.IsFilteredServerside)

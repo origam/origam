@@ -69,6 +69,37 @@ namespace Origam.Workflow
             return data;
         }
 
+		internal T TryGetParameter<T>(string parameterName)
+		{
+			if (Parameters.Contains(parameterName))
+			{
+				object value = Parameters[parameterName];
+				if (value is T t)
+				{
+					return t;
+				}
+			}
+			return default(T);
+		}
+
+		internal T GetParameter<T>(string parameterName)
+        {
+            if (!Parameters.Contains(parameterName))
+            {
+				throw new ArgumentOutOfRangeException(
+					$"Missing parameter {parameterName}");
+            }
+			object value = Parameters[parameterName];
+            if (value is T t)
+            {
+				return t;
+            }
+            else
+            {
+				throw new ArgumentOutOfRangeException($"Parameter {parameterName} should be of type {typeof(T)}");
+            }
+        }
+
         #region IServiceAgent Members
         public virtual string Info
 		{

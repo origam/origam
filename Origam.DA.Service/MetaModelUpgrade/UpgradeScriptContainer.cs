@@ -164,8 +164,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 .FirstOrDefault(nameSpace => nameSpace.FullTypeName == FullTypeName)
                 ?.StringValue;
         }
+
+        internal void AddEmptyUpgrade(string fromVersion, string toVersion)
+        {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version(fromVersion),
+                new Version(toVersion),
+                EmptyUpgrade()));
+        }
+
+        internal static Action<XElement, OrigamXDocument> EmptyUpgrade()
+        {
+            return (node, doc) => { };
+        }
     }
-    
+
     [DebuggerDisplay("Form: {FromVersion}, To: {ToVersion}")]
     public class UpgradeScript
     {

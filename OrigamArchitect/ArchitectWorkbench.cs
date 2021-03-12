@@ -2263,7 +2263,7 @@ namespace OrigamArchitect
 			MenuSchemaItemProvider menuProvider = _schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
 			if(menuProvider.ChildItems.Count > 0)
 			{
-				_workflowPad.OrigamMenu = menuProvider.ChildItems[0] as Origam.Schema.MenuModel.Menu;
+				_workflowPad.OrigamMenu = menuProvider.MainMenu;
 			}
             UpdateTitle();
 		}
