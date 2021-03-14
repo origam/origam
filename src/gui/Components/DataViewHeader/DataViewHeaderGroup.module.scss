@@ -25,12 +25,14 @@
   &:global(.isHidden) {
     //display: none;
     position: absolute;
-    top: 110%;;
+    top: 110%;
     left: 0;
   }
 
   &:first-of-type {
-    border-left: 1px solid $grey2;
+    &:not(:global(.noDivider)) {
+      border-left: 1px solid $grey2;
+    }
     border-right: none;
   }
 
