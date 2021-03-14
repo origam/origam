@@ -73,11 +73,8 @@ export class NumberEditor extends React.Component<{
     if (!prevProps.isFocused && this.props.isFocused) {
       this.makeFocusedIfNeeded();
     }
-    if (this.props.value !== prevProps.value) {
-      this.wasChanged = false;
-      if (!this.hasFocus) {
-        this.editingValue = this.numeralFormattedValue;
-      }
+    if (this.props.value !== prevProps.value && !this.wasChanged) {
+      this.editingValue = this.numeralFormattedValue;
     }
   }
 
@@ -92,6 +89,7 @@ export class NumberEditor extends React.Component<{
   @action.bound
   handleFocus(event: any) {
     this.hasFocus = true;
+    this.wasChanged = false;
     this.editingValue = this.numeralFormattedValue;
     if (this.elmInput) {
       this.elmInput.select();
@@ -102,6 +100,7 @@ export class NumberEditor extends React.Component<{
   @action.bound
   handleBlur(event: any) {
     this.hasFocus = false;
+    this.wasChanged = false;
     if (!this.wasChanged || this.props.value === this.editValue) {
       this.props.onEditorBlur?.(event);
       return;
