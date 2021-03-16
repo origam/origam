@@ -1,6 +1,7 @@
 import React from "react";
 import S from "gui/Components/Form/RadioButton.module.scss";
 import {IFocusAble} from "model/entities/FocusManager";
+import {uuidv4} from "../../../utils/uuid";
 
 
 export class RadioButton extends React.Component<{
@@ -18,6 +19,7 @@ export class RadioButton extends React.Component<{
   onClick: ()=>void;
   labelColor?: string;
 }> {
+  inputId = uuidv4();
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
@@ -51,7 +53,7 @@ export class RadioButton extends React.Component<{
           className={S.input}
           type={"radio"}
           onClick={() => this.props.onClick()}
-          id={this.props.value}
+          id={this.inputId}
           name={this.props.name}
           value={this.props.value}
           checked={this.props.checked}
@@ -59,7 +61,7 @@ export class RadioButton extends React.Component<{
           onChange={event => this.onChange(event)}/>
         <label
           className={S.label}
-          htmlFor={this.props.value}
+          htmlFor={this.inputId}
           style={{color: this.props.labelColor}}>
           {this.props.caption}
         </label>
