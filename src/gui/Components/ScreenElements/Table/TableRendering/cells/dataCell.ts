@@ -1,8 +1,5 @@
 import { flow } from "mobx";
-import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
 import selectors from "model/selectors-tree";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
@@ -141,11 +138,6 @@ function registerClickHandler(columnId: string) {
             }
           } else {
             yield* getTablePanelView(ctx).onCellClick(event, row, columnId, true);
-            yield onPossibleSelectedRowChange(ctx)(
-              getMenuItemId(ctx),
-              getDataStructureEntityId(ctx),
-              getSelectedRowId(ctx)
-            );
           }
         })();
       },
@@ -165,11 +157,6 @@ function registerClickHandler(columnId: string) {
             }
           } else {
             yield* getTablePanelView(ctx).onCellClick(event, row, columnId, false);
-            yield onPossibleSelectedRowChange(ctx)(
-              getMenuItemId(ctx),
-              getDataStructureEntityId(ctx),
-              getSelectedRowId(ctx)
-            );
           }
         })();
       },
@@ -190,11 +177,6 @@ function registerClickHandler(columnId: string) {
             }
           } else {
             yield* getTablePanelView(ctx).onCellClick(event, row, columnId, false);
-            yield onPossibleSelectedRowChange(ctx)(
-              getMenuItemId(ctx),
-              getDataStructureEntityId(ctx),
-              getSelectedRowId(ctx)
-            );
           }
         })();
       },

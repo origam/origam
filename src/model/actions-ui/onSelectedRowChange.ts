@@ -1,7 +1,7 @@
 import {flow} from "mobx";
 import {getRecordInfo} from "model/selectors/RecordInfo/getRecordInfo";
 
-export function onPossibleSelectedRowChange(ctx: any) {
+export function onSelectedRowChange(ctx: any) {
   return flow(function* onPossibleSelectedRowChange(
     menuId: string,
     dataStructureEntityId: string,
