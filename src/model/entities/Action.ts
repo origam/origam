@@ -1,13 +1,7 @@
 import { computed } from "mobx";
 import { getRowStateIsDisableAction } from "model/selectors/RowState/getRowStateIsDisabledAction";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import {
-  IAction,
-  IActionData,
-  IActionMode,
-  IActionPlacement,
-  IActionType,
-} from "./types/IAction";
+import { IAction, IActionData, IActionMode, IActionPlacement, IActionType } from "./types/IAction";
 import { IActionParameter } from "./types/IActionParameter";
 import { getDataView } from "model/selectors/DataView/getDataView";
 
@@ -33,19 +27,19 @@ export class Action implements IAction {
     if (this.mode === IActionMode.Always) {
       return true;
     }
-  
+
     switch (this.mode) {
       case IActionMode.ActiveRecord: {
         const selRowId = getSelectedRowId(this);
-        return selRowId 
-          ? !getRowStateIsDisableAction(this, selRowId, this.id) 
-          : false;
+        return selRowId ? !getRowStateIsDisableAction(this, selRowId, this.id) : false;
       }
       case IActionMode.MultipleCheckboxes: {
         const selectedIds = getDataView(this).selectedRowIds;
-          return selectedIds.size > 0
-            ? !Array.from(selectedIds).some(rowId => getRowStateIsDisableAction(this, rowId, this.id))
-            : this.placement === IActionPlacement.Toolbar;
+        return selectedIds.size > 0
+          ? !Array.from(selectedIds)
+              .map((rowId) => getRowStateIsDisableAction(this, rowId, this.id))
+              .some((item) => item)
+          : this.placement === IActionPlacement.Toolbar;
       }
     }
   }
