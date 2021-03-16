@@ -7,10 +7,6 @@ import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export function onTableKeyDown(ctx: any) {
   return flow(function* onTableKeyDown(event: any) {
@@ -23,11 +19,6 @@ export function onTableKeyDown(ctx: any) {
             break;
           }
           yield* selectPrevRow(ctx)();
-          yield onPossibleSelectedRowChange(ctx)(
-            getMenuItemId(ctx),
-            getDataStructureEntityId(ctx),
-            getSelectedRowId(ctx)
-          );
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowDown":
@@ -36,11 +27,6 @@ export function onTableKeyDown(ctx: any) {
             break;
           }
           yield* selectNextRow(ctx)();
-          yield onPossibleSelectedRowChange(ctx)(
-            getMenuItemId(ctx),
-            getDataStructureEntityId(ctx),
-            getSelectedRowId(ctx)
-          );
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowLeft":

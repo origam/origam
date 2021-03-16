@@ -66,8 +66,8 @@ import selectors from "model/selectors-tree";
 import produce from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import Axios from "axios";
-import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
+import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
+import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -600,6 +600,21 @@ export class DataView implements IDataView {
         binding.childDataView.dataTable.updateSortAndFilter()
       );
     }
+    const self = this;
+    if(!this.selectedRowId){
+      return;
+    }
+    runInFlowWithHandler(
+        {
+          ctx: self,
+          action: async () => {
+            await onSelectedRowChange(self)(
+                getMenuItemId(self),
+                getDataStructureEntityId(self),
+                self.selectedRowId
+                );
+            }
+        });
   }
 
   viewStateStack: SavedViewState[] = [];
