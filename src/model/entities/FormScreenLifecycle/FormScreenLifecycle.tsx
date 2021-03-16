@@ -180,8 +180,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       case IQuestionSaveDataAnswer.Cancel:
         return;
       case IQuestionSaveDataAnswer.Save:
-        yield* this.saveSession();
-        yield* this.closeForm();
+        const saveSuccessful = yield* this.saveSession();
+        if(saveSuccessful){
+          yield* this.closeForm();
+        }
         return;
       case IQuestionSaveDataAnswer.NoSave:
         yield* this.closeForm();
@@ -945,7 +947,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *saveSession() {
     if (getIsSuppressSave(this)) {
-      return;
+      return true;
     }
     try {
       this.monitor.inFlow++;
@@ -960,7 +962,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           queryResult,
           formScreen.title
         );
-        if (!processQueryInfoResult.canContinue) return;
+        if (!processQueryInfoResult.canContinue){
+          return false;
+        }
         result = yield api.saveSession(getSessionId(this));
         getFormScreen(this).dataViews.forEach((dataView) =>
           dataView.dataTable.unlockAddedRowPosition()
@@ -977,6 +981,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } finally {
       this.monitor.inFlow--;
     }
+    return true;
   }
 
   *refreshLookups() {
