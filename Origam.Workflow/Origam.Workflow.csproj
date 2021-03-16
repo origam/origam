@@ -51,6 +51,9 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+  </ItemGroup>
 
 
  

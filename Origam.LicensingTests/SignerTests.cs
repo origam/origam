@@ -29,7 +29,7 @@ namespace Origam.Licensing.Tests
 	[TestClass()]
 	public class SignerTests
 	{
-		[TestMethod()]
+		//[TestMethod()]
 		public void TestAll()
 		{
 			try

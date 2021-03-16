@@ -148,7 +148,7 @@ namespace TestSqlCommandGenerator
 		/// <summary>
 		///A test for SelectSql
 		///</summary>
-        [TestMethod()]
+        //[TestMethod()]
         public void SelectSqlTest()
         {
             // create an entity
@@ -156,10 +156,12 @@ namespace TestSqlCommandGenerator
             // with one field
             IDataEntityColumn col1 = EntityHelper.CreateColumn(table1, "col1", true, OrigamDataType.String, 100, "col1 caption", null, null, true);
 
-			ArrayList cols = new ArrayList();
-			cols.Add(col1);
-			// create child entity with language translations
-			TableMappingItem languageEntity = EntityHelper.CreateLanguageTranslationChildEntity(table1, cols);
+            ArrayList cols = new ArrayList
+            {
+                col1
+            };
+            // create child entity with language translations
+            TableMappingItem languageEntity = EntityHelper.CreateLanguageTranslationChildEntity(table1, cols);
 
             // create a default data structure for the entity
             DataStructure ds = EntityHelper.CreateDataStructure(table1, "table1Ds", false);
