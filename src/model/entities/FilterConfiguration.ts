@@ -168,7 +168,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         )
           return true;
 
-        const t1 = term.setting.val1.split(".")[0].endsWith("T00:00:00")
+        const t1 = term.setting.val1.split(".")[0].endsWith("T00:00:00") && cellValue !== null
           ? cellValue.substr(0, 10).concat("T00:00:00")
           : cellValue;
 
