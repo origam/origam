@@ -21,7 +21,11 @@ export class GenericGroupData implements IGroupData{
 
   compare(other: IGroupData): number{
     if (this.label && other.label) {
-      return this.label.localeCompare(other.label, getLocaleFromCookie());
+      if(typeof this.label === "string"){
+        return this.label.localeCompare(other.label, getLocaleFromCookie());
+      }else{
+        return this.label > other.label ? 1 : -1;
+      }
     } else if (!this.label) {
       return -1;
     } else {
