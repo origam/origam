@@ -409,6 +409,10 @@ namespace Origam.DA.Service
 		{
 			foreach(IDbDataParameter dbParam in dsParameters)
 			{
+				if(dbParam.IsNullable && dbParam.Value == null)
+				{
+					dbParam.Value = DBNull.Value;
+				}
 				ICustomParameter customParameter = CustomParameterService.MatchParameter(dbParam.ParameterName);
 				if(customParameter != null)
 				{
