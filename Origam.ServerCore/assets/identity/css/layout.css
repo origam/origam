@@ -60,3 +60,7 @@ iframe
 .in-page-link{
   text-decoration: underline;
 }
+
+input::placeholder {
+    color: transparent;
+}
