@@ -44,7 +44,7 @@ export class TextEditor extends React.Component<{
 
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
-    if (this.props.isMultiline){
+    if (this.props.isMultiline) {
       this.disposers.push(this.startAutoUpdate());
     }
     this.makeFocusedIfNeeded();
@@ -52,12 +52,11 @@ export class TextEditor extends React.Component<{
 
   private startAutoUpdate() {
     this.updateInterval = setInterval(() => {
-        if (this.lastAutoUpdatedValue !== this.currentValue) {
-          this.props.onEditorBlur?.(null);
-          this.lastAutoUpdatedValue = this.currentValue;
-        }
-      },
-      autoUpdateUntervalMs);
+      if (this.lastAutoUpdatedValue !== this.currentValue) {
+        this.props.onEditorBlur?.(null);
+        this.lastAutoUpdatedValue = this.currentValue;
+      }
+    }, autoUpdateUntervalMs);
     return () => this.updateInterval && clearTimeout(this.updateInterval);
   }
 
@@ -83,7 +82,7 @@ export class TextEditor extends React.Component<{
   handleFocus(event: any) {
     if (this.elmInput) {
       const isNotMemoField = this.props.maxLength && this.props.maxLength > 0;
-      if(isNotMemoField){
+      if (isNotMemoField) {
         this.elmInput.select();
       }
       this.elmInput.scrollLeft = 0;
@@ -91,7 +90,7 @@ export class TextEditor extends React.Component<{
   }
 
   elmInput: any = null;
-  refInput = (elm:  any) => {
+  refInput = (elm: any) => {
     this.elmInput = elm;
     if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
@@ -115,7 +114,7 @@ export class TextEditor extends React.Component<{
         {this.renderValueTag()}
         {this.props.isInvalid && (
           <div className={S.notification}>
-            <Tooltip html={this.props.invalidMessage} arrow={true}>
+            <Tooltip html={this.props.invalidMessage} arrow={true} animation="none" duration={0}>
               <i className="fas fa-exclamation-circle red" />
             </Tooltip>
           </div>

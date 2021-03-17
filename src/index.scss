@@ -73,6 +73,10 @@ body,
   max-height: 400px;
 }
 
+.tippy-popper {
+  transition: none;
+}
+
 .leaflet-control-container,
 .leaflet-draw-actions a {
   color: black !important;

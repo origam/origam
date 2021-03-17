@@ -60,7 +60,7 @@ export class BoolEditor extends React.Component<{
         />
         {this.props.isInvalid && (
           <div className={CS.notification}>
-            <Tooltip html={this.props.invalidMessage} arrow={true}>
+            <Tooltip html={this.props.invalidMessage} arrow={true} animation="none" duration={0}>
               <i className="fas fa-exclamation-circle red" />
             </Tooltip>
           </div>

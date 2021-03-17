@@ -111,6 +111,8 @@ export class FormField extends React.Component<{
         theme={"light"}
         distance={10}
         style={toolTipStyle}
+        animation="none"
+        duration={0}
       >
         <div className={S.editor} style={editorStyle}>
           {this.props.editor}

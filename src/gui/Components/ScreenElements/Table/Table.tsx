@@ -421,6 +421,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                   open={this.toolTipData?.content && this.mouseInToolTipEnabledArea}
                                   position={"right"}
                                   theme={"light"}
+                                  animation="none"
+                                  duration={0}
                                   distance={0}
                                   className={S.toolTipContainer}
                                 >
