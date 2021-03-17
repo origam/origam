@@ -43,7 +43,7 @@ export class FormField extends React.Component<{
   captionColor?: string;
   toolTip?: string;
 }> {
-  @computed
+
   get captionStyle() {
     if (this.props.isHidden) {
       return {
@@ -98,11 +98,11 @@ export class FormField extends React.Component<{
   }
 
   renderEditorWithToolTip() {
-    const toolTipStyle = this.formFieldStyle as any;
+    const toolTipStyle = this.captionStyle as any;
     toolTipStyle["position"] = "absolute";
 
-    const editorStyle = this.formFieldStyle as any;
-    editorStyle["position"] = "static";
+    const captionStyle = this.captionStyle as any;
+    captionStyle["position"] = "static";
 
     return (
       <Tooltip
@@ -112,9 +112,9 @@ export class FormField extends React.Component<{
         distance={10}
         style={toolTipStyle}
       >
-        <div className={S.editor} style={editorStyle}>
-          {this.props.editor}
-        </div>
+        <label className={S.caption} style={captionStyle}>
+          {this.props.caption}
+        </label>
       </Tooltip>
     );
   }
@@ -124,17 +124,17 @@ export class FormField extends React.Component<{
     return (
       <>
         {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption && (
-          <label className={S.caption} style={this.captionStyle}>
-            {props.caption}
-          </label>
+          this.props.toolTip ? (
+            this.renderEditorWithToolTip()
+          ) : (
+            <label className={S.caption} style={this.captionStyle}>
+              {props.caption}
+            </label>
+         )
         )}
-        {props.toolTip ? (
-          this.renderEditorWithToolTip()
-        ) : (
           <div className={S.editor} style={this.formFieldStyle}>
             {props.editor}
           </div>
-        )}
       </>
     );
   }
