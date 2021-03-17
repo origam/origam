@@ -39,12 +39,12 @@ namespace Origam.DA.ServiceTests
         {
             new object[] {
                 "[\"name\",\"gt\",\"John Doe\"]",
-                "([name] > @name)",
+                "([name] > @name_gt)",
                 new List<ParameterData> {
                    new ParameterData
                    (
                        columnName: "name", 
-                       parameterName: "name", 
+                       parameterName: "name_gt", 
                        value: "John Doe",
                        dataType: OrigamDataType.String
                    )
@@ -52,12 +52,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"gt\",\"John, Doe\"]",
-                "([name] > @name)",
+                "([name] > @name_gt)",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_gt", 
                         value: "John, Doe",
                         dataType: OrigamDataType.String
                     )
@@ -65,12 +65,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"starts\",\"John Doe\"]",
-                "([name] LIKE @name+'%')",
+                "([name] LIKE @name_starts+'%')",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_starts", 
                         value: "John Doe",
                         dataType: OrigamDataType.String
                     )
@@ -78,12 +78,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"nstarts\",\"John Doe\"]",
-                "([name] NOT LIKE @name+'%')",
+                "([name] NOT LIKE @name_nstarts+'%')",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_nstarts", 
                         value: "John Doe",
                         dataType: OrigamDataType.String
                     )
@@ -91,12 +91,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"ends\",\"John Doe\"]",
-                "([name] LIKE '%'+@name)",
+                "([name] LIKE '%'+@name_ends)",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_ends", 
                         value: "John Doe",
                         dataType: OrigamDataType.String
                     )
@@ -104,12 +104,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"nends\",\"John Doe\"]",
-                "([name] NOT LIKE '%'+@name)",
+                "([name] NOT LIKE '%'+@name_nends)",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_nends", 
                         value: "John Doe",
                         dataType: OrigamDataType.String
                     )
@@ -117,12 +117,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"contains\",\"John Doe\"]",
-                "([name] LIKE '%'+@name+'%')",
+                "([name] LIKE '%'+@name_contains+'%')",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_contains", 
                         value: "John Doe",
                         dataType: OrigamDataType.String
                     )
@@ -130,12 +130,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"ncontains\",\"John Doe\"]",
-                "([name] NOT LIKE '%'+@name+'%')",
+                "([name] NOT LIKE '%'+@name_ncontains+'%')",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_ncontains", 
                         value: "John Doe",
                         dataType: OrigamDataType.String
                     )
@@ -143,12 +143,12 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"name\",\"gt\",\"John' Doe\"]",
-                "([name] > @name)",
+                "([name] > @name_gt)",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_gt", 
                         value: "John' Doe",
                         dataType: OrigamDataType.String
                     )
@@ -161,47 +161,47 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
-                "((([city_name] LIKE '%'+@city_name+'%') OR ([name] LIKE '%'+@name+'%')) AND ([age] >= @age) AND [id] IN (@id_0, @id_1, @id_2))",
+                "((([city_name] LIKE '%'+@city_name_like+'%') OR ([name] LIKE '%'+@name_like+'%')) AND ([age] >= @age_gte) AND [id] IN (@id_in_0, @id_in_1, @id_in_2))",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "city_name", 
-                        parameterName: "city_name", 
+                        parameterName: "city_name_like", 
                         value: "Wash",
                         dataType: OrigamDataType.String
                     ),
                     new ParameterData
                     (
                         columnName: "name", 
-                        parameterName: "name", 
+                        parameterName: "name_like", 
                         value: "Smith",
                         dataType: OrigamDataType.String
                     ),
                     new ParameterData
                     (
                         columnName: "age", 
-                        parameterName: "age", 
+                        parameterName: "age_gte", 
                         value: 18,
                         dataType: OrigamDataType.String
                     ),
                     new ParameterData
                     (
                         columnName: "id", 
-                        parameterName: "id_0", 
+                        parameterName: "id_in_0", 
                         value: "f2",
                         dataType: OrigamDataType.String
                     ),
                     new ParameterData
                     (
                         columnName: "id", 
-                        parameterName: "id_1", 
+                        parameterName: "id_in_1", 
                         value: "f3",
                         dataType: OrigamDataType.String
                     ),
                     new ParameterData
                     (
                         columnName: "id", 
-                        parameterName: "id_2", 
+                        parameterName: "id_in_2", 
                         value: "f4",
                         dataType: OrigamDataType.String
                     ),
@@ -209,19 +209,19 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"age\",\"between\",[18, 80]]",
-                "[age] BETWEEN @age_0 AND @age_1",
+                "[age] BETWEEN @age_between_0 AND @age_between_1",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "age", 
-                        parameterName: "age_0", 
+                        parameterName: "age_between_0", 
                         value: 18,
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "age", 
-                        parameterName: "age_1", 
+                        parameterName: "age_between_1", 
                         value: 80,
                         dataType: OrigamDataType.String
                     )
@@ -229,19 +229,19 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"age\",\"nbetween\",[18, 80]]",
-                "[age] NOT BETWEEN @age_0 AND @age_1",
+                "[age] NOT BETWEEN @age_nbetween_0 AND @age_nbetween_1",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "age", 
-                        parameterName: "age_0", 
+                        parameterName: "age_nbetween_0", 
                         value: 18,
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "age", 
-                        parameterName: "age_1", 
+                        parameterName: "age_nbetween_1", 
                         value: 80,
                         dataType: OrigamDataType.String
                     )
@@ -249,33 +249,33 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\", \"Ben\"]]",
-                "[Name] IN (@Name_0, @Name_1, @Name_2, @Name_3)",
+                "[Name] IN (@Name_in_0, @Name_in_1, @Name_in_2, @Name_in_3)",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_0", 
+                        parameterName: "Name_in_0", 
                         value: "Tom",
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_1", 
+                        parameterName: "Name_in_1", 
                         value: "Jane",
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_2", 
+                        parameterName: "Name_in_2", 
                         value: "David",
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_3", 
+                        parameterName: "Name_in_3", 
                         value: "Ben",
                         dataType: OrigamDataType.String
                     )
@@ -283,26 +283,26 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\"]]",
-                "[Name] IN (@Name_0, @Name_1, @Name_2)",
+                "[Name] IN (@Name_in_0, @Name_in_1, @Name_in_2)",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_0", 
+                        parameterName: "Name_in_0", 
                         value: "Tom",
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_1", 
+                        parameterName: "Name_in_1", 
                         value: "Jane",
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_2", 
+                        parameterName: "Name_in_2", 
                         value: "David",
                         dataType: OrigamDataType.String
                     ),
@@ -310,70 +310,110 @@ namespace Origam.DA.ServiceTests
             },
             new object[] {
                 "[\"Name\",\"nin\",[\"Tom\", \"Jane\", \"David\"]]",
-                "[Name] NOT IN (@Name_0, @Name_1, @Name_2)",
+                "[Name] NOT IN (@Name_nin_0, @Name_nin_1, @Name_nin_2)",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_0", 
+                        parameterName: "Name_nin_0", 
                         value: "Tom",
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_1", 
+                        parameterName: "Name_nin_1", 
                         value: "Jane",
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Name", 
-                        parameterName: "Name_2", 
+                        parameterName: "Name_nin_2", 
                         value: "David",
                         dataType: OrigamDataType.String
                     ),
                 }
             },
             new object[] {
-                "[\"Timestamp\", \"between\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
-                "[Timestamp] BETWEEN @Timestamp_0 AND @Timestamp_1",
+                "[\"Timestamp\", \"between\", [\"2020-04-04T00:00:00.000\", \"2020-05-01T23:59:59.000\"]]",
+                "[Timestamp] BETWEEN @Timestamp_between_0 AND @Timestamp_between_1",
                 new List<ParameterData> {
                     new ParameterData
                     (
                         columnName: "Timestamp", 
-                        parameterName: "Timestamp_0", 
+                        parameterName: "Timestamp_between_0", 
+                        value: DateTime.Parse("2020-04-04 00:00:00"),
+                        dataType: OrigamDataType.String
+                    ),                    
+                    new ParameterData
+                    (
+                        columnName: "Timestamp", 
+                        parameterName: "Timestamp_between_1", 
+                        value: DateTime.Parse("2020-05-01 23:59:59"),
+                        dataType: OrigamDataType.String
+                    )
+                } 
+            },
+            new object[] {
+                "[\"Timestamp\", \"between\", [\"2020-04-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
+                "[Timestamp] BETWEEN @Timestamp_between_0 AND @Timestamp_between_1",
+                new List<ParameterData> {
+                    new ParameterData
+                    (
+                        columnName: "Timestamp",
+                        parameterName: "Timestamp_between_0",
+                        value: DateTime.Parse("2020-04-04 00:00:00"),
+                        dataType: OrigamDataType.String
+                    ),
+                    new ParameterData
+                    (
+                        columnName: "Timestamp",
+                        parameterName: "Timestamp_between_1",
+                        value: DateTime.Parse("2020-05-01 23:59:59"),
+                        dataType: OrigamDataType.String
+                    )
+                }
+            },
+            new object[] {
+                "[\"Timestamp\", \"nbetween\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T23:59:59.000\"]]",
+                "[Timestamp] NOT BETWEEN @Timestamp_nbetween_0 AND @Timestamp_nbetween_1",
+                new List<ParameterData> {
+                    new ParameterData
+                    (
+                        columnName: "Timestamp", 
+                        parameterName: "Timestamp_nbetween_0", 
                         value: DateTime.Parse("2020-08-04 00:00:00"),
                         dataType: OrigamDataType.String
                     ),                    
                     new ParameterData
                     (
                         columnName: "Timestamp", 
-                        parameterName: "Timestamp_1", 
-                        value: DateTime.Parse("2020-05-01 00:00:00"),
+                        parameterName: "Timestamp_nbetween_1", 
+                        value: DateTime.Parse("2020-05-01 23:59:59"),
                         dataType: OrigamDataType.String
                     )
                 } 
             },
             new object[] {
                 "[\"Timestamp\", \"nbetween\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
-                "[Timestamp] NOT BETWEEN @Timestamp_0 AND @Timestamp_1",
+                "[Timestamp] NOT BETWEEN @Timestamp_nbetween_0 AND @Timestamp_nbetween_1",
                 new List<ParameterData> {
                     new ParameterData
                     (
-                        columnName: "Timestamp", 
-                        parameterName: "Timestamp_0", 
+                        columnName: "Timestamp",
+                        parameterName: "Timestamp_nbetween_0",
                         value: DateTime.Parse("2020-08-04 00:00:00"),
                         dataType: OrigamDataType.String
-                    ),                    
+                    ),
                     new ParameterData
                     (
-                        columnName: "Timestamp", 
-                        parameterName: "Timestamp_1", 
-                        value: DateTime.Parse("2020-05-01 00:00:00"),
+                        columnName: "Timestamp",
+                        parameterName: "Timestamp_nbetween_1",
+                        value: DateTime.Parse("2020-05-01 23:59:59"),
                         dataType: OrigamDataType.String
                     )
-                } 
+                }
             },
             new object[] {
                 "",
