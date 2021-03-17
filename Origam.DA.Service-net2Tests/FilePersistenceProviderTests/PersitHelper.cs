@@ -51,7 +51,10 @@ namespace Origam.DA.Service_net2Tests
             persistenceService = new FilePersistenceService(
                 new NullMetaModelUpgradeService(), DefaultFolders, testFolderPath);
         }
-
+        public IPersistenceProvider GetPersistenceProvider()
+        {
+            return persistenceService.SchemaProvider;
+        }
         public void PersistAll()
         {
             PersistFolders<Package>();
