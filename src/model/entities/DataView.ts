@@ -68,6 +68,10 @@ import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDa
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
 import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
+import {IAggregation} from "./types/IAggregation";
+import {getFilterConfiguration} from "../selectors/DataView/getFilterConfiguration";
+import _ from "lodash";
+import {calcAggregations, parseAggregations} from "./Aggregatioins";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -76,6 +80,7 @@ class SavedViewState {
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
   focusManager: FocusManager = new FocusManager(this);
+  @observable aggregationData: IAggregation[] = [];
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
@@ -664,7 +669,40 @@ export class DataView implements IDataView {
         }
       )
     );
+    getFormScreenLifecycle(this).registerDisposer(
+      reaction(
+      () => [
+        [...getTablePanelView(this).aggregations.aggregationList],
+        getFilterConfiguration(this).activeFilters.map((x) => [
+          x.propertyId,
+          x.setting.type,
+          x.setting.val1,
+          x.setting.val2,
+        ]),
+        isInfiniteScrollingActive(this) ? true : this.dataTable.rows.length === 0,
+      ],
+      () => this.reloadAggregationsDebounced(),
+      { fireImmediately: true }
+      )
+    );
     await this.dataTable.start();
+  }
+
+  reloadAggregationsDebounced = _.debounce(this.reloadAggregations, 10);
+
+  reloadAggregations() {
+    const aggregations = getTablePanelView(this).aggregations.aggregationList;
+    if (aggregations.length === 0) {
+      this.aggregationData.length = 0;
+      return;
+    }
+    if (isInfiniteScrollingActive(this)) {
+      getFormScreenLifecycle(this)
+          .loadAggregations(this, aggregations)
+          .then((data) => (this.aggregationData = parseAggregations(data) || []));
+    } else {
+      this.aggregationData = calcAggregations(this, aggregations);
+    }
   }
 
   @action.bound stop() {

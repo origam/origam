@@ -18,6 +18,7 @@ import { DataViewData } from "../../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../../modules/DataView/TableCursor";
 import {IInfiniteScrollLoader} from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {IAggregation} from "./IAggregation";
 
 export interface IDataViewData {
   id: string;
@@ -90,6 +91,7 @@ export interface IDataView extends IDataViewData {
   focusManager: FocusManager;
   firstEnabledDefaultAction: IAction | undefined;
   defaultActions: IAction[];
+  aggregationData: IAggregation[];
 
   isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
