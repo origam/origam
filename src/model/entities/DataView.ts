@@ -50,7 +50,6 @@ import { VisibleRowsMonitor } from "gui/Workbench/ScreenArea/TableView/VisibleRo
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
-import { IPolymorphRules } from "model/entities/types/IApi";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
@@ -68,6 +67,7 @@ import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDa
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
 import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
+import {IAggregation} from "./types/IAggregation";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -76,6 +76,7 @@ class SavedViewState {
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
   focusManager: FocusManager = new FocusManager(this);
+  @observable aggregationData: IAggregation[] = [];
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);

@@ -10,6 +10,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
 import selectors from "model/selectors-tree";
+import {processCRUDResult} from "../../actions/DataLoading/processCRUDResult";
 
 export function questionSaveDataAfterRecordChange(ctx: any) {
   return new Promise(
@@ -52,7 +53,8 @@ export async function handleUserInputOnChangingRow(dataView: IDataView) {
         return false;
       case IQuestionChangeRecordAnswer.Yes:
         await api.saveSessionQuery(sessionId);
-        await api.saveSession(sessionId);
+        const result = await api.saveSession(sessionId);
+        await flow(() => processCRUDResult(dataView, result));
         return true;
       case IQuestionChangeRecordAnswer.No:
         await flow(() =>

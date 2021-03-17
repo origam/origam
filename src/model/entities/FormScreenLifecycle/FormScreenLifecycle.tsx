@@ -56,10 +56,13 @@ import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChi
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { AggregationType } from "../types/AggregationType";
-import { parseAggregations } from "../Aggregatioins";
+import {calcAggregations, parseAggregations} from "../Aggregatioins";
 import { UpdateRequestAggregator } from "./UpdateRequestAggregator";
 import { IGroupingSettings } from "../types/IGroupingConfiguration";
 import { groupingUnitToString } from "../types/GroupingUnit";
+import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
+import {runInFlowWithHandler} from "../../../utils/runInFlowWithHandler";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -978,6 +981,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         dataView.dataTable.updateSortAndFilter({ retainPreviousSelection: true })
       );
       yield* this.updateTotalRowCounts();
+      // getFormScreen(this).dataViews.forEach((dataView) =>
+      //     yield dataView.reloadAggregations()
+      // );
     } finally {
       this.monitor.inFlow--;
     }
@@ -1056,7 +1062,23 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     for (const dataView of formScreen.rootDataViews) {
       if (isInfiniteScrollingActive(dataView) && !getGroupingConfiguration(dataView).isGrouping) {
         yield this.updateTotalRowCount(dataView);
+        yield this.reloadAggregations(dataView);
       }
+    }
+  }
+
+  async reloadAggregations(dataView: IDataView) {
+    const aggregations = getTablePanelView(dataView).aggregations.aggregationList;
+    if (aggregations.length === 0) {
+      dataView.aggregationData.length = 0;
+      return;
+    }
+    if (isInfiniteScrollingActive(dataView)) {
+      const data = await getFormScreenLifecycle(dataView)
+          .loadAggregations(dataView, aggregations);
+      dataView.aggregationData = parseAggregations(data) || [];
+    } else {
+      dataView.aggregationData = calcAggregations(dataView, aggregations);
     }
   }
 
@@ -1210,9 +1232,37 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield dataView.setRecords((entityValue as any).data);
         dataView.setRowCount(dataView.dataTable.rows.length);
         yield dataView.start();
+
+        this.registerDisposer(
+            reaction(
+                () => [
+                  [...getTablePanelView(this).aggregations.aggregationList],
+                  getFilterConfiguration(this).activeFilters.map((x) => [
+                    x.propertyId,
+                    x.setting.type,
+                    x.setting.val1,
+                    x.setting.val2,
+                  ]),
+                  isInfiniteScrollingActive(this) ? true : dataView.dataTable.rows.length === 0,
+                ],
+                () => this.reloadAggregationsDebounced(dataView),
+                { fireImmediately: true }
+            )
+        );
       }
     }
   }
+
+  reloadAggregationsDebounced = _.debounce( (dataView: IDataView) => {
+    const self = this;
+    runInFlowWithHandler({
+            ctx: dataView,
+            action: () => self.reloadAggregations(dataView)
+          }
+        )
+      },
+      10
+    );
 
   get eagerLoading() {
     return !isLazyLoading(this);

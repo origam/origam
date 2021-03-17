@@ -202,15 +202,12 @@ interface IHeaderRendererData {
 class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
     Object.assign(this, data);
-    const disposer = this.start();
-    getFormScreenLifecycle(this.dataView).registerDisposer(disposer);
   }
   gridDimensions: IGridDimensions = null as any;
   getTableViewProperties: () => IProperty[] = null as any;
   getIsSelectionCheckboxes: () => boolean = null as any;
   dataView: IDataView = null as any;
   getFixedColumnCount = null as any;
-  @observable aggregationData: IAggregation[] = [];
 
   @computed get tableViewPropertiesOriginal() {
     return this.getTableViewProperties();
@@ -363,54 +360,20 @@ class HeaderRenderer implements IHeaderRendererData {
   makeAdditionalHeaderContent(columnId: string, property: IProperty) {
     const filterControlsDisplayed = this.tablePanelView.filterConfiguration
       .isFilterControlsDisplayed;
-    if (!filterControlsDisplayed && this.aggregationData.length === 0) {
+    if (!filterControlsDisplayed && this.dataView.aggregationData.length === 0) {
       return undefined;
     }
     const headerContent: JSX.Element[] = [];
     if (filterControlsDisplayed) {
       headerContent.push(<FilterSettings />);
     }
-    if (this.aggregationData.length !== 0) {
-      const aggregation = this.aggregationData.find((agg) => agg.columnId === columnId);
+    if (this.dataView.aggregationData.length !== 0) {
+      const aggregation = this.dataView.aggregationData.find((agg) => agg.columnId === columnId);
       if (aggregation) {
         headerContent.push(<div>{aggregationToString(aggregation, property)}</div>);
       }
     }
     return () => <>{headerContent}</>;
-  }
-
-  start() {
-    return reaction(
-      () => [
-        [...getTablePanelView(this.dataView).aggregations.aggregationList],
-        getFilterConfiguration(this.dataView).activeFilters.map((x) => [
-          x.propertyId,
-          x.setting.type,
-          x.setting.val1,
-          x.setting.val2,
-        ]),
-        isInfiniteScrollingActive(this.dataView) ? true : this.dataView.dataTable.rows.length === 0,
-      ],
-      () => this.reloadAggregationsDebounced(),
-      { fireImmediately: true }
-    );
-  }
-
-  reloadAggregationsDebounced = _.debounce(this.reloadAggregations, 10);
-
-  reloadAggregations() {
-    const aggregations = getTablePanelView(this.dataView).aggregations.aggregationList;
-    if (aggregations.length === 0) {
-      this.aggregationData.length = 0;
-      return;
-    }
-    if (isInfiniteScrollingActive(this.dataView)) {
-      getFormScreenLifecycle(this.dataView)
-        .loadAggregations(this.dataView, aggregations)
-        .then((data) => (this.aggregationData = parseAggregations(data) || []));
-    } else {
-      this.aggregationData = calcAggregations(this.dataView, aggregations);
-    }
   }
 }
 
