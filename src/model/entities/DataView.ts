@@ -50,7 +50,6 @@ import { VisibleRowsMonitor } from "gui/Workbench/ScreenArea/TableView/VisibleRo
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
-import { IPolymorphRules } from "model/entities/types/IApi";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
@@ -69,9 +68,6 @@ import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemCli
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
 import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
 import {IAggregation} from "./types/IAggregation";
-import {getFilterConfiguration} from "../selectors/DataView/getFilterConfiguration";
-import _ from "lodash";
-import {calcAggregations, parseAggregations} from "./Aggregatioins";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -669,40 +665,7 @@ export class DataView implements IDataView {
         }
       )
     );
-    getFormScreenLifecycle(this).registerDisposer(
-      reaction(
-      () => [
-        [...getTablePanelView(this).aggregations.aggregationList],
-        getFilterConfiguration(this).activeFilters.map((x) => [
-          x.propertyId,
-          x.setting.type,
-          x.setting.val1,
-          x.setting.val2,
-        ]),
-        isInfiniteScrollingActive(this) ? true : this.dataTable.rows.length === 0,
-      ],
-      () => this.reloadAggregationsDebounced(),
-      { fireImmediately: true }
-      )
-    );
     await this.dataTable.start();
-  }
-
-  reloadAggregationsDebounced = _.debounce(this.reloadAggregations, 10);
-
-  reloadAggregations() {
-    const aggregations = getTablePanelView(this).aggregations.aggregationList;
-    if (aggregations.length === 0) {
-      this.aggregationData.length = 0;
-      return;
-    }
-    if (isInfiniteScrollingActive(this)) {
-      getFormScreenLifecycle(this)
-          .loadAggregations(this, aggregations)
-          .then((data) => (this.aggregationData = parseAggregations(data) || []));
-    } else {
-      this.aggregationData = calcAggregations(this, aggregations);
-    }
   }
 
   @action.bound stop() {
