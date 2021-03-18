@@ -70,7 +70,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TestFiles\" />
+	<Content Include="TestFiles\**"> 
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> 
+	</Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Git\Origam.Git.csproj">

@@ -81,9 +81,4 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NUnit3TestAdapter">
-      <Version>3.17.0</Version>
-    </PackageReference>
-  </ItemGroup>
 </Project>
