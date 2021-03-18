@@ -57,6 +57,7 @@ export class Property implements IProperty {
   controlPropertyId?: string;
   toolTip: string = null as any;
   suppressEmptyColumns: boolean = false;
+  supportsServerSideSorting: boolean = false;
 
   linkToMenuId?: string = undefined;
   linkDependsOnValue: boolean = false;

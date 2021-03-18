@@ -45,25 +45,35 @@ const OPERATORS = [
     Operator.isNotNull
   ];
 
+const LOOKUP_TYPE_OPERATORS = [
+    Operator.startsWith,
+    Operator.notStartsWith,
+    Operator.contains,
+    Operator.notContains
+];
+
 const OpCombo: React.FC<{
   setting: any;
+  enableLookupTypeFilters: boolean
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
       trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).caption}</>}
     >
-      {OPERATORS.map((op) => (
-        <FilterSettingsComboBoxItem
-          key={op.type}
-          onClick={() => {
-            props.setting.type = op.type;
-            props.setting.isComplete = op.type === "null" || op.type === "nnull";
-            props.setting.val1 = undefined;
-            props.setting.val2 = undefined;
-          }}
-        >
-          {op.caption}
-        </FilterSettingsComboBoxItem>
+      {OPERATORS
+        .filter(operator => props.enableLookupTypeFilters || !LOOKUP_TYPE_OPERATORS.includes(operator) )
+        .map((op) => (
+          <FilterSettingsComboBoxItem
+            key={op.type}
+            onClick={() => {
+              props.setting.type = op.type;
+              props.setting.isComplete = op.type === "null" || op.type === "nnull";
+              props.setting.val1 = undefined;
+              props.setting.val2 = undefined;
+            }}
+          >
+            {op.caption}
+          </FilterSettingsComboBoxItem>
       ))}
     </FilterSettingsComboBox>
   );
@@ -142,7 +152,9 @@ export class FilterSettingsLookup extends React.Component<{
     const setting = this.props.setting;
     return (
       <>
-        <OpCombo setting={setting} />
+        <OpCombo
+          setting={setting}
+          enableLookupTypeFilters={this.props.property.supportsServerSideSorting}/>
         <OpEditors
           setting={setting}
           getOptions={this.props.getOptions}
@@ -162,10 +174,8 @@ export class LookupFilterSetting implements IFilterSetting {
 
   private _lookupId: string | undefined;
 
-  operatorsRequiringLookup = [ "contains", "ncontains", "starts", "nstarts", "ends", "nends"]
-
   public get lookupId(): string | undefined {
-    if(this.operatorsRequiringLookup.includes(this.type)){
+    if(LOOKUP_TYPE_OPERATORS.map(operator => operator.type).includes(this.type)){
       return  this._lookupId;
     }
     return undefined;
