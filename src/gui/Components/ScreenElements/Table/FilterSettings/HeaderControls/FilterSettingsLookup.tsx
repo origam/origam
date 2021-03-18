@@ -274,12 +274,10 @@ export function FilterBuildDropdownEditor(props: {
     columnNameToIndex.set(props.property.name, 1);
     visibleColumnNames.push(props.property.name);
 
-    const bodyCellDriver = new TextCellDriver(1, dropdownEditorDataTable, dropdownEditorBehavior);
-
-    drivers.drivers.push({
+    drivers.allDrivers.push({
       columnId: props.property.id,
       headerCellDriver: new DefaultHeaderCellDriver(props.property.name),
-      bodyCellDriver,
+      bodyCellDriver: new TextCellDriver(1, dropdownEditorDataTable, dropdownEditorBehavior),
     });
 
     const showUniqueValues = true;
