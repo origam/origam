@@ -13,7 +13,8 @@ export enum IActionType {
 
 export enum IActionPlacement {
   PanelHeader = "PanelHeader",
-  Toolbar = "Toolbar"
+  Toolbar = "Toolbar",
+  PanelMenu = "PanelMenu"
 }
 
 export enum IActionMode {

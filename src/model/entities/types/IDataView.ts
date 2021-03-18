@@ -86,6 +86,7 @@ export interface IDataView extends IDataViewData {
   bindingParametersFromParent: { [key: string]: string };
   showSelectionCheckboxes: boolean;
   panelViewActions: IAction[];
+  panelMenuActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
   focusManager: FocusManager;
