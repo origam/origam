@@ -148,4 +148,4 @@ export interface IDataView extends IDataViewData {
   exportToExcel(): void;
 }
 
-export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;
+export const isIDataView = (o: any): o is IDataView => o?.$type_IDataView;
