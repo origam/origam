@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2020.4.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="System.Security.Permissions" Version="4.7.0" />
   </ItemGroup>
 
