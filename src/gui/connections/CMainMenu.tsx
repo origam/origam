@@ -151,7 +151,7 @@ class CMainMenuCommandItem extends React.Component<{
               })
             }
             onContextMenu={(event) => {
-              setDropped(true);
+              setDropped(true, event);
               event.preventDefault();
               event.stopPropagation();
             }}
