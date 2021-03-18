@@ -33,7 +33,7 @@ namespace OrigamArchitectTests
     [TestFixture]
     public class ArchitectTests
     {
-        [Test,  Order(1)]
+        //[Test,  Order(1)]
         public void ShouldCreateNewEntity()
         {
             OrigamEngine.ConnectRuntime(
