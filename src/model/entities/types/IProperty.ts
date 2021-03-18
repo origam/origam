@@ -36,6 +36,7 @@ export interface IPropertyData {
   autoSort: boolean;
   toolTip: string;
   suppressEmptyColumns: boolean;
+  supportsServerSideSorting: boolean;
 
   controlPropertyValue?: string;
   controlPropertyId?: string;

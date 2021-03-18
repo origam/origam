@@ -2,15 +2,12 @@ import { action, computed, observable } from "mobx";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import React, { useContext, useState } from "react";
-import { Grid, GridCellProps } from "react-virtualized";
-import Highlighter from "react-highlight-words";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import S from "./FilterSettingsLookup.module.scss";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
-import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import {
   CtxDropdownEditor,
   DropdownEditor,
