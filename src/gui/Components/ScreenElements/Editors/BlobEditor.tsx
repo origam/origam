@@ -1,34 +1,34 @@
 import React from "react";
-import {inject, observer} from "mobx-react";
-import {getApi} from "model/selectors/getApi";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getMenuItemId} from "model/selectors/getMenuItemId";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getSessionId} from "model/selectors/getSessionId";
-import {IApi} from "model/entities/types/IApi";
-import {IProperty} from "model/entities/types/IProperty";
-import {action, flow, observable} from "mobx";
+import { inject, observer } from "mobx-react";
+import { getApi } from "model/selectors/getApi";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getSessionId } from "model/selectors/getSessionId";
+import { IApi } from "model/entities/types/IApi";
+import { IProperty } from "model/entities/types/IProperty";
+import { action, flow, observable } from "mobx";
 import S from "./BlobEditor.module.scss";
-import {IProcessCRUDResult} from "model/actions/Actions/processActionResult";
-import {processCRUDResult} from "model/actions/DataLoading/processCRUDResult";
-import {getDialogStack} from "model/selectors/DialogStack/getDialogStack";
-import {IDialogStack} from "model/entities/types/IDialogStack";
-import {ModalWindow} from "gui/Components/Dialog/Dialog";
-import {changeManyFields} from "model/actions-ui/DataView/TableView/onFieldChange";
-import {flushCurrentRowData} from "model/actions/DataView/TableView/flushCurrentRowData";
-import {handleError} from "model/actions/handleError";
-import {IFocusAble} from "model/entities/FocusManager";
-import {Tooltip} from "react-tippy";
+import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
+import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
+import { IDialogStack } from "model/entities/types/IDialogStack";
+import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import { handleError } from "model/actions/handleError";
+import { IFocusAble } from "model/entities/FocusManager";
+import { Tooltip } from "react-tippy";
 import cx from "classnames";
-import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import {Dropdown} from "gui/Components/Dropdown/Dropdown";
-import {DropdownItem} from "gui/Components/Dropdown/DropdownItem";
-import {T} from "utils/translation";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { Dropdown } from "gui/Components/Dropdown/Dropdown";
+import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
+import { T } from "utils/translation";
 import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
-import {runInFlowWithHandler, runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
+import { runInFlowWithHandler, runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
-@inject(({property}: { property: IProperty }, {value}) => {
+@inject(({ property }: { property: IProperty }, { value }) => {
   return {
     api: getApi(property),
     processCRUDResult: (result: any) => processCRUDResult(property, result),
@@ -106,10 +106,10 @@ export class BlobEditor extends React.Component<{
       parameters: this.props.parameters,
       isPreview: args.isPreview,
     });
-    await this.props.api!.getBlob({downloadToken: token});
+    await this.props.api!.getBlob({ downloadToken: token });
   }
 
-  * upload() {
+  *upload() {
     this.progressValue = 0;
     this.speedValue = 0;
     this.isUploading = true;
@@ -155,7 +155,7 @@ export class BlobEditor extends React.Component<{
             RowId: this.props.RowId!,
           });
           console.log(crudResult);
-          yield * this.props.processCRUDResult!(crudResult);
+          yield* this.props.processCRUDResult!(crudResult);
         }
       }
     } catch (e) {
@@ -166,7 +166,7 @@ export class BlobEditor extends React.Component<{
     }
   }
 
-  * delete() {
+  *delete() {
     if (
       yield new Promise(
         action((resolve: (value: boolean) => void) => {
@@ -209,39 +209,39 @@ export class BlobEditor extends React.Component<{
         })
       )
     ) {
-      const {parameters} = this.props;
+      const { parameters } = this.props;
       console.log(parameters);
       const changeSet: Array<{ fieldId: string; value: any }> = [];
-      changeSet.push({fieldId: this.props.Property!, value: null});
+      changeSet.push({ fieldId: this.props.Property!, value: null });
       if (parameters["AuthorMember"]) {
-        changeSet.push({fieldId: parameters["AuthorMember"], value: null});
+        changeSet.push({ fieldId: parameters["AuthorMember"], value: null });
       }
       if (parameters["BlobMember"]) {
-        changeSet.push({fieldId: parameters["BlobMember"], value: null});
+        changeSet.push({ fieldId: parameters["BlobMember"], value: null });
       }
       if (parameters["CompressionStateMember"]) {
-        changeSet.push({fieldId: parameters["CompressionStateMember"], value: null});
+        changeSet.push({ fieldId: parameters["CompressionStateMember"], value: null });
       }
       if (parameters["DateCreatedMember"]) {
-        changeSet.push({fieldId: parameters["DateCreatedMember"], value: null});
+        changeSet.push({ fieldId: parameters["DateCreatedMember"], value: null });
       }
       if (parameters["DateLastModifiedMember"]) {
-        changeSet.push({fieldId: parameters["DateLastModifiedMember"], value: null});
+        changeSet.push({ fieldId: parameters["DateLastModifiedMember"], value: null });
       }
       if (parameters["FileSizeMember"]) {
-        changeSet.push({fieldId: parameters["FileSizeMember"], value: null});
+        changeSet.push({ fieldId: parameters["FileSizeMember"], value: null });
       }
       if (parameters["OriginalPathMember"]) {
-        changeSet.push({fieldId: parameters["OriginalPathMember"], value: null});
+        changeSet.push({ fieldId: parameters["OriginalPathMember"], value: null });
       }
       if (parameters["RemarkMember"]) {
-        changeSet.push({fieldId: parameters["RemarkMember"], value: null});
+        changeSet.push({ fieldId: parameters["RemarkMember"], value: null });
       }
       if (parameters["ThumbnailMember"]) {
-        changeSet.push({fieldId: parameters["ThumbnailMember"], value: null});
+        changeSet.push({ fieldId: parameters["ThumbnailMember"], value: null });
       }
-      yield * this.props.changeManyFields!(changeSet);
-      yield * this.props.flushCurrentRowData!();
+      yield* this.props.changeManyFields!(changeSet);
+      yield* this.props.flushCurrentRowData!();
     }
   }
 
@@ -254,8 +254,8 @@ export class BlobEditor extends React.Component<{
         {this.renderInput()}
         {this.props.isInvalid && (
           <div className={S.notification}>
-            <Tooltip html={this.props.invalidMessage} arrow={true}>
-              <i className="fas fa-exclamation-circle red"/>
+            <Tooltip html={this.props.invalidMessage} arrow={true} animation="none" duration={0}>
+              <i className="fas fa-exclamation-circle red" />
             </Tooltip>
           </div>
         )}
@@ -280,7 +280,8 @@ export class BlobEditor extends React.Component<{
             className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
             value={this.props.value || ""}
           />
-        </div>);
+        </div>
+      );
     }
     if (!this.props.value) {
       return (
@@ -301,7 +302,7 @@ export class BlobEditor extends React.Component<{
           </label>
           {this.isUploading && (
             <div className="progress">
-              <div className="progressBar" style={{width: `${this.progressValue * 100}%`}}>
+              <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
                 <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
                   {(this.progressValue * 100).toFixed(0)}%
                 </div>
@@ -324,30 +325,29 @@ export class BlobEditor extends React.Component<{
         />
         <div>
           <Dropdowner
-            trigger={({refTrigger, setDropped, isDropped}) => (
+            trigger={({ refTrigger, setDropped, isDropped }) => (
               <div className={CS.control} ref={refTrigger}>
                 <div
                   className={cx("inputBtn", "lastOne", this.props.isReadOnly && "readOnly")}
-
-                  onClick={event => setDropped(true)}
+                  onClick={(event) => setDropped(true)}
                 >
-                  {!isDropped
-                    ? <i className="fas fa-caret-down"></i>
-                    : <i className="fas fa-caret-up"></i>
-                  }
+                  {!isDropped ? (
+                    <i className="fas fa-caret-down"></i>
+                  ) : (
+                    <i className="fas fa-caret-up"></i>
+                  )}
                 </div>
               </div>
             )}
-            content={({setDropped}) => (
+            content={({ setDropped }) => (
               <Dropdown>
                 <DropdownItem
                   onClick={(event: any) => {
                     setDropped(false);
-                    runInFlowWithHandler(
-                      {
-                        ctx: this.props.Property!,
-                        action: async () => await this.download({isPreview: false})
-                      })
+                    runInFlowWithHandler({
+                      ctx: this.props.Property!,
+                      action: async () => await this.download({ isPreview: false }),
+                    });
                   }}
                 >
                   {T("Download", "blob_download")}
@@ -355,11 +355,10 @@ export class BlobEditor extends React.Component<{
                 <DropdownItem
                   onClick={(event: any) => {
                     setDropped(false);
-                    runGeneratorInFlowWithHandler(
-                      {
-                        ctx: this.props.Property!,
-                        generator: this.delete.bind(this)()
-                      })
+                    runGeneratorInFlowWithHandler({
+                      ctx: this.props.Property!,
+                      generator: this.delete.bind(this)(),
+                    });
                   }}
                 >
                   {T("Delete", "blob_delete")}
@@ -367,11 +366,10 @@ export class BlobEditor extends React.Component<{
                 <DropdownItem
                   onClick={(event: any) => {
                     setDropped(false);
-                    runInFlowWithHandler(
-                      {
-                        ctx: this.props.Property!,
-                        action: async () => await this.download({isPreview: true})
-                      })
+                    runInFlowWithHandler({
+                      ctx: this.props.Property!,
+                      action: async () => await this.download({ isPreview: true }),
+                    });
                   }}
                 >
                   {T("Preview", "blob_preview")}
@@ -384,4 +382,3 @@ export class BlobEditor extends React.Component<{
     );
   }
 }
-

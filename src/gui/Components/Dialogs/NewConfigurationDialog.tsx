@@ -1,11 +1,11 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {ModalWindow} from "gui/Components/Dialog/Dialog";
-import {T} from "utils/translation";
+import { observable } from "mobx";
+import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
 
 @observer
 export class NewConfigurationDialog extends React.Component<{
@@ -39,7 +39,7 @@ export class NewConfigurationDialog extends React.Component<{
     if (this.isInvalid) {
       return;
     }
-    this.props.onOkClick(this.groupName)
+    this.props.onOkClick(this.groupName);
   }
 
   render() {
@@ -52,8 +52,9 @@ export class NewConfigurationDialog extends React.Component<{
             <button tabIndex={0} onClick={() => this.onOkClick()}>
               {T("Ok", "button_ok")}
             </button>
-            <button tabIndex={0}
-                    onClick={this.props.onCancelClick}>{T("Cancel", "button_cancel")}</button>
+            <button tabIndex={0} onClick={this.props.onCancelClick}>
+              {T("Cancel", "button_cancel")}
+            </button>
           </>
         }
         buttonsLeft={null}
@@ -73,9 +74,13 @@ export class NewConfigurationDialog extends React.Component<{
               {this.isInvalid && (
                 <div>
                   <div className={S.notification}>
-                    <Tooltip html={T("Name cannot be empty", "column_config_name_empty",)}
-                             arrow={true}>
-                      <i className="fas fa-exclamation-circle red"/>
+                    <Tooltip
+                      html={T("Name cannot be empty", "column_config_name_empty")}
+                      arrow={true}
+                      animation="none"
+                      duration={0}
+                    >
+                      <i className="fas fa-exclamation-circle red" />
                     </Tooltip>
                   </div>
                 </div>

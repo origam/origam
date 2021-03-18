@@ -18,7 +18,7 @@ import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 export interface IRawCheckListProps {
   api: IApi;
   value: string[];
-  onClick: (()=> void);
+  onClick: () => void;
   Entity: string;
   SessionFormIdentifier: string;
   DataStructureEntityId: string;
@@ -97,7 +97,7 @@ export const CheckList: React.FC<{
   invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown(event: any): void;
-  onClick: (()=>void);
+  onClick: () => void;
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
 
@@ -136,7 +136,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
   function focusLeft(x: number, y: number) {
     const inputsOnTheLeft = inputRefs
       .filter((input) => input.hasYEqualTo(y) && input.isOnTheLeftOf(x))
-      .sort((i1, i2) => i2.x  - i1.x);
+      .sort((i1, i2) => i2.x - i1.x);
 
     if (inputsOnTheLeft.length > 0) {
       inputsOnTheLeft[0].focus();
@@ -200,7 +200,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
       </div>
       {props.isInvalid && (
         <div className={CS.notification}>
-          <Tooltip html={props.invalidMessage} arrow={true}>
+          <Tooltip html={props.invalidMessage} arrow={true} animation="none" duration={0}>
             <i className="fas fa-exclamation-circle red" />
           </Tooltip>
         </div>

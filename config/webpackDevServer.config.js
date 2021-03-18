@@ -24,7 +24,7 @@ const proxyTarget = makeProxyTarget();
 
 const proxyCommon = {
   //logLevel: 'debug',
-  //changeOrigin: true
+  changeOrigin: process.env.WDS_CHANGE_ORIGIN || false
 };
 
 const customProxy = {

@@ -387,7 +387,12 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             />
             {this.props.isInvalid && (
               <div className={S.notification}>
-                <Tooltip html={this.props.invalidMessage} arrow={true}>
+                <Tooltip
+                  html={this.props.invalidMessage}
+                  arrow={true}
+                  animation="none"
+                  duration={0}
+                >
                   <i className="fas fa-exclamation-circle red" />
                 </Tooltip>
               </div>

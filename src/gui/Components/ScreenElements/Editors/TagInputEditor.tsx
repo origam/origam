@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip } from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
@@ -15,7 +15,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
-import {IFocusAble} from "model/entities/FocusManager";
+import { IFocusAble } from "model/entities/FocusManager";
 
 export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
@@ -42,7 +42,6 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       onEditorBlur?(event: any): void;
       customInputClass?: string;
     }) => {
-
       const beh = useContext(CtxDropdownEditor).behavior;
       const ref = useContext(CtxDropdownRefCtrl);
       const data = useContext(CtxDropdownEditor).editorData;
@@ -59,7 +58,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       }
 
       function removeItem(event: any, item: string) {
-        if(props.isReadOnly){
+        if (props.isReadOnly) {
           return;
         }
         const index = props.value.indexOf(item);
@@ -82,7 +81,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       }, []);
 
       useEffect(() => {
-        if(beh.subscribeToFocusManager && beh.elmInputElement){
+        if (beh.subscribeToFocusManager && beh.elmInputElement) {
           beh.subscribeToFocusManager(beh.elmInputElement);
         }
       }, []);
@@ -123,9 +122,9 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
                   </TagInputItem>
                 ))
               : null}
-            {props.isReadOnly
-              ? null
-              : <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />}
+            {props.isReadOnly ? null : (
+              <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />
+            )}
             <input
               disabled={props.isReadOnly}
               className={S.filterInput + " " + props.customInputClass}
@@ -142,7 +141,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
           </TagInput>
           {props.isInvalid && (
             <div className={CS.notification}>
-              <Tooltip html={props.invalidMessage} arrow={true}>
+              <Tooltip html={props.invalidMessage} arrow={true} animation="none" duration={0}>
                 <i className="fas fa-exclamation-circle red" />
               </Tooltip>
             </div>

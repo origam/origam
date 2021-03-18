@@ -5,7 +5,7 @@ import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
 
 @observer
 export class FavoriteFolderPropertiesDialog extends React.Component<{
@@ -21,7 +21,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
   @observable
   isPinned: boolean = this.props.isPinned ?? false;
 
-  get isInvalid(){
+  get isInvalid() {
     return this.groupName === "";
   }
 
@@ -31,7 +31,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
     this.groupName = event.target.value;
   }
 
-  onIsPinnedClicked(event: any){
+  onIsPinnedClicked(event: any) {
     this.isPinned = event.target.checked;
   }
 
@@ -45,11 +45,11 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
     }
   }
 
-  onOkClick(){
-    if(this.isInvalid){
+  onOkClick() {
+    if (this.isInvalid) {
       return;
     }
-    this.props.onOkClick(this.groupName, this.isPinned)
+    this.props.onOkClick(this.groupName, this.isPinned);
   }
 
   render() {
@@ -62,7 +62,9 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
             <button tabIndex={0} onClick={() => this.onOkClick()}>
               {T("Ok", "button_ok")}
             </button>
-            <button tabIndex={0} onClick={this.props.onCancelClick}>{T("Cancel", "button_cancel")}</button>
+            <button tabIndex={0} onClick={this.props.onCancelClick}>
+              {T("Cancel", "button_cancel")}
+            </button>
           </>
         }
         buttonsLeft={null}
@@ -81,23 +83,26 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
               />
               {this.isInvalid && (
                 <div>
-                <div className={S.notification}>
-                  <Tooltip html={ T("Name cannot be empty", "group_name_empty")} arrow={true}>
-                    <i className="fas fa-exclamation-circle red" />
-                  </Tooltip>
-                </div>
+                  <div className={S.notification}>
+                    <Tooltip
+                      html={T("Name cannot be empty", "group_name_empty")}
+                      arrow={true}
+                      animation="none"
+                      duration={0}
+                    >
+                      <i className="fas fa-exclamation-circle red" />
+                    </Tooltip>
+                  </div>
                 </div>
               )}
             </div>
             <div id={S.lastRow} className={S.row}>
-              <div className={S.label}>
-                {T("Pin to the Top:", "group_pinned")}
-              </div>
+              <div className={S.label}>{T("Pin to the Top:", "group_pinned")}</div>
               <input
                 className={S.chcekBoxinput}
                 type="checkbox"
                 checked={this.isPinned}
-                onChange={event => this.onIsPinnedClicked(event)}
+                onChange={(event) => this.onIsPinnedClicked(event)}
               />
             </div>
           </div>

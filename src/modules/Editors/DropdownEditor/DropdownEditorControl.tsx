@@ -43,7 +43,7 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
 
 class TriggerContextMenuState {
   constructor(public behaviour: DropdownEditorBehavior) {}
-  
+
   @observable isDropped = false;
   @observable top = 0;
   @observable left = 0;
@@ -126,7 +126,7 @@ export function DropdownEditorControl(props: {
 
           {props.isInvalid && (
             <div className={CS.notification}>
-              <Tooltip html={props.invalidMessage} arrow={true}>
+              <Tooltip html={props.invalidMessage} arrow={true} animation="none" duration={0}>
                 <i className="fas fa-exclamation-circle red" />
               </Tooltip>
             </div>

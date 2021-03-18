@@ -111,6 +111,8 @@ export class FormField extends React.Component<{
         theme={"light"}
         distance={10}
         style={toolTipStyle}
+        animation="none"
+        duration={0}
       >
         <label className={S.caption} style={captionStyle}>
           {this.props.caption}
