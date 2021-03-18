@@ -3,8 +3,18 @@ import { closeForm } from "model/actions/closeForm";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { handleError } from "model/actions/handleError";
+import { closingScreens } from "model/entities/FormScreenLifecycle/FormScreenLifecycle";
 
-const closingScreens = new WeakSet<any>();
+export function onScreenTabCloseMouseDown(ctx: any) {
+  return function (event: any) {
+    // OMG, how ugly is this...
+    const openedScreen = getOpenedScreen(ctx);
+    if(openedScreen) {
+      openedScreen.isBeingClosed = true;
+    }
+  };
+}
+
 
 export function onScreenTabCloseClick(ctx: any) {
   return flow(function* onFormTabCloseClick(event: any, isDueToError?: boolean) {
