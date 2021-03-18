@@ -105,7 +105,7 @@ export class RowState implements IRowState {
         )
       });
     }
-    this.observedIds.get(key)?.atom.reportObserved();
+    this.observedIds.get(key)?.atom?.reportObserved?.();
     return this.resolvedValues.get(key);
   }
 
@@ -156,7 +156,7 @@ export class RowState implements IRowState {
     this.resolvedValues.clear();
     this.idStates.clear();
     for (let obsvIdVal of this.observedIds.values()) {
-      if(obsvIdVal){
+      if(obsvIdVal?.atom){
         obsvIdVal.atom.onBecomeUnobservedListeners.clear();
         obsvIdVal.atom.onBecomeObservedListeners.clear();
       }
