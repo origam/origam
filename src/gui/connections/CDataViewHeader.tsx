@@ -55,6 +55,8 @@ import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { computed } from "mobx";
+import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
+import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 
 function isAddRecordShortcut(event: any) {
   return (
@@ -101,6 +103,26 @@ export class CDataViewHeaderInner extends React.Component<{
     return this.allActions
       .filter((action) => !action.groupId)
       .filter((action) => this.shouldBeShown(action));
+  }
+
+  @computed
+  get relevantMenuActions() {
+    return this.allMenuActions
+      .filter((action) => !action.groupId)
+      .filter((action) => this.shouldBeShown(action));
+  }
+
+  renderMenuActions() {
+    return this.relevantMenuActions.map((action) => {
+      return (
+        <DropdownItem
+          key={action.id}
+          onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+        >
+          {action.caption}
+        </DropdownItem>
+      );
+    });
   }
 
   renderActions() {
@@ -208,6 +230,11 @@ export class CDataViewHeaderInner extends React.Component<{
   @computed
   get allActions() {
     return getPanelViewActions(this.dataView);
+  }
+
+  @computed
+  get allMenuActions() {
+    return getPanelMenuActions(this.dataView);
   }
 
   render() {
@@ -507,6 +534,8 @@ export class CDataViewHeaderInner extends React.Component<{
                                     {T("Delete View", "delete_current_column_config")}
                                   </DropdownItem>,
                                 ]}
+                                {this.relevantMenuActions.length > 0 && <DropdownDivider />}
+                                {this.renderMenuActions()}
                               </Dropdown>
                             )}
                           />

@@ -324,6 +324,14 @@ export class DataView implements IDataView {
     return this.actions.filter((action) => action.placement === IActionPlacement.PanelHeader);
   }
 
+  @computed get panelMenuActions() {
+    const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
+    if (rowStateMayCauseFlicker && !this.dataTable.isEmpty) {
+      return [];
+    }
+    return this.actions.filter((action) => action.placement === IActionPlacement.PanelMenu);
+  }
+
   @computed get toolbarActions() {
     const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
     if (rowStateMayCauseFlicker && !this.dataTable.isEmpty) {
