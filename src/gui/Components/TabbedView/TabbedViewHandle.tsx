@@ -10,6 +10,7 @@ export class TabbedViewHandle extends React.Component<{
   isDirty?: boolean;
   onClick?(event: any): void;
   onCloseClick?(event: any): void;
+  onCloseMouseDown?(event: any): void;
 }> {
   render() {
     return (
@@ -18,11 +19,13 @@ export class TabbedViewHandle extends React.Component<{
         className={cx(S.root, { isActive: this.props.isActive, isDirty: this.props.isDirty })}
         title={this.props.title}
       >
-        <div className={S.label}>
-          {this.props.children}
-        </div>
+        <div className={S.label}>{this.props.children}</div>
         {this.props.hasCloseBtn && (
-          <a className={S.closeBtn} onClick={this.props.onCloseClick}>
+          <a
+            className={S.closeBtn}
+            onClick={this.props.onCloseClick}
+            onMouseDown={this.props.onCloseMouseDown}
+          >
             <Icon src="./icons/close.svg" tooltip={""} />
           </a>
         )}

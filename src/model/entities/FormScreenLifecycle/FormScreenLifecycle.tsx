@@ -75,6 +75,8 @@ enum IQuestionDeleteDataAnswer {
   Yes = 1,
 }
 
+export const closingScreens = new WeakSet<any>();
+
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
@@ -689,6 +691,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   _processedUpdateObjectResults = new WeakSet<any>();
 
   private *runUpdateObject(dataView: IDataView) {
+    if (getOpenedScreen(dataView)?.isBeingClosed) return false;
     const updateData = dataView.dataTable.getDirtyValueRows().map((row) => {
       return {
         RowId: dataView.dataTable.getRowId(row),

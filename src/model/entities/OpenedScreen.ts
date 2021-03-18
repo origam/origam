@@ -15,6 +15,8 @@ export class OpenedScreen implements IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
   parentSessionId: string | undefined;
 
+  isBeingClosed = false;
+
   constructor(data: IOpenedScreenData) {
     Object.assign(this, data);
     this.content.parent = this;
