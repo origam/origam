@@ -77,6 +77,14 @@ body,
   transition: none;
 }
 
+.tippy-popper [x-circle] {
+  display: none !important;
+}
+
+.tippy-tooltip.tippy-tooltip--regular, .tippy-popper.tippy-tooltip.light-theme[data-animatefill] {
+  background-color: white !important;
+}
+
 .leaflet-control-container,
 .leaflet-draw-actions a {
   color: black !important;
