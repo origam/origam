@@ -170,6 +170,7 @@ export class TableViewInner extends React.Component<
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.handleTableKeyDown}
             refTable={this.refTable}
+            onFocus={() => getFormScreenLifecycle(this.props.dataView).focusedDataViewId = this.props.dataView?.id}
           />
         </>
       </Provider>
