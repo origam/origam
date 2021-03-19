@@ -137,7 +137,7 @@ namespace Origam.Workbench.ServicesTests
             var mockFileProvider = new MockFileProvider(starageDir);
             var fileStorageDocumentationService =
                 new FileStorageDocumentationService(mockFileProvider, 
-                    new FileEventQueue(new FilePersistenceIndex(new OrigamPathFactory(null))
+                    new FileEventQueue(new FilePersistenceIndex(new OrigamPathFactory(starageDir))
                         ,new NullWatchDog()));
             return fileStorageDocumentationService;
         }
