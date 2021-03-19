@@ -1,5 +1,4 @@
 import { flow } from "mobx";
-import selectors from "model/selectors-tree";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
@@ -39,7 +38,7 @@ import {
   checkBoxCharacterFontSize,
   clipCell,
   drawSelectedRowBorder,
-  fontSize,
+  fontSize, frontStripWidth, selectRowBorderWidth,
   topTextOffset,
 } from "./cellsCommon";
 import {
@@ -57,6 +56,7 @@ export function dataColumnsDraws() {
   return tableColumnIds().map((id) => () => {
     applyScrollTranslation();
     drawDataCellBackground();
+    drawInvalidDataSymbol();
     clipCell();
     drawCellValue();
     registerClickHandler(id);
@@ -220,14 +220,6 @@ export function drawDataCellBackground() {
     getTablePanelView(ctx).firstColumn = currentProperty();
   }
 
-  /*ctx2d.fillStyle = getUnderLineColor();
-  ctx2d.fillRect(
-    currentColumnLeft() * CPR(),
-    currentRowTop() * CPR(),
-    currentColumnWidth() * CPR(),
-    rowHeight() * CPR()
-  );*/
-
   ctx2d.fillStyle = getBackGroundColor();
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
@@ -236,7 +228,42 @@ export function drawDataCellBackground() {
     CPR() * (currentRowHeight() - 1)
   );
   if (isRowCursor) {
-    drawSelectedRowBorder(8);
+    drawSelectedRowBorder(frontStripWidth);
+  }
+}
+
+function drawInvalidDataSymbol() {
+  const ctx2d = context2d();
+  let isInvalid = !!currentCellErrorMessage();
+  const property = currentProperty();
+  const selectedRowId = getSelectedRowId(tablePanelView());
+  const isRowCursor = recordId() === selectedRowId;
+
+  let isLoading = false;
+  if (property.isLookup && property.lookupEngine) {
+    isLoading = isCurrentCellLoading();
+  }
+
+  if (isInvalid && !isLoading) {
+    const leftOffset =  drawingColumnIndex() === 0 && isRowCursor
+        ?  frontStripWidth / 2
+        : 0;
+    const topBottomOffset = isRowCursor ? selectRowBorderWidth : 0;
+    ctx2d.save();
+    ctx2d.fillStyle = "red";
+    ctx2d.beginPath();
+    ctx2d.moveTo(
+        leftOffset + currentColumnLeft() * CPR(),
+        topBottomOffset + currentRowTop() * CPR());
+    ctx2d.lineTo(
+        (leftOffset + currentColumnLeft() + 5) * CPR(),
+        (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
+    );
+    ctx2d.lineTo(
+        leftOffset + currentColumnLeft() * CPR(),
+        (currentRowTop() + currentRowHeight() - topBottomOffset) * CPR());
+    ctx2d.fill();
+    ctx2d.restore();
   }
 }
 
@@ -245,15 +272,9 @@ function drawCellValue() {
   const property = currentProperty();
   const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), property.id);
   const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId());
-  const type = property.column;
-
-  let isLink = false;
   let isLoading = false;
-  let isInvalid = !!currentCellErrorMessage();
-
   if (property.isLookup && property.lookupEngine) {
     isLoading = isCurrentCellLoading();
-    isLink = selectors.column.isLinkToForm(property);
   }
 
   ctx2d.font = `${fontSize * CPR()}px "IBM Plex Sans", sans-serif`;
@@ -268,40 +289,9 @@ function drawCellValue() {
       CPR() * (currentRowTop() + topTextOffset)
     );
   } else {
-    if (isInvalid) {
-      ctx2d.save();
-      ctx2d.fillStyle = "red";
-      // Exclamation mark (not working, probably solvable)
-      //ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
-      //This character does not work for some reason 😠
-      //ctx2d.fillText(`\uf06a`, CPR() * currentColumnLeft(), currentRowTop() + topTextOffset);
-
-      // Or we might put a line as in Flash client:
-      /*ctx2d.fillRect(
-        currentColumnLeft() * CPR(),
-        currentRowTop() * CPR(),
-        3 * CPR(),
-        currentRowHeight() * CPR()
-      );*/
-
-      ctx2d.beginPath();
-      ctx2d.moveTo(currentColumnLeft() * CPR(), currentRowTop() * CPR());
-      ctx2d.lineTo(
-        (currentColumnLeft() + 5) * CPR(),
-        (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
-      );
-      ctx2d.lineTo(currentColumnLeft() * CPR(), (currentRowTop() + currentRowHeight()) * CPR());
-      ctx2d.fill();
-      ctx2d.restore();
-    }
-
     ctx2d.fillStyle = foregroundColor || "black";
     currentDataCellRenderer(ctx2d).drawCellText();
   }
-}
-
-function getUnderLineColor() {
-  return "#e5e5e5";
 }
 
 function getBackGroundColor() {
