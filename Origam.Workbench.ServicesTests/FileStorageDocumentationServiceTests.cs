@@ -198,7 +198,7 @@ namespace Origam.Workbench.ServicesTests
         public DirectoryInfo GetParentPackageDirectory(Guid itemId) =>
             testDir;
 
-        public bool Has(Guid id) => throw new NotImplementedException();
+        public bool Has(Guid id) => true;
         public DirectoryInfo TopDirectory { get; }
         public object Clone()
         {
