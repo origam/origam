@@ -38,7 +38,7 @@ import {
   checkBoxCharacterFontSize,
   clipCell,
   drawSelectedRowBorder,
-  fontSize,
+  fontSize, frontStripWidth, selectRowBorderWidth,
   topTextOffset,
 } from "./cellsCommon";
 import {
@@ -228,7 +228,7 @@ export function drawDataCellBackground() {
     CPR() * (currentRowHeight() - 1)
   );
   if (isRowCursor) {
-    drawSelectedRowBorder(8);
+    drawSelectedRowBorder(frontStripWidth);
   }
 }
 
@@ -236,21 +236,32 @@ function drawInvalidDataSymbol() {
   const ctx2d = context2d();
   let isInvalid = !!currentCellErrorMessage();
   const property = currentProperty();
+  const selectedRowId = getSelectedRowId(tablePanelView());
+  const isRowCursor = recordId() === selectedRowId;
+
   let isLoading = false;
   if (property.isLookup && property.lookupEngine) {
     isLoading = isCurrentCellLoading();
   }
 
   if (isInvalid && !isLoading) {
+    const leftOffset =  drawingColumnIndex() === 0 && isRowCursor
+        ?  frontStripWidth / 2
+        : 0;
+    const topBottomOffset = isRowCursor ? selectRowBorderWidth : 0;
     ctx2d.save();
     ctx2d.fillStyle = "red";
     ctx2d.beginPath();
-    ctx2d.moveTo(currentColumnLeft() * CPR(), currentRowTop() * CPR());
+    ctx2d.moveTo(
+        leftOffset + currentColumnLeft() * CPR(),
+        topBottomOffset + currentRowTop() * CPR());
     ctx2d.lineTo(
-        (currentColumnLeft() + 5) * CPR(),
+        (leftOffset + currentColumnLeft() + 5) * CPR(),
         (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
     );
-    ctx2d.lineTo(currentColumnLeft() * CPR(), (currentRowTop() + currentRowHeight()) * CPR());
+    ctx2d.lineTo(
+        leftOffset + currentColumnLeft() * CPR(),
+        (currentRowTop() + currentRowHeight() - topBottomOffset) * CPR());
     ctx2d.fill();
     ctx2d.restore();
   }

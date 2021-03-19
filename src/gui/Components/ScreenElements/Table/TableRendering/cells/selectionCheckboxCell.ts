@@ -12,7 +12,7 @@ import {
   checkSymbolFontSize,
   checkBoxCellPaddingLeft,
   topTextOffset,
-  drawSelectedRowBorder
+  drawSelectedRowBorder, frontStripWidth
 } from "./cellsCommon";
 import {CPR} from "utils/canvas";
 import {onClick} from "../onClick";
@@ -115,6 +115,6 @@ export function drawSelectionCheckboxBackground() {
     CPR() * currentRowHeight()
   );
   if (isRowCursor) {
-    drawSelectedRowBorder(4);
+    drawSelectedRowBorder(frontStripWidth / 2);
   }
 }

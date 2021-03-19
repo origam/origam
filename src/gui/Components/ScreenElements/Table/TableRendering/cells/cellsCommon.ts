@@ -37,7 +37,7 @@ export function drawSelectedRowBorder(frontStripeWidth: number) {
   const ctx2d = context2d();
   ctx2d.beginPath();
   ctx2d.strokeStyle = "#4C84FF";
-  ctx2d.lineWidth = 1 * CPR();
+  ctx2d.lineWidth = selectRowBorderWidth * CPR();
   ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
   ctx2d.lineTo(
     CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
@@ -71,3 +71,6 @@ export const checkSymbolFontSize = 15;
 export const checkBoxCellPaddingLeft = 3;
 export const checkBoxCharacterFontSize = 12;
 export const rowHeight = 25;
+export const frontStripWidth = 8;
+export const selectRowBorderWidth = 1;
+
