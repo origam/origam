@@ -1236,14 +1236,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         this.registerDisposer(
             reaction(
                 () => [
-                  [...getTablePanelView(this).aggregations.aggregationList],
-                  getFilterConfiguration(this).activeFilters.map((x) => [
+                  [...getTablePanelView(dataView).aggregations.aggregationList],
+                  getFilterConfiguration(dataView).activeFilters.map((x) => [
                     x.propertyId,
                     x.setting.type,
                     x.setting.val1,
                     x.setting.val2,
                   ]),
-                  isInfiniteScrollingActive(this) ? true : dataView.dataTable.rows.length === 0,
+                  isInfiniteScrollingActive(dataView) ? true : dataView.dataTable.rows.length === 0,
                 ],
                 () => this.reloadAggregationsDebounced(dataView),
                 { fireImmediately: true }
