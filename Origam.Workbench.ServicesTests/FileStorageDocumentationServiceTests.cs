@@ -76,6 +76,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShouldLoadDocumennationOfSpecifiedType()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(ReadingTestFiles);
             string loadedDoc = sut.GetDocumentation(
                 new Guid("df7c2a53-c56a-426a-b748-08e656ae46db"),
@@ -193,6 +194,7 @@ namespace Origam.Workbench.ServicesTests
         public MockFileProvider(DirectoryInfo testDir)
         {
             this.testDir = testDir;
+            this.LocalizationCache = new LocalizationCache();
         }
         
         public DirectoryInfo GetParentPackageDirectory(Guid itemId) =>
