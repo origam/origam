@@ -43,6 +43,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShouldAddTwoDocumenattionItems()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(WritingTestFiles);
             DocumentationComplete dataSet = GetTestDataSet("inputDataSet_2Items.xml");
             sut.SaveDocumentation(dataSet);
@@ -88,6 +89,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShoudThrowBecauseCategoryNameIsWrong()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongCategoryName"));
             
@@ -101,6 +103,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShoudThrowBecauseAStringCannotBeParsedToGuid()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongGuid"));
             
@@ -114,6 +117,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShoudThrowBecauseANodeNameIsWrong()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongNodeName"));
             
