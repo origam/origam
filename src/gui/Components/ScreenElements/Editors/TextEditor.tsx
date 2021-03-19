@@ -36,6 +36,7 @@ export class TextEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
+  onAutoUpdate?(value: string): void;
 }> {
   disposers: any[] = [];
   currentValue = this.props.value;
@@ -53,7 +54,7 @@ export class TextEditor extends React.Component<{
   private startAutoUpdate() {
     this.updateInterval = setInterval(() => {
       if (this.lastAutoUpdatedValue !== this.currentValue) {
-        this.props.onEditorBlur?.(null);
+        this.props.onAutoUpdate?.(this.currentValue ?? "");
         this.lastAutoUpdatedValue = this.currentValue;
       }
     }, autoUpdateUntervalMs);
