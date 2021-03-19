@@ -57,6 +57,7 @@ export function dataColumnsDraws() {
   return tableColumnIds().map((id) => () => {
     applyScrollTranslation();
     drawDataCellBackground();
+    drawInvalidDataSymbol();
     clipCell();
     drawCellValue();
     registerClickHandler(id);
@@ -240,20 +241,51 @@ export function drawDataCellBackground() {
   }
 }
 
+function drawInvalidDataSymbol() {
+  const ctx2d = context2d();
+  let isInvalid = !!currentCellErrorMessage();
+  const property = currentProperty();
+  let isLoading = false;
+  if (property.isLookup && property.lookupEngine) {
+    isLoading = isCurrentCellLoading();
+  }
+
+  if (isInvalid && !isLoading) {
+    ctx2d.save();
+    ctx2d.fillStyle = "red";
+    // Exclamation mark (not working, probably solvable)
+    //ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
+    //This character does not work for some reason 😠
+    //ctx2d.fillText(`\uf06a`, CPR() * currentColumnLeft(), currentRowTop() + topTextOffset);
+
+    // Or we might put a line as in Flash client:
+    /*ctx2d.fillRect(
+      currentColumnLeft() * CPR(),
+      currentRowTop() * CPR(),
+      3 * CPR(),
+      currentRowHeight() * CPR()
+    );*/
+
+    ctx2d.beginPath();
+    ctx2d.moveTo(currentColumnLeft() * CPR(), currentRowTop() * CPR());
+    ctx2d.lineTo(
+        (currentColumnLeft() + 5) * CPR(),
+        (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
+    );
+    ctx2d.lineTo(currentColumnLeft() * CPR(), (currentRowTop() + currentRowHeight()) * CPR());
+    ctx2d.fill();
+    ctx2d.restore();
+  }
+}
+
 function drawCellValue() {
   const ctx2d = context2d();
   const property = currentProperty();
   const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), property.id);
   const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId());
-  const type = property.column;
-
-  let isLink = false;
   let isLoading = false;
-  let isInvalid = !!currentCellErrorMessage();
-
   if (property.isLookup && property.lookupEngine) {
     isLoading = isCurrentCellLoading();
-    isLink = selectors.column.isLinkToForm(property);
   }
 
   ctx2d.font = `${fontSize * CPR()}px "IBM Plex Sans", sans-serif`;
@@ -268,33 +300,6 @@ function drawCellValue() {
       CPR() * (currentRowTop() + topTextOffset)
     );
   } else {
-    if (isInvalid) {
-      ctx2d.save();
-      ctx2d.fillStyle = "red";
-      // Exclamation mark (not working, probably solvable)
-      //ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
-      //This character does not work for some reason 😠
-      //ctx2d.fillText(`\uf06a`, CPR() * currentColumnLeft(), currentRowTop() + topTextOffset);
-
-      // Or we might put a line as in Flash client:
-      /*ctx2d.fillRect(
-        currentColumnLeft() * CPR(),
-        currentRowTop() * CPR(),
-        3 * CPR(),
-        currentRowHeight() * CPR()
-      );*/
-
-      ctx2d.beginPath();
-      ctx2d.moveTo(currentColumnLeft() * CPR(), currentRowTop() * CPR());
-      ctx2d.lineTo(
-        (currentColumnLeft() + 5) * CPR(),
-        (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
-      );
-      ctx2d.lineTo(currentColumnLeft() * CPR(), (currentRowTop() + currentRowHeight()) * CPR());
-      ctx2d.fill();
-      ctx2d.restore();
-    }
-
     ctx2d.fillStyle = foregroundColor || "black";
     currentDataCellRenderer(ctx2d).drawCellText();
   }
