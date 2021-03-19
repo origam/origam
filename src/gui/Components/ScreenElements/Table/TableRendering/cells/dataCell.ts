@@ -1,5 +1,4 @@
 import { flow } from "mobx";
-import selectors from "model/selectors-tree";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
@@ -221,14 +220,6 @@ export function drawDataCellBackground() {
     getTablePanelView(ctx).firstColumn = currentProperty();
   }
 
-  /*ctx2d.fillStyle = getUnderLineColor();
-  ctx2d.fillRect(
-    currentColumnLeft() * CPR(),
-    currentRowTop() * CPR(),
-    currentColumnWidth() * CPR(),
-    rowHeight() * CPR()
-  );*/
-
   ctx2d.fillStyle = getBackGroundColor();
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
@@ -253,19 +244,6 @@ function drawInvalidDataSymbol() {
   if (isInvalid && !isLoading) {
     ctx2d.save();
     ctx2d.fillStyle = "red";
-    // Exclamation mark (not working, probably solvable)
-    //ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
-    //This character does not work for some reason 😠
-    //ctx2d.fillText(`\uf06a`, CPR() * currentColumnLeft(), currentRowTop() + topTextOffset);
-
-    // Or we might put a line as in Flash client:
-    /*ctx2d.fillRect(
-      currentColumnLeft() * CPR(),
-      currentRowTop() * CPR(),
-      3 * CPR(),
-      currentRowHeight() * CPR()
-    );*/
-
     ctx2d.beginPath();
     ctx2d.moveTo(currentColumnLeft() * CPR(), currentRowTop() * CPR());
     ctx2d.lineTo(
@@ -303,10 +281,6 @@ function drawCellValue() {
     ctx2d.fillStyle = foregroundColor || "black";
     currentDataCellRenderer(ctx2d).drawCellText();
   }
-}
-
-function getUnderLineColor() {
-  return "#e5e5e5";
 }
 
 function getBackGroundColor() {
