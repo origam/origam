@@ -461,6 +461,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         onMouseOver={this.onMouseOver}
                         onMouseLeave={(event) => this.onMouseLeaveToolTipEnabledArea(event)}
                         onKeyDown={this.props.onKeyDown}
+                        onFocus={this.props.onFocus}
                       />
                     </>
                   </div>

@@ -32,6 +32,7 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
 }
 
 export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
+  focusedDataViewId: string | undefined;
   $type_IFormScreenLifecycle: 1;
 
   isWorkingDelayed: boolean;

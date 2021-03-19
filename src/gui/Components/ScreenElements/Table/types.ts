@@ -37,6 +37,7 @@ export interface ITableProps {
   onKeyDown?(event: any): void;
   refCanvasMovingComponent?(elm: IGridCanvas | null): void;
   onContentBoundsChanged(bounds: BoundingRect): void;
+  onFocus: ()=>void;
 }
 
 export type IRenderHeader = (args: { columnIndex: number; columnWidth: number }) => React.ReactNode;
@@ -144,6 +145,7 @@ export interface IScrollerProps {
   onMouseLeave: (event: any) => void;
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
+  onFocus: ()=>void;
 }
 
 export interface IScrolleeProps {

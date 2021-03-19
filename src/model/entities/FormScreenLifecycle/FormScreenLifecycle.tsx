@@ -80,6 +80,7 @@ export const closingScreens = new WeakSet<any>();
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
+  focusedDataViewId: string | undefined;
   _updateRequestAggregator: UpdateRequestAggregator | undefined;
 
   get updateRequestAggregator() {
