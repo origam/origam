@@ -1,7 +1,11 @@
-import {IOpenedScreen, isIOpenedScreen} from "../entities/types/IOpenedScreen";
+import { IOpenedScreen, isIOpenedScreen } from "../entities/types/IOpenedScreen";
 
 export function getOpenedScreen(ctx: any): IOpenedScreen {
   let cn = ctx;
-  while (!isIOpenedScreen(cn)) cn = cn.parent;
+  while (true) {
+    if (isIOpenedScreen(cn)) return cn;
+    if (!cn) return undefined as any;
+    cn = cn.parent;
+  }
   return cn;
 }

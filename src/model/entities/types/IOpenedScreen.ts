@@ -29,6 +29,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   isDialog: boolean;
   isClosed: boolean;
   stackPosition: number;
+  isBeingClosed: boolean;
 
   setActive(state: boolean): void;
   setContent(screen: IFormScreenEnvelope): void;
@@ -38,4 +39,4 @@ export interface IOpenedScreen extends IOpenedScreenData {
 }
 
 export const isIOpenedScreen = (o: any): o is IOpenedScreen =>
-  o.$type_IOpenedScreen;
+  o?.$type_IOpenedScreen;

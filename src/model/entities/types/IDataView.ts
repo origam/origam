@@ -86,6 +86,7 @@ export interface IDataView extends IDataViewData {
   bindingParametersFromParent: { [key: string]: string };
   showSelectionCheckboxes: boolean;
   panelViewActions: IAction[];
+  panelMenuActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
   focusManager: FocusManager;
@@ -148,4 +149,4 @@ export interface IDataView extends IDataViewData {
   exportToExcel(): void;
 }
 
-export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;
+export const isIDataView = (o: any): o is IDataView => o?.$type_IDataView;

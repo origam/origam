@@ -9,6 +9,8 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IWebScreen: 1 = 1;
   parentSessionId: string | undefined;
 
+  isBeingClosed = false;
+
   constructor(
     title: string,
     public screenUrl: string,

@@ -2,7 +2,7 @@ import { TabbedViewHandle } from "gui/Components/TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "gui/Components/TabbedView/TabbedViewHandleRow";
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { MobXProviderContext, observer } from "mobx-react";
-import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { onScreenTabCloseClick, onScreenTabCloseMouseDown } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { IWorkbench } from "model/entities/types/IWorkbench";
@@ -53,6 +53,7 @@ class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
         isDirty={getIsFormScreenDirty(item)}
         onClick={(event: any) => onScreenTabHandleClick(item)(event)}
         onCloseClick={(event: any) => onScreenTabCloseClick(item)(event)}
+        onCloseMouseDown={(event: any) => onScreenTabCloseMouseDown(item)(event)}
       >
         {label}
       </TabbedViewHandle>

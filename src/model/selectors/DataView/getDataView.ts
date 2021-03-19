@@ -1,4 +1,4 @@
-import {IDataView, isIDataView} from "../../entities/types/IDataView";
+import { IDataView, isIDataView } from "../../entities/types/IDataView";
 
 export function getDataView(ctx: any): IDataView {
   let cn = ctx;
@@ -6,6 +6,7 @@ export function getDataView(ctx: any): IDataView {
     if (isIDataView(cn)) {
       return cn;
     }
-    cn = cn.parent;
+    if (!cn) return undefined as any;
+    cn = cn?.parent;
   }
 }
