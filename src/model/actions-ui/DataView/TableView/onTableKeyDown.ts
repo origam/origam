@@ -7,6 +7,7 @@ import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
+import uiActions from "../../../actions-ui-tree";
 
 export function onTableKeyDown(ctx: any) {
   return flow(function* onTableKeyDown(event: any) {
@@ -54,12 +55,12 @@ export function onTableKeyDown(ctx: any) {
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "Enter":
-          if (event.shiftKey) {
-            yield* selectPrevRow(ctx)();
-          } else {
-            yield* selectNextRow(ctx)();
+          if (dataView.firstEnabledDefaultAction) {
+            uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
+                event,
+                dataView.firstEnabledDefaultAction
+            );
           }
-          getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "Escape": {
           getTablePanelView(ctx).setEditing(false);
