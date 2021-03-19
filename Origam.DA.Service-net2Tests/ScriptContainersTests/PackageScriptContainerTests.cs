@@ -31,10 +31,11 @@ namespace Origam.DA.ServiceTests.ScriptContainersTests
     [TestFixture]
     public class PackageScriptContainerTests: ClassUpgradeTestBase
     {
+        protected override string DirName => "ScriptContainersTests";
         [Test]
         public void ShouldRenameSchemaExtensionToPackage()
         {
-            XFileData xFileData = LoadFile("../ScriptContainersTests/TestFiles/Security_V5.0.0_.origamPackage");
+            XFileData xFileData = LoadFile("Security_V5.0.0_.origamPackage");
             var modelUpGrader = new MetaModelUpgrader(new NullFileWriter());
             modelUpGrader.TryUpgrade(xFileData);
         }

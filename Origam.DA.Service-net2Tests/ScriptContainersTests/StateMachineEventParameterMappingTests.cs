@@ -7,10 +7,11 @@ namespace Origam.DA.ServiceTests.ScriptContainersTests
     [TestFixture]
     public class StateMachineEventParameterMappingTests: ClassUpgradeTestBase
     {
+        protected override string DirName => "ScriptContainersTests";
         [Test]
         public void ShouldRenameTypeProperty()
         {
-            XFileData xFileData = LoadFile("../ScriptContainersTests/TestFiles/BusinessPartner.origam");
+            XFileData xFileData = LoadFile("BusinessPartner.origam");
             var modelUpGrader = new MetaModelUpgrader(new NullFileWriter());
             modelUpGrader.TryUpgrade(xFileData);
         }
