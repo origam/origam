@@ -23,6 +23,7 @@ import {
   tableRows,
   viewportHeight,
   viewportWidth,
+  mouseMoveSubscriptions,
 } from "./renderingValues";
 import {firstDrawableRowIndex, lastDrawableRowIndex} from "./drawableRowIndex";
 import {drawCurrentCell} from "./currentCell";
@@ -49,6 +50,7 @@ export function renderTable(
   aColumnWidths: Map<string, number>,
   aFixedColumnCount: number,
   aClickSubscriptions: IClickSubsItem[],
+  aMouseMoveSubscriptions: IClickSubsItem[],
   aMouseOverSubscriptions: IMouseOverSubsItem[],
   aRowHeight: number
 ) {
@@ -68,10 +70,12 @@ export function renderTable(
   columnWidths.set(aColumnWidths);
   fixedColumnCount.set(aFixedColumnCount);
   clickSubscriptions.set(aClickSubscriptions);
+  mouseMoveSubscriptions.set(aMouseMoveSubscriptions);
   mouseOverSubscriptions.set(aMouseOverSubscriptions);
   try {
     clickSubscriptions().length = 0;
     mouseOverSubscriptions().length = 0;
+    mouseMoveSubscriptions().length = 0;
     const ctx2d = context2d();
     ctx2d.fillStyle = "white";
     ctx2d.fillRect(0, 0, CPR()*viewportWidth(), CPR()*viewportHeight());

@@ -11,9 +11,7 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 import { IFocusAble } from "../../../../model/entities/FocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
-import { Tooltip } from "react-tippy";
 import cx from "classnames";
-import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -199,10 +197,8 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
         ))}
       </div>
       {props.isInvalid && (
-        <div className={CS.notification}>
-          <Tooltip html={props.invalidMessage} arrow={true} animation="none" duration={0}>
-            <i className="fas fa-exclamation-circle red" />
-          </Tooltip>
+        <div className={CS.notification} title={props.invalidMessage}>
+          <i className="fas fa-exclamation-circle red" />
         </div>
       )}
     </div>

@@ -5,8 +5,6 @@ import cx from "classnames";
 import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
-import { Tooltip } from "react-tippy";
-import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { action, observable } from "mobx";
 import { createPortal } from "react-dom";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
@@ -125,10 +123,8 @@ export function DropdownEditorControl(props: {
           <TriggerContextMenu state={triggerContextMenu} />
 
           {props.isInvalid && (
-            <div className={CS.notification}>
-              <Tooltip html={props.invalidMessage} arrow={true} animation="none" duration={0}>
-                <i className="fas fa-exclamation-circle red" />
-              </Tooltip>
+            <div className={CS.notification} title={props.invalidMessage}>
+              <i className="fas fa-exclamation-circle red" />
             </div>
           )}
         </div>

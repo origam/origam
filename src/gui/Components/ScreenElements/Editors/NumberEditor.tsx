@@ -1,7 +1,6 @@
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
-import { Tooltip } from "react-tippy";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
 import {
@@ -182,10 +181,8 @@ export class NumberEditor extends React.Component<{
           onFocus={this.handleFocus}
         />
         {this.props.isInvalid && (
-          <div className={S.notification}>
-            <Tooltip html={this.props.invalidMessage} arrow={true} animation="none" duration={0}>
-              <i className="fas fa-exclamation-circle red" />
-            </Tooltip>
+          <div className={S.notification} title={this.props.invalidMessage}>
+            <i className="fas fa-exclamation-circle red" />
           </div>
         )}
       </div>

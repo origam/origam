@@ -1,11 +1,10 @@
-import { observer } from "mobx-react";
-import React from "react";
-import { observable } from "mobx";
 import { ModalWindow } from "gui/Components/Dialog/Dialog";
-import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
-import { Tooltip } from "react-tippy";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
+import React from "react";
+import { T } from "utils/translation";
 
 @observer
 export class NewConfigurationDialog extends React.Component<{
@@ -73,15 +72,11 @@ export class NewConfigurationDialog extends React.Component<{
               />
               {this.isInvalid && (
                 <div>
-                  <div className={S.notification}>
-                    <Tooltip
-                      html={T("Name cannot be empty", "column_config_name_empty")}
-                      arrow={true}
-                      animation="none"
-                      duration={0}
-                    >
-                      <i className="fas fa-exclamation-circle red" />
-                    </Tooltip>
+                  <div
+                    className={S.notification}
+                    title={T("Name cannot be empty", "column_config_name_empty")}
+                  >
+                    <i className="fas fa-exclamation-circle red" />
                   </div>
                 </div>
               )}

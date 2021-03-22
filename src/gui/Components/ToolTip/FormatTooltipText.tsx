@@ -27,3 +27,18 @@ function formatToolTipLines(content: string[]) {
     </div>
   );
 }
+
+export function formatTooltipPlaintext(content: string | string[] | undefined) {
+  if (!content) return;
+  const lines = Array.isArray(content)
+    ? content.flatMap((line) => splitToLines(line))
+    : splitToLines(content);
+  return formatToolTipLinesPlaintext(lines);
+}
+
+function formatToolTipLinesPlaintext(content: string[]) {
+  const equalLengthLines = content;
+  const linesToShow =
+    equalLengthLines.length > 10 ? equalLengthLines.slice(0, 9).concat(["..."]) : equalLengthLines;
+  return linesToShow.join("\n");
+}

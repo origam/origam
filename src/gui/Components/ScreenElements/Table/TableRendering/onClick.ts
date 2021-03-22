@@ -1,4 +1,8 @@
-import { clickSubscriptions, mouseOverSubscriptions } from "./renderingValues";
+import {
+  clickSubscriptions,
+  mouseOverSubscriptions,
+  mouseMoveSubscriptions,
+} from "./renderingValues";
 import { IClickSubsItem, IMouseOverSubsItem } from "./types";
 
 export function onClick(item: IClickSubsItem) {
@@ -24,6 +28,29 @@ export function handleTableClick(
   return { handled };
 }
 
+export function onMouseMove(item: IClickSubsItem) {
+  mouseMoveSubscriptions().push(item);
+}
+
+export function handleTableMouseMove(
+  event: any,
+  canvasX: number,
+  canvasY: number,
+  scrollLeft: number,
+  scrollTop: number,
+  mouseMoveSubscriptions: IClickSubsItem[]
+) {
+  let handled = false;
+  for (let h of mouseMoveSubscriptions) {
+    if (h.x <= canvasX && h.x + h.w >= canvasX && h.y <= canvasY && h.y + h.h >= canvasY) {
+      h.handler(event, canvasX, canvasY, canvasX, canvasY);
+      handled = true;
+      break;
+    }
+  }
+  return { handled };
+}
+
 export function onMouseOver(item: IMouseOverSubsItem) {
   mouseOverSubscriptions().push(item);
 }
@@ -38,5 +65,5 @@ export function getTooltip(
       return h.toolTipGetter(canvasX, canvasY, canvasX, canvasY);
     }
   }
-  return undefined ;
+  return undefined;
 }

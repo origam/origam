@@ -5,7 +5,6 @@ import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.scss";
-import { Tooltip } from "react-tippy";
 
 @observer
 export class FavoriteFolderPropertiesDialog extends React.Component<{
@@ -83,15 +82,11 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
               />
               {this.isInvalid && (
                 <div>
-                  <div className={S.notification}>
-                    <Tooltip
-                      html={T("Name cannot be empty", "group_name_empty")}
-                      arrow={true}
-                      animation="none"
-                      duration={0}
-                    >
-                      <i className="fas fa-exclamation-circle red" />
-                    </Tooltip>
+                  <div
+                    className={S.notification}
+                    title={T("Name cannot be empty", "group_name_empty")}
+                  >
+                    <i className="fas fa-exclamation-circle red" />
                   </div>
                 </div>
               )}

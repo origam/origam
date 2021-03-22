@@ -1,9 +1,9 @@
-import {action, observable} from "mobx";
+import { action, observable } from "mobx";
 import * as React from "react";
-import {IScrollerProps} from "./types";
-import {observer} from "mobx-react";
+import { IScrollerProps } from "./types";
+import { observer } from "mobx-react";
 import S from "./Scroller.module.css";
-import {busyDelayMillis} from "../../../../utils/flow";
+import { busyDelayMillis } from "../../../../utils/flow";
 
 /*
   Two divs broadcasting the outer one's scroll state to scrollOffsetTarget.
@@ -13,8 +13,9 @@ export default class Scroller extends React.Component<IScrollerProps> {
   @observable.ref private elmScrollerDiv: HTMLDivElement | null = null;
   private lastScrollLeft: number = 0;
   private lastScrollTop: number = 0;
-  private clickHandler: SequentialSingleDoubleClickHandler =
-    new SequentialSingleDoubleClickHandler((event: any) => this.runOnclick(event));
+  private clickHandler: SequentialSingleDoubleClickHandler = new SequentialSingleDoubleClickHandler(
+    (event: any) => this.runOnclick(event)
+  );
 
   @action.bound scrollTo(coords: { scrollLeft?: number; scrollTop?: number }) {
     if (this.elmScrollerDiv) {
@@ -29,24 +30,18 @@ export default class Scroller extends React.Component<IScrollerProps> {
   }
 
   @action.bound private handleScroll(event: any) {
-
-    if(this.props.scrollingDisabled){
+    if (this.props.scrollingDisabled) {
       event.target.scrollLeft = this.lastScrollLeft;
       event.target.scrollTop = this.lastScrollTop;
-    }
-    else{
-      this.lastScrollLeft =  event.target.scrollLeft
-      this.lastScrollTop =  event.target.scrollTop
+    } else {
+      this.lastScrollLeft = event.target.scrollLeft;
+      this.lastScrollTop = event.target.scrollTop;
     }
 
-    this.props.onScroll(
-      event,
-      event.target.scrollLeft,
-      event.target.scrollTop
-    );
+    this.props.onScroll(event, event.target.scrollLeft, event.target.scrollTop);
   }
 
-  forceScrollLeft(left: number){
+  forceScrollLeft(left: number) {
     this.lastScrollLeft = left;
   }
 
@@ -106,26 +101,34 @@ export default class Scroller extends React.Component<IScrollerProps> {
   timeout: NodeJS.Timeout | undefined;
 
   @action.bound
-  handleMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>){
+  handleMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     event.persist();
-    const distanceSinceLastMove = Math.sqrt((event.clientX - this.lastMouseX) ** 2 + (event.clientY - this.lastMouseY) ** 2);
+    const scrollerRect = this.elmScrollerDiv!.getBoundingClientRect();
+    this.props.onMouseMove?.(
+      event,
+      event.clientX - scrollerRect.left,
+      event.clientY - scrollerRect.top
+    );
+    const distanceSinceLastMove = Math.sqrt(
+      (event.clientX - this.lastMouseX) ** 2 + (event.clientY - this.lastMouseY) ** 2
+    );
     this.lastMouseX = event.clientX;
     this.lastMouseY = event.clientY;
 
-    if(distanceSinceLastMove > 1){
-      if(this.timeout){
+    if (distanceSinceLastMove > 1) {
+      if (this.timeout) {
         clearTimeout(this.timeout);
       }
 
       const boundingRectangle = this.elmScrollerDiv!.getBoundingClientRect();
-      this.timeout = setTimeout(()=>{
-          this.props.onMouseOver(event, boundingRectangle);
-      }, 500)
-    } 
+      this.timeout = setTimeout(() => {
+        this.props.onMouseOver(event, boundingRectangle);
+      }, 500);
+    }
   }
 
-  handleMouseLeave(event: any){
-    if(this.timeout){
+  handleMouseLeave(event: any) {
+    if (this.timeout) {
       clearTimeout(this.timeout);
     }
     this.props.onMouseLeave(event);
@@ -159,8 +162,8 @@ export default class Scroller extends React.Component<IScrollerProps> {
         style={{ width: this.props.width, height: this.props.height }}
         onScroll={this.handleScroll}
         onClick={(e) => this.clickHandler.handleClick(e)}
-        onMouseMove={event => this.handleMouseMove(event)}
-        onMouseLeave={event => this.handleMouseLeave(event)}
+        onMouseMove={(event) => this.handleMouseMove(event)}
+        onMouseLeave={(event) => this.handleMouseLeave(event)}
         onKeyDown={(event) => this.props.onKeyDown?.(event)}
         onFocus={() => this.props.onFocus()}
         ref={this.refScrollerDiv}
@@ -180,19 +183,18 @@ export default class Scroller extends React.Component<IScrollerProps> {
 // Ensures that single click is handled before double click and
 // that single click callback does not prevent double click from being registered
 class SequentialSingleDoubleClickHandler {
-
   private timer: any = null;
   private readonly runOnclick: (event: any) => void;
   private singleClickIsRunning = false;
   firstEvent: any | undefined;
-  private readonly doubleClickDelayMillis =  busyDelayMillis;
+  private readonly doubleClickDelayMillis = busyDelayMillis;
 
   constructor(runOnclick: (event: any) => void) {
     this.runOnclick = runOnclick;
   }
 
   sleep(ms: number) {
-    return new Promise(resolve => this.timer = setTimeout(resolve, ms));
+    return new Promise((resolve) => (this.timer = setTimeout(resolve, ms)));
   }
 
   @action.bound
@@ -206,7 +208,7 @@ class SequentialSingleDoubleClickHandler {
       await this.sleep(this.doubleClickDelayMillis);
       this.singleClickIsRunning = false;
     } else {
-      if(clickDistance(this.firstEvent, event) < 5){
+      if (clickDistance(this.firstEvent, event) < 5) {
         this.doubleClick(event);
       }
       this.firstEvent = undefined;
