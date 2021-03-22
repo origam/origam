@@ -63,6 +63,7 @@ import { groupingUnitToString } from "../types/GroupingUnit";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
+import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -176,6 +177,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
     const formScreen = getFormScreen(this);
+    for (let dataView of formScreen.dataViews) {
+      yield onFieldBlur(dataView)(null);
+    }
+
     // Just wait if there is some data manipulation in progress.
     yield formScreen.dataUpdateCRS.runAsync(() => Promise.resolve());
     if (isDueToError || !getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
@@ -692,7 +697,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   _processedUpdateObjectResults = new WeakSet<any>();
 
   private *runUpdateObject(dataView: IDataView) {
-    if (getOpenedScreen(dataView)?.isBeingClosed) return false;
     const updateData = dataView.dataTable.getDirtyValueRows().map((row) => {
       return {
         RowId: dataView.dataTable.getRowId(row),
