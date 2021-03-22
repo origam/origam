@@ -27,7 +27,6 @@ import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick
 import { onMoveRowUpClick } from "model/actions-ui/DataView/onMoveRowUpClick";
 import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
-import { onRecordAuditClick } from "model/actions-ui/RecordInfo/onRecordAuditClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
 import { IAction, IActionMode, IActionType } from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
@@ -464,17 +463,6 @@ export class CDataViewHeaderInner extends React.Component<{
                                 >
                                   {T("Column configuration", "column_config_tool_tip")}
                                 </DropdownItem>
-                                {!isDialog && (
-                                  <DropdownItem
-                                    isDisabled={false}
-                                    onClick={(event: any) => {
-                                      setDropped(false);
-                                      onRecordAuditClick(dataView)(event);
-                                    }}
-                                  >
-                                    {T("Show audit", "audit_title")}
-                                  </DropdownItem>
-                                )}
                                 {!isDialog && (
                                   <DropdownItem
                                     isDisabled={false}
