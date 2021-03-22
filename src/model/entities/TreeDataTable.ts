@@ -164,7 +164,6 @@ export class TreeDataTable implements IDataTable {
   }
 
   flushFormToTable(row: any[]): void {
-    throw new Error("Not implemented");
   }
 
   deleteAdditionalRowData(row: any[]): void {
