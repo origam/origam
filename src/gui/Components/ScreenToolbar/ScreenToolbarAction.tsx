@@ -2,7 +2,6 @@ import S from "gui/Components/ScreenToolbar/ScreenToolbarAction.module.scss";
 import React from "react";
 import cx from "classnames";
 import { action } from "mobx";
-import { withTooltip } from "react-tippy";
 
 export class ScreenToolbarAction extends React.Component<{
   icon?: React.ReactNode;

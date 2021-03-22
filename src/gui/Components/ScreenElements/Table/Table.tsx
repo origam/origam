@@ -1,5 +1,12 @@
+import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { action, autorun, comparer, computed, observable, runInAction } from "mobx";
 import { MobXProviderContext, Observer, observer } from "mobx-react";
+import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
+import { IProperty } from "model/entities/types/IProperty";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { getProperties } from "model/selectors/DataView/getProperties";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Measure, { BoundingRect } from "react-measure";
@@ -9,27 +16,15 @@ import { PositionedField } from "./PositionedField";
 import Scrollee from "./Scrollee";
 import Scroller from "./Scroller";
 import S from "./Table.module.scss";
-import { IGridDimensions, ITableProps } from "./types";
-import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
+import { getTooltip, handleTableClick, handleTableMouseMove } from "./TableRendering/onClick";
+import { renderTable } from "./TableRendering/renderTable";
 import {
   IClickSubsItem,
   IMouseOverSubsItem,
   ITableRow,
-  IToolTipData,
+  IToolTipData
 } from "./TableRendering/types";
-import { renderTable } from "./TableRendering/renderTable";
-import { getTooltip, handleTableClick, handleTableMouseMove } from "./TableRendering/onClick";
-import { getProperties } from "model/selectors/DataView/getProperties";
-import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import { IProperty } from "model/entities/types/IProperty";
-import { Tooltip } from "react-tippy";
-import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
-import {
-  formatTooltipText,
-  formatTooltipPlaintext,
-} from "gui/Components/ToolTip/FormatTooltipText";
+import { IGridDimensions, ITableProps } from "./types";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(

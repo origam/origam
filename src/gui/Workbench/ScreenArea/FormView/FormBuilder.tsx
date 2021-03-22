@@ -24,8 +24,7 @@ import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowR
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { Tooltip } from "react-tippy";
-import { IProperty } from "model/entities/types/IProperty";
+
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };

@@ -6,7 +6,6 @@ import { getApi } from "model/selectors/getApi";
 import { ensureLogin, userManager } from "oauth";
 import React from "react";
 import ReactDOM from "react-dom";
-import "react-tippy/dist/tippy.css";
 import { Root } from "Root";
 import "./index.scss";
 import { createApplication } from "./model/factories/createApplication";

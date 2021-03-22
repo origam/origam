@@ -1,16 +1,15 @@
-import * as React from "react";
-import { observer } from "mobx-react";
-import S from "./DateTimeEditor.module.scss";
+import cx from "classnames";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 // import CS from "./CommonStyle.module.css";
 import { action, computed, observable, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import moment, { Moment } from "moment";
-import { Tooltip } from "react-tippy";
-import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import DateCompleter from "./DateCompleter";
-import { getLocaleFromCookie } from "../../../../utils/cookies";
-import cx from "classnames";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
+import * as React from "react";
 import { toOrigamServerString } from "utils/moment";
+import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { getLocaleFromCookie } from "../../../../utils/cookies";
+import DateCompleter from "./DateCompleter";
+import S from "./DateTimeEditor.module.scss";
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -369,51 +368,27 @@ export class DateTimeEditor extends React.Component<{
               zIndex: this.isDroppedDown ? 1000 : undefined,
             }}
           >
-            <Tooltip
-              html={
-                <div>
-                  <div>{this.autocompletedText}</div>
-                  <div>"{this.props.outputFormat}"</div>
-                </div>
-              }
-              position="top"
-              arrow={true}
-              trigger="manual"
-              open={this.isTooltipShown}
-              animation="none"
-              duration={0}
-            >
-              <input
-                style={{
-                  color: this.props.foregroundColor,
-                  backgroundColor: this.props.backgroundColor,
-                }}
-                className={S.input}
-                type="text"
-                onBlur={this.handleInputBlur}
-                onFocus={this.handleFocus}
-                /*value={moment(this.props.value, this.props.inputFormat).format(
-            this.props.outputFormat
-          )}*/
-                ref={this.refInput}
-                value={this.textfieldValue}
-                readOnly={this.props.isReadOnly}
-                onChange={this.handleTextfieldChange}
-                onClick={this.props.onClick}
-                onDoubleClick={this.props.onDoubleClick}
-                onKeyDown={this.handleKeyDown}
-              />
-            </Tooltip>
+            <input
+              title={this.autocompletedText + "\n" + '"' + this.props.outputFormat + '"'}
+              style={{
+                color: this.props.foregroundColor,
+                backgroundColor: this.props.backgroundColor,
+              }}
+              className={S.input}
+              type="text"
+              onBlur={this.handleInputBlur}
+              onFocus={this.handleFocus}
+              ref={this.refInput}
+              value={this.textfieldValue}
+              readOnly={this.props.isReadOnly}
+              onChange={this.handleTextfieldChange}
+              onClick={this.props.onClick}
+              onDoubleClick={this.props.onDoubleClick}
+              onKeyDown={this.handleKeyDown}
+            />
             {this.props.isInvalid && (
-              <div className={S.notification}>
-                <Tooltip
-                  html={this.props.invalidMessage}
-                  arrow={true}
-                  animation="none"
-                  duration={0}
-                >
-                  <i className="fas fa-exclamation-circle red" />
-                </Tooltip>
+              <div className={S.notification} title={this.props.invalidMessage}>
+                <i className="fas fa-exclamation-circle red" />
               </div>
             )}
             {!this.props.isReadOnly && (
@@ -449,43 +424,27 @@ export class DateTimeEditor extends React.Component<{
           zIndex: this.isDroppedDown ? 1000 : undefined,
         }}
       >
-        <Tooltip
-          html={
-            <div>
-              <div>{this.autocompletedText}</div>
-              <div>"{this.props.outputFormat}"</div>
-            </div>
-          }
-          position="top"
-          arrow={true}
-          trigger="manual"
-          open={this.isTooltipShown}
-          animation="none"
-          duration={0}
-        >
-          <input
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
-            className={S.input}
-            type="text"
-            onBlur={this.handleInputBlur}
-            onFocus={this.handleFocus}
-            ref={this.refInput}
-            value={this.textfieldValue}
-            readOnly={this.props.isReadOnly}
-            onChange={this.handleTextfieldChange}
-            onClick={this.props.onClick}
-            onDoubleClick={this.props.onDoubleClick}
-            onKeyDown={this.handleKeyDown}
-          />
-        </Tooltip>
+        <input
+          style={{
+            color: this.props.foregroundColor,
+            backgroundColor: this.props.backgroundColor,
+          }}
+          title={this.autocompletedText + "\n" + '"' + this.props.outputFormat + '"'}
+          className={S.input}
+          type="text"
+          onBlur={this.handleInputBlur}
+          onFocus={this.handleFocus}
+          ref={this.refInput}
+          value={this.textfieldValue}
+          readOnly={this.props.isReadOnly}
+          onChange={this.handleTextfieldChange}
+          onClick={this.props.onClick}
+          onDoubleClick={this.props.onDoubleClick}
+          onKeyDown={this.handleKeyDown}
+        />
         {this.props.isInvalid && (
-          <div className={S.notification}>
-            <Tooltip html={this.props.invalidMessage} arrow={true} animation="none" duration={0}>
-              <i className="fas fa-exclamation-circle red" />
-            </Tooltip>
+          <div className={S.notification} title={this.props.invalidMessage}>
+            <i className="fas fa-exclamation-circle red" />
           </div>
         )}
       </div>

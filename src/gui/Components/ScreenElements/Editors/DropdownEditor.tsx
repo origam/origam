@@ -2,7 +2,6 @@ import * as React from "react";
 import { inject, Observer, observer } from "mobx-react";
 import { action, computed, observable, runInAction } from "mobx";
 import S from "./DropdownEditor.module.scss";
-import { Tooltip } from "react-tippy";
 import cx from "classnames";
 
 import _ from "lodash";
@@ -386,15 +385,8 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
               onFocus={this.handleFocus}
             />
             {this.props.isInvalid && (
-              <div className={S.notification}>
-                <Tooltip
-                  html={this.props.invalidMessage}
-                  arrow={true}
-                  animation="none"
-                  duration={0}
-                >
-                  <i className="fas fa-exclamation-circle red" />
-                </Tooltip>
+              <div className={S.notification} title={this.props.invalidMessage}>
+                <i className="fas fa-exclamation-circle red" />
               </div>
             )}
             {!this.props.isReadOnly && (

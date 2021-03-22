@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useMemo, useRef } from "react";
-import { Tooltip } from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
 import S from "./TagInputEditor.module.css";
@@ -45,11 +44,9 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const ref = useContext(CtxDropdownRefCtrl);
       const data = useContext(CtxDropdownEditor).editorData;
 
-      const value = Array.isArray(props.value)
-          ? [...props.value]
-          : props.value;
+      const value = Array.isArray(props.value) ? [...props.value] : props.value;
 
-        function getStyle() {
+      function getStyle() {
         if (props.customStyle) {
           return props.customStyle;
         } else {
@@ -96,12 +93,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
           beh.elmInputElement.value = "";
         }
         previousValueRef.current = value;
-      }, [
-        previousValueRef.current,
-        previousValueRef.current?.length,
-        value,
-        value?.length,
-      ]);
+      }, [previousValueRef.current, previousValueRef.current?.length, value, value?.length]);
 
       function handleInputKeyDown(event: any) {
         if (event.key === "Backspace" && event.target.value === "" && value.length > 0) {
@@ -143,10 +135,8 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
             />
           </TagInput>
           {props.isInvalid && (
-            <div className={CS.notification}>
-              <Tooltip html={props.invalidMessage} arrow={true} animation="none" duration={0}>
-                <i className="fas fa-exclamation-circle red" />
-              </Tooltip>
+            <div className={CS.notification} title={props.invalidMessage}>
+              <i className="fas fa-exclamation-circle red" />
             </div>
           )}
         </div>

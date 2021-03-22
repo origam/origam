@@ -1,15 +1,10 @@
-import { computed } from "mobx";
+import S from "gui/Components/Form/FormField.module.scss";
 import { inject, observer } from "mobx-react";
 import { IDockType } from "model/entities/types/IProperty";
-import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import S from "gui/Components/Form/FormField.module.scss";
-import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
-import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
-import { Tooltip } from "react-tippy";
-import { formatTooltipText } from "../ToolTip/FormatTooltipText";
-
+import { formatTooltipText, formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
 export enum ICaptionPosition {
   Left = "Left",
   Right = "Right",
@@ -43,7 +38,6 @@ export class FormField extends React.Component<{
   captionColor?: string;
   toolTip?: string;
 }> {
-
   get captionStyle() {
     if (this.props.isHidden) {
       return {
@@ -105,19 +99,13 @@ export class FormField extends React.Component<{
     captionStyle["position"] = "static";
 
     return (
-      <Tooltip
-        html={formatTooltipText(this.props.toolTip)}
-        position={"top-start"}
-        theme={"light"}
-        distance={10}
-        style={toolTipStyle}
-        animation="none"
-        duration={0}
+      <label
+        className={S.caption}
+        style={captionStyle}
+        title={formatTooltipPlaintext(this.props.toolTip)}
       >
-        <label className={S.caption} style={captionStyle}>
-          {this.props.caption}
-        </label>
-      </Tooltip>
+        {this.props.caption}
+      </label>
     );
   }
 
@@ -125,18 +113,18 @@ export class FormField extends React.Component<{
     const { props } = this;
     return (
       <>
-        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption && (
-          this.props.toolTip ? (
+        {this.props.captionPosition !== ICaptionPosition.None &&
+          !this.props.hideCaption &&
+          (this.props.toolTip ? (
             this.renderEditorWithToolTip()
           ) : (
             <label className={S.caption} style={this.captionStyle}>
               {props.caption}
             </label>
-         )
-        )}
-          <div className={S.editor} style={this.formFieldStyle}>
-            {props.editor}
-          </div>
+          ))}
+        <div className={S.editor} style={this.formFieldStyle}>
+          {props.editor}
+        </div>
       </>
     );
   }

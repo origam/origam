@@ -4,7 +4,6 @@ import S from "./BoolEditor.module.scss";
 import cx from "classnames";
 import { IFocusAble } from "../../../../model/entities/FocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
-import { Tooltip } from "react-tippy";
 
 @observer
 export class BoolEditor extends React.Component<{
@@ -59,10 +58,8 @@ export class BoolEditor extends React.Component<{
           tabIndex={0}
         />
         {this.props.isInvalid && (
-          <div className={CS.notification}>
-            <Tooltip html={this.props.invalidMessage} arrow={true} animation="none" duration={0}>
-              <i className="fas fa-exclamation-circle red" />
-            </Tooltip>
+          <div className={CS.notification} title={this.props.invalidMessage}>
+            <i className="fas fa-exclamation-circle red" />
           </div>
         )}
       </div>
