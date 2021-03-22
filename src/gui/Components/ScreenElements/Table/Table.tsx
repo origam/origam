@@ -18,7 +18,7 @@ import {
   IToolTipData,
 } from "./TableRendering/types";
 import { renderTable } from "./TableRendering/renderTable";
-import { getTooltip, handleTableClick } from "./TableRendering/onClick";
+import { getTooltip, handleTableClick, handleTableMouseMove } from "./TableRendering/onClick";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
@@ -26,7 +26,10 @@ import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSel
 import { IProperty } from "model/entities/types/IProperty";
 import { Tooltip } from "react-tippy";
 import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
-import { formatTooltipText } from "gui/Components/ToolTip/FormatTooltipText";
+import {
+  formatTooltipText,
+  formatTooltipPlaintext,
+} from "gui/Components/ToolTip/FormatTooltipText";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -46,6 +49,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 
   const clickSubscriptions: IClickSubsItem[] = [];
   const mouseOverSubscriptions: IMouseOverSubsItem[] = [];
+  const mouseMoveSubscriptions: IClickSubsItem[] = [];
 
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
   function drawTable(
@@ -69,6 +73,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       gridDimensions.columnWidths,
       fixedColumnCount,
       clickSubscriptions,
+      mouseMoveSubscriptions,
       mouseOverSubscriptions,
       gridDimensions.rowHeight
     );
@@ -94,6 +99,19 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     return handlingResult;
   }
 
+  function handleMouseMove(event: any) {
+    const domRect = event.target.getBoundingClientRect();
+    const handlingResult = handleTableMouseMove(
+      event,
+      event.clientX - domRect.x,
+      event.clientY - domRect.y,
+      scrollLeftObs.get(),
+      scrollTopObs.get(),
+      mouseMoveSubscriptions
+    );
+    return handlingResult;
+  }
+
   function setViewportSize(width: number, height: number) {
     runInAction(() => {
       viewportWidthObs.set(width);
@@ -109,7 +127,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     );
   }
 
-  return { drawTable, setScroll, handleClick, setViewportSize, getToolTipContent };
+  return { drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getToolTipContent };
 }
 
 export const Table: React.FC<
@@ -314,16 +332,23 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     this.toolTipData = undefined;
     setTimeout(() => {
       runInAction(() => {
+        //console.log("mouseOver", boundingRectangle);
         this.mouseInToolTipEnabledArea = true;
-        this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
+        //this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
       });
     });
+  }
+
+  @action.bound
+  handleScrollerMouseMove(event: any) {
+    this.tableRenderer.handleMouseMove(event);
   }
 
   @observable
   mouseInToolTipEnabledArea = true;
 
   @action.bound onMouseLeaveToolTipEnabledArea(event: any) {
+    this.tablePanelView.currentTooltipText = undefined;
     this.mouseInToolTipEnabledArea = false;
   }
 
@@ -393,7 +418,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                       </div>
                     ) : null)}
 
-                  <div ref={measureRef} className={S.cellAreaContainer}>
+                  <div
+                    ref={measureRef}
+                    className={S.cellAreaContainer}
+                    title={this.tablePanelView.currentTooltipText}
+                  >
                     <>
                       {contentRect.bounds!.height ? (
                         <div className={S.canvasRow}>
@@ -417,36 +446,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           {this.props.renderEditor && this.props.renderEditor()}
                         </PositionedField>
                       )}
-                      {this.toolTipData?.content && this.mouseInToolTipEnabledArea && (
-                        <PositionedField
-                          fixedColumnsCount={this.fixedColumnCount}
-                          rowIndex={this.toolTipData.rowIndex}
-                          columnIndex={this.toolTipData.columnIndex}
-                          scrollOffsetSource={this.props.scrollState}
-                          worldBounds={contentRect.bounds!}
-                          cellRectangle={this.toolTipData.positionRectangle}
-                        >
-                          <div className={S.toolTip}>
-                            <Tooltip
-                              html={formatTooltipText(this.toolTipData.content)}
-                              open={this.toolTipData?.content && this.mouseInToolTipEnabledArea}
-                              position={"right"}
-                              theme={"light"}
-                              animation="none"
-                              duration={0}
-                              distance={0}
-                              className={S.toolTipContainer}
-                            >
-                              <div
-                                style={{
-                                  maxHeight: "5px",
-                                  maxWidth: "5px",
-                                }}
-                              ></div>
-                            </Tooltip>
-                          </div>
-                        </PositionedField>
-                      )}
                       <Scroller
                         ref={this.refScroller}
                         width={contentRect.bounds!.width}
@@ -458,6 +457,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         contentHeight={this.props.gridDimensions.contentHeight + 30}
                         onScroll={this.handleScroll}
                         onClick={this.handleScrollerClick}
+                        onMouseMove={this.handleScrollerMouseMove}
                         onMouseOver={this.onMouseOver}
                         onMouseLeave={(event) => this.onMouseLeaveToolTipEnabledArea(event)}
                         onKeyDown={this.props.onKeyDown}

@@ -143,6 +143,7 @@ export interface IScrollerProps {
   onClick?: (event: any, contentLeft: number, contentTop: number) => void;
   onMouseOver: (event: any, boundingRectangle: DOMRect) => void;
   onMouseLeave: (event: any) => void;
+  onMouseMove?: (event: any, contentLeft: number, contentTop: number) => void;
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onFocus: ()=>void;

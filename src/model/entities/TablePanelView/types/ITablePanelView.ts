@@ -47,6 +47,8 @@ export interface ITablePanelView extends ITablePanelViewData {
   hiddenPropertyIds: Map<string, boolean>;
   aggregations: AggregationContainer;
 
+  currentTooltipText: string | undefined;
+
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;
 

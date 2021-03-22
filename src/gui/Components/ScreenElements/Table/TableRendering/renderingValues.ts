@@ -1,13 +1,12 @@
-import {ValueBox} from "./common/ValueBox";
-import {IClickSubsItem, IMouseOverSubsItem, ITableRow} from "./types";
-import {Memoized} from "./common/Memoized";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {IProperty} from "model/entities/types/IProperty";
-import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import {getDataView} from "model/selectors/DataView/getDataView";
+import { ValueBox } from "./common/ValueBox";
+import { IClickSubsItem, IMouseOverSubsItem, ITableRow } from "./types";
+import { Memoized } from "./common/Memoized";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { IProperty } from "model/entities/types/IProperty";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { getDataView } from "model/selectors/DataView/getDataView";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
-
 
 export const scRenderTable: Array<() => void> = [];
 export const scRenderRow: Array<() => void> = [];
@@ -24,7 +23,7 @@ scRenderRow.push(() => rowIndex.clear());
 
 export const rowId = () => dataTable().getRowId(currentDataRow());
 
-export const selectionColumnShown = () =>  getIsSelectionCheckboxesShown(context());
+export const selectionColumnShown = () => getIsSelectionCheckboxesShown(context());
 
 export const drawingColumnIndex = ValueBox<number>();
 scRenderCell.push(() => drawingColumnIndex.clear());
@@ -52,10 +51,10 @@ export const viewportRight = () => viewportLeft() + viewportWidth();
 
 export const viewportBottom = () => viewportTop() + viewportHeight();
 
-export const worldWidth = Memoized(() => gridLeadCellDimensions().slice(-1)[0].right)
+export const worldWidth = Memoized(() => gridLeadCellDimensions().slice(-1)[0].right);
 scRenderTable.push(() => worldWidth.clear());
 
-export const worldHeight = Memoized(() => tableRowsCount() * rowHeight())
+export const worldHeight = Memoized(() => tableRowsCount() * rowHeight());
 scRenderTable.push(() => worldHeight.clear());
 
 export const rowHeight = ValueBox<number>();
@@ -95,22 +94,29 @@ export const gridLeadCellDimensions = ValueBox<{ left: number; width: number; ri
 scRenderTable.push(gridLeadCellDimensions.clear);
 
 export const propertyById = ValueBox<Map<string, IProperty>>();
-scRenderTable.push(propertyById.clear)
+scRenderTable.push(propertyById.clear);
 
-export const tableRowsCount = () => tableRows().length
+export const tableRowsCount = () => tableRows().length;
 
 export const clickSubscriptions = ValueBox<IClickSubsItem[]>();
-scRenderTable.push(clickSubscriptions.clear)
+scRenderTable.push(() => {
+  clickSubscriptions.clear();
+});
+
+export const mouseMoveSubscriptions = ValueBox<IClickSubsItem[]>();
+scRenderTable.push(() => {
+  mouseMoveSubscriptions.clear();
+});
 
 export const mouseOverSubscriptions = ValueBox<IMouseOverSubsItem[]>();
-scRenderTable.push(mouseOverSubscriptions.clear)
+scRenderTable.push(mouseOverSubscriptions.clear);
 
 export const tablePanelView = () => getTablePanelView(context());
 // export const property = () => getTableViewPropertyById(tablePanelView(),  dataRowColumnIds()[drawingColumnIndex()]!);// currentColumnId()!);
 //export const property = () => getTableViewPropertyByIdx(tablePanelView(), drawingColumnIndex() - realFixedColumnCount());// currentColumnId()!);
- 
+
 export const dataTable = () => getDataTable(tablePanelView());
 export const dataView = () => getDataView(context());
-export const recordId = () =>  dataTable().getRowId(currentDataRow()); 
+export const recordId = () => dataTable().getRowId(currentDataRow());
 
 export const formScreen = () => getFormScreen(context());

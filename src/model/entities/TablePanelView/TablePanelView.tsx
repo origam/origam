@@ -13,7 +13,7 @@ import { IFilterConfiguration } from "../types/IFilterConfiguration";
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { IProperty } from "../types/IProperty";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableCanvas, ITablePanelView, ITablePanelViewData} from "./types/ITablePanelView";
+import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
 import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
 import { IAggregationInfo } from "../types/IAggregationInfo";
 import { AggregationType } from "../types/AggregationType";
@@ -26,7 +26,7 @@ import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
-import {IConfigurationManager} from "model/entities/TablePanelView/types/IConfigurationManager";
+import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -61,6 +61,14 @@ export class TablePanelView implements ITablePanelView {
   @observable hiddenPropertyIds: Map<string, boolean> = new Map();
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
+
+  @observable _currentTooltipText?: string = undefined;
+  @computed get currentTooltipText() {
+    return this._currentTooltipText;
+  }
+  set currentTooltipText(value: string | undefined) {
+    this._currentTooltipText = value;
+  }
 
   parent?: any;
   aggregations: AggregationContainer = new AggregationContainer();
@@ -156,10 +164,7 @@ export class TablePanelView implements ITablePanelView {
       if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
         yield* getDataView(this).navigateLookupLink(property, row);
       } else {
-        if (
-          this.dataTable.getRowId(row) ===
-          this.selectedRowId
-        ) {
+        if (this.dataTable.getRowId(row) === this.selectedRowId) {
           this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
         } else {
@@ -179,14 +184,14 @@ export class TablePanelView implements ITablePanelView {
 
       if (!isReadOnly(property!, rowId)) {
         yield* onFieldChangeG(this)({
-          event: undefined, 
-          row: row, 
-          property: property, 
-          value: !getCellValue(this, row, property), 
+          event: undefined,
+          row: row,
+          property: property,
+          value: !getCellValue(this, row, property),
         });
       }
     }
-    if(!getGroupingConfiguration(this).isGrouping){
+    if (!getGroupingConfiguration(this).isGrouping) {
       this.scrollToCurrentCell();
     }
   }
@@ -211,7 +216,7 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound
   handleTableScroll(event: any, scrollTop: number, scrollLeft: number) {
-    if(!this.handleScrolling){
+    if (!this.handleScrolling) {
       this.handleScrolling = true;
       return;
     }
@@ -225,7 +230,7 @@ export class TablePanelView implements ITablePanelView {
     })();
   }
 
-  dontHandleNextScroll(){
+  dontHandleNextScroll() {
     this.handleScrolling = false;
   }
 

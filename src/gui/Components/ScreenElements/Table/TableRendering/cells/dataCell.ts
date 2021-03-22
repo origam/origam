@@ -21,7 +21,7 @@ import {
   currentRowTop,
   isCurrentCellLoading,
 } from "../currentCell";
-import { onClick, onMouseOver } from "../onClick";
+import { onClick, onMouseOver, onMouseMove } from "../onClick";
 import {
   columnWidths,
   context,
@@ -38,7 +38,9 @@ import {
   checkBoxCharacterFontSize,
   clipCell,
   drawSelectedRowBorder,
-  fontSize, frontStripWidth, selectRowBorderWidth,
+  fontSize,
+  frontStripWidth,
+  selectRowBorderWidth,
   topTextOffset,
 } from "./cellsCommon";
 import {
@@ -93,25 +95,25 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-  const textWidth = ctx2d.measureText(currentCellText()).width / CPR();
-  if (cellWidth - getPaddingLeft() - getPaddingRight() < textWidth) {
-    onMouseOver({
-      x: cellClickableArea.x,
-      y: cellClickableArea.y,
-      w: cellClickableArea.width,
-      h: cellClickableArea.height,
-      toolTipGetter() {
-        return {
-          columnIndex: currentColumnIndex,
-          rowIndex: currentRowIndex,
-          content: cellText,
-          cellWidth: cellWidth,
-          cellHeight: cellHeight,
-          positionRectangle: toolTipPositionRectangle,
-        };
-      },
-    });
-  }
+  const cellTextRendered = cellRenderer.cellText;
+  const textWidth = ctx2d.measureText(cellTextRendered).width / CPR();
+
+  const hasTooltip = cellWidth - getPaddingLeft() - getPaddingRight() < textWidth;
+  const tablePanelView = getTablePanelView(context());
+
+  onMouseMove({
+    x: cellClickableArea.x,
+    y: cellClickableArea.y,
+    w: cellClickableArea.width,
+    h: cellClickableArea.height,
+    handler(event: any) {
+      if (hasTooltip) {
+        tablePanelView.currentTooltipText = cellTextRendered;
+      } else {
+        tablePanelView.currentTooltipText = undefined;
+      }
+    },
+  });
 }
 
 function registerClickHandler(columnId: string) {
@@ -245,23 +247,23 @@ function drawInvalidDataSymbol() {
   }
 
   if (isInvalid && !isLoading) {
-    const leftOffset =  drawingColumnIndex() === 0 && isRowCursor
-        ?  frontStripWidth / 2
-        : 0;
+    const leftOffset = drawingColumnIndex() === 0 && isRowCursor ? frontStripWidth / 2 : 0;
     const topBottomOffset = isRowCursor ? selectRowBorderWidth : 0;
     ctx2d.save();
     ctx2d.fillStyle = "red";
     ctx2d.beginPath();
     ctx2d.moveTo(
-        leftOffset + currentColumnLeft() * CPR(),
-        topBottomOffset + currentRowTop() * CPR());
-    ctx2d.lineTo(
-        (leftOffset + currentColumnLeft() + 5) * CPR(),
-        (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
+      leftOffset + currentColumnLeft() * CPR(),
+      topBottomOffset + currentRowTop() * CPR()
     );
     ctx2d.lineTo(
-        leftOffset + currentColumnLeft() * CPR(),
-        (currentRowTop() + currentRowHeight() - topBottomOffset) * CPR());
+      (leftOffset + currentColumnLeft() + 5) * CPR(),
+      (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
+    );
+    ctx2d.lineTo(
+      leftOffset + currentColumnLeft() * CPR(),
+      (currentRowTop() + currentRowHeight() - topBottomOffset) * CPR()
+    );
     ctx2d.fill();
     ctx2d.restore();
   }
