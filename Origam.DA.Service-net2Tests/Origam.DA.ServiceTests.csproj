@@ -181,6 +181,9 @@
     <Content Include="FilePersistenceProviderTests\TestFiles\.origamPackage">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+	<Content Include="FilePersistenceProviderTests\TestFiles\.origamGroup">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="FlatFileSearchTests\TestFiles\FaultyFile.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -226,11 +229,15 @@
     <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0_WithChild.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScriptContainersTests\TestFiles\BusinessPartner.origam" />
+    <Content Include="ScriptContainersTests\TestFiles\BusinessPartner.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ScriptContainersTests\TestFiles\Security_V5.0.0_.origamPackage">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ScriptContainersTests\TestFiles\TestEntityAction.origam" />
+    <Content Include="ScriptContainersTests\TestFiles\TestEntityAction.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="_OrigamSettings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

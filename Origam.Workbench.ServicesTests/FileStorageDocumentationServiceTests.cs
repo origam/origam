@@ -43,6 +43,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShouldAddTwoDocumenattionItems()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(WritingTestFiles);
             DocumentationComplete dataSet = GetTestDataSet("inputDataSet_2Items.xml");
             sut.SaveDocumentation(dataSet);
@@ -76,6 +77,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShouldLoadDocumennationOfSpecifiedType()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(ReadingTestFiles);
             string loadedDoc = sut.GetDocumentation(
                 new Guid("df7c2a53-c56a-426a-b748-08e656ae46db"),
@@ -87,6 +89,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShoudThrowBecauseCategoryNameIsWrong()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongCategoryName"));
             
@@ -100,6 +103,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShoudThrowBecauseAStringCannotBeParsedToGuid()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongGuid"));
             
@@ -113,6 +117,7 @@ namespace Origam.Workbench.ServicesTests
         [Test]
         public void ShoudThrowBecauseANodeNameIsWrong()
         {
+            ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
             var sut = GetFileStorageDocumentationService(
                 GetDirectory("WrongNodeName"));
             
@@ -137,7 +142,7 @@ namespace Origam.Workbench.ServicesTests
             var mockFileProvider = new MockFileProvider(starageDir);
             var fileStorageDocumentationService =
                 new FileStorageDocumentationService(mockFileProvider, 
-                    new FileEventQueue(new FilePersistenceIndex(new OrigamPathFactory(null))
+                    new FileEventQueue(new FilePersistenceIndex(new OrigamPathFactory(starageDir))
                         ,new NullWatchDog()));
             return fileStorageDocumentationService;
         }
@@ -193,12 +198,13 @@ namespace Origam.Workbench.ServicesTests
         public MockFileProvider(DirectoryInfo testDir)
         {
             this.testDir = testDir;
+            this.LocalizationCache = new LocalizationCache();
         }
         
         public DirectoryInfo GetParentPackageDirectory(Guid itemId) =>
             testDir;
 
-        public bool Has(Guid id) => throw new NotImplementedException();
+        public bool Has(Guid id) => true;
         public DirectoryInfo TopDirectory { get; }
         public object Clone()
         {

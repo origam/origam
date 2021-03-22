@@ -35,7 +35,7 @@ namespace Origam.DA.Service_net2Tests
     {    
         protected override TestContext TestContext =>
             TestContext.CurrentContext;
-        [Test]
+       /// [Test]
         public void ShouldThrowBecauseIdInFoundElementIsMissing()
         {
             var exception = Assert.Throws<ArgumentNullException>(() =>
@@ -60,7 +60,7 @@ namespace Origam.DA.Service_net2Tests
         /// <summary>
         /// Takes 300 ms on 1100 files.
         /// </summary>
-        [Test]
+       /// [Test]
         public void SpeedTest()
         {
             string pathToLargeNumberOfTestFiles = @"C:\Bordel\Serialization";

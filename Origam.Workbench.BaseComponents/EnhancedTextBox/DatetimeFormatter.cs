@@ -214,14 +214,14 @@ namespace Origam.Gui.UI
 
         private string AutoCompleteDate(string incompleteDate)
         {
-            if(incompleteDate.Contains(dateSeparator))
+            if(incompleteDate.Contains(dateSeparator) && (incompleteDate.Split(dateSeparator).Length - 1) == 2)
             {
                 return CompleteDateWithSeparators(incompleteDate);
             }
             return CompleteDateWithoutSeparators(incompleteDate);
         }
 
-        private static string CompleteDateWithSeparators(string incompleteDate)
+        private  string CompleteDateWithSeparators(string incompleteDate)
         {
             var parseSuccess = DateTime.TryParse(incompleteDate, out var date);
             return parseSuccess ? date.ToShortDateString() : incompleteDate;
@@ -271,8 +271,8 @@ namespace Origam.Gui.UI
 
         private string AddYear(string dayAndMonth)
         {
-            return dayAndMonth.Substring(0, 2) + dateSeparator
-                  + dayAndMonth.Substring(2) + dateSeparator
+            return dayAndMonth.Substring(0, 2).Replace(dateSeparator,"") + dateSeparator
+                  + dayAndMonth.Substring(2).Replace(dateSeparator, "") + dateSeparator
                   + timeNowFunc.Invoke().Year;
         }
 

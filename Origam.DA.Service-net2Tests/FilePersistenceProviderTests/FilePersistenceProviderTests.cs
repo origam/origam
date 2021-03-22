@@ -27,13 +27,15 @@ using System.Xml;
 using System.Xml.Serialization;
 using MoreLinq;
 using NUnit.Framework;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
+using Origam.DA.Service_net2Tests;
 using Origam.TestCommon;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
 
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.ServiceTests
 {
     public class FilePersistenceProviderTests: AbstractFileTestClass
     {     
@@ -45,6 +47,7 @@ namespace Origam.DA.Service_net2Tests
         [Test]
         public void ShouldUpdateItemInOrigamFile()
         {
+            ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
             var testObj1 = new TestItem(persistor.DefaultFolders)
@@ -53,7 +56,8 @@ namespace Origam.DA.Service_net2Tests
                 TestBool = true,
                 TestInt = 5,
                 TestString="test1",
-                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6")
+                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             var testObj2 = new TestItem(persistor.DefaultFolders)
             {
@@ -61,13 +65,14 @@ namespace Origam.DA.Service_net2Tests
                 TestBool = true,
                 TestInt = 5,
                 TestString="test2",
-                FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322")
+                FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             persistor.Persist(new List<IFilePersistent> {testObj1, testObj2});
 
             XmlNode rootNode = LoadXml(testObj2.RelativeFilePath).ChildNodes[1];
             var persistedTestBool =
-                bool.Parse(rootNode.FirstChild.FirstChild.Attributes["testBool"].Value);
+                bool.Parse(rootNode.FirstChild.FirstChild.Attributes["ti:testBool"].Value);
             Assert.That(persistedTestBool, Is.EqualTo(true));
             
             testObj1.TestBool = false;
@@ -75,13 +80,14 @@ namespace Origam.DA.Service_net2Tests
             
             rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
             persistedTestBool =
-                bool.Parse(rootNode.FirstChild.Attributes["testBool"].Value);
+                bool.Parse(rootNode.FirstChild.Attributes["ti:testBool"].Value);
              Assert.That(persistedTestBool, Is.EqualTo(false));
         }
 
         [Test]
         public void ShouldMoveItemInFileWhenParentChangedToSomethingOutSideOfTheFile()
         {
+            ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
             var testObj1 = new TestItem(persistor.DefaultFolders)
@@ -90,7 +96,8 @@ namespace Origam.DA.Service_net2Tests
                 TestBool = true,
                 TestInt = 5,
                 TestString="test1",
-                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6")
+                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             var testObj2 = new TestItem(persistor.DefaultFolders)
             {
@@ -98,7 +105,8 @@ namespace Origam.DA.Service_net2Tests
                 TestBool = true,
                 TestInt = 5,
                 TestString="test2",
-                FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322")
+                FileParentId = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
             
@@ -131,15 +139,17 @@ namespace Origam.DA.Service_net2Tests
         [Test]
         public void ShouldMoveItemInFileWhenParentChangedToAnItemTheFile()
         {
+            ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
             var testObj1 = new TestItem(persistor.DefaultFolders)
             {
-                Id= new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
+                Id = new Guid("1d5ff1c0-0972-4e9d-a2da-cb5e62202322"),
                 TestBool = true,
                 TestInt = 5,
-                TestString="test1",
-                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6")
+                TestString = "test1",
+                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             var testObj2 = new TestItem(persistor.DefaultFolders)
             {
@@ -147,7 +157,8 @@ namespace Origam.DA.Service_net2Tests
                 TestBool = true,
                 TestInt = 5,
                 TestString="test2",
-                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6")
+                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
             
@@ -180,6 +191,7 @@ namespace Origam.DA.Service_net2Tests
         [Test]
         public void ShouldNotDeleteChildrenWhenUpdatingParentNode()
         {
+            ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
             var testObj1 = new TestItem(persistor.DefaultFolders)
@@ -188,7 +200,8 @@ namespace Origam.DA.Service_net2Tests
                 TestBool = true,
                 TestInt = 5,
                 TestString="test1",
-                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6")
+                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             var testObj2 = new TestItem(persistor.DefaultFolders)
             {
@@ -196,13 +209,15 @@ namespace Origam.DA.Service_net2Tests
                 TestBool = true,
                 TestInt = 5,
                 TestString="test2",
-                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6")
+                FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             var testObj3 = new TestItem(persistor.DefaultFolders)
             {
                 Id= new Guid("0c0cc916-5142-41ea-b3ca-a9916736157a"),
                 TestString="test3",
-                FileParentId = new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63")
+                FileParentId = new Guid("9602d3b7-60df-4f43-92d0-881ab4764d63"),
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
             persistor.Persist(new List<IFilePersistent>{testObj1, testObj2, testObj3});
             
@@ -234,17 +249,19 @@ namespace Origam.DA.Service_net2Tests
 
         [Test]
         public void ShouldWriteAndReadTestItem()
-        {  
+        {
+            ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
+            ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);
-
             var origTestObject = new TestItem(persistor.DefaultFolders)
             {
                 TestBool = true,
                 TestInt = 5,
-                TestString="test1",
-                TestXml ="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;string&gt;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;&lt;/string&gt;",
-                TestImage = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9},
-                NullImage = null
+                TestString = "test1",
+                TestXml = "&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;string&gt;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;&lt;/string&gt;",
+                TestImage = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                NullImage = null,
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
 
             persistor.PersistSingle(origTestObject);            
@@ -258,7 +275,8 @@ namespace Origam.DA.Service_net2Tests
         
         [Test]
         public void ShouldNotWriteFieldsWithDefaultValues()
-        {  
+        {
+            ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             var persistor = new PersitHelper(TestFilesDir.FullName);
 
             var origTestObject = new TestItem(persistor.DefaultFolders)
@@ -268,7 +286,8 @@ namespace Origam.DA.Service_net2Tests
                 TestString="test1",
                 TestXml ="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;string&gt;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&gt;&lt;/string&gt;",
                 TestImage = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9},
-                NullImage = null
+                NullImage = null,
+                PersistenceProvider = persistor.GetPersistenceProvider()
             };
 
             persistor.PersistSingle(origTestObject); 
@@ -281,40 +300,43 @@ namespace Origam.DA.Service_net2Tests
                 .Select(attr => attr.Name)
                 .ToHashSet();
             
-            Assert.That(attributeNames.Contains("testEmptyBool"));
-            Assert.That(!attributeNames.Contains("testEmptyInt"));
-            Assert.That(!attributeNames.Contains("testEmptyString"));
-        }  
+            Assert.That(attributeNames.Contains("ti:testEmptyBool"));
+            Assert.That(!attributeNames.Contains("ti:testEmptyInt"));
+            Assert.That(!attributeNames.Contains("ti:testEmptyString"));
+        }
+
+        private OrigamSettings GetTestOrigamSettings()
+        {
+            OrigamSettings settings = new OrigamSettings();
+            return settings;
+        }
     }
 
     [XmlRoot("test", Namespace = "http://schemas.origam.com/1.0.0/model-test")]
+    [ClassMetaVersion("6.0.1")]
     internal class TestItem : IFilePersistent
     {
         private readonly PropertyContainer<string> testXmlContainer;
         private readonly PropertyContainer<byte[]> testImageContainer;
         private readonly PropertyContainer<byte[]> nullImageContainer;
 
-        public TestItem()
+        public TestItem(Key primaryKey)
         {
+            PrimaryKey = primaryKey;
             testXmlContainer = new PropertyContainer<string>(
-                containerName: nameof(testXmlContainer),
-                containingObject: this);
-            
+              containerName: nameof(testXmlContainer),
+              containingObject: this);
+
             testImageContainer = new PropertyContainer<byte[]>(
                 containerName: nameof(testImageContainer),
                 containingObject: this);
-            
+
             nullImageContainer = new PropertyContainer<byte[]>(
                 containerName: nameof(nullImageContainer),
                 containingObject: this);
         }
 
-        public TestItem(Key primaryKey):this()
-        {
-            PrimaryKey = primaryKey;
-        }
-
-        public TestItem(IList<string> persistorDefaultFolders):this()
+        public TestItem(IList<string> persistorDefaultFolders)
         {
             ParentFolderIds.Add(persistorDefaultFolders[0], new Guid("1112687f-be11-49ec-a2eb-fba58d945b3e"));
             ParentFolderIds.Add(persistorDefaultFolders[1], new Guid("1113687f-be11-49ec-a2eb-fba58d945b3e"));
@@ -322,6 +344,17 @@ namespace Origam.DA.Service_net2Tests
             {
                 ["Id"] = new Guid("1111687f-be11-49ec-a2eb-fba58d945b3e")
             };
+            testXmlContainer = new PropertyContainer<string>(
+             containerName: nameof(testXmlContainer),
+             containingObject: this);
+
+            testImageContainer = new PropertyContainer<byte[]>(
+                containerName: nameof(testImageContainer),
+                containingObject: this);
+
+            nullImageContainer = new PropertyContainer<byte[]>(
+                containerName: nameof(nullImageContainer),
+                containingObject: this);
         }
 
         
