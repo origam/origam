@@ -112,12 +112,15 @@ export class CDataViewHeaderInner extends React.Component<{
       .filter((action) => this.shouldBeShown(action));
   }
 
-  renderMenuActions() {
+  renderMenuActions(args: { setMenuDropped(state: boolean): void }) {
     return this.relevantMenuActions.map((action) => {
       return (
         <DropdownItem
           key={action.id}
-          onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+          onClick={(event) => {
+            args.setMenuDropped(false);
+            uiActions.actions.onActionClick(action)(event, action);
+          }}
         >
           {action.caption}
         </DropdownItem>
@@ -535,7 +538,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                   </DropdownItem>,
                                 ]}
                                 {this.relevantMenuActions.length > 0 && <DropdownDivider />}
-                                {this.renderMenuActions()}
+                                {this.renderMenuActions({ setMenuDropped: setDropped })}
                               </Dropdown>
                             )}
                           />
