@@ -35,10 +35,6 @@ export class OpenedScreen implements IOpenedScreen {
   @observable content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
 
-  get formTitle(){
-    return this.content.formScreen?.title ?? this.title;
-  }
-
   get title(){
     return this.content.formScreen?.dynamicTitle ?? this._title;
   }
