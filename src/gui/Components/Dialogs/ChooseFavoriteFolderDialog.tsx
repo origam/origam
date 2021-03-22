@@ -1,4 +1,4 @@
-import { observer, Provider } from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
 import { ModalWindow } from "gui/Components/Dialog/Dialog";
@@ -19,8 +19,6 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
   @observable
   selectedOption: IOption<FavoriteFolder>;
 
-  refInput = React.createRef<HTMLSelectElement>();
-
   constructor(props: any) {
     super(props);
     this.options = this.props.favorites.map((favorite) => {
@@ -29,19 +27,11 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
     this.selectedOption = this.options[0];
   }
 
-  componentDidMount() {
-    this.refInput.current?.focus();
-  }
-
   onKeydown(event: React.KeyboardEvent<HTMLSelectElement>) {
     if (event.key === "Enter") {
       this.props.onOkClick(this.selectedOption.value.id);
     }
   }
-
-  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
-  elmPrimaryBtn: any;
-
 
   render() {
     return (
@@ -53,7 +43,6 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
             <button
               tabIndex={0}
               autoFocus={true}
-              ref={this.refPrimaryBtn}
               onClick={() => this.props.onOkClick(this.selectedOption.value.id)}
             >
               {T("Ok", "button_ok")}

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef } from "react";
 import { Tooltip } from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
@@ -15,7 +15,6 @@ import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
-import { IFocusAble } from "model/entities/FocusManager";
 
 export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
@@ -46,7 +45,11 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const ref = useContext(CtxDropdownRefCtrl);
       const data = useContext(CtxDropdownEditor).editorData;
 
-      function getStyle() {
+      const value = Array.isArray(props.value)
+          ? [...props.value]
+          : props.value;
+
+        function getStyle() {
         if (props.customStyle) {
           return props.customStyle;
         } else {
@@ -61,11 +64,11 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         if (props.isReadOnly) {
           return;
         }
-        const index = props.value.indexOf(item);
+        const index = value.indexOf(item);
         if (index > -1) {
-          const removedItem = props.value.splice(index, 1)[0];
+          const removedItem = value.splice(index, 1)[0];
           if (props.onChange) {
-            props.onChange(event, props.value);
+            props.onChange(event, value);
           }
           if (props.onEditorBlur) {
             props.onEditorBlur(event);
@@ -89,20 +92,20 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const previousValueRef = useRef<string[]>();
 
       useEffect(() => {
-        if (previousValueRef.current?.length !== props.value?.length) {
+        if (previousValueRef.current?.length !== value?.length) {
           beh.elmInputElement.value = "";
         }
-        previousValueRef.current = props.value;
+        previousValueRef.current = value;
       }, [
         previousValueRef.current,
         previousValueRef.current?.length,
-        props.value,
-        props.value?.length,
+        value,
+        value?.length,
       ]);
 
       function handleInputKeyDown(event: any) {
-        if (event.key === "Backspace" && event.target.value === "" && props.value.length > 0) {
-          removeItem(event, props.value[props.value.length - 1]);
+        if (event.key === "Backspace" && event.target.value === "" && value.length > 0) {
+          removeItem(event, value[value.length - 1]);
         }
         beh.handleInputKeyDown(event);
       }
@@ -110,8 +113,8 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       return (
         <div className={CS.editorContainer} ref={ref}>
           <TagInput className={S.tagInput}>
-            {props.value
-              ? props.value.map((valueItem, idx) => (
+            {value
+              ? value.map((valueItem, idx) => (
                   <TagInputItem key={valueItem}>
                     <TagInputItemDelete
                       onClick={(event) => {
