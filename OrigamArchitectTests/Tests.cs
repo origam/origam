@@ -83,7 +83,7 @@ namespace OrigamArchitectTests
                 .Services
                 .GetService<IPersistenceService>()
                 .SchemaProvider
-                .RetrieveInstance(typeof(T), new Key { { "Id", id } });
+                .RetrieveInstance(typeof(T), new Key {{ "Id", id }});
         }
     }
 }
