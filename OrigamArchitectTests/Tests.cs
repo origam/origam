@@ -33,17 +33,18 @@ namespace OrigamArchitectTests
     [TestFixture]
     public class ArchitectTests
     {
-        //[Test,  Order(1)]
+        [Test,  Order(1)]
+        [Ignore("Disable test.")]
         public void ShouldCreateNewEntity()
         {
             OrigamEngine.ConnectRuntime(
                 customServiceFactory: new TestRuntimeServiceFactory(),
                 runRestartTimer: false);
 
-            SchemaItemGroup parentGroup = 
+            SchemaItemGroup parentGroup =
                 GetItemById<SchemaItemGroup>(new Guid("d86679c6-3cee-419e-afc0-98011fad460e"));
 
-            TableMappingItem newItem = 
+            TableMappingItem newItem =
                 EntityHelper.CreateTable("Test1", parentGroup, true);
 
             TableMappingItem persistedItem = GetItemById<TableMappingItem>(newItem.Id);
@@ -76,13 +77,13 @@ namespace OrigamArchitectTests
         }
 
 
-        private static T GetItemById<T>(Guid id) 
+        private static T GetItemById<T>(Guid id)
         {
             return (T)ServiceManager
                 .Services
                 .GetService<IPersistenceService>()
                 .SchemaProvider
-                .RetrieveInstance(typeof(T),  new Key {{"Id" , id}});
+                .RetrieveInstance(typeof(T), new Key { { "Id", id } });
         }
     }
 }
