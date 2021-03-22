@@ -31,6 +31,7 @@ namespace Origam.DA.ServiceTests.ScriptContainersTests
     [TestFixture]
     public class PackageScriptContainerTests: ClassUpgradeTestBase
     {
+        protected override string DirName => "ScriptContainersTests";
         [Test]
         public void ShouldRenameSchemaExtensionToPackage()
         {

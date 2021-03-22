@@ -7,6 +7,7 @@ namespace Origam.DA.ServiceTests.ScriptContainersTests
     [TestFixture]
     public class EntityUIActionScriptContainerTests: ClassUpgradeTestBase
     {
+        protected override string DirName => "ScriptContainersTests";
         [Test]
         public void ShouldCreteChildren()
         {
