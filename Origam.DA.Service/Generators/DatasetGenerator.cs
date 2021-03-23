@@ -830,9 +830,9 @@ namespace Origam.DA.Service
             // auditing exclusion
             EntityAuditingType auditing = !(column is DetachedField)
                 ? entity.AuditingType : EntityAuditingType.None;
-            FieldMappingItem databaseField = column as FieldMappingItem;
-            if (databaseField != null)
+            if (column is FieldMappingItem databaseField)
             {
+				tableColumn.ExtendedProperties.Add(Const.IsDatabaseField, true);
                 auditing = !databaseField.ExcludeFromAuditing ?
                     entity.AuditingType : EntityAuditingType.None;
             }
