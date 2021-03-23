@@ -3787,7 +3787,10 @@ namespace Origam.DA.Service
         {
             int i = 0;
             StringBuilder concatBuilder = new StringBuilder();
-            concatBuilder.Append("TRIM( ', ' FROM ");
+            if (columnRenderItems.Count > 1)
+            {
+                concatBuilder.Append("TRIM( ', ' FROM ");
+            }
             foreach (ColumnRenderItem columnRenderItem in columnRenderItems)
             {
                 if (i > 0)
@@ -3806,7 +3809,10 @@ namespace Origam.DA.Service
                 concatBuilder.Append(nonNullExpression);
                 i++;
             }
-            concatBuilder.Append(")");
+            if (columnRenderItems.Count > 1)
+            {
+                concatBuilder.Append(")");
+            }
             return concatBuilder.ToString();
         }
 
