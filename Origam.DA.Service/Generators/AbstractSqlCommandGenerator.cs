@@ -3787,7 +3787,9 @@ namespace Origam.DA.Service
         {
             int i = 0;
             StringBuilder concatBuilder = new StringBuilder();
-            if (columnRenderItems.Count > 1)
+            bool shouldTrimSeparator = !string.IsNullOrEmpty(separator) &&
+                              columnRenderItems.Count > 1;
+            if (shouldTrimSeparator)
             {
                 concatBuilder.Append($"TRIM( {separator} FROM ");
             }
@@ -3809,7 +3811,7 @@ namespace Origam.DA.Service
                 concatBuilder.Append(nonNullExpression);
                 i++;
             }
-            if (columnRenderItems.Count > 1)
+            if (shouldTrimSeparator)
             {
                 concatBuilder.Append(")");
             }
