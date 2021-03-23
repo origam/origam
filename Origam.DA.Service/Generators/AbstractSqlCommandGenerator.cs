@@ -3789,7 +3789,7 @@ namespace Origam.DA.Service
             StringBuilder concatBuilder = new StringBuilder();
             if (columnRenderItems.Count > 1)
             {
-                concatBuilder.Append("TRIM( ', ' FROM ");
+                concatBuilder.Append($"TRIM( {separator} FROM ");
             }
             foreach (ColumnRenderItem columnRenderItem in columnRenderItems)
             {
