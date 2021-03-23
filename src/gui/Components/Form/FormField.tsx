@@ -92,16 +92,10 @@ export class FormField extends React.Component<{
   }
 
   renderEditorWithToolTip() {
-    const toolTipStyle = this.captionStyle as any;
-    toolTipStyle["position"] = "absolute";
-
-    const captionStyle = this.captionStyle as any;
-    captionStyle["position"] = "static";
-
-    return (
+   return (
       <label
         className={S.caption}
-        style={captionStyle}
+        style={this.captionStyle}
         title={formatTooltipPlaintext(this.props.toolTip)}
       >
         {this.props.caption}
