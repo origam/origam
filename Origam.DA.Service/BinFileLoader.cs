@@ -210,13 +210,13 @@ namespace Origam.DA.Service
         {
             Dictionary<string, int> newStats = itemTracker.GetStats();
             Dictionary<string, int> loadedStats = serializationData.ItemTrackerStats;
-            if (!AreTrackerStatsAreEqual(newStats, loadedStats))
+            if (!AreTrackerStatsEqual(newStats, loadedStats))
             {
                 HandleTrackerStatsAreNotEqual(newStats, loadedStats);
             }
         }
 
-        private bool AreTrackerStatsAreEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats)
+        private bool AreTrackerStatsEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats)
         {
             foreach (string statName in newStats.Keys)
             {
@@ -227,8 +227,7 @@ namespace Origam.DA.Service
             }
             return true;
         }
-
-
+        
         private void HandleTrackerStatsAreNotEqual(Dictionary<string, int> newStats, Dictionary<string, int> loadedStats) {
             log.Error(
                 $"Error when loading index file:{indexFile}, data is inconsistent." +
@@ -248,7 +247,7 @@ namespace Origam.DA.Service
                        testTracker.AddOrReplace(x);
                        testTracker.AddOrReplaceHash(x);
                    });
-            if (!AreTrackerStatsAreEqual(testTracker.GetStats(), originalTracker.GetStats()))
+            if (!AreTrackerStatsEqual(testTracker.GetStats(), originalTracker.GetStats()))
             {
                 SaveItemTrackersForDebugging(originalTracker, testTracker);
                 HandleTrackerStatsAreNotEqual(testTracker.GetStats(), originalTracker.GetStats());
