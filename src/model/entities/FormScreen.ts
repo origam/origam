@@ -65,6 +65,14 @@ export class FormScreen implements IFormScreen {
   componentBindings: IComponentBinding[] = [];
 
   setPanelSize(id: string, size: number) {
+    if(!this.panelConfigurations.has(id)){
+      this.panelConfigurations.set(
+          id,
+          {
+            position:undefined,
+            defaultOrdering: undefined}
+          )
+    }
     this.panelConfigurations.get(id)!.position = size;
   }
 

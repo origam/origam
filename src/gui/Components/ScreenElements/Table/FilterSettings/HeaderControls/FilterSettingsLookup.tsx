@@ -310,8 +310,8 @@ export function FilterBuildDropdownEditor(props: {
     };
   });
 
-  function onItemRemoved(event: any, item: any) {
-    props.onChange(props.values);
+  function onItemRemoved(event: any, value: string[]) {
+    props.onChange(value);
   }
 
   const value = props.values;
