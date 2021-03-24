@@ -668,7 +668,6 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.Connect_MenuItem, new ConnectRepository(), Images.Home, Keys.None, _fileMenu);
 			CreateMenuItem(strings.Disconnect_MenuItem, new DisconnectRepository(), null, Keys.None, _fileMenu);
 			CreateMenuItem(strings.ConnectionConfig_MenuItem, new EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
-			AsMenuCommand mnuPersistSchema = CreateMenuItem(strings.UpdateModelRepository_MenuItem, new PersistSchema(), Images.SaveToDatabase, Keys.Control | Keys.Shift | Keys.S, _fileMenu);
 			AsMenuCommand mnuServerRestart = CreateMenuItem(strings.SetServerRestart_MenuItem, new Commands.SetServerRestart(), Images.RestartServer, Keys.None, _toolsMenu);
 			using (SqlViewer vwr = new SqlViewer(null))
             {
@@ -676,14 +675,8 @@ namespace OrigamArchitect
 			}
 
 			_fileMenu.SubItems.Add(CreateSeparator());
-			
-			CreateMenuItem(strings.ImportPackagesFromRepository_MenuItem, new ImportPackagesFromRepository(), null, Keys.None, _fileMenu);
-			CreateMenuItem(strings.ExportModel_MenuItem, new ExportSchemaToFile(), null, Keys.None, _fileMenu);
-			CreateMenuItem(strings.ImportUpdatedModel_MenuItem, new ImportSchemaFromFile(), null, Keys.None, _fileMenu);
-			CreateMenuItem(strings.ExportSinglePackage_MenuItem, new ExportPackageToFile(), null, Keys.None, _fileMenu);
-			CreateMenuItem(strings.ImportSinglePackage_Menuitem, new ImportPackageFromFile(), null, Keys.None, _fileMenu);
+
 			CreateMenuItem(strings.RunUpdateScripts_MenuItem, new DeployVersion(), null, Keys.None, _fileMenu);
-			CreateMenuItem(strings.UpdateModel_MenuItem, new UpdateModelAndTargetEnvironment(), null, Keys.None, _fileMenu);
 			
 			_fileMenu.SubItems.Add(CreateSeparator());
 			
@@ -692,8 +685,7 @@ namespace OrigamArchitect
 			ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuSave,ImageRes.Save));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuRefresh,ImageRes.Refresh));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
-           
-			toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuPersistSchema,ImageRes.UpdateModelRepository));
+
 			toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
 #endif
         }
@@ -800,8 +792,6 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.ShowTrace_MenuItem, new Commands.ShowTrace(), null, Keys.Control | Keys.T, _toolsMenu);
 			CreateMenuItem(strings.ResetUserCache_MenuItem, new Commands.ResetUserCaches(), null, Keys.None, _toolsMenu);
 			CreateMenuItem(strings.RebuildLocalizationFiles_MenuItem, new Commands.GenerateLocalizationFile(), null, Keys.None, _toolsMenu);
-            CreateMenuItem("Convert to File Storage", new Commands.ConvertModelToFileStorage(), null, Keys.None, _toolsMenu);
-			CreateMenuItem("Compare to Original DB data", new Commands.CompareToOriginalDBData(), null, Keys.None, _toolsMenu);
         }
 
         private void UpdateMenu()
