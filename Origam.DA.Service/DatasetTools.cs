@@ -528,6 +528,7 @@ namespace Origam.DA
 
 						// Compare & update fields (UPDATE ?)
 						bRowModified = false;
+						bool shouldUpdateSystemColumns = false;
 						for (iCol = 0; inout_dtTarget.Columns.Count > iCol; ++iCol)
 						{
 							string colName = inout_dtTarget.Columns[iCol].ColumnName;
@@ -569,7 +570,15 @@ namespace Origam.DA
 											drTarget[colName] = DatasetTools.ConvertValue(drSource[colName], col.DataType);
 
 											bRowModified = true;
-											if (!changedColumns.Contains(col.ExtendedProperties["Id"])) changedColumns.Add(col.ExtendedProperties["Id"], col);
+											if (!changedColumns.Contains(col.ExtendedProperties["Id"]))
+											{
+												changedColumns.Add(col.ExtendedProperties["Id"], col);
+												if (col.ExtendedProperties.Contains(Const.IsDatabaseField) &&
+												    (bool) col.ExtendedProperties[Const.IsDatabaseField])
+												{
+													shouldUpdateSystemColumns = true;
+												}
+											}
 										}
 									}
 								}
@@ -579,7 +588,10 @@ namespace Origam.DA
 						if (bRowModified)
 						{
 							// only put RecordUpdated and RecordUpdatedBy if the data has actually changed
-							UpdateOrigamSystemColumns(drTarget, false, mergeParams.ProfileId, changedColumns);
+							if (shouldUpdateSystemColumns)
+							{
+								UpdateOrigamSystemColumns(drTarget, false, mergeParams.ProfileId, changedColumns);
+							}
 							drTarget.EndEdit();
 							changed = true;
 
