@@ -634,8 +634,7 @@ namespace OrigamArchitect
 				CreateMenuItem(strings.ConnectionConfig_MenuItem, new Origam.Workbench.Commands.EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
 
 				_fileMenu.SubItems.Add(CreateSeparator());
-				
-				CreateMenuItem(strings.Refresh_MenuItem, new Commands.UpdateModelAndTargetEnvironment(), null, Keys.None, _fileMenu);
+                
 				CreateMenuItem(strings.RunRefreshActions_MenuItem, new DeployVersion(), null, Keys.None, _fileMenu);
 			}
 
@@ -1746,8 +1745,8 @@ namespace OrigamArchitect
         {
             GetPad<AuditLogPad>().ClearList();
             GetPad<ExtensionPad>().UnloadPackages();
-            GetPad<FindSchemaItemResultsPad>().Clear();
-            GetPad<FindRulesPad>().Clear();
+            GetPad<FindSchemaItemResultsPad>()?.Clear();
+            GetPad<FindRulesPad>()?.Clear();
         }
 
         private void SaveWorkspace()
@@ -2361,7 +2360,7 @@ namespace OrigamArchitect
 				{
 					if((Guid)extension.PrimaryKey["Id"] == new Guid("147FA70D-6519-4393-B5D0-87931F9FD609"))
 					{
-						if(! extension.VersionString.Equals("5.0"))
+						if(extension.Version < new PackageVersion("5.0.0"))
 						{
 							MessageBox.Show(this, strings.ModelVersionErrorMessage, strings.ModelVersionTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
 							Disconnect();

@@ -426,9 +426,6 @@
   <data name="ConnectionConfig_MenuItem" xml:space="preserve">
     <value>&amp;Konfigurace připojení...</value>
   </data>
-  <data name="Refresh_MenuItem" xml:space="preserve">
-    <value>&amp;Aktualizovat...</value>
-  </data>
   <data name="RunRefreshActions_MenuItem" xml:space="preserve">
     <value>Sp&amp;ustit aktualizační akce</value>
   </data>

@@ -1114,7 +1114,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Model OrigamRoot version must be 5.00. Cannot run the application..
+        ///   Looks up a localized string similar to Model OrigamRoot version must be greater than 5.0.0 Cannot run the application..
         /// </summary>
         internal static string ModelVersionErrorMessage {
             get {
@@ -1335,15 +1335,6 @@ namespace OrigamArchitect {
         internal static string Refresh_MenuCommand {
             get {
                 return ResourceManager.GetString("Refresh_MenuCommand", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Update....
-        /// </summary>
-        internal static string Refresh_MenuItem {
-            get {
-                return ResourceManager.GetString("Refresh_MenuItem", resourceCulture);
             }
         }
         
