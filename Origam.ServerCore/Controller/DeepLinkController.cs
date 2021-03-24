@@ -25,7 +25,7 @@ using Microsoft.Extensions.Logging;
 using Origam.OrigamEngine.ModelXmlBuilders;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
-using Origam.ServerCore.Model.HashTag;
+using Origam.ServerCore.Model.DeepLink;
 using Origam.ServerCore.Resources;
 using Origam.Services;
 using Origam.Workbench.Services;
@@ -39,10 +39,10 @@ namespace Origam.ServerCore.Controller
 {
     [ApiController]
     [Route("internalApi/[controller]")]
-    public class HashTagController : AbstractController
+    public class DeepLinkController : AbstractController
     {
         private readonly ILogger<AbstractController> logger;
-        public HashTagController(
+        public DeepLinkController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log) : base(log, sessionObjects)
@@ -65,14 +65,14 @@ namespace Origam.ServerCore.Controller
         }
         [HttpPost("{categoryId}/labels")]
         public IActionResult GetLookupLabelRequest(string categoryId,
-            [FromBody] HashtagLabelInput label)
+            [FromBody] DeepLinkLabelInput label)
         {
             return RunWithErrorHandler(() =>
                 GetLookupLabel(categoryId, label.LabelIds));
         }
         private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
         {
-            HashtagCategory category = GetCategory(categoryId);
+            DeepLinkCategory category = GetCategory(categoryId);
             if (category == null)
             {
                 return NotFound();
@@ -84,15 +84,15 @@ namespace Origam.ServerCore.Controller
             }
             return Forbid();
         }
-        private HashtagCategory GetCategory(string categoryId)
+        private DeepLinkCategory GetCategory(string categoryId)
         {
-            var hashtagProvider = GetHasTagProvider();
-            HashtagCategory category = hashtagProvider.GetChildByName(
-                categoryId, HashtagCategory.CategoryConst) as HashtagCategory;
+            var deepLinkProvider = GetDeepLinkProvider();
+            DeepLinkCategory category = deepLinkProvider.GetChildByName(
+                categoryId, DeepLinkCategory.CategoryConst) as DeepLinkCategory;
             return category;
         }
         private Dictionary<object, string> GetLookupLabelsInternal(
-           HashtagCategory input, object[] labelIds)
+           DeepLinkCategory input, object[] labelIds)
         {
             IDataLookupService lookupService
                    = ServiceManager.Services.GetService<IDataLookupService>();
@@ -110,23 +110,23 @@ namespace Origam.ServerCore.Controller
             return labelDictionary;
         }
         [HttpPost("[action]")]
-        public IActionResult GetMenuId([FromBody] GetHashtagMenuInput input)
+        public IActionResult GetMenuId([FromBody] GetDeepLinkMenuInput input)
         {
             return RunWithErrorHandler(() => Ok(GetMenuId(
-                hashtagCategory: input.Category,
+                deepLinkCategory: input.Category,
                 ReferenceId: input.ReferenceId))
             );
         }
-        private string GetMenuId(string hashtagCategory, Guid ReferenceId)
+        private string GetMenuId(string deepLinkCategory, Guid ReferenceId)
         {
             return ServiceManager.Services
                 .GetService<IDataLookupService>()
-                .GetMenuBinding(GetCategory(hashtagCategory).LookupId, ReferenceId)
+                .GetMenuBinding(GetCategory(deepLinkCategory).LookupId, ReferenceId)
                 .MenuId;
         }
         private IActionResult GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
         {
-            HashtagCategory category = GetCategory(categoryId);
+            DeepLinkCategory category = GetCategory(categoryId);
             if (category != null)
             {
                  var lookupData = GetLookupData(category, limit, pageNumber, searchPhrase);
@@ -134,12 +134,12 @@ namespace Origam.ServerCore.Controller
             }
             return NotFound();
         }
-        private HashTagCategorySchemaItemProvider GetHasTagProvider()
+        private DeepLinkCategorySchemaItemProvider GetDeepLinkProvider()
         {
             var schemaservice = ServiceManager.Services.GetService<SchemaService>();
-            return schemaservice.GetProvider<HashTagCategorySchemaItemProvider>();
+            return schemaservice.GetProvider<DeepLinkCategorySchemaItemProvider>();
         }
-        private Result<IEnumerable<object[]>, IActionResult> GetLookupData(HashtagCategory hashT, int limit, int pageNumber, string searchPhrase)
+        private Result<IEnumerable<object[]>, IActionResult> GetLookupData(DeepLinkCategory hashT, int limit, int pageNumber, string searchPhrase)
         {
             IDataLookupService lookupService
                     = ServiceManager.Services.GetService<IDataLookupService>();
@@ -160,9 +160,9 @@ namespace Origam.ServerCore.Controller
                 : Result.Failure<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
         }
-        private string[] GetListColumn(HashtagCategory hashtagCategory)
+        private string[] GetListColumn(DeepLinkCategory deepLinkCategory)
         {
-            string displayColumn = hashtagCategory.Lookup.ListValueMember +";" +hashtagCategory.Lookup.ListDisplayMember;
+            string displayColumn = deepLinkCategory.Lookup.ListValueMember +";" +deepLinkCategory.Lookup.ListDisplayMember;
             return displayColumn.Split(";");
         }
         private IEnumerable<object[]> GetRowData(
@@ -188,32 +188,32 @@ namespace Origam.ServerCore.Controller
             return columnNames
                 .All(colName => actualColumnNames.Contains(colName));
         }
-        private List<HashtagCategoryResult> GetCategories()
+        private List<DeepLinkCategoryResult> GetCategories()
         {
-            var hashtagProvider = GetHasTagProvider();
-            var categories = hashtagProvider.ChildItems;
-            List<HashtagCategoryResult> hashtagCategoryList = new List<HashtagCategoryResult>();
-            foreach (HashtagCategory category in categories)
+            var deepLinkProvider = GetDeepLinkProvider();
+            var categories = deepLinkProvider.ChildItems;
+            List<DeepLinkCategoryResult> deepLinkCategoryList = new List<DeepLinkCategoryResult>();
+            foreach (DeepLinkCategory category in categories)
             {
                 if (TestRole(category.Roles))
                 {
-                    var result = new HashtagCategoryResult
+                    var result = new DeepLinkCategoryResult
                     {
-                        HashtagName = category.Name,
-                        HashtagLabel = category.Label,
+                        DeepLinkName = category.Name,
+                        DeepLinkLabel = category.Label,
                         ObjectComboboxMetadata = CreateComboBox(category)
                     };
-                    hashtagCategoryList.Add(result);
+                    deepLinkCategoryList.Add(result);
                 }
             }
-            return hashtagCategoryList;
+            return deepLinkCategoryList;
         }
         private bool TestRole(string roles)
         {
             return SecurityManager.GetAuthorizationProvider()
                 .Authorize(SecurityManager.CurrentPrincipal, roles);
         }
-        private string CreateComboBox(HashtagCategory category)
+        private string CreateComboBox(DeepLinkCategory category)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement controlElement = doc.CreateElement("control");

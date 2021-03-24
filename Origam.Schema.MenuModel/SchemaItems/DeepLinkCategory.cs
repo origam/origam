@@ -28,19 +28,19 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.MenuModel
 {
-    [SchemaItemDescription("Hashtag Category", "hashtag_category.png")]
-    [HelpTopic("Hashtag+Categories")]
+    [SchemaItemDescription("Deep Link Category", "hashtag_category.png")]
+    [HelpTopic("Deep+Link+Categories")]
     [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
-    public class HashtagCategory : AbstractSchemaItem , ILookupReference
+    public class DeepLinkCategory : AbstractSchemaItem , ILookupReference
     {
-        public const string CategoryConst = "HashtagCategory";
+        public const string CategoryConst = "DeepLinkCategory";
 
-        public HashtagCategory() : base() { Init(); }
+        public DeepLinkCategory() : base() { Init(); }
 
-        public HashtagCategory(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+        public DeepLinkCategory(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
 
-        public HashtagCategory(Key primaryKey) : base(primaryKey) { Init(); }
+        public DeepLinkCategory(Key primaryKey) : base(primaryKey) { Init(); }
 
         private void Init()
         {
@@ -49,7 +49,7 @@ namespace Origam.Schema.MenuModel
         private string _Label;
         [Category("Reference")]
         [DisplayName("Label")]
-        [Description("A name of the hashtag category that will appear to the user when creating a hashtag.")]
+        [Description("A name of the deep link category that will appear to the user when creating a deep link.")]
         [NotNullModelElementRule()]
         [Localizable(true)]
         [XmlAttribute("label")]
@@ -69,7 +69,7 @@ namespace Origam.Schema.MenuModel
         [Category("Reference")]
         [TypeConverter(typeof(DataLookupConverter))]
         [LookupServerSideElementRule()]
-        [Description("A lookup which will resolve the list of available values for the hashtag. It must be server-side filtered and must be connected to a menu item so the user can use the hashtag as a link.")]
+        [Description("A lookup which will resolve the list of available values for the link. The lookup must be server-side filtered and must be connected to a menu item so the user can open the link.")]
         [XmlReference("lookup", "LookupId")]
         public IDataLookup Lookup
         {
