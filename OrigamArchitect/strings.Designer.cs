@@ -1114,7 +1114,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Model OrigamRoot version must be 5.00. Cannot run the application..
+        ///   Looks up a localized string similar to Model OrigamRoot version must be greater than 5.0.0 Cannot run the application..
         /// </summary>
         internal static string ModelVersionErrorMessage {
             get {

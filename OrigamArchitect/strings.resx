@@ -250,7 +250,7 @@
     <value>Deployment Scripts Pending</value>
   </data>
   <data name="ModelVersionErrorMessage" xml:space="preserve">
-    <value>Model OrigamRoot version must be 5.00. Cannot run the application.</value>
+    <value>Model OrigamRoot version must be greater than 5.0.0 Cannot run the application.</value>
   </data>
   <data name="ModelVersionTitle" xml:space="preserve">
     <value>Model Version</value>

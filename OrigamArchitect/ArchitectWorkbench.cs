@@ -2360,7 +2360,7 @@ namespace OrigamArchitect
 				{
 					if((Guid)extension.PrimaryKey["Id"] == new Guid("147FA70D-6519-4393-B5D0-87931F9FD609"))
 					{
-						if(! extension.VersionString.Equals("5.0"))
+						if(extension.Version < new PackageVersion("5.0.0"))
 						{
 							MessageBox.Show(this, strings.ModelVersionErrorMessage, strings.ModelVersionTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
 							Disconnect();
