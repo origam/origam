@@ -124,7 +124,7 @@ namespace Origam.Workbench.Services
 				{
 					_schemaBrowser.EbrSchemaBrowser.NodeClick -= new EventHandler(ebrSchemaBrowser_NodeClick);
 					_schemaBrowser.EbrSchemaBrowser.NodeDoubleClick -= new EventHandler(ebrSchemaBrowser_NodeDoubleClick);
-                    _schemaBrowser.EbrSchemaBrowser.ContextMenuStrip.Dispose();
+                    _schemaBrowser.EbrSchemaBrowser.ContextMenuStrip?.Dispose();
                     _schemaBrowser.EbrSchemaBrowser.ContextMenuStrip = null;
                 }
                 
