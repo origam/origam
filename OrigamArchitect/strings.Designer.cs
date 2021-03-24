@@ -19,7 +19,7 @@ namespace OrigamArchitect {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class strings {
@@ -700,24 +700,6 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;Export Model....
-        /// </summary>
-        internal static string ExportModel_MenuItem {
-            get {
-                return ResourceManager.GetString("ExportModel_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Export Single Package....
-        /// </summary>
-        internal static string ExportSinglePackage_MenuItem {
-            get {
-                return ResourceManager.GetString("ExportSinglePackage_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &amp;File.
         /// </summary>
         internal static string File_Menu {
@@ -831,33 +813,6 @@ namespace OrigamArchitect {
         internal static string Help_MenuItem {
             get {
                 return ResourceManager.GetString("Help_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Import Packages from Repository.
-        /// </summary>
-        internal static string ImportPackagesFromRepository_MenuItem {
-            get {
-                return ResourceManager.GetString("ImportPackagesFromRepository_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Import Single Package....
-        /// </summary>
-        internal static string ImportSinglePackage_Menuitem {
-            get {
-                return ResourceManager.GetString("ImportSinglePackage_Menuitem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Import Updated Model....
-        /// </summary>
-        internal static string ImportUpdatedModel_MenuItem {
-            get {
-                return ResourceManager.GetString("ImportUpdatedModel_MenuItem", resourceCulture);
             }
         }
         
@@ -1839,24 +1794,6 @@ namespace OrigamArchitect {
         internal static string UnknownDeploymentType {
             get {
                 return ResourceManager.GetString("UnknownDeploymentType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Update Model + Run Scripts....
-        /// </summary>
-        internal static string UpdateModel_MenuItem {
-            get {
-                return ResourceManager.GetString("UpdateModel_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &amp;Update Model Repository.
-        /// </summary>
-        internal static string UpdateModelRepository_MenuItem {
-            get {
-                return ResourceManager.GetString("UpdateModelRepository_MenuItem", resourceCulture);
             }
         }
         

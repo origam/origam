@@ -537,35 +537,14 @@
   <data name="NewProject_MenuItem" xml:space="preserve">
     <value>&amp;New Project...</value>
   </data>
-  <data name="UpdateModelRepository_MenuItem" xml:space="preserve">
-    <value>&amp;Update Model Repository</value>
-  </data>
   <data name="SetServerRestart_MenuItem" xml:space="preserve">
     <value>Restart Server(s)</value>
   </data>
   <data name="SqlConsole_MenuItem" xml:space="preserve">
     <value>SQL Console</value>
   </data>
-  <data name="ImportPackagesFromRepository_MenuItem" xml:space="preserve">
-    <value>Import Packages from Repository</value>
-  </data>
-  <data name="ExportModel_MenuItem" xml:space="preserve">
-    <value>&amp;Export Model...</value>
-  </data>
-  <data name="ImportUpdatedModel_MenuItem" xml:space="preserve">
-    <value>&amp;Import Updated Model...</value>
-  </data>
-  <data name="ExportSinglePackage_MenuItem" xml:space="preserve">
-    <value>Export Single Package...</value>
-  </data>
-  <data name="ImportSinglePackage_Menuitem" xml:space="preserve">
-    <value>Import Single Package...</value>
-  </data>
   <data name="RunUpdateScripts_MenuItem" xml:space="preserve">
     <value>&amp;Run Update Scripts</value>
-  </data>
-  <data name="UpdateModel_MenuItem" xml:space="preserve">
-    <value>&amp;Update Model + Run Scripts...</value>
   </data>
   <data name="Help_MenuItem" xml:space="preserve">
     <value>&amp;Help</value>
