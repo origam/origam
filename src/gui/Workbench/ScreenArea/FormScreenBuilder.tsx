@@ -19,6 +19,7 @@ import actions from "model/actions-ui-tree";
 import { HBox } from "gui/Components/ScreenElements/HBox";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
+import {serverValueToPanelSizeRatio} from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -84,17 +85,13 @@ export class FormScreenBuilder extends React.Component<{
               onRepeatClick={actions.workflow.onRepeatClick(self.formScreen)}
             />
           );
-          break;
         }
         case "HSplit": {
-          let panelPosition =
-            (self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId) || 0.5 * 1e6) / 1e6;
-          if (panelPosition > 1) panelPosition = 0.5;
-          if (panelPosition < 0.1) panelPosition = 0.1;
-          if (panelPosition > 0.9) panelPosition = 0.9;
+          const serverStoredValue = self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId);
+          const panelPositionRatio = serverValueToPanelSizeRatio(serverStoredValue);
           const panels = findUIChildren(xso).map((child, idx) => [
             idx,
-            idx === 0 ? panelPosition : 1 - panelPosition,
+            idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
             recursive(child),
           ]);
           return (
@@ -103,25 +100,22 @@ export class FormScreenBuilder extends React.Component<{
               STYLE={SSplitter}
               type="isHoriz"
               id={xso.attributes.ModelInstanceId}
-              /*sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
-                xso.attributes.ModelInstanceId
-              )}*/
               onSizeChangeFinished={(
                 panelId1: any,
                 panelId2: any,
-                panelSize1: number,
-                panelSize2: number
+                panel1SizeRatio: number,
+                panel2SizeRatio: number
               ) => {
                 if (panelId1 === panels[0][0]) {
                   onSplitterPositionChangeFinished(self.formScreen)(
                     xso.attributes.ModelInstanceId,
-                    panelSize1
+                    panel1SizeRatio
                   );
                 }
                 if (panelId2 === panels[0][0]) {
                   onSplitterPositionChangeFinished(self.formScreen)(
                     xso.attributes.ModelInstanceId,
-                    panelSize2
+                    panel2SizeRatio
                   );
                 }
               }}
@@ -130,14 +124,11 @@ export class FormScreenBuilder extends React.Component<{
           );
         }
         case "VSplit": {
-          let panelPosition =
-            (self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId) || 0.5 * 1e6) / 1e6;
-          if (panelPosition > 1) panelPosition = 0.5;
-          if (panelPosition < 0.1) panelPosition = 0.1;
-          if (panelPosition > 0.9) panelPosition = 0.9;
+          const serverStoredValue = self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId);
+          const panelPositionRatio = serverValueToPanelSizeRatio(serverStoredValue);
           const panels = findUIChildren(xso).map((child, idx) => [
             idx,
-            idx === 0 ? panelPosition : 1 - panelPosition,
+            idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
             recursive(child),
           ]);
           return (
@@ -146,25 +137,22 @@ export class FormScreenBuilder extends React.Component<{
               STYLE={SSplitter}
               type="isVert"
               id={xso.attributes.ModelInstanceId}
-              /*sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
-                xso.attributes.ModelInstanceId
-              )}*/
               onSizeChangeFinished={(
                 panelId1: any,
                 panelId2: any,
-                panelSize1: number,
-                panelSize2: number
+                panel1SizeRatio: number,
+                panel2SizeRatio: number
               ) => {
                 if (panelId1 === panels[0][0]) {
                   onSplitterPositionChangeFinished(self.formScreen)(
                     xso.attributes.ModelInstanceId,
-                    panelSize1
+                    panel1SizeRatio
                   );
                 }
                 if (panelId2 === panels[0][0]) {
                   onSplitterPositionChangeFinished(self.formScreen)(
                     xso.attributes.ModelInstanceId,
-                    panelSize2
+                    panel2SizeRatio
                   );
                 }
               }}

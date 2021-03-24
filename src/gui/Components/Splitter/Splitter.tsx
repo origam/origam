@@ -88,8 +88,8 @@ export class Splitter extends React.Component<{
   onSizeChangeFinished?(
     panelId1: any,
     panelId2: any,
-    panelSize1: number,
-    panelSize2: number
+    panel1Ratio: number,
+    panel2Ratio: number
   ): void;
   STYLE?: any;
 }> {

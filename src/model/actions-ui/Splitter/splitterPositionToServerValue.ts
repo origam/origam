@@ -1,19 +1,16 @@
-export default 0;
-/*export function splitterPositionToRatio(position: number) {
-  return Math.round(position / window.screen.height * 1000_000);
+
+export function panelSizeRatioToServerValue(sizeRatio: number){
+    return Math.round(sizeRatio * 1000_000);
 }
 
-export function splitterPositionFromRatio(serverStoredValue: number | undefined){
-  if(!serverStoredValue){
-    return serverStoredValue;
-  }
-  const isScreenSizePositionRatio = serverStoredValue > 1000; // this will work up to 8k 
-  if(isScreenSizePositionRatio){
-    return Math.round(serverStoredValue * window.screen.height / 1000_000) 
-  }
-  else
-  {
-    return undefined;
-  }
+export function serverValueToPanelSizeRatio(serverStoredSizeRatio: number | undefined){
+
+    const panelPositionRatio =  serverStoredSizeRatio
+        ? serverStoredSizeRatio / 1000_000
+        : 0.5;
+
+    if (panelPositionRatio > 1) return 0.5;
+    if (panelPositionRatio < 0.1) return 0.1;
+    if (panelPositionRatio > 0.9) return 0.9;
+    return panelPositionRatio;
 }
-*/
