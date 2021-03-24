@@ -165,7 +165,7 @@ export class FormScreen implements IFormScreen {
   }
 
   getPanelPosition(id: string): number | undefined {
-    const conf = this.panelConfigurations.get(id);
+    const conf = this.panelConfigurations.get(id.toLowerCase());
     return conf ? conf.position : undefined;
   }
 

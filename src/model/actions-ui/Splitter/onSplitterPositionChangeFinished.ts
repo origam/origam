@@ -8,7 +8,8 @@ export function onSplitterPositionChangeFinished(ctx: any) {
     modelInstanceId: string,
     sizeRatio: number
   ) {
-    getFormScreen(ctx).setPanelSize(modelInstanceId, sizeRatio);
-    yield* saveSplitPanelConfiguration(ctx)(modelInstanceId, panelSizeRatioToServerValue(sizeRatio));
+    let panelSizeRatioServerValue = panelSizeRatioToServerValue(sizeRatio);
+    getFormScreen(ctx).setPanelSize(modelInstanceId, panelSizeRatioServerValue);
+    yield* saveSplitPanelConfiguration(ctx)(modelInstanceId, panelSizeRatioServerValue);
   });
 }
