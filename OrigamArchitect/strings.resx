@@ -426,9 +426,6 @@
   <data name="ConnectionConfig_MenuItem" xml:space="preserve">
     <value>&amp;Connection Configuration...</value>
   </data>
-  <data name="Refresh_MenuItem" xml:space="preserve">
-    <value>Update...</value>
-  </data>
   <data name="RunRefreshActions_MenuItem" xml:space="preserve">
     <value>Run Update Actions</value>
   </data>

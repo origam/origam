@@ -634,8 +634,7 @@ namespace OrigamArchitect
 				CreateMenuItem(strings.ConnectionConfig_MenuItem, new Origam.Workbench.Commands.EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
 
 				_fileMenu.SubItems.Add(CreateSeparator());
-				
-				CreateMenuItem(strings.Refresh_MenuItem, new Commands.UpdateModelAndTargetEnvironment(), null, Keys.None, _fileMenu);
+                
 				CreateMenuItem(strings.RunRefreshActions_MenuItem, new DeployVersion(), null, Keys.None, _fileMenu);
 			}
 

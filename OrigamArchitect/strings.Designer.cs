@@ -1339,15 +1339,6 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update....
-        /// </summary>
-        internal static string Refresh_MenuItem {
-            get {
-                return ResourceManager.GetString("Refresh_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Temporary error ({0}). Please contact Origam.com by if it repeats..
         /// </summary>
         internal static string RegisterAndLoginForm_TemporaryHttpError {
