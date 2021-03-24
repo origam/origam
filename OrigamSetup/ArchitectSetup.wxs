@@ -1635,7 +1635,6 @@
             <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL" />
             <ComponentRef Id="ORIGAM.GUI.WIN.DLL" />
             <ComponentRef Id="ORIGAM.MAIL.DLL" />
-            <ComponentRef Id="ORIGAM.MODELIMPORT.DLL" />
             <ComponentRef Id="ORIGAM.REFLECTORCACHE.DLL" />
             <ComponentRef Id="ORIGAM.RULE.DLL" />
             <ComponentRef Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.DLL" />
@@ -1929,7 +1928,6 @@
             <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL_1" />
             <ComponentRef Id="ORIGAM.GUI.WIN.DLL_1" />
             <ComponentRef Id="ORIGAM.MAIL.DLL_1" />
-            <ComponentRef Id="ORIGAM.MODELIMPORT.DLL_1" />
             <ComponentRef Id="ORIGAM.REFLECTORCACHE.DLL_1" />
             <ComponentRef Id="ORIGAM.RULE.DLL_1" />
             <ComponentRef Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.DLL_1" />
