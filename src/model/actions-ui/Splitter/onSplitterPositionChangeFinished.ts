@@ -1,7 +1,6 @@
 import { flow } from "mobx";
 import { saveSplitPanelConfiguration } from "model/actions/FormScreen/saveSplitPanelConfiguration";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
-import { splitterPositionToRatio } from "./splitterPositionToServerValue";
 
 export function onSplitterPositionChangeFinished(ctx: any) {
   return flow(function* onSplitterPositionChangeFinished(
@@ -9,6 +8,6 @@ export function onSplitterPositionChangeFinished(ctx: any) {
     position: number
   ) {
     getFormScreen(ctx).setPanelSize(modelInstanceId, position);
-    yield* saveSplitPanelConfiguration(ctx)(modelInstanceId, splitterPositionToRatio(position));
+    yield* saveSplitPanelConfiguration(ctx)(modelInstanceId, Math.round(position * 1e6)); //splitterPositionToRatio(position));
   });
 }

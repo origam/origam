@@ -70,7 +70,6 @@ import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/F
 import { addFilterGroups } from "./filterXml";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { splitterPositionFromRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
 import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspective";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
@@ -228,7 +227,7 @@ export function* interpretScreenXml(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
       {
-        position: splitterPositionFromRatio(pcr.position),
+        position: pcr.position,
         defaultOrdering: parseToOrdering(pcr.defaultSort),
       },
     ])

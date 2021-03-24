@@ -1,5 +1,5 @@
-
-export function splitterPositionToRatio(position: number) {
+export default 0;
+/*export function splitterPositionToRatio(position: number) {
   return Math.round(position / window.screen.height * 1000_000);
 }
 
@@ -16,3 +16,4 @@ export function splitterPositionFromRatio(serverStoredValue: number | undefined)
     return undefined;
   }
 }
+*/

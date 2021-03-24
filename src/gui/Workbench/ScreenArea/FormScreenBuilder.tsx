@@ -1,22 +1,22 @@
-import {EmbeddedWebpage} from "gui/Components/EmbeddedWebpage/EmbeddedWebpage";
-import {Splitter} from "gui/Components/Splitter/Splitter";
-import {CScreenSectionTabbedView} from "gui/connections/CScreenSectionTabbedView";
-import {action, computed, observable} from "mobx";
-import {MobXProviderContext, observer, Observer} from "mobx-react";
-import {onSplitterPositionChangeFinished} from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
-import {IFormScreen} from "model/entities/types/IFormScreen";
+import { EmbeddedWebpage } from "gui/Components/EmbeddedWebpage/EmbeddedWebpage";
+import { Splitter } from "gui/Components/Splitter/Splitter";
+import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedView";
+import { action, computed, observable } from "mobx";
+import { MobXProviderContext, observer, Observer } from "mobx-react";
+import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
+import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
 import SSplitter from "styles/CustomSplitter.module.scss";
-import {findBoxes, findUIChildren, findUIRoot} from "../../../xmlInterpreters/screenXml";
-import {Box} from "../../Components/ScreenElements/Box";
-import {DataView} from "../../Components/ScreenElements/DataView";
-import {Label} from "../../Components/ScreenElements/Label";
-import {TabbedPanel, TabBody, TabHandle} from "../../Components/ScreenElements/TabbedPanel";
-import {VBox} from "../../Components/ScreenElements/VBox";
-import {WorkflowFinishedPanel} from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel";
+import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
+import { Box } from "../../Components/ScreenElements/Box";
+import { DataView } from "../../Components/ScreenElements/DataView";
+import { Label } from "../../Components/ScreenElements/Label";
+import { TabbedPanel, TabBody, TabHandle } from "../../Components/ScreenElements/TabbedPanel";
+import { VBox } from "../../Components/ScreenElements/VBox";
+import { WorkflowFinishedPanel } from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel";
 
 import actions from "model/actions-ui-tree";
-import {HBox} from "gui/Components/ScreenElements/HBox";
+import { HBox } from "gui/Components/ScreenElements/HBox";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 
@@ -87,16 +87,25 @@ export class FormScreenBuilder extends React.Component<{
           break;
         }
         case "HSplit": {
-          const panels = findUIChildren(xso).map((child, idx) => [idx, 1, recursive(child)]);
+          let panelPosition =
+            (self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId) || 0.5 * 1e6) / 1e6;
+          if (panelPosition > 1) panelPosition = 0.5;
+          if (panelPosition < 0.1) panelPosition = 0.1;
+          if (panelPosition > 0.9) panelPosition = 0.9;
+          const panels = findUIChildren(xso).map((child, idx) => [
+            idx,
+            idx === 0 ? panelPosition : 1 - panelPosition,
+            recursive(child),
+          ]);
           return (
             <Splitter
               key={xso.$iid}
               STYLE={SSplitter}
               type="isHoriz"
               id={xso.attributes.ModelInstanceId}
-              sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
+              /*sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
                 xso.attributes.ModelInstanceId
-              )}
+              )}*/
               onSizeChangeFinished={(
                 panelId1: any,
                 panelId2: any,
@@ -121,16 +130,25 @@ export class FormScreenBuilder extends React.Component<{
           );
         }
         case "VSplit": {
-          const panels = findUIChildren(xso).map((child, idx) => [idx, 1, recursive(child)]);
+          let panelPosition =
+            (self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId) || 0.5 * 1e6) / 1e6;
+          if (panelPosition > 1) panelPosition = 0.5;
+          if (panelPosition < 0.1) panelPosition = 0.1;
+          if (panelPosition > 0.9) panelPosition = 0.9;
+          const panels = findUIChildren(xso).map((child, idx) => [
+            idx,
+            idx === 0 ? panelPosition : 1 - panelPosition,
+            recursive(child),
+          ]);
           return (
             <Splitter
               key={xso.$iid}
               STYLE={SSplitter}
               type="isVert"
               id={xso.attributes.ModelInstanceId}
-              sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
+              /*sizeOverrideFirstPanel={self.formScreen.getPanelPosition(
                 xso.attributes.ModelInstanceId
-              )}
+              )}*/
               onSizeChangeFinished={(
                 panelId1: any,
                 panelId2: any,
@@ -185,7 +203,7 @@ export class FormScreenBuilder extends React.Component<{
         case "Grid":
           if (xso.attributes.ModelInstanceId !== "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE") {
             const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
-            if(dataView){
+            if (dataView) {
               dataViewMap.set(xso.attributes.Id, dataView);
             }
             return (
@@ -208,7 +226,12 @@ export class FormScreenBuilder extends React.Component<{
           }
         case "Tab":
           return (
-            <CScreenSectionTabbedView key={xso.$iid} boxes={findBoxes(xso)} nextNode={recursive} dataViewMap={dataViewMap}/>
+            <CScreenSectionTabbedView
+              key={xso.$iid}
+              boxes={findBoxes(xso)}
+              nextNode={recursive}
+              dataViewMap={dataViewMap}
+            />
           );
         case "Box":
           return <Box key={xso.$iid}>{findUIChildren(xso).map((child) => recursive(child))}</Box>;

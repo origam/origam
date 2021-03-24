@@ -236,7 +236,11 @@ export class Splitter extends React.Component<{
     this.sizeMap.set(id1, size1);
     this.sizeMap.set(id2, size2);
     if (this.props.onSizeChangeFinished) {
-      this.props.onSizeChangeFinished(id1, id2, size1, size2);
+      if(this.props.type === "isHoriz") {
+        this.props.onSizeChangeFinished(id1, id2, size1 / this.containerWidth, size2);
+      } else {
+        this.props.onSizeChangeFinished(id1, id2, size1 / this.containerHeight, size2);
+      }
     }
   }
 
