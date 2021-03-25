@@ -11,6 +11,7 @@ export interface IRowState extends IRowStateData {
   loadValues(keys: string[]): Promise<any>;
   putValue(state: any): void;
   hasValue(key: string): boolean;
+  suppressWorkingStatus: boolean;
   clearAll(): void;
 
   parent?: any;

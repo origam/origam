@@ -352,7 +352,6 @@ export class DataView implements IDataView {
   }
 
   @computed get isWorking() {
-    // TODO
     return (
       this.lifecycle.isWorking || getRowStates(this).isWorking || getLookupLoader(this).isWorking
     );
@@ -408,7 +407,6 @@ export class DataView implements IDataView {
     const parentRow = getParentRow(this);
     if (parentRow) {
       const parent = getBindingParent(this);
-      const parentEntity = getEntity(parent);
       const parentDataTable = getDataTable(parent);
 
       const bindingToParent = getBindingToParent(this)!;

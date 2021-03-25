@@ -64,6 +64,7 @@ import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelV
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
 import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
+import {getRowStates} from "../../selectors/RowState/getRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -347,10 +348,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const self = this;
     flow(function* () {
       try {
+        const formScreen = getFormScreen(self);
+        formScreen.dataViews.forEach((dataView) => getRowStates(dataView).suppressWorkingStatus = true);
         yield* self.refreshSession();
       } catch (e) {
         yield* handleError(self)(e);
         throw e;
+      }
+      finally {
+        const formScreen = getFormScreen(self);
+        formScreen.dataViews.forEach((dataView) => getRowStates(dataView).suppressWorkingStatus = false);
       }
     })();
   }
@@ -727,7 +734,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
     try {
       this.monitor.inFlow++;
-      const api = getApi(this);
       const changes: any = {};
       changes[fieldName] = newValue;
       const formScreen = getFormScreen(this);
@@ -830,7 +836,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const orderMember = targetDataView.orderMember;
     const dataSourceField = getDataSourceFieldByName(targetDataView, orderMember);
     const orderValues = targetDataView.tableRows
-      .filter((row) => Array.isArray)
       .map((row) => (row as any[])[dataSourceField!.index] as number);
     const nextOrderValue = orderValues.length > 0 ? Math.max(...orderValues) + 1 : 0;
     const values = {} as any;
