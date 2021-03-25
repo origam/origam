@@ -26,17 +26,10 @@ namespace Origam.TestCommon
 {
     public abstract class AbstractFileTestClass
     {
-        protected DirectoryInfo ProjectDir
-        {
-            get
-            {
-               return string.IsNullOrEmpty(TestDirectory)?
-                    new DirectoryInfo(TestContext.TestDirectory):
-                    new DirectoryInfo(TestDirectory);
-            }
-        }
+        protected DirectoryInfo ProjectDir =>
+            new DirectoryInfo(TestContext.TestDirectory);
+
         protected virtual string DirName => "";
-        protected virtual string TestDirectory => "";
 
         protected abstract TestContext TestContext { get; }
 

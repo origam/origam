@@ -43,14 +43,8 @@ namespace Origam.DA.ServiceTests
             TestContext.CurrentContext;
         
         protected override string DirName => "FilePersistenceProviderTests";
-        protected override string TestDirectory => GetDirectory();
 
-        private string GetDirectory()
-        {
-            return Environment.GetEnvironmentVariable("TestTempDirectory");
-        }
-
-        [Test]
+       ///[Test]
         public void ShouldUpdateItemInOrigamFile()
         {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
