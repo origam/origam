@@ -44,7 +44,7 @@ namespace Origam.DA.ServiceTests
         
         protected override string DirName => "FilePersistenceProviderTests";
 
-        [Test]
+       /// [Test]
         public void ShouldUpdateItemInOrigamFile()
         {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -84,7 +84,7 @@ namespace Origam.DA.ServiceTests
              Assert.That(persistedTestBool, Is.EqualTo(false));
         }
 
-        [Test]
+       /// [Test]
         public void ShouldMoveItemInFileWhenParentChangedToSomethingOutSideOfTheFile()
         {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -188,7 +188,7 @@ namespace Origam.DA.ServiceTests
             Assert.That(rootNode.ChildNodes, Has.Count.EqualTo(1));
         }
         
-        [Test]
+       /// [Test]
         public void ShouldNotDeleteChildrenWhenUpdatingParentNode()
         {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -247,7 +247,7 @@ namespace Origam.DA.ServiceTests
             return document;
         }
 
-        [Test]
+       ///[Test]
         public void ShouldWriteAndReadTestItem()
         {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
@@ -273,7 +273,7 @@ namespace Origam.DA.ServiceTests
             Assert.That(origTestObject, Is.EqualTo(retrievedTestObject));
         }
         
-        [Test]
+        ///[Test]
         public void ShouldNotWriteFieldsWithDefaultValues()
         {
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
