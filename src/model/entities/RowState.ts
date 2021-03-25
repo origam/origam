@@ -45,7 +45,7 @@ export class RowState implements IRowState {
         try {
           this.monitor.inFlow++;
           idsToLoad = Array.from(this.containers.values())
-              .filter(container => !container.isValid && !container.processingSate)
+              .filter(container => container.rowId && !container.isValid && !container.processingSate)
               .map(container => container.rowId);
           if (idsToLoad.length === 0) {
             break;
