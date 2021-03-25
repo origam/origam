@@ -83,8 +83,7 @@ function registerToolTipGetter(columnId: string) {
 
   if (
     getShowToolTipsForMemoFieldsOnly(property) &&
-    (property.column !== "Text" || !property.multiline) &&
-    property.column !== "ComboBox"
+    (property.column !== "Text" || !property.multiline)
   ) {
     return;
   }
