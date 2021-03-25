@@ -734,7 +734,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
     try {
       this.monitor.inFlow++;
-      const api = getApi(this);
       const changes: any = {};
       changes[fieldName] = newValue;
       const formScreen = getFormScreen(this);
@@ -837,7 +836,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const orderMember = targetDataView.orderMember;
     const dataSourceField = getDataSourceFieldByName(targetDataView, orderMember);
     const orderValues = targetDataView.tableRows
-      .filter((row) => Array.isArray)
       .map((row) => (row as any[])[dataSourceField!.index] as number);
     const nextOrderValue = orderValues.length > 0 ? Math.max(...orderValues) + 1 : 0;
     const values = {} as any;

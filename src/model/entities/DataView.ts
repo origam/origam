@@ -407,7 +407,6 @@ export class DataView implements IDataView {
     const parentRow = getParentRow(this);
     if (parentRow) {
       const parent = getBindingParent(this);
-      const parentEntity = getEntity(parent);
       const parentDataTable = getDataTable(parent);
 
       const bindingToParent = getBindingToParent(this)!;
