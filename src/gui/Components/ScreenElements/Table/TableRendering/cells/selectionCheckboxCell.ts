@@ -1,4 +1,4 @@
-import {context, context2d, currentDataRow, dataView, drawingColumnIndex, isCheckBoxedTable, recordId, rowId, tablePanelView} from "../renderingValues";
+import {context, context2d, currentDataRow, dataView, isCheckBoxedTable, recordId, rowId, tablePanelView} from "../renderingValues";
 import {
   currentColumnLeft,
   currentColumnLeftVisible,
@@ -9,10 +9,9 @@ import {
 } from "../currentCell";
 import {
   applyScrollTranslation,
-  checkSymbolFontSize,
   checkBoxCellPaddingLeft,
   topTextOffset,
-  drawSelectedRowBorder, frontStripWidth
+  drawSelectedRowBorder, frontStripWidth, checkBoxCharacterFontSize
 } from "./cellsCommon";
 import {CPR} from "utils/canvas";
 import {onClick} from "../onClick";
@@ -41,7 +40,7 @@ export function selectionCheckboxCellsDraws() {
         drawSelectionCheckboxBackground();
         const ctx2d = context2d();
         ctx2d.fillStyle = "black";
-        ctx2d.font = `${CPR() * checkSymbolFontSize}px "Font Awesome 5 Free"`;
+        ctx2d.font = `${CPR() * checkBoxCharacterFontSize}px "Font Awesome 5 Free"`;
         const state = dataView().isSelected(rowId());
         ctx2d.fillText(
           state ? "\uf14a" : "\uf0c8",
