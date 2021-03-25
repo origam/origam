@@ -11,7 +11,8 @@ export function onRefreshChatrooms(ctx: any) {
       getSearcher(ctx).indexChats(chatRooms.items);
     } catch (e) {
       yield* handleError(ctx)(e);
-      console.log("Error during getChatroomsList call ignored.");
+      //console.log("Error during getChatroomsList call ignored.");
+      throw e;
     };
   }
 }
