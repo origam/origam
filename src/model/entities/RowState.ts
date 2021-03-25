@@ -32,7 +32,6 @@ export class RowState implements IRowState {
   }
 
   @observable resolvedValues: Map<string, IRowStateItem> = new Map();
-  @observable idStates = new Map();
   @observable observedIds = new Map();
 
   @observable
@@ -48,9 +47,8 @@ export class RowState implements IRowState {
         try {
           this.monitor.inFlow++;
           for (let key of this.observedIds.keys()) {
-            if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
+            if (key && !this.resolvedValues.has(key)) {
               idsToLoad.add(key);
-              this.idStates.set(key, IIdState.LOADING);
             }
           }
           if (idsToLoad.size === 0) {
@@ -67,15 +65,11 @@ export class RowState implements IRowState {
           this.firstLoadingPerformed = true;
           for (let state of states) {
             this.putValue(state);
-            this.idStates.delete(state.id);
             idsToLoad.delete(state.id);
           }
         } catch (error) {
           this.isSomethingLoading = false;
           this.firstLoadingPerformed = true;
-          for (let key of idsToLoad) {
-            this.idStates.set(key, IIdState.ERROR);
-          }
           console.error(error);
           // TODO: Better error handling.
           yield* handleError(this)(error);
@@ -154,7 +148,6 @@ export class RowState implements IRowState {
 
   @action.bound clearAll() {
     this.resolvedValues.clear();
-    this.idStates.clear();
     for (let obsvIdVal of this.observedIds.values()) {
       if(obsvIdVal?.atom){
         obsvIdVal.atom.onBecomeUnobservedListeners.clear();
