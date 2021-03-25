@@ -28,10 +28,15 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.MenuModel
 {
+    /// <summary>
+    /// Version history:
+    /// 1.0.0 Initial version of HashtagCategory
+    /// 1.0.1 Renamed to DeepLinkCategory
+    /// </summary>
     [SchemaItemDescription("Deep Link Category", "hashtag_category.png")]
     [HelpTopic("Deep+Link+Categories")]
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("1.0.1")]
     public class DeepLinkCategory : AbstractSchemaItem , ILookupReference
     {
         public const string CategoryConst = "DeepLinkCategory";
