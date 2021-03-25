@@ -68,8 +68,8 @@ export class RowState implements IRowState {
           this.isSomethingLoading = false;
           this.firstLoadingPerformed = true;
           console.error(error);
-          for (let key of idsToLoad) {
-            this.containers.get(key)!.processingSate = IIdState.LOADING;
+          for (let rowId of idsToLoad) {
+            this.containers.get(rowId)!.processingSate = IIdState.LOADING;
           }
           // TODO: Better error handling.
           yield* handleError(this)(error);
@@ -82,40 +82,40 @@ export class RowState implements IRowState {
 
   triggerLoad = _.debounce(this.triggerLoadImm, 666);
 
-  getValue(key: string) {
-    if(!this.containers.has(key)){
-      this.containers.set(key, new RowStateContainer(key,) );
+  getValue(rowId: string) {
+    if(!this.containers.has(rowId)){
+      this.containers.set(rowId, new RowStateContainer(rowId,) );
     }
-    let container = this.containers.get(key)!;
+    let container = this.containers.get(rowId)!;
     if(!container.atom){
       container.atom = createAtom(
-          `RowState atom [${key}]`,
+          `RowState atom [${rowId}]`,
           () =>
               requestAnimationFrame(() => {
                 this.triggerLoad();
               }),
           () => {
-            // this.observedIds.delete(key);
+            // this.observedIds.delete(rowId);
           }
       )
     }
     container.atom.reportObserved?.();
-    console.log( "key: " +key + " rowStateItem: "+ this.containers.get(key)?.rowStateItem)
-    return this.containers.get(key)?.rowStateItem;
+    console.log( "rowId: " +rowId + " rowStateItem: "+ this.containers.get(rowId)?.rowStateItem)
+    return this.containers.get(rowId)?.rowStateItem;
 
   }
 
-  async loadValues(keys: string[]) {
-    for (const key of keys) {
-      if (!this.containers.has(key)) {
-        this.containers.set(key, new RowStateContainer(key));
+  async loadValues(rowIds: string[]) {
+    for (const rowId of rowIds) {
+      if (!this.containers.has(rowId)) {
+        this.containers.set(rowId, new RowStateContainer(rowId));
       }
     }
     await this.triggerLoadImm();
   }
 
-  hasValue(key: string): boolean {
-    return this.containers.has(key);
+  hasValue(rowId: string): boolean {
+    return this.containers.has(rowId);
   }
 
   @action.bound
