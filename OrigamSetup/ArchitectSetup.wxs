@@ -83,9 +83,6 @@
                         <Component Id="ORIGAM.MAIL.DLL" DiskId="1" Guid="7BCB8BBB-B702-45A6-A13E-9896386D1C1C">
                             <File Id="ORIGAM.MAIL.DLL" Name="Origam.Mail.dll" Source="source\Origam.Mail.dll" />
                         </Component>
-                        <Component Id="ORIGAM.MODELIMPORT.DLL" DiskId="1" Guid="174CF408-3A23-4479-B3EE-BF796E5DE4DD">
-                            <File Id="ORIGAM.MODELIMPORT.DLL" Name="Origam.ModelImport.dll" Source="source\Origam.ModelImport.dll" />
-                        </Component>
                         <Component Id="ORIGAM.REFLECTORCACHE.DLL" DiskId="1" Guid="2D38B990-A9E0-4F02-9E24-83EA403DCEB5">
                             <File Id="ORIGAM.REFLECTORCACHE.DLL" Name="Origam.ReflectorCache.dll" Source="source\Origam.ReflectorCache.dll" />
                         </Component>
@@ -1073,9 +1070,6 @@
                                         <Component Id="ORIGAM.MAIL.DLL_1" DiskId="1" Guid="769DF376-576D-492E-BE00-7DFDD46E38BB">
                                             <File Id="ORIGAM.MAIL.DLL_1" Name="Origam.Mail.dll" Source="server_source\bin\Origam.Mail.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.MODELIMPORT.DLL_1" DiskId="1" Guid="E789EA31-BF95-497B-8BAC-98F5EE5F9163">
-                                            <File Id="ORIGAM.MODELIMPORT.DLL_1" Name="Origam.ModelImport.dll" Source="server_source\bin\Origam.ModelImport.dll" />
-                                        </Component>
                                         <Component Id="ORIGAM.REFLECTORCACHE.DLL_1" DiskId="1" Guid="F5130E76-B2AE-405F-8FFD-405A655F448D">
                                             <File Id="ORIGAM.REFLECTORCACHE.DLL_1" Name="Origam.ReflectorCache.dll" Source="server_source\bin\Origam.ReflectorCache.dll" />
                                         </Component>
@@ -1641,7 +1635,6 @@
             <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL" />
             <ComponentRef Id="ORIGAM.GUI.WIN.DLL" />
             <ComponentRef Id="ORIGAM.MAIL.DLL" />
-            <ComponentRef Id="ORIGAM.MODELIMPORT.DLL" />
             <ComponentRef Id="ORIGAM.REFLECTORCACHE.DLL" />
             <ComponentRef Id="ORIGAM.RULE.DLL" />
             <ComponentRef Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.DLL" />
@@ -1935,7 +1928,6 @@
             <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL_1" />
             <ComponentRef Id="ORIGAM.GUI.WIN.DLL_1" />
             <ComponentRef Id="ORIGAM.MAIL.DLL_1" />
-            <ComponentRef Id="ORIGAM.MODELIMPORT.DLL_1" />
             <ComponentRef Id="ORIGAM.REFLECTORCACHE.DLL_1" />
             <ComponentRef Id="ORIGAM.RULE.DLL_1" />
             <ComponentRef Id="ORIGAM.SCHEMA.DEPLOYMENTMODEL.DLL_1" />
