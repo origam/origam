@@ -79,7 +79,9 @@ export const DialogScreen: React.FC<{
                     <>
                       {props.openedScreen.content
                         .formScreen!.dialogActions.filter(
-                          (action) => action.placement !== IActionPlacement.PanelHeader
+                          (action) =>
+                            action.placement !== IActionPlacement.PanelHeader &&
+                            action.placement !== IActionPlacement.PanelMenu
                         )
                         .map((action, idx) => (
                           <button
@@ -130,4 +132,3 @@ export const DialogScreen: React.FC<{
   }, []);
   return null;
 });
-
