@@ -93,7 +93,7 @@ export class RowState implements IRowState {
 
   getValue(rowId: string) {
     if(!this.containers.has(rowId)){
-      this.containers.set(rowId, new RowStateContainer(rowId,) );
+      this.containers.set(rowId, new RowStateContainer(rowId) );
     }
     let container = this.containers.get(rowId)!;
     if(!container.atom){
@@ -148,8 +148,12 @@ export class RowState implements IRowState {
         new Set(state.disabledActions),
         state.relations
     );
-    this.containers.get(state.id)!.rowStateItem = rowStateItem;
-    this.containers.get(state.id)!.isValid = true;
+    if(!this.containers.has(state.id)){
+      this.containers.set(state.id, new RowStateContainer(state.id) );
+    }
+    const container = this.containers.get(state.id);
+    container!.rowStateItem = rowStateItem;
+    container!.isValid = true;
     this.firstLoadingPerformed = true;
   }
 
