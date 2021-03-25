@@ -24,11 +24,11 @@ using System.Text;
 
 namespace Origam.Schema.MenuModel
 {
-    public class HashTagCategorySchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+    public class DeepLinkCategorySchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
     {
-        public HashTagCategorySchemaItemProvider()
+        public DeepLinkCategorySchemaItemProvider()
         {
-            this.ChildItemTypes.Add(typeof(HashtagCategory));
+            this.ChildItemTypes.Add(typeof(DeepLinkCategory));
         }
 
 		#region ISchemaItemProvider Members
@@ -36,7 +36,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return HashtagCategory.CategoryConst;
+				return DeepLinkCategory.CategoryConst;
 			}
 		}
 		public override string Group
@@ -61,7 +61,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return "Hashtag Categories";
+				return "Deep Link Categories";
 			}
 			set
 			{
@@ -73,7 +73,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return "List of Hashtags";
+				return "List of Deep Links";
 			}
 		}
 

@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -18,12 +18,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
-namespace Origam.ServerCore.Model.HashTag
+namespace Origam.ServerCore.Model.DeepLink
 {
-    public class GetHashtagMenuInput
+    public class DeepLinkCategoryResult
     {
-        public string Category { get; set; }
-        public Guid ReferenceId { get; set; }
+        public string DeepLinkName { get; set; }
+        public string DeepLinkLabel { get; set; }
+        public string ObjectComboboxMetadata { get; set; }
     }
 }

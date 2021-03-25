@@ -161,7 +161,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private XNamespace GetThisClassNamespace(XDocument document)
         {
             return OrigamXDocument.GetNamespaces(document)
-                .FirstOrDefault(nameSpace => nameSpace.FullTypeName == FullTypeName)
+                .FirstOrDefault(nameSpace => nameSpace.FullTypeName == FullTypeName 
+                || (OldFullTypeNames != null 
+                && OldFullTypeNames.Contains(nameSpace.FullTypeName)))
                 ?.StringValue;
         }
 
