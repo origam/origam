@@ -47,7 +47,7 @@ namespace Origam.DA.ServiceTests
 
         private string GetDirectory()
         {
-            return Environment.GetEnvironmentVariable("Agent.TempDirectory");
+            return Environment.GetEnvironmentVariable("TestTempDirectory");
         }
 
         [Test]
