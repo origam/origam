@@ -352,7 +352,6 @@ export class DataView implements IDataView {
   }
 
   @computed get isWorking() {
-    // TODO
     return (
       this.lifecycle.isWorking || getRowStates(this).isWorking || getLookupLoader(this).isWorking
     );

@@ -64,6 +64,7 @@ import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelV
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
 import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
+import {getRowStates} from "../../selectors/RowState/getRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -328,7 +329,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           } else {
             this._autoRefreshTimerHandle = setInterval(
               () => this.performAutoReload(),
-              autoRefreshPeriod * 1000
+              10 * 1000
             );
           }
         })
@@ -347,10 +348,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const self = this;
     flow(function* () {
       try {
+        const formScreen = getFormScreen(self);
+        formScreen.dataViews.forEach((dataView) => getRowStates(dataView).suppressWorkingStatus = true);
         yield* self.refreshSession();
       } catch (e) {
         yield* handleError(self)(e);
         throw e;
+      }
+      finally {
+        const formScreen = getFormScreen(self);
+        formScreen.dataViews.forEach((dataView) => getRowStates(dataView).suppressWorkingStatus = false);
       }
     })();
   }

@@ -15,6 +15,7 @@ export enum IIdState {
 
 export class RowState implements IRowState {
   $type_IRowState: 1 = 1;
+  suppressWorkingStatus: boolean = false;
 
   constructor(data: IRowStateData) {
     Object.assign(this, data);
@@ -40,14 +41,20 @@ export class RowState implements IRowState {
       if (this.isSomethingLoading) {
         return;
       }
-      let idsToLoad: string[] = [];
+      let containersToLoad: Map<string, RowStateContainer> = new Map();
+      let reportBusyStatus = true;
       while (true) {
         try {
-          this.monitor.inFlow++;
-          idsToLoad = Array.from(this.containers.values())
-              .filter(container => container.rowId && !container.isValid && !container.processingSate)
-              .map(container => container.rowId);
-          if (idsToLoad.length === 0) {
+          for (let container of this.containers.values()) {
+            if(container.rowId && !container.isValid && !container.processingSate){
+              containersToLoad.set(container.rowId, container);
+            }
+          }
+          reportBusyStatus = Array.from(containersToLoad.values()).every(container => !container.suppressWorkingStatus);
+          if(reportBusyStatus){
+            this.monitor.inFlow++;
+          }
+          if (containersToLoad.size === 0) {
             break;
           }
           this.isSomethingLoading = true;
@@ -55,26 +62,28 @@ export class RowState implements IRowState {
           const states = yield api.getRowStates({
             SessionFormIdentifier: getSessionId(this),
             Entity: getEntity(this),
-            Ids: idsToLoad
+            Ids: Array.from(containersToLoad.values()).map(container => container.rowId)
           });
           this.isSomethingLoading = false;
           this.firstLoadingPerformed = true;
           for (let state of states) {
             this.putValue(state);
             this.containers.get(state.id)!.processingSate = IIdState.LOADING;
-            idsToLoad.remove(state.id);
+            containersToLoad.delete(state.id);
           }
         } catch (error) {
           this.isSomethingLoading = false;
           this.firstLoadingPerformed = true;
           console.error(error);
-          for (let rowId of idsToLoad) {
-            this.containers.get(rowId)!.processingSate = IIdState.LOADING;
+          for (let container of containersToLoad.values()) {
+            container.processingSate = IIdState.LOADING;
           }
-          // TODO: Better error handling.
           yield* handleError(this)(error);
         } finally {
-          this.monitor.inFlow--
+          if(reportBusyStatus){
+            this.monitor.inFlow--;
+          }
+          containersToLoad.forEach(container => container.suppressWorkingStatus = false);
         }
       }
     }.bind(this)
@@ -88,21 +97,18 @@ export class RowState implements IRowState {
     }
     let container = this.containers.get(rowId)!;
     if(!container.atom){
+      container.suppressWorkingStatus = this.suppressWorkingStatus;
       container.atom = createAtom(
           `RowState atom [${rowId}]`,
           () =>
               requestAnimationFrame(() => {
                 this.triggerLoad();
               }),
-          () => {
-            // this.observedIds.delete(rowId);
-          }
+          () => {}
       )
     }
     container.atom.reportObserved?.();
-    console.log( "rowId: " +rowId + " rowStateItem: "+ this.containers.get(rowId)?.rowStateItem)
     return this.containers.get(rowId)?.rowStateItem;
-
   }
 
   async loadValues(rowIds: string[]) {
@@ -197,7 +203,7 @@ class RowStateContainer {
   public isValid: boolean = false;
 
   public processingSate: IIdState | undefined;
-
+  public suppressWorkingStatus: boolean = false;
   constructor(
       rowId: string,
       public atom? : IAtom
