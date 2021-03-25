@@ -7,7 +7,8 @@ export function getNotificationBoxContent(ctx: any) {
       yield* getNotifications(ctx).getNotificationBoxContent();
     } catch (e) {
       yield* handleError(ctx)(e);
-      console.log("Error during getNotificationBoxContent call ignored.");
+      // console.log("Error during getNotificationBoxContent call ignored.");
+      throw e;
     }
   };
 }

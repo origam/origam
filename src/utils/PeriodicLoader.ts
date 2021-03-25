@@ -1,4 +1,5 @@
 import { flow } from "mobx";
+import { exception } from "console";
 
 export class PeriodicLoader {
   private timeoutHandle: any;
@@ -22,7 +23,12 @@ export class PeriodicLoader {
       }
       while (true) {
         const timeBefore = new Date();
-        yield* self.loadFunction();
+        try {
+          yield* self.loadFunction();
+        } catch(e) {
+          yield self.sleep(60000);
+          continue
+        }
         const timeAfter = new Date();
 
         const loadTimeMs = timeAfter.valueOf() - timeBefore.valueOf();
