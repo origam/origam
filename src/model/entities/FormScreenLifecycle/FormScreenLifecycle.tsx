@@ -329,7 +329,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           } else {
             this._autoRefreshTimerHandle = setInterval(
               () => this.performAutoReload(),
-              10 * 1000
+              autoRefreshPeriod * 1000
             );
           }
         })
