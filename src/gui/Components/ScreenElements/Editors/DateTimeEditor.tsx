@@ -2,7 +2,7 @@ import cx from "classnames";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 // import CS from "./CommonStyle.module.css";
 import { action, computed, observable, runInAction } from "mobx";
-import { observer } from "mobx-react";
+import { observer, Observer } from "mobx-react";
 import moment, { Moment } from "moment";
 import * as React from "react";
 import { toOrigamServerString } from "utils/moment";
@@ -10,6 +10,8 @@ import { IFocusAble } from "../../../../model/entities/FocusManager";
 import { getLocaleFromCookie } from "../../../../utils/cookies";
 import DateCompleter from "./DateCompleter";
 import S from "./DateTimeEditor.module.scss";
+import Measure, { ContentRect } from "react-measure";
+import { createPortal } from "react-dom";
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -162,6 +164,8 @@ export class DateTimeEditor extends React.Component<{
 }> {
   @observable isDroppedDown = false;
 
+  @observable isShowFormatHintTooltip = false;
+
   refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
   elmDropdowner: Dropdowner | null = null;
 
@@ -228,7 +232,28 @@ export class DateTimeEditor extends React.Component<{
     }
   }
 
+  _hLocationInterval: any;
+
+  @action.bound
+  handleWindowMouseWheel(e: any) {
+    this.setShowFormatHint(false);
+  }
+
+  @action.bound
+  setShowFormatHint(state: boolean) {
+    if (state && !this.isShowFormatHintTooltip) {
+      this.measureInputElement();
+      this._hLocationInterval = setInterval(() => this.measureInputElement(), 500);
+      window.addEventListener("mousewheel", this.handleWindowMouseWheel);
+    } else if (!state && this.isShowFormatHintTooltip) {
+      clearInterval(this._hLocationInterval);
+      window.removeEventListener("mousewheel", this.handleWindowMouseWheel);
+    }
+    this.isShowFormatHintTooltip = state;
+  }
+
   @action.bound handleInputBlur(event: any) {
+    this.setShowFormatHint(false);
     const dateCompleter = this.getDateCompleter();
     const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
     if (completedMoment) {
@@ -249,9 +274,13 @@ export class DateTimeEditor extends React.Component<{
   private get autocompletedText() {
     const completedMoment = this.autoCompletedMoment;
     if (completedMoment) {
-      return this.formatMomentValue(this.autoCompletedMoment);
+      if (this.autoCompletedMoment?.isValid()) {
+        return this.formatMomentValue(this.autoCompletedMoment);
+      } else return "?";
     } else {
-      return this.formatMomentValue(this.momentValue);
+      if (this.momentValue?.isValid()) {
+        return this.formatMomentValue(this.momentValue);
+      } else return "?";
     }
   }
 
@@ -264,6 +293,8 @@ export class DateTimeEditor extends React.Component<{
         this.props.onChange?.(event, toOrigamServerString(this.momentValue));
       }
       this.dirtyTextualValue = undefined;
+    } else if (event.key === "Escape") {
+      this.setShowFormatHint(false);
     }
     this.props.onKeyDown?.(event);
   }
@@ -277,6 +308,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleContainerMouseDown(event: any) {
+    this.setShowFormatHint(true);
     setTimeout(() => {
       this.elmInput?.focus();
     }, 30);
@@ -284,8 +316,20 @@ export class DateTimeEditor extends React.Component<{
 
   refContainer = (elm: HTMLDivElement | null) => (this.elmContainer = elm);
   elmContainer: HTMLDivElement | null = null;
-  refInput = (elm: HTMLInputElement | null) => (this.elmInput = elm);
+  refInput = (elm: HTMLInputElement | null) => {
+    this.elmInput = elm;
+  };
+  @observable inputRect: any;
   elmInput: HTMLInputElement | null = null;
+
+  @action.bound
+  measureInputElement() {
+    if (this.elmInput) {
+      this.inputRect = this.elmInput.getBoundingClientRect();
+    } else {
+      this.inputRect = undefined;
+    }
+  }
 
   @observable dirtyTextualValue: string | undefined;
 
@@ -324,6 +368,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleTextfieldChange(event: any) {
+    this.setShowFormatHint(true);
     this.dirtyTextualValue = event.target.value;
     if (this.dirtyTextualValue === "") {
       this.props.onChange && this.props.onChange(event, null);
@@ -340,6 +385,7 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound
   handleFocus(event: any) {
+    this.setShowFormatHint(true);
     if (this.elmInput) {
       this.elmInput.select();
       this.elmInput.scrollLeft = 0;
@@ -368,24 +414,40 @@ export class DateTimeEditor extends React.Component<{
               zIndex: this.isDroppedDown ? 1000 : undefined,
             }}
           >
-            <input
-              title={this.autocompletedText + "\n" + '"' + this.props.outputFormat + '"'}
-              style={{
-                color: this.props.foregroundColor,
-                backgroundColor: this.props.backgroundColor,
-              }}
-              className={S.input}
-              type="text"
-              onBlur={this.handleInputBlur}
-              onFocus={this.handleFocus}
-              ref={this.refInput}
-              value={this.textfieldValue}
-              readOnly={this.props.isReadOnly}
-              onChange={this.handleTextfieldChange}
-              onClick={this.props.onClick}
-              onDoubleClick={this.props.onDoubleClick}
-              onKeyDown={this.handleKeyDown}
-            />
+            <Observer>
+              {() => (
+                <>
+                  {this.isShowFormatHintTooltip && (
+                    <FormatHintTooltip
+                      boundingRect={this.inputRect}
+                      line1={this.autocompletedText}
+                      line2={this.props.outputFormat}
+                    />
+                  )}
+                  <input
+                    title={this.autocompletedText + "\n" + '"' + this.props.outputFormat + '"'}
+                    style={{
+                      color: this.props.foregroundColor,
+                      backgroundColor: this.props.backgroundColor,
+                    }}
+                    className={S.input}
+                    type="text"
+                    onBlur={this.handleInputBlur}
+                    onFocus={this.handleFocus}
+                    ref={(elm) => {
+                      this.refInput(elm);
+                    }}
+                    value={this.textfieldValue}
+                    readOnly={this.props.isReadOnly}
+                    onChange={this.handleTextfieldChange}
+                    onClick={this.props.onClick}
+                    onDoubleClick={this.props.onDoubleClick}
+                    onKeyDown={this.handleKeyDown}
+                  />
+                </>
+              )}
+            </Observer>
+
             {this.props.isInvalid && (
               <div className={S.notification} title={this.props.invalidMessage}>
                 <i className="fas fa-exclamation-circle red" />
@@ -458,4 +520,28 @@ export class DateTimeEditor extends React.Component<{
       return this.renderInputFieldOnly();
     }
   }
+}
+
+function FormatHintTooltip(props: { boundingRect?: any; line1?: string; line2?: string }) {
+  const [tooltipHeight, setTooltipHeight] = React.useState(0);
+  function refTooltip(elm: any) {
+    if (elm) {
+      setTooltipHeight(elm.getBoundingClientRect().height);
+    }
+  }
+  if (!props.boundingRect || (!props.line1 && !props.line2)) return null;
+  const bounds = props.boundingRect;
+
+  return createPortal(
+    <div
+      ref={refTooltip}
+      className={S.formatHintTooltip}
+      style={{ top: bounds.top - 1 - tooltipHeight, left: bounds.left }}
+    >
+      {props.line1}
+      {props.line2 && <br />}
+      {props.line2}
+    </div>,
+    document.getElementById("tooltip-portal")!
+  );
 }
