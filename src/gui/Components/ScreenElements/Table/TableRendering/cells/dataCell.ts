@@ -11,7 +11,6 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getShowToolTipsForMemoFieldsOnly } from "model/selectors/Workbench/getShowToolTipsForMemoFieldsOnly";
 import {
   currentCellErrorMessage,
-  currentCellText,
   currentColumnLeft,
   currentColumnLeftVisible,
   currentColumnWidth,
@@ -21,7 +20,7 @@ import {
   currentRowTop,
   isCurrentCellLoading,
 } from "../currentCell";
-import { onClick, onMouseOver, onMouseMove } from "../onClick";
+import { onClick, onMouseMove } from "../onClick";
 import {
   columnWidths,
   context,
@@ -70,12 +69,8 @@ function registerToolTipGetter(columnId: string) {
   const ctx2d = context2d();
   const property = currentProperty();
   const cellRenderer = currentDataCellRenderer(ctx2d);
-  const cellText = cellRenderer.cellTextMulitiline;
   const cellClickableArea = getCellClickableArea();
-  const currentRowIndex = rowIndex();
-  const currentColumnIndex = drawingColumnIndex();
   const cellWidth = currentColumnWidth();
-  const cellHeight = currentRowHeight();
 
   if (property.column === "CheckBox" || property.column === "Image" || property.column === "Blob") {
     return;
@@ -87,13 +82,6 @@ function registerToolTipGetter(columnId: string) {
   ) {
     return;
   }
-
-  const toolTipPositionRectangle = {
-    columnLeft: currentColumnLeft() + currentColumnWidth() * 0.2,
-    columnWidth: 0,
-    rowTop: currentRowTop() + currentRowHeight() + 10,
-    rowHeight: 0,
-  };
 
   const cellTextRendered = cellRenderer.cellText;
   const textWidth = ctx2d.measureText(cellTextRendered).width / CPR();

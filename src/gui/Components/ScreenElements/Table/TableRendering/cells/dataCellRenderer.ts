@@ -98,7 +98,7 @@ class CheckBoxCellRenderer implements IDataCellRenderer {
     this.ctx2d.fillText(
       !!this.cellText ? "\uf14a" : "\uf0c8",
       CPR() * xCenter(),
-      CPR() * (currentRowTop() + topTextOffset - 4)
+      CPR() * (currentRowTop() + topTextOffset - 5)
     );
   }
 }
