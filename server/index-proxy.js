@@ -47,7 +47,7 @@ app.use(
 );
 
 app.use(
-  ["/chatrooms/Chat", "/chatrooms/Avatar", "/internalApi/HashTag"],
+  ["/chatrooms/Chat", "/chatrooms/Avatar", "/internalApi/DeepLink"],
   createProxyMiddleware({
     // logProvider: () => winston,
     logLevel: "debug",

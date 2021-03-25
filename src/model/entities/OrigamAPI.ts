@@ -806,7 +806,7 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     fileDownload(response.data, fileName);
   }
   async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {
-    return (await this.axiosInstance.post(`/HashTag/GetMenuId`, data)).data;
+    return (await this.axiosInstance.post(`/DeepLink/GetMenuId`, data)).data;
   }
 }
 
