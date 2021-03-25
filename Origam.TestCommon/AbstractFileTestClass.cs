@@ -54,7 +54,7 @@ namespace Origam.TestCommon
 
         protected void ClearTestDir()
         {
-            Directory.Delete(TestFilesDir.FullName, true);
+            //Directory.Delete(TestFilesDir.FullName, true);
         }
     }
 }
