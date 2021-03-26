@@ -71,7 +71,7 @@ namespace Origam.OrigamEngine
                     providers.Add(new TreeStructureSchemaItemProvider());
                     providers.Add(new KeyboardShortcutsSchemaItemProvider());
                     providers.Add(new SearchSchemaItemProvider());
-                    providers.Add(new HashTagCategorySchemaItemProvider());
+                    providers.Add(new DeepLinkCategorySchemaItemProvider());
         }
         public List<AbstractSchemaItemProvider> GetAll()
         {

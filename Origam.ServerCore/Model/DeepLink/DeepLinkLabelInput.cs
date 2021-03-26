@@ -18,9 +18,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-namespace Origam.ServerCore.Model.HashTag
+namespace Origam.ServerCore.Model.DeepLink
 {
-    public class HashtagLabelInput
+    public class DeepLinkLabelInput
     {
            public object[] LabelIds { get; set; }
     }
