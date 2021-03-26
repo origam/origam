@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ema="http://schemas.origam.com/Origam.Schema.MenuModel.EntityMenuAction/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0">
+  <ema:EntityUIAction
+    asi:abstract="true"
+    euia:actionType="OpenForm"
+    euia:default="false"
+    x:id="777c0ff3-6e87-4c1b-aac8-6ab50457e6b5"
+    euia:label="Show Audit"
+    ema:menu="Audit/Menu/AuditContextMenu.origam#AuditContextMenu/Audit/18bdd6b8-570a-4e64-b1cd-0cf67caa3b73"
+    euia:modal="false"
+    euia:mode="ActiveRecord"
+    asi:name="Audit"
+    euia:order="10"
+    x:parentId="28c21d99-785a-4cc5-bce9-62dca7b852c6"
+    euia:placement="PanelMenu"
+    euia:refreshAfterReturn="None"
+    euia:roles="*"
+    euia:valueType="SavedValue">
+    <euiapm:EntityUIActionParameterMapping
+      asi:abstract="true"
+      euiapm:field="Id"
+      x:id="db569732-c8d5-482e-8d22-e60748153687"
+      asi:name="OrigamDataAuditLog_parRefParentRecordId"
+      euiapm:type="Current" />
+  </ema:EntityUIAction>
+</x:file>

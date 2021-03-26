@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<OrigamLocalization>
+  <Element Id="18258213-097a-4947-a45d-39b5b1147610" Path="Attachment/Save">
+    <Caption OriginalText="Save">Uložit</Caption>
+  </Element>
+  <Element Id="5141dc11-b21e-4d0e-90e2-d62c205fed90" Path="Attachment/AttachmentRootControl/PanelTitle">
+    <Value OriginalText="Attachments">Přílohy</Value>
+  </Element>
+  <Element Id="00a6c763-45f3-4ff6-bbfc-c80f88e6c59d" Path="Attachment_Upload/Attachment_UploadRootControl/BlobControl1/Caption">
+    <Value OriginalText="Attachment">Přílohy</Value>
+  </Element>
+  <Element Id="ada0f8df-4596-4656-8559-3382e447c133" Path="Attachment_Upload/Attachment_UploadRootControl/PanelTitle">
+    <Value OriginalText="Attachments">Přílohy</Value>
+  </Element>
+  <Element Id="ef2af8c2-e6ee-4a4b-aa58-86bde5b353f0" Path="AttachmentEdit/NewComponent/SplitPanel1/NewControlSetItem/PanelTitle">
+    <Value OriginalText="Attachments">Přílohy</Value>
+  </Element>
+  <Element Id="ceaa87d2-d340-4302-93ca-da47b5c0321e" Path="AttachmentEdit/NewComponent/SplitPanel1/SplitPanel2/AsPanel2/PanelTitle">
+    <Value OriginalText="Attachments">Přílohy</Value>
+  </Element>
+  <Element Id="374a0ce5-9fe2-4fcb-b200-b126dfd72340" Path="IOrigamAttachments/EditAttachments">
+    <Caption OriginalText="Attachments">Přílohy</Caption>
+  </Element>
+</OrigamLocalization>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="7c976d82-16b5-44cc-9b85-c44c6cae9a08"
+    x:isFolder="true"
+    g:name="Audit"
+    g:rootItemType="PanelControlSet" />
+</x:file>
