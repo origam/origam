@@ -1,5 +1,4 @@
 import { TypeSymbol } from "dic/Container";
-import FlexSearch from "flexsearch";
 import { action, computed, observable } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
 import { EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";

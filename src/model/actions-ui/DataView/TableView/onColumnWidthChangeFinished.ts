@@ -1,6 +1,5 @@
 import {flow} from "mobx";
 import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
-import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
 import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 
 export function onColumnWidthChangeFinished(ctx: any) {

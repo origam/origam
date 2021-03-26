@@ -2,7 +2,6 @@ import { IDataTable } from "./types/IDataTable";
 import { IProperty } from "./types/IProperty";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
-import { IGroupTreeNode } from "../../gui/Components/ScreenElements/Table/TableRendering/types";
 import { IDataSourceField } from "./types/IDataSourceField";
 import { computed, observable } from "mobx";
 import { getDataSource } from "../selectors/DataSources/getDataSource";

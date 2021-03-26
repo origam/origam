@@ -23,7 +23,7 @@ import { assignIIds } from "xmlInterpreters/xmlUtils";
 import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
-import {flow, observable, when} from "mobx";
+import {observable} from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
@@ -34,7 +34,6 @@ import selectors from "model/selectors-tree";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
-import {IPerspective} from "modules/DataView/Perspective/Perspective";
 import { IDataView } from "../types/IDataView";
 import {FormScreenEnvelope} from "model/entities/FormScreen";
 
@@ -234,8 +233,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
     const url = `/chatrooms/index.html#/chatroom?chatroomId=${item.id}`;
     const id = url;
-
-    let dialogInfo: IDialogInfo | undefined;
 
     const existingItem = openedScreens.findLastExistingTabItem(id);
     if (existingItem) {

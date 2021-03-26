@@ -1,6 +1,4 @@
-import { delay } from "./common";
 import { TypeSymbol } from "dic/Container";
-import { IOrigamAPI } from "model/entities/OrigamAPI";
 import { IApi } from "model/entities/types/IApi";
 
 export class LookupApi {

@@ -28,6 +28,6 @@ export class ImageEditor extends React.Component<{
 }> {
   render() {
     const preparedUrl = processedImageURL(this.props.value).value;
-    return preparedUrl ? <img className={S.image} src={preparedUrl} /> : null;
+    return preparedUrl ? <img className={S.image} src={preparedUrl}  alt=""/> : null;
   }
 }

@@ -5,8 +5,6 @@ import _ from "lodash";
 import {IApi, IUpdateData, IUIGridFilterCoreConfiguration, IEntityExportField, ILazyLoadedEntityInput} from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
-import { IColumnSettings } from "./types/IColumnSettings";
-import { compareByGroupingIndex } from "./ColumnSettings";
 import { TypeSymbol } from "dic/Container";
 import { IAboutInfo } from "./types/IAboutInfo";
 import { T } from "utils/translation";

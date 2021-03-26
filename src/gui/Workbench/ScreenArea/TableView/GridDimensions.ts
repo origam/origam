@@ -35,6 +35,7 @@ export class GridDimensions implements IGridDimensions {
         return prop;
       }
     }
+    return undefined;
   }
 
   @computed get rowHeight(): number {

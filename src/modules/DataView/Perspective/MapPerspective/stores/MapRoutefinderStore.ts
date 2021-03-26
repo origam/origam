@@ -85,7 +85,7 @@ export class MapRoutefinderStore {
       const smapCoords = gjsCoords.map((ll: any) =>
         (window as any).SMap.Coords.fromWGS84(ll[0], ll[1])
       );
-      const routeInstance = new (window as any).SMap.Route(smapCoords, (route: any) => {
+      new (window as any).SMap.Route(smapCoords, (route: any) => {
         const results = route.getResults();
         if (results.error) {
           this.handleResultsError();

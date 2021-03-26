@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import bind from "bind-decorator";
-import { action, autorun, computed, observable, reaction } from "mobx";
+import { action, computed, observable} from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React, { useContext } from "react";
@@ -29,16 +30,10 @@ import { getLeadingColumnCount } from "model/selectors/TablePanelView/getLeading
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
-import { IAggregation } from "model/entities/types/IAggregation";
 import { SelectionCheckBoxHeader } from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
-import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import {
-  parseAggregations,
-  calcAggregations,
   aggregationToString,
 } from "model/entities/Aggregatioins";
-import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
-import _ from "lodash";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";

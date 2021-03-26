@@ -7,7 +7,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
 import { getMainMenu } from "model/selectors/MainMenu/getMainMenu";
-import { action, observable } from "mobx";
+import { action} from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
@@ -19,7 +19,7 @@ import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { ChooseFavoriteFolderDialog } from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
-import { getIconUrl as getIconUrl } from "gui/getIconUrl";
+import { getIconUrl } from "gui/getIconUrl";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/IMenuItemIcon";
@@ -33,7 +33,7 @@ export class CMainMenu extends React.Component {
   }
 
   render() {
-    const { props, application } = this;
+    const { application } = this;
     const isLoading = getIsMainMenuLoading(application);
     const mainMenu = getMainMenu(application);
 

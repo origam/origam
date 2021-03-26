@@ -117,7 +117,7 @@ class XmlToFavoritesConverter {
 
   private folderToXml(folder: FavoriteFolder) {
     return (
-      `  <folder label=\"${folder.name}\" id=\"${folder.id}\" isPinned=\"${folder.isPinned}\">\n` +
+      `  <folder label="${folder.name}" id="${folder.id}" isPinned="${folder.isPinned}">\n` +
       folder.items.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
       "  </folder>"
     );

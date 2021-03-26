@@ -1,8 +1,7 @@
 import { EmbeddedWebpage } from "gui/Components/EmbeddedWebpage/EmbeddedWebpage";
 import { Splitter } from "gui/Components/Splitter/Splitter";
 import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedView";
-import { action, computed, observable } from "mobx";
-import { MobXProviderContext, observer, Observer } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
@@ -11,7 +10,6 @@ import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/
 import { Box } from "../../Components/ScreenElements/Box";
 import { DataView } from "../../Components/ScreenElements/DataView";
 import { Label } from "../../Components/ScreenElements/Label";
-import { TabbedPanel, TabBody, TabHandle } from "../../Components/ScreenElements/TabbedPanel";
 import { VBox } from "../../Components/ScreenElements/VBox";
 import { WorkflowFinishedPanel } from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel";
 
@@ -20,44 +18,6 @@ import { HBox } from "gui/Components/ScreenElements/HBox";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 import {serverValueToPanelSizeRatio} from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
-
-@observer
-class TabbedPanelHelper extends React.Component<{
-  boxes: any[];
-  nextNode: (node: any) => React.ReactNode;
-}> {
-  @observable activePanelId: string =
-    this.props.boxes.length > 0 ? this.props.boxes[0].attributes.Id : "";
-
-  @action.bound activateTab(tabId: string) {
-    this.activePanelId = tabId;
-  }
-
-  render() {
-    const { boxes, nextNode } = this.props;
-    return (
-      <TabbedPanel
-        handles={boxes.map((box) => (
-          <TabHandle
-            isActive={this.activePanelId === box.attributes.Id}
-            label={box.attributes.Name}
-            onClick={() => this.activateTab(box.attributes.Id)}
-          />
-        ))}
-      >
-        {boxes.map((box) => (
-          <Observer>
-            {() => (
-              <TabBody isActive={computed(() => this.activePanelId === box.attributes.Id).get()}>
-                {findUIChildren(box).map((child) => nextNode(child))}
-              </TabBody>
-            )}
-          </Observer>
-        ))}
-      </TabbedPanel>
-    );
-  }
-}
 
 @observer
 export class FormScreenBuilder extends React.Component<{

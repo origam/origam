@@ -15,8 +15,6 @@ import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 export class ApplicationLifecycle implements IApplicationLifecycle {
   $type_IApplicationLifecycle: 1 = 1;
 
-  constructor() {}
-
   @observable loginPageMessage?: string | undefined;
 
   @observable inFlow = 0;

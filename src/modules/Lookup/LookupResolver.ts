@@ -1,10 +1,9 @@
 import { createAtom, IAtom, action } from "mobx";
 import _ from "lodash";
-import { LookupCacheIndividual, ILookupCacheIndividual } from "./LookupCacheIndividual";
+import { LookupCacheIndividual } from "./LookupCacheIndividual";
 import {
   LookupLoaderIndividual,
   ILookupIndividualResultListenerArgs,
-  ILookupLoaderIndividual,
 } from "./LookupLoaderIndividual";
 import { TypeSymbol } from "dic/Container";
 
@@ -35,7 +34,7 @@ export class LookupResolver {
   @action.bound
   cleanAndReload() {
     const keysToDelete: any[] = [];
-    for (let [k, v] of this.resolved.entries()) {
+    for (let k of this.resolved.keys()) {
       if (!this.atoms.has(k)) {
         keysToDelete.push(k);
       } else {

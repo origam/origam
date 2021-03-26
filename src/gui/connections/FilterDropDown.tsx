@@ -1,28 +1,14 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
 import { IFilterGroup } from "model/entities/types/IFilterGroup";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
-import {getFilterConfiguration} from "model/selectors/DataView/getFilterConfiguration";
-import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
-import {getOpenedScreen} from "model/selectors/getOpenedScreen";
-import {QuestionSaveData} from "gui/Components/Dialogs/QuestionSaveData";
 import {getDialogStack} from "model/selectors/getDialogStack";
 import { SaveFilterDialog } from "gui/Components/Dialogs/SaveFilterDialog";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {IFilter} from "model/entities/types/IFilter";
-import {
-  IUIGridFilterCoreConfiguration,
-  IUIGridFilterFieldConfiguration
-} from "model/entities/types/IApi";
-import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import { getApi } from "model/selectors/getApi";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {getDataView} from "model/selectors/DataView/getDataView";
 import { getFilterGroupManager } from "model/selectors/DataView/getFilterGroupManager";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";

@@ -4,7 +4,7 @@ import { IDockType } from "model/entities/types/IProperty";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import { formatTooltipText, formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
+import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
 export enum ICaptionPosition {
   Left = "Left",
   Right = "Right",

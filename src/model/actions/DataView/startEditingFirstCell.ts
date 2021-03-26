@@ -1,5 +1,4 @@
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { getProperties } from "model/selectors/DataView/getProperties";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 

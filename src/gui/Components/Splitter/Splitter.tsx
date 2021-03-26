@@ -25,6 +25,7 @@ class SplitterPanel extends React.Component<{
       case "isVert":
         return { height: this.props.size };
     }
+    return undefined;
   }
 
   render() {
@@ -57,6 +58,7 @@ class SplitterDivider extends React.Component<{
       case "isHoriz":
         return { left: this.props.relativeLoc };
     }
+    return undefined;
   }
 
   render() {

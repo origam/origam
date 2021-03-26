@@ -1,7 +1,7 @@
 import { action, observable, createAtom } from "mobx";
 import { PubSub } from "./common";
-import { LookupApi, ILookupApi } from "./LookupApi";
-import { Clock, IClock } from "./Clock";
+import { LookupApi } from "./LookupApi";
+import { Clock } from "./Clock";
 import { TypeSymbol } from "dic/Container";
 
 export interface ILookupMultiResultListenerArgs {
@@ -52,7 +52,7 @@ export class LookupLoaderMulti {
         for (let [l1k, l1v] of result.entries()) {
           l1k = String(l1k).toLowerCase();
           if (!this.loading.has(l1k)) continue;
-          for (let [l2k, l2v] of l1v.entries()) {
+          for (let l2k of l1v.keys()) {
             l2k = String(l2k).toLowerCase();
             this.loading.get(l1k)!.delete(l2k);
           }

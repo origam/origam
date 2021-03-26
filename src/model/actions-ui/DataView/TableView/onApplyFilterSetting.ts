@@ -1,4 +1,4 @@
-import { flow, toJS } from "mobx";
+import { flow } from "mobx";
 import { getProperty } from "model/selectors/DataView/getProperty";
 import { getFilterConfiguration } from "../../../selectors/DataView/getFilterConfiguration";
 import { handleError } from "model/actions/handleError";

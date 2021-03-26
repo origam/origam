@@ -2,7 +2,6 @@ import {IDialogInfo, IOpenedScreen, IOpenedScreenData} from "./types/IOpenedScre
 import {action, computed, observable} from "mobx";
 import {IFormScreenEnvelope} from "./types/IFormScreen";
 import {IMainMenuItemType} from "./types/IMainMenu";
-import {IActionResultRequest} from "./types/IActionResultRequest";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 export class DialogInfo implements IDialogInfo {

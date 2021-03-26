@@ -1,4 +1,4 @@
-import React, { RefObject, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
 import S from "./CheckList.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { action, computed, flow, observable } from "mobx";

@@ -7,7 +7,6 @@ import {getDataView} from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import _ from "lodash";
 import { fixRowIdentifier } from "utils/dataRow";
-import {IProperty} from "model/entities/types/IProperty";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;

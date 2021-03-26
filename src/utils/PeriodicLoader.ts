@@ -1,5 +1,4 @@
 import { flow } from "mobx";
-import { exception } from "console";
 
 export class PeriodicLoader {
   private timeoutHandle: any;

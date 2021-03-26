@@ -14,7 +14,6 @@ import {
 import { IPanelConfiguration } from "./types/IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
 import {getSessionId} from "model/selectors/getSessionId";
-import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import {getRowStates} from "model/selectors/RowState/getRowStates";
 import { ScreenPictureCache } from "./ScreenPictureCache";

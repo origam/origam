@@ -7,10 +7,8 @@ import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { action, observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getSearcher } from "model/selectors/getSearcher";
-import { getIconUrl } from "gui/getIconUrl";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
-import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";

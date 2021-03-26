@@ -1,7 +1,6 @@
 import React from "react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { MobXProviderContext, observer } from "mobx-react";
-import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
 import { WorkQueuesItem } from "gui/Components/WorkQueues/WorkQueuesItem";
 import { flow } from "mobx";
 import { Icon } from "gui/Components/Icon/Icon";

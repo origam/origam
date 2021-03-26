@@ -1,5 +1,5 @@
 import Axios from "axios";
-import {action, comparer, computed, flow, observable, reaction} from "mobx";
+import {action, comparer, flow, reaction} from "mobx";
 import {navigateAsChild} from "model/actions/DataView/navigateAsChild";
 import {handleError} from "model/actions/handleError";
 import {getBindingChildren} from "model/selectors/DataView/getBindingChildren";

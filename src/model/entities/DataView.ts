@@ -15,7 +15,6 @@ import { IPanelViewType } from "./types/IPanelViewType";
 import { IProperty } from "./types/IProperty";
 import { getBindingToParent } from "model/selectors/DataView/getBindingToParent";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { getEntity } from "model/selectors/DataView/getEntity";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
 import { ILookupLoader } from "./types/ILookupLoader";
 import bind from "bind-decorator";

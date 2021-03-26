@@ -6,7 +6,6 @@ import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelVi
 import {getProperties} from "model/selectors/DataView/getProperties";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 import { IProperty } from "../types/IProperty";
-import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { observable } from "mobx";
 
 export class TableConfiguration implements ITableConfiguration {

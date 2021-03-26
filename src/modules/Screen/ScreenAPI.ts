@@ -1,4 +1,3 @@
-import { IOrigamAPI } from "model/entities/OrigamAPI";
 import { TypeSymbol } from "dic/Container";
 import { IApi } from "model/entities/types/IApi";
 

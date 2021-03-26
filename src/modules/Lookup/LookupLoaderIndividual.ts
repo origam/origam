@@ -1,8 +1,7 @@
 import { action } from "mobx";
-import { ILookupMultiResultListenerArgs, LookupLoaderMulti, ILookupLoaderMulti } from "./LookupLoaderMulti";
+import { ILookupMultiResultListenerArgs, LookupLoaderMulti } from "./LookupLoaderMulti";
 import { PubSub } from "./common";
 import { TypeSymbol } from "dic/Container";
-import { ILookupId } from "./LookupModule";
 
 export interface ILookupIndividualResultListenerArgs {
   labels: Map<any, any>;

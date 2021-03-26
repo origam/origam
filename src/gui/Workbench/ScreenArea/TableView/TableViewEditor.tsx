@@ -65,7 +65,7 @@ export class TableViewEditor extends React.Component<{
     const dataView = getDataView(this.props.property);
     const readOnly =
       isReadOnly(this.props.property!, rowId) ||
-      (dataView.orderProperty != undefined &&
+      (dataView.orderProperty !== undefined &&
         this.props.property?.name === dataView.orderProperty.name);
 
     const customBackgroundColor = getRowStateRowBgColor(dataView, rowId);

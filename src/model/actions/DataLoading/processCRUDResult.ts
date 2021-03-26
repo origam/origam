@@ -7,7 +7,6 @@ import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
-import {runInAction} from "mobx";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { IDataView } from "model/entities/types/IDataView";
 
@@ -93,7 +92,6 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
       for (let dataView of dataViews) {
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
-          const deletedRowIndex = dataView.selectedRowIndex;
           dataView.deleteRowAndSelectNext(row);
         }
       }

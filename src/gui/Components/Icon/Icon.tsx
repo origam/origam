@@ -27,7 +27,7 @@ export class Icon extends React.Component<{
         title={this.props.tooltip}
         src={this.props.src}
         className={cx(S.root, "icon", this.props.className)}
-      />
+        alt=""/>
     );
   }
 }

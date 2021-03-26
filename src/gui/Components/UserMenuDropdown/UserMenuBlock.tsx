@@ -10,7 +10,7 @@ export const UserMenuBlock: React.FC<{
     <div className={S.avatarSection}>
       <div className={S.pictureSection}>
         <div className={S.avatarContainer}>
-          <img className={S.avatar} src={props.avatarLink} />
+          <img className={S.avatar} src={props.avatarLink}  alt=""/>
         </div>
       </div>
       <div className={S.infoSection}>{props.userName}</div>

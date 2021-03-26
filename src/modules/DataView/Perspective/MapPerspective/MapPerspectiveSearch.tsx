@@ -1,8 +1,7 @@
-import { action, observable } from "mobx";
 import { Observer } from "mobx-react";
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import { createPortal } from "react-dom";
-import { AutoSizer, Grid } from "react-virtualized";
+import { Grid } from "react-virtualized";
 import Highlighter from "react-highlight-words";
 import cx from "classnames";
 import S from "./MapPerspectiveUI.module.scss";

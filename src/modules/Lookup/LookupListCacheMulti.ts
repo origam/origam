@@ -1,7 +1,6 @@
 import { TypeSymbol } from "dic/Container";
 import { action } from "mobx";
 import { IClock } from "./Clock";
-import { IGetLookupLabelsCleanerReloader } from "./LookupCleanerLoader";
 
 export class LookupListCacheMulti {
   constructor(private clock = IClock()) {}

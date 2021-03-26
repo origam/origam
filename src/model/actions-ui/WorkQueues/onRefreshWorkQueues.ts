@@ -1,4 +1,3 @@
-import {flow} from "mobx";
 import {refreshWorkQueues} from "model/actions/WorkQueues/refreshWorkQueues";
 import {handleError} from "model/actions/handleError";
 

@@ -1,7 +1,7 @@
 import { CDataViewHeader } from "gui/connections/CDataViewHeader";
 import { inject, Observer, observer, Provider } from "mobx-react";
 import { getIsDataViewOrFormScreenWorkingDelayed } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
-import React, { createContext, Fragment, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, useState } from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
 import S from "./DataView.module.css";

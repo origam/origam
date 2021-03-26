@@ -1,7 +1,6 @@
 import { action } from "mobx";
-import { LookupCacheMulti, ILookupCacheMulti } from "./LookupCacheMulti";
+import { LookupCacheMulti } from "./LookupCacheMulti";
 import { TypeSymbol } from "dic/Container";
-import { ILookupId } from "./LookupModule";
 
 export class LookupCacheIndividual {
   constructor(private lookupId: string, private cache: LookupCacheMulti) {}

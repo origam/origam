@@ -1,6 +1,4 @@
-import { flow } from "mobx";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
 import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 

@@ -1,7 +1,5 @@
-import { TypeSymbol, Func } from "dic/Container";
-import { IDataView } from "./DataViewTypes";
-import { IOrigamAPI } from "model/entities/OrigamAPI";
-import { IScreenAPI, ScreenAPI } from "modules/Screen/ScreenAPI";
+import { TypeSymbol} from "dic/Container";
+import { ScreenAPI } from "modules/Screen/ScreenAPI";
 
 export class DataViewAPI {
   constructor(

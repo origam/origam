@@ -5,7 +5,6 @@ import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 import { observable } from "mobx";
-import { MultiGrid } from "react-virtualized";
 
 @observer
 export class SaveFilterDialog extends React.Component<{

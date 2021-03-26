@@ -8,7 +8,6 @@ const formatCache: any = new Map<any, any>();
 function getOrSetCached(fnGetResult: () => any, ...simpleKeys: any[]) {
   let item = formatCache;
   let keyIndex = 0;
-  let cacheHit = true;
   for (let key of simpleKeys) {
     let nextItem = item.get(key);
     if (nextItem === undefined) {
@@ -17,7 +16,6 @@ function getOrSetCached(fnGetResult: () => any, ...simpleKeys: any[]) {
       } else {
         item.set(key, (nextItem = new Map()));
       }
-      cacheHit = false;
     }
     item = nextItem;
     keyIndex++;

@@ -7,8 +7,7 @@ import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
-import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
+import { getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
 import { DateGroupData, GenericGroupData } from "./DateGroupData";
 import moment from "moment";

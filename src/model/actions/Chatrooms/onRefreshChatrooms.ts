@@ -1,4 +1,3 @@
-import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { getSearcher } from "model/selectors/getSearcher";

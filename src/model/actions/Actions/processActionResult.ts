@@ -13,11 +13,8 @@ import {ICRUDResult, processCRUDResult} from "../DataLoading/processCRUDResult";
 import {IRefreshOnReturnType} from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import {IDataView} from "../../entities/types/IDataView";
 import {getDataViewByModelInstanceId} from "../../selectors/DataView/getDataViewByModelInstanceId";
-import {getDataView} from "../../selectors/DataView/getDataView";
 import {getOpenedScreen} from "../../selectors/getOpenedScreen";
-import { getSessionId } from "model/selectors/getSessionId";
 import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
 
 export interface IOpenNewForm {
   (
