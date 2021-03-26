@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="bf8a8278-8973-40b9-b174-07e8d2d2d75c"
+    x:isFolder="true"
+    g:name="Audit"
+    g:rootItemType="WorkflowStateMachine" />
+</x:file>

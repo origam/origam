@@ -15,11 +15,11 @@
 					<xsl:with-param name="Severity"><xsl:value-of select="'High'"/></xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
-			<xsl:if test="not(ROOT/Test/@dateAttribute = '2020-09-21T11:58:22+00:00')">
+			<xsl:if test="AS:DifferenceInSeconds(ROOT/Test/@dateAttribute, '2020-09-21T11:58:22') != 0">
 				<xsl:call-template name="Exception">
 					<xsl:with-param name="FieldName"><xsl:value-of select="''"/></xsl:with-param>
 					<xsl:with-param name="EntityName"><xsl:value-of select="''"/></xsl:with-param>
-					<xsl:with-param name="Message"><xsl:value-of select="'/ROOT/Test/@dateAttribute was expected to be 2020-09-21T11:58:22+00:00'"/></xsl:with-param>
+					<xsl:with-param name="Message"><xsl:value-of select="'/ROOT/Test/@dateAttribute was expected to be 2020-09-21T11:58:22'"/></xsl:with-param>
 					<xsl:with-param name="Severity"><xsl:value-of select="'High'"/></xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>

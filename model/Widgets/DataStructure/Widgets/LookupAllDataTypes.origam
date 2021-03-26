@@ -118,5 +118,18 @@
         asi:name="AllDataTypes_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="b153119a-f1e5-48db-b515-fde0bbc7c687"
+      asi:name="GetLikeText1">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/AllDataTypes/ec0a1b91-c379-4ef0-abe8-8fa62edd9598"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetLikeText1/37cb378c-573a-4c5d-9b4f-4cc151bc501d"
+        x:id="5d2a51d5-6ca6-4c23-880b-479884e5c5ba"
+        asi:name="AllDataTypes_GetLikeText1"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
   </ds:DataStructure>
 </x:file>
