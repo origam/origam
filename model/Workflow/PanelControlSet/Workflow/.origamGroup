@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="654331d2-3cf7-4c1c-adc2-07b21b4e5713"
+    x:isFolder="true"
+    g:name="Workflow"
+    g:rootItemType="PanelControlSet" />
+</x:file>
