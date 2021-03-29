@@ -33,7 +33,7 @@
     animation-name: slideright;
     animation-duration: 2s;
     animation-iteration-count: infinite;
-    animation-timing-function: linear;
+    animation-timing-function: steps(20);
     width: $indefiniteMarkerWidth;
     height: 100%;
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,73b1e7+34,0a77d5+50,73b1e7+66,73b1e7+66,ffffff+100 */
