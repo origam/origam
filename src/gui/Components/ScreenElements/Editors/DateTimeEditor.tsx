@@ -308,7 +308,6 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleContainerMouseDown(event: any) {
-    this.setShowFormatHint(true);
     setTimeout(() => {
       this.elmInput?.focus();
     }, 30);
@@ -385,7 +384,6 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound
   handleFocus(event: any) {
-    this.setShowFormatHint(true);
     if (this.elmInput) {
       this.elmInput.select();
       this.elmInput.scrollLeft = 0;
