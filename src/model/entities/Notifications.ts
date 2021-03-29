@@ -11,13 +11,12 @@ export class Notifications {
     this.notificationBox = yield getApi(this).getNotificationBoxContent();
   }
 
-  loader = new PeriodicLoader(getNotificationBoxContent(this));
+  loader = new PeriodicLoader(getNotificationBoxContent(this), () => getApi(this).onApiResponse);
 
   *startTimer(refreshIntervalMs: number) {
-    if(localStorage.getItem('debugNoPolling_notificationBox')) return
+    if (localStorage.getItem("debugNoPolling_notificationBox")) return;
     yield* this.loader.start(refreshIntervalMs);
   }
 
   parent?: any;
 }
-
