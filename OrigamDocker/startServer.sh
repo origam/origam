@@ -101,6 +101,10 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   if [ -f custom.js ]; then
 		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
 	   fi
+	   if [ -f reverse-proxy.conf ]; then
+			sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
+			sudo /etc/init.d/nginx restart
+	   fi
 	   if [ -f "/home/origam/.ssh/id_rsa" ]; then
 		#Remove key
 		rm /home/origam/.ssh/id_rsa
