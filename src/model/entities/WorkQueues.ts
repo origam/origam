@@ -1,8 +1,8 @@
-import {IWorkQueues} from "./types/IWorkQueues";
-import {getApi} from "model/selectors/getApi";
-import {onRefreshWorkQueues} from "model/actions-ui/WorkQueues/onRefreshWorkQueues";
-import {computed, observable} from "mobx";
-import {PeriodicLoader} from "utils/PeriodicLoader";
+import { IWorkQueues } from "./types/IWorkQueues";
+import { getApi } from "model/selectors/getApi";
+import { onRefreshWorkQueues } from "model/actions-ui/WorkQueues/onRefreshWorkQueues";
+import { computed, observable } from "mobx";
+import { PeriodicLoader } from "utils/PeriodicLoader";
 
 export class WorkQueues implements IWorkQueues {
   $type_IWorkQueues: 1 = 1;
@@ -15,14 +15,13 @@ export class WorkQueues implements IWorkQueues {
 
   @observable items: any[] = [];
   @computed get totalItemCount() {
-    return this.items.map(item => item.countTotal).reduce((a, b) => a + b, 0);
+    return this.items.map((item) => item.countTotal).reduce((a, b) => a + b, 0);
   }
 
-  loader = new PeriodicLoader(onRefreshWorkQueues(this));
-
+  loader = new PeriodicLoader(onRefreshWorkQueues(this), () => getApi(this).onApiResponse);
 
   *startTimer(refreshIntervalMs: number) {
-    if(localStorage.getItem('debugNoPolling')) return
+    if (localStorage.getItem("debugNoPolling")) return;
     yield* this.loader.start(refreshIntervalMs);
   }
 

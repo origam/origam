@@ -10,7 +10,7 @@ export class Chatrooms {
     this.items = chatrooms;
   }
 
-  loader = new PeriodicLoader(onRefreshChatrooms(this));
+  loader = new PeriodicLoader(onRefreshChatrooms(this), () => getApi(this).onApiResponse);
 
   @observable items: any[] = [];
   @computed get totalItemCount() {
