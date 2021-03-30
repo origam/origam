@@ -10,6 +10,8 @@ import { IAboutInfo } from "./types/IAboutInfo";
 import { T } from "utils/translation";
 import fileDownload from "js-file-download";
 import {ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
+import { PubSub } from "utils/events";
+
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -36,7 +38,10 @@ export class OrigamAPI implements IApi {
     });
 
     axiosInstance.interceptors.response.use(
-      (response) => response,
+      (response) => {
+        this.onApiResponse.trigger({});
+        return response;
+      },
       async (error) => {
         if(error.response?.data?.constructor?.name === 'Blob'){
           error.response.data = await error.response.data.text();
@@ -49,6 +54,8 @@ export class OrigamAPI implements IApi {
     );
     return axiosInstance;
   }
+
+  onApiResponse = new PubSub<{}>();
 
   errorHandler: (error: any) => void;
   axiosInstance: AxiosInstance;
