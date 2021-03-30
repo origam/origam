@@ -5,6 +5,7 @@
     "no-mixed-operators": 0,
     "no-extend-native": 0,
     "jsx-a11y/iframe-has-title": 0,
-    "jsx-a11y/anchor-is-valid": 0
+    "jsx-a11y/anchor-is-valid": 0,
+    "no-console": 1
   }
 }

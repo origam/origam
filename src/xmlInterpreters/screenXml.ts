@@ -456,8 +456,6 @@ export function* interpretScreenXml(
         ),
       });
 
-      console.log(">>>>>", dataViewInstance.id, dataViewInstance.activePanelView);
-
       instance2XmlNode.set(dataViewInstance, dataView);
 
       const gridConfigurationNodes = configuration.filter(
@@ -638,7 +636,7 @@ export function* interpretScreenXml(
     flow($dataView.resolve(IPerspective).activateDefault)();
   }
 
-  const rscr = $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
+  $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
 
   return { formScreen: scr, foundLookupIds };
 }

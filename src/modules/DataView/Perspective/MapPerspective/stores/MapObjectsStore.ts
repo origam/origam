@@ -67,7 +67,6 @@ export class MapObjectsStore {
   @computed
   get mapObjects() {
     if (this.fldIdentifier === undefined) {
-      console.warn("field identifier is undefined");
       return [];
     }
     const result: IMapObject[] = [];
@@ -98,7 +97,7 @@ export class MapObjectsStore {
             objectGeoJson = wktParse(row[this.fldLocationIndex]);
           } catch (e) {
             // TODO: Erorr dialog?
-            console.error(e);
+            console.error(e); // eslint-disable-line no-console
           }
           if (objectGeoJson) {
             result.push({
@@ -113,7 +112,6 @@ export class MapObjectsStore {
         }
       }
     }
-    console.log(result);
     return result;
   }
 
@@ -123,7 +121,6 @@ export class MapObjectsStore {
     return flow(function* () {
       const property = getDataViewPropertyById(self.dataView, self.setup.mapLocationMember);
       const selectedRow = getSelectedRow(self.dataView);
-      console.log(property, selectedRow);
       if (property && selectedRow) {
         yield* onFieldChangeG(self.dataView)({
           event: undefined,

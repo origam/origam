@@ -27,7 +27,6 @@ export class ClientSideGrouper implements IGrouper {
     const dataTable = getDataTable(this);
     const groups = this.makeGroups(undefined, dataTable.rows, firstGroupingColumn);
     this.loadRecursively(groups);
-    console.log("topLevelGroups: "+groups.length);
     return groups;
   }
   

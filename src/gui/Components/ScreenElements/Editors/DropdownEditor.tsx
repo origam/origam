@@ -199,7 +199,6 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       })
       .then(
         action((lookupItems: any) => {
-          console.log("Loaded lookup list items:", lookupItems);
           this.lookupItems = lookupItems;
           this.isLoading = false;
         })

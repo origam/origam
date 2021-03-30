@@ -306,11 +306,10 @@ export class FormViewEditor extends React.Component<{
           />
         );
       case "Polymorph":
-        console.warn(`Type of polymorphic column was not determined, no editor was rendered`);
+        console.warn(`Type of polymorphic column was not determined, no editor was rendered`); // eslint-disable-line no-console
         return "";
       default:
-        console.warn(
-          `Unknown column type "${this.props.property!.column}", no editor was rendered`
+        console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered` // eslint-disable-line no-console
         );
         return "";
     }

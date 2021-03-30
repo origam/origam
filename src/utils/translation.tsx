@@ -25,7 +25,7 @@ export function T(defaultContent: any, translKey: string, ...p: any[]) {
   }
   if (debugShowTranslations) {
     if (showingDefault) {
-      console.error(`Could not find translation for: "${translKey}", showing default: "${result}"`);
+      console.error(`Could not find translation for: "${translKey}", showing default: "${result}"`); // eslint-disable-line no-console
       return (
         <span title={translKey} style={{ backgroundColor: "red" }}>
           {result}

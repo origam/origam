@@ -7,7 +7,7 @@ export class ErrorBoundary extends React.Component<{
   onErrorCaught?: (error: any, errorInfo: any) => void;
 }> {
   componentDidCatch(error: any, errorInfo: any) {
-    console.log("CAUGHT ERROR:", error, errorInfo);
+    console.log("CAUGHT ERROR:", error, errorInfo); // eslint-disable-line no-console
     this.props.onErrorCaught?.(error, errorInfo);
   }
 

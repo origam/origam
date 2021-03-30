@@ -184,6 +184,7 @@ export class FormScreen implements IFormScreen {
     }
   }
 
+  /* eslint-disable no-console */
   printMasterDetailTree() {
     const strrep = (cnt: number, str: string) => {
       let result = "";
@@ -202,7 +203,6 @@ export class FormScreen implements IFormScreen {
         recursive(chb.childDataView, level + 1);
       }
     };
-    console.log("");
     console.log("View bindings");
     console.log("=============");
     const roots = Array.from(this.dataViews.values()).filter((dv) => dv.isBindingRoot);
@@ -213,6 +213,7 @@ export class FormScreen implements IFormScreen {
     console.log("End of View bindings");
     console.log("");
   }
+  /* eslint-enable no-console */
 }
 
 export class FormScreenEnvelope implements IFormScreenEnvelope {

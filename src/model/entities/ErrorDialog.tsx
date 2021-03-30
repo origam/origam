@@ -38,7 +38,7 @@ export class ErrorDialogController implements IErrorDialogController {
 
   @computed get errorMessages() {
     return this.errorStack.map((errItem) => {
-      console.log(errItem.error, "response.");
+      console.log(errItem.error, "response."); // eslint-disable-line no-console
 
       const handlePlainText = () =>
         _.get(errItem.error, "response.headers.content-type", "").startsWith("text/plain") &&
@@ -95,7 +95,6 @@ export class ErrorDialogController implements IErrorDialogController {
     const promise = NewExternalPromise();
     this.errorStack.push({ id: myId, error, promise, timestamp: moment() });
     this.displayDialog();
-    console.log(this.errorMessages.length);
     yield promise;
   }
 
@@ -110,7 +109,6 @@ export class ErrorDialogController implements IErrorDialogController {
             <ErrorDialogComponent
               errorMessages={this.errorMessages}
               onOkClick={action(() => {
-                console.log("close dialog...");
                 closeDialog();
                 this.isDialogDisplayed = false;
                 this.dismissErrors();

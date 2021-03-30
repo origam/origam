@@ -175,12 +175,8 @@ export class Splitter extends React.Component<{
       for (let [key, value] of this.sizeMap.entries()) {
         if (key === this.props.panels[0][0]) continue;
         this.sizeMap.set(key, value * sizeRatio);
-        console.log("Set", key, value * sizeRatio);
       }
       this.sizeMap.set(this.props.panels[0][0], firstPanelSize);
-      for (let [key, value] of this.sizeMap.entries()) {
-        console.log("Size", key, "=", value);
-      }
     }
   }
 
