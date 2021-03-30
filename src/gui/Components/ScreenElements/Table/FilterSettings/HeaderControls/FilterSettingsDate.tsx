@@ -1,5 +1,5 @@
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import { action, observable, runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import {
@@ -7,12 +7,8 @@ import {
   FilterSettingsComboBoxItem,
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import { FilterSetting } from "./FilterSetting";
-import { T } from "utils/translation";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 import {getLocaleFromCookie} from "utils/cookies";
-import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
-import moment from "moment";
 
 const OPERATORS = [
     Operator.equals,

@@ -273,7 +273,9 @@ export class Searcher implements ISearcher {
               onClick: () => this.onCommandClicked(node)
             };
         }
-      }) as ISearchResult[];
+        return undefined;
+      })
+        .filter(result => result) as ISearchResult[];
     this.menuResultGroup = new SearchResultGroup(T("Menu", "menu"), searchResults);
   }
 

@@ -21,15 +21,15 @@ export function questionSaveDataAfterRecordChange(ctx: any) {
           screenTitle={getOpenedScreen(ctx).title}
           onSaveClick={() => {
             closeDialog();
-            resolve(IQuestionChangeRecordAnswer.Yes);
+            resolve(IQuestionChangeRecordAnswer.Yes); // eslint-disable-line @typescript-eslint/no-use-before-define
           }}
           onDontSaveClick={() => {
             closeDialog();
-            resolve(IQuestionChangeRecordAnswer.No);
+            resolve(IQuestionChangeRecordAnswer.No); // eslint-disable-line @typescript-eslint/no-use-before-define
           }}
           onCancelClick={() => {
             closeDialog();
-            resolve(IQuestionChangeRecordAnswer.Cancel);
+            resolve(IQuestionChangeRecordAnswer.Cancel); // eslint-disable-line @typescript-eslint/no-use-before-define
           }}
         />
       );
@@ -49,14 +49,14 @@ export async function handleUserInputOnChangingRow(dataView: IDataView) {
 
   if (isInfiniteScrollingActive(dataView)) {
     switch (await questionSaveDataAfterRecordChange(dataView)) {
-      case IQuestionChangeRecordAnswer.Cancel:
+      case IQuestionChangeRecordAnswer.Cancel: // eslint-disable-line @typescript-eslint/no-use-before-define
         return false;
-      case IQuestionChangeRecordAnswer.Yes:
+      case IQuestionChangeRecordAnswer.Yes: // eslint-disable-line @typescript-eslint/no-use-before-define
         await api.saveSessionQuery(sessionId);
         const result = await api.saveSession(sessionId);
         await flow(() => processCRUDResult(dataView, result));
         return true;
-      case IQuestionChangeRecordAnswer.No:
+      case IQuestionChangeRecordAnswer.No: // eslint-disable-line @typescript-eslint/no-use-before-define
         await flow(() =>
           getFormScreenLifecycle(dataView).throwChangesAway(dataView)
         )();

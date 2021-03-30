@@ -3,7 +3,6 @@ import { Memoized } from "./common/Memoized";
 import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
 import stripHtml from "string-strip-html";
 import {
-  context,
   currentDataRow,
   currentRow,
   dataTable,
@@ -16,8 +15,6 @@ import {
   scRenderCell,
 } from "./renderingValues";
 import { dataRowColumnIds } from "./rowCells/dataRowCells";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export function drawCurrentCell() {
   const colIdx = drawingColumnIndex();

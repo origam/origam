@@ -1,5 +1,5 @@
-import { LookupCacheIndividual, ILookupCacheIndividual } from "./LookupCacheIndividual";
-import { LookupResolver, ILookupResolver } from "./LookupResolver";
+import { LookupCacheIndividual } from "./LookupCacheIndividual";
+import { LookupResolver } from "./LookupResolver";
 import { TypeSymbol } from "dic/Container";
 
 export class LookupLabelsCleanerReloader {

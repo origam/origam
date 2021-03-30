@@ -1,7 +1,7 @@
 import React from "react";
 import { bodyCellClass } from "./CellsCommon";
-import { IDropdownDataTable, IBodyCellDriver, DropdownDataTable } from "../DropdownTableModel";
-import { IDropdownEditorBehavior, DropdownEditorBehavior } from "../DropdownEditorBehavior";
+import { IBodyCellDriver, DropdownDataTable } from "../DropdownTableModel";
+import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { TypeSymbol } from "dic/Container";
 
 export class TextCellDriver implements IBodyCellDriver {

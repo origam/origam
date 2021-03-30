@@ -5,15 +5,10 @@ import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
 import { IDataSourceField } from "./types/IDataSourceField";
-import { getGrouper } from "model/selectors/DataView/getGrouper";
-import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { getRowContainer } from "../selectors/getRowContainer";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { formatNumber } from "./NumberFormating";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
-import { isScrollRowContainer } from "./ScrollRowContainer";
-import { getProperties } from "model/selectors/DataView/getProperties";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getDataSourceFieldByIndex } from "model/selectors/DataSources/getDataSourceFieldByIndex";
 import { isArray } from "lodash";
 

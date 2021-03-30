@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 declare global {
   interface String {
     latinize(): String;
@@ -16,3 +16,6 @@ export function latinize(str: string)
 {
   return str.replace(/[^A-Za-z0-9\[\] ]/g,function(a){return Latinize.latin_map[a]||a})
 };
+
+
+/* eslint-enable */

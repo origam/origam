@@ -1,6 +1,4 @@
-import { computed, observable } from "mobx";
 import { IDataView } from "model/entities/types/IDataView";
-import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { createContext } from "react";
 import { MapNavigationStore } from "./MapNavigationStore";
 import { MapObjectsStore } from "./MapObjectsStore";

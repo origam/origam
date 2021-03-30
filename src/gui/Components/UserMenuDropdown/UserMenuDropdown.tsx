@@ -44,7 +44,7 @@ export const UserMenuDropdown: React.FC<{
            <div className={S.avatarSection}>
             <div className={S.pictureSection}>
               <div className={S.avatarContainer}>
-                <img className={cx(S.avatar, S.clickableAvatar)} src={props.avatarLink} />
+                <img className={cx(S.avatar, S.clickableAvatar)} src={props.avatarLink}  alt=""/>
               </div>
             </div>
             <div className={S.userNameLabel}>{props.userName}</div>

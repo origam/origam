@@ -8,7 +8,7 @@ import cx from "classnames";
 @observer
 export class PositionedField extends React.Component<IPositionedFieldProps> {
   render() {
-    const { columnIndex,rowIndex, worldBounds, cellRectangle } = this.props;
+    const { columnIndex, worldBounds, cellRectangle } = this.props;
     const columnLeft = cellRectangle.columnLeft;
     const columnWidth = cellRectangle.columnWidth;
     const rowTop = cellRectangle.rowTop;

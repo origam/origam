@@ -139,7 +139,7 @@ export class CSidebar extends React.Component {
             {notificationBox ? (
               <div dangerouslySetInnerHTML={{__html: notificationBox}}/>
             ) : (
-              <img src={logoUrl}/>
+              <img src={logoUrl} alt=""/>
             )}
           </div>
         </LogoSection>

@@ -52,7 +52,6 @@ import { onFirstRowClick } from "model/actions-ui/DataView/onFirstRowClick";
 import { onLastRowClick } from "model/actions-ui/DataView/onLastRowClick";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
@@ -243,7 +242,6 @@ export class CDataViewHeaderInner extends React.Component<{
     const { dataView } = this;
     const label = getDataViewLabel(dataView);
     const isFilterSettingsVisible = getIsFilterControlsDisplayed(dataView);
-    const actions = this.allActions;
     const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
     const onExportToExcelClickEvt = onExportToExcelClick(dataView);
     const onDeleteRowClickEvt = onDeleteRowClick(dataView);

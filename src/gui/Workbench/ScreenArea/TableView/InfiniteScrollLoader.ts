@@ -13,7 +13,6 @@ import {getUserOrdering} from "model/selectors/DataView/getUserOrdering";
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
-import { IProperty } from "model/entities/types/IProperty";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 
 

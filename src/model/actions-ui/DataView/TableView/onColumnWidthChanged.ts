@@ -1,4 +1,3 @@
-import {flow} from "mobx";
 import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
 import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 

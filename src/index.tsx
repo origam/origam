@@ -17,7 +17,6 @@ import { getLocaleFromCookie, initLocaleCookie } from "utils/cookies";
 import moment from "moment";
 import "moment/min/locales";
 import { preventDoubleclickSelect } from "utils/mouse";
-import { inspect } from "@xstate/inspect";
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");

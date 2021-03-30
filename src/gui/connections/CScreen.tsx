@@ -7,7 +7,7 @@ import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { WebScreen } from "gui/Components/WebScreen/WebScreen";
 import { IWebScreen } from "model/entities/types/IWebScreen";
 import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
-import { ErrorBoundary, ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
+import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
 

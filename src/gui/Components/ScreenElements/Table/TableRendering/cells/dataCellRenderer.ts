@@ -20,7 +20,6 @@ import { CPR } from "utils/canvas";
 import moment from "moment";
 import selectors from "model/selectors-tree";
 import {
-  currentRow,
   drawingColumnIndex,
   formScreen,
   rowHeight,

@@ -4,7 +4,6 @@ import {
   SCROLL_ROW_CHUNK,
 } from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IRowsContainer } from "./types/IRowsContainer";
-import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { fixRowIdentifier } from "utils/dataRow";
 import {IProperty} from "model/entities/types/IProperty";

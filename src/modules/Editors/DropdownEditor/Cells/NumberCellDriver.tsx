@@ -1,9 +1,9 @@
 import React from "react";
 import { bodyCellClass } from "./CellsCommon";
-import { IDropdownDataTable, IBodyCellDriver, DropdownDataTable } from "../DropdownTableModel";
+import { IBodyCellDriver, DropdownDataTable } from "../DropdownTableModel";
 import cx from "classnames";
 import S from "./NumberCell.module.scss";
-import { IDropdownEditorBehavior, DropdownEditorBehavior } from "../DropdownEditorBehavior";
+import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { TypeSymbol } from "dic/Container";
 
 export class NumberCellDriver implements IBodyCellDriver {

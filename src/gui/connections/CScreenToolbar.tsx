@@ -185,7 +185,6 @@ export class CScreenToolbar extends React.Component<{}> {
     const toolbarActions = getActiveScreenActions(this.application);
     const userName = getLoggedUserName(this.application);
     const avatarLink = getUserAvatarLink(this.application);
-    const customAssetsRoute = getCustomAssetsRoute(this.application);
     return (
       <ScreenToolbar>
         {formScreen ? (

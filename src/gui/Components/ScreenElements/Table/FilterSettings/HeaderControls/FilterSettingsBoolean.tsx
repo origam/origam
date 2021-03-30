@@ -1,13 +1,12 @@
+/* eslint-disable no-whitespace-before-property */
 import React from "react";
 import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
 
 import { Checkbox } from "gui/Components/CheckBox/Checkbox";
 import { observer } from "mobx-react";
-import { action, observable } from "mobx";
-import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
+import { action} from "mobx";
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
 const OPERATORS: Operator[] = [Operator.equals];
 
@@ -22,16 +21,16 @@ export class FilterSettingsBoolean extends React.Component<{
 
   @action.bound handleValueClick(event: any) {
       const setting = this.props.setting;
-      if (setting .val1 === undefined) {
-        setting .val1 = false;
-        setting .isComplete = true;
+      if (setting.val1 === undefined) {
+        setting.val1 = false;
+        setting.isComplete = true;
       } else if (setting .val1 === false) {
-        setting .val1 = true;
-        setting .isComplete = true;
+        setting.val1 = true;
+        setting.isComplete = true;
       } else if (setting .val1 === true) {
-        setting .val1 = undefined;
-        setting .isComplete = false;
-    };
+        setting.val1 = undefined;
+        setting.isComplete = false;
+    }
   }
 
   render() {

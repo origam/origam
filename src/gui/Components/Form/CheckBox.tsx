@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IProperty } from "model/entities/types/IProperty";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import S from "gui/Components/Form/CheckBox.module.scss";

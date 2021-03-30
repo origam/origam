@@ -1,5 +1,5 @@
 import { inject, observer, Observer, Provider } from "mobx-react";
-import React, { useContext } from "react";
+import React from "react";
 import { IDataView } from "../../../../model/entities/types/IDataView";
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";

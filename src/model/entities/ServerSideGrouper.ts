@@ -8,12 +8,11 @@ import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRe
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
-import { joinWithAND, joinWithOR } from "./OrigamApiHelpers";
+import { joinWithAND} from "./OrigamApiHelpers";
 import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
-import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowIndex } from "./GrouperCommon";
+import { getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowIndex } from "./GrouperCommon";
 import _ from "lodash";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
 import { DateGroupData, GenericGroupData, IGroupData } from "./DateGroupData";

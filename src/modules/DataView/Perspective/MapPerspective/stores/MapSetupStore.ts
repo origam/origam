@@ -57,7 +57,7 @@ export class MapSetupStore {
       return this.mapCenterRaw ? wktParse(this.mapCenterRaw) : undefined;
     } catch (e) {
       console.error(e);
-      return;
+      return undefined;
     }
   }
 }

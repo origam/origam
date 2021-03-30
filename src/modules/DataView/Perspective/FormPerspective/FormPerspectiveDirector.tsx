@@ -1,5 +1,5 @@
 import React from "react";
-import { action, flow } from "mobx";
+import { action } from "mobx";
 import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";

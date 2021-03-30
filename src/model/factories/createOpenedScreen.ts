@@ -1,9 +1,7 @@
-import {IDialogInfo, IOpenedScreen} from "../entities/types/IOpenedScreen";
+import {IDialogInfo} from "../entities/types/IOpenedScreen";
 import {OpenedScreen} from "../entities/OpenedScreen";
 import {IFormScreenEnvelope} from "../entities/types/IFormScreen";
 import {IMainMenuItemType} from "../entities/types/IMainMenu";
-import {WebScreen} from "model/entities/WebScreen";
-import {getApi} from "model/selectors/getApi";
 
 export function *createOpenedScreen(
   ctx: any,

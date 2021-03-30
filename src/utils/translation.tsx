@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { getLocaleFromCookie, initLocaleCookie } from "./cookies";
+import { getLocaleFromCookie } from "./cookies";
 
 const debugShowTranslations = window.localStorage.getItem("debugShowTranslations") === "true";
 

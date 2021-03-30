@@ -8,11 +8,6 @@ import React from "react";
 import {TypeSymbol} from "dic/Container";
 import {TextCellDriver} from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
 import moment from "moment";
-import {
-  currentCellText,
-  currentProperty
-} from "gui/Components/ScreenElements/Table/TableRendering/currentCell";
-import {getProperties} from "model/selectors/DataView/getProperties";
 
 export class DateCellDriver implements IBodyCellDriver {
   constructor(

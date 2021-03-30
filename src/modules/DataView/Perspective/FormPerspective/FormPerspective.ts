@@ -5,7 +5,6 @@ import {IPerspective, IPerspectiveContrib} from "../Perspective";
 import bind from "bind-decorator";
 import {IViewConfiguration} from "modules/DataView/ViewConfiguration";
 import {IPanelViewType} from "model/entities/types/IPanelViewType";
-import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 export class FormPerspective implements IIId, IPerspectiveContrib {
   $iid = getIdent();

@@ -1,5 +1,5 @@
 import {computed, observable} from "mobx";
-import {IGroupRow, IGroupTreeNode} from "./types";
+import {IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 import {getOrderingConfiguration} from "../../../../../model/selectors/DataView/getOrderingConfiguration";
@@ -247,5 +247,5 @@ function getAllParents(group: IGroupTreeNode){
 
 function allChildGroups(group: IGroupTreeNode): IGroupTreeNode[]{
   const allChildGroups = group.childGroups.flatMap(childGroup => childGroup.allChildGroups)
-  return [...group.childGroups, ... allChildGroups];
+  return [...group.childGroups, ...allChildGroups];
 }

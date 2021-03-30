@@ -7,5 +7,4 @@ export function getOpenedScreen(ctx: any): IOpenedScreen {
     if (!cn) return undefined as any;
     cn = cn.parent;
   }
-  return cn;
 }

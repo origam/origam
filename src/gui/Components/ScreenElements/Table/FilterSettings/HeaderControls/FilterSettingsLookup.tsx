@@ -1,9 +1,7 @@
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable} from "mobx";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import React, { useContext, useState } from "react";
-import { Grid, GridCellProps } from "react-virtualized";
-import Highlighter from "react-highlight-words";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
@@ -11,7 +9,6 @@ import {
 import S from "./FilterSettingsLookup.module.scss";
 import CS from "./FilterSettingsCommon.module.scss";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
-import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import {
   CtxDropdownEditor,
   DropdownEditor,
@@ -219,10 +216,10 @@ export class LookupFilterSetting implements IFilterSetting {
     this.type = type;
     this.isComplete = isComplete;
     if(Array.isArray(val1)){
-      this.val1 = [... new Set(val1)];
+      this.val1 = [...new Set(val1)];
     }
     else if(val1 !== undefined && val1 !== null){
-      this.val1 = [... new Set(val1.split(","))];
+      this.val1 = [...new Set(val1.split(","))];
     }
     this.val2 = val2 ?? undefined;
   }

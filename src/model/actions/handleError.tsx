@@ -1,9 +1,7 @@
 import selectors from "model/selectors-tree";
-import { stopWorkQueues } from "./WorkQueues/stopWorkQueues";
-import { performLogout } from "./User/performLogout";
-import { T } from "utils/translation";
-import { getOpenedScreens } from "model/selectors/getOpenedScreens";
-import { tryGetOpenedScreen } from "model/selectors/tryGetOpenedScreen";
+import {stopWorkQueues} from "./WorkQueues/stopWorkQueues";
+import {performLogout} from "./User/performLogout";
+import {T} from "utils/translation";
 import { flow } from "mobx";
 
 const HANDLED = Symbol("_$ErrorHandled");

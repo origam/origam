@@ -161,7 +161,7 @@ export class TagInputFilterSetting implements IFilterSetting {
     this.type = type;
     this.isComplete = isComplete;
     if(val1 !== undefined && val1 !== null){
-      this.val1 = [... new Set(val1.split(","))];
+      this.val1 = [...new Set(val1.split(","))];
     }
     this.val2 = val2 ?? undefined;
   }

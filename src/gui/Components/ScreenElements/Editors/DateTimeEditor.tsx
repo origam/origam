@@ -1,6 +1,5 @@
 import cx from "classnames";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-// import CS from "./CommonStyle.module.css";
 import { action, computed, observable, runInAction } from "mobx";
 import { observer, Observer } from "mobx-react";
 import moment, { Moment } from "moment";
@@ -10,7 +9,6 @@ import { IFocusAble } from "../../../../model/entities/FocusManager";
 import { getLocaleFromCookie } from "../../../../utils/cookies";
 import DateCompleter from "./DateCompleter";
 import S from "./DateTimeEditor.module.scss";
-import Measure, { ContentRect } from "react-measure";
 import { createPortal } from "react-dom";
 
 @observer
@@ -399,7 +397,6 @@ export class DateTimeEditor extends React.Component<{
   }
 
   renderWithCalendarWidget() {
-    const mVal = moment(this.props.value);
     return (
       <Dropdowner
         ref={this.refDropdowner}
@@ -423,7 +420,7 @@ export class DateTimeEditor extends React.Component<{
                     />
                   )}
                   <input
-                    title={this.autocompletedText + "\n" + '"' + this.props.outputFormat + '"'}
+                    title={this.autocompletedText + '\n"' + this.props.outputFormat + '"'}
                     style={{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
@@ -489,7 +486,7 @@ export class DateTimeEditor extends React.Component<{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor,
           }}
-          title={this.autocompletedText + "\n" + '"' + this.props.outputFormat + '"'}
+          title={this.autocompletedText + '\n"' + this.props.outputFormat + '"'}
           className={S.input}
           type="text"
           onBlur={this.handleInputBlur}

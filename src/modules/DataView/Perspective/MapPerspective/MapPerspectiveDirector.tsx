@@ -180,23 +180,3 @@ function MapPerspectiveNavigation() {
     </Observer>
   );
 }
-
-function MapPerspectiveRoutefind() {
-  const { mapSetupStore, mapRoutefinderStore } = useContext(CtxMapRootStore);
-  return (
-    <Observer>
-      {() => (
-        <>
-          {!mapSetupStore.isReadOnlyView && (
-            <button
-              className={cx(S.mapToolbarButton, { isActive: mapRoutefinderStore.isActive })}
-              onClick={mapRoutefinderStore.handleRoutefinderButtonClick}
-            >
-              <i className="fas fa-route fa-lg" />
-            </button>
-          )}
-        </>
-      )}
-    </Observer>
-  );
-}

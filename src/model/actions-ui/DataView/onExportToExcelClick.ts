@@ -1,5 +1,4 @@
 import { flow } from "mobx";
-import { getColumnConfigurationDialog } from "model/selectors/getColumnConfigurationDialog";
 import { handleError } from "model/actions/handleError";
 import {getDataView} from "model/selectors/DataView/getDataView";
 

@@ -1,9 +1,6 @@
 import { IProperty } from "./types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { getGrouper } from "model/selectors/DataView/getGrouper";
 import {getApi} from "model/selectors/getApi";
 import {getMenuItemId} from "model/selectors/getMenuItemId";
 import {getSessionId} from "model/selectors/getSessionId";

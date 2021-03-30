@@ -5,7 +5,6 @@ import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { action, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
-import produce from "immer";
 import { Dropdowner } from "../Dropdowner/Dropdowner";
 import { DataViewHeaderAction } from "../DataViewHeader/DataViewHeaderAction";
 import { Dropdown } from "../Dropdown/Dropdown";
@@ -17,8 +16,6 @@ import {
 import { T } from "../../../utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel } from "model/entities/types/GroupingUnit";
-import {IDataView} from "model/entities/types/IDataView";
-import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
 

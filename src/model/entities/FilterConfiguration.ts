@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { action, comparer, computed, flow, observable, reaction, toJS } from "mobx";
+import { action, comparer, computed, flow, observable, reaction } from "mobx";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
@@ -219,6 +219,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (cellValue === null) return false;
             return t1 !== term.setting.val1;
         }
+        break;
       }
       case "Number": {
         if (cellValue === undefined) return true;
@@ -281,6 +282,7 @@ export class FilterConfiguration implements IFilterConfiguration {
           case "null":
             return t1 === null;
         }
+        break;
       }
       case "ComboBox": {
         switch (term.setting.type) {
@@ -371,7 +373,6 @@ export class FilterConfiguration implements IFilterConfiguration {
 
         }
         return true;
-        break;
       }
       case "CheckBox": {
         switch (term.setting.type) {

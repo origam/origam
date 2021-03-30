@@ -3,7 +3,6 @@ import L from "leaflet";
 import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
-import _ from "lodash";
 import { action, computed, reaction, runInAction, observable, autorun } from "mobx";
 import qs from "querystring";
 import React from "react";
@@ -64,10 +63,6 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   editingObjectsRepaintDisabled = false;
 
   _disposers: any[] = [];
-
-  constructor(props: IMapPerspectiveComProps) {
-    super(props);
-  }
 
   panToCenter() {
     if (this.props.mapCenter) {
@@ -208,6 +203,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             }),
           ];
         }
+        return undefined;
       })
       .filter((layer) => layer) as [MapLayer, L.TileLayer][];
   }
@@ -251,36 +247,32 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             }
             break;
           case IMapObjectType.POLYGON:
-            {
-              result = [
-                obj,
-                L.polygon(
-                  obj.coordinates[0].map((coords) => [coords[1], coords[0]]),
-                  {
-                    color:
-                      obj.color !== undefined && obj.color !== 0 && obj.color !== null
-                        ? flashColor2htmlColor(obj.color)
-                        : "blue",
-                  }
-                ).bindTooltip(obj.name),
-              ];
-            }
+            result = [
+              obj,
+              L.polygon(
+                obj.coordinates[0].map((coords) => [coords[1], coords[0]]),
+                {
+                  color:
+                    obj.color !== undefined && obj.color !== 0 && obj.color !== null
+                      ? flashColor2htmlColor(obj.color)
+                      : "blue",
+                }
+              ).bindTooltip(obj.name),
+            ];
             break;
           case IMapObjectType.LINESTRING:
-            {
-              result = [
-                obj,
-                L.polyline(
-                  obj.coordinates.map((coords) => [coords[1], coords[0]]),
-                  {
-                    color:
-                      obj.color !== undefined && obj.color !== 0 && obj.color !== null
-                        ? flashColor2htmlColor(obj.color)
-                        : "blue",
-                  }
-                ).bindTooltip(obj.name),
-              ];
-            }
+            result = [
+              obj,
+              L.polyline(
+                obj.coordinates.map((coords) => [coords[1], coords[0]]),
+                {
+                  color:
+                    obj.color !== undefined && obj.color !== 0 && obj.color !== null
+                      ? flashColor2htmlColor(obj.color)
+                      : "blue",
+                }
+              ).bindTooltip(obj.name),
+            ];
             break;
         }
         return result;
@@ -294,14 +286,12 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       .map((obj) => {
         switch (obj.type) {
           case "LineString":
-            {
-              return L.polyline(
-                obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
-                { color: "blue" }
-              );
-            }
-            break;
+            return L.polyline(
+              obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
+              { color: "blue" }
+            );
         }
+        return undefined;
       })
       .filter((obj) => obj);
   }
@@ -312,14 +302,12 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       .map((obj) => {
         switch (obj.type) {
           case "LineString":
-            {
-              return L.polyline(
-                obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
-                { color: "green", dashArray: "10 5 3 5", opacity: 1.0, weight: 1.5 }
-              );
-            }
-            break;
+            return L.polyline(
+              obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
+              { color: "green", dashArray: "10 5 3 5", opacity: 1.0, weight: 1.5 }
+            );
         }
+        return undefined;
       })
       .filter((obj) => obj);
   }

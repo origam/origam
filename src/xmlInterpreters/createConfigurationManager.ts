@@ -2,7 +2,7 @@ import {IProperty} from "model/entities/types/IProperty";
 import {IColumnConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 import {ConfigurationManager} from "model/entities/TablePanelView/configurationManager";
 import {findStopping} from "xmlInterpreters/xmlUtils";
-import {parseAggregationType, tryParseAggregationType} from "model/entities/types/AggregationType";
+import {tryParseAggregationType} from "model/entities/types/AggregationType";
 import {fixColumnWidth} from "xmlInterpreters/screenXml";
 import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";

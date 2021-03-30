@@ -1,9 +1,8 @@
 import React from "react";
-import {action, computed, flow} from "mobx";
+import {action, computed} from "mobx";
 import {getDialogStack} from "../../selectors/DialogStack/getDialogStack";
 import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
 import {ColumnsDialog,} from "gui/Components/Dialogs/ColumnsDialog";
-import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {ITableConfiguration} from "./types/IConfigurationManager";
 import {runGeneratorInFlowWithHandler, runInFlowWithHandler} from "utils/runInFlowWithHandler";
@@ -11,7 +10,6 @@ import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigu
 import {NewConfigurationDialog} from "gui/Components/Dialogs/NewConfigurationDialog";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {getColumnConfigurationDialog} from "model/selectors/getColumnConfigurationDialog";
 import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
 
 export interface IColumnOptions {
@@ -26,7 +24,6 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   tableConfigBeforeChanges: ITableConfiguration | undefined;
 
   getColumnOptions(){
-    const groupingConf = getGroupingConfiguration(this);
     const groupingOnClient = !isLazyLoading(this);
     const activeTableConfiguration = this.configManager.activeTableConfiguration;
     const optionsMap = new Map<string, IColumnOptions>()

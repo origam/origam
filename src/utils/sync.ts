@@ -17,7 +17,6 @@ export function TriggerablePromise<T>() {
 }
 
 export class CriticalSection {
-  constructor() {}
 
   tokensIn = 0;
 

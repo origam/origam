@@ -555,7 +555,6 @@ function pushCreator(creator: any) {
 }
 
 function popCreator() {
-  const creator = _creatorStack[_creatorStackTop];
   _creatorStack[_creatorStackTop] = undefined;
   _creatorStackTop--;
 }
