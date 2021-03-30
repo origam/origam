@@ -121,7 +121,6 @@ export class FormScreenBuilder extends React.Component<{
           );
         }
         case "Label":
-          console.log(xso);
           return (
             <Label
               key={xso.$iid}
@@ -184,7 +183,7 @@ export class FormScreenBuilder extends React.Component<{
         case "Box":
           return <Box key={xso.$iid}>{findUIChildren(xso).map((child) => recursive(child))}</Box>;
         default:
-          console.log("Unknown node:", xso);
+          console.error("Unknown node:", xso);  // eslint-disable-line no-console
           return null;
       }
     }

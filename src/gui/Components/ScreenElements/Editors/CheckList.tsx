@@ -70,7 +70,6 @@ export class CheckListControler {
   }
 
   @action.bound handleClick(event: any, item: { value: string; label: string }) {
-    console.log("Clicked");
     event.preventDefault();
     const currentIndex = this.props.value.findIndex((id) => item.value === id);
     if (currentIndex > -1) {

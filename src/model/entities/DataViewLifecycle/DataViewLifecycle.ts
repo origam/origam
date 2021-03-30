@@ -4,7 +4,6 @@ import {navigateAsChild} from "model/actions/DataView/navigateAsChild";
 import {handleError} from "model/actions/handleError";
 import {getBindingChildren} from "model/selectors/DataView/getBindingChildren";
 import {getDataView} from "model/selectors/DataView/getDataView";
-import {getDataViewLabel} from "model/selectors/DataView/getDataViewLabel";
 import {getEntity} from "model/selectors/DataView/getEntity";
 import {getIsBindingParent} from "model/selectors/DataView/getIsBindingParent";
 import {getIsBindingRoot} from "model/selectors/DataView/getIsBindingRoot";
@@ -49,7 +48,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const dataView = getDataView(this);
       try {
         this.monitor.inFlow++;
-        console.log(getDataViewLabel(this), "detected control id change", getSelectedRowId(this));
         if (getSelectedRowId(this)) {
           if (getIsBindingRoot(this)) {
             if(!getFormScreenLifecycle(this).rowSelectedReactionsDisabled(dataView)){
@@ -73,7 +71,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   _selectedRowReactionDisposer: any;
   @action.bound
   async startSelectedRowReaction(fireImmediately?: boolean) {
-    console.log('selrow reaction started')
     if(fireImmediately){
       await this.onSelectedRowIdChangeImm();
     }
@@ -106,7 +103,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     if (this._selectedRowReactionDisposer) {
       this._selectedRowReactionDisposer();
       this._selectedRowReactionDisposer = undefined;
-      console.log('selrow reaction stopped')
       return true;
     }
     return false;

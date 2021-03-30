@@ -37,7 +37,6 @@ async function main() {
   const locationHash = window.location.hash;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";
   if (locationHash.startsWith(TOKEN_OVR_HASH)) {
-    console.log("Set auth token to:", locationHash.replace(TOKEN_OVR_HASH, ""));
     sessionStorage.setItem("origamAuthTokenOverride", locationHash.replace(TOKEN_OVR_HASH, ""));
     window.location.hash = "";
   }

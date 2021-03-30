@@ -115,7 +115,6 @@ export class ModalWindow extends React.Component<{
         },
         true
       );
-      console.log("handler added");
       this._focusHookIsOn = true;
     }
   }

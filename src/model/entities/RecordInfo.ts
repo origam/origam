@@ -93,9 +93,6 @@ export class RecordInfo implements IRecordInfo {
       if (this.recordInfoExpanded) {
         yield* this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
       }
-      if (this.recordAuditExpanded) {
-        yield* this.loadRecordAudit(menuId, dataStructureEntityId, rowId);
-      }
     }
     this.displayedFor = {
       menuId,
@@ -113,9 +110,6 @@ export class RecordInfo implements IRecordInfo {
     this.recordAuditExpanded = true;
     this.recordInfoExpanded = false;
     this.triggerAuditSectionExpand();
-    //if (this.willLoadNewInfo(menuId, dataStructureEntityId, rowId)) {
-    yield* this.loadRecordAudit(menuId, dataStructureEntityId, rowId);
-    //}
   }
 
   *onSidebarInfoSectionExpanded() {
@@ -154,21 +148,6 @@ export class RecordInfo implements IRecordInfo {
       (infoCellStruct: any) => infoCellStruct["#text"]
     );
     this.info = info;
-  }
-
-  *loadRecordAudit(
-    menuId: string,
-    dataStructureEntityId: string,
-    rowId: string
-  ) {
-    const api = getApi(this);
-    this.audit = undefined;
-    const audit = yield api.getRecordAudit({
-      MenuId: menuId,
-      DataStructureEntityId: dataStructureEntityId,
-      RowId: rowId
-    });
-    console.log(audit);
   }
 
   parent?: any;

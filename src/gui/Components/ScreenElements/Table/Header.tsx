@@ -89,14 +89,6 @@ export class Header extends React.Component<{
   }
 
   @action.bound handleMouseUp(event: any) {
-    console.log(
-      this.props.isColumnOrderChanging,
-      this.isMouseIn,
-      event.screenX,
-      this.mouseX0,
-      event.screenY,
-      this.mouseY0
-    );
     if (this.props.isColumnOrderChanging && this.isMouseIn) {
       if (
         (event.screenX - this.mouseX0) ** 2 + (event.screenY - this.mouseY0) ** 2 <

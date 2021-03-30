@@ -56,7 +56,7 @@ export class MapSetupStore {
     try {
       return this.mapCenterRaw ? wktParse(this.mapCenterRaw) : undefined;
     } catch (e) {
-      console.error(e);
+      console.error(e); // eslint-disable-line no-console
       return undefined;
     }
   }

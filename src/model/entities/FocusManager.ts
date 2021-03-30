@@ -78,7 +78,6 @@ export class FocusManager {
     );
     const previousIndex =
       currentContainerIndex === 0 ? this.focusAbleContainers.length - 1 : currentContainerIndex - 1;
-    console.log("nextIndex: " + previousIndex);
     const focusAble = this.focusAbleContainers[previousIndex].focusAble;
     if (focusAble.disabled) {
       this.focusPrevious(focusAble);

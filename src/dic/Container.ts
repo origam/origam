@@ -339,9 +339,6 @@ export class Container implements IContainer {
     // console.log("Disposing", this);
     try {
       const parent = this.parent;
-      if (this.children.length > 0) {
-        console.log("Disposing container with children?", this);
-      }
       for (let instance of this.instances.values()) {
         const disposeEvent = this.disposeEvents.get(instance);
         if (disposeEvent) {

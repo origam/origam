@@ -67,12 +67,11 @@ export class MapRoutefinderStore {
   }
 
   @action.bound handleResultsError() {
-    console.log("Route lookup failed.");
+    console.error("Route lookup failed."); // eslint-disable-line no-console
   }
 
   @action.bound
   handleGeometryChange(obj: any) {
-    console.log("Route object:", obj);
     if (obj) {
       const gjsCoords = obj.coordinates;
       this.driveThruPointsEditing = gjsCoords;

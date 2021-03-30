@@ -42,6 +42,7 @@ export class Action implements IAction {
           : this.placement === IActionPlacement.Toolbar;
       }
     }
+    return false;
   }
 
   parent?: any;

@@ -81,7 +81,6 @@ export class LookupLoader implements ILookupLoader {
           }
         }
       } catch (error) {
-        console.error(error);
         // TODO: Better error handling.
         // TODO: Refactor to use generators
         yield* handleError(self)(error);

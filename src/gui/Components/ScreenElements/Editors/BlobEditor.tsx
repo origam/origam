@@ -115,7 +115,6 @@ export class BlobEditor extends React.Component<{
     try {
       if (this.fileList && this.fileList.length > 0) {
         for (let file of this.fileList) {
-          console.log(file);
           const token = yield this.props.api!.getUploadToken({
             SessionFormIdentifier: this.props.SessionFormIdentifier!,
             MenuId: this.props.menuItemId!,
@@ -129,7 +128,6 @@ export class BlobEditor extends React.Component<{
             DateLastModified: "2010-01-01",
           });
 
-          console.log("Uploading ", file.name, file.size);
           let lastTime: number | undefined;
           let lastSize: number = 0;
           yield this.props.api!.putBlob(
@@ -142,7 +140,6 @@ export class BlobEditor extends React.Component<{
               this.progressValue = event.loaded / event.total;
               if (lastTime !== undefined) {
                 this.speedValue = ((event.loaded - lastSize) / (event.timeStamp - lastTime)) * 1000;
-                console.log(event.loaded - lastSize, event.timeStamp - lastTime);
               }
               lastTime = event.timeStamp;
               lastSize = event.loaded;
@@ -153,7 +150,6 @@ export class BlobEditor extends React.Component<{
             Entity: this.props.Entity!,
             RowId: this.props.RowId!,
           });
-          console.log(crudResult);
           yield* this.props.processCRUDResult!(crudResult);
         }
       }
@@ -209,7 +205,6 @@ export class BlobEditor extends React.Component<{
       )
     ) {
       const { parameters } = this.props;
-      console.log(parameters);
       const changeSet: Array<{ fieldId: string; value: any }> = [];
       changeSet.push({ fieldId: this.props.Property!, value: null });
       if (parameters["AuthorMember"]) {

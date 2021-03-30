@@ -400,7 +400,6 @@ export class TableHeader extends React.Component<{
   @action.bound handleWindowMouseMove(event: any) {
     const vec = event.screenX - this.mouseX0;
     const newWidth = this.width0 + vec;
-    console.log(this.props.columnIndex, newWidth);
     this.props.onColumnWidthChange &&
       this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
   }

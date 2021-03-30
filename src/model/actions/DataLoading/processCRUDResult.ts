@@ -107,7 +107,6 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
         dataSources.map((ds) => ds.lookupCacheKey)
       );
       for (let lookupId of collectedLookupIds) {
-        console.log("Clean+Reload:", lookupId);
         lookupCleanerReloaderById.get(lookupId)?.reloadLookupLabels();
         workbench.lookupListCache.deleteLookup(lookupId);
       }

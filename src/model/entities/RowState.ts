@@ -74,7 +74,6 @@ export class RowState implements IRowState {
         } catch (error) {
           this.isSomethingLoading = false;
           this.firstLoadingPerformed = true;
-          console.error(error);
           for (let container of containersToLoad.values()) {
             container.processingSate = IIdState.LOADING;
           }
