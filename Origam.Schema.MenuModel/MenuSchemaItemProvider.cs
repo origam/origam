@@ -42,7 +42,7 @@ namespace Origam.Schema.MenuModel
         {
 			get
             {
-				return ChildItems.OfType<Menu>().FirstOrDefault();
+				return ChildItems[0] as Menu;
             }
         }
 
