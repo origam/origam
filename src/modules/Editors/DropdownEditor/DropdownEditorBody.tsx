@@ -18,13 +18,13 @@ export function DropdownEditorBody() {
       refCtxBody(elm);
       beh.refDropdownBody(elm);
     },
-    []
+    [beh, refCtxBody]
   );
 
   useEffect(() => {
     window.addEventListener("mousedown", beh.handleWindowMouseDown);
     return () => window.removeEventListener("mousedown", beh.handleWindowMouseDown);
-  }, []);
+  }, [beh]);
   return (
     <Observer>
       {() => (
@@ -145,7 +145,7 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
 
   useEffect(() => {
     refMultiGrid.current?.recomputeGridSize();
-  }, [width]);
+  }, [width, refMultiGrid]);
 
   return (
     <MultiGrid

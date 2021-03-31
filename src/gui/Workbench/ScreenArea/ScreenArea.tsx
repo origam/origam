@@ -127,6 +127,6 @@ export const DialogScreen: React.FC<{
       </Observer>
     );
     return () => getDialogStack(workbenchLifecycle).closeDialog(key);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 });

@@ -90,7 +90,7 @@ export function MapPerspectiveComContainer(
   useEffect(() => {
     toolbarExtension.put(props.toolbarActionsExtension);
     return () => toolbarExtension.del(props.toolbarActionsExtension);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return <>{props.children}</>;
 }
 
@@ -158,7 +158,7 @@ function MapContentUI(props: {
 
 function MapPerspectiveNavigation() {
   const { mapObjectsStore, mapNavigationStore } = useContext(CtxMapRootStore);
-  useEffect(() => mapObjectsStore.handleMapMounted(), []);
+  useEffect(() => mapObjectsStore.handleMapMounted(), []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <Observer>
       {() => (

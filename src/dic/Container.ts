@@ -251,12 +251,12 @@ export class Container implements IContainer {
       h({
         container: this,
         instance,
-        replaceInstance(newInstance) {
+        replaceInstance(newInstance) { // eslint-disable-line no-loop-func
           instance = newInstance;
         },
       });
     for (let h of registration.onActivated) {
-      getBottomContainer().scheduledOnActivated.push(() => h({ container: this, instance }));
+      getBottomContainer().scheduledOnActivated.push(() => h({ container: this, instance })); // eslint-disable-line no-loop-func
     }
     this.transientInstances.push(instance);
 
@@ -309,13 +309,13 @@ export class Container implements IContainer {
         h({
           container: this,
           instance,
-          replaceInstance(newInstance) {
+          replaceInstance(newInstance) { // eslint-disable-line no-loop-func
             instance = newInstance;
           },
         });
       container.instances.set(registration.typeSymbol!, instance);
       for (let h of registration.onActivated) {
-        getBottomContainer().scheduledOnActivated.push(() => h({ container: this, instance }));
+        getBottomContainer().scheduledOnActivated.push(() => h({ container: this, instance })); // eslint-disable-line no-loop-func
       }
       return instance;
     }

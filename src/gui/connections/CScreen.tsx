@@ -15,17 +15,29 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   const { openedScreen } = props;
   const [isLoading, setLoading] = useState(false);
   const refIFrame = useRef<any>(null);
+
+  const setTabTitleFromIFrame = useMemo(
+    () => () => {
+      const frameWindow = refIFrame.current;
+      const contentDocument = frameWindow?.contentDocument;
+      if (contentDocument?.title) {
+        ((openedScreen as unknown) as IWebScreen).setTitle(contentDocument.title);
+      }
+    },
+    [openedScreen]
+  );
+
   useEffect(() => {
     if (openedScreen.screenUrl) {
       setLoading(true);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handle = setInterval(() => {
       setTabTitleFromIFrame();
     }, 10000);
     return () => clearTimeout(handle);
-  }, []);
+  }, [setTabTitleFromIFrame]);
 
   useEffect(() => {
     const frameWindow = refIFrame.current;
@@ -43,16 +55,6 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
       return () => mo.disconnect();
     }
   });
-  const setTabTitleFromIFrame = useMemo(
-    () => () => {
-      const frameWindow = refIFrame.current;
-      const contentDocument = frameWindow?.contentDocument;
-      if (contentDocument?.title) {
-        ((openedScreen as unknown) as IWebScreen).setTitle(contentDocument.title);
-      }
-    },
-    []
-  );
 
   const initIFrame = useMemo(
     () => () => {
@@ -69,7 +71,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
         );
       }
     },
-    []
+    [openedScreen]
   );
   return (
     <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>

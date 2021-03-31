@@ -251,7 +251,7 @@ export function XmlBuildDropdownEditor(props: {
 
   useEffect(() => {
     dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
-  }, [props.isReadOnly]);
+  }, [props.isReadOnly, dropdownEditorInfrastructure.behavior.isReadOnly]);
 
   dropdownEditorInfrastructure.behavior.onClick = props.onClick;
   dropdownEditorInfrastructure.behavior.onDoubleClick = props.onDoubleClick;

@@ -16,13 +16,13 @@ export function DropdownEditorInput(props:{
     return (elm: any) => {
       beh.refInputElement(elm);
     };
-  }, []);
+  }, [beh]);
 
   useEffect(() => {
     if(beh.subscribeToFocusManager && beh.elmInputElement){
       beh.subscribeToFocusManager(beh.elmInputElement);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function getStyle() {
     if (props.customStyle) {

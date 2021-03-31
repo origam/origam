@@ -10,22 +10,24 @@ export const WebScreen: React.FC<{
   onLoadStart?: any;
 }> = props => {
   const [mouseDowned, setMouseDowned] = useState(false);
-  const handleMousedown = () => {
-    setMouseDowned(true);
-    window.addEventListener("mouseup", handleMouseup);
-  };
-  const handleMouseup = () => {
-    setMouseDowned(false);
-    window.removeEventListener("mouseup", handleMouseup);
-  };
+
   useEffect(() => {
-    window.addEventListener("mousedown", handleMousedown);
-    return () => window.removeEventListener("mousedown", handleMousedown);
+    const handleMouseDown = () => {
+      setMouseDowned(true);
+      window.addEventListener("mouseup", handleMouseup);
+    };
+    const handleMouseup = () => {
+      setMouseDowned(false);
+      window.removeEventListener("mouseup", handleMouseup);
+    };
+
+    window.addEventListener("mousedown", handleMouseDown);
+    return () => window.removeEventListener("mousedown", handleMouseDown);
   }, []);
 
   const refIFrame = useCallback((elm: any) => {
     props.refIFrame && props.refIFrame(elm);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={S.root}>

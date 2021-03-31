@@ -69,6 +69,8 @@ export function DropdownLayout(props: {
     }
   };
 
+  const elmDropdownPortal = document.getElementById("dropdown-portal")!;
+
   useEffect(() => {
     let intervalHandle: any;
     const handleScroll = _.throttle((event: any) => {
@@ -94,9 +96,9 @@ export function DropdownLayout(props: {
       window.removeEventListener("mouseup", handleMouse, true);
       clearInterval(intervalHandle);
     };
-  }, [props.isDropped, props.onDropupRequest]);
+  }, [props.isDropped, props.onDropupRequest, elmDropdownPortal]);
 
-  const elmDropdownPortal = document.getElementById("dropdown-portal")!;
+
   return (
     <>
       <CtxDropdownBodyRect.Provider value={rectBody}>
