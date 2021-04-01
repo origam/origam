@@ -78,13 +78,13 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         return (elm: any) => {
           beh.refInputElement(elm);
         };
-      }, []);
+      }, [beh]);
 
       useEffect(() => {
         if (beh.subscribeToFocusManager && beh.elmInputElement) {
           beh.subscribeToFocusManager(beh.elmInputElement);
         }
-      }, []);
+      }, [beh]);
 
       const previousValueRef = useRef<string[]>();
 
@@ -93,7 +93,13 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
           beh.elmInputElement.value = "";
         }
         previousValueRef.current = value;
-      }, [previousValueRef.current, previousValueRef.current?.length, value, value?.length]);
+      }, [ // eslint-disable-line react-hooks/exhaustive-deps
+        previousValueRef.current,
+        previousValueRef.current?.length, // eslint-disable-line react-hooks/exhaustive-deps
+        value,
+        value?.length, // eslint-disable-line react-hooks/exhaustive-deps
+        beh.elmInputElement?.value, // eslint-disable-line react-hooks/exhaustive-deps
+      ]);
 
       function handleInputKeyDown(event: any) {
         if (event.key === "Backspace" && event.target.value === "" && value.length > 0) {

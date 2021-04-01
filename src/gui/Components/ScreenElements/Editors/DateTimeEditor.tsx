@@ -27,7 +27,11 @@ class CalendarWidget extends React.Component<{
       day.add({ days: 1 }), i++
     ) {
       result.push(
-        <div className={S.calendarWidgetDayHeaderCell} title={day.format("dddd")}>
+        <div
+          key={day.toISOString()}
+          className={S.calendarWidgetDayHeaderCell}
+          title={day.format("dddd")}
+        >
           {day.format("dd")[0]}
         </div>
       );
@@ -49,6 +53,7 @@ class CalendarWidget extends React.Component<{
       const dayCopy = moment(day);
       result.push(
         <div
+          key={day.toISOString()}
           className={cx(S.calendarWidgetCell, {
             [S.calendarWidgetNeighbourMonthCell]: isNeighbourMonth,
             [S.calendarWidgetSelectedDay]: isSelectedDay,
@@ -66,7 +71,7 @@ class CalendarWidget extends React.Component<{
   getDateRows() {
     const result: any[] = [];
     for (let i = 0; i < 6; i++) {
-      result.push(<div className={S.calendarWidgetRow}>{this.getDates(i)}</div>);
+      result.push(<div key={i} className={S.calendarWidgetRow}>{this.getDates(i)}</div>);
     }
     return result;
   }

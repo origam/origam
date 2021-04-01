@@ -42,7 +42,7 @@ export class BoolEditor extends React.Component<{
           id={this.props.id ? this.props.id : undefined}
           className="editor"
           type="checkbox"
-          checked={this.props.value}
+          checked={this.props.value || false}
           readOnly={!this.props.readOnlyNoGrey && this.props.isReadOnly}
           disabled={!this.props.readOnlyNoGrey && this.props.isReadOnly}
           onChange={(event: any) => {

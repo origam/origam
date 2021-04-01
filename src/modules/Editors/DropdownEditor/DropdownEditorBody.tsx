@@ -18,13 +18,13 @@ export function DropdownEditorBody() {
       refCtxBody(elm);
       beh.refDropdownBody(elm);
     },
-    []
+    [beh, refCtxBody]
   );
 
   useEffect(() => {
     window.addEventListener("mousedown", beh.handleWindowMouseDown);
     return () => window.removeEventListener("mousedown", beh.handleWindowMouseDown);
-  }, []);
+  }, [beh]);
   return (
     <Observer>
       {() => (
@@ -68,10 +68,12 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
   const [hoveredRowIndex, setHoveredRowIndex] = useState(-1);
 
   function renderTableCell({ columnIndex, key, parent, rowIndex, style }: GridCellProps) {
+    const Prov = CtxCell.Provider as any;
     return (
-      <CtxCell.Provider
+      <Prov
         key={key}
         value={{ visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex }}
+        style={style}
       >
         <CellMeasurer
           cache={cache}
@@ -109,7 +111,7 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
             </div>
           )}
         </CellMeasurer>
-      </CtxCell.Provider>
+      </Prov>
     );
   }
 
@@ -145,7 +147,7 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
 
   useEffect(() => {
     refMultiGrid.current?.recomputeGridSize();
-  }, [width]);
+  }, [width, refMultiGrid]);
 
   return (
     <MultiGrid

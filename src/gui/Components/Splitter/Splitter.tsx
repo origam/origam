@@ -272,6 +272,7 @@ export class Splitter extends React.Component<{
       if (i < this.props.panels.length - 1) {
         content.push(
           <Measure
+            key={i} // Assuming panel structure will not change.
             bounds={true}
             onResize={contentRect =>
               this.handleDividerResize(contentRect, panel[0])

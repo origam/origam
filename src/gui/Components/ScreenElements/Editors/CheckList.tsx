@@ -219,11 +219,14 @@ export const CheckListItem: React.FC<{
 }> = (props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
+  const refInput = useRef<HTMLInputElement>(null);
+  props.inputSetter(new InputReference(refInput));
+
   useEffect(() => {
     if (props.subscribeToFocusManager && refInput.current) {
       props.subscribeToFocusManager(refInput.current);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onKeyDown(event: any) {
     const boundingRect = refInput.current?.getBoundingClientRect()!;
@@ -263,8 +266,7 @@ export const CheckListItem: React.FC<{
     refInput?.current?.focus();
   }
 
-  const refInput = useRef<HTMLInputElement>(null);
-  props.inputSetter(new InputReference(refInput));
+
 
   return (
     <div className={S.item} onClick={onClick}>
