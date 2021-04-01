@@ -68,10 +68,12 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
   const [hoveredRowIndex, setHoveredRowIndex] = useState(-1);
 
   function renderTableCell({ columnIndex, key, parent, rowIndex, style }: GridCellProps) {
+    const Prov = CtxCell.Provider as any;
     return (
-      <CtxCell.Provider
+      <Prov
         key={key}
         value={{ visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex }}
+        style={style}
       >
         <CellMeasurer
           cache={cache}
@@ -109,7 +111,7 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
             </div>
           )}
         </CellMeasurer>
-      </CtxCell.Provider>
+      </Prov>
     );
   }
 

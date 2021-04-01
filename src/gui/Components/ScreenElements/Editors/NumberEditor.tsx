@@ -156,7 +156,7 @@ export class NumberEditor extends React.Component<{
   }
 
   render() {
-    const maxLength = this.props.maxLength === 0 ? undefined : this.props.maxLength;
+    const maxLength = (this.props.maxLength === 0 ? undefined : this.props.maxLength) || undefined;
     return (
       <div className={S.editorContainer}>
         <input

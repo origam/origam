@@ -98,7 +98,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         previousValueRef.current?.length, // eslint-disable-line react-hooks/exhaustive-deps
         value,
         value?.length, // eslint-disable-line react-hooks/exhaustive-deps
-        beh.elmInputElement.value,
+        beh.elmInputElement?.value, // eslint-disable-line react-hooks/exhaustive-deps
       ]);
 
       function handleInputKeyDown(event: any) {

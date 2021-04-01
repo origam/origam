@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import bind from "bind-decorator";
-import { action, computed, observable} from "mobx";
+import { action, computed, observable } from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React, { useContext } from "react";
@@ -31,9 +31,7 @@ import { getDataTable } from "../../../../model/selectors/DataView/getDataTable"
 import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import { SelectionCheckBoxHeader } from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
-import {
-  aggregationToString,
-} from "model/entities/Aggregatioins";
+import { aggregationToString } from "model/entities/Aggregatioins";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
@@ -165,7 +163,11 @@ export class TableViewInner extends React.Component<
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.handleTableKeyDown}
             refTable={this.refTable}
-            onFocus={() => getFormScreenLifecycle(this.props.dataView).focusedDataViewId = this.props.dataView?.id}
+            onFocus={() =>
+              (getFormScreenLifecycle(
+                this.props.dataView
+              ).focusedDataViewId = this.props.dataView?.id)
+            }
           />
         </>
       </Provider>
@@ -292,7 +294,7 @@ class HeaderRenderer implements IHeaderRendererData {
     for (let i = 0; i < groupingColumnCount; i++) {
       headerContainers.push(
         new HeaderContainer({
-          header: this.renderDummyHeader(columnDimensions[i].width),
+          header: this.renderDummyHeader(columnDimensions[i].width, i),
           isFixed: columnsToFix > i,
           width: columnDimensions[i].width,
         })
@@ -317,12 +319,16 @@ class HeaderRenderer implements IHeaderRendererData {
     return headerContainers;
   }
 
-  renderDummyHeader(columnWidth: number) {
-    return <div style={{ minWidth: columnWidth + "px" }}></div>;
+  renderDummyHeader(columnWidth: number, columnIndex: number) {
+    return (
+      <div key={`dummy-header-key-${columnIndex}`} style={{ minWidth: columnWidth + "px" }}></div>
+    );
   }
 
   renderSelectionCheckBoxHeader(columnWidth: number) {
-    return <SelectionCheckBoxHeader width={columnWidth} dataView={this.dataView} />;
+    return (
+      <SelectionCheckBoxHeader key="checkboxHeader" width={columnWidth} dataView={this.dataView} />
+    );
   }
 
   @bind
@@ -361,12 +367,16 @@ class HeaderRenderer implements IHeaderRendererData {
     }
     const headerContent: JSX.Element[] = [];
     if (filterControlsDisplayed) {
-      headerContent.push(<FilterSettings />);
+      headerContent.push(<FilterSettings key={`filter-settings-${columnId}`} />);
     }
     if (this.dataView.aggregationData.length !== 0) {
       const aggregation = this.dataView.aggregationData.find((agg) => agg.columnId === columnId);
       if (aggregation) {
-        headerContent.push(<div>{aggregationToString(aggregation, property)}</div>);
+        headerContent.push(
+          <div key={`aggregation-field-${columnId}`}>
+            {aggregationToString(aggregation, property)}
+          </div>
+        );
       }
     }
     return () => <>{headerContent}</>;

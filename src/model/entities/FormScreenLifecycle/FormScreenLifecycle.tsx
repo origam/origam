@@ -508,7 +508,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
 
     openedScreen.content.setFormScreen(screen);
-    screen.printMasterDetailTree();
+    // screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
 
     setTimeout(() => {

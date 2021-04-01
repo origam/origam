@@ -15,7 +15,10 @@ import {
 } from "../../../model/entities/types/AggregationType";
 import { T } from "../../../utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel } from "model/entities/types/GroupingUnit";
+import {
+  GroupingUnit,
+  GroupingUnitToLabel as groupingUnitToLabel,
+} from "model/entities/types/GroupingUnit";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
 
@@ -44,29 +47,29 @@ export class ColumnsDialog extends React.Component<{
   }
 
   @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
-
-    if(entity === "Date"){
-      if(state){
+    if (entity === "Date") {
+      if (state) {
         this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
-      }else{
+      } else {
         this.setTimeGroupingUnit(rowIndex, undefined);
       }
     }
 
     const columnConfCopy = [...this.configuration.columnConfigurations];
     columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
-      if (this.configuration.columnConfigurations[rowIndex].groupingIndex === 0) {
-        this.configuration.columnConfigurations[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
-      } else {
-        this.configuration.columnConfigurations[rowIndex].groupingIndex = 0;
-        let groupingIndex = 1;
-        columnConfCopy.reverse();
-        for (let columnConfItem of columnConfCopy) {
-          if (columnConfItem.groupingIndex > 0) {
-            columnConfItem.groupingIndex = groupingIndex++;
-          }
+    if (this.configuration.columnConfigurations[rowIndex].groupingIndex === 0) {
+      this.configuration.columnConfigurations[rowIndex].groupingIndex =
+        columnConfCopy[0].groupingIndex + 1;
+    } else {
+      this.configuration.columnConfigurations[rowIndex].groupingIndex = 0;
+      let groupingIndex = 1;
+      columnConfCopy.reverse();
+      for (let columnConfItem of columnConfCopy) {
+        if (columnConfItem.groupingIndex > 0) {
+          columnConfItem.groupingIndex = groupingIndex++;
         }
       }
+    }
   }
 
   @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
@@ -74,7 +77,9 @@ export class ColumnsDialog extends React.Component<{
   }
 
   @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
-    this.configuration.columnConfigurations[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
+    this.configuration.columnConfigurations[rowIndex].aggregationType = tryParseAggregationType(
+      selectedAggregation
+    );
   }
 
   @action.bound handleFixedColumnsCountChange(event: any) {
@@ -96,8 +101,8 @@ export class ColumnsDialog extends React.Component<{
             >
               {T("OK", "button_ok")}
             </button>
-            <button onClick={event => this.props.onSaveAsClick(event, this.configuration)}>
-              {T("Save As...","column_config_save_as")}
+            <button onClick={(event) => this.props.onSaveAsClick(event, this.configuration)}>
+              {T("Save As...", "column_config_save_as")}
             </button>
             <button tabIndex={0} onClick={this.props.onCancelClick}>
               {T("Cancel", "button_cancel")}
@@ -150,15 +155,10 @@ export class ColumnsDialog extends React.Component<{
       propertyId,
       aggregationType,
       groupingIndex,
-      timeGroupingUnit
+      timeGroupingUnit,
     } = this.configuration.columnConfigurations[rowIndex];
 
-    const {
-      name,
-      entity,
-      canGroup,
-      canAggregate,
-    } = this.props.columnOptions.get(propertyId)!;
+    const { name, entity, canGroup, canAggregate } = this.props.columnOptions.get(propertyId)!;
 
     switch (columnIndex) {
       case 0:
@@ -179,14 +179,14 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
-              onClick={(event: any) => this.setGrouping(rowIndex, event.target.checked, entity)}
+              onChange={(event: any) => this.setGrouping(rowIndex, event.target.checked, entity)}
               disabled={!canGroup}
             />{" "}
             {groupingIndex > 0 ? groupingIndex : ""}
           </span>
         );
       case 3:
-        if(groupingIndex > 0 && entity === "Date"){
+        if (groupingIndex > 0 && entity === "Date") {
           return (
             <Dropdowner
               trigger={({ refTrigger, setDropped }) => (
@@ -205,7 +205,7 @@ export class ColumnsDialog extends React.Component<{
                       setDropped(false);
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Year);
                     }}
-                    >
+                  >
                     {groupingUnitToLabel(GroupingUnit.Year)}
                   </DropdownItem>
                   <DropdownItem
@@ -213,7 +213,7 @@ export class ColumnsDialog extends React.Component<{
                       setDropped(false);
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Month);
                     }}
-                    >
+                  >
                     {groupingUnitToLabel(GroupingUnit.Month)}
                   </DropdownItem>
                   <DropdownItem
@@ -221,7 +221,7 @@ export class ColumnsDialog extends React.Component<{
                       setDropped(false);
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
                     }}
-                    >
+                  >
                     {groupingUnitToLabel(GroupingUnit.Day)}
                   </DropdownItem>
                   <DropdownItem
@@ -244,8 +244,7 @@ export class ColumnsDialog extends React.Component<{
               )}
             />
           );
-        }
-        else{
+        } else {
           return "";
         }
       case 4:
@@ -325,20 +324,21 @@ export class ColumnsDialog extends React.Component<{
     style: any;
     key: any;
   }): React.ReactNode {
+    const Obsv = Observer as any;
     if (args.rowIndex > 0) {
       const rowClassName = args.rowIndex % 2 === 0 ? "even" : "odd";
       return (
-        <Observer>
+        <Obsv style={args.style} key={args.key}>
           {() => (
             <div style={args.style} className={S.columnTableCell + " " + rowClassName}>
               {this.getCell(args.rowIndex - 1, args.columnIndex)}
             </div>
           )}
-        </Observer>
+        </Obsv>
       );
     } else {
       return (
-        <Observer>
+        <Obsv style={args.style} key={args.key}>
           {() => (
             <TableHeader
               columnIndex={args.columnIndex}
@@ -347,7 +347,7 @@ export class ColumnsDialog extends React.Component<{
               onColumnWidthChange={this.handleColumnWidthChange}
             />
           )}
-        </Observer>
+        </Obsv>
       );
     }
   }
