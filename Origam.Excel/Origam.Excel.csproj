@@ -58,7 +58,7 @@
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="NPOI" Version="2.4.1" />
+    <PackageReference Include="NPOI" Version="2.5.2" />
   </ItemGroup>
 
 
