@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Drawing;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
