@@ -269,7 +269,7 @@ export class BlobEditor extends React.Component<{
   }
 
   private renderInput() {
-    if (this.props.isReadOnly) {
+    if (this.props.isReadOnly && !this.props.value) {
       return (
         <div className={S.blobEditor}>
           <input
@@ -315,17 +315,18 @@ export class BlobEditor extends React.Component<{
         <input
           className={"input " + (this.focused ? S.focusedBorder : S.standardBorder)}
           value={this.props.value || ""}
+          disabled={this.props.isReadOnly}
           onChange={(event: any) =>
-            this.props.onChange && this.props.onChange(event, event.target.value)
+              !this.props.isReadOnly && this.props.onChange && this.props.onChange(event, event.target.value)
           }
-          onBlur={this.props.onEditorBlur}
+          onBlur={event => !this.props.isReadOnly && this.props.onEditorBlur && this.props.onEditorBlur(event)}
         />
         <div>
           <Dropdowner
             trigger={({ refTrigger, setDropped, isDropped }) => (
               <div className={CS.control} ref={refTrigger}>
                 <div
-                  className={cx("inputBtn", "lastOne", this.props.isReadOnly && "readOnly")}
+                  className={cx("inputBtn", "lastOne")}
                   onClick={(event) => setDropped(true)}
                 >
                   {!isDropped ? (
@@ -350,6 +351,7 @@ export class BlobEditor extends React.Component<{
                   {T("Download", "blob_download")}
                 </DropdownItem>
                 <DropdownItem
+                  isDisabled={this.props.isReadOnly}
                   onClick={(event: any) => {
                     setDropped(false);
                     runGeneratorInFlowWithHandler({
