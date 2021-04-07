@@ -3,7 +3,7 @@ import {AggregationType} from "model/entities/types/AggregationType";
 import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
 export interface IConfigurationManager {
-  onColumnOrderChnaged(): Generator;
+  onColumnOrderChanged(): Generator;
   onColumnWidthChanged(id: string, width: number): Generator;
   deleteActiveTableConfiguration(): Promise<any>;
   saveTableConfigurations(): Promise<any>;
