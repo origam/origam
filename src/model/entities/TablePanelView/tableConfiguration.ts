@@ -74,12 +74,10 @@ export class TableConfiguration implements ITableConfiguration {
       if (!columnConfiguration.isVisible) {
         tablePanelView.setPropertyHidden(columnConfiguration.propertyId, true);
       }
-      if (columnConfiguration.aggregationType !== undefined) {
-        tablePanelView.aggregations.setType(
-          columnConfiguration.propertyId,
-          columnConfiguration.aggregationType
-        );
-      }
+      tablePanelView.aggregations.setType(
+        columnConfiguration.propertyId,
+        columnConfiguration.aggregationType
+      );
       if (columnConfiguration.groupingIndex > 0) {
         tablePanelView.groupingConfiguration.setGrouping(
           columnConfiguration.propertyId,
