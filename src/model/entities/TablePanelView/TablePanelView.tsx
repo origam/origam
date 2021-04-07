@@ -443,7 +443,12 @@ export class AggregationContainer {
   }
 
   setType(columnId: string, aggregationType: AggregationType | undefined) {
+    if(!aggregationType && this.aggregationTypes.has(columnId)){
+      this.aggregationTypes.delete(columnId);
+      return;
+    }
     if (!aggregationType && !this.aggregationTypes.has(columnId)) return;
+
     this.aggregationTypes.set(columnId, aggregationType);
   }
 
