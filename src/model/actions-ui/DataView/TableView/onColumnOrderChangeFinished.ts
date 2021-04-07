@@ -8,7 +8,7 @@ export function onColumnOrderChangeFinished(ctx: any, id1: string, id2: string) 
     generator: function* (){
       const tablePanelView = getTablePanelView(ctx);
       tablePanelView.moveColumnBehind(id1, id2);
-      yield* getConfigurationManager(ctx).onColumnOrderChnaged();
+      yield* getConfigurationManager(ctx).onColumnOrderChanged();
     }()
   })
 }

@@ -104,7 +104,7 @@ export class ConfigurationManager implements IConfigurationManager {
     yield* saveColumnConfigurations(this)();
   }
 
-  *onColumnOrderChnaged(): Generator {
+  *onColumnOrderChanged(): Generator {
     if(!this.defaultTableConfiguration.isActive){
       return;
     }
