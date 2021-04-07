@@ -64,6 +64,8 @@ import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelV
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
 import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
+import {getRowStates} from "../../selectors/RowState/getRowStates";
+import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisible";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -876,8 +878,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
-      const childEntities = getAllBindingChildren(targetDataView).map((dataView) =>
-        getEntity(dataView)
+      const childEntities = getAllBindingChildren(targetDataView)
+          .filter(dataView => getIsAddButtonVisible(dataView))
+          .map((dataView) => getEntity(dataView)
       );
 
       const api = getApi(this);
