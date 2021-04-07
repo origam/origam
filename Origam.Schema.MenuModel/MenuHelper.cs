@@ -25,7 +25,6 @@ using Origam.Schema.WorkflowModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
-using System.Linq;
 
 namespace Origam.Schema.MenuModel
 {
@@ -47,8 +46,9 @@ namespace Origam.Schema.MenuModel
 			
 			if(menuProvider.ChildItems.Count > 0 && menuProvider.ChildItems[0].IsPersisted)
 			{
-				FormReferenceMenuItem formMenu = GetMenu(menuProvider).
-					NewItem(typeof(FormReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as FormReferenceMenuItem;
+                Menu menu = menuProvider.MainMenu;
+
+				FormReferenceMenuItem formMenu = menu.NewItem(typeof(FormReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as FormReferenceMenuItem;
 				formMenu.Name = form.Name;
 				formMenu.DisplayName = caption;
 				formMenu.Screen = form;
@@ -72,13 +72,14 @@ namespace Origam.Schema.MenuModel
 			}
 
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			
+
 			MenuSchemaItemProvider menuProvider = schema.GetProvider(typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
 			
 			if(menuProvider.ChildItems.Count > 0)
 			{
-				DataConstantReferenceMenuItem constantMenu = GetMenu(menuProvider).
-					NewItem(typeof(DataConstantReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as DataConstantReferenceMenuItem;
+				Menu menu = menuProvider.MainMenu;
+
+				DataConstantReferenceMenuItem constantMenu = menu.NewItem(typeof(DataConstantReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as DataConstantReferenceMenuItem;
 				constantMenu.Name = constant.Name;
 				constantMenu.DisplayName = caption;
 				constantMenu.Constant = constant;
@@ -94,13 +95,7 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-        private static Menu GetMenu(MenuSchemaItemProvider menuProvider)
-        {
-			return menuProvider.ChildItemsByType(Menu.CategoryConst)
-				.Cast<Menu>().FirstOrDefault();
-		}
-
-        public static WorkflowReferenceMenuItem CreateMenuItem(string caption, string role, IWorkflow wf)
+		public static WorkflowReferenceMenuItem CreateMenuItem(string caption, string role, IWorkflow wf)
 		{
 			if(caption == "" || caption == null)
 			{
@@ -113,8 +108,8 @@ namespace Origam.Schema.MenuModel
 			
 			if(menuProvider.ChildItems.Count > 0)
 			{
-				WorkflowReferenceMenuItem wfMenu = GetMenu(menuProvider).
-					NewItem(typeof(WorkflowReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as WorkflowReferenceMenuItem;
+				Menu menu = menuProvider.MainMenu;
+				WorkflowReferenceMenuItem wfMenu = menu.NewItem(typeof(WorkflowReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as WorkflowReferenceMenuItem;
 				wfMenu.Name = wf.Name;
 				wfMenu.DisplayName = caption;
 				wfMenu.Workflow = wf;
