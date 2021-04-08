@@ -61,7 +61,7 @@
       <Version>2.15.1</Version>
     </PackageReference>
     <PackageReference Include="MailKit">
-      <Version>2.5.0</Version>
+      <Version>2.11.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration">
       <Version>2.2.0</Version>
