@@ -1,12 +1,12 @@
 'use strict';
 
 const {execSync} = require('child_process');
-/*try {
+try {
   process.env.REACT_APP_GIT_REVISION_HASH = execSync('git rev-parse HEAD').toString().trim();
   process.env.REACT_APP_GIT_REVISION_DATE = execSync('git log -1 --format=%cd').toString().trim();
 } catch(e) {
   console.error('Cannot determine git revision:', e);
-}*/
+}
 
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = 'production';
