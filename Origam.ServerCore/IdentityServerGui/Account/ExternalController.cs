@@ -58,26 +58,19 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 throw new Exception("invalid return URL");
             }
 
-            if (AccountOptions.WindowsAuthenticationSchemeName == provider)
+            // start challenge and roundtrip the return URL and scheme 
+            var props = new AuthenticationProperties
             {
-                // windows authentication needs special handling
-                return await ProcessWindowsLoginAsync(returnUrl);
-            }
-            else
-            {
-                // start challenge and roundtrip the return URL and scheme 
-                var props = new AuthenticationProperties
+                RedirectUri = Url.Action(nameof(Callback)),
+                Items =
                 {
-                    RedirectUri = Url.Action(nameof(Callback)),
-                    Items =
-                    {
-                        { "returnUrl", returnUrl },
-                        { "scheme", provider },
-                    }
-                };
+                    { "returnUrl", returnUrl },
+                    { "scheme", provider },
+                }
+            };
 
-                return Challenge(props, provider);
-            }
+            return Challenge(props, provider);
+
         }
 
         /// <summary>
@@ -115,9 +108,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             // this is typically used to store data needed for signout from those protocols.
             var additionalLocalClaims = new List<Claim>();
             var localSignInProps = new AuthenticationProperties();
-            ProcessLoginCallbackForOidc(result, additionalLocalClaims, localSignInProps);
-            //ProcessLoginCallbackForWsFed(result, additionalLocalClaims, localSignInProps);
-            //ProcessLoginCallbackForSaml2p(result, additionalLocalClaims, localSignInProps);
+            ProcessLoginCallback(result, additionalLocalClaims, localSignInProps);
 
             // issue authentication cookie for user
             var isuser = new IdentityServerUser(user.BusinessPartnerId)
@@ -137,11 +128,11 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 
             // check if external login is in the context of an OIDC request
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.BusinessPartnerId, user.UserName, true, context?.ClientId));
+            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.BusinessPartnerId, user.UserName, true, context?.Client.ClientId));
 
             if (context != null)
             {
-                if (await _clientStore.IsPkceClientAsync(context.ClientId))
+                if (context.IsNativeClient())
                 {
                     // if the client is PKCE then we assume it's native, so this change in how to
                     // return the response is for better UX for the end user.
@@ -151,54 +142,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 
             return Redirect(returnUrl);
         }
-
-        private async Task<IActionResult> ProcessWindowsLoginAsync(string returnUrl)
-        {
-            // see if windows auth has already been requested and succeeded
-            var result = await HttpContext.AuthenticateAsync(AccountOptions.WindowsAuthenticationSchemeName);
-            if (result?.Principal is WindowsPrincipal wp)
-            {
-                // we will issue the external cookie and then redirect the
-                // user back to the external callback, in essence, treating windows
-                // auth the same as any other external authentication mechanism
-                var props = new AuthenticationProperties()
-                {
-                    RedirectUri = Url.Action("Callback"),
-                    Items =
-                    {
-                        { "returnUrl", returnUrl },
-                        { "scheme", AccountOptions.WindowsAuthenticationSchemeName },
-                    }
-                };
-
-                var id = new ClaimsIdentity(AccountOptions.WindowsAuthenticationSchemeName);
-                id.AddClaim(new Claim(JwtClaimTypes.Subject, wp.FindFirst(ClaimTypes.PrimarySid).Value));
-                id.AddClaim(new Claim(JwtClaimTypes.Name, wp.Identity.Name));
-
-                // add the groups as claims -- be careful if the number of groups is too large
-                if (AccountOptions.IncludeWindowsGroups)
-                {
-                    var wi = wp.Identity as WindowsIdentity;
-                    var groups = wi.Groups.Translate(typeof(NTAccount));
-                    var roles = groups.Select(x => new Claim(JwtClaimTypes.Role, x.Value));
-                    id.AddClaims(roles);
-                }
-
-                await HttpContext.SignInAsync(
-                    IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme,
-                    new ClaimsPrincipal(id),
-                    props);
-                return Redirect(props.RedirectUri);
-            }
-            else
-            {
-                // trigger windows auth
-                // since windows auth don't support the redirect uri,
-                // this URL is re-triggered when we call challenge
-                return Challenge(AccountOptions.WindowsAuthenticationSchemeName);
-            }
-        }
-
+        
         private (IOrigamUser user, string provider, string providerUserId, IEnumerable<Claim> claims) FindUserFromExternalProvider(AuthenticateResult result)
         {
             var externalUser = result.Principal;
@@ -256,13 +200,25 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 localSignInProps.StoreTokens(new[] { new AuthenticationToken { Name = "id_token", Value = id_token } });
             }
         }
+        
+        // if the external login is OIDC-based, there are certain things we need to preserve to make logout work
+        // this will be different for WS-Fed, SAML2p or other protocols
+        private void ProcessLoginCallback(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
+        {
+            // if the external system sent a session id claim, copy it over
+            // so we can use it for single sign-out
+            var sid = externalResult.Principal.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.SessionId);
+            if (sid != null)
+            {
+                localClaims.Add(new Claim(JwtClaimTypes.SessionId, sid.Value));
+            }
 
-        //private void ProcessLoginCallbackForWsFed(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
-        //{
-        //}
-
-        //private void ProcessLoginCallbackForSaml2p(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
-        //{
-        //}
+            // if the external provider issued an id_token, we'll keep it for signout
+            var idToken = externalResult.Properties.GetTokenValue("id_token");
+            if (idToken != null)
+            {
+                localSignInProps.StoreTokens(new[] { new AuthenticationToken { Name = "id_token", Value = idToken } });
+            }
+        }
     }
 }

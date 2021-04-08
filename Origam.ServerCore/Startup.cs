@@ -130,14 +130,15 @@ namespace Origam.ServerCore
             services.Configure<ChatConfig>(options => Configuration.GetSection("ChatConfig").Bind(options));
             services.Configure<HtmlClientConfig>(options => Configuration.GetSection("HtmlClientConfig").Bind(options));
 
-            IIdentityServerBuilder serverBuilder = services.AddIdentityServer()
+           services.AddIdentityServer()
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
                 .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
                 .AddAspNetIdentity<IOrigamUser>()
                 .AddSigningCredential(new X509Certificate2(
                     identityServerConfig.PathToJwtCertificate,
-                    identityServerConfig.PasswordForJwtCertificate));
+                    identityServerConfig.PasswordForJwtCertificate))
+                .AddInMemoryApiScopes(Settings.GetApiScopes());
             
             services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false)

@@ -57,7 +57,8 @@
 
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.15.1" />
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.1.2" />
+    <PackageReference Include="IdentityServer4" Version="4.1.2" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.23.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
@@ -247,6 +248,10 @@
     <None Update="TemplateFiles\testResetPwFile.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Authorization\RoleStore.cs" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties assets_4identity_4lib_4bootstrap_4css_4bootstrap_1css_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
