@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Security.Permissions;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.ComponentModel;
@@ -29,8 +28,6 @@ using System.ComponentModel.Design;
 
 namespace Origam.Gui.Win
 {
-
-	[SecurityPermission(SecurityAction.Demand, UnmanagedCode=true)]
 	internal class CollapsibleContainerDesigner : ParentControlDesigner
 	{
 		// Fields

@@ -71,12 +71,6 @@
     <Compile Include="WebGitXmlParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\EnterpriseLibrary\git2-6311e88.dll">
-      <Link>git2-6311e88.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
@@ -84,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp">
-      <Version>0.26.0</Version>
+      <Version>0.26.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

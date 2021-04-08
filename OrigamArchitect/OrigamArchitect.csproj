@@ -466,7 +466,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AeroWizard">
-      <Version>2.2.2</Version>
+      <Version>2.2.9</Version>
+    </PackageReference>
+    <PackageReference Include="AvalonEdit">
+      <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="DockPanelSuite">
       <Version>3.0.6</Version>
@@ -475,10 +478,10 @@
       <Version>3.0.6</Version>
     </PackageReference>
     <PackageReference Include="LibGit2Sharp">
-      <Version>0.26.0</Version>
+      <Version>0.26.2</Version>
     </PackageReference>
     <PackageReference Include="NPOI">
-      <Version>2.4.1</Version>
+      <Version>2.5.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
