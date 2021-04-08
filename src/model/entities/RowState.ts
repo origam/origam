@@ -57,6 +57,9 @@ export class RowState implements IRowState {
           if (containersToLoad.size === 0) {
             break;
           }
+          for (let container of containersToLoad.values()) {
+            container.processingSate = IIdState.LOADING;
+          }
           this.isSomethingLoading = true;
           const api = getApi(this);
           const states = yield api.getRowStates({
@@ -68,14 +71,13 @@ export class RowState implements IRowState {
           this.firstLoadingPerformed = true;
           for (let state of states) {
             this.putValue(state);
-            this.containers.get(state.id)!.processingSate = IIdState.LOADING;
-            containersToLoad.delete(state.id);
+            this.containers.get(state.id)!.processingSate = undefined;
           }
         } catch (error) {
           this.isSomethingLoading = false;
           this.firstLoadingPerformed = true;
           for (let container of containersToLoad.values()) {
-            container.processingSate = IIdState.LOADING;
+            container.processingSate = IIdState.ERROR;
           }
           yield* handleError(this)(error);
         } finally {
@@ -83,6 +85,7 @@ export class RowState implements IRowState {
             this.monitor.inFlow--;
           }
           containersToLoad.forEach(container => container.suppressWorkingStatus = false);
+          containersToLoad.clear();
         }
       }
     }.bind(this)
@@ -194,7 +197,6 @@ export class RowStateColumnItem implements IRowStateColumnItem {
     public allowUpdate: boolean
   ) {}
 }
-
 
 class RowStateContainer {
   public rowId: string;
