@@ -475,7 +475,7 @@
       <Version>3.0.6</Version>
     </PackageReference>
     <PackageReference Include="LibGit2Sharp">
-      <Version>0.26.0</Version>
+      <Version>0.26.2</Version>
     </PackageReference>
     <PackageReference Include="NPOI">
       <Version>2.5.2</Version>
