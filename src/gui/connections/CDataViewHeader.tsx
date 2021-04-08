@@ -28,7 +28,7 @@ import { onMoveRowUpClick } from "model/actions-ui/DataView/onMoveRowUpClick";
 import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
-import { IAction, IActionMode, IActionType } from "model/entities/types/IAction";
+import { IAction, IActionMode, IActionType, IActionPlacement } from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getExpandedGroupRowCount } from "model/selectors/DataView/getExpandedGroupRowCount";
@@ -226,7 +226,10 @@ export class CDataViewHeaderInner extends React.Component<{
 
   @computed
   get hasSomeRelevantActions() {
-    return this.relevantActions.length > 0;
+    return (
+      this.relevantActions.filter((action) => action.placement !== IActionPlacement.PanelMenu)
+        .length > 0
+    );
   }
 
   @computed
