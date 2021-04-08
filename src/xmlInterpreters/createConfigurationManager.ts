@@ -7,10 +7,20 @@ import {fixColumnWidth} from "xmlInterpreters/screenXml";
 import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 
+function mergeToConfiguration(target: TableConfiguration, source: TableConfiguration) {
+  for(let srcColumn of source.columnConfigurations) {
+    const trgIndex = target.columnConfigurations.findIndex(item => item.propertyId === srcColumn.propertyId);
+    if(trgIndex > -1) {
+      target.columnConfigurations[trgIndex] = srcColumn;
+    }
+  }
+}
+
 export function createConfigurationManager(configurationNodes: any, properties: IProperty[]) {
+  const defaultConfiguration = TableConfiguration.createDefault(properties);
   if (configurationNodes.length === 0) {
     return new ConfigurationManager(
-      [], TableConfiguration.createDefault(properties));
+      [], defaultConfiguration);
   } else if (configurationNodes.length > 1) {
     throw new Error("Can not process more than one configuration node")
   }
@@ -18,7 +28,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   const tableConfigurationNodes = findStopping(configurationNodes[0], (n) => n.name === "tableConfigurations")?.[0]?.elements;
   if(!tableConfigurationNodes){
     return new ConfigurationManager(
-      [], TableConfiguration.createDefault(properties));
+      [], defaultConfiguration);
   }
   const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) =>
     TableConfiguration.create(
@@ -33,12 +43,14 @@ export function createConfigurationManager(configurationNodes: any, properties: 
       }));
 
   const defaultTableConfiguration = tableConfigurations.find((tableConfig: TableConfiguration) => tableConfig.name === "")
-          ?? TableConfiguration.createDefault(properties);
+          ?? defaultConfiguration;
+
+  mergeToConfiguration(defaultConfiguration, defaultTableConfiguration)
 
   return new ConfigurationManager(
     tableConfigurations
       .filter((tableConfig: TableConfiguration) => tableConfig !== defaultTableConfiguration),
-    defaultTableConfiguration
+      defaultConfiguration
   );
 }
 
