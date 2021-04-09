@@ -271,6 +271,9 @@
                         <Component Id="LIBGIT2SHARP.DLL" DiskId="1" Guid="d40f49c8-f2c9-4a21-92ee-2ae903cdc9e8">
                             <File Id="LIBGIT2SHARP" Name="LIBGIT2SHARP.DLL" Source="source\LIBGIT2SHARP.DLL" />
                         </Component>
+                        <Component Id="GIT2_572E4D8.DLL" DiskId="1" Guid="4243d3ae-23f2-4c4e-b69e-873c8cc307f6">
+                            <File Id="GIT2_572E4D8" Name="GIT2-572E4D8.DLL" Source="source\GIT2-572E4D8.DLL" />
+                        </Component>
                         <Component Id="EDIFACT2XML.DLL" Guid="6018bc7d-9913-4782-847a-94bef17c21b4" DiskId="1">
                             <File Id="EDIFACT2XML" Name="EDIFACT2XML.dll" Source="source\EDIFACT2XML.dll">
                             </File>
@@ -2111,6 +2114,7 @@
             <ComponentRef Id="MORELINQ.DLL" />
             <ComponentRef Id="MORELINQ.DLL_1" />
             <ComponentRef Id="LIBGIT2SHARP.DLL" />
+            <ComponentRef Id="GIT2_572E4D8.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />

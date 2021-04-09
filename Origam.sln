@@ -214,6 +214,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.SSRS.NetFx", "Ori
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.BI.CrystalReports", "Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj", "{17ADA218-6B4F-4A45-9499-54496D2FFB27}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrigamSetup", "OrigamSetup", "{0C3F0EEC-2294-4665-90AF-3252EE9B10B7}"
+ProjectSection(SolutionItems) = preProject
+	OrigamSetup\ArchitectSetup.wxs = OrigamSetup\ArchitectSetup.wxs
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect|Any CPU = Debug Architect|Any CPU
