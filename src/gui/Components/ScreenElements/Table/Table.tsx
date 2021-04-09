@@ -395,7 +395,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                             scrollOffsetSource={this.props.scrollState}
                             fixedHoriz={true}
                             fixedVert={true}
-                            width={this.fixedColumnsWidth}
+                            width={this.fixedColumnsWidth - 3}
                             zIndex={100}
                             offsetLeft={0}
                           >
