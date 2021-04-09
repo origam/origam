@@ -1,6 +1,6 @@
 import {
   context2d, dataCellOffset, drawingColumnIndex,
-  getCurrentRowRightBorderDrawn, groupingColumnCount,
+  getCurrentRowRightBorderDrawn,
   scRenderCell,
   scrollLeft,
   scrollTop, selectionColumnShown, setCurrentRowRightBorderDrawn,

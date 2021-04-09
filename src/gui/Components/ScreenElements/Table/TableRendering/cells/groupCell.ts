@@ -1,7 +1,7 @@
 import {
   context,
   context2d,
-  currentRow, drawingColumnIndex,
+  currentRow,
   gridLeadCellDimensions,
   groupingColumnCount,
   groupingColumnIds, isCheckBoxedTable, recordId, tablePanelView,
@@ -12,7 +12,6 @@ import {IGroupRow, IGroupTreeNode} from "../types";
 import {
   applyScrollTranslation,
   cellPaddingLeft,
-  clipCell,
   fontSize,
   selectRowBorderWidth,
   topTextOffset
@@ -26,7 +25,6 @@ import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActi
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import {getSelectedRowId} from "../../../../../../model/selectors/TablePanelView/getSelectedRowId";
-import selectionCheckboxes from "../../../../../../model/selectors-tree/selectionCheckboxes";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
