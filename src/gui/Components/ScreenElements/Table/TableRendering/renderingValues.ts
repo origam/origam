@@ -21,9 +21,27 @@ scRenderTable.push(() => context2d.clear());
 export const rowIndex = ValueBox<number>();
 scRenderRow.push(() => rowIndex.clear());
 
+let currentRowRightBorderDrawn = false;
+
+export function setCurrentRowRightBorderDrawn(value: boolean){
+  currentRowRightBorderDrawn = value;
+}
+
+export function getCurrentRowRightBorderDrawn(){
+  return currentRowRightBorderDrawn;
+}
+
 export const rowId = () => dataTable().getRowId(currentDataRow());
 
 export const selectionColumnShown = () => getIsSelectionCheckboxesShown(context());
+
+export const  dataCellOffset = ()=>{
+  let offset = groupingColumnCount();
+  if(selectionColumnShown()){
+    offset++;
+  }
+  return offset;
+}
 
 export const drawingColumnIndex = ValueBox<number>();
 scRenderCell.push(() => drawingColumnIndex.clear());

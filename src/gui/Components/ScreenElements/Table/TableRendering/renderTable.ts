@@ -23,7 +23,7 @@ import {
   tableRows,
   viewportHeight,
   viewportWidth,
-  mouseMoveSubscriptions,
+  mouseMoveSubscriptions,setCurrentRowRightBorderDrawn,
 } from "./renderingValues";
 import {firstDrawableRowIndex, lastDrawableRowIndex} from "./drawableRowIndex";
 import {drawCurrentCell} from "./currentCell";
@@ -116,6 +116,7 @@ function renderSecondLayerCells() {
 
 export function renderRow(rowIdx: number) {
   rowIndex.set(rowIdx);
+  setCurrentRowRightBorderDrawn(false);
   try {
     if (!currentRow()) return;
     renderRowInternal();

@@ -1,12 +1,12 @@
 import {
-  context2d,
-  drawingColumnIndex,
+  context2d, dataCellOffset, drawingColumnIndex,
+  getCurrentRowRightBorderDrawn, groupingColumnCount,
   scRenderCell,
   scrollLeft,
-  scrollTop,
+  scrollTop, selectionColumnShown, setCurrentRowRightBorderDrawn,
 } from "../renderingValues";
 import {
-  currentColumnLeft,
+  currentColumnLeft, currentColumnRight,
   currentColumnWidth,
   currentRowHeight,
   currentRowTop,
@@ -49,12 +49,23 @@ export function drawSelectedRowBorder(frontStripeWidth: number) {
     CPR() * (currentRowTop() + currentRowHeight() - 1.5)
   );
   ctx2d.stroke();
-  if (drawingColumnIndex() === 0) {
+
+  const currentIsTheLeftMostDataColumn = drawingColumnIndex() === dataCellOffset();
+
+  if (currentIsTheLeftMostDataColumn && !selectionColumnShown()) {
     ctx2d.beginPath();
     ctx2d.lineWidth = frontStripeWidth * CPR();
     ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
     ctx2d.lineTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
     ctx2d.stroke();
+  }
+  if (!getCurrentRowRightBorderDrawn()) {
+    ctx2d.beginPath();
+    ctx2d.lineWidth = selectRowBorderWidth * CPR();
+    ctx2d.moveTo(CPR() * currentColumnRight(), CPR() * (currentRowTop() + 1.5));
+    ctx2d.lineTo(CPR() * currentColumnRight(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
+    ctx2d.stroke();
+    setCurrentRowRightBorderDrawn(true);
   }
 }
 
