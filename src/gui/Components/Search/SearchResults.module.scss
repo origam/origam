@@ -1,6 +1,4 @@
-.root{
-
-}
+@import "../../../styles/common_styles";
 
 .resultItem{
   padding: 0 1.6667em;
@@ -13,9 +11,13 @@
   cursor: pointer;
   text-decoration: none;
   font-style: normal;
-  color: #3e3d45;
+  color: $textColorNoHover;
   background-color: #f7f6fa;
   transition: all 300ms linear;
+}
+
+.resultItem:hover {
+  color: $textColorHover;
 }
 
 .resultItemName{
