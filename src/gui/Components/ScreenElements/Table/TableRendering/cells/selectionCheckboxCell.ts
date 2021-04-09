@@ -1,4 +1,13 @@
-import {context, context2d, currentDataRow, dataView, isCheckBoxedTable, recordId, rowId, tablePanelView} from "../renderingValues";
+import {
+  context,
+  context2d,
+  currentDataRow,
+  dataView,
+  isCheckBoxedTable,
+  recordId,
+  rowId,
+  tablePanelView
+} from "../renderingValues";
 import {
   currentColumnLeft,
   currentColumnLeftVisible,
@@ -105,7 +114,7 @@ export function selectionCheckboxEmptyCellsDraws() {
 export function drawSelectionCheckboxBackground() {
   const ctx2d = context2d();
   const selectedRowId = getSelectedRowId(tablePanelView());
-  const isRowCursor = recordId() === selectedRowId;
+  const isRowCursor = selectedRowId && recordId() === selectedRowId;
   ctx2d.fillStyle = "#ffffff";
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
