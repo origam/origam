@@ -1008,7 +1008,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const cleaned = new Set<any>();
     for (let prop of properties) {
       if (prop.lookupEngine && !cleaned.has(prop.lookupId)) {
-        //console.log("Cleaning and reloading lookup caches:", prop.id, prop.lookupId);
         prop.lookupEngine.cleanAndReload();
         getWorkbench(this).lookupListCache.deleteLookup(prop.lookupId!);
         cleaned.add(prop.lookupId);
@@ -1244,6 +1243,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         dataView.setRowCount(dataView.dataTable.rows.length);
         yield dataView.start();
 
+        const reloadAggregationsDebounced = _.debounce(() => {
+          const self = this;
+          runInFlowWithHandler({
+            ctx: dataView,
+            action: () => self.reloadAggregations(dataView),
+          });
+        }, 10);
+
         this.registerDisposer(
           reaction(
             () => {
@@ -1260,21 +1267,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                 isInfiniteScrollingActive(dataView) ? true : dataView.dataTable.rows.length === 0,
               ];
             },
-            () => this.reloadAggregationsDebounced(dataView),
+            () => reloadAggregationsDebounced(),
             { fireImmediately: true }
           )
         );
       }
     }
   }
-
-  reloadAggregationsDebounced = _.debounce((dataView: IDataView) => {
-    const self = this;
-    runInFlowWithHandler({
-      ctx: dataView,
-      action: () => self.reloadAggregations(dataView),
-    });
-  }, 10);
 
   get eagerLoading() {
     return !isLazyLoading(this);
