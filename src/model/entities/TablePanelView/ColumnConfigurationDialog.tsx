@@ -118,8 +118,13 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   }
 
   @action.bound onColumnConfSubmit(configuration: ITableConfiguration): void {
+    const groupingWasOnBefore = this.tablePanelView?.groupingConfiguration.isGrouping;
     configuration.apply(this.tablePanelView);
-    getFormScreenLifecycle(this).loadInitialData();
+    const groupingIsOffNow = !this.tablePanelView?.groupingConfiguration.isGrouping;
+
+    if(groupingWasOnBefore && groupingIsOffNow){
+      getFormScreenLifecycle(this).loadInitialData();
+    }
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 
