@@ -1,15 +1,22 @@
 import {
   context,
   context2d,
-  currentRow,
+  currentRow, drawingColumnIndex,
   gridLeadCellDimensions,
   groupingColumnCount,
-  groupingColumnIds,
+  groupingColumnIds, isCheckBoxedTable, recordId, tablePanelView,
   worldWidth,
 } from "../renderingValues";
 import {currentColumnLeft, currentColumnWidth, currentRowHeight, currentRowTop,} from "../currentCell";
 import {IGroupRow, IGroupTreeNode} from "../types";
-import {applyScrollTranslation, cellPaddingLeft, clipCell, fontSize, topTextOffset} from "./cellsCommon";
+import {
+  applyScrollTranslation,
+  cellPaddingLeft,
+  clipCell,
+  fontSize,
+  selectRowBorderWidth,
+  topTextOffset
+} from "./cellsCommon";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {onClick} from "../onClick";
 import {CPR} from "utils/canvas";
@@ -18,6 +25,8 @@ import {flow} from "mobx";
 import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import {getSelectedRowId} from "../../../../../../model/selectors/TablePanelView/getSelectedRowId";
+import selectionCheckboxes from "../../../../../../model/selectors-tree/selectionCheckboxes";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -66,7 +75,7 @@ export function groupRowContentCellsDraws() {
 
 export function drawEmptyGroupCell() {
   applyScrollTranslation();
-  clipCell();
+  // clipCell();
   drawEmptyGroupCellBackground();
 }
 
@@ -164,4 +173,28 @@ export function drawEmptyGroupCellBackground() {
     CPR() * currentColumnWidth(),
     CPR() * currentRowHeight()
   );
+  const selectedRowId = getSelectedRowId(tablePanelView());
+  const isSelected = recordId() === selectedRowId;
+
+  if(isSelected && isCheckBoxedTable()){
+    drawSelectedRowBorder();
+  }
+}
+
+function drawSelectedRowBorder() {
+  const ctx2d = context2d();
+  ctx2d.beginPath();
+  ctx2d.strokeStyle = "#4C84FF";
+  ctx2d.lineWidth = selectRowBorderWidth * CPR();
+  ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
+  ctx2d.lineTo(
+      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+      CPR() * (currentRowTop() + 1.5)
+  );
+  ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
+  ctx2d.lineTo(
+      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+      CPR() * (currentRowTop() + currentRowHeight() - 1.5)
+  );
+  ctx2d.stroke();
 }
