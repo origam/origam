@@ -50,6 +50,7 @@ namespace Origam.ServerCore.Authorization
         private static readonly string SubjectIdParameterName = "OrigamIdentityGrant_parSubjectId";
         private static readonly string ClientIdParameterName = "OrigamIdentityGrant_parClientId";
         private static readonly string TypeParameterName = "OrigamIdentityGrant_parType";
+        private static readonly string SessionIdParameterName = "OrigamIdentityGrant_sessionId";
         private readonly DataStructureQuery dataStructureQuery = new DataStructureQuery
         {
             DataSourceId = OrigamIdentityGrantDataStructureId,
@@ -78,6 +79,7 @@ namespace Origam.ServerCore.Authorization
             newRow.SetField("CreationTime", grant.CreationTime);
             newRow.SetField("Expiration", grant.Expiration);
             newRow.SetField("Data", grant.Data);
+            newRow.SetField("SessionId", grant.SessionId);
             
             dataSet.Tables[GrantTableName].Rows.Add(newRow);
             DataService.StoreData(dataStructureQuery, dataSet, null);
@@ -97,7 +99,46 @@ namespace Origam.ServerCore.Authorization
                 key);
             return Task.FromResult(GrantsFromDataSet(dataSet).FirstOrDefault());
         }
-        
+
+        public Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
+        {
+            QueryParameterCollection parameters = FilterToParameterCollection(filter);
+            DataSet dataSet = DataService.LoadData(
+                OrigamIdentityGrantDataStructureId,
+                GetGrandBySubjectIdFilterId,
+                Guid.Empty,
+                Guid.Empty,
+                null,
+                parameters
+            );
+            return Task.FromResult(GrantsFromDataSet(dataSet));
+        }
+
+        private static QueryParameterCollection FilterToParameterCollection(PersistedGrantFilter filter)
+        { 
+            QueryParameterCollection parameters = new QueryParameterCollection();
+            if (!string.IsNullOrEmpty(filter.ClientId))
+            {
+                parameters.Add(new QueryParameter(ClientIdParameterName, filter.ClientId));
+            }
+
+            if (!string.IsNullOrEmpty(filter.SubjectId))
+            {
+                parameters.Add(new QueryParameter(SubjectIdParameterName, filter.SubjectId));
+            }
+
+            if (!string.IsNullOrEmpty(filter.Type))
+            {
+                parameters.Add(new QueryParameter(TypeParameterName, filter.Type));
+            }
+
+            if (!string.IsNullOrEmpty(filter.SessionId))
+            {
+                parameters.Add(new QueryParameter(SessionIdParameterName, filter.SessionId));
+            }
+            return parameters;
+        }
+
         public Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
             DataSet dataSet = DataService.LoadData(
@@ -128,6 +169,27 @@ namespace Origam.ServerCore.Authorization
             }
             dataSet.Tables[GrantTableName].Rows[0].Delete();
             DataService.StoreData(dataStructureQuery, dataSet, null);
+            return Task.CompletedTask;
+        }
+
+        public Task RemoveAllAsync(PersistedGrantFilter filter)
+        {
+            QueryParameterCollection parameters = FilterToParameterCollection(filter);
+            DataSet dataSet = DataService.LoadData(
+                OrigamIdentityGrantDataStructureId,
+                GetBySubjectIdClientIdFilterId,
+                Guid.Empty,
+                Guid.Empty,
+                null,
+                parameters);
+
+            foreach (DataRow row in dataSet.Tables[GrantTableName].Rows)
+            {
+                row.Delete();
+            }
+
+            DataService.StoreData(dataStructureQuery, dataSet, null);
+
             return Task.CompletedTask;
         }
 
@@ -193,6 +255,7 @@ namespace Origam.ServerCore.Authorization
                             CreationTime = (DateTime) row["CreationTime"],
                             Expiration = (DateTime) row["Expiration"],
                             Data = row["Data"] as string,
+                            SessionId = row["SessionId"] as string,
                         } 
                 );
         }

@@ -43,7 +43,7 @@ namespace Origam.Schema.MenuModel
 			get
             {
 				return ChildItems.OfType<Menu>().FirstOrDefault();
-			}
+            }
         }
 
 		#region ISchemaItemProvider Members

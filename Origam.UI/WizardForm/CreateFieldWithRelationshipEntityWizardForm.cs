@@ -100,7 +100,7 @@ namespace Origam.UI.WizardForm
             if (tableRelation.Items.Count == 0)
             {
                 if (this.Entity == null) return;
-                txtRelationName.Text = "Transaction " + this.Entity.Name;
+                txtRelationName.Text = this.Entity.Name;
                 foreach (AbstractSchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
                 {
                     tableRelation.Items.Add(abstractSchemaIttem);
@@ -112,7 +112,7 @@ namespace Origam.UI.WizardForm
             BaseEntityField.Items.Clear();
             RelatedEntityField.Items.Clear();
             if (this.Entity == null) return;
-            txtKeyName.Text = RelatedEntity.NodeText + " TransactionKey";
+            txtKeyName.Text = RelatedEntity.NodeText + "_RelationtionKey";
             foreach (AbstractSchemaItem filter in RelatedEntity.ChildItemsByType("DataEntityColumn"))
             {
                 RelatedEntityField.Items.Add(filter);

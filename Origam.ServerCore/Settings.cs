@@ -95,5 +95,13 @@ namespace Origam.ServerCore
             }
             return clients.ToArray();
         }
+
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>
+            {
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName),
+            };
+        }
     }
 }
