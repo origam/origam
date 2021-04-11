@@ -21,7 +21,7 @@ export class DateCellDriver implements IBodyCellDriver {
     const value = this.dataTable.getValue(rowIndex, this.dataIndex);
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     let momentValue = moment(value);
-    const formattedValue = momentValue.format(this.formatterPattern);
+    const formattedValue = momentValue.isValid() ? momentValue.format(this.formatterPattern) : "";
 
     return (
       <div
