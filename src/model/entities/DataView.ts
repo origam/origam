@@ -525,6 +525,7 @@ export class DataView implements IDataView {
     const menuId = yield selectors.column.getLinkMenuId(property, value);
     let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
     if (menuItem) {
+      menuItem = {...menuItem, parent: undefined, elements: []};
       menuItem = produce(menuItem, (draft: any) => {
         if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
           draft.attributes.type = "FormReferenceMenuItem";
