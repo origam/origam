@@ -7,13 +7,15 @@ import {fixColumnWidth} from "xmlInterpreters/screenXml";
 import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 
-function mergeToConfiguration(target: TableConfiguration, source: TableConfiguration) {
-  for(let srcColumn of source.columnConfigurations) {
-    const trgIndex = target.columnConfigurations.findIndex(item => item.propertyId === srcColumn.propertyId);
-    if(trgIndex > -1) {
-      target.columnConfigurations[trgIndex] = srcColumn;
-    }
-  }
+function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any) {
+  return properties.map(property => {
+        const configElement = tableConfigNode.elements
+            .find((element: any) => element.attributes?.propertyId === property.id)
+        return configElement
+            ? parseColumnConfigurationNode(configElement, property)
+            : new TableColumnConfiguration(property.id);
+      }
+  );
 }
 
 export function createConfigurationManager(configurationNodes: any, properties: IProperty[]) {
