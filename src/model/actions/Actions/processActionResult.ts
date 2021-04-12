@@ -82,8 +82,13 @@ export function processActionResult2(dep: {
   parentContext: any
 }) {
   return function* processActionResult2(actionResultList: any[]) {
-    
-    for (let actionResultItem of actionResultList) {
+    const indexedList = actionResultList.map((item, index) => [index, item]);
+    indexedList.sort((a: any, b: any) => {
+      if(a[1].type === IActionResultType.DestroyForm) return -1;
+      if(b[1].type === IActionResultType.DestroyForm) return 1;
+      return a[0] - b[0]
+    });
+    for (let actionResultItem of indexedList.map(item => item[1])) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
           const menuItem = getMainMenuItemById(dep.parentContext, actionResultItem.request.objectId);
