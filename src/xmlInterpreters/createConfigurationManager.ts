@@ -1,24 +1,23 @@
 import { IProperty } from "model/entities/types/IProperty";
-import { IColumnConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
-import { ConfigurationManager } from "model/entities/TablePanelView/configurationManager";
+import {  ConfigurationManager } from "model/entities/TablePanelView/configurationManager";
 import { findStopping } from "xmlInterpreters/xmlUtils";
 import {
-  parseAggregationType,
   tryParseAggregationType,
 } from "model/entities/types/AggregationType";
 import { fixColumnWidth } from "xmlInterpreters/screenXml";
 import { TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
 import { TableColumnConfiguration } from "model/entities/TablePanelView/tableColumnConfiguration";
 
-function mergeToConfiguration(target: TableConfiguration, source: TableConfiguration) {
-  for (let srcColumn of source.columnConfigurations) {
-    const trgIndex = target.columnConfigurations.findIndex(
-      (item) => item.propertyId === srcColumn.propertyId
-    );
-    if (trgIndex > -1) {
-      target.columnConfigurations[trgIndex] = srcColumn;
-    }
-  }
+
+function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any) {
+  return properties.map(property => {
+        const configElement = tableConfigNode.elements
+            .find((element: any) => element.attributes?.propertyId === property.id)
+        return configElement
+            ? parseColumnConfigurationNode(configElement, property)
+            : new TableColumnConfiguration(property.id);
+      }
+  );
 }
 
 export function createConfigurationManager(configurationNodes: any, properties: IProperty[]) {
@@ -29,30 +28,27 @@ export function createConfigurationManager(configurationNodes: any, properties: 
     throw new Error("Can not process more than one configuration node");
   }
 
-  const tableConfigurationNodes = findStopping(
-    configurationNodes[0],
-    (n) => n.name === "tableConfigurations"
-  )?.[0]?.elements;
-  if (!tableConfigurationNodes) {
-    return new ConfigurationManager([], defaultConfiguration);
+  const tableConfigurationNodes = findStopping(configurationNodes[0], (n) => n.name === "tableConfigurations")?.[0]?.elements;
+  if(!tableConfigurationNodes){
+    return new ConfigurationManager(
+      [], defaultConfiguration);
   }
-  const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) =>
-    TableConfiguration.create({
-      name: tableConfigNode.attributes.name,
-      id: tableConfigNode.attributes.id,
-      isActive: tableConfigNode.attributes.isActive === "true",
-      fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
-      columnConfigurations: tableConfigNode.elements
-        .map((columnConfigNode: any) => parseColumnConfigurationNode(columnConfigNode, properties))
-        .filter((columnConfiguration: IColumnConfiguration | undefined) => columnConfiguration),
-    })
+  const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) => {
+    return TableConfiguration.create(
+      {
+        name: tableConfigNode.attributes.name,
+        id: tableConfigNode.attributes.id,
+        isActive: tableConfigNode.attributes.isActive === "true",
+        fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
+        columnConfigurations: makeColumnConfigurations(properties, tableConfigNode),
+      }
+      )
+    }
   );
 
   const defaultTableConfiguration =
     tableConfigurations.find((tableConfig: TableConfiguration) => tableConfig.name === "") ??
     defaultConfiguration;
-
-  mergeToConfiguration(defaultConfiguration, defaultTableConfiguration)
 
   return new ConfigurationManager(
     tableConfigurations.filter(
@@ -62,11 +58,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   );
 }
 
-function parseColumnConfigurationNode(columnConfigNode: any, properties: IProperty[]) {
-  const property = properties.find((prop) => prop.id === columnConfigNode.attributes.propertyId);
-  if (!property) {
-    return undefined;
-  }
+function parseColumnConfigurationNode(columnConfigNode: any, property: IProperty) {
   const tableConfiguration = new TableColumnConfiguration(property.id);
   tableConfiguration.width = fixColumnWidth(parseInt(columnConfigNode.attributes.width));
 
