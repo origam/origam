@@ -30,22 +30,21 @@ export function createConfigurationManager(configurationNodes: any, properties: 
     return new ConfigurationManager(
       [], defaultConfiguration);
   }
-  const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) =>
-    TableConfiguration.create(
+  const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) => {
+    return TableConfiguration.create(
       {
         name: tableConfigNode.attributes.name,
         id: tableConfigNode.attributes.id,
         isActive: tableConfigNode.attributes.isActive === "true",
         fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
-        columnConfigurations: tableConfigNode.elements
-          .map((columnConfigNode: any) => parseColumnConfigurationNode(columnConfigNode, properties))
-          .filter((columnConfiguration: IColumnConfiguration | undefined) => columnConfiguration),
-      }));
+        columnConfigurations: makeColumnConfigurations(properties, tableConfigNode),
+      }
+      )
+    }
+  );
 
   const defaultTableConfiguration = tableConfigurations.find((tableConfig: TableConfiguration) => tableConfig.name === "")
           ?? defaultConfiguration;
-
-  mergeToConfiguration(defaultConfiguration, defaultTableConfiguration)
 
   return new ConfigurationManager(
     tableConfigurations
@@ -54,12 +53,8 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   );
 }
 
-function parseColumnConfigurationNode(columnConfigNode: any, properties: IProperty[]){
-  const property = properties.find((prop) => prop.id === columnConfigNode.attributes.propertyId);
-  if (!property) {
-    return undefined;
-  }
-  const tableConfiguration = new TableColumnConfiguration(property.id)
+function parseColumnConfigurationNode(columnConfigNode: any, property: IProperty) {
+  const tableConfiguration = new TableColumnConfiguration(property.id);
   tableConfiguration.width = fixColumnWidth(parseInt(columnConfigNode.attributes.width));
 
   if (columnConfigNode.attributes.isVisible === "false" || tableConfiguration.width < 0) {
