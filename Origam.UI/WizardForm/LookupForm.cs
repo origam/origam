@@ -1,5 +1,4 @@
-﻿using AeroWizard;
-using Origam.Schema.EntityModel;
+﻿using Origam.Schema.EntityModel;
 using System;
 using System.Windows.Forms;
 

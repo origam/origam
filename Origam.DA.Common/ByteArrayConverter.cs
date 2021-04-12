@@ -46,12 +46,12 @@ namespace Origam.DA
 			
 		public static bool SaveToDataSet (string fullFileName, DataRow dataRow, string columnName, bool compress)
 		{
-			dataRow[columnName] = GetByteArryFromFile(fullFileName, compress);
+			dataRow[columnName] = GetByteArrayFromFile(fullFileName, compress);
 			return true;
 		}
 
 
-		private static byte[] GetByteArryFromFile(string filePath, bool compress)
+		private static byte[] GetByteArrayFromFile(string filePath, bool compress)
 		{
 			FileStream fs = null;
 			try

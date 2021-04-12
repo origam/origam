@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -31,6 +32,7 @@ using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
+using Origam.ServerCore.Extensions;
 using Origam.ServerCore.IdentityServerGui.Home;
 using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
@@ -369,15 +371,16 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     // if the user cancels, send a result back into IdentityServer as if they 
                     // denied the consent (even if this client does not require consent).
                     // this will send back an access denied OIDC error response to the client.
-                    await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
+                    await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
 
                     // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                    if (await _clientStore.IsPkceClientAsync(context.ClientId))
+                    if (context.IsNativeClient())
                     {
-                        // if the client is PKCE then we assume it's native, so this change in how to
+                        // The client is native, so this change in how to
                         // return the response is for better UX for the end user.
-                        return View("Redirect", new RedirectViewModel { RedirectUrl = model.ReturnUrl });
+                        return this.LoadingPage("Redirect", model.ReturnUrl);
                     }
+
 
                     return Redirect(model.ReturnUrl);
                 }
@@ -398,15 +401,35 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     {
                         return View("EmailNotConfirmed");
                     }
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.BusinessPartnerId, user.UserName, clientId: context?.ClientId));
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
 
+                    // only set explicit expiration here if user chooses "remember me". 
+                    // otherwise we rely upon expiration configured in cookie middleware.
+                    AuthenticationProperties props = null;
+                    if (AccountOptions.AllowRememberLogin && model.RememberLogin)
+                    {
+                        props = new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
+                        };
+                    };
+
+                    // issue authentication cookie with subject ID and username
+                    var isuser = new IdentityServerUser(user.BusinessPartnerId)
+                    {
+                        DisplayName = user.UserName
+                    };
+
+                    await HttpContext.SignInAsync(isuser, props);
+                    
                     if (context != null)
                     {
-                        if (await _clientStore.IsPkceClientAsync(context.ClientId))
+                        if (context.IsNativeClient())
                         {
-                            // if the client is PKCE then we assume it's native, so this change in how to
+                            // The client is native, so this change in how to
                             // return the response is for better UX for the end user.
-                            return View("Redirect", new RedirectViewModel { RedirectUrl = model.ReturnUrl });
+                            return this.LoadingPage("Redirect", model.ReturnUrl);
                         }
 
                         // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
@@ -430,12 +453,12 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 }
                 else if (result.IsLockedOut)
                 {
-                    await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "user is lockedout", clientId:context?.ClientId));
+                    await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
                     ModelState.AddModelError(string.Empty, _localizer["UserLockedOut"]);
                 }
                 else
                 {
-                    await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
+                    await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
                     ModelState.AddModelError(string.Empty, _localizer["InvalidLogin"]);
                 }
                 if (result.RequiresTwoFactor)
@@ -555,7 +578,12 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 _sessionObjects.UIService.Logout();
                 
                 var subjectId = HttpContext.User.Identity.GetSubjectId();
-                await _persistedGrantStore.RemoveAllAsync(subjectId, vm.ClientName);
+                var filter = new PersistedGrantFilter
+                {
+                    SubjectId = subjectId,
+                    ClientId = vm.ClientName
+                };
+                await _persistedGrantStore.RemoveAllAsync(filter);
 
                 // raise the logout event
                 await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
@@ -622,9 +650,9 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 }).ToList();
 
             var allowLocal = true;
-            if (context?.ClientId != null)
+            if (context?.Client.ClientId != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(context.ClientId);
+                var client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
                 if (client != null)
                 {
                     allowLocal = client.EnableLocalLogin;

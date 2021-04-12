@@ -271,9 +271,6 @@
                         <Component Id="LIBGIT2SHARP.DLL" DiskId="1" Guid="d40f49c8-f2c9-4a21-92ee-2ae903cdc9e8">
                             <File Id="LIBGIT2SHARP" Name="LIBGIT2SHARP.DLL" Source="source\LIBGIT2SHARP.DLL" />
                         </Component>
-                        <Component Id="GIT2_6311E88.DLL" DiskId="1" Guid="4243d3ae-23f2-4c4e-b69e-873c8cc307f6">
-                            <File Id="GIT2_6311E88" Name="GIT2-6311E88.DLL" Source="source\GIT2-6311E88.DLL" />
-                        </Component>
                         <Component Id="EDIFACT2XML.DLL" Guid="6018bc7d-9913-4782-847a-94bef17c21b4" DiskId="1">
                             <File Id="EDIFACT2XML" Name="EDIFACT2XML.dll" Source="source\EDIFACT2XML.dll">
                             </File>
@@ -302,13 +299,13 @@
                         <Directory Id="lib" Name="lib">
                             <Directory Id="win32" Name="win32">
                                 <Directory Id="dir_x64" Name="x64">
-                                    <Component Id="GIT2_572E4D8.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
-                                        <File Id="GIT2_572E4D8.DLL_X64" Name="git2-572e4d8.dll" Source="source\lib\win32\x64\git2-572e4d8.dll" />
+                                    <Component Id="GIT2_106A5F2.DLL_X64" DiskId="1" Guid="952BFB96-FF27-4DBF-A56D-BAACD0A06CA9">
+                                        <File Id="GIT2_106A5F2.DLL_X64" Name="git2-106a5f2.dll" Source="source\lib\win32\x64\git2-106a5f2.dll" />
                                     </Component>
                                 </Directory>
                                 <Directory Id="dir_x86" Name="x86">
-                                    <Component Id="GIT2_572E4D8.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
-                                        <File Id="GIT2_572E4D8.DLL_X86" Name="git2-572e4d8.dll" Source="source\lib\win32\x86\git2-572e4d8.dll" />
+                                    <Component Id="GIT2_106A5F2.DLL_X86" DiskId="1" Guid="D138CE85-CBB7-4894-BAFF-FE7F6F768463">
+                                        <File Id="GIT2_106A5F2.DLL_X86" Name="git2-106a5f2.dll" Source="source\lib\win32\x86\git2-106a5f2.dll" />
                                     </Component>
                                 </Directory>
                             </Directory>
@@ -1630,8 +1627,8 @@
             <ComponentRef Id="ORIGAM.DLL" />
             <ComponentRef Id="ORIGAM.NETFX.DLL" />
             <ComponentRef Id="ORIGAM.GIT.DLL" />
-            <ComponentRef Id="GIT2_572E4D8.DLL_X86" />
-            <ComponentRef Id="GIT2_572E4D8.DLL_X64" />
+            <ComponentRef Id="GIT2_106A5F2.DLL_X86" />
+            <ComponentRef Id="GIT2_106A5F2.DLL_X64" />
             <ComponentRef Id="ORIGAM.GUI.DESIGNER.DLL" />
             <ComponentRef Id="ORIGAM.GUI.WIN.DLL" />
             <ComponentRef Id="ORIGAM.MAIL.DLL" />
@@ -2114,7 +2111,6 @@
             <ComponentRef Id="MORELINQ.DLL" />
             <ComponentRef Id="MORELINQ.DLL_1" />
             <ComponentRef Id="LIBGIT2SHARP.DLL" />
-            <ComponentRef Id="GIT2_6311E88.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />

@@ -42,7 +42,8 @@ namespace Origam.Schema.MenuModel
         {
 			get
             {
-				return ChildItems.OfType<Menu>().FirstOrDefault();
+				return ChildItemsByType(Menu.CategoryConst)
+				.Cast<Menu>().FirstOrDefault();
 			}
         }
 
