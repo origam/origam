@@ -20,7 +20,7 @@
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___b6f638f1-bb4c-493f-b9a6-8b345b81ca2b.txt"
       x:id="b6f638f1-bb4c-493f-b9a6-8b345b81ca2b"
       asi:name="00020_PG_Database_Field_OrigamIdentityGrant.SessionId"
-      scusa:platform="MsSql"
+      scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>
