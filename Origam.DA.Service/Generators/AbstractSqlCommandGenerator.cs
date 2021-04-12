@@ -3069,9 +3069,29 @@ namespace Origam.DA.Service
 
             if (agg2 != null)
             {
-                if (agg2.AggregationType != item.AggregationType)
+                // allow nested 
+                //   sum(sum()) / avg(avg()) /  min(min()) / max(max())
+                //   It will mean e.g. avg(table join second_table)
+                //   sum(count()) - will mean count(table join second_table)
+                //   count(count()) is not allowed
+                if (agg2.AggregationType != item.AggregationType
+                    && ! (agg2.AggregationType ==  AggregationType.Count 
+                          && item.AggregationType == AggregationType.Sum)
+                    )
                 {
-                    throw new ArgumentOutOfRangeException("AggregationType", agg2.AggregationType, "Nested aggregations must be of the same type. Path: " + agg2.Path);
+                    throw new ArgumentOutOfRangeException("AggregationType", 
+                        agg2.AggregationType, 
+                        "Nested aggregations must be of the same type. Path: " 
+                        + agg2.Path);
+                }
+                if (agg2.AggregationType == AggregationType.Count
+                    && item.AggregationType == AggregationType.Count)
+                {
+                    throw new ArgumentOutOfRangeException("AggregationType", 
+                        agg2.AggregationType, 
+                        "Count(Count()) nested aggregation is not allowed. " +
+                        "Use Sum(Count()) for a total nested count. Path: " + 
+                        agg2.Path);
                 }
 
                 // nested aggregated expression
