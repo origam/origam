@@ -51,7 +51,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   return new ConfigurationManager(
     tableConfigurations
       .filter((tableConfig: TableConfiguration) => tableConfig !== defaultTableConfiguration),
-      defaultConfiguration
+      defaultTableConfiguration
   );
 }
 
