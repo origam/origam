@@ -1381,6 +1381,11 @@ namespace Origam.DA
 
 		public static void CheckRowError(DataSet dataSet)
 		{
+			if (dataSet == null)
+			{
+				return;
+			}
+
 			foreach(DataTable table in dataSet.Tables)
 			{
 				foreach(DataRow row in table.Rows)
