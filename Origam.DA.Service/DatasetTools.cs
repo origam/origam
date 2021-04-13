@@ -1385,7 +1385,6 @@ namespace Origam.DA
 			{
 				return;
 			}
-
 			foreach(DataTable table in dataSet.Tables)
 			{
 				foreach(DataRow row in table.Rows)
