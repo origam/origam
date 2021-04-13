@@ -42,6 +42,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using MoreLinq;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
@@ -772,6 +774,55 @@ namespace Origam.ServerCore
                 throw new Exception(localizer["ErrorLoadingWorkQueueList"], ex);
             }
         }
+
+        public void ResetObjectConfig(ResetObjectConfigInput input)
+        {
+            var profileId = SecurityTools.CurrentUserProfile().Id;
+            
+            IPersistenceService persistence = 
+                ServiceManager.Services.GetService<IPersistenceService>();
+            var item = persistence.SchemaProvider.RetrieveInstance<FormReferenceMenuItem>(input.ObjectInstanceId);
+            item.Screen.ChildrenRecursive
+                .OfType<ControlSetItem>()
+                .Where(controlSetItem => controlSetItem.ControlItem.IsComplexType)
+                .Select(controlSetItem => controlSetItem.Id)
+                .ForEach(screenSectionId => ResetConfiguration(screenSectionId, profileId));
+        }
+
+        private void ResetConfiguration(Guid screenSectionId, Guid profileId)
+        {
+            var userConfig = OrigamPanelConfigDA.LoadConfigData(
+                screenSectionId, Guid.Empty, profileId);
+                    
+            object data = userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["SettingsData"];
+            if (!(data is string strData))
+            {
+                return;
+            }
+
+            var xDocument = new XmlDocument();
+            xDocument.LoadXml(strData);
+            var configurationNodes= xDocument
+                .GetAllNodes()
+                .FirstOrDefault(node =>
+                    node.Name == "tableConfigurations");
+
+            configurationNodes?.ChildNodes
+                .Cast<XmlNode>()
+                .Where(configNode => 
+                    configNode?.Attributes?["isActive"]?.Value == "true" ||
+                    configNode?.Attributes?["name"]?.Value == ""
+                )
+                .ToList()
+                .ForEach(nodeToRemove => configurationNodes.RemoveChild(nodeToRemove));
+
+            userConfig.Tables["OrigamFormPanelConfig"].Rows[0][
+                "SettingsData"] = xDocument.OuterXml;
+                    
+            OrigamPanelConfigDA.SaveUserConfig(
+                userConfig, screenSectionId, Guid.Empty, profileId);
+        }
+
         public void SaveObjectConfig(SaveObjectConfigInput input)
         {
             var profileId = SecurityTools.CurrentUserProfile().Id;
