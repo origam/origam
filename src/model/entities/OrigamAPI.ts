@@ -568,6 +568,14 @@ export class OrigamAPI implements IApi {
     });
   }
 
+  async resetObjectConfiguration(data: {
+    instanceId: string;
+  }): Promise<any>{
+    await this.axiosInstance.post(`/UIService/ResetObjectConfig`, {
+      ObjectInstanceId: data.instanceId,
+    });
+  }
+
   async saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/SaveSplitPanelConfig`, data)).data;
   }

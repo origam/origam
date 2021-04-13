@@ -23,6 +23,7 @@ import { getIconUrl } from "gui/getIconUrl";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/IMenuItemIcon";
+import {onResetColumnConfigClick} from "../../model/actions-ui/MainMenu/onResetColumnConfigClick";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -184,6 +185,18 @@ class CMainMenuCommandItem extends React.Component<{
             >
               {T("Open in New Tab", "open_in_new_tab")}
             </DropdownItem>
+            {props.node.attributes.type === "FormReferenceMenuItem" &&
+              <DropdownItem
+                onClick={(event: any) => {
+                  setDropped(false);
+                    onResetColumnConfigClick(this.workbench)({
+                      item: props.node
+                  })
+                }}
+              >
+                {T("Reset Column Configuration", "reset_column_configuration")}
+              </DropdownItem>
+            }
             {!this.favorites.isInAnyFavoriteFolder(this.menuId) && (
               <DropdownItem
                 onClick={(event: any) => {

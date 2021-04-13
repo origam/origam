@@ -32,7 +32,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
     return new ConfigurationManager(
       [], defaultConfiguration);
   }
-  const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) => {
+  const tableConfigurations: TableConfiguration[] = tableConfigurationNodes.map((tableConfigNode: any) => {
     return TableConfiguration.create(
       {
         name: tableConfigNode.attributes.name,
@@ -45,8 +45,13 @@ export function createConfigurationManager(configurationNodes: any, properties: 
     }
   );
 
-  const defaultTableConfiguration = tableConfigurations.find((tableConfig: TableConfiguration) => tableConfig.name === "")
+  const defaultTableConfiguration = tableConfigurations.find(tableConfig => tableConfig.name === "")
           ?? defaultConfiguration;
+
+   const noConfigIsActive = tableConfigurations.every(tableConfig => !tableConfig.isActive);
+   if(noConfigIsActive){
+     defaultTableConfiguration.isActive = true;
+   }
 
   return new ConfigurationManager(
     tableConfigurations
