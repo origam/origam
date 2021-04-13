@@ -1379,7 +1379,7 @@ namespace Origam.DA
 			return result;
 		}
 
-		public static void CheckRowError(DataSet dataSet)
+		public static void CheckRowErrorOfChangedRows(DataSet dataSet)
 		{
 			if (dataSet == null)
 			{
@@ -1389,7 +1389,10 @@ namespace Origam.DA
 			{
 				foreach(DataRow row in table.Rows)
 				{
-					CheckRowError(row);
+					if (row.RowState != DataRowState.Unchanged)
+					{
+						CheckRowError(row);
+					}
 				}
 			}
 		}

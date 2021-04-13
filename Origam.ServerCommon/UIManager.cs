@@ -170,7 +170,7 @@ namespace Origam.Server
                 // (primary keys + all the initial sort columns)
                 columns = ss.DataListLoadedColumns;
             }
-            DatasetTools.CheckRowError(ss.InitialData);
+            DatasetTools.CheckRowErrorOfChangedRows(ss.InitialData);
             UIResult result = new UIResult(ss.Id, DataTools.DatasetToHashtable(
                 ss.InitialData, columns, initialPageNumberOfRecords,
                 ss.CurrentRecordId, ss.DataListEntity, ss), ss.Variables);
