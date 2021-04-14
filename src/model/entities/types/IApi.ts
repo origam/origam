@@ -304,6 +304,10 @@ export interface IApi {
     defaultView: string;
   }): Promise<any>;
 
+  resetObjectConfiguration(data: {
+    instanceId: string;
+  }): Promise<any>;
+
   saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any>;
 
   workflowAbort(data: { sessionFormIdentifier: string }): Promise<any>;

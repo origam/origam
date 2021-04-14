@@ -1,5 +1,4 @@
 import {IProperty} from "model/entities/types/IProperty";
-import {IColumnConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 import {ConfigurationManager} from "model/entities/TablePanelView/configurationManager";
 import {findStopping} from "xmlInterpreters/xmlUtils";
 import {tryParseAggregationType} from "model/entities/types/AggregationType";
@@ -32,7 +31,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
     return new ConfigurationManager(
       [], defaultConfiguration);
   }
-  const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) => {
+  const tableConfigurations: TableConfiguration[] = tableConfigurationNodes.map((tableConfigNode: any) => {
     return TableConfiguration.create(
       {
         name: tableConfigNode.attributes.name,
@@ -45,13 +44,18 @@ export function createConfigurationManager(configurationNodes: any, properties: 
     }
   );
 
-  const defaultTableConfiguration = tableConfigurations.find((tableConfig: TableConfiguration) => tableConfig.name === "")
+  const defaultTableConfiguration = tableConfigurations.find(tableConfig => tableConfig.name === "")
           ?? defaultConfiguration;
+
+   const noConfigIsActive = tableConfigurations.every(tableConfig => !tableConfig.isActive);
+   if(noConfigIsActive){
+     defaultTableConfiguration.isActive = true;
+   }
 
   return new ConfigurationManager(
     tableConfigurations
       .filter((tableConfig: TableConfiguration) => tableConfig !== defaultTableConfiguration),
-      defaultConfiguration
+      defaultTableConfiguration
   );
 }
 
