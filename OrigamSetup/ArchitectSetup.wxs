@@ -1352,6 +1352,9 @@
                                         </Component>
                                         <Component Id="PROTOBUFNET.DLL_1" DiskId="1" Guid="c9bae7be-661c-458b-b9a2-d841688bb014">
                                             <File Id="PROTOBUFNET" Name="protobuf-net.dll" Source="server_source\bin\protobuf-net.dll" />
+                                        </Component>                                        
+                                        <Component Id="PROTOBUFNET_CORE.DLL_1" DiskId="1" Guid="06ae6fcd-4fea-4cfb-9964-a3b6ca52b8fc">
+                                            <File Id="PROTOBUFNET" Name="protobuf-net.Core.dll" Source="server_source\bin\protobuf-net.Core.dll" />
                                         </Component>
                                         <Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" DiskId="1" Guid="E42358D4-5F5F-4A15-B58B-94CD19CE2DEB">
                                             <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" Name="System.Threading.Tasks.Extensions.dll" Source="server_source\bin\System.Threading.Tasks.Extensions.dll" />
@@ -1684,6 +1687,7 @@
             <ComponentRef Id="PROTOBUFNET.DLL" />
             <ComponentRef Id="PROTOBUFNET_CORE.DLL" />
             <ComponentRef Id="PROTOBUFNET.DLL_1" />
+            <ComponentRef Id="PROTOBUFNET_CORE.DLL_1" />
             <ComponentRef Id="CSHARPFUNCTIONALEXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.DRAWING.COMMON.DLL" />
             <ComponentRef Id="CSHARPFUNCTIONALEXTENSIONS.DLL_1" />
