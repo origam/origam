@@ -269,6 +269,16 @@ namespace Origam.ServerCore.Controller
                 Ok(ServerCoreUIService.WorkQueueList(localizer)));
         }
         [HttpPost("[action]")]
+        public IActionResult ResetScreenColumnConfiguration(
+            [FromBody][Required]ResetScreenColumnConfigurationInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                sessionObjects.UIService.ResetScreenColumnConfiguration(input);
+                return Ok();
+            });
+        }        
+        [HttpPost("[action]")]
         public IActionResult SaveObjectConfig(
             [FromBody][Required]SaveObjectConfigInput input)
         {
