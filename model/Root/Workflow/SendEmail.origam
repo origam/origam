@@ -4,7 +4,7 @@
     asi:abstract="false"
     x:id="6e6d4e02-812a-4c95-afd1-eb2428802e2b"
     asi:name="SendEmail"
-    w:traceLevel="TraceClientAndArchitect"
+	w:traceLevel="None"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
