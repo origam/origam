@@ -67,6 +67,7 @@ import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemCli
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
 import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
 import {IAggregation} from "./types/IAggregation";
+import {getConfigurationManager} from "../selectors/TablePanelView/getConfigurationManager";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -743,20 +744,26 @@ export class DataView implements IDataView {
   attributes: any;
 
   async exportToExcel() {
-    const fields = getTablePanelView(this).allTableProperties.map((property) => {
-      return {
-        Caption: property.name,
-        FieldName: property.id,
-        LookupId: property.lookupId,
-        Format: property.formatterPattern,
-        PolymorphRules: property.controlPropertyId
-          ? {
-              ControlField: property.controlPropertyId,
-              Rules: this.getPolymorphicRules(property),
-            }
-          : undefined,
-      };
-    });
+    const visibleColumnIds = getConfigurationManager(this).activeTableConfiguration.columnConfigurations
+      .filter(columnConfig => columnConfig.isVisible)
+      .map(columnConfig => columnConfig.propertyId) ;
+    const fields = getTablePanelView(this)
+      .allTableProperties
+      .filter(property => visibleColumnIds.includes(property.id))
+      .map((property) => {
+        return {
+          Caption: property.name,
+          FieldName: property.id,
+          LookupId: property.lookupId,
+          Format: property.formatterPattern,
+          PolymorphRules: property.controlPropertyId
+            ? {
+                ControlField: property.controlPropertyId,
+                Rules: this.getPolymorphicRules(property),
+              }
+            : undefined,
+        };
+      });
     const excelMaxRowCount = 1048576;
     const api = getApi(this);
     if (isInfiniteScrollingActive(this)) {
