@@ -744,7 +744,7 @@ export class DataView implements IDataView {
   attributes: any;
 
   async exportToExcel() {
-    const visibleColumnIds = getConfigurationManager(this).activeTableConfiguration.columnConfigurations
+    const visibleColumnIds = getConfigurationManager(this) .activeTableConfiguration.columnConfigurations
       .filter(columnConfig => columnConfig.isVisible)
       .map(columnConfig => columnConfig.propertyId) ;
     const fields = getTablePanelView(this)
