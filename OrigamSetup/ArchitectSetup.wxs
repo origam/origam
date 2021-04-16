@@ -277,6 +277,9 @@
                         </Component>
                         <Component Id="PROTOBUFNET.DLL" DiskId="1" Guid="7fd63098-6c49-4bef-9d5f-10c09763f89c">
                             <File Id="PROTOBUFNET.DLL" Name="protobuf-net.dll" Source="source\protobuf-net.dll" />
+                        </Component>                        
+                        <Component Id="PROTOBUFNET_CORE.DLL" DiskId="1" Guid="6621aa4b-74e7-4016-b88a-a497284333d5">
+                            <File Id="PROTOBUFNET_CORE.DLL" Name="protobuf-net.Core.dll" Source="source\protobuf-net.Core.dll" />
                         </Component>
                         <Component Id="CSHARPFUNCTIONALEXTENSIONS.DLL" DiskId="1" Guid="a6c87c91-a684-42f4-99cc-c5f03347348f">
                             <File Id="CSHARPFUNCTIONALEXTENSIONS.DLL" Name="CSharpFunctionalExtensions.dll" Source="source\CSharpFunctionalExtensions.dll" />
@@ -1679,6 +1682,7 @@
             <ComponentRef Id="NPOI.OPENXMLFORMATS.DLL" />
             <ComponentRef Id="OFFICE.DLL" />
             <ComponentRef Id="PROTOBUFNET.DLL" />
+            <ComponentRef Id="PROTOBUFNET_CORE.DLL" />
             <ComponentRef Id="PROTOBUFNET.DLL_1" />
             <ComponentRef Id="CSHARPFUNCTIONALEXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.DRAWING.COMMON.DLL" />
