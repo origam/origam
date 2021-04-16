@@ -18,7 +18,7 @@ export class PeriodicLoader {
           INITIALIZED: {
             on: {
               START: {
-                target: "WAIT_PERIOD_REST",
+                target: "PERFORMING_LOAD",
               },
             },
           },
