@@ -775,7 +775,7 @@ namespace Origam.ServerCore
             }
         }
 
-        public void ResetObjectConfig(ResetObjectConfigInput input)
+        public void ResetScreenColumnConfiguration(ResetScreenColumnConfigurationInput input)
         {
             var profileId = SecurityTools.CurrentUserProfile().Id;
             

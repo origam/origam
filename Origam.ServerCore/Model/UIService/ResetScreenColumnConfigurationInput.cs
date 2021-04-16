@@ -2,7 +2,7 @@
 
 namespace Origam.ServerCore.Model.UIService
 {
-    public class ResetObjectConfigInput
+    public class ResetScreenColumnConfigurationInput
     {
         public Guid ObjectInstanceId { get; set; }
     }
