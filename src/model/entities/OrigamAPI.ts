@@ -568,10 +568,10 @@ export class OrigamAPI implements IApi {
     });
   }
 
-  async resetObjectConfiguration(data: {
+  async resetScreenColumnConfiguration(data: {
     instanceId: string;
   }): Promise<any>{
-    await this.axiosInstance.post(`/UIService/ResetObjectConfig`, {
+    await this.axiosInstance.post(`/UIService/ResetScreenColumnConfiguration`, {
       ObjectInstanceId: data.instanceId,
     });
   }

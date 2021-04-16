@@ -304,7 +304,7 @@ export interface IApi {
     defaultView: string;
   }): Promise<any>;
 
-  resetObjectConfiguration(data: {
+  resetScreenColumnConfiguration(data: {
     instanceId: string;
   }): Promise<any>;
 

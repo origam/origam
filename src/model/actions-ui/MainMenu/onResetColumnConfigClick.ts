@@ -11,7 +11,7 @@ export function onResetColumnConfigClick(ctx: any) {
                 return;
             }
             const api = getApi(ctx);
-            yield api.resetObjectConfiguration({instanceId : args.item.attributes.id});
+            yield api.resetScreenColumnConfiguration({instanceId : args.item.attributes.id});
         } catch (e) {
             yield* handleError(ctx)(e);
             throw e;
