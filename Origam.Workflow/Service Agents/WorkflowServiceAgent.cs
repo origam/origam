@@ -32,8 +32,9 @@ namespace Origam.Workflow
 	/// <summary>
 	/// Summary description for WorkflowServiceAgent.
 	/// </summary>
-	public class WorkflowServiceAgent : AbstractServiceAgent
+	public class WorkflowServiceAgent : AbstractServiceAgent, IAsyncAgent
 	{
+		public event EventHandler<AsyncReturnValues> AsyncCallFinished;
 		public WorkflowServiceAgent()
 		{
 		}
@@ -69,6 +70,7 @@ namespace Origam.Workflow
 		    engine.Name = string.IsNullOrEmpty(wf.Name) ?
 		        "WorkFlow" : wf.Name;
 			engine.Trace = this.Trace;
+			workflowUniqueId = engine.WorkflowUniqueId;
 
             // input parameters
             foreach (DictionaryEntry entry in parameters)
@@ -89,17 +91,11 @@ namespace Origam.Workflow
 				engine.InputContexts.Add(context.PrimaryKey, contextValue);
 			}
 
-			WorkflowHost host;
+			var host = GetHost();
 
-            if (this.WorkflowEngine != null)
-            {
-                host = (this.WorkflowEngine as WorkflowEngine).Host;
-            }
-            else
-            {
-                host = WorkflowHost.DefaultHost;
-            }
-
+			host.WorkflowFinished += OnHostOnWorkflowFinished;
+            host.WorkflowMessage += Host_WorkflowMessage;
+            
             host.ExecuteWorkflow(engine);
 
             if(engine.Exception != null)
@@ -109,10 +105,49 @@ namespace Origam.Workflow
 
 			return engine.ReturnValue;
 		}
+
+		private WorkflowHost GetHost()
+		{
+			return WorkflowEngine != null 
+				? (WorkflowEngine as WorkflowEngine).Host 
+				: WorkflowHost.DefaultHost;
+		}
+
+		private void OnHostOnWorkflowFinished(object sender, WorkflowHostEventArgs e)
+		{
+			if (e.Engine.WorkflowUniqueId.Equals(workflowUniqueId))
+			{
+				AsyncCallFinished?.Invoke(null, new AsyncReturnValues{Result = e.Engine.ReturnValue});
+			}
+		}
+
+		private void Host_WorkflowMessage(object sender, WorkflowHostMessageEventArgs e)
+		{
+			if(e.Engine.WorkflowUniqueId.Equals(workflowUniqueId))
+			{
+				if(e.Exception != null)
+				{
+					UnsubscribeEvents();
+					AsyncCallFinished?.Invoke(
+						null, 
+						new AsyncReturnValues{Exception = e.Exception});
+				}
+			}
+		}
+
+		private void UnsubscribeEvents()
+		{
+			var host = GetHost();
+			host.WorkflowFinished -= OnHostOnWorkflowFinished;
+			host.WorkflowMessage -= Host_WorkflowMessage;
+		}
+
 		#endregion
 
 		#region IServiceAgent Members
 		private object _result;
+		private Guid workflowUniqueId;
+
 		public override object Result
 		{
 			get

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 
 using Origam.Schema;
@@ -33,16 +34,66 @@ namespace Origam.Workflow.Tasks
 	public class ServiceMethodCallEngineTask : AbstractWorkflowEngineTask
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
+		private IServiceAgent serviceAgent;
+		private IServiceAgent ServiceAgent
+		{
+			get
+			{
+				if (serviceAgent == null)
+				{
+					ServiceMethodCallTask task = Step as ServiceMethodCallTask;
+					ServiceAgentFactory serviceAgentFactory = new ServiceAgentFactory();
+					serviceAgent = serviceAgentFactory.GetAgent(task.Service.Name,
+						this.Engine.RuleEngine, this.Engine);
+				}
+
+				return serviceAgent;
+			}
+		}
+		
 		public ServiceMethodCallEngineTask() : base()
 		{
 		}
 
+		public override void Execute()
+		{
+			Exception exception = null;
+
+			if (ServiceAgent is IAsyncAgent asyncAgent)
+			{
+				asyncAgent.AsyncCallFinished += OnAsyncAgentOnAsyncCallFinished;
+			}
+		
+			try
+			{
+				MeasuredExecution();
+			}
+			catch(Exception ex)
+			{
+				exception = ex;
+			}
+
+			if (!(ServiceAgent is IAsyncAgent))
+			{
+				OnFinished(new WorkflowEngineTaskEventArgs(exception));
+			}
+		}
+		private void OnAsyncAgentOnAsyncCallFinished(object sender, AsyncReturnValues args)
+		{
+			if (ServiceAgent is IAsyncAgent asyncAgent)
+			{
+				asyncAgent.AsyncCallFinished -= OnAsyncAgentOnAsyncCallFinished;
+			}
+			Result = args.Result;
+			OnFinished(new WorkflowEngineTaskEventArgs(args.Exception));
+		}
+
 		protected override void OnExecute()
 		{
-			ServiceMethodCallTask task = this.Step as ServiceMethodCallTask;
-
-			ServiceAgentFactory serviceAgentFactory = new ServiceAgentFactory();
-			IServiceAgent agent = serviceAgentFactory.GetAgent(task.Service.Name, this.Engine.RuleEngine, this.Engine);
+			ServiceMethodCallTask task = Step as ServiceMethodCallTask;
+			IServiceAgent agent = ServiceAgent;
 			
             agent.Trace = Engine.IsTrace(task);
 			agent.TraceStepName = task.Path;
@@ -157,6 +208,5 @@ namespace Origam.Workflow.Tasks
 
 			this.Result = agent.Result;
 		}
-
 	}
 }
