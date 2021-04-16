@@ -1,12 +1,13 @@
 import {computed, observable, action, reaction, IReactionDisposer, flow, comparer} from "mobx";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
-import { IOrderByDirection, IOrderingConfiguration } from "./types/IOrderingConfiguration";
+import {IOrderByDirection, IOrdering, IOrderingConfiguration} from "./types/IOrderingConfiguration";
 import { IRowsContainer } from "./types/IRowsContainer";
 import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
 import {getDataView} from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import _ from "lodash";
 import { fixRowIdentifier } from "utils/dataRow";
+import {IDataView} from "./types/IDataView";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
@@ -64,7 +65,7 @@ export class ListRowContainer implements IRowsContainer {
     const dataTable = getDataTable(dataView);
 
     const orderingComboProps = this.orderingConfiguration.userOrderings
-      .map((term) => getDataViewPropertyById(this.orderingConfiguration, term.columnId)!)
+      .map(ordering => this.getOrderingProperty(dataView, ordering))
       .filter((prop) => prop.column === "ComboBox");
 
     const filterComboProps = this.filterConfiguration.activeFilters
@@ -79,6 +80,14 @@ export class ListRowContainer implements IRowsContainer {
         );
       })
     );
+  }
+
+  getOrderingProperty(dataView: IDataView, ordering: IOrdering) {
+    const property = getDataViewPropertyById(dataView, ordering.columnId)
+    if (!property) {
+      throw new Error(`Panel ${dataView.modelId} has default sort set to column ${ordering.columnId}. This column does not exist in the panel. Cannot set default sort.`);
+    }
+    return property;
   }
 
   updateSortAndFilterDebounced = _.debounce(this.updateSortAndFilter, 10);
