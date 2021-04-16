@@ -65,7 +65,7 @@ export class MainMenuState implements IMainMenuState {
   refMap: Map<string, RefObject<HTMLElement>> = new Map();
 
   @observable
-  private _hightLightedItemId: string | undefined;
+  private _highLightedItemId: string | undefined;
   
   closeAll(){
     this.folderStateMap.clear();
@@ -92,12 +92,12 @@ export class MainMenuState implements IMainMenuState {
     this.refMap.get(id)?.current?.scrollIntoView();
   }
 
-  public get hightLightedItemId() {
-    return this._hightLightedItemId;
+  public get highLightedItemId() {
+    return this._highLightedItemId;
   }
 
   highlightItem(itemId: string){
-    this._hightLightedItemId = itemId;
-    setTimeout(() => this._hightLightedItemId = undefined, 3000)
+    this._highLightedItemId = itemId;
+    setTimeout(() => this._highLightedItemId = undefined, 3000)
   }
 }

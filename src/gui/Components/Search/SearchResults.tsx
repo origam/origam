@@ -4,6 +4,7 @@ import { ISearchResult } from "model/entities/types/ISearchResult";
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
+import {Icon} from "../Icon/Icon";
 
 export class SearchResults extends React.Component<{
   groups: ISearchResultGroup[];
@@ -62,8 +63,13 @@ function SearchResultItem(props: { result: ISearchResult }) {
   return (
     <div className={S.resultItem} 
         onClick={()=> props.result.onClick()}>
-      <div className={S.resultItemName}>{props.result.label}</div>
-      <div className={S.resultItemDescription}>{props.result.description}</div>
+      <Icon className={S.icon} src={props.result.iconUrl}/>
+      <div className={S.textContainer}>
+        <div className={S.resultItemName}>{props.result.label}</div>
+        {props.result.description &&
+          <div className={S.resultItemDescription}>{props.result.description}</div>
+        }
+      </div>
     </div>
   );
 }

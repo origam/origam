@@ -4,8 +4,7 @@
   padding: 0 1.6667em;
   padding-bottom: 10px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   white-space: nowrap;
   flex-shrink: 0;
   cursor: pointer;
@@ -14,6 +13,32 @@
   color: $textColorNoHover;
   background-color: #f7f6fa;
   transition: all 300ms linear;
+  @include hoverItemAnimation;
+
+  &:not(:global(.isActive)):hover {
+    color: $textColorHover;
+    svg:global(.icon) {
+      stroke: #0d0d0d;
+      stroke-width: 1.5;
+    }
+  }
+
+  svg:global(.icon) {
+    @include hoverItemAnimation;
+  }
+}
+
+.icon {
+  width: 1.6667em;
+  height: 1.6667em;
+  margin: 0 1em 0 0;
+  flex-shrink: 0;
+}
+
+.textContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .resultItem:hover {
