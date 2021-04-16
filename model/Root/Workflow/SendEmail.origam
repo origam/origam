@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.0" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.0" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:awb="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowBlock/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="6e6d4e02-812a-4c95-afd1-eb2428802e2b"
     asi:name="SendEmail"
-    w:traceLevel="None"
+	w:traceLevel="None"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -92,6 +92,20 @@
       x:id="40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
       cs:isReturnValue="false"
       asi:name="attachmentName" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
+      cs:isReturnValue="false"
+      asi:name="recipientCCEmail" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="c949513d-ff5f-4def-98bf-f0a96332d30d"
+      cs:isReturnValue="false"
+      asi:name="recipientBCCEmail" />
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="8749b173-a49e-4b27-a4c4-5d85154ec8e0"
@@ -214,6 +228,20 @@
           x:id="f534fd4e-8e1e-4842-b2fc-c000b0823fd7"
           asi:name="attachment"
           cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientCCEmail/77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
+          x:id="77dd05ac-c631-4265-b0a5-ac7ae2df8f38"
+          asi:name="recipientCCEmail"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientBCCEmail/c949513d-ff5f-4def-98bf-f0a96332d30d"
+          x:id="1fab4726-d91b-40e1-8d7e-9d757b5237ed"
+          asi:name="recipientBCCEmail"
+          cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
@@ -301,11 +329,6 @@
           x:id="3b6bd81b-c368-4769-96d0-110f79b5b07d"
           asi:name="Parameters"
           smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Root/DataConstant/_guids/_guid_empty.origam#_guid_empty/3d973b7e-7594-4e7d-999a-a6356776a028"
-            x:id="b6b7fa2c-2481-4458-a3bc-13ede3c74adc"
-            asi:name="recordId" />
           <cr:WorkflowContextReference
             asi:abstract="false"
             cr:castToDataType="String"
@@ -320,6 +343,11 @@
             x:id="647acbba-9421-4d02-8600-30a9fad86fc6"
             asi:name="attachment"
             cr:xPath="/" />
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_guids/_guid_empty.origam#_guid_empty/3d973b7e-7594-4e7d-999a-a6356776a028"
+            x:id="b6b7fa2c-2481-4458-a3bc-13ede3c74adc"
+            asi:name="recordId" />
         </smcp:ServiceMethodCallParameter>
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
