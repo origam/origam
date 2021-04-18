@@ -6,11 +6,9 @@ import { crs_fieldBlur_ActionClick } from "model/actions/actionSync";
 export function onFieldBlur(ctx: any) {
   return flow(function* onFieldBlur(event: any) {
     try {
-      yield* crs_fieldBlur_ActionClick.runGenerator(function*() {
-        console.log("EDITOR BLUR:", ctx);
+      yield* crs_fieldBlur_ActionClick.runGenerator(function* () {
         yield* flushCurrentRowData(ctx)();
-        console.log("BLUR EVENT HANDLER FINISHED");
-      })
+      });
     } catch (e) {
       yield* handleError(ctx)(e);
       throw e;
