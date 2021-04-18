@@ -30,7 +30,7 @@ export class OpenedScreens implements IOpenedScreens {
 
   @action.bound activateItem(menuItemId: string, order: number) {
     this.items.forEach(item => item.setActive(false));
-    const item = this.items.find(item => item.menuItemId === menuItemId && item.order === order);
+    let item = this.items.find(item => item.menuItemId === menuItemId && item.order === order);
     if (item) {
       item.setActive(true);
       item.stackPosition = this.maxStackPosition + 1;
@@ -63,16 +63,12 @@ export class OpenedScreens implements IOpenedScreens {
     return items.slice(-1)[0];
   }
 
-  findClosestItem(menuItemId: string, order: number): IOpenedScreen | undefined {
-    let idx = this.items.findIndex(item => item.menuItemId === menuItemId && item.order === order && !item.dialogInfo);
-    if (idx === -1 || this.items.length === 1) {
-      return undefined;
+  findTopmostItemExcept(menuItemId: string, order: number): IOpenedScreen | undefined {
+    const itemsSortedByStackPosition = [...this.items].sort((a, b) => b.stackPosition - a.stackPosition);
+    let idx = itemsSortedByStackPosition.findIndex(item => item.menuItemId === menuItemId && item.order === order );
+    if(idx > -1) {
+      itemsSortedByStackPosition.splice(idx, 1);
     }
-    if (idx === 0) {
-      idx = 1;
-    } else {
-      idx--;
-    }
-    return this.items[idx];
+    return itemsSortedByStackPosition[0];
   }
 }

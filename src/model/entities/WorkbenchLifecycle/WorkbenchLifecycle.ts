@@ -290,7 +290,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     const screenToActivate = parentScreen && !parentScreen.isClosed
       ? parentScreen
-      : openedScreens.findClosestItem(openedScreen.menuItemId, openedScreen.order);
+      : openedScreens.findTopmostItemExcept(openedScreen.menuItemId, openedScreen.order);
 
     openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     if (openedScreen.dialogInfo) {
