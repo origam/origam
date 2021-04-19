@@ -46,9 +46,9 @@ namespace Origam.Gui
 			}
 			else
 			{
-				return ShouldRender(action.Features, action.Roles) 
-					&& (!action.ScreenIds.Any()|| action.ScreenIds.Contains(formId))
-					&& (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId));
+				return (!action.ScreenIds.Any()|| action.ScreenIds.Contains(formId)) &&
+				       (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId)) && 
+				       ShouldRender(action.Features, action.Roles) ;
 			}
 		}
 
