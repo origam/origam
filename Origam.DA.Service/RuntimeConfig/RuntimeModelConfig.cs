@@ -26,7 +26,8 @@ namespace Origam.DA.Service
         {
             if (!File.Exists(pathToConfigFile))
             {
-                throw new Exception($"Config file does not exist: {pathToConfigFile}");
+                configItems = new List<ConfigItem>();
+                return;
             }
             try
             {

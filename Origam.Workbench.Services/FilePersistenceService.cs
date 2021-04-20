@@ -101,7 +101,7 @@ namespace Origam.Workbench.Services
                 trackerLoaderFactory: trackerLoaderFactory,
                 origamFileManager: origamFileManager,
                 checkRules: checkRules,
-                runtimeModelConfig: RuntimeModelConfigFactory.Create(pathToRuntimeModelConfig));
+                runtimeModelConfig: new RuntimeModelConfig(pathToRuntimeModelConfig));
             
             FileEventQueue.ReloadNeeded += OnReloadNeeded;
             SchemaListProvider = schemaProvider;
