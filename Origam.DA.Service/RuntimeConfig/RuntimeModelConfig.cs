@@ -66,10 +66,22 @@ namespace Origam.DA.Service
                     $" \"{configItem.PropertyName}\" so it's value cannot be set " +
                     $"as requested in the runtime configuration file: \"{pathToConfigFile}\"");
             }
-            
-            object value = InstanceTools.GetCorrectlyTypedValue(
-                memberAttributeInfo.MemberInfo, configItem.PropertyValue);
-            Reflector.SetValue(memberAttributeInfo.MemberInfo, instance, value);
+
+            try
+            {
+                object value = InstanceTools.GetCorrectlyTypedValue(
+                    memberAttributeInfo.MemberInfo, configItem.PropertyValue);
+                Reflector.SetValue(memberAttributeInfo.MemberInfo, instance,
+                    value);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    $"An error occured when trying to set runtime config " +
+                    $"value \"{configItem.PropertyValue}\" of property " +
+                    $"\"{configItem.PropertyName}\" on object id: \"{instance.Id}\"." +
+                    $" Configuration file: \"{pathToConfigFile}\"\n", ex);
+            }
         }
     }
 
