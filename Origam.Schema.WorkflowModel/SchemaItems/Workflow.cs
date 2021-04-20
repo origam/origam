@@ -37,7 +37,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Sequential Workflow", "sequential-workflow.png")]
     [HelpTopic("Sequential+Workflows")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.0.1")]
 	public class Workflow : AbstractSchemaItem, IWorkflow
 	{
 		public const string CategoryConst = "Workflow";
@@ -109,12 +109,12 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[DefaultValue(WorkflowStepTraceLevel.None)]
+		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
 		[EntityColumn("I01")] 
-		[RuntimeConfigurable ("traceLevel")]
+		[RuntimeConfigurable ("trace")]
         [DisplayName("Trace Level")]
-		public WorkflowStepTraceLevel TraceLevel { get; set; } = WorkflowStepTraceLevel.None;
+		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
 		[Category("Tracing")]
    
