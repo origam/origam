@@ -51,13 +51,26 @@ namespace Origam.DA.Service
             }
 
             ConfigItem configItem = configItems[instance.Id];
-            var memberAttributeInfo = Reflector
-                .FindMembers(instance.GetType(), 
-                    new[]{typeof(XmlAttributeAttribute), typeof(RuntimeConfigurableAttribute)})
+            
+            var xmlMemberAttributeInfo = Reflector
+                .FindMembers(instance.GetType(), typeof(XmlAttributeAttribute))
+                .Cast<MemberAttributeInfo>()
                 .FirstOrDefault(memberInfo => 
-                    (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName == configItem.PropertyName || 
+                    (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName == configItem.PropertyName);
+#if !ORIGAM_CLIENT
+            if (xmlMemberAttributeInfo != null)
+            {
+                return;
+            }
+#endif
+            var runtimeConfigMemberAttributeInfo = Reflector
+                .FindMembers(instance.GetType(), typeof(RuntimeConfigurableAttribute))
+                .Cast<MemberAttributeInfo>()
+                .FirstOrDefault(memberInfo => 
                     (memberInfo.Attribute as RuntimeConfigurableAttribute)?.Name == configItem.PropertyName);
 
+            var memberAttributeInfo = runtimeConfigMemberAttributeInfo ?? xmlMemberAttributeInfo;
+            
             if (memberAttributeInfo == null)
             {
                 throw new Exception(
