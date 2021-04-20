@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Xml;
 using Origam.DA.ObjectPersistence;
 
@@ -6,8 +7,14 @@ namespace Origam.DA.Service
 {
     static class InstanceTools
     {
-        public static object GetCorrectlyTypedValue(Type memberType, object value)
+        public static object GetCorrectlyTypedValue(MemberInfo memberInfo, object value)
         {
+            Type memberType;
+            if (memberInfo is PropertyInfo)
+                memberType = (memberInfo as PropertyInfo).PropertyType;
+            else
+                memberType = (memberInfo as FieldInfo).FieldType;
+            
             object correctlyTypedValue;
             // If member is enum, we have to convert
             if (memberType.IsEnum )

@@ -269,12 +269,7 @@ namespace Origam.DA.Service
         protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi,
             object value, IPersistenceProvider provider)
         {
-            Type memberType;
-            if (mi.MemberInfo is PropertyInfo)
-                memberType = (mi.MemberInfo as PropertyInfo).PropertyType;
-            else
-                memberType = (mi.MemberInfo as FieldInfo).FieldType;
-            object correctlyTypedValue =  InstanceTools.GetCorrectlyTypedValue(memberType, value);
+            object correctlyTypedValue =  InstanceTools.GetCorrectlyTypedValue(mi.MemberInfo, value);
             if ( correctlyTypedValue is string strValue)
             {
                 correctlyTypedValue = provider.LocalizationCache

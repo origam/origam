@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
 using Newtonsoft.Json.Linq;
 using Origam.DA.ObjectPersistence;
 
@@ -49,22 +51,25 @@ namespace Origam.DA.Service
             }
 
             ConfigItem configItem = configItems[instance.Id];
+            
+            var memberAttributeInfo = Reflector
+                .FindMembers(instance.GetType(), typeof(XmlAttributeAttribute))
+                .Cast<MemberAttributeInfo>()
+                .FirstOrDefault(memberInfo => 
+                    (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName == configItem.PropertyName);
 
-            PropertyInfo propertyInfo = instance.GetType()
-                .GetProperties()
-                .FirstOrDefault( property =>  property.Name == configItem.PropertyName);
-            if (propertyInfo == null)
+            if (memberAttributeInfo == null)
             {
                 throw new Exception(
                     $"$Error processing runtime configuration. Object with" +
-                    $" id \"{instance.Id}\" does not have the property named" +
-                    $" \"{configItem.PropertyName}\" so its value cannot be set " +
+                    $" id \"{instance.Id}\" does not have the attribute named" +
+                    $" \"{configItem.PropertyName}\" so it's value cannot be set " +
                     $"as requested in the runtime configuration file: \"{pathToConfigFile}\"");
             }
             
-            object value = InstanceTools.GetCorrectlyTypedValue(propertyInfo.PropertyType,
-                configItem.PropertyValue);
-            Reflector.SetValue(propertyInfo, instance, value);
+            object value = InstanceTools.GetCorrectlyTypedValue(
+                memberAttributeInfo.MemberInfo, configItem.PropertyValue);
+            Reflector.SetValue(memberAttributeInfo.MemberInfo, instance, value);
         }
     }
 
