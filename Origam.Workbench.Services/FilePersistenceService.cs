@@ -42,19 +42,22 @@ namespace Origam.Workbench.Services
         private readonly FilePersistenceProvider schemaProvider;
         private readonly IMetaModelUpgradeService metaModelUpgradeService;
         private readonly IList<string> defaultFolders;
-        
+        private readonly string pathToRuntimeModelConfig;
+
         public FileEventQueue FileEventQueue { get; }
         public IPersistenceProvider SchemaProvider => schemaProvider;
         public IPersistenceProvider SchemaListProvider { get; }
         
         public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
-        public FilePersistenceService(IMetaModelUpgradeService metaModelUpgradeService, IList<string> defaultFolders,
+        public FilePersistenceService(IMetaModelUpgradeService metaModelUpgradeService, 
+            IList<string> defaultFolders, string pathToRuntimeModelConfig,
             string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
             bool checkRules = true, bool tryUpgrade = false)
         {
             this.metaModelUpgradeService = metaModelUpgradeService;
             this.defaultFolders = defaultFolders;
+            this.pathToRuntimeModelConfig = pathToRuntimeModelConfig;
             var topDirectory = GetTopDirectory(basePath);
             topDirectory.Create();
             var pathFactory = new OrigamPathFactory(topDirectory);
@@ -97,7 +100,8 @@ namespace Origam.Workbench.Services
                 origamFileFactory: origamFileFactory,
                 trackerLoaderFactory: trackerLoaderFactory,
                 origamFileManager: origamFileManager,
-                checkRules: checkRules);
+                checkRules: checkRules,
+                runtimeModelConfig: RuntimeModelConfigFactory.Create(pathToRuntimeModelConfig));
             
             FileEventQueue.ReloadNeeded += OnReloadNeeded;
             SchemaListProvider = schemaProvider;
@@ -212,7 +216,8 @@ namespace Origam.Workbench.Services
 
         public object Clone()
         {
-            return new FilePersistenceService(metaModelUpgradeService, defaultFolders, tryUpgrade: false);
+            return new FilePersistenceService(metaModelUpgradeService, defaultFolders,
+                tryUpgrade: false, pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 
         public void MergeSchema(System.Data.DataSet schema, Key activePackage)

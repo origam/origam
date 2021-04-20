@@ -51,6 +51,7 @@ namespace Origam.DA.Service
         private readonly ILocalizationCache localizationCache;
         private readonly TrackerLoaderFactory trackerLoaderFactory;
         private readonly OrigamFileManager origamFileManager;
+        private readonly IRuntimeModelConfig runtimeModelConfig;
 
         public override bool InTransaction => persistor.IsInTransaction;
         public override ILocalizationCache LocalizationCache => localizationCache;
@@ -65,10 +66,11 @@ namespace Origam.DA.Service
             FileEventQueue fileEventQueue,
             TrackerLoaderFactory trackerLoaderFactory, OrigamFileFactory origamFileFactory,
             FilePersistenceIndex index, OrigamFileManager origamFileManager,
-            bool checkRules)
+            bool checkRules, IRuntimeModelConfig runtimeModelConfig)
         {
             CheckRules = checkRules;
             this.origamFileManager = origamFileManager;
+            this.runtimeModelConfig = runtimeModelConfig;
             this.trackerLoaderFactory = trackerLoaderFactory;
             localizationCache = new LocalizationCache();
             TopDirectory = topDirectory;
@@ -143,6 +145,8 @@ namespace Origam.DA.Service
                 // but we could not find it...
                 throw new Exception("PersistedObjectInfo was found but no instance was returned.");
             }
+
+            runtimeModelConfig.SetConfigurationValues(retrievedInstance);
             return retrievedInstance;
         }
 

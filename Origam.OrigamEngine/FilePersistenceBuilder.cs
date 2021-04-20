@@ -70,12 +70,15 @@ namespace Origam.OrigamEngine
 #else
             bool tryUpgrade = false;
 #endif
+            string pathToRuntimeModelConfig = ConfigurationManager
+                .GetActiveConfiguration().PathToRuntimeModelConfig;
             return new FilePersistenceService(
                 metaModelUpgradeService: metaModelUpgradeService,
                 defaultFolders: defaultFolders,
                 watchFileChanges: watchFileChanges,
                 checkRules: checkRules,useBinFile: useBinFile,
-                tryUpgrade: tryUpgrade);
+                tryUpgrade: tryUpgrade,
+                pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 
         public FilePersistenceService CreateNoBinFilePersistenceService()
@@ -86,12 +89,16 @@ namespace Origam.OrigamEngine
                 CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 
+            string pathToRuntimeModelConfig = ConfigurationManager
+                .GetActiveConfiguration().PathToRuntimeModelConfig;
+            
             return new FilePersistenceService(
                 new NullMetaModelUpgradeService(), 
                 defaultFolders: defaultFolders,
                 watchFileChanges: false,
                 useBinFile: false,
-                tryUpgrade: false);
+                tryUpgrade: false,
+                pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 
         public static void Clear()
