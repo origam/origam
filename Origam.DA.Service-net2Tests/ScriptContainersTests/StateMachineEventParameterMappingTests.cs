@@ -12,7 +12,7 @@ namespace Origam.DA.ServiceTests.ScriptContainersTests
         public void ShouldRenameTypeProperty()
         {
             XFileData xFileData = LoadFile("BusinessPartner.origam");
-            var modelUpGrader = new MetaModelUpgrader(new NullFileWriter());
+            var modelUpGrader = new MetaModelUpGrader(new NullFileWriter());
             modelUpGrader.TryUpgrade(xFileData);
         }
     }

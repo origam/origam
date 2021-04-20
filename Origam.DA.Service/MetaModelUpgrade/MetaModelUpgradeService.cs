@@ -69,7 +69,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
     public class MetaModelUpgradeService: IMetaModelUpgradeService
     {
-        private MetaModelUpgrader metaModelUpgrader;
+        private MetaModelUpGrader _metaModelUpGrader;
         public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
         public event EventHandler UpgradeStarted;
         public event EventHandler UpgradeFinished;
@@ -78,7 +78,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData)
         {
-            metaModelUpgrader = new MetaModelUpgrader();
+            _metaModelUpGrader = new MetaModelUpGrader();
 
             filesProcessed = 0;
             UpgradeStarted?.Invoke(null, EventArgs.Empty);
@@ -114,7 +114,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             bool wasUpgraded;
             try
             {
-                wasUpgraded = metaModelUpgrader.TryUpgrade(xFileData);
+                wasUpgraded = _metaModelUpGrader.TryUpgrade(xFileData);
             }
             catch (Exception ex)
             {

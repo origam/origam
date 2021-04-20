@@ -36,25 +36,25 @@ using Origam.Schema;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
-    public class MetaModelUpgrader
+    public class MetaModelUpGrader
     {
         private readonly ScriptContainerLocator scriptLocator;
         private readonly IFileWriter fileWriter;
 
         private readonly Version firstVersion = new Version("6.0.0");
-        public MetaModelUpgrader(Assembly scriptAssembly, IFileWriter fileWriter)
+        public MetaModelUpGrader(Assembly scriptAssembly, IFileWriter fileWriter)
         {
             scriptLocator = new ScriptContainerLocator(scriptAssembly);
             this.fileWriter = fileWriter;
         }
 
-        public MetaModelUpgrader(IFileWriter fileWriter)
+        public MetaModelUpGrader(IFileWriter fileWriter)
         {
             this.fileWriter = fileWriter;
             scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
 
-        public MetaModelUpgrader()
+        public MetaModelUpGrader()
         {
             fileWriter = new FileWriter();
             scriptLocator = new ScriptContainerLocator(GetType().Assembly);
