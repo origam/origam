@@ -302,15 +302,12 @@ function getBackGroundColor() {
   const selectedColumnId = tableColumnIds()[drawingColumnIndex()];
   const selectedRowId = getSelectedRowId(tablePanelView());
 
-  const isCellCursor = currentProperty().id === selectedColumnId && recordId() === selectedRowId;
   const isRowCursor = recordId() === selectedRowId;
 
   const backgroundColor = getRowStateRowBgColor(tablePanelView(), recordId());
 
   if (isColumnOrderChangeSource) {
     return "#eeeeff";
-  } else if (isCellCursor) {
-    return "#EDF2FF";
   } else if (isRowCursor) {
     return backgroundColor ? shadeHexColor(backgroundColor, -0.1)! : "#EDF2FF";
   } else {
