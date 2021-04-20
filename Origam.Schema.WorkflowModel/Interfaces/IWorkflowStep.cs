@@ -43,9 +43,9 @@ namespace Origam.Schema.WorkflowModel
 
 	public enum Trace
     {
+        InheritFromParent,
         Yes,
-        No,
-        InheritFromParent
+        No
     }
         
     /// <summary>
