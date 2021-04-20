@@ -319,6 +319,7 @@ namespace Origam.DA.Service
         public override void Persist(IPersistent obj)
         {
             persistor.Persist(obj, CheckRules);
+            runtimeModelConfig.UpdateConfig(obj);
             base.Persist(obj);
         }
 

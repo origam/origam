@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Xml.Serialization;
-using Newtonsoft.Json.Linq;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.DA.Service
@@ -14,7 +14,7 @@ namespace Origam.DA.Service
     {
         private readonly string pathToConfigFile;
 
-        private Dictionary<Guid, ConfigItem> configItems;
+        private List<ConfigItem> configItems;
 
         public RuntimeModelConfig(string pathToConfigFile)
         {
@@ -32,11 +32,7 @@ namespace Origam.DA.Service
             try
             {
                 string json = File.ReadAllText(pathToConfigFile);
-                configItems = new ConfigItemConverter()
-                    .ReadToEnumerable(json)
-                    .ToDictionary(
-                        configItem => configItem.OrigamObjectId,
-                        configItem => configItem);
+                configItems = JsonSerializer.Deserialize<List<ConfigItem>>(json);
             }
             catch (Exception ex)
             {
@@ -46,12 +42,13 @@ namespace Origam.DA.Service
 
         public void SetConfigurationValues(IFilePersistent instance)
         {
-            if (!configItems.ContainsKey(instance.Id))
+            ConfigItem configItem = configItems
+                .FirstOrDefault(item => item.Id == instance.Id);
+            
+            if (configItem == null)
             {
                 return;
             }
-
-            ConfigItem configItem = configItems[instance.Id];
             
             var xmlMemberAttributeInfo = Reflector
                 .FindMembers(instance.GetType(), typeof(XmlAttributeAttribute))
@@ -97,64 +94,104 @@ namespace Origam.DA.Service
                     $" Configuration file: \"{pathToConfigFile}\"\n", ex);
             }
         }
-    }
 
-    class ConfigItemConverter
-    {
-        public IEnumerable<ConfigItem> ReadToEnumerable(string json)
+        public void UpdateConfig(IPersistent instance)
         {
-            JObject jsonConfig = JObject.Parse(json);
-
-            JToken firstConfigNode = jsonConfig["RuntimeConfig"];
-            if (!(firstConfigNode is JArray configArray))
+            try
+            {
+                UpdateConfigInternal(instance);
+            }
+            catch (Exception ex)
             {
                 throw new Exception(
-                    "The first node in the runtimeModelConfig has to be an array of config nodes named \"runtimeConfig\"");
+                    $"An error occured when trying to save values from " +
+                    $"object id: \"{instance.Id}\" to configuration file: \"{pathToConfigFile}\"\n", ex);
             }
-
-            return configArray
-                .Children<JToken>()
-                .Select(ParseConfigNode);
         }
-        private ConfigItem ParseConfigNode(JToken configNode)
+
+        private void UpdateConfigInternal(IPersistent instance)
         {
-            string strId = configNode["Id"]?.ToString();
-            if (!Guid.TryParse(strId, out Guid id))
+            var memberAttrInfos = Reflector
+                .FindMembers(instance.GetType(),
+                    typeof(RuntimeConfigurableAttribute));
+            if (memberAttrInfos.Count == 0)
             {
-                throw new ArgumentException($"Cannot parse id value \"{strId}\" to Guid");
+                return;
             }
 
-            var configurationProperties = configNode
-                .OfType<JProperty>()
-                .Where(prop => prop.Name != "Id" && prop.Name != "Description")
-                .ToList();
-            if (configurationProperties.Count != 1)
+            foreach (MemberAttributeInfo memberAttrInfo in memberAttrInfos)
             {
-                throw new ArgumentException(
-                    "Every configuration node must contain a property" +
-                    " called \"id\", a property named the same as the origam " +
-                    "object's property to be changed and can contain a " +
-                    "\"description\" property. The following node fails the " +
-                    "described criteria: \n " + configNode);
+                string name =
+                    (memberAttrInfo.Attribute as RuntimeConfigurableAttribute).Name;
+                string value = Reflector
+                    .GetValue(memberAttrInfo.MemberInfo, instance)
+                    .ToString();
+                var defaultValueAttribute =
+                    memberAttrInfo.MemberInfo.GetCustomAttributes()
+                            .FirstOrDefault(attribute => attribute is DefaultValueAttribute) 
+                        as DefaultValueAttribute;
+                
+                if (defaultValueAttribute != null &&
+                    defaultValueAttribute.Value.ToString() == value)
+                {
+                    RemoveConfigItem(instance.Id);
+                }
+                else
+                {
+                    SetConfigItemValues(instance.Id, name, value);
+                }
             }
 
-            return new ConfigItem( 
-                origamObjectId: id,
-                propertyName: configurationProperties[0].Name,
-                propertyValue: configurationProperties[0].Value.ToString());
+            string json = JsonSerializer.Serialize(
+                configItems,
+                new JsonSerializerOptions{WriteIndented = true});
+            File.WriteAllText(pathToConfigFile, json);
+        }
+
+        private void RemoveConfigItem(Guid id)
+        { 
+            configItems.RemoveAll(configItem => configItem.Id == id);
+        }
+
+        private void SetConfigItemValues(Guid id, string name, string value)
+        {
+            ConfigItem configItem = configItems
+                .FirstOrDefault(item => item.Id == id);
+            bool itemFound = true;
+            if (configItem == null)
+            {
+                itemFound = false;
+                configItem = new ConfigItem(id, "");
+            }
+            configItem.PropertyName = name;
+            configItem.PropertyValue = value;
+            if (!itemFound)
+            {
+                configItems.Add(configItem);
+            }
         }
     }
     
-
     class ConfigItem
     {
-        public Guid OrigamObjectId { get; }
-        public string PropertyName { get; }
-        public string PropertyValue { get; }
+        public Guid Id { get; set; }
+        public string PropertyName { get; set; }
+        public string PropertyValue { get; set; }
+        public string Description { get; set; }
 
-        public ConfigItem(Guid origamObjectId, string propertyName, string propertyValue)
+        public ConfigItem()
         {
-            OrigamObjectId = origamObjectId;
+        }
+
+        public ConfigItem(Guid id, string propertyName)
+        {
+            Id = id;
+            PropertyName = propertyName;
+        }
+
+        public ConfigItem(Guid id, string propertyName, string propertyValue)
+        {
+            Id = id;
             PropertyName = propertyName;
             PropertyValue = propertyValue;
         }

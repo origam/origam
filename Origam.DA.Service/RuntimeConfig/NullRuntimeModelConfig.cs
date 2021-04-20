@@ -7,5 +7,9 @@ namespace Origam.DA.Service
         public void SetConfigurationValues(IFilePersistent instance)
         {
         }
+
+        public void UpdateConfig(IPersistent persistent)
+        {
+        }
     }
 }
