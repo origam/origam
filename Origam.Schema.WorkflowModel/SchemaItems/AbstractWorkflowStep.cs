@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.RuleModel;
@@ -121,7 +122,7 @@ namespace Origam.Schema.WorkflowModel
 		[DefaultValue(WorkflowStepTraceLevel.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
 		[EntityColumn("I01")]  
-		[XmlAttribute ("traceLevel")]
+		[RuntimeConfigurable("traceLevel")]
 		public WorkflowStepTraceLevel TraceLevel { get; set; } = WorkflowStepTraceLevel.InheritFromParent;
 
 		[Category("Tracing")]
