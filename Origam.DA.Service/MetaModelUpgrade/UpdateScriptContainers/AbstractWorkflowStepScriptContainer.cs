@@ -1,4 +1,5 @@
 ﻿#region license
+
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -17,20 +18,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-using Origam.DA.ObjectPersistence;
+using System;
+using System.Collections.Generic;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 {
-    public class NullRuntimeModelConfig : IRuntimeModelConfig
+    public class AbstractWorkflowStepScriptContainer : UpgradeScriptContainer
     {
-        public void SetConfigurationValues(IFilePersistent instance)
-        {
-        }
+        public override string FullTypeName { get; } =
+            typeof(Schema.WorkflowModel.AbstractWorkflowStep).FullName;
 
-        public void UpdateConfig(IPersistent persistent)
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+
+        public AbstractWorkflowStepScriptContainer()
         {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.0"),
+                new Version("6.0.1"),
+                (node, doc) =>
+                    RemoveAttribute(node, "traceLevel")));
         }
     }
 }
