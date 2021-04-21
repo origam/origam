@@ -19,29 +19,32 @@ namespace Origam.DA.Service
         public RuntimeModelConfig(string pathToConfigFile)
         {
             this.pathToConfigFile = pathToConfigFile;
-            ParseConfigFile();
         }
 
-        private void ParseConfigFile()
+        private List<ConfigItem> ParseConfigFile()
         {
             if (!File.Exists(pathToConfigFile))
             {
-                configItems = new List<ConfigItem>();
-                return;
+                return new List<ConfigItem>();
             }
             try
             {
                 string json = File.ReadAllText(pathToConfigFile);
-                configItems = JsonSerializer.Deserialize<List<ConfigItem>>(json);
+                return JsonSerializer.Deserialize<List<ConfigItem>>(json);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error when parsing runtime config file: {pathToConfigFile}", ex);
+                throw new Exception($"Error when parsing runtime config file: \"{pathToConfigFile}\"", ex);
             }
         }
 
         public void SetConfigurationValues(IFilePersistent instance)
         {
+            if (configItems == null)
+            {
+                configItems = ParseConfigFile();
+            }
+
             ConfigItem configItem = configItems
                 .FirstOrDefault(item => item.Id == instance.Id);
             
@@ -177,7 +180,7 @@ namespace Origam.DA.Service
         public Guid Id { get; set; }
         public string PropertyName { get; set; }
         public string PropertyValue { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = "";
 
         public ConfigItem()
         {
