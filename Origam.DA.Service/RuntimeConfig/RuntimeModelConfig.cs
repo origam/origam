@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.Schema;
 
 namespace Origam.DA.Service
 {
@@ -149,7 +150,7 @@ namespace Origam.DA.Service
                 }
                 else
                 {
-                    SetConfigItemValues(instance.Id, name, value);
+                    SetConfigItemValues(instance, name, value);
                 }
             }
 
@@ -164,18 +165,22 @@ namespace Origam.DA.Service
             configItems.RemoveAll(configItem => configItem.Id == id);
         }
 
-        private void SetConfigItemValues(Guid id, string name, string value)
+        private void SetConfigItemValues(IPersistent instance, string name, string value)
         {
             ConfigItem configItem = configItems
-                .FirstOrDefault(item => item.Id == id);
+                .FirstOrDefault(item => item.Id == instance.Id);
             bool itemFound = true;
             if (configItem == null)
             {
                 itemFound = false;
-                configItem = new ConfigItem(id, "");
+                configItem = new ConfigItem(instance.Id, "");
             }
             configItem.PropertyName = name;
             configItem.PropertyValue = value;
+            if (string.IsNullOrEmpty(configItem.Description))
+            {
+                configItem.Description = (instance as ISchemaItem)?.Name ?? "";
+            }
             if (!itemFound)
             {
                 configItems.Add(configItem);
