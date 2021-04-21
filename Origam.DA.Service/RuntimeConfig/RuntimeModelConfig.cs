@@ -53,24 +53,17 @@ namespace Origam.DA.Service
                 return;
             }
             
-            var xmlMemberAttributeInfo = Reflector
-                .FindMembers(instance.GetType(), typeof(XmlAttributeAttribute))
-                .Cast<MemberAttributeInfo>()
-                .FirstOrDefault(memberInfo => 
-                    (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName == configItem.PropertyName);
 #if !ORIGAM_CLIENT
-            if (xmlMemberAttributeInfo != null)
+            if (PropertyHasXmlAttribute(instance, configItem.PropertyName))
             {
                 return;
             }
 #endif
-            var runtimeConfigMemberAttributeInfo = Reflector
+            var memberAttributeInfo = Reflector
                 .FindMembers(instance.GetType(), typeof(RuntimeConfigurableAttribute))
                 .Cast<MemberAttributeInfo>()
                 .FirstOrDefault(memberInfo => 
                     (memberInfo.Attribute as RuntimeConfigurableAttribute)?.Name == configItem.PropertyName);
-
-            var memberAttributeInfo = runtimeConfigMemberAttributeInfo ?? xmlMemberAttributeInfo;
             
             if (memberAttributeInfo == null)
             {
@@ -96,6 +89,18 @@ namespace Origam.DA.Service
                     $"\"{configItem.PropertyName}\" on object id: \"{instance.Id}\"." +
                     $" Configuration file: \"{pathToConfigFile}\"\n", ex);
             }
+        }
+
+        private bool PropertyHasXmlAttribute(IFilePersistent instance, string propertyName)
+        {
+            var xmlMemberAttributeInfo = Reflector
+                .FindMembers(
+                    instance.GetType(), 
+                    new []{typeof(XmlAttributeAttribute), typeof(XmlReferenceAttribute)})
+                .FirstOrDefault(memberInfo => 
+                    (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName == propertyName || 
+                    (memberInfo.Attribute as XmlReferenceAttribute)?.AttributeName == propertyName);
+            return xmlMemberAttributeInfo != null;
         }
 
         public void UpdateConfig(IPersistent instance)
