@@ -30,6 +30,10 @@ namespace Origam.DA.Service
             try
             {
                 string json = File.ReadAllText(pathToConfigFile);
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    json = "[]";
+                }
                 return JsonSerializer.Deserialize<List<ConfigItem>>(json);
             }
             catch (Exception ex)
