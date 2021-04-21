@@ -135,16 +135,14 @@ namespace Origam.DA.Service
             {
                 string name =
                     (memberAttrInfo.Attribute as RuntimeConfigurableAttribute).Name;
-                string value = Reflector
-                    .GetValue(memberAttrInfo.MemberInfo, instance)
-                    .ToString();
+                object value = Reflector.GetValue(memberAttrInfo.MemberInfo, instance);
                 var defaultValueAttribute =
                     memberAttrInfo.MemberInfo.GetCustomAttributes()
                             .FirstOrDefault(attribute => attribute is DefaultValueAttribute) 
                         as DefaultValueAttribute;
                 
                 if (defaultValueAttribute != null &&
-                    defaultValueAttribute.Value.ToString() == value)
+                    defaultValueAttribute.Value == value)
                 {
                     RemoveConfigItem(instance.Id);
                 }
@@ -165,7 +163,7 @@ namespace Origam.DA.Service
             configItems.RemoveAll(configItem => configItem.Id == id);
         }
 
-        private void SetConfigItemValues(IPersistent instance, string name, string value)
+        private void SetConfigItemValues(IPersistent instance, string name, object value)
         {
             ConfigItem configItem = configItems
                 .FirstOrDefault(item => item.Id == instance.Id);
@@ -176,7 +174,7 @@ namespace Origam.DA.Service
                 configItem = new ConfigItem(instance.Id, "");
             }
             configItem.PropertyName = name;
-            configItem.PropertyValue = value;
+            configItem.PropertyValue = XmlTools.ConvertToString(value);
             if (string.IsNullOrEmpty(configItem.Description))
             {
                 configItem.Description = (instance as ISchemaItem)?.Name ?? "";
