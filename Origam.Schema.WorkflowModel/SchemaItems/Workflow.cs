@@ -124,18 +124,18 @@ namespace Origam.Schema.WorkflowModel
 			{
 				foreach(object s in this.ChildItemsRecursive)
 				{
-					if(s is IWorkflowStep)
+					if(s is IWorkflowStep workflowStep)
 					{
-						if((s as IWorkflowStep).Trace == Trace.Yes)
+						if(workflowStep.Trace == Trace.Yes)
 						{
 							return Trace.Yes;
 						}
-						else if(s is WorkflowCallTask)
+						else if(workflowStep is WorkflowCallTask workflowCallTask)
 						{
 							// skip any direct recursion
-							if(!(s as WorkflowCallTask).Workflow.PrimaryKey.Equals(this.PrimaryKey))
+							if(!workflowCallTask.Workflow.PrimaryKey.Equals(this.PrimaryKey))
 							{
-								Trace result = (s as WorkflowCallTask).Workflow.Trace;
+								Trace result = workflowCallTask.Workflow.Trace;
 
 								if(result == Trace.Yes) return Trace.Yes;
 							}
