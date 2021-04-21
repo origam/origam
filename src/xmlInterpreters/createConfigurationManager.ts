@@ -7,14 +7,24 @@ import {TableConfiguration} from "model/entities/TablePanelView/tableConfigurati
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 
 function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any) {
-  return properties.map(property => {
-        const configElement = tableConfigNode.elements
-            .find((element: any) => element.attributes?.propertyId === property.id)
-        return configElement
-            ? parseColumnConfigurationNode(configElement, property)
-            : new TableColumnConfiguration(property.id);
+  const columnConfigurations: TableColumnConfiguration[] = tableConfigNode.elements
+    .map((element: any) => {
+      if(!element.attributes?.propertyId){
+        return undefined;
       }
-  );
+      const property = properties.find(prop => prop.id === element.attributes?.propertyId);
+      if(!property){
+        return undefined;
+      }
+      return parseColumnConfigurationNode(element, property)
+    })
+    .filter((columnConfig: any) => columnConfig);
+  const parsedColumnConfigurationIds = columnConfigurations.map(columnConfig => columnConfig.propertyId);
+
+  const newColumnConfigurations = properties
+    .filter(property => !parsedColumnConfigurationIds.includes(property.id))
+    .map(property => new TableColumnConfiguration(property.id));
+  return columnConfigurations.concat(newColumnConfigurations);
 }
 
 export function createConfigurationManager(configurationNodes: any, properties: IProperty[]) {
