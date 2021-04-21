@@ -142,7 +142,7 @@ namespace Origam.Schema.WorkflowModel
 		        
 		        parentStep = parentStep.ParentItem as IWorkflowStep;
 	        } 
-	        return Trace.No;
+	        return Trace.InheritFromParent;
         }
 
 
