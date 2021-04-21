@@ -57,12 +57,6 @@ namespace Origam.DA.Service
                 return;
             }
             
-#if !ORIGAM_CLIENT
-            if (PropertyHasXmlAttribute(instance, configItem.PropertyName))
-            {
-                return;
-            }
-#endif
             var memberAttributeInfo = Reflector
                 .FindMembers(instance.GetType(), typeof(RuntimeConfigurableAttribute))
                 .Cast<MemberAttributeInfo>()
@@ -77,6 +71,13 @@ namespace Origam.DA.Service
                     $" \"{configItem.PropertyName}\" so it's value cannot be set " +
                     $"as requested in the runtime configuration file: \"{pathToConfigFile}\"");
             }
+            
+#if !ORIGAM_CLIENT
+            if (PropertyHasXmlAttribute(memberAttributeInfo.MemberInfo))
+            {
+                return;
+            }
+#endif
 
             try
             {
@@ -95,16 +96,14 @@ namespace Origam.DA.Service
             }
         }
 
-        private bool PropertyHasXmlAttribute(IFilePersistent instance, string propertyName)
+        private bool PropertyHasXmlAttribute(MemberInfo memberInfo)
         {
-            var xmlMemberAttributeInfo = Reflector
-                .FindMembers(
-                    instance.GetType(), 
-                    new []{typeof(XmlAttributeAttribute), typeof(XmlReferenceAttribute)})
-                .FirstOrDefault(memberInfo => 
-                    (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName == propertyName || 
-                    (memberInfo.Attribute as XmlReferenceAttribute)?.AttributeName == propertyName);
-            return xmlMemberAttributeInfo != null;
+            Attribute xmlAttribute = memberInfo
+                .GetCustomAttributes()
+                .FirstOrDefault(attribute =>
+                    attribute is XmlAttributeAttribute ||
+                    attribute is XmlReferenceAttribute);
+            return xmlAttribute != null;
         }
 
         public void UpdateConfig(IPersistent instance)
