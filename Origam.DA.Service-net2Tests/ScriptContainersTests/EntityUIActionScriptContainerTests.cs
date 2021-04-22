@@ -12,8 +12,8 @@ namespace Origam.DA.ServiceTests.ScriptContainersTests
         public void ShouldCreteChildren()
         {
             XFileData xFileData = LoadFile("TestEntityAction.origam");
-            var modelUpGrader = new MetaModelUpGrader(new NullFileWriter());
-            modelUpGrader.TryUpgrade(xFileData);
+            var modelUpgrader = new MetaModelUpgrader(new NullFileWriter());
+            modelUpgrader.TryUpgrade(xFileData);
         }
     }
 }
