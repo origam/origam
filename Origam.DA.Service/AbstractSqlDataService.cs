@@ -510,8 +510,7 @@ namespace Origam.DA.Service
 					{
 						currentEntityName = entity.Name;
 						TableMappingItem tableMapping = entity.EntityDefinition as TableMappingItem;
-						if (tableMapping != null && tableMapping.DatabaseObjectType ==
-							DatabaseMappingObjectType.Table)
+						if (tableMapping != null)
 						{
 							// We check if the dataset actually contains the entity.
 							// E.g. for self-joins the entity name is not contained in the dataset
@@ -537,27 +536,39 @@ namespace Origam.DA.Service
 										changedTable.ImportRow(row);
 									}
 								}
-								if (changedTable != null)
+
+								if (tableMapping.DatabaseObjectType ==
+								    DatabaseMappingObjectType.Table)
 								{
-									if (stateMachine != null && query.FireStateMachineEvents)
+									if (changedTable != null)
 									{
-										stateMachine.OnDataChanging(changedTable, transactionId);
+										if (stateMachine != null && query.FireStateMachineEvents)
+										{
+											stateMachine.OnDataChanging(changedTable, transactionId);
+										}
+									}
+									int rowCount = changedTable.Rows.Count;
+									if (rowCount > 0)
+									{
+										profiler.ExecuteAndLogStoreActionDuration(
+											entity: entity,
+											actionToExecute: () =>
+										{
+											ExecuteUpdate(query, transactionId, profile,
+												ds, transaction, connection,
+												deletedRowIds, 
+	                                            changedTable,
+												rowState, entity, rowCount, 
+	                                            forceBulkInsert);
+										});
 									}
 								}
-								int rowCount = changedTable.Rows.Count;
-								if (rowCount > 0)
+
+								// finally add the table to a list of changed tables so 
+								// changes can be accepted later
+								if (!changedTables.Contains(changedTable.TableName))
 								{
-									profiler.ExecuteAndLogStoreActionDuration(
-										entity: entity,
-										actionToExecute: () =>
-									{
-										ExecuteUpdate(query, transactionId, profile,
-											ds, transaction, connection,
-											changedTables, deletedRowIds, 
-                                            changedTable,
-											rowState, entity, rowCount, 
-                                            forceBulkInsert);
-									});
+									changedTables.Add(changedTable.TableName);
 								}
 							}
 						}						
@@ -771,7 +782,7 @@ namespace Origam.DA.Service
             DataStructureQuery query, string transactionId, 
             UserProfile profile, DataStructure ds, 
             IDbTransaction transaction, IDbConnection connection, 
-            ArrayList changedTables, ArrayList deletedRowIds, 
+			ArrayList deletedRowIds, 
             DataTable changedTable, DataRowState rowState, 
             DataStructureEntity entity, int rowCount,
             bool forceBulkInsert)
@@ -850,12 +861,6 @@ namespace Origam.DA.Service
                 {
                     throw new DBConcurrencyException(ResourceUtils.GetString("ConcurrencyViolation", changedTable.TableName));
                 }
-            }
-            // finally add the table to a list of changed tables so 
-            // changes can be accepted later
-            if (!changedTables.Contains(changedTable.TableName))
-            {
-                changedTables.Add(changedTable.TableName);
             }
         }
 
