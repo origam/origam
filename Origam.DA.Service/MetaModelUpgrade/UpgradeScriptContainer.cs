@@ -141,6 +141,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node}");
             }
             node.Add(new XAttribute(xName, attributeValue));
+        }        
+        protected void RemoveAttribute(XElement node, string attributeName)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            XNamespace thisTypeNamespace = GetThisClassNamespace(node.Document);
+            node.Attribute(thisTypeNamespace + attributeName)?.Remove();
         }
         
         protected XNamespace GetPersistenceNamespace(XElement element)

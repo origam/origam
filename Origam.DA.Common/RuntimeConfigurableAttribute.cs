@@ -1,5 +1,4 @@
-#region license
-
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -18,26 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #endregion
 
-using System.Collections.Generic;
-using NUnit.Framework;
-using Origam.DA.Service.MetaModelUpgrade;
-using Origam.DA.ServiceTests.MetaModelUpgraderTests;
+using System;
 
-namespace Origam.DA.ServiceTests.ScriptContainersTests
+namespace Origam.DA
 {
-    [TestFixture]
-    public class PackageScriptContainerTests: ClassUpgradeTestBase
+    [AttributeUsage(AttributeTargets.Property)]
+    public class RuntimeConfigurableAttribute: Attribute
     {
-        protected override string DirName => "ScriptContainersTests";
-        [Test]
-        public void ShouldRenameSchemaExtensionToPackage()
+        public string Name { get; }
+        public RuntimeConfigurableAttribute(string name)
         {
-            XFileData xFileData = LoadFile("Security_V5.0.0_.origamPackage");
-            var modelUpgrader = new MetaModelUpgrader(new NullFileWriter());
-            modelUpgrader.TryUpgrade(xFileData);
+            Name = name;
         }
     }
 }

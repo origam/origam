@@ -561,7 +561,13 @@ namespace Origam.Workflow
 
         public bool IsTrace(IWorkflowStep workflowStep)
         {
-            switch (workflowStep.Trace)
+	        if (workflowStep is Schema.WorkflowModel.Workflow &&
+	            workflowStep.TraceLevel == Schema.WorkflowModel.Trace.InheritFromParent)
+	        {
+		        return Trace;
+	        }
+
+	        switch (workflowStep.Trace)
             {
                 // when all workflow has InheritFromParent then gets Trace from Parent Workflow
                 case Schema.WorkflowModel.Trace.InheritFromParent:

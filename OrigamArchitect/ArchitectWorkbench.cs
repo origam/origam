@@ -1577,7 +1577,8 @@ namespace OrigamArchitect
 	            if (!(ae.InnerException is OperationCanceledException))
 	            {
 	                log.Error(ae.InnerException);
-	                this.RunWithInvoke(() => AsMessageBox.ShowError(null, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
+	                this.RunWithInvoke(() => AsMessageBox.ShowError(
+		                this, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
 	            }
 	        }
 	    }

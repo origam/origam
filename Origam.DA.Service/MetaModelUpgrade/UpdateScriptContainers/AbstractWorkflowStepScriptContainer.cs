@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -21,23 +21,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using Origam.DA.Service.MetaModelUpgrade;
-using Origam.DA.ServiceTests.MetaModelUpgraderTests;
 
-namespace Origam.DA.ServiceTests.ScriptContainersTests
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 {
-    [TestFixture]
-    public class PackageScriptContainerTests: ClassUpgradeTestBase
+    public class AbstractWorkflowStepScriptContainer : UpgradeScriptContainer
     {
-        protected override string DirName => "ScriptContainersTests";
-        [Test]
-        public void ShouldRenameSchemaExtensionToPackage()
+        public override string FullTypeName { get; } =
+            typeof(Schema.WorkflowModel.AbstractWorkflowStep).FullName;
+
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+
+        public AbstractWorkflowStepScriptContainer()
         {
-            XFileData xFileData = LoadFile("Security_V5.0.0_.origamPackage");
-            var modelUpgrader = new MetaModelUpgrader(new NullFileWriter());
-            modelUpgrader.TryUpgrade(xFileData);
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.0"),
+                new Version("6.0.1"),
+                (node, doc) =>
+                    RemoveAttribute(node, "traceLevel")));
         }
     }
 }
