@@ -145,7 +145,7 @@ namespace Origam.Gui.Win
             if (noDataToDisplay)
             {
                 return ruleEngine
-                    .GetDisabledActions(null, null, entityId)
+                    .GetDisabledActions(null, null, entityId, Guid.Empty)
                     .Cast<string>()
                     .ToList();
             }
@@ -162,7 +162,7 @@ namespace Origam.Gui.Win
                     : DataRowVersion.Default);
 
             return ruleEngine
-                .GetDisabledActions(originalData, actualData, entityId)
+                .GetDisabledActions(originalData, actualData, entityId, Guid.Empty)
                 .Cast<string>()
                 .ToList();
         }

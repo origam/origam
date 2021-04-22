@@ -3650,7 +3650,13 @@ namespace Origam.Rule
 			}
 		}
 
-		public RowSecurityState RowLevelSecurityState(DataRow row, object profileId)
+		public RowSecurityState RowLevelSecurityState(DataRow row,
+			object profileId)
+		{
+			return RowLevelSecurityState(row, profileId, Guid.Empty);
+		}
+
+		public RowSecurityState RowLevelSecurityState(DataRow row, object profileId, Guid formId)
 		{
 			if(! DatasetTools.HasRowValidParent(row)) return null;
 			
@@ -3776,7 +3782,7 @@ namespace Origam.Rule
 				// TODO: resolve only those action buttons valid for a current form - passing
 				// a screen/section id would be neccessary
                 result.DisabledActions = GetDisabledActions(
-                    originalData, actualData, entityId);
+                    originalData, actualData, entityId, formId);
 				return result;
 			}
 			else
@@ -3786,7 +3792,7 @@ namespace Origam.Rule
 		}
 
         public ArrayList GetDisabledActions(
-	        XmlContainer originalData, XmlContainer actualData, Guid entityId)
+	        XmlContainer originalData, XmlContainer actualData, Guid entityId, Guid formId)
         {
             ArrayList result = new ArrayList();
             IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(
@@ -3795,16 +3801,15 @@ namespace Origam.Rule
             foreach(EntityUIAction action in entity.ChildItemsByTypeRecursive(
                 EntityUIAction.CategoryConst))
             {
-	            bool featureIsOff = ! _parameterService.IsFeatureOn(action.Features);
-
-	            bool modeDisablesTheAction 
-	            	= action.Mode == PanelActionMode.ActiveRecord &&
-	              	  actualData == null;
-	              	  
 	            // Performance sensitive! RuleDisablesAction method should not
-	            // be invoked unless it is realy necessary.
-	            if( featureIsOff ||  modeDisablesTheAction ||
-	                RuleDisablesAction(originalData, actualData, action))
+	            // be invoked unless it is really necessary.
+	            if( 
+		            IsFeatureOff(action) ||
+		            IsDisabledByMode(actualData, action) || 
+		            IsDisabledByScreenCondition(formId, action) || 
+		            IsDisabledByScreenSectionCondition(formId, action) || 
+		            IsDisabledByRoles(action) ||
+		            RuleDisablesAction(originalData, actualData, action))
                 {
                     result.Add(action.Id.ToString());
                 }
@@ -3812,8 +3817,57 @@ namespace Origam.Rule
             return result;
         }
 
-		// Performance sensitive! RuleDisablesAction method should not
-		// be invoked unless it is realy necessary.
+        private bool IsDisabledByRoles(EntityUIAction action)
+        {
+	        if (action.Roles != null & action.Roles != String.Empty)
+	        {
+		        return false;
+	        }
+
+	        return !SecurityManager
+		        .GetAuthorizationProvider()
+		        .Authorize(SecurityManager.CurrentPrincipal, action.Roles);
+        }
+
+        private bool IsDisabledByScreenSectionCondition(Guid formId,
+	        EntityUIAction action)
+        {
+	        if (formId == Guid.Empty)
+	        {
+		        return false;
+	        }
+	        var panelIds = _persistence.SchemaProvider
+		        .RetrieveInstance<FormControlSet>(formId)
+		        .ChildrenRecursive
+		        .OfType<ControlSetItem>()
+		        .Select(controlSet => controlSet.ControlItem.PanelControlSetId)
+		        .Where(panelId => panelId != Guid.Empty)
+		        .ToList();
+	        return action.ScreenSectionIds.Any() &&
+	               panelIds.Count > 0 &&
+	               !panelIds.Any(panelId => action.ScreenSectionIds.Contains(panelId));
+        }
+
+        private static bool IsDisabledByScreenCondition(Guid formId, EntityUIAction action)
+        {
+	        return formId != Guid.Empty &&
+	               action.ScreenIds.Any() && 
+	               !action.ScreenIds.Contains(formId);
+        }
+
+        private static bool IsDisabledByMode(XmlContainer actualData, EntityUIAction action)
+        {
+	        return action.Mode == PanelActionMode.ActiveRecord &&
+	               actualData == null;
+        }
+
+        private bool IsFeatureOff(EntityUIAction action)
+        {
+	        return !_parameterService.IsFeatureOn(action.Features);
+        }
+
+        // Performance sensitive! RuleDisablesAction method should not
+		// be invoked unless it is really necessary.
 		private bool RuleDisablesAction(XmlContainer originalData,
 			XmlContainer actualData, EntityUIAction action)
 		{
