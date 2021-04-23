@@ -25,8 +25,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 
@@ -56,7 +56,7 @@ namespace Origam.DA.Service
                 {
                     json = "[]";
                 }
-                return JsonSerializer.Deserialize<List<ConfigItem>>(json);
+                return JsonConvert.DeserializeObject<List<ConfigItem>>(json);
             }
             catch (Exception ex)
             {
@@ -173,9 +173,7 @@ namespace Origam.DA.Service
                 }
             }
 
-            string json = JsonSerializer.Serialize(
-                configItems,
-                new JsonSerializerOptions{WriteIndented = true});
+            string json = JsonConvert.SerializeObject(configItems, Formatting.Indented);
             File.WriteAllText(pathToConfigFile, json);
         }
 
