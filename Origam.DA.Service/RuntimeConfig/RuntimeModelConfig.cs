@@ -88,10 +88,12 @@ namespace Origam.DA.Service
             if (memberAttributeInfo == null)
             {
                 throw new Exception(
-                    $"$Error processing runtime configuration. Object with" +
-                    $" id \"{instance.Id}\" does not have the attribute named" +
-                    $" \"{configItem.PropertyName}\" so it's value cannot be set " +
-                    $"as requested in the runtime configuration file: \"{pathToConfigFile}\"");
+                    $"Error processing runtime configuration. Object with" +
+                    $" id \"{instance.Id}\" does not have the property named" +
+                    $" \"{configItem.PropertyName}\" or the property is not allowed" +
+                    $" to be changed in the runtime configuration file. The value" +
+                    $" cannot be set as requested in the runtime configuration file:" +
+                    $" \"{pathToConfigFile}\"");
             }
             
 #if !ORIGAM_CLIENT
