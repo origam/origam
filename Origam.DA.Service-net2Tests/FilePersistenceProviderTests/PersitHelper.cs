@@ -49,7 +49,10 @@ namespace Origam.DA.Service_net2Tests
             };
 
             persistenceService = new FilePersistenceService(
-                new NullMetaModelUpgradeService(), DefaultFolders, testFolderPath);
+                metaModelUpgradeService: new NullMetaModelUpgradeService(), 
+                defaultFolders: DefaultFolders, 
+                pathToRuntimeModelConfig: "runtimeConfig.json" ,
+                basePath: testFolderPath);
         }
         public IPersistenceProvider GetPersistenceProvider()
         {
