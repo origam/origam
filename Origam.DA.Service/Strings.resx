@@ -369,4 +369,16 @@
   <data name="CouldNotFindXmlNamespace" xml:space="preserve">
     <value>"Could not find xmlNamespace for  \"{0}\" in {1} and its base types"</value>
   </data>
+  <data name="CannotSaveConfig" xml:space="preserve">
+    <value>An error occurred when trying to save values from object id: "{0}" to configuration file: "{1}"</value>
+  </data>
+  <data name="ConfiguredPropertyNotFound" xml:space="preserve">
+    <value>Error processing runtime configuration. Object with id "{0}" does not have the property named "{1}" or the property is not allowed to be changed in the runtime configuration file. The value cannot be set as requested in the runtime configuration file: "{2}"</value>
+  </data>
+  <data name="ErrorParsingConfig" xml:space="preserve">
+    <value>Error when parsing runtime config file: "{0}"</value>
+  </data>
+  <data name="ErrorWhenSettingConfigProperty" xml:space="preserve">
+    <value>An error occurred when trying to set runtime config value "{0}" of property "{1}" on object id: "{2}". Configuration file: "{3}"</value>
+  </data>
 </root>

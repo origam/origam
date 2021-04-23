@@ -61,6 +61,15 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred when trying to save values from object id: &quot;{0}&quot; to configuration file: &quot;{1}&quot;.
+        /// </summary>
+        internal static string CannotSaveConfig {
+            get {
+                return ResourceManager.GetString("CannotSaveConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot generate DDL script for object of type: {0}.
         /// </summary>
         internal static string CantDDLScript {
@@ -102,6 +111,15 @@ namespace Origam.DA.Service {
         internal static string ConcurrencyViolation {
             get {
                 return ResourceManager.GetString("ConcurrencyViolation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error processing runtime configuration. Object with id &quot;{0}&quot; does not have the property named &quot;{1}&quot; or the property is not allowed to be changed in the runtime configuration file. The value cannot be set as requested in the runtime configuration file: &quot;{2}&quot;.
+        /// </summary>
+        internal static string ConfiguredPropertyNotFound {
+            get {
+                return ResourceManager.GetString("ConfiguredPropertyNotFound", resourceCulture);
             }
         }
         
@@ -385,6 +403,15 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error when parsing runtime config file: &quot;{0}&quot;.
+        /// </summary>
+        internal static string ErrorParsingConfig {
+            get {
+                return ResourceManager.GetString("ErrorParsingConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Right parameter cannot be empty.
         /// </summary>
         internal static string ErrorRightParamEmpty {
@@ -453,6 +480,15 @@ namespace Origam.DA.Service {
         internal static string ErrorWhenScalar {
             get {
                 return ResourceManager.GetString("ErrorWhenScalar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred when trying to set runtime config value &quot;{0}&quot; of property &quot;{1}&quot; on object id: &quot;{2}&quot;. Configuration file: &quot;{3}&quot;.
+        /// </summary>
+        internal static string ErrorWhenSettingConfigProperty {
+            get {
+                return ResourceManager.GetString("ErrorWhenSettingConfigProperty", resourceCulture);
             }
         }
         
