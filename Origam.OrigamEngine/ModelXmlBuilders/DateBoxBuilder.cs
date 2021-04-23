@@ -40,25 +40,25 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				switch(customFormat)
 				{
                     case "dd. MM. yyyy":
-                        pattern = ConvertToFlexPattern(culture.DateTimeFormat.ShortDatePattern);
+                        pattern = culture.DateTimeFormat.ShortDatePattern;
                         break;
                     case "dd. MM. yyyy HH:mm":
-						pattern = ConvertToFlexPattern(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern);
+						pattern = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.ShortTimePattern;
 						break;
                     case "dd. MM. yyyy HH:mm:ss":
-						pattern = ConvertToFlexPattern(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern);
+						pattern = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern;
 						break;
                     case "dd. MM. yyyy HH:mm:ss.fff":
-                        pattern = ConvertToFlexPattern(culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern + ".fff");
+                        pattern = culture.DateTimeFormat.ShortDatePattern + " " + culture.DateTimeFormat.LongTimePattern + ".fff";
                         break;
                     case "ddd d. MMMM yyyy":
-                        pattern = ConvertToFlexPattern(AddDayName(culture.DateTimeFormat.LongDatePattern));
+                        pattern = AddDayName(culture.DateTimeFormat.LongDatePattern);
                         break;
                     case "ddd d. MMMM yyyy HH:mm":
-						pattern = ConvertToFlexPattern(AddDayName(culture.DateTimeFormat.LongDatePattern) + " " + culture.DateTimeFormat.ShortTimePattern);
+						pattern = AddDayName(culture.DateTimeFormat.LongDatePattern) + " " + culture.DateTimeFormat.ShortTimePattern;
 						break;
 					default:
-						pattern = ConvertToFlexPattern(customFormat);
+						pattern = customFormat;
 						break;
 				}
 			}
@@ -67,10 +67,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				switch(format)
 				{
 					case "Long":
-						pattern = ConvertToFlexPattern(culture.DateTimeFormat.ShortDatePattern);
+						pattern = culture.DateTimeFormat.ShortDatePattern;
 						break;
 					default:
-						pattern = "EEE DD. MM YYYY JJ:NN";
+						pattern = "ddd dd. MM yyy HH:mm";
 						break;
 				}
 			}
@@ -78,24 +78,6 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			propertyElement.SetAttribute("Entity", "Date");
 			propertyElement.SetAttribute("Column", "Date");
 			propertyElement.SetAttribute("FormatterPattern", pattern);
-		}
-
-		private static string ConvertToFlexPattern(string netPattern)
-		{
-			string result = netPattern;
-            result = result.Replace("dddd", "EEEE");
-            result = result.Replace("ddd", "EEE");
-			result = result.Replace("d", "D");
-			result = result.Replace("y", "Y");
-			result = result.Replace("H", "J");
-			result = result.Replace("h", "K");
-			result = result.Replace("m", "N");
-			result = result.Replace("s", "S");
-			result = result.Replace("f", "Q");
-			result = result.Replace("tt", "A");
-			result = result.Replace("t", "A");
-
-			return result;
 		}
 
 		private static string AddDayName(string netPattern)

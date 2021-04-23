@@ -127,7 +127,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						case OrigamDataType.Date:
 							targetEntity = "Date";
 							targetColumn = "Date";
-							formatPattern = "EEE DD. MM YYYY JJ:NN";
+							formatPattern = "ddd dd. MM yyy HH:mm";
 							break;
 
 						case OrigamDataType.Integer:
