@@ -244,64 +244,60 @@ namespace Origam.Server
 
                 }
 
-                // get changes - only if not saving afterwards - in that case the changes will be taken from the save action
-                if (!entityWorkflowAction.SaveAfterWorkflow)
+                // in any case update the list row - we do not know if it was changed directly (will be in changelist)
+                // or by a rule execution
+                if (sessionStore.DataList != null)
                 {
-                    // in any case update the list row - we do not know if it was changed directly (will be in changelist)
-                    // or by a rule execution
-                    if (sessionStore.DataList != null)
-                    {
-                        DataRow rootRow = sessionStore.GetSessionRow(sessionStore.DataListEntity, sessionStore.CurrentRecordId);
-                        sessionStore.UpdateListRow(rootRow);
-                    }
+                    DataRow rootRow = sessionStore.GetSessionRow(sessionStore.DataListEntity, sessionStore.CurrentRecordId);
+                    sessionStore.UpdateListRow(rootRow);
+                }
 
-                    // read all changed keys to a table so getChangesRecursive skips all those that
-                    // have been directly changed and so will be processed anyway
-                    Hashtable ignoreKeys = new Hashtable();
-                    foreach (var entry in changeList)
+                // read all changed keys to a table so getChangesRecursive skips all those that
+                // have been directly changed and so will be processed anyway
+                Hashtable ignoreKeys = new Hashtable();
+                foreach (var entry in changeList)
+                {
+                    foreach (var rowEntry in entry.Value)
                     {
-                        foreach (var rowEntry in entry.Value)
+                        // table name + row id
+                        ignoreKeys[entry.Key + rowEntry.Key] = null;
+                    }
+                }
+
+                bool hasErrors = sessionStore.Data.HasErrors;
+                bool hasChanges = sessionStore.Data.HasChanges();
+
+                foreach (var entry in changeList)
+                {
+                    string tableName = entry.Key;
+
+                    foreach (var rowEntry in entry.Value)
+                    {
+                        DataRow row = targetData.Tables[tableName].Rows.Find(rowEntry.Key);
+
+                        DataRowState changeType = rowEntry.Value.State;
+
+                        if (entityWorkflowAction.CleanDataBeforeMerge)
                         {
-                            // table name + row id
-                            ignoreKeys[entry.Key + rowEntry.Key] = null;
+                            changeType = DataRowState.Added;
                         }
-                    }
 
-                    bool hasErrors = sessionStore.Data.HasErrors;
-                    bool hasChanges = sessionStore.Data.HasChanges();
-
-                    foreach (var entry in changeList)
-                    {
-                        string tableName = entry.Key;
-
-                        foreach (var rowEntry in entry.Value)
+                        switch (changeType)
                         {
-                            DataRow row = targetData.Tables[tableName].Rows.Find(rowEntry.Key);
+                            case DataRowState.Added:
+                                changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Create, ignoreKeys, false, hasErrors, hasChanges));
+                                break;
 
-                            DataRowState changeType = rowEntry.Value.State;
+                            case DataRowState.Modified:
+                                changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Update, ignoreKeys, false, hasErrors, hasChanges));
+                                break;
 
-                            if (entityWorkflowAction.CleanDataBeforeMerge)
-                            {
-                                changeType = DataRowState.Added;
-                            }
+                            case DataRowState.Deleted:
+                                changes.Add(sessionStore.GetDeletedInfo(null, tableName, rowEntry.Key));
+                                break;
 
-                            switch (changeType)
-                            {
-                                case DataRowState.Added:
-                                    changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Create, ignoreKeys, false, hasErrors, hasChanges));
-                                    break;
-
-                                case DataRowState.Modified:
-                                    changes.AddRange(sessionStore.GetChanges(tableName, rowEntry.Key, Operation.Update, ignoreKeys, false, hasErrors, hasChanges));
-                                    break;
-
-                                case DataRowState.Deleted:
-                                    changes.Add(sessionStore.GetDeletedInfo(null, tableName, rowEntry.Key));
-                                    break;
-
-                                default:
-                                    throw new Exception(Resources.ErrorUnknownRowChangeState);
-                            }
+                            default:
+                                throw new Exception(Resources.ErrorUnknownRowChangeState);
                         }
                     }
                 }
