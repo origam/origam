@@ -30,6 +30,7 @@ export interface IPropertyData {
   gridColumnWidth: number;
   columnWidth: number;
   formatterPattern: string;
+  modelFormatterPattern: string;
   customNumericFormat?: string;
   isAggregatedColumn: boolean;
   isLookupColumn: boolean;

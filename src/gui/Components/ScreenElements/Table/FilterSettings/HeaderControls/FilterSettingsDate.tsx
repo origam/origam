@@ -66,6 +66,9 @@ const OpEditors: React.FC<{
           outputFormat={getLocaleFromCookie() === "en-US"
             ? "MM/DD/YYYY h:mm:ss"
             : "DD.MM.YYYY h:mm:ss"}
+          outputFormatToShow={getLocaleFromCookie() === "en-US"
+            ? "MM/dd/yyyy h:mm:ss"
+            : "dd.MM.yyyy h:mm:ss"}
           onChange={(event, isoDay) => {
             runInAction(()=> {
               setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -86,6 +89,9 @@ const OpEditors: React.FC<{
             outputFormat={getLocaleFromCookie() === "en-US"
               ? "MM/DD/YYYY h:mm:ss"
               : "DD.MM.YYYY h:mm:ss"}
+            outputFormatToShow={getLocaleFromCookie() === "en-US"
+              ? "MM/dd/yyyy h:mm:ss"
+              : "dd.MM.yyyy h:mm:ss"}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -101,6 +107,9 @@ const OpEditors: React.FC<{
             outputFormat={getLocaleFromCookie() === "en-US"
               ? "MM/DD/YYYY h:mm:ss"
               : "DD.MM.YYYY h:mm:ss"}
+            outputFormatToShow={getLocaleFromCookie() === "en-US"
+              ? "MM/dd/yyyy h:mm:ss"
+              : "dd.MM.yyyy h:mm:ss"}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);

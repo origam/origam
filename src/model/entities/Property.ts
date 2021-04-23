@@ -43,6 +43,7 @@ export class Property implements IProperty {
   allowReturnToForm?: boolean | undefined;
   isTree?: boolean | undefined;
   formatterPattern: string = "";
+  modelFormatterPattern: string = "";
   customNumericFormat: string = "";
   gridColumnWidth: number = 100;
   @observable columnWidth: number = 100;

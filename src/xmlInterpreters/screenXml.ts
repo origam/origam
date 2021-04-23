@@ -20,7 +20,6 @@ import { TablePanelView } from "model/entities/TablePanelView/TablePanelView";
 import { IComponentBinding } from "model/entities/types/IComponentBinding";
 import { IFormScreenLifecycle02 } from "model/entities/types/IFormScreenLifecycle";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
-import { flf2mof } from "utils/flashDateFormat";
 import { findStopping } from "./xmlUtils";
 import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
 import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
@@ -73,6 +72,7 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspective";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
+import {getMomentFormat} from "./getMomentFormat";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -146,8 +146,9 @@ function parseProperty(property: any, idx: number): IProperty {
     isRichText: property.attributes.IsRichText === "true",
     autoSort: property.attributes.AutoSort === "true",
     maxLength: parseInt(property.attributes.MaxLength, 10),
+    modelFormatterPattern: property.attributes.FormatterPattern,
     formatterPattern: property.attributes.FormatterPattern
-      ? flf2mof(property.attributes.FormatterPattern)
+      ? getMomentFormat(property)
       : "",
     customNumericFormat: property.attributes.CustomNumericFormat,
     identifier: property.attributes.Identifier,

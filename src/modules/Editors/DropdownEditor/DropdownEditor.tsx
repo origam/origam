@@ -19,7 +19,7 @@ import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusAble } from "../../../model/entities/FocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
-import { flf2mof } from "utils/flashDateFormat";
+import {getMomentFormat} from "../../../xmlInterpreters/getMomentFormat";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -170,7 +170,7 @@ export function XmlBuildDropdownEditor(props: {
       columnNameToIndex.set(id, index);
 
       const formatterPattern = attributes.FormatterPattern
-        ? flf2mof(attributes.FormatterPattern)
+        ? getMomentFormat(propertyXml)
         : "";
       visibleColumnNames.push(id);
       const name = attributes.Name;
