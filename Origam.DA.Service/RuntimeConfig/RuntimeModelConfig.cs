@@ -207,8 +207,11 @@ namespace Origam.DA.Service
     
     class ConfigItem
     {
+        [JsonProperty(Required = Required.Always)]
         public Guid Id { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public string PropertyName { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public string PropertyValue { get; set; }
         public string Description { get; set; } = "";
 
