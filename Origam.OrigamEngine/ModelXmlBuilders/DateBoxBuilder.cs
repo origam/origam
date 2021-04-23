@@ -70,7 +70,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						pattern = culture.DateTimeFormat.ShortDatePattern;
 						break;
 					default:
-						pattern = "ddd dd. MM yyy HH:mm";
+						pattern = "ddd dd. MM yyyy HH:mm";
 						break;
 				}
 			}
