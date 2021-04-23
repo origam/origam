@@ -53,6 +53,7 @@ const OpEditors: React.FC<{
   onKeyDown?: (event: any) => void;
 }> = observer((props) => {
   const { setting } = props;
+  const dateFormats = getDateFormats();
   switch (setting.type) {
     case "eq":
     case "neq":
@@ -63,9 +64,8 @@ const OpEditors: React.FC<{
       return (
         <DateTimeEditor
           value={setting.val1 ?? ""}
-          outputFormat={getLocaleFromCookie() === "en-US"
-            ? "MM/DD/YYYY h:mm:ss"
-            : "DD.MM.YYYY h:mm:ss"}
+          outputFormat={dateFormats.momentFormat}
+          outputFormatToShow={dateFormats.userModelFormat}
           onChange={(event, isoDay) => {
             runInAction(()=> {
               setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -83,9 +83,8 @@ const OpEditors: React.FC<{
         <>
           <DateTimeEditor
             value={setting.val1}
-            outputFormat={getLocaleFromCookie() === "en-US"
-              ? "MM/DD/YYYY h:mm:ss"
-              : "DD.MM.YYYY h:mm:ss"}
+            outputFormat={dateFormats.momentFormat}
+            outputFormatToShow={dateFormats.userModelFormat}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -98,9 +97,8 @@ const OpEditors: React.FC<{
           />
           <DateTimeEditor
             value={setting.val2}
-            outputFormat={getLocaleFromCookie() === "en-US"
-              ? "MM/DD/YYYY h:mm:ss"
-              : "DD.MM.YYYY h:mm:ss"}
+            outputFormat={dateFormats.momentFormat}
+            outputFormatToShow={dateFormats.userModelFormat}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -170,4 +168,21 @@ export class FilterSettingsDate extends React.Component<{
 function removeTimeZone(isoDateString: string | null | undefined) {
   if (!isoDateString) return isoDateString;
   return isoDateString.substring(0, 23);
+}
+
+interface IDateFormats{
+  momentFormat: string;
+  userModelFormat: string
+}
+
+function getDateFormats(): IDateFormats{
+  const locale = getLocaleFromCookie();
+  return {
+    momentFormat: locale === "en-US"
+      ? "MM/DD/YYYY h:mm:ss"
+      : "DD.MM.YYYY h:mm:ss",
+    userModelFormat: locale === "en-US"
+      ? "MM/dd/yyyy h:mm:ss"
+      : "dd.MM.yyyy h:mm:ss"
+  }
 }

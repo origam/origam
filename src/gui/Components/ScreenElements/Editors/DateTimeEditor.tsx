@@ -150,6 +150,7 @@ class CalendarWidget extends React.Component<{
 export class DateTimeEditor extends React.Component<{
   value: string | null;
   outputFormat: string;
+  outputFormatToShow: string;
   isReadOnly?: boolean;
   isInvalid?: boolean;
   invalidMessage?: string;
@@ -344,10 +345,10 @@ export class DateTimeEditor extends React.Component<{
 
   formatMomentValue(value: Moment | null | undefined) {
     if (!value) return "";
-    if (value.hour() === 0 && value.minute() === 0 && value.second() === 0) {
-      const expectedDateFormat = this.props.outputFormat.split(" ")[0];
-      return value.format(expectedDateFormat);
-    }
+    // if (value.hour() === 0 && value.minute() === 0 && value.second() === 0) {
+    //   const expectedDateFormat = this.props.outputFormat.split(" ")[0];
+    //   return value.format(expectedDateFormat);
+    // }
     return value.format(this.props.outputFormat);
   }
 
@@ -421,11 +422,11 @@ export class DateTimeEditor extends React.Component<{
                     <FormatHintTooltip
                       boundingRect={this.inputRect}
                       line1={this.autocompletedText}
-                      line2={this.props.outputFormat}
+                      line2={this.props.outputFormatToShow}
                     />
                   )}
                   <input
-                    title={this.autocompletedText + '\n"' + this.props.outputFormat + '"'}
+                    title={this.autocompletedText + '\n"' + this.props.outputFormatToShow + '"'}
                     style={{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,

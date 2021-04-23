@@ -123,6 +123,7 @@ export class TableViewEditor extends React.Component<{
           <DateTimeEditor
             value={this.props.getCellValue!()}
             outputFormat={this.props.property!.formatterPattern}
+            outputFormatToShow={this.props.property!.modelFormatterPattern}
             isReadOnly={readOnly}
             isInvalid={false}
             isFocused={true}
