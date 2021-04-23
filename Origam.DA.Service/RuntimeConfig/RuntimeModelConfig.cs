@@ -60,7 +60,8 @@ namespace Origam.DA.Service
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error when parsing runtime config file: \"{pathToConfigFile}\"", ex);
+                throw new Exception(
+                    String.Format(Strings.ErrorParsingConfig, pathToConfigFile), ex);
             }
         }
 
@@ -87,11 +88,8 @@ namespace Origam.DA.Service
             
             if (memberAttributeInfo == null)
             {
-                throw new Exception(
-                    $"$Error processing runtime configuration. Object with" +
-                    $" id \"{instance.Id}\" does not have the attribute named" +
-                    $" \"{configItem.PropertyName}\" so it's value cannot be set " +
-                    $"as requested in the runtime configuration file: \"{pathToConfigFile}\"");
+                throw new Exception(string.Format(Strings.ConfiguredPropertyNotFound,
+                    instance.Id, configItem.PropertyName, pathToConfigFile));
             }
             
 #if !ORIGAM_CLIENT
@@ -110,11 +108,10 @@ namespace Origam.DA.Service
             }
             catch (Exception ex)
             {
-                throw new Exception(
-                    $"An error occured when trying to set runtime config " +
-                    $"value \"{configItem.PropertyValue}\" of property " +
-                    $"\"{configItem.PropertyName}\" on object id: \"{instance.Id}\"." +
-                    $" Configuration file: \"{pathToConfigFile}\"\n", ex);
+                throw new Exception(String.Format(
+                    Strings.ErrorWhenSettingConfigProperty,
+                    configItem.PropertyValue, configItem.PropertyName,
+                    instance.Id, pathToConfigFile), ex);
             }
         }
 
@@ -136,9 +133,8 @@ namespace Origam.DA.Service
             }
             catch (Exception ex)
             {
-                throw new Exception(
-                    $"An error occured when trying to save values from " +
-                    $"object id: \"{instance.Id}\" to configuration file: \"{pathToConfigFile}\"\n", ex);
+                throw new Exception(String.Format(
+                    Origam.Strings.CantSaveConfig, instance.Id, pathToConfigFile), ex);
             }
         }
 
@@ -207,8 +203,11 @@ namespace Origam.DA.Service
     
     class ConfigItem
     {
+        [JsonProperty(Required = Required.Always)]
         public Guid Id { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public string PropertyName { get; set; }
+        [JsonProperty(Required = Required.Always)]
         public string PropertyValue { get; set; }
         public string Description { get; set; } = "";
 
