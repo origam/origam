@@ -287,7 +287,6 @@ function drawCellValue() {
 function getBackGroundColor() {
   const isColumnOrderChangeSource =
     tablePanelView().columnOrderChangingSourceId === currentProperty().id;
-  const selectedColumnId = tableColumnIds()[drawingColumnIndex()];
   const selectedRowId = getSelectedRowId(tablePanelView());
 
   const isRowCursor = recordId() === selectedRowId;
