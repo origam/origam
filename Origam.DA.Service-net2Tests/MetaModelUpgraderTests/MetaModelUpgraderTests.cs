@@ -36,7 +36,7 @@ using Origam.Extensions;
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
     [TestFixture]
-    public class MetaModelUpGraderTests: ClassUpgradeTestBase
+    public class MetaModelUpgraderTests: ClassUpgradeTestBase
     {
         protected override string DirName { get; } = "MetaModelUpgraderTests";
         

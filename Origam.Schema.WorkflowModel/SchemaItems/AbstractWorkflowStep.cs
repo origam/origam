@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.RuleModel;
@@ -34,7 +35,7 @@ namespace Origam.Schema.WorkflowModel
     /// Summary description for AbstractWorkflowStep.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.0.1")]
     public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	{															
 		public const string CategoryConst = "WorkflowTask";
@@ -117,57 +118,33 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-
-		[DefaultValue(WorkflowStepTraceLevel.InheritFromParent)]
+		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
 		[EntityColumn("I01")]  
-		[XmlAttribute ("traceLevel")]
-		public WorkflowStepTraceLevel TraceLevel { get; set; } = WorkflowStepTraceLevel.InheritFromParent;
+		[RuntimeConfigurable("trace")]
+		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
 		[Category("Tracing")]
-        public Trace Trace
-		{
-			get
-			{
-#if ORIGAM_CLIENT
-					if(this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return Trace.Yes;
-#else
-                if (this.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
-						this.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return Trace.Yes;
-				#endif
+        public Trace Trace => 
+	        TraceLevel == Trace.InheritFromParent 
+		        ? GetValueOfFirstNonInheritParent() 
+		        : TraceLevel;
 
-				if(this.TraceLevel == WorkflowStepTraceLevel.InheritFromParent)
-				{
-					// we check the first non-inherited parent
+        private Trace GetValueOfFirstNonInheritParent()
+        {
+	        IWorkflowStep parentStep = ParentItem as IWorkflowStep;
+	        while(parentStep != null)
+	        {
+		        if(parentStep.TraceLevel != Trace.InheritFromParent)
+		        {
+			        return parentStep.TraceLevel;
+		        }
+		        
+		        parentStep = parentStep.ParentItem as IWorkflowStep;
+	        } 
+	        return Trace.InheritFromParent;
+        }
 
-					IWorkflowStep parentStep = this.ParentItem as IWorkflowStep;
-					while(parentStep != null)
-					{
-						if(parentStep.TraceLevel != WorkflowStepTraceLevel.InheritFromParent)
-						{
-							break;
-						}
-						if(parentStep.ParentItem as IWorkflowStep == null)
-                        {
-                            return Trace.InheritFromParent;
-                        }
-						parentStep = parentStep.ParentItem as IWorkflowStep;
-					}
-
-					if(parentStep != null)
-					{
-						#if ORIGAM_CLIENT
-							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect) return Trace.Yes;
-						#else
-							if(parentStep.TraceLevel == WorkflowStepTraceLevel.TraceClientAndArchitect |
-								parentStep.TraceLevel == WorkflowStepTraceLevel.TraceArchitect) return Trace.Yes;
-						#endif
-					}
-				}
-
-				return Trace.No;
-			}
-		}
 
         [EntityColumn("G02")]  
 		public Guid StartRuleId;

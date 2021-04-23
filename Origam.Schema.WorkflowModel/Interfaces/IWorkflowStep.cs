@@ -41,19 +41,11 @@ namespace Origam.Schema.WorkflowModel
 		Running
 	}
 
-	public enum WorkflowStepTraceLevel
-	{
-		None = 0,
-		InheritFromParent = 1,
-		TraceArchitect = 2,
-		TraceClientAndArchitect = 3
-	}
-
-    public enum Trace
+	public enum Trace
     {
+        InheritFromParent,
         Yes,
-        No,
-        InheritFromParent
+        No
     }
         
     /// <summary>
@@ -61,7 +53,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	public interface IWorkflowStep : ISchemaItem
 	{
-		WorkflowStepTraceLevel TraceLevel{get; set;}
+		Trace TraceLevel{get; set;}
         Trace Trace { get;}
 		StartRule StartConditionRule{get; set;}
 		IContextStore StartConditionRuleContextStore{get; set;}

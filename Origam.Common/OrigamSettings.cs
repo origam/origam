@@ -72,7 +72,8 @@ namespace Origam
             string serverLogUrl,
 			bool traceEnabled,
 			string authorizationProvider,
-			string profileProvider)
+			string profileProvider,
+			string pathToRuntimeModelConfig)
 		{
 			
 			this.Name = name;
@@ -104,6 +105,7 @@ namespace Origam
 			this.TraceEnabled = traceEnabled;
 		    this.AuthorizationProvider = authorizationProvider;
 		    this.ProfileProvider = profileProvider;
+		    this.PathToRuntimeModelConfig = pathToRuntimeModelConfig;
 		}
 
 		public override string ToString()
@@ -210,7 +212,9 @@ namespace Origam
 	    public string AuthorizationProvider { get; set; } = "Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security";
 
 	    [Category("Model Connection")]
-	    public string ProfileProvider { get; set; } = "Origam.Security.OrigamProfileProvider, Origam.Security";
+	    public string ProfileProvider { get; set; } = "Origam.Security.OrigamProfileProvider, Origam.Security";	    
+	    [Category("Model Connection")]
+	    public string PathToRuntimeModelConfig { get; set; } = "RuntimeModelConfiguration.json";
 
         [Category("Data Connection"), DefaultValue(2000)]
 		public int DataServiceExecuteProcedureTimeout { get; set; } = 2000;
@@ -326,7 +330,8 @@ namespace Origam
                 this.ServerLogUrl,
 				this.TraceEnabled,
                 this.AuthorizationProvider,
-                this.ProfileProvider
+                this.ProfileProvider,
+				this.PathToRuntimeModelConfig
 				);
 		}
 

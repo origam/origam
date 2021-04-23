@@ -184,7 +184,8 @@ namespace Origam.DA.Service_net2Tests
                     origamFileFactory,
                     index,
                     origamFileManager,
-                    true);
+                    true,
+                    runtimeModelConfig: new NullRuntimeModelConfig());
         }
     }
 }
