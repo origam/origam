@@ -112,7 +112,7 @@ namespace Origam.Schema.WorkflowModel
 		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
 		[EntityColumn("I01")] 
-		[RuntimeConfigurable ("trace")]
+		[RuntimeConfigurable ("traceLevel")]
         [DisplayName("Trace Level")]
 		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
