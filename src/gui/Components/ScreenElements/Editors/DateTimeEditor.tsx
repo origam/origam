@@ -345,10 +345,10 @@ export class DateTimeEditor extends React.Component<{
 
   formatMomentValue(value: Moment | null | undefined) {
     if (!value) return "";
-    if (value.hour() === 0 && value.minute() === 0 && value.second() === 0) {
-      const expectedDateFormat = this.props.outputFormat.split(" ")[0];
-      return value.format(expectedDateFormat);
-    }
+    // if (value.hour() === 0 && value.minute() === 0 && value.second() === 0) {
+    //   const expectedDateFormat = this.props.outputFormat.split(" ")[0];
+    //   return value.format(expectedDateFormat);
+    // }
     return value.format(this.props.outputFormat);
   }
 
