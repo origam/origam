@@ -163,7 +163,7 @@ namespace Origam.DA.Service
                         as DefaultValueAttribute;
                 
                 if (defaultValueAttribute != null &&
-                    defaultValueAttribute.Value == value)
+                    Equals(defaultValueAttribute.Value, value))
                 {
                     RemoveConfigItem(instance.Id);
                 }
