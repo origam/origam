@@ -29,6 +29,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Origam.DA.Service
 {
@@ -72,31 +73,51 @@ namespace Origam.DA.Service
                 configItems = ParseConfigFile();
             }
 
-            ConfigItem configItem = configItems
-                .FirstOrDefault(item => item.Id == instance.Id);
+            var configItemsForTheInstance = configItems
+                .Where(item => item.Id == instance.Id)
+                .ToList();
             
-            if (configItem == null)
+            if (configItemsForTheInstance.Count == 0)
             {
                 return;
             }
             
-            var memberAttributeInfo = Reflector
+            foreach (var configItem in configItemsForTheInstance)
+            {
+                SetConfigurationValues(instance, configItem);
+            }
+        }
+
+        private void SetConfigurationValues(IFilePersistent instance,
+            ConfigItem configItem)
+        {
+            var xmlMemberAttributeInfo = Reflector
+                .FindMembers(instance.GetType(), typeof(XmlAttributeAttribute))
+                .Cast<MemberAttributeInfo>()
+                .FirstOrDefault(memberInfo =>
+                    (memberInfo.Attribute as XmlAttributeAttribute)?.AttributeName ==
+                    configItem.PropertyName);
+
+            var configMemberAttributeInfo = Reflector
                 .FindMembers(instance.GetType(), typeof(RuntimeConfigurableAttribute))
                 .Cast<MemberAttributeInfo>()
-                .FirstOrDefault(memberInfo => 
-                    (memberInfo.Attribute as RuntimeConfigurableAttribute)?.Name == configItem.PropertyName);
-            
+                .FirstOrDefault(memberInfo =>
+                    (memberInfo.Attribute as RuntimeConfigurableAttribute)?.Name ==
+                    configItem.PropertyName);
+
+            var memberAttributeInfo =
+                configMemberAttributeInfo ?? xmlMemberAttributeInfo;
             if (memberAttributeInfo == null)
             {
                 throw new Exception(string.Format(Strings.ConfiguredPropertyNotFound,
                     instance.Id, configItem.PropertyName, pathToConfigFile));
             }
-            
+
 #if !ORIGAM_CLIENT
-            if (PropertyHasXmlAttribute(memberAttributeInfo.MemberInfo))
-            {
-                return;
-            }
+                if (xmlMemberAttributeInfo != null)
+                {
+                    return;
+                }
 #endif
 
             try
@@ -113,16 +134,6 @@ namespace Origam.DA.Service
                     configItem.PropertyValue, configItem.PropertyName,
                     instance.Id, pathToConfigFile), ex);
             }
-        }
-
-        private bool PropertyHasXmlAttribute(MemberInfo memberInfo)
-        {
-            Attribute xmlAttribute = memberInfo
-                .GetCustomAttributes()
-                .FirstOrDefault(attribute =>
-                    attribute is XmlAttributeAttribute ||
-                    attribute is XmlReferenceAttribute);
-            return xmlAttribute != null;
         }
 
         public void UpdateConfig(IPersistent instance)
