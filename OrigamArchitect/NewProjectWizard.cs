@@ -308,15 +308,18 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            dir = new DirectoryInfo(txtBinFolderRoot.Text);
-            if (!dir.Exists)
+            if (Deployment == DeploymentType.Local)
             {
-                AsMessageBox.ShowError(this, strings.WebAppFolderNotExists_Message, strings.NewProjectWizard_Title, null);
-                e.Cancel = true;
-                return;
+                dir = new DirectoryInfo(txtBinFolderRoot.Text);
+                if (!dir.Exists)
+                {
+                    AsMessageBox.ShowError(this, strings.WebAppFolderNotExists_Message, strings.NewProjectWizard_Title, null);
+                    e.Cancel = true;
+                    return;
+                }
+                _project.BinFolder = Path.Combine(txtBinFolderRoot.Text, txtName.Text);
             }
             _project.ServerTemplateFolder = txtTemplateFolder.Text;
-            _project.BinFolder = Path.Combine(txtBinFolderRoot.Text, txtName.Text);
             _project.GitRepository = gitrepo.Checked;
         }
 
