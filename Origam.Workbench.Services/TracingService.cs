@@ -131,7 +131,7 @@ namespace Origam.Workbench.Services
 			TraceRule(ruleId, ruleName, ruleInput, ruleResult, Guid.Empty);
 		}
 
-		public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid callingWorkFlowId)
+		public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid workflowInstanceId)
 		{
 			if (IsTraceDisabled())
 			{
@@ -152,11 +152,11 @@ namespace Origam.Workbench.Services
 				row.Id = Guid.NewGuid();
 				row.RecordCreated = DateTime.Now;
 				row.RecordCreatedBy = profile.Id;
-				row.RefOrigamTraceWorkflowId = callingWorkFlowId;
+				row.RefOrigamTraceWorkflowId = workflowInstanceId;
 			
 				if(ruleInput != null) row.DataIn = ruleInput;
 				if(ruleResult != null) row.DatOut = ruleResult;
-				row.Id = ruleId;
+				row.RuleId = ruleId;
 				row.RuleName = ruleName;
 				
 				data.OrigamTraceRule.AddOrigamTraceRuleRow(row);

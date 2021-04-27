@@ -470,7 +470,7 @@ namespace Origam.Workflow
 				Hashtable stores = new Hashtable();
 
 				// Initialize RuleEngine for this session
-				_ruleEngine = new RuleEngine(stores, this.TransactionId);
+				_ruleEngine = new RuleEngine(stores, this.TransactionId, WorkflowInstanceId);
 
 				foreach (IContextStore store in this.WorkflowBlock.ChildItemsByType(
 					ContextStore.CategoryConst))

@@ -55,6 +55,7 @@ namespace Origam.Rule
 	/// </summary>
 	public class RuleEngine
 	{
+		private readonly Guid _workflowInstanceId;
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private static System.Xml.Serialization.XmlSerializer _ruleExceptionSerializer = 
 			new System.Xml.Serialization.XmlSerializer(typeof(RuleExceptionDataCollection),
@@ -75,6 +76,12 @@ namespace Origam.Rule
 #endif
 		
 		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+
+		public RuleEngine(Hashtable contextStores, string transactionId,
+			Guid workflowInstanceId) :this(contextStores, transactionId)
+		{
+			_workflowInstanceId = workflowInstanceId;
+		}
 
 		public RuleEngine() : this(new Hashtable(), null)
 		{
@@ -2264,7 +2271,8 @@ namespace Origam.Rule
         #endregion
 
         #region Other Functions
-        public object EvaluateRule(IRule rule, object data, XPathNodeIterator contextPosition)
+        public object EvaluateRule(IRule rule, object data, 
+	        XPathNodeIterator contextPosition)
 		{
 			try
 			{
@@ -2292,7 +2300,8 @@ namespace Origam.Rule
 						    ruleId: rule.Id, 
 						    ruleName: rule.Name, 
 						    ruleInput: xmlData?.Xml?.OuterXml, 
-						    ruleResult: ruleResult?.ToString()
+						    ruleResult: ruleResult?.ToString(),
+						    workflowInstanceId: _workflowInstanceId
 						);
 			    }
 
@@ -2361,7 +2370,8 @@ namespace Origam.Rule
 							ruleId: rule.Id, 
 							ruleName: rule.Name, 
 							ruleInput: context?.Xml?.OuterXml, 
-							ruleResult: result.Xml.OuterXml
+							ruleResult: result.Xml.OuterXml,
+							workflowInstanceId: _workflowInstanceId
 						);
 				}
 				
