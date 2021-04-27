@@ -620,6 +620,9 @@
   </data>
   <data name="ShowTrace_MenuItem" xml:space="preserve">
     <value>Show Trace</value>
+  </data>  
+  <data name="ShowRuleTrace_MenuItem" xml:space="preserve">
+    <value>Show Rule Trace</value>
   </data>
   <data name="ResetUserCache_MenuItem" xml:space="preserve">
     <value>&amp;Reset User Cache</value>

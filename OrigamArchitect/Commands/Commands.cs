@@ -757,6 +757,38 @@ namespace OrigamArchitect.Commands
 		}
 
 	}
+	
+	public class ShowRuleTrace : AbstractMenuCommand
+	{
+		IPersistenceService _persistence = ServiceManager.Services.GetService<IPersistenceService>();
+		SchemaService _schemaService = ServiceManager.Services.GetService<SchemaService>();
+
+		public override bool IsEnabled
+		{
+			get => _schemaService.IsSchemaLoaded;
+			set => throw new ArgumentException("Cannot set this property", "IsEnabled");
+		}
+
+		public override void Run()
+		{
+			FormReferenceMenuItem formMenu = new FormReferenceMenuItem();
+			formMenu.PersistenceProvider = _persistence.SchemaProvider;
+			formMenu.DisplayName = strings.WorkFlowTrace_MenuItem;
+			formMenu.ScreenId 
+                = new Guid("57dc7edd-7b9c-43f2-b94a-54ddd2d98206");
+			formMenu.Roles = "*";
+			ExecuteSchemaItem cmd = new ExecuteSchemaItem();
+			cmd.Owner = formMenu;
+			cmd.Run();
+		}
+
+		public override void Dispose()
+		{
+			_persistence = null;
+			_schemaService = null;
+		}
+
+	}
 
 	/// <summary>
 	/// Runs Explorer with Debug path displayed

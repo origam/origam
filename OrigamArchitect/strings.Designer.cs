@@ -1672,6 +1672,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Rule Trace.
+        /// </summary>
+        internal static string ShowRuleTrace_MenuItem {
+            get {
+                return ResourceManager.GetString("ShowRuleTrace_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Trace.
         /// </summary>
         internal static string ShowTrace_MenuItem {
