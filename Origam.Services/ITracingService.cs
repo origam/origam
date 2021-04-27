@@ -30,5 +30,9 @@ namespace Origam.Workbench.Services
 	{
 		void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName);
 		void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId, string category, string subCategory, string remark, string data1, string data2, string message);
+		void TraceRule(Guid ruleId, string ruleName, string ruleInput,
+			string ruleResult,  Guid callingWorkFlowId);		
+		void TraceRule(Guid ruleId, string ruleName, string ruleInput,
+			string ruleResult);
 	}
 }

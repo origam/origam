@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Data;
 using System.Reflection;
 using Origam.DA;
 
@@ -69,16 +70,10 @@ namespace Origam.Workbench.Services
 
 			data.OrigamTraceWorkflow.AddOrigamTraceWorkflowRow(row);
 
-			// store to the database
-			DataStructureQuery query = new DataStructureQuery(
-				new Guid("309843cc-39ec-4eca-8848-8c69c885790c"));
-
-			_dataServiceAgent.MethodName = "StoreDataByQuery";
-			_dataServiceAgent.Parameters.Clear();
-			_dataServiceAgent.Parameters.Add("Query", query);
-			_dataServiceAgent.Parameters.Add("Data", data);
-
-			_dataServiceAgent.Run();
+			StoreTraceData(
+				dataSet: data, 
+				dataStructureQueryId: "309843cc-39ec-4eca-8848-8c69c885790c"
+			);
 		}
 
 		public void TraceStep(Guid workflowInstanceId, string stepPath, Guid stepId,
@@ -118,21 +113,76 @@ namespace Origam.Workbench.Services
 				row.WorkflowStepPath = stepPath;
 
 				data.OrigamTraceWorkflowStep.AddOrigamTraceWorkflowStepRow(row);
-
-				// store to the database
-				DataStructureQuery query = new DataStructureQuery(
-					new Guid("4985a6b2-8bae-4c21-9a09-0c2480c4efe2"));
-
-				_dataServiceAgent.MethodName = "StoreDataByQuery";
-				_dataServiceAgent.Parameters.Clear();
-				_dataServiceAgent.Parameters.Add("Query", query);
-				_dataServiceAgent.Parameters.Add("Data", data);
-
-				_dataServiceAgent.Run();
+			
+				StoreTraceData(
+					dataSet: data, 
+					dataStructureQueryId: "4985a6b2-8bae-4c21-9a09-0c2480c4efe2"
+				);
 			}
-			catch 
+			catch (Exception ex)
 			{
+				log.Error(ex);
 			}
+		}
+
+		public void TraceRule(Guid ruleId, string ruleName, string ruleInput,
+			string ruleResult)
+		{
+			TraceRule(ruleId, ruleName, ruleInput, ruleResult, Guid.Empty);
+		}
+
+		public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid callingWorkFlowId)
+		{
+			if (IsTraceDisabled())
+			{
+				if (log.IsDebugEnabled)
+				{
+					log.Debug("Trace is disabled, step is not traced.");
+				}
+				return;
+			}
+			
+			try
+			{
+				UserProfile profile = SecurityManager.CurrentUserProfile();
+
+				OrigamTraceRuleData data = new OrigamTraceRuleData();
+				var row = data.OrigamTraceRule.NewOrigamTraceRuleRow();
+
+				row.Id = Guid.NewGuid();
+				row.RecordCreated = DateTime.Now;
+				row.RecordCreatedBy = profile.Id;
+				row.RefOrigamTraceWorkflowId = callingWorkFlowId;
+			
+				if(ruleInput != null) row.DataIn = ruleInput;
+				if(ruleResult != null) row.DatOut = ruleResult;
+				row.Id = ruleId;
+				row.RuleName = ruleName;
+				
+				data.OrigamTraceRule.AddOrigamTraceRuleRow(row);
+				
+				StoreTraceData(
+					dataSet: data, 
+					dataStructureQueryId: "ca2f9609-e6b1-4425-a673-a46f69590eb3"
+				);
+			}
+			catch (Exception ex)
+			{
+				log.Error(ex);
+			}
+		}
+
+		private void StoreTraceData(DataSet dataSet, string dataStructureQueryId)
+		{
+			DataStructureQuery query = new DataStructureQuery(
+				new Guid(dataStructureQueryId));
+
+			_dataServiceAgent.MethodName = "StoreDataByQuery";
+			_dataServiceAgent.Parameters.Clear();
+			_dataServiceAgent.Parameters.Add("Query", query);
+			_dataServiceAgent.Parameters.Add("Data", dataSet);
+
+			_dataServiceAgent.Run();
 		}
 
 		private bool IsTraceDisabled()

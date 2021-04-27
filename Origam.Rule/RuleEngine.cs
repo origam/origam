@@ -2270,10 +2270,33 @@ namespace Origam.Rule
 			{
 			    IXmlContainer xmlData = GetXmlDocumentFromData(data);
 
-				if(rule is XPathRule) return EvaluateRule(rule as XPathRule, xmlData, contextPosition);
-				if(rule is XslRule) return EvaluateRule(rule as XslRule, xmlData);
+			    bool ruleEvaluationDidRun = false;
+			    object ruleResult = null;
+			    switch (rule)
+			    {
+				    case XPathRule pathRule:
+					    ruleResult = EvaluateRule(pathRule, xmlData, contextPosition);
+					    ruleEvaluationDidRun = true;
+					    break;
+				    case XslRule xslRule:
+					    ruleResult = EvaluateRule(xslRule, xmlData);
+					    ruleEvaluationDidRun = true;
+					    break;
+			    }
+			    
+			    if (rule.Trace == Origam.Trace.Yes && ruleEvaluationDidRun)
+			    {
+				    ServiceManager.Services
+					    .GetService<ITracingService>()
+					    .TraceRule(
+						    ruleId: rule.Id, 
+						    ruleName: rule.Name, 
+						    ruleInput: xmlData?.Xml?.OuterXml, 
+						    ruleResult: ruleResult?.ToString()
+						);
+			    }
 
-				return null;
+			    return ruleResult;
 			}
 			catch(OrigamRuleException)
 			{
@@ -2329,6 +2352,19 @@ namespace Origam.Rule
 
 				RuleExceptionDataCollection exceptions = (RuleExceptionDataCollection)_ruleExceptionSerializer.Deserialize(reader);
 
+				
+				if (rule.Trace == Origam.Trace.Yes)
+				{
+					ServiceManager.Services
+						.GetService<ITracingService>()
+						.TraceRule(
+							ruleId: rule.Id, 
+							ruleName: rule.Name, 
+							ruleInput: context?.Xml?.OuterXml, 
+							ruleResult: result.Xml.OuterXml
+						);
+				}
+				
 				return exceptions;
 			}
 			catch(Exception ex)
