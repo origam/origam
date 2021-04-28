@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.0" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="0019e8e5-31c9-4fa9-a22a-a4096aab8a59"
     asi:name="Identity_ConfirmUserEmail"
-    w:traceLevel="None"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -37,8 +36,7 @@
       smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
       smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/20e59f17-d1aa-456a-b614-6a5851ced2c7"
       aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
-      aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/UserId/02e7436c-f8a2-42c0-832a-83c8968f424e"
-      aws:traceLevel="InheritFromParent">
+      aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/UserId/02e7436c-f8a2-42c0-832a-83c8968f424e">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="7bc86e2a-858f-400a-a485-33c8766449e6"
