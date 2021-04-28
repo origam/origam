@@ -2271,8 +2271,15 @@ namespace Origam.Rule
         #endregion
 
         #region Other Functions
-        public object EvaluateRule(IRule rule, object data, 
+
+        public object EvaluateRule(IRule rule, object data,
 	        XPathNodeIterator contextPosition)
+        {
+	       return EvaluateRule(rule, data, contextPosition, false);
+        }
+
+        public object EvaluateRule(IRule rule, object data, 
+	        XPathNodeIterator contextPosition, bool parentIsTracing)
 		{
 			try
 			{
@@ -2292,7 +2299,9 @@ namespace Origam.Rule
 					    break;
 			    }
 			    
-			    if (rule.Trace == Origam.Trace.Yes && ruleEvaluationDidRun)
+			    if ((rule.Trace == Origam.Trace.Yes ||
+			         rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing) &&
+			        ruleEvaluationDidRun)
 			    {
 				    ServiceManager.Services
 					    .GetService<ITracingService>()
@@ -2332,10 +2341,17 @@ namespace Origam.Rule
 
 		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule, object data)
 		{
-			return EvaluateEndRule(rule, data, new Hashtable());
+			return EvaluateEndRule(rule, data, new Hashtable(), false);
 		}
 
-		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule, object data, Hashtable parameters)
+		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule,
+			object data, bool parentIsTracing)
+		{
+			return EvaluateEndRule(rule, data, new Hashtable(), parentIsTracing);
+		}
+
+		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule,
+			object data, Hashtable parameters, bool parentIsTracing)
 		{
 		    IXmlContainer context = GetXmlDocumentFromData(data);
 		    IXmlContainer result = null;
@@ -2360,9 +2376,9 @@ namespace Origam.Rule
 				XmlNodeReader reader = new XmlNodeReader(result.Xml);
 
 				RuleExceptionDataCollection exceptions = (RuleExceptionDataCollection)_ruleExceptionSerializer.Deserialize(reader);
-
 				
-				if (rule.Trace == Origam.Trace.Yes)
+				if (rule.Trace == Origam.Trace.Yes ||
+				    rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing)
 				{
 					ServiceManager.Services
 						.GetService<ITracingService>()

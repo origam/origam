@@ -756,8 +756,10 @@ namespace Origam.Workflow
 			if(rule == null) return;
 
 			Rule.RuleExceptionDataCollection result = this.RuleEngine.EvaluateEndRule(
-				rule, 
-				data);
+				rule: rule, 
+				data: data, 
+				parentIsTracing: IsTrace(step)
+			);
 
 			if(step != null && IsTrace(step))
 			{
@@ -928,7 +930,8 @@ namespace Origam.Workflow
 				log.Debug("Evaluating startup rule for step " + task.Name);
 			}
 			result = (bool) this.RuleEngine.EvaluateRule(
-				task.StartConditionRule, task.StartConditionRuleContextStore, null);
+				task.StartConditionRule, task.StartConditionRuleContextStore, null,
+				IsTrace(task));
 			if (log.IsDebugEnabled)
 			{
 				log.Debug("Rule evaluated and returned " + result.ToString());
