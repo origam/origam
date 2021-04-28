@@ -154,10 +154,10 @@ namespace Origam.Workbench.Services
 				row.RecordCreatedBy = profile.Id;
 				if (workflowInstanceId != Guid.Empty)
 				{
-					row.RefOrigamTraceWorkflowId = workflowInstanceId;
+					row.refOrigamTraceWorkflowId = workflowInstanceId;
 				}
 				if(ruleInput != null) row.DataIn = ruleInput;
-				if(ruleResult != null) row.DatOut = ruleResult;
+				if(ruleResult != null) row.DataOut = ruleResult;
 				row.RuleId = ruleId;
 				row.RuleName = ruleName;
 				
