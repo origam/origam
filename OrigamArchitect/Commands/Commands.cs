@@ -773,7 +773,7 @@ namespace OrigamArchitect.Commands
 		{
 			FormReferenceMenuItem formMenu = new FormReferenceMenuItem();
 			formMenu.PersistenceProvider = _persistence.SchemaProvider;
-			formMenu.DisplayName = strings.WorkFlowTrace_MenuItem;
+			formMenu.DisplayName = strings.RuleTrace_MenuItem;
 			formMenu.ScreenId 
                 = new Guid("57dc7edd-7b9c-43f2-b94a-54ddd2d98206");
 			formMenu.Roles = "*";

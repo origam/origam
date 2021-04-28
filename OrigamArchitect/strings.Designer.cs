@@ -1510,6 +1510,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RuleTrace.
+        /// </summary>
+        internal static string RuleTrace_MenuItem {
+            get {
+                return ResourceManager.GetString("RuleTrace_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Model has been updated and update scripts are pending. Do you want to execute the deployment scripts?.
         /// </summary>
         internal static string RunDeploymentScriptsQuestion {

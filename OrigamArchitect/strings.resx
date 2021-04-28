@@ -738,4 +738,7 @@
   <data name="WebPasswordNotMatch_Message" xml:space="preserve">
     <value>Passwords are not equal!</value>
   </data>
+  <data name="RuleTrace_MenuItem" xml:space="preserve">
+    <value>RuleTrace</value>
+  </data>
 </root>
