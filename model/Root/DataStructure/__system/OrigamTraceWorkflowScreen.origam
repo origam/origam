@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="43b7bdd6-9f59-42d9-9a3b-0188dd9b1917"
@@ -204,6 +204,17 @@
           dsc:writeOnly="false"
           dsc:xmlMappingType="Default" />
       </dse:DataStructureEntity>
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/OrigamTraceRule/c4ff1a26-0577-4c66-8b0e-e4459553d43f"
+        x:id="2d088790-8656-4ab7-9169-1ade690ab640"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamTraceRule"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
     </dse:DataStructureEntity>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
@@ -235,6 +246,13 @@
         dsssi:fieldName="RecordCreated"
         x:id="3561b43a-c007-4f4c-b7c2-3d8572861912"
         asi:name="OrigamTraceWorkflowStep_RecordCreated"
+        dsssi:sortDirection="Ascending" />
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Root/DataStructure/__system/OrigamTraceWorkflowScreen.origam#OrigamTraceWorkflowScreen/OrigamTraceWorkflow/OrigamTraceRule/2d088790-8656-4ab7-9169-1ade690ab640"
+        dsssi:fieldName="RecordCreated"
+        x:id="563aa13c-4eeb-4c1d-a009-b13a4978187c"
+        asi:name="OrigamTraceRule_0_RecordCreated"
         dsssi:sortDirection="Ascending" />
     </dsss:DataStructureSortSet>
   </ds:DataStructure>
