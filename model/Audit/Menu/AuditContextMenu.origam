@@ -17,7 +17,7 @@
       frmi:method="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/GetId/a8ae1641-709c-482f-829b-c89e428ec25f"
       asi:name="Audit"
       ami:openExclusively="false"
-      frmi:readOnlyAccess="false"
+      frmi:readOnlyAccess="true"
       frmi:refreshAfterSaveType="RefreshChangedRecords"
       frmi:refreshOnFocus="false"
       frmi:refreshPortalAfterSave="false"
