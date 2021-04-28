@@ -777,6 +777,10 @@ namespace OrigamArchitect.Commands
 			formMenu.ScreenId 
                 = new Guid("57dc7edd-7b9c-43f2-b94a-54ddd2d98206");
 			formMenu.Roles = "*";
+			formMenu.SortSet = _persistence.SchemaProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(
+					new Guid("6b22f4c9-bc05-4e52-88f9-486e64dc7b1b")), 
+				true, false) as DataStructureSortSet;
 			ExecuteSchemaItem cmd = new ExecuteSchemaItem();
 			cmd.Owner = formMenu;
 			cmd.Run();
