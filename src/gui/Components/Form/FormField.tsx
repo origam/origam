@@ -91,33 +91,30 @@ export class FormField extends React.Component<{
     };
   }
 
-  renderEditorWithToolTip() {
-   return (
-      <label
-        className={S.caption}
-        style={this.captionStyle}
-        title={formatTooltipPlaintext(this.props.toolTip)}
-      >
-        {this.props.caption}
-      </label>
-    );
+  getToolTip() {
+    return this.props.toolTip
+      ? formatTooltipPlaintext(this.props.toolTip)
+      : undefined;
   }
 
   render() {
-    const { props } = this;
     return (
       <>
-        {this.props.captionPosition !== ICaptionPosition.None &&
-          !this.props.hideCaption &&
-          (this.props.toolTip ? (
-            this.renderEditorWithToolTip()
-          ) : (
-            <label className={S.caption} style={this.captionStyle}>
-              {props.caption}
-            </label>
-          ))}
-        <div className={S.editor} style={this.formFieldStyle}>
-          {props.editor}
+        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption &&
+        <label
+          className={S.caption}
+          style={this.captionStyle}
+          title={this.getToolTip()}
+        >
+          {this.props.caption}
+        </label>
+        }
+        <div
+          className={S.editor}
+          style={this.formFieldStyle}
+          title={this.getToolTip()}
+        >
+            {this.props.editor}
         </div>
       </>
     );
