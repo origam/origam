@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0">
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="094508c1-abd1-4a4f-a40f-dd130e1c1cf9"
     asi:name="ModelEntityColumnLookup_Label"
-    w:traceLevel="None"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -28,8 +27,7 @@
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/ModelService.origam#ModelService/92d3277e-dabc-4093-bd25-bc010078b925"
-      smct:serviceMethod="Root/Service/ModelService.origam#ModelService/ElementAttribute/6ed7e428-32bc-45d9-89b9-9424a5f2cf74"
-      aws:traceLevel="InheritFromParent">
+      smct:serviceMethod="Root/Service/ModelService.origam#ModelService/ElementAttribute/6ed7e428-32bc-45d9-89b9-9424a5f2cf74">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="cb01fa2c-1f6a-48f2-b96b-6b38a82dffd1"
