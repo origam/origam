@@ -38,7 +38,7 @@ export class ErrorDialogController implements IErrorDialogController {
 
   @computed get errorMessages() {
     return this.errorStack.map((errItem) => {
-      console.log(errItem.error, "response."); // eslint-disable-line no-console
+      console.error(errItem.error); // eslint-disable-line no-console
 
       const handlePlainText = () =>
         _.get(errItem.error, "response.headers.content-type", "").startsWith("text/plain") &&
