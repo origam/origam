@@ -2351,6 +2351,12 @@ namespace Origam.Rule
 		}
 
 		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule,
+			object data, Hashtable parameters)
+		{
+			return EvaluateEndRule(rule, data, parameters, false);
+		}
+
+		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule,
 			object data, Hashtable parameters, bool parentIsTracing)
 		{
 		    IXmlContainer context = GetXmlDocumentFromData(data);
