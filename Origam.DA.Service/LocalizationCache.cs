@@ -171,7 +171,6 @@ namespace Origam.DA.ObjectPersistence
 		{
 			rwLock.RunWriter(ReloadCache);
 		}
-
         private void ReloadCache()
         {
 			if(languages.Count>0)
@@ -179,9 +178,7 @@ namespace Origam.DA.ObjectPersistence
 				languages.Clear();
             }
 			LoadFromLocalizationFolder();
-
 		}
-
         public string GetLocalizedString(Guid elementId, string memberName, 
 			string defaultString, string locale)
 		{
