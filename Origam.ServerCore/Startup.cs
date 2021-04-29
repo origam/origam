@@ -48,6 +48,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Origam.Extensions;
+using Origam.ServerCore.Middleware;
 
 namespace Origam.ServerCore
 {

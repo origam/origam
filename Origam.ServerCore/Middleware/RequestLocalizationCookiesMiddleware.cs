@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 
-namespace Origam.ServerCore
+namespace Origam.ServerCore.Middleware
 {
     public static class RequestLocalizationCookiesMiddlewareExtensions
     {
