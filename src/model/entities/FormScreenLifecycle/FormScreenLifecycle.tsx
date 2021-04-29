@@ -768,6 +768,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
     try {
+      this.monitor.inFlow++;
       const loadedData = yield api.getRows({
         MenuId: getMenuItemId(rootDataView),
         SessionFormIdentifier: getSessionId(this),
@@ -790,11 +791,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } else {
         rootDataView.reselectOrSelectFirst();
       }
-
-      //debugger
       rootDataView.restoreViewState();
     } finally {
       rootDataView.lifecycle.startSelectedRowReaction(true);
+      this.monitor.inFlow--;
     }
   }
 
