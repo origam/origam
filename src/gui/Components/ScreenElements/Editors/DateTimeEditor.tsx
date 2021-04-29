@@ -6,7 +6,7 @@ import moment, { Moment } from "moment";
 import * as React from "react";
 import { toOrigamServerString } from "utils/moment";
 import { IFocusAble } from "../../../../model/entities/FocusManager";
-import { getLocaleFromCookie } from "../../../../utils/cookies";
+import {getDefaultCsDateFormatDataFromCookie} from "../../../../utils/cookies";
 import DateCompleter from "./DateCompleter";
 import S from "./DateTimeEditor.module.scss";
 import { createPortal } from "react-dom";
@@ -304,11 +304,15 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound getDateCompleter() {
-    if (getLocaleFromCookie() === "en-US") {
-      return new DateCompleter("MM/DD/YYYY h:mm:ss A", "/", ":", " ", () => moment());
-    } else {
-      return new DateCompleter("DD.MM.YYYY h:mm:ss", ".", ":", " ", () => moment());
-    }
+    const formatData = getDefaultCsDateFormatDataFromCookie();
+    return new DateCompleter(
+      formatData.defaultDateSequence,
+      this.props.outputFormat,
+      formatData.defaultDateSeparator,
+      formatData.defaultTimeSeparator,
+      formatData.defaultDateTimeSeparator,
+      () => moment()
+    );
   }
 
   @action.bound handleContainerMouseDown(event: any) {

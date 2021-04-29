@@ -1,6 +1,8 @@
 import moment from "moment";
+import {DateSequence} from "../../../../utils/cookies";
 
 export default class DateCompleter {
+  dateSequence: DateSequence;
   expectedFormat: string;
   dateSeparator: string;
   timeSeparator: string;
@@ -9,6 +11,7 @@ export default class DateCompleter {
   timeNowFunc: () => moment.Moment;
 
   constructor(
+    dateSequence: DateSequence,
     expectedFormat: string,
     dateSeparator: string,
     timeSeparator: string,
@@ -21,6 +24,7 @@ export default class DateCompleter {
     this.dateTimeSeparator = dateTimeSeparator;
     this.expectedDateFormat = this.expectedFormat.split(this.dateTimeSeparator)[0];
     this.timeNowFunc = timeNowFunc;
+    this.dateSequence = dateSequence;
   }
 
   isUSCompletionTriggered(datetimeTextIn: string) {
@@ -58,7 +62,7 @@ export default class DateCompleter {
       return undefined;
     }
     const trimmedText = text.trim();
-    if (this.expectedFormat.trim().startsWith("M")) {
+    if (this.dateSequence === DateSequence.MontDayYear) {
       if (!this.isUSCompletionTriggered(trimmedText)) return;
     } else {
       if (!this.isEUCompletionTriggered(trimmedText)) return;

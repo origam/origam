@@ -72,7 +72,7 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspective";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
-import {getMomentFormat} from "./getMomentFormat";
+import {getMomentFormat, replaceDefaultDateFormats} from "./getMomentFormat";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -146,7 +146,7 @@ function parseProperty(property: any, idx: number): IProperty {
     isRichText: property.attributes.IsRichText === "true",
     autoSort: property.attributes.AutoSort === "true",
     maxLength: parseInt(property.attributes.MaxLength, 10),
-    modelFormatterPattern: property.attributes.FormatterPattern,
+    modelFormatterPattern: replaceDefaultDateFormats(property.attributes.FormatterPattern),
     formatterPattern: property.attributes.FormatterPattern
       ? getMomentFormat(property)
       : "",
