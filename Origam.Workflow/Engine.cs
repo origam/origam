@@ -470,7 +470,7 @@ namespace Origam.Workflow
 				Hashtable stores = new Hashtable();
 
 				// Initialize RuleEngine for this session
-				_ruleEngine = new RuleEngine(stores, this.TransactionId);
+				_ruleEngine = new RuleEngine(stores, this.TransactionId, WorkflowInstanceId);
 
 				foreach (IContextStore store in this.WorkflowBlock.ChildItemsByType(
 					ContextStore.CategoryConst))
@@ -562,7 +562,7 @@ namespace Origam.Workflow
         public bool IsTrace(IWorkflowStep workflowStep)
         {
 	        if (workflowStep is Schema.WorkflowModel.Workflow &&
-	            workflowStep.TraceLevel == Schema.WorkflowModel.Trace.InheritFromParent)
+	            workflowStep.TraceLevel == Origam.Trace.InheritFromParent)
 	        {
 		        return Trace;
 	        }
@@ -570,11 +570,11 @@ namespace Origam.Workflow
 	        switch (workflowStep.Trace)
             {
                 // when all workflow has InheritFromParent then gets Trace from Parent Workflow
-                case Schema.WorkflowModel.Trace.InheritFromParent:
+                case Origam.Trace.InheritFromParent:
                     return Trace;
-                case Schema.WorkflowModel.Trace.Yes:
+                case Origam.Trace.Yes:
                     return true;
-                case Schema.WorkflowModel.Trace.No:
+                case Origam.Trace.No:
                     return false;
                 default:
                     return false;
@@ -756,8 +756,10 @@ namespace Origam.Workflow
 			if(rule == null) return;
 
 			Rule.RuleExceptionDataCollection result = this.RuleEngine.EvaluateEndRule(
-				rule, 
-				data);
+				rule: rule, 
+				data: data, 
+				parentIsTracing: IsTrace(step)
+			);
 
 			if(step != null && IsTrace(step))
 			{
@@ -928,7 +930,8 @@ namespace Origam.Workflow
 				log.Debug("Evaluating startup rule for step " + task.Name);
 			}
 			result = (bool) this.RuleEngine.EvaluateRule(
-				task.StartConditionRule, task.StartConditionRuleContextStore, null);
+				task.StartConditionRule, task.StartConditionRuleContextStore, null,
+				IsTrace(task));
 			if (log.IsDebugEnabled)
 			{
 				log.Debug("Rule evaluated and returned " + result.ToString());

@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Diagnostics;
+
 namespace Origam.Schema.EntityModel
 {
 	/// <summary>
@@ -27,5 +29,7 @@ namespace Origam.Schema.EntityModel
 	public interface IRule : ISchemaItem
 	{
 		bool IsPathRelative{get;set;}
+		Trace TraceLevel { get; set; }
+		Trace Trace { get; }
 	}
 }

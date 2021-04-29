@@ -789,6 +789,7 @@ namespace OrigamArchitect
             CreateMenuItem(strings.GenerateGUID_MenuItem, new Commands.GenerateGuid(), null, Keys.Control | Keys.Shift | Keys.G, _toolsMenu);
 			CreateMenuItem(strings.DumpWindowXML_MenuItem, new Commands.DumpWindowXml(), null, Keys.None, _toolsMenu);
 			CreateMenuItem(strings.ShowTrace_MenuItem, new Commands.ShowTrace(), null, Keys.Control | Keys.T, _toolsMenu);
+			CreateMenuItem(strings.ShowRuleTrace_MenuItem, new Commands.ShowRuleTrace(), null, Keys.None, _toolsMenu);
 			CreateMenuItem(strings.ResetUserCache_MenuItem, new Commands.ResetUserCaches(), null, Keys.None, _toolsMenu);
 			CreateMenuItem(strings.RebuildLocalizationFiles_MenuItem, new Commands.GenerateLocalizationFile(), null, Keys.None, _toolsMenu);
         }

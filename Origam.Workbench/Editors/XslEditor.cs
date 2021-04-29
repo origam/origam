@@ -93,7 +93,9 @@ namespace Origam.Workbench.Editors
         private TreeView tvwDestination;
 
 		private LabeledToolStrip toolStrip;
-		private readonly ParameterListUpdater parameterListUpdater;
+        private ModelComboBox cboTraceLevel;
+        private Label lblTraceLevel;
+        private readonly ParameterListUpdater parameterListUpdater;
 
 		public override List<ToolStrip> GetToolStrips(int maxWidth) => new List<ToolStrip>{toolStrip}; 
 		
@@ -245,6 +247,8 @@ namespace Origam.Workbench.Editors
             this.tvwSource = new System.Windows.Forms.TreeView();
             this.lblDestination = new System.Windows.Forms.Label();
             this.tvwDestination = new System.Windows.Forms.TreeView();
+            this.cboTraceLevel = new Origam.UI.ModelComboBox();
+            this.lblTraceLevel = new System.Windows.Forms.Label();
             this.panel4.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabXsl.SuspendLayout();
@@ -262,17 +266,17 @@ namespace Origam.Workbench.Editors
             // 
             this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtName.Location = new System.Drawing.Point(179, 9);
+            this.txtName.Location = new System.Drawing.Point(128, 7);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(381, 23);
+            this.txtName.Size = new System.Drawing.Size(500, 20);
             this.txtName.TabIndex = 3;
-			this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // lblXslName
             // 
-            this.lblXslName.Location = new System.Drawing.Point(11, 9);
+            this.lblXslName.Location = new System.Drawing.Point(8, 7);
             this.lblXslName.Name = "lblXslName";
-            this.lblXslName.Size = new System.Drawing.Size(157, 20);
+            this.lblXslName.Size = new System.Drawing.Size(112, 17);
             this.lblXslName.TabIndex = 2;
             this.lblXslName.Text = "Name";
             // 
@@ -286,9 +290,9 @@ namespace Origam.Workbench.Editors
             this.panel4.Controls.Add(this.txtName);
             this.panel4.Controls.Add(this.lblXslName);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(0, 40);
+            this.panel4.Location = new System.Drawing.Point(0, 32);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(755, 533);
+            this.panel4.Size = new System.Drawing.Size(768, 541);
             this.panel4.TabIndex = 16;
             // 
             // tabControl
@@ -303,11 +307,11 @@ namespace Origam.Workbench.Editors
             this.tabControl.Controls.Add(this.tabResult);
             this.tabControl.Controls.Add(this.tabDataResult);
             this.tabControl.Controls.Add(this.settingsTab);
-            this.tabControl.Location = new System.Drawing.Point(0, 38);
+            this.tabControl.Location = new System.Drawing.Point(0, 31);
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(747, 491);
+            this.tabControl.Size = new System.Drawing.Size(762, 506);
             this.tabControl.TabIndex = 8;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -316,19 +320,20 @@ namespace Origam.Workbench.Editors
             this.tabXsl.Controls.Add(this.txtText);
             this.tabXsl.Location = new System.Drawing.Point(4, 4);
             this.tabXsl.Name = "tabXsl";
-            this.tabXsl.Size = new System.Drawing.Size(739, 461);
+            this.tabXsl.Size = new System.Drawing.Size(754, 480);
             this.tabXsl.TabIndex = 0;
             this.tabXsl.Text = "XSL";
             // 
             // txtText
             // 
+            this.txtText.BackColor = System.Drawing.Color.White;
             this.txtText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtText.IsReadOnly = false;
             this.txtText.Location = new System.Drawing.Point(0, 0);
-            this.txtText.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtText.Margin = new System.Windows.Forms.Padding(4);
             this.txtText.Name = "txtText";
             this.txtText.ResultSchema = null;
-            this.txtText.Size = new System.Drawing.Size(739, 461);
+            this.txtText.Size = new System.Drawing.Size(754, 480);
             this.txtText.TabIndex = 8;
             // 
             // tabSource
@@ -337,19 +342,20 @@ namespace Origam.Workbench.Editors
             this.tabSource.Controls.Add(this.txtXpath);
             this.tabSource.Location = new System.Drawing.Point(4, 4);
             this.tabSource.Name = "tabSource";
-            this.tabSource.Size = new System.Drawing.Size(739, 462);
+            this.tabSource.Size = new System.Drawing.Size(535, 373);
             this.tabSource.TabIndex = 1;
             this.tabSource.Text = "Source XML";
             // 
             // txtSource
             // 
+            this.txtSource.BackColor = System.Drawing.Color.White;
             this.txtSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtSource.IsReadOnly = false;
-            this.txtSource.Location = new System.Drawing.Point(0, 23);
-            this.txtSource.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtSource.Location = new System.Drawing.Point(0, 20);
+            this.txtSource.Margin = new System.Windows.Forms.Padding(4);
             this.txtSource.Name = "txtSource";
             this.txtSource.ResultSchema = null;
-            this.txtSource.Size = new System.Drawing.Size(739, 439);
+            this.txtSource.Size = new System.Drawing.Size(535, 353);
             this.txtSource.TabIndex = 7;
             // 
             // txtXpath
@@ -358,7 +364,7 @@ namespace Origam.Workbench.Editors
             this.txtXpath.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.txtXpath.Location = new System.Drawing.Point(0, 0);
             this.txtXpath.Name = "txtXpath";
-            this.txtXpath.Size = new System.Drawing.Size(739, 23);
+            this.txtXpath.Size = new System.Drawing.Size(535, 20);
             this.txtXpath.TabIndex = 8;
             // 
             // tabParameters
@@ -367,7 +373,7 @@ namespace Origam.Workbench.Editors
             this.tabParameters.Location = new System.Drawing.Point(4, 4);
             this.tabParameters.Name = "tabParameters";
             this.tabParameters.Padding = new System.Windows.Forms.Padding(3);
-            this.tabParameters.Size = new System.Drawing.Size(739, 462);
+            this.tabParameters.Size = new System.Drawing.Size(535, 373);
             this.tabParameters.TabIndex = 6;
             this.tabParameters.Text = "Input Parameters";
             this.tabParameters.UseVisualStyleBackColor = true;
@@ -386,17 +392,17 @@ namespace Origam.Workbench.Editors
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.82801F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.17199F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(733, 456);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(529, 367);
             this.tableLayoutPanel1.TabIndex = 14;
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.label2);
             this.flowLayoutPanel1.Controls.Add(this.parameterTypeComboBox);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(146, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(106, 3);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(180, 32);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(200, 32);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(180, 32);
             this.flowLayoutPanel1.TabIndex = 13;
             // 
             // label2
@@ -405,7 +411,7 @@ namespace Origam.Workbench.Editors
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 17);
+            this.label2.Size = new System.Drawing.Size(31, 13);
             this.label2.TabIndex = 12;
             this.label2.Text = "Type";
             // 
@@ -413,32 +419,32 @@ namespace Origam.Workbench.Editors
             // 
             this.parameterTypeComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.parameterTypeComboBox.FormattingEnabled = true;
-            this.parameterTypeComboBox.Location = new System.Drawing.Point(49, 3);
+            this.parameterTypeComboBox.Location = new System.Drawing.Point(40, 3);
             this.parameterTypeComboBox.Name = "parameterTypeComboBox";
-            this.parameterTypeComboBox.Size = new System.Drawing.Size(121, 25);
+            this.parameterTypeComboBox.Size = new System.Drawing.Size(86, 21);
             this.parameterTypeComboBox.TabIndex = 10;
             // 
             // parameterList
             // 
             this.parameterList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.parameterList.FormattingEnabled = true;
-            this.parameterList.ItemHeight = 17;
-            this.parameterList.Location = new System.Drawing.Point(3, 47);
+            this.parameterList.Location = new System.Drawing.Point(3, 39);
             this.parameterList.MinimumSize = new System.Drawing.Size(120, 0);
             this.parameterList.Name = "parameterList";
-            this.parameterList.Size = new System.Drawing.Size(137, 406);
+            this.parameterList.Size = new System.Drawing.Size(120, 325);
             this.parameterList.TabIndex = 11;
             this.parameterList.SelectedIndexChanged += new System.EventHandler(this.paremeterList_SelectedIndexChanged);
             // 
             // paremeterEditor
             // 
+            this.paremeterEditor.BackColor = System.Drawing.Color.White;
             this.paremeterEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.paremeterEditor.IsReadOnly = false;
-            this.paremeterEditor.Location = new System.Drawing.Point(147, 48);
-            this.paremeterEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.paremeterEditor.Location = new System.Drawing.Point(107, 40);
+            this.paremeterEditor.Margin = new System.Windows.Forms.Padding(4);
             this.paremeterEditor.Name = "paremeterEditor";
             this.paremeterEditor.ResultSchema = null;
-            this.paremeterEditor.Size = new System.Drawing.Size(582, 404);
+            this.paremeterEditor.Size = new System.Drawing.Size(418, 323);
             this.paremeterEditor.TabIndex = 9;
             // 
             // tabResult
@@ -446,19 +452,20 @@ namespace Origam.Workbench.Editors
             this.tabResult.Controls.Add(this.txtResult);
             this.tabResult.Location = new System.Drawing.Point(4, 4);
             this.tabResult.Name = "tabResult";
-            this.tabResult.Size = new System.Drawing.Size(739, 462);
+            this.tabResult.Size = new System.Drawing.Size(535, 373);
             this.tabResult.TabIndex = 2;
             this.tabResult.Text = "Result";
             // 
             // txtResult
             // 
+            this.txtResult.BackColor = System.Drawing.Color.White;
             this.txtResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtResult.IsReadOnly = false;
             this.txtResult.Location = new System.Drawing.Point(0, 0);
-            this.txtResult.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtResult.Margin = new System.Windows.Forms.Padding(4);
             this.txtResult.Name = "txtResult";
             this.txtResult.ResultSchema = null;
-            this.txtResult.Size = new System.Drawing.Size(739, 462);
+            this.txtResult.Size = new System.Drawing.Size(535, 373);
             this.txtResult.TabIndex = 8;
             // 
             // tabDataResult
@@ -466,7 +473,7 @@ namespace Origam.Workbench.Editors
             this.tabDataResult.Controls.Add(this.grdResult);
             this.tabDataResult.Location = new System.Drawing.Point(4, 4);
             this.tabDataResult.Name = "tabDataResult";
-            this.tabDataResult.Size = new System.Drawing.Size(739, 462);
+            this.tabDataResult.Size = new System.Drawing.Size(535, 373);
             this.tabDataResult.TabIndex = 3;
             this.tabDataResult.Text = "Data Result";
             // 
@@ -478,11 +485,13 @@ namespace Origam.Workbench.Editors
             this.grdResult.HeaderForeColor = System.Drawing.SystemColors.ControlText;
             this.grdResult.Location = new System.Drawing.Point(0, 0);
             this.grdResult.Name = "grdResult";
-            this.grdResult.Size = new System.Drawing.Size(739, 462);
+            this.grdResult.Size = new System.Drawing.Size(535, 373);
             this.grdResult.TabIndex = 0;
             // 
             // settingsTab
             // 
+            this.settingsTab.Controls.Add(this.cboTraceLevel);
+            this.settingsTab.Controls.Add(this.lblTraceLevel);
             this.settingsTab.Controls.Add(this.txtPackage);
             this.settingsTab.Controls.Add(this.txtId);
             this.settingsTab.Controls.Add(this.lblXsltEngineType);
@@ -498,7 +507,7 @@ namespace Origam.Workbench.Editors
             this.settingsTab.Location = new System.Drawing.Point(4, 4);
             this.settingsTab.Name = "settingsTab";
             this.settingsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.settingsTab.Size = new System.Drawing.Size(739, 462);
+            this.settingsTab.Size = new System.Drawing.Size(754, 480);
             this.settingsTab.TabIndex = 5;
             this.settingsTab.Text = "Settings";
             this.settingsTab.UseVisualStyleBackColor = true;
@@ -507,26 +516,26 @@ namespace Origam.Workbench.Editors
             // 
             this.txtPackage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPackage.Location = new System.Drawing.Point(534, 12);
+            this.txtPackage.Location = new System.Drawing.Point(381, 10);
             this.txtPackage.Name = "txtPackage";
             this.txtPackage.ReadOnly = true;
-            this.txtPackage.Size = new System.Drawing.Size(22, 23);
+            this.txtPackage.Size = new System.Drawing.Size(235, 20);
             this.txtPackage.TabIndex = 2;
             // 
             // txtId
             // 
-            this.txtId.Location = new System.Drawing.Point(175, 12);
+            this.txtId.Location = new System.Drawing.Point(125, 10);
             this.txtId.Name = "txtId";
             this.txtId.ReadOnly = true;
-            this.txtId.Size = new System.Drawing.Size(286, 23);
+            this.txtId.Size = new System.Drawing.Size(204, 20);
             this.txtId.TabIndex = 1;
             // 
             // lblXsltEngineType
             // 
             this.lblXsltEngineType.AutoSize = true;
-            this.lblXsltEngineType.Location = new System.Drawing.Point(10, 41);
+            this.lblXsltEngineType.Location = new System.Drawing.Point(7, 33);
             this.lblXsltEngineType.Name = "lblXsltEngineType";
-            this.lblXsltEngineType.Size = new System.Drawing.Size(79, 17);
+            this.lblXsltEngineType.Size = new System.Drawing.Size(60, 13);
             this.lblXsltEngineType.TabIndex = 16;
             this.lblXsltEngineType.Text = "XsltEngine:";
             // 
@@ -536,9 +545,9 @@ namespace Origam.Workbench.Editors
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboDataStructure.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboDataStructure.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cboDataStructure.Location = new System.Drawing.Point(175, 103);
+            this.cboDataStructure.Location = new System.Drawing.Point(125, 84);
             this.cboDataStructure.Name = "cboDataStructure";
-            this.cboDataStructure.Size = new System.Drawing.Size(381, 25);
+            this.cboDataStructure.Size = new System.Drawing.Size(491, 21);
             this.cboDataStructure.Sorted = true;
             this.cboDataStructure.TabIndex = 6;
             // 
@@ -548,9 +557,9 @@ namespace Origam.Workbench.Editors
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboXsltEngineType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboXsltEngineType.FormattingEnabled = true;
-            this.cboXsltEngineType.Location = new System.Drawing.Point(175, 41);
+            this.cboXsltEngineType.Location = new System.Drawing.Point(125, 33);
             this.cboXsltEngineType.Name = "cboXsltEngineType";
-            this.cboXsltEngineType.Size = new System.Drawing.Size(381, 25);
+            this.cboXsltEngineType.Size = new System.Drawing.Size(491, 21);
             this.cboXsltEngineType.TabIndex = 4;
             // 
             // cboSourceStructure
@@ -559,25 +568,25 @@ namespace Origam.Workbench.Editors
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboSourceStructure.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboSourceStructure.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cboSourceStructure.Location = new System.Drawing.Point(175, 73);
+            this.cboSourceStructure.Location = new System.Drawing.Point(125, 59);
             this.cboSourceStructure.Name = "cboSourceStructure";
-            this.cboSourceStructure.Size = new System.Drawing.Size(381, 25);
+            this.cboSourceStructure.Size = new System.Drawing.Size(491, 21);
             this.cboSourceStructure.Sorted = true;
             this.cboSourceStructure.TabIndex = 5;
             // 
             // lblId
             // 
-            this.lblId.Location = new System.Drawing.Point(10, 15);
+            this.lblId.Location = new System.Drawing.Point(7, 12);
             this.lblId.Name = "lblId";
-            this.lblId.Size = new System.Drawing.Size(157, 20);
+            this.lblId.Size = new System.Drawing.Size(112, 16);
             this.lblId.TabIndex = 0;
             this.lblId.Text = "Id";
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(7, 73);
+            this.label1.Location = new System.Drawing.Point(5, 59);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(168, 20);
+            this.label1.Size = new System.Drawing.Size(120, 17);
             this.label1.TabIndex = 4;
             this.label1.Text = "Source Structure:";
             // 
@@ -587,33 +596,33 @@ namespace Origam.Workbench.Editors
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboRuleSet.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboRuleSet.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.cboRuleSet.Location = new System.Drawing.Point(175, 133);
+            this.cboRuleSet.Location = new System.Drawing.Point(125, 108);
             this.cboRuleSet.Name = "cboRuleSet";
-            this.cboRuleSet.Size = new System.Drawing.Size(381, 25);
+            this.cboRuleSet.Size = new System.Drawing.Size(491, 21);
             this.cboRuleSet.Sorted = true;
             this.cboRuleSet.TabIndex = 7;
             // 
             // lblDataStructure
             // 
-            this.lblDataStructure.Location = new System.Drawing.Point(7, 103);
+            this.lblDataStructure.Location = new System.Drawing.Point(5, 84);
             this.lblDataStructure.Name = "lblDataStructure";
-            this.lblDataStructure.Size = new System.Drawing.Size(168, 20);
+            this.lblDataStructure.Size = new System.Drawing.Size(120, 16);
             this.lblDataStructure.TabIndex = 6;
             this.lblDataStructure.Text = "Destination Structure:";
             // 
             // lblPackage
             // 
-            this.lblPackage.Location = new System.Drawing.Point(467, 15);
+            this.lblPackage.Location = new System.Drawing.Point(334, 12);
             this.lblPackage.Name = "lblPackage";
-            this.lblPackage.Size = new System.Drawing.Size(77, 20);
+            this.lblPackage.Size = new System.Drawing.Size(55, 16);
             this.lblPackage.TabIndex = 14;
             this.lblPackage.Text = "Package";
             // 
             // lblRuleSet
             // 
-            this.lblRuleSet.Location = new System.Drawing.Point(10, 133);
+            this.lblRuleSet.Location = new System.Drawing.Point(7, 108);
             this.lblRuleSet.Name = "lblRuleSet";
-            this.lblRuleSet.Size = new System.Drawing.Size(154, 25);
+            this.lblRuleSet.Size = new System.Drawing.Size(110, 20);
             this.lblRuleSet.TabIndex = 13;
             this.lblRuleSet.Text = "Rule Set:";
             // 
@@ -651,9 +660,30 @@ namespace Origam.Workbench.Editors
             this.tvwDestination.Size = new System.Drawing.Size(258, 393);
             this.tvwDestination.TabIndex = 2;
             // 
+            // chboTraceLevel
+            // 
+            this.cboTraceLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboTraceLevel.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.cboTraceLevel.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cboTraceLevel.Location = new System.Drawing.Point(125, 132);
+            this.cboTraceLevel.Name = "cboTraceLevel";
+            this.cboTraceLevel.Size = new System.Drawing.Size(491, 21);
+            this.cboTraceLevel.Sorted = true;
+            this.cboTraceLevel.TabIndex = 17;
+            this.cboTraceLevel.SelectedIndexChanged += new System.EventHandler(this.cboTraceLevel_SelectedIndexChanged);
+            // 
+            // lblTraceLevel
+            // 
+            this.lblTraceLevel.Location = new System.Drawing.Point(7, 135);
+            this.lblTraceLevel.Name = "lblTraceLevel";
+            this.lblTraceLevel.Size = new System.Drawing.Size(110, 20);
+            this.lblTraceLevel.TabIndex = 18;
+            this.lblTraceLevel.Text = "Trace Level:";
+            // 
             // XslEditor
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(7, 16);
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(847, 573);
             this.Controls.Add(this.panel4);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -810,6 +840,11 @@ namespace Origam.Workbench.Editors
 					cboDataStructure.SelectedItem = _xslRule.Structure;
                 }
 
+				cboTraceLevel.Items.Add(Trace.InheritFromParent);
+				cboTraceLevel.Items.Add(Trace.Yes);
+				cboTraceLevel.Items.Add(Trace.No);
+				cboTraceLevel.SelectedItem = _xslRule.TraceLevel;
+
                 if (txtText.Text == "") txtText.Text = 
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
 				"<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"" + Environment.NewLine +
@@ -837,6 +872,9 @@ namespace Origam.Workbench.Editors
 			}
 			else if(ModelContent is XslTransformation)
 			{
+				cboTraceLevel.Visible = false;
+				lblTraceLevel.Visible = false;
+				
 				XslTransformation _XslTransformation = ModelContent as XslTransformation;
 
 				_isEditing = true;
@@ -1206,9 +1244,22 @@ namespace Origam.Workbench.Editors
 			parameterListUpdater.Refresh(xsltDoc);
 		}
 
-	}
+        private void cboTraceLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+	        if (ModelContent is XslRule rule)
+	        {
+		        ModelComboBox comboBox = sender as ModelComboBox;
+		        var traceLevelBefore = rule.TraceLevel; 
+		        rule.TraceLevel = (Trace)comboBox.SelectedItem;
+		        if (traceLevelBefore != rule.TraceLevel)
+		        {
+					IsDirty = true;
+		        }
+	        }
+        }
+    }
 
-	internal class ParameterListUpdater
+    internal class ParameterListUpdater
 	{
 		private readonly MemoryListBox parameterList;
 		private IDictionary<string, string> aliasToNameSpaceDict;

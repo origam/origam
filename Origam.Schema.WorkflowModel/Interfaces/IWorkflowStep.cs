@@ -41,14 +41,7 @@ namespace Origam.Schema.WorkflowModel
 		Running
 	}
 
-	public enum Trace
-    {
-        InheritFromParent,
-        Yes,
-        No
-    }
-        
-    /// <summary>
+	/// <summary>
 	/// Summary description for IWorkflowStep.
 	/// </summary>
 	public interface IWorkflowStep : ISchemaItem

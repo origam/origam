@@ -55,6 +55,7 @@ namespace Origam.Rule
 	/// </summary>
 	public class RuleEngine
 	{
+		private readonly Guid _workflowInstanceId;
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private static System.Xml.Serialization.XmlSerializer _ruleExceptionSerializer = 
 			new System.Xml.Serialization.XmlSerializer(typeof(RuleExceptionDataCollection),
@@ -75,6 +76,12 @@ namespace Origam.Rule
 #endif
 		
 		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+
+		public RuleEngine(Hashtable contextStores, string transactionId,
+			Guid workflowInstanceId) :this(contextStores, transactionId)
+		{
+			_workflowInstanceId = workflowInstanceId;
+		}
 
 		public RuleEngine() : this(new Hashtable(), null)
 		{
@@ -2264,16 +2271,50 @@ namespace Origam.Rule
         #endregion
 
         #region Other Functions
-        public object EvaluateRule(IRule rule, object data, XPathNodeIterator contextPosition)
+
+        public object EvaluateRule(IRule rule, object data,
+	        XPathNodeIterator contextPosition)
+        {
+	       return EvaluateRule(rule, data, contextPosition, false);
+        }
+
+        public object EvaluateRule(IRule rule, object data, 
+	        XPathNodeIterator contextPosition, bool parentIsTracing)
 		{
 			try
 			{
 			    IXmlContainer xmlData = GetXmlDocumentFromData(data);
 
-				if(rule is XPathRule) return EvaluateRule(rule as XPathRule, xmlData, contextPosition);
-				if(rule is XslRule) return EvaluateRule(rule as XslRule, xmlData);
+			    bool ruleEvaluationDidRun = false;
+			    object ruleResult = null;
+			    switch (rule)
+			    {
+				    case XPathRule pathRule:
+					    ruleResult = EvaluateRule(pathRule, xmlData, contextPosition);
+					    ruleEvaluationDidRun = true;
+					    break;
+				    case XslRule xslRule:
+					    ruleResult = EvaluateRule(xslRule, xmlData);
+					    ruleEvaluationDidRun = true;
+					    break;
+			    }
+			    
+			    if ((rule.Trace == Origam.Trace.Yes ||
+			         rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing) &&
+			        ruleEvaluationDidRun)
+			    {
+				    ServiceManager.Services
+					    .GetService<ITracingService>()
+					    .TraceRule(
+						    ruleId: rule.Id, 
+						    ruleName: rule.Name, 
+						    ruleInput: xmlData?.Xml?.OuterXml, 
+						    ruleResult: ruleResult?.ToString(),
+						    workflowInstanceId: _workflowInstanceId
+						);
+			    }
 
-				return null;
+			    return ruleResult;
 			}
 			catch(OrigamRuleException)
 			{
@@ -2300,10 +2341,17 @@ namespace Origam.Rule
 
 		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule, object data)
 		{
-			return EvaluateEndRule(rule, data, new Hashtable());
+			return EvaluateEndRule(rule, data, new Hashtable(), false);
 		}
 
-		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule, object data, Hashtable parameters)
+		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule,
+			object data, bool parentIsTracing)
+		{
+			return EvaluateEndRule(rule, data, new Hashtable(), parentIsTracing);
+		}
+
+		public RuleExceptionDataCollection EvaluateEndRule(IEndRule rule,
+			object data, Hashtable parameters, bool parentIsTracing)
 		{
 		    IXmlContainer context = GetXmlDocumentFromData(data);
 		    IXmlContainer result = null;
@@ -2328,7 +2376,21 @@ namespace Origam.Rule
 				XmlNodeReader reader = new XmlNodeReader(result.Xml);
 
 				RuleExceptionDataCollection exceptions = (RuleExceptionDataCollection)_ruleExceptionSerializer.Deserialize(reader);
-
+				
+				if (rule.Trace == Origam.Trace.Yes ||
+				    rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing)
+				{
+					ServiceManager.Services
+						.GetService<ITracingService>()
+						.TraceRule(
+							ruleId: rule.Id, 
+							ruleName: rule.Name, 
+							ruleInput: context?.Xml?.OuterXml, 
+							ruleResult: result.Xml.OuterXml,
+							workflowInstanceId: _workflowInstanceId
+						);
+				}
+				
 				return exceptions;
 			}
 			catch(Exception ex)

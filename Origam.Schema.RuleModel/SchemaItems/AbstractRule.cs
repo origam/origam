@@ -21,7 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml.Serialization;
+using Origam.DA;
 using Origam.DA.Common;
 using Origam.Schema.EntityModel;
 using Origam.DA.ObjectPersistence;
@@ -97,6 +99,17 @@ namespace Origam.Schema.RuleModel
 		}
 
 		public abstract bool IsPathRelative{get;set;}
+		
+		[DefaultValue(Trace.InheritFromParent)]
+		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
+		[EntityColumn("I01")] 
+		[RuntimeConfigurable ("traceLevel")]
+		[DisplayName("Trace Level")]
+		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
+
+		[Category("Tracing")]
+   
+		public Trace Trace => TraceLevel;
 
 		#endregion
 
