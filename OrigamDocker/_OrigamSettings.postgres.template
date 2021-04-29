@@ -21,6 +21,7 @@
         <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
         <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
         <ReportDefinitionsPath>OrigamSettings_ReportDefinitionsPath</ReportDefinitionsPath>
+		<PathToRuntimeModelConfig>OrigamSettings_RuntimeModelConfigurationPath</PathToRuntimeModelConfig>
       </OrigamSettings>
     </ArrayOfOrigamSettings>
   </xmlSerializerSection>
