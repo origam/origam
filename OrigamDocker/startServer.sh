@@ -177,6 +177,7 @@ if [[ ! -f "OrigamSettings.config" ]]; then
 		sed -i "s|OrigamSettings_ModelName|data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
 		sed -i "s/OrigamSettings_Title/${OrigamSettings_Title}/" OrigamSettings.config
 		sed -i "s|OrigamSettings_ReportDefinitionsPath|${OrigamSettings_ReportDefinitionsPath}|" OrigamSettings.config
+		sed -i "s|OrigamSettings_RuntimeModelConfigurationPath|${OrigamSettings_RuntimeModelConfigurationPath}|" OrigamSettings.config
 	fi
 fi
 export gitUrl
