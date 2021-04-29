@@ -8,7 +8,8 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import {getLocaleFromCookie} from "utils/cookies";
+import {getDefaultCsDateFormatDataFromCookie} from "utils/cookies";
+import {csToMomentFormat} from "../../../../../../utils/dateFormatConversion";
 
 const OPERATORS = [
     Operator.equals,
@@ -53,7 +54,8 @@ const OpEditors: React.FC<{
   onKeyDown?: (event: any) => void;
 }> = observer((props) => {
   const { setting } = props;
-  const dateFormats = getDateFormats();
+  const dateFormatCs = getDefaultCsDateFormatDataFromCookie().defaultLongDateFormat;
+  const dateFormatMoment= csToMomentFormat(dateFormatCs)!;
   switch (setting.type) {
     case "eq":
     case "neq":
@@ -64,8 +66,8 @@ const OpEditors: React.FC<{
       return (
         <DateTimeEditor
           value={setting.val1 ?? ""}
-          outputFormat={dateFormats.momentFormat}
-          outputFormatToShow={dateFormats.userModelFormat}
+          outputFormat={dateFormatMoment}
+          outputFormatToShow={dateFormatCs}
           onChange={(event, isoDay) => {
             runInAction(()=> {
               setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -83,8 +85,8 @@ const OpEditors: React.FC<{
         <>
           <DateTimeEditor
             value={setting.val1}
-            outputFormat={dateFormats.momentFormat}
-            outputFormatToShow={dateFormats.userModelFormat}
+            outputFormat={dateFormatMoment}
+            outputFormatToShow={dateFormatCs}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -97,8 +99,8 @@ const OpEditors: React.FC<{
           />
           <DateTimeEditor
             value={setting.val2}
-            outputFormat={dateFormats.momentFormat}
-            outputFormatToShow={dateFormats.userModelFormat}
+            outputFormat={dateFormatMoment}
+            outputFormatToShow={dateFormatCs}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -173,16 +175,4 @@ function removeTimeZone(isoDateString: string | null | undefined) {
 interface IDateFormats{
   momentFormat: string;
   userModelFormat: string
-}
-
-function getDateFormats(): IDateFormats{
-  const locale = getLocaleFromCookie();
-  return {
-    momentFormat: locale === "en-US"
-      ? "MM/DD/YYYY h:mm:ss"
-      : "DD.MM.YYYY h:mm:ss",
-    userModelFormat: locale === "en-US"
-      ? "MM/dd/yyyy h:mm:ss"
-      : "dd.MM.yyyy h:mm:ss"
-  }
 }
