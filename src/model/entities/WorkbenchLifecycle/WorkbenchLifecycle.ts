@@ -172,6 +172,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       // implemented for paginated screens on server side. There is no need to paginate
       // when we have just one record, hence it is ok to execute the screen in without
       // pagination
+      menuItem = {...menuItem};
+      delete menuItem.parent;
+      delete menuItem.elements;
       menuItem = produce(menuItem, (draft: any) => {
         draft.attributes.isLazyLoading = "false";
       });

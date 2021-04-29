@@ -38,7 +38,7 @@ export class ErrorDialogController implements IErrorDialogController {
 
   @computed get errorMessages() {
     return this.errorStack.map((errItem) => {
-      console.log(errItem.error, "response.");
+      console.error(errItem.error);
 
       const handlePlainText = () =>
         _.get(errItem.error, "response.headers.content-type", "").startsWith("text/plain") &&
