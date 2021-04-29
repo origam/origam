@@ -496,7 +496,7 @@ export class DateTimeEditor extends React.Component<{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor,
           }}
-          title={this.autocompletedText + '\n"' + this.props.outputFormat + '"'}
+          title={this.autocompletedText + '\n' + this.props.outputFormat}
           className={S.input}
           type="text"
           onBlur={this.handleInputBlur}
