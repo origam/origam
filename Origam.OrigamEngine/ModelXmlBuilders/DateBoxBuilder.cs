@@ -67,11 +67,16 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				switch(format)
 				{
 					case "Long":
-						pattern = culture.DateTimeFormat.ShortDatePattern;
+						pattern = "long"; 
+						break;					
+					case "Short":
+						pattern = "short"; 
+						break;					
+					case "Time":
+						pattern = "time"; 
 						break;
 					default:
-						pattern = "ddd dd. MM yyyy HH:mm";
-						break;
+						throw new NotImplementedException("Unknown option "+format);
 				}
 			}
 
