@@ -430,7 +430,7 @@ export class DateTimeEditor extends React.Component<{
                     />
                   )}
                   <input
-                    title={this.autocompletedText + '\n"' + this.props.outputFormatToShow + '"'}
+                    title={this.autocompletedText + '\n' + this.props.outputFormatToShow}
                     style={{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
