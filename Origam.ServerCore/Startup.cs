@@ -43,11 +43,9 @@ using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Resources;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Origam.Extensions;
 using Origam.ServerCore.Middleware;
 
 namespace Origam.ServerCore
@@ -168,13 +166,10 @@ namespace Origam.ServerCore
                 options.DefaultRequestCulture = languageConfig.DefaultCulture;
                 options.SupportedCultures = languageConfig.AllowedCultures;
                 options.SupportedUICultures = languageConfig.AllowedCultures;
-                options.RequestCultureProviders.Insert(0,
-                    new CookieRequestCultureProvider{CookieName = "origamCurrentLocale"});
-                options
-                    .RequestCultureProviders
-                    .Remove(typeof(AcceptLanguageHeaderRequestCultureProvider));
+                options.RequestCultureProviders.Clear();
+                options.RequestCultureProviders.Insert(0, 
+                    new OrigamCookieRequestCultureProvider(languageConfig));
             });
-            services.AddScoped<RequestLocalizationCookiesMiddleware>();
         }
 
         public void Configure(
@@ -202,7 +197,6 @@ namespace Origam.ServerCore
             var localizationOptions = app.ApplicationServices
                 .GetService<IOptions<RequestLocalizationOptions>>().Value;
             app.UseRequestLocalization(localizationOptions);
-            app.UseRequestLocalizationCookies();
             app.UseIdentityServer();
             app.MapWhen(
                 IsPublicUserApiRoute,

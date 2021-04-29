@@ -756,10 +756,10 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         public IActionResult SetLanguage(string culture, string returnUrl)
         {
             var cultureProvider = _requestLocalizationOptions.RequestCultureProviders
-                .OfType<CookieRequestCultureProvider>().First();
+                .OfType<OrigamCookieRequestCultureProvider>().First();
             Response.Cookies.Append(
                 cultureProvider.CookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                cultureProvider.MakeCookieValue(new RequestCulture(culture)),
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );
 
