@@ -33,9 +33,6 @@ namespace Origam.ServerCore.Configuration
     public class LanguageConfig
     {
         public RequestCulture DefaultCulture { get; }
-
-        public CultureItem DefaultCultureItem => CultureItems
-            .First(items => items.CultureName == DefaultCulture.Culture.Name);
         public CultureInfo[] AllowedCultures { get; }
         public CultureItem[] CultureItems { get; }
 
@@ -91,7 +88,7 @@ namespace Origam.ServerCore.Configuration
         
         public static DefaultDateFormats Create(IConfigurationSection parentSection)
         {
-            var section = parentSection.GetSection("DateCompleterConfig");
+            var section = parentSection.GetSection("DefaultDateFormats");
             return new DefaultDateFormats
             {
                 Short = section?["Short"] ?? "dd.MM.yyyy",
@@ -105,6 +102,7 @@ namespace Origam.ServerCore.Configuration
     {
         public string DateSeparator { get; set; }
         public string TimeSeparator { get; set; } = ":";
+        public string DateTimeSeparator { get; set; } = " ";
         public DateSequence DateSequence { get; set; } =
             DateSequence.DayMonthYear;
 
@@ -122,6 +120,7 @@ namespace Origam.ServerCore.Configuration
             {
                 DateSeparator = section?["DateSeparator"] ?? ".",
                 TimeSeparator = section?["TimeSeparator"] ?? ":",
+                DateTimeSeparator = section?["DateTimeSeparator"] ?? " ",
                 DateSequence = sequence
             };
         }

@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
@@ -71,7 +72,8 @@ namespace Origam.ServerCore
                 throw new ArgumentNullException(nameof(requestCulture));
             }
 
-            var cultureItem = languageConfig.DefaultCultureItem;
+            var cultureItem = languageConfig.CultureItems
+                .First(items => items.CultureName == requestCulture.Culture.Name);;
             return string.Join(cookieSeparator, 
                 new[]
                 {
@@ -79,6 +81,7 @@ namespace Origam.ServerCore
                     $"{uiCulturePrefix}{requestCulture.UICulture.Name}",
                     "defaultDateSeparator=" + cultureItem.DateCompleterConfig.DateSeparator,
                     "defaultTimeSeparator=" + cultureItem.DateCompleterConfig.TimeSeparator,
+                    "defaultDateTimeSeparator=" + cultureItem.DateCompleterConfig.DateTimeSeparator,
                     "defaultDateSequence=" + cultureItem.DateCompleterConfig.DateSequence,
                     "defaultLongDateFormat=" + cultureItem.DefaultDateFormats.Long,
                     "defaultShortDateFormat=" + cultureItem.DefaultDateFormats.Short,
