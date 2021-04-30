@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamTraceRule" (
+	"RuleName" Varchar(100) NULL,
+	"RuleId" Uuid NULL,
+	"DataIn" Varchar(500) NULL,
+	"DataOut" Varchar(500) NULL,
+	"refOrigamTraceWorkflowId" Uuid NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
