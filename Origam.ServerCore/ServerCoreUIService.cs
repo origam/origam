@@ -126,11 +126,13 @@ namespace Origam.ServerCore
                 result.Favorites = (string)favorites
                     .Tables["OrigamFavoritesUserConfig"].Rows[0]["ConfigXml"];
             }
-            if(sessionManager.HasPortalSession(profile.Id))
-            {
-                var portalSessionStore = sessionManager.GetPortalSession(
-                    profile.Id);
-                var clearAll = portalSessionStore.ShouldBeCleared();
+
+            sessionManager.AddOrUpdatePortalSession(
+                id: profile.Id, 
+                addSession: id => new PortalSessionStore(profile.Id),
+                updateSession: (storeId, portalSessionStore) =>    
+                {
+                    var clearAll = portalSessionStore.ShouldBeCleared();
                 // running session, we get all the form sessions
                 var sessionsToDestroy = new ArrayList();
                 foreach(var mainSessionStore in portalSessionStore.FormSessions)
@@ -197,14 +199,9 @@ namespace Origam.ServerCore
                 {
                     portalSessionStore.ResetSessionStart();
                 }
-            }
-            else
-            {
-                // new session
-                var portalSessionStore = new PortalSessionStore(profile.Id);
-                sessionManager.AddPortalSession(profile.Id, portalSessionStore);
-            }
 
+                return portalSessionStore;
+            });
             result.UserName = profile.FullName;
             result.UserId = profile.Id;
             result.Tooltip = ToolTipTools.NextTooltip();
@@ -212,7 +209,7 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return result;
         }
-        
+
         public void Logout()
         {
             PortalSessionStore pss;

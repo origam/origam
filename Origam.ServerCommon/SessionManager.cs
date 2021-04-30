@@ -20,8 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
@@ -34,22 +33,24 @@ namespace Origam.Server
 {
     public class SessionManager
     {
-        private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
-        private readonly Dictionary<Guid, SessionStore> formSessions;
-        private readonly Dictionary<Guid, ReportRequest> reportRequests;
-        private readonly Dictionary<Guid, BlobDownloadRequest> 
+        private readonly ConcurrentDictionary<Guid, PortalSessionStore> portalSessions;
+        private readonly ConcurrentDictionary<Guid, SessionStore> formSessions;
+        private readonly ConcurrentDictionary<Guid, ReportRequest> reportRequests;
+        private readonly ConcurrentDictionary<Guid, BlobDownloadRequest> 
             blobDownloadRequests;
-        private readonly Dictionary<Guid, BlobUploadRequest> 
+        private readonly ConcurrentDictionary<Guid, BlobUploadRequest> 
             blobUploadRequests;
         private readonly Analytics analytics;
+        private static readonly log4net.ILog log = log4net.LogManager
+            .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public SessionManager(
-            Dictionary<Guid, PortalSessionStore> portalSessions,
-            Dictionary<Guid, SessionStore> formSessions, 
+            ConcurrentDictionary<Guid, PortalSessionStore> portalSessions,
+            ConcurrentDictionary<Guid, SessionStore> formSessions, 
             Analytics analytics,
-            Dictionary<Guid, ReportRequest> reportRequests,
-            Dictionary<Guid, BlobDownloadRequest> blobDownloadRequests,
-            Dictionary<Guid, BlobUploadRequest> blobUploadRequests)
+            ConcurrentDictionary<Guid, ReportRequest> reportRequests,
+            ConcurrentDictionary<Guid, BlobDownloadRequest> blobDownloadRequests,
+            ConcurrentDictionary<Guid, BlobUploadRequest> blobUploadRequests)
         {
             this.analytics = analytics;
             this.portalSessions = portalSessions;
@@ -63,39 +64,40 @@ namespace Origam.Server
         
         public void RemoveFormSession(Guid sessionFormIdentifier)
         {
-            lock (((IDictionary)formSessions).SyncRoot)
+            if(!formSessions.TryRemove(sessionFormIdentifier, out _))
             {
-                formSessions.Remove(sessionFormIdentifier);
+                log.Warn($"Form session with id: {sessionFormIdentifier} was not removed because it did not exist");
             }
         }
 
         public void RemovePortalSession(Guid id)
         {
-            portalSessions.Remove(id);
+            if (!portalSessions.TryRemove(id, out _))
+            {
+                log.Warn($"Portal session with id: {id} was not removed because it did not exist");
+            }
         }
 
-        public void AddPortalSession(Guid id,PortalSessionStore portalSessionStore )
+        public void AddPortalSessionIfNotExist(Guid id, Func<Guid, 
+            PortalSessionStore> createSession )
         {
-            portalSessions.Add(id, portalSessionStore);
+            portalSessions.GetOrAdd(id, createSession);
         }
 
         public PortalSessionStore GetPortalSession(Guid id)
         {
-            return portalSessions[id];
+            portalSessions.TryGetValue(id, out var value);
+            return value;
         }
 
         public PortalSessionStore GetPortalSession()
         {
             Guid profileId = SecurityTools.CurrentUserProfile().Id;
 
-            if (!portalSessions.ContainsKey(profileId))
-            {
-                throw new SessionExpiredException();
-            } 
-            else
-            {
-                return portalSessions[profileId];
-            }
+            return portalSessions.GetOrAdd(
+                profileId,
+                guid => throw new SessionExpiredException()
+            );
         }
 
         public SessionStore GetSession(Guid sessionFormIdentifier)
@@ -110,30 +112,19 @@ namespace Origam.Server
 
         public bool SessionExists(Guid sessionFormIdentifier)
         {
-            lock (((IDictionary)formSessions).SyncRoot)
-            {
-                return formSessions.ContainsKey(sessionFormIdentifier);
-            }
+            return formSessions.TryGetValue(sessionFormIdentifier, out _);
         }
 
         public SessionStore GetSession(Guid sessionFormIdentifier, bool rootSession)
         {
             SecurityTools.CurrentUserProfile();
 
-            SessionStore ss;
-
-            try
-            {
-                lock (((IDictionary)formSessions).SyncRoot)
-                {
-                    ss = formSessions[sessionFormIdentifier];
-                }
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new SessionExpiredException();
-            }
-
+           SessionStore ss = formSessions
+               .GetOrAdd(
+                   sessionFormIdentifier, 
+                   guid =>  throw new SessionExpiredException()
+                );
+           
             if (ss == null)
             {
                 throw new Exception(string.Format(Resources.ErrorSessionNotFound, sessionFormIdentifier.ToString()));
@@ -152,23 +143,21 @@ namespace Origam.Server
         
         public void RegisterSession(SessionStore ss)
         {
-            lock (((IDictionary)formSessions).SyncRoot)
+            PortalSessionStore pss = GetPortalSession();
+            if (pss.IsExclusiveScreenOpen
+                && ! pss.ExclusiveSession.Equals(ss))
             {
-                PortalSessionStore pss = GetPortalSession();
-                if (pss.IsExclusiveScreenOpen
-                    && ! pss.ExclusiveSession.Equals(ss))
+                throw new RuleException(string.Format(Resources.ErrorCannotOpenScreenWhenExclusiveIsOpen,
+                    pss.ExclusiveSession.Title));
+            }
+            formSessions.AddOrUpdate(ss.Id, ss, (guid, store) => store);
+
+            if (!ss.Request.IsStandalone)
+            {
+                if (!pss.FormSessions.Contains(ss))
                 {
-                    throw new RuleException(string.Format(Resources.ErrorCannotOpenScreenWhenExclusiveIsOpen,
-                        pss.ExclusiveSession.Title));
-                }
-                formSessions[ss.Id] = ss;
-                if (!ss.Request.IsStandalone)
-                {
-                    if (!pss.FormSessions.Contains(ss))
-                    {
-                        pss.IsExclusiveScreenOpen = ss.IsExclusive;
-                        pss.FormSessions.Add(ss);
-                    }
+                    pss.IsExclusiveScreenOpen = ss.IsExclusive;
+                    pss.FormSessions.Add(ss);
                 }
             }
         }
@@ -177,8 +166,15 @@ namespace Origam.Server
             int dirtyScreens = 0;
             int runningWorkflows = 0;
             UserProfile profile = SecurityTools.CurrentUserProfile();
+
+            portalSessions.TryGetValue(profile.Id, out var portalSession);
+            if (portalSession == null)
+            {
+                return new SessionStats(dirtyScreens, runningWorkflows);
+            }
+
             foreach (SessionStore mainSessionStore
-                in portalSessions[profile.Id].FormSessions)
+                in portalSession.FormSessions)
             {
                 if (formSessions.ContainsKey(mainSessionStore.Id))
                 {
@@ -207,11 +203,7 @@ namespace Origam.Server
             }
             return new SessionStats(dirtyScreens, runningWorkflows);
         }
-
-        public bool HasPortalSession(Guid id)
-        {
-            return portalSessions.ContainsKey(id);
-        }
+        
         public bool HasFormSession(Guid id)
         {
             return formSessions.ContainsKey(id);
@@ -313,48 +305,75 @@ namespace Origam.Server
         
         public void AddReportRequest(Guid key, ReportRequest request)
         {
-            reportRequests.Add(key, request);
+            if (!reportRequests.TryAdd(key, request))
+            {
+                throw new ArgumentException($"Report request could not be added because another one with id {key} already exists");
+            }
         }
         public ReportRequest GetReportRequest(Guid key)
         {
-            return reportRequests.ContainsKey(key) 
-                ? reportRequests[key] : null;
+            reportRequests.TryGetValue(key, out var reportRequest);
+            return reportRequest;
         }
         public void RemoveReportRequest(Guid key)
         {
-            reportRequests.Remove(key);
+            if(!reportRequests.TryRemove(key, out _))
+            {
+                log.Warn($"Report request with id: {key} was not removed because it did not exist");
+            }
         }
         public void RemoveExcelFileRequest(Guid key)
         {
-            reportRequests.Remove(key);
+            if (!reportRequests.TryRemove(key, out _))
+            {
+                log.Warn($"Excel file request with id: {key} was not removed because it did not exist");
+            }
         }
         public void AddBlobDownloadRequest(Guid key,
             BlobDownloadRequest request)
         {
-            blobDownloadRequests.Add(key, request);
+            if (!blobDownloadRequests.TryAdd(key, request))
+            {
+                throw new ArgumentException($"Blob download request could not be added because another session with id {key} already exists");
+            }
         }
         public BlobDownloadRequest GetBlobDownloadRequest(Guid key)
         {
-            return blobDownloadRequests.ContainsKey(key) 
-                ? blobDownloadRequests[key] : null;
+            blobDownloadRequests.TryGetValue(key, out var request);
+            return request;
         }
         public void RemoveBlobDownloadRequest(Guid key)
         {
-            blobDownloadRequests.Remove(key);
+            if (!blobDownloadRequests.TryRemove(key, out _))
+            {
+                log.Warn($"Blob download request with id: {key} was not removed because it did not exist");
+            }
         }
         public void AddBlobUploadRequest(Guid key,
             BlobUploadRequest request)
         {
-            blobUploadRequests.Add(key, request);
+            if (!blobUploadRequests.TryAdd(key, request))
+            {
+                throw new ArgumentException($"Blob upload request could not be added because another session with id {key} already exists");
+            }
         }
         public BlobUploadRequest GetBlobUploadRequest(Guid key)
         {
-            return blobUploadRequests.ContainsKey(key) 
-                ? blobUploadRequests[key] : null;
+            blobUploadRequests.TryGetValue(key, out var request);
+            return request;
         }
         public void RemoveBlobUploadRequest(Guid key)
         {
-            blobUploadRequests.Remove(key);
+            if (!blobUploadRequests.TryRemove(key, out _))
+            {
+                log.Warn($"Blob upload request with id: {key} was not removed because it did not exist");
+            }    
+        }
+
+        public void AddOrUpdatePortalSession(Guid id, Func<Guid, PortalSessionStore> addSession,
+            Func<Guid, PortalSessionStore, PortalSessionStore> updateSession)
+        {
+            portalSessions.AddOrUpdate(id, addSession, updateSession);
         }
     }
 
