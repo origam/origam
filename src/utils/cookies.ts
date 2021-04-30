@@ -93,10 +93,5 @@ export async function initLocaleCookie(ctx: any) {
     return;
   }
   const api = getApi(ctx);
-  const defaultCultureInfo = await api.defaultCulture();
-  const expireDate = new Date();
-  expireDate.setTime(expireDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-  const expires = "; expires=" + expireDate.toUTCString();
-  const cultureInfo = "c=" + defaultCultureInfo.culture + "|uic=" + defaultCultureInfo.uiCulture;
-  document.cookie = "origamCurrentLocale=" + cultureInfo + expires + "; Path=/";
+  document.cookie = "origamCurrentLocale=" + await api.defaultLocalizationCookie();
 }
