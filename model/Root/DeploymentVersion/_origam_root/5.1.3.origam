@@ -2,6 +2,7 @@
 <x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
+	dv:deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.1.2"
     x:id="754ccf82-9084-4b60-b65d-718809b6c798"
     asi:name="5.1.3"
     dv:version="5.1.3">
