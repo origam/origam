@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Origam.Server;
 
 namespace Origam.ServerCore
@@ -35,12 +35,12 @@ namespace Origam.ServerCore
         {
             var analytics = Analytics.Instance;
             SessionManager = new SessionManager(
-                portalSessions: new Dictionary<Guid, PortalSessionStore>(),
-                formSessions: new Dictionary<Guid, SessionStore>(),
-                reportRequests: new Dictionary<Guid, ReportRequest>(),
-                blobDownloadRequests: new Dictionary<Guid, 
+                portalSessions: new ConcurrentDictionary<Guid, PortalSessionStore>(),
+                formSessions: new ConcurrentDictionary<Guid, SessionStore>(),
+                reportRequests: new ConcurrentDictionary<Guid, ReportRequest>(),
+                blobDownloadRequests: new ConcurrentDictionary<Guid, 
                     BlobDownloadRequest>(),
-                blobUploadRequests: new Dictionary<Guid, BlobUploadRequest>(),
+                blobUploadRequests: new ConcurrentDictionary<Guid, BlobUploadRequest>(),
                 analytics: analytics);
             UIManager = new UIManager(50, SessionManager, analytics);
             UIService = new ServerCoreUIService(UIManager, SessionManager);
