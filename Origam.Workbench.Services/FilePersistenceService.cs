@@ -33,6 +33,7 @@ using MoreLinq;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
+using Origam.Git;
 using Origam.OrigamEngine;
 
 namespace Origam.Workbench.Services
@@ -57,14 +58,23 @@ namespace Origam.Workbench.Services
         {
             this.metaModelUpgradeService = metaModelUpgradeService;
             this.defaultFolders = defaultFolders;
-            this.pathToRuntimeModelConfig = pathToRuntimeModelConfig;
-            var topDirectory = GetTopDirectory(basePath);
+            DirectoryInfo topDirectory = GetTopDirectory(basePath);
             topDirectory.Create();
+            this.pathToRuntimeModelConfig = 
+                CheckRuntimeModelConfigPathAndUpdateGitIgnore(pathToRuntimeModelConfig, topDirectory);
             var pathFactory = new OrigamPathFactory(topDirectory);
             var pathToIndexBin = new FileInfo(Path.Combine(topDirectory.FullName, "index.bin"));
             var index = new FilePersistenceIndex(pathFactory);
             var fileChangesWatchDog =
-                GetNewWatchDog(topDirectory, watchFileChanges, pathToIndexBin);
+                GetNewWatchDog(
+                    topDir: topDirectory,
+                    watchFileChanges: watchFileChanges, 
+                    filesToIgnore: new List<FileInfo>
+                    {
+                        pathToIndexBin, 
+                        new FileInfo(this.pathToRuntimeModelConfig)
+                    }
+                );
             FileEventQueue = 
                 new FileEventQueue(index, fileChangesWatchDog);
             var origamFileManager = new OrigamFileManager(
@@ -101,11 +111,29 @@ namespace Origam.Workbench.Services
                 trackerLoaderFactory: trackerLoaderFactory,
                 origamFileManager: origamFileManager,
                 checkRules: checkRules,
-                runtimeModelConfig: new RuntimeModelConfig(pathToRuntimeModelConfig));
+                runtimeModelConfig: new RuntimeModelConfig(this.pathToRuntimeModelConfig));
             
             FileEventQueue.ReloadNeeded += OnReloadNeeded;
             SchemaListProvider = schemaProvider;
         }
+
+        private string CheckRuntimeModelConfigPathAndUpdateGitIgnore(string pathCandidate,
+            DirectoryInfo topDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(pathCandidate))
+            {
+                string configFileName = "RuntimeModelConfiguration.json";
+                IgnoreFileTools.TryAdd(topDirectory.FullName, configFileName);
+                return Path.Combine(topDirectory.FullName, configFileName);
+            }
+            if(!Path.IsPathRooted(pathCandidate))
+            {
+                IgnoreFileTools.TryAdd(topDirectory.FullName, pathCandidate);
+                return Path.Combine(topDirectory.FullName, pathCandidate);
+            }
+            return pathCandidate;
+        }
+
 
         private static DirectoryInfo GetTopDirectory(string basePath)
         {
@@ -128,7 +156,7 @@ namespace Origam.Workbench.Services
         }
 
         private IFileChangesWatchDog GetNewWatchDog(DirectoryInfo topDir,
-            bool watchFileChanges, FileInfo pathToIndexBin)
+            bool watchFileChanges, List<FileInfo> filesToIgnore)
         {
             if (!watchFileChanges)
             {
@@ -137,7 +165,7 @@ namespace Origam.Workbench.Services
             return new FileChangesWatchDog(
                 topDir: topDir,
                 fileExtensionsToIgnore: new HashSet<string>{"bak", "debug"},
-                filesToIgnore: new List<FileInfo> {pathToIndexBin},
+                filesToIgnore: filesToIgnore,
                 directoryNamesToIgnore: new List<string>{".git"});
         }
 

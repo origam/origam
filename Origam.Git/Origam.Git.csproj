@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="GitFileComparer.cs" />
     <Compile Include="GitManager.cs" />
+    <Compile Include="IgnoreFileTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebGitData.cs" />
     <Compile Include="WebGitXmlParser.cs" />
