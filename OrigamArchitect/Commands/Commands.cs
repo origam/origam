@@ -862,6 +862,10 @@ namespace OrigamArchitect.Commands
 			{
 				string fileName = packageName + "-" + language.Trim() + ".xml";
 				string outputPath = Path.Combine(Path.Combine(settings.ModelSourceControlLocation, "l10n"), fileName);
+				if (!string.IsNullOrEmpty(settings.LocalizationFolder))
+				{
+					outputPath = Path.Combine(settings.LocalizationFolder, fileName);
+				}
 				LocalizationCache currentTransaltions = null;
 				if(File.Exists(outputPath))
 				{
