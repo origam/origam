@@ -329,8 +329,8 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.get("/UIService/GetNotificationBoxContent")).data;
   }
 
-  async defaultCulture(): Promise<any> {
-    return (await this.axiosInstance.get("/UIService/DefaultCulture")).data;
+  async defaultLocalizationCookie(): Promise<any> {
+    return (await this.axiosInstance.get("/UIService/DefaultLocalizationCookie")).data;
   }
 
   async initPortal(): Promise<any> {

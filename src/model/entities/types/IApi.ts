@@ -142,7 +142,7 @@ export interface IApi {
 
   getNotificationBoxContent(): Promise<any>;
 
-  defaultCulture(): Promise<any>;
+  defaultLocalizationCookie(): Promise<any>;
 
   initPortal(): Promise<any>;
 
