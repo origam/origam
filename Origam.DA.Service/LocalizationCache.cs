@@ -169,11 +169,14 @@ namespace Origam.DA.ObjectPersistence
 
 		public void Reload()
 		{
-			rwLock.RunWriter(LoadFromLocalizationFolder);
+			rwLock.RunWriter(ReloadCache);
 		}
-
-
-		public string GetLocalizedString(Guid elementId, string memberName, 
+        private void ReloadCache()
+        {
+			languages.Clear();
+            LoadFromLocalizationFolder();
+		}
+        public string GetLocalizedString(Guid elementId, string memberName, 
 			string defaultString, string locale)
 		{
 			return rwLock.RunReader(() =>
