@@ -76,7 +76,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						pattern = "time"; 
 						break;
 					default:
-						throw new NotImplementedException("Unknown option "+format);
+						throw new NotImplementedException("Unknown option " + format);
 				}
 			}
 
