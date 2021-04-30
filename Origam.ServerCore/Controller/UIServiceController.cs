@@ -64,8 +64,7 @@ namespace Origam.ServerCore.Controller
     {
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataLookupService lookupService;
-        private readonly IOptions<RequestLocalizationOptions> 
-            localizationOptions;
+        private readonly RequestLocalizationOptions localizationOptions;
         private readonly CustomAssetsConfig customAssetsConfig;
         private readonly HtmlClientConfig htmlClientConfig;
         private readonly ChatConfig chatConfig;
@@ -81,7 +80,7 @@ namespace Origam.ServerCore.Controller
             : base(log, sessionObjects)
         {
             this.localizer = localizer;
-            this.localizationOptions = localizationOptions;
+            this.localizationOptions = localizationOptions.Value;
             customAssetsConfig = customAssetsOptions.Value;
             htmlClientConfig = htmlClientConfigOptions.Value;
             lookupService
@@ -102,9 +101,16 @@ namespace Origam.ServerCore.Controller
             });
         }
         [HttpGet("[action]")]
-        public IActionResult DefaultCulture()
+        public IActionResult DefaultLocalizationCookie()
         {
-            return Ok(localizationOptions.Value.DefaultRequestCulture);
+            return RunWithErrorHandler(() =>
+            {
+                var cultureProvider = localizationOptions.RequestCultureProviders
+                    .OfType<OrigamCookieRequestCultureProvider>().First();
+                string localizationCookie = cultureProvider.MakeCookieValue(
+                    localizationOptions.DefaultRequestCulture);
+                return Ok(localizationCookie);
+            });
         }
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
