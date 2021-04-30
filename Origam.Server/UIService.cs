@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -76,17 +77,17 @@ namespace Origam.Server
             IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             parameterService.SetFeatureStatus("FLASH", true);
 
-            var portalSessions = (Dictionary<Guid, PortalSessionStore>)FluorineFx.Context.FluorineContext.Current.ApplicationState["portals"];
+            var portalSessions = (ConcurrentDictionary<Guid, PortalSessionStore>)FluorineFx.Context.FluorineContext.Current.ApplicationState["portals"];
             if (portalSessions == null)
             {
-                portalSessions = new Dictionary<Guid, PortalSessionStore>();
+                portalSessions = new ConcurrentDictionary<Guid, PortalSessionStore>();
                 FluorineFx.Context.FluorineContext.Current.ApplicationState["portals"] = portalSessions;
             }
 
-            var formSessions = (Dictionary<Guid, SessionStore>)FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"];
+            var formSessions = (ConcurrentDictionary<Guid, SessionStore>)FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"];
             if (formSessions == null)
             {
-                formSessions = new Dictionary<Guid, SessionStore>();
+                formSessions = new ConcurrentDictionary<Guid, SessionStore>();
                 FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"] = formSessions;
             }
 
@@ -151,75 +152,73 @@ namespace Origam.Server
                 result.Favorites = (string)favorites.Tables["OrigamFavoritesUserConfig"].Rows[0]["ConfigXml"];
             }
 
-            if (sessionManager.HasPortalSession(profile.Id))
-            {
-                var portalSessionStore = sessionManager.GetPortalSession(profile.Id);
-                bool clearAll = portalSessionStore.ShouldBeCleared();
-                // running session, we get all the form sessions
-
-                ArrayList sessionsToDestroy = new ArrayList();
-
-                foreach (SessionStore mainSS in portalSessionStore.FormSessions)
+            sessionManager.AddOrUpdatePortalSession(
+                profile.Id, 
+                addSession: id => new PortalSessionStore(id),
+                updateSession: (storeId, portalSessionStore) =>
                 {
-                    if (clearAll)
-                    {
-                        sessionsToDestroy.Add(mainSS.Id);
-                    }
-                    else if (sessionManager.HasFormSession(mainSS.Id))
-                    {
-                        SessionStore ss = (mainSS.ActiveSession == null ? mainSS : mainSS.ActiveSession);
+                    bool clearAll = portalSessionStore.ShouldBeCleared();
+                    // running session, we get all the form sessions
 
-                        if (ss is SelectionDialogSessionStore || ss.IsModalDialog)
+                    ArrayList sessionsToDestroy = new ArrayList();
+
+                    foreach (SessionStore mainSS in portalSessionStore.FormSessions)
+                    {
+                        if (clearAll)
                         {
-                            sessionsToDestroy.Add(ss.Id);
+                            sessionsToDestroy.Add(mainSS.Id);
+                        }
+                        else if (sessionManager.HasFormSession(mainSS.Id))
+                        {
+                            SessionStore ss = (mainSS.ActiveSession == null ? mainSS : mainSS.ActiveSession);
+
+                            if (ss is SelectionDialogSessionStore || ss.IsModalDialog)
+                            {
+                                sessionsToDestroy.Add(ss.Id);
+                            }
+                            else
+                            {
+                                WorkflowSessionStore wss = ss as WorkflowSessionStore;
+                                bool askWorkflowClose = false;
+                                if (wss != null) askWorkflowClose = wss.AskWorkflowClose;
+                                
+                                bool hasChanges = HasChanges(ss);
+
+                                result.Sessions.Add(new PortalResultSession(ss.Id, ss.Request.ObjectId, hasChanges, ss.Request.Type, ss.Request.Caption, ss.Request.Icon, askWorkflowClose));
+                            }
                         }
                         else
                         {
-                            WorkflowSessionStore wss = ss as WorkflowSessionStore;
-                            bool askWorkflowClose = false;
-                            if (wss != null) askWorkflowClose = wss.AskWorkflowClose;
-                            
-                            bool hasChanges = HasChanges(ss);
-
-                            result.Sessions.Add(new PortalResultSession(ss.Id, ss.Request.ObjectId, hasChanges, ss.Request.Type, ss.Request.Caption, ss.Request.Icon, askWorkflowClose));
+                            // session is registered in the user's portal, but not in the UIService anymore,
+                            // we have to destroy it
+                            sessionsToDestroy.Add(mainSS.Id);
                         }
                     }
-                    else
-                    {
-                        // session is registered in the user's portal, but not in the UIService anymore,
-                        // we have to destroy it
-                        sessionsToDestroy.Add(mainSS.Id);
-                    }
-                }
 
-                foreach (Guid id in sessionsToDestroy)
-                {
-                    try
+                    foreach (Guid id in sessionsToDestroy)
                     {
-                        DestroyUI(id);
-                    }
-                    catch(Exception ex)
-                    {
-                        if(log.IsFatalEnabled)
+                        try
                         {
-                            log.Error(
-                                "Failed to destroy session " + id.ToString()
-                                + ".", ex);
+                            DestroyUI(id);
+                        }
+                        catch(Exception ex)
+                        {
+                            if(log.IsFatalEnabled)
+                            {
+                                log.Error(
+                                    "Failed to destroy session " + id.ToString()
+                                    + ".", ex);
+                            }
                         }
                     }
-                }
-                if (clearAll)
-                {
-                    portalSessionStore.ResetSessionStart();
-                }
-            }
-            else
-            {
-                // new session
-                PortalSessionStore pss = new PortalSessionStore(profile.Id);
-                sessionManager.AddPortalSession(profile.Id, pss);
-            }
+                    if (clearAll)
+                    {
+                        portalSessionStore.ResetSessionStart();
+                    }
 
+                    return portalSessionStore;
+                }
+            );
             result.UserName = profile.FullName;
             result.UserId = profile.Id;
             result.Tooltip = ToolTipTools.NextTooltip();

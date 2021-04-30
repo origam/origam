@@ -59,11 +59,11 @@ namespace Origam.ServerCore.Controllers
             return await RunWithErrorHandlerAsync(async () =>
             {
                 UserProfile profile = SecurityTools.CurrentUserProfile();
-                if (!sessionObjects.SessionManager.HasPortalSession(profile.Id))
-                {
-                    PortalSessionStore pss = new PortalSessionStore(profile.Id);
-                    sessionObjects.SessionManager.AddPortalSession(profile.Id, pss);
-                }
+                PortalSessionStore pss = new PortalSessionStore(profile.Id);
+                sessionObjects.SessionManager.AddPortalSessionIfNotExist(
+                    id: profile.Id,
+                    createSession: id => new PortalSessionStore(id)
+                );
                 Guid newSessionId = Guid.NewGuid();
                 UIRequest uiRequest = new UIRequest
                 {
