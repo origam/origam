@@ -214,7 +214,7 @@ namespace Origam
 	    [Category("Model Connection")]
 	    public string ProfileProvider { get; set; } = "Origam.Security.OrigamProfileProvider, Origam.Security";	    
 	    [Category("Model Connection")]
-	    public string PathToRuntimeModelConfig { get; set; } = "RuntimeModelConfiguration.json";
+	    public string PathToRuntimeModelConfig { get; set; }
 
         [Category("Data Connection"), DefaultValue(2000)]
 		public int DataServiceExecuteProcedureTimeout { get; set; } = 2000;

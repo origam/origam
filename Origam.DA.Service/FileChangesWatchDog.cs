@@ -60,8 +60,6 @@ namespace Origam.DA.Service
         private readonly IEnumerable<FileInfo> filesToIgnore;
         private readonly IEnumerable<string> directoryNamesToIgnore;
         private FileSystemWatcher watcher;
-        private HashSet<string> IgnorePaths { get;} 
-            = new HashSet<string>();
 
         public FileChangesWatchDog(
             DirectoryInfo topDir,
