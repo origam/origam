@@ -54,13 +54,7 @@ export function getDefaultCsDateFormatDataFromCookie(): IDefaultDateFormats {
   if (!_defaultDateFormats) {
     const cookieValue = unescape(getCookie("origamCurrentLocale"));
     try {
-      const parameters = cookieValue
-        .split("|")
-        .map(pair => pair.split("="))
-        .reduce(function (map: { [key: string]: string }, pair) {
-          map[pair[0]] = pair[1];
-          return map;
-        }, {});
+      const parameters = getCookieParameters(cookieValue);
 
       _defaultDateFormats = {
         defaultDateSeparator: getParameter("defaultDateSeparator", parameters),
@@ -79,6 +73,24 @@ export function getDefaultCsDateFormatDataFromCookie(): IDefaultDateFormats {
   return _defaultDateFormats;
 }
 
+function getCookieParameters(cookieValue: string){
+  return cookieValue
+    .split("|")
+    .map(pair => pair.split("="))
+    .reduce(function (map: { [key: string]: string }, pair) {
+      map[pair[0]] = pair[1];
+      return map;
+    }, {});
+}
+
+function isValidLocalizationCookie(cookieValue: string){
+  if(!cookieValue){
+    return false;
+  }
+  let parameters = getCookieParameters(cookieValue);
+  return Object.keys(parameters).length === 9;
+}
+
 function getParameter(name: string, parameters: { [key: string]: string }){
   let value = parameters[name];
   if(!value){
@@ -89,7 +101,7 @@ function getParameter(name: string, parameters: { [key: string]: string }){
 
 export async function initLocaleCookie(ctx: any) {
   const cookieValue = unescape(getCookie("origamCurrentLocale"));
-  if (cookieValue) {
+  if (isValidLocalizationCookie(cookieValue)) {
     return;
   }
   const api = getApi(ctx);
