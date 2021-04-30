@@ -23,7 +23,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 
-namespace Origam.ServerCore
+namespace Origam.ServerCore.Middleware
 {
     public static class SpaApplicationBuilderExtensions
     {
