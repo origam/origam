@@ -43,6 +43,7 @@ namespace Origam.Gui.Win
         private readonly Func<Guid> FormPanelIdGetter;
         private readonly Func<string> dataMemberGetter;
         private readonly Func<FormGenerator> formGeneratorGetter;
+        private readonly Func<Guid> formIdGetter;
         private readonly Func<ToolStrip> toolStripGetter;
         private IList<ToolStripItem> actionButtons;
         private ToolStripItem dafaultButton;
@@ -63,7 +64,8 @@ namespace Origam.Gui.Win
         public ActionButtonManager(Func<CurrencyManager> bindingManagerGetter,
             Func<Guid> parentIdGetter, Func<DataSet> dataSourceGetter, 
             Func<Guid> formPanelIdGetter, Func<string> dataMemberGetter, 
-            Func<ToolStrip> toolStripGetter,Func<FormGenerator> formGeneratorGetter)
+            Func<ToolStrip> toolStripGetter,Func<FormGenerator> formGeneratorGetter,
+            Func<Guid> formIdGetter)
         {
             this.bindingManagerGetter = bindingManagerGetter;
             this.parentIdGetter = parentIdGetter;
@@ -72,6 +74,7 @@ namespace Origam.Gui.Win
             this.dataMemberGetter = dataMemberGetter;
             this.toolStripGetter = toolStripGetter;
             this.formGeneratorGetter = formGeneratorGetter;
+            this.formIdGetter = formIdGetter;
         }
         
         public void RunDefaultAction()
@@ -145,7 +148,7 @@ namespace Origam.Gui.Win
             if (noDataToDisplay)
             {
                 return ruleEngine
-                    .GetDisabledActions(null, null, entityId, Guid.Empty)
+                    .GetDisabledActions(null, null, entityId,  formIdGetter())
                     .Cast<string>()
                     .ToList();
             }
@@ -162,7 +165,7 @@ namespace Origam.Gui.Win
                     : DataRowVersion.Default);
 
             return ruleEngine
-                .GetDisabledActions(originalData, actualData, entityId, Guid.Empty)
+                .GetDisabledActions(originalData, actualData, entityId, formIdGetter())
                 .Cast<string>()
                 .ToList();
         }

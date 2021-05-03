@@ -155,7 +155,8 @@ namespace Origam.Gui.Win
 				formPanelIdGetter: () => FormPanelId,
 				dataMemberGetter: () => DataMember,
 				toolStripGetter: () => ToolStrip,
-				formGeneratorGetter: () => Generator);
+				formGeneratorGetter: () => Generator,
+				formIdGetter: () => (Guid)(FindForm() as AsForm).PrimaryKey["Id"]);
 		}
 
 		public AsPanel(IContainer container) : this()
