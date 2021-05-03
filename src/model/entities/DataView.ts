@@ -650,10 +650,14 @@ export class DataView implements IDataView {
     }
   }
 
+  get isLazyLoading(){
+    return isLazyLoading(this) && this.isRootGrid
+  }
+
   @action.bound
   async start() {
     this.lifecycle.start();
-    const serverSideGrouping = isLazyLoading(this);
+    const serverSideGrouping = this.isLazyLoading;
     if (serverSideGrouping) {
       this.serverSideGrouper.start();
     }
