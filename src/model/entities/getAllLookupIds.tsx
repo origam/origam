@@ -11,7 +11,7 @@ import {getUserFilterLookups} from "model/selectors/DataView/getUserFilterLookup
 
 export function* getAllLookupIds(property: IProperty): Generator {
   const dataView = getDataView(property);
-  if (isLazyLoading(dataView)) {
+  if (dataView.isLazyLoading) {
       return yield getAllValuesOfProp(property);
   }
   else {
