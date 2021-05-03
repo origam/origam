@@ -71,11 +71,11 @@ export class TableViewInner extends React.Component<
   componentDidMount() {
     const openScreen = getOpenedScreen(this.props.dataView);
     const dataViews = openScreen.content.formScreen?.dataViews;
-    const isMainDatView =
+    const isMainDataView =
       (dataViews && dataViews.length > 0 && this.props.dataView?.isBindingRoot) ||
       dataViews?.length === 1;
 
-    if (openScreen.isActive && isMainDatView) {
+    if (openScreen.isActive && isMainDataView) {
       if (!this.props.dataView?.isFormViewActive()) {
         const tablePanelView = getTablePanelView(this.props.dataView);
         tablePanelView.triggerOnFocusTable();
