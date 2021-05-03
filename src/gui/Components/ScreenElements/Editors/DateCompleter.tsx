@@ -62,7 +62,7 @@ export default class DateCompleter {
       return undefined;
     }
     const trimmedText = text.trim();
-    if (this.dateSequence === DateSequence.MontDayYear) {
+    if (this.dateSequence === DateSequence.MonthDayYear) {
       if (!this.isUSCompletionTriggered(trimmedText)) return;
     } else {
       if (!this.isEUCompletionTriggered(trimmedText)) return;
