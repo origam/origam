@@ -148,7 +148,7 @@ namespace Origam.Gui.Win
             if (noDataToDisplay)
             {
                 return ruleEngine
-                    .GetDisabledActions(null, null, entityId,  formIdGetter())
+                    .GetDisabledActions(null, null, entityId, formIdGetter())
                     .Cast<string>()
                     .ToList();
             }
