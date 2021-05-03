@@ -109,7 +109,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     function* (this: OrderingConfiguration) {
       const dataView = getDataView(this);
       const dataTable = getDataTable(dataView);
-      if (!isLazyLoading(dataView)) {
+      if (!dataView.isLazyLoading) {
         const comboProps = this.userOrderings
           .map((term) => getDataViewPropertyById(this, term.columnId)!)
           .filter((prop) => prop.column === "ComboBox");

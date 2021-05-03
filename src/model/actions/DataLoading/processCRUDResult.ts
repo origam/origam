@@ -70,7 +70,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
         const dataSourceRow = result.wrappedObject;
         const shouldLockNewRowAtTop = sourceDataView?.modelInstanceId === dataView.modelInstanceId;
         
-        if(isLazyLoading(dataView) && dataView.isRootGrid){
+        if(dataView.isLazyLoading){
           yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
           try{
             dataView.lifecycle.stopSelectedRowReaction();
