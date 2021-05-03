@@ -128,6 +128,6 @@ namespace Origam.ServerCore.Configuration
 
     public enum DateSequence
     {
-        DayMonthYear, MontDayYear
+        DayMonthYear, MonthDayYear
     }
 }
