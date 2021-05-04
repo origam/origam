@@ -55,6 +55,7 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
+import {getTrueSelectedRowIndex} from "../../model/selectors/DataView/getTrueSelectedRowIndex";
 
 function isAddRecordShortcut(event: any) {
   return (
@@ -190,7 +191,7 @@ export class CDataViewHeaderInner extends React.Component<{
   }
 
   renderRowCount() {
-    const selectedRowIndex = getSelectedRowIndex(this.dataView);
+    const selectedRowIndex = getTrueSelectedRowIndex(this.dataView);
     const totalRowCount = getTotalRowCount(this.dataView);
     const groupRowCount = getExpandedGroupRowCount(this.dataView);
     if (groupRowCount) {
@@ -271,9 +272,9 @@ export class CDataViewHeaderInner extends React.Component<{
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
     const goToFirstRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping || isInfiniteScrollingActive(dataView);
+      getGroupingConfiguration(dataView).isGrouping; // || isInfiniteScrollingActive(dataView);
     const goToLastRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping || isInfiniteScrollingActive(dataView);
+      getGroupingConfiguration(dataView).isGrouping; // || isInfiniteScrollingActive(dataView);
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;

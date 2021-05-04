@@ -24,7 +24,14 @@ export class ScrollRowContainer implements IRowsContainer {
   @observable
   rowChunks: RowChunk[] = [];
   private readonly rowIdGetter: (row: any[]) => string;
-  _maxRowNumberSeen = 0;
+
+  getTrueIndexById(id: string){
+    const chunk = this.findChunkByRowId(id);
+    if(!chunk){
+      return undefined;
+    }
+    return chunk.rowOffset + chunk.getRowIdxById(id)!;
+  }
 
   async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {}
 
@@ -52,15 +59,14 @@ export class ScrollRowContainer implements IRowsContainer {
   delete(row: any[]): void {
     const rowId = this.rowIdGetter(row);
     const chunk = this.findChunkByRowId(rowId);
+    if(!chunk){
+      throw new Error(`Row with id "${rowId}" was not found`);
+    }
     chunk.delete(rowId);
   }
 
   findChunkByRowId(rowId: string) {
-    const chunk = this.rowChunks.find((chunk) => chunk.has(rowId));
-    if (!chunk) {
-      throw new Error(`Row with id "${rowId}" was not found`);
-    }
-    return chunk;
+    return this.rowChunks.find((chunk) => chunk.has(rowId));
   }
 
   findChunkByRowIndex(indexInContainer: number) {
@@ -341,6 +347,11 @@ class RowChunk {
         this.idMap.set(entry[0], entry[1] + 1);
       }
     }
+  }
+
+  getRowIdxById(id: string) {
+    const idx = this.rows.findIndex((row) => this.rowIdGetter(row) === id);
+    return idx > -1 ? idx : undefined;
   }
 }
 

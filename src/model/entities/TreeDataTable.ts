@@ -42,6 +42,11 @@ export class TreeDataTable implements IDataTable {
     this.parentIdProperty = parentIdProperty;
     this.idProperty = idProperty;
   }
+
+  getTrueIndexById(id: string): number | undefined {
+      const idx = this.rows.findIndex((row) => this.getRowId(row) === id);
+      return idx > -1 ? idx : undefined;
+    }
   
   deleteAdditionalCellData(row: any[], propertyId: string): void {
     throw new Error("Method not implemented.");

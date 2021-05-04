@@ -203,6 +203,11 @@ export class ListRowContainer implements IRowsContainer {
 
   parent: any;
 
+  getTrueIndexById(id: string){
+    const idx = this.rows.findIndex((row) => this.rowIdGetter(row) === id);
+    return idx > -1 ? idx : undefined;
+  }
+
   get addedRowPositionLocked(): boolean {
     return this.forcedLastRowId !== undefined;
   }

@@ -166,6 +166,10 @@ export class DataTable implements IDataTable {
     return this.rowsContainer.rows.find((row) => this.getRowId(row) === id);
   }
 
+  getTrueIndexById(id: string){
+    return this.rowsContainer.getTrueIndexById(id);
+  }
+
   getExistingRowIdxById(id: string) {
     const idx = this.rows.findIndex((row) => this.getRowId(row) === id);
     return idx > -1 ? idx : undefined;

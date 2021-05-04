@@ -34,4 +34,6 @@ export interface IRowsContainer {
   getFirstRow(): any[] | undefined;
 
   parent?: any;
+
+  getTrueIndexById(id: string): number | undefined;
 }
