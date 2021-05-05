@@ -148,6 +148,8 @@ export interface IDataView extends IDataViewData {
 
   initializeNewScrollLoader(): void;
   exportToExcel(): void;
+
+  isLazyLoading: Boolean;
 }
 
 export const isIDataView = (o: any): o is IDataView => o?.$type_IDataView;

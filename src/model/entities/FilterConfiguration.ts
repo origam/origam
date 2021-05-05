@@ -472,7 +472,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   @action.bound applyNewFilteringImm = flow(function* (this: FilterConfiguration) {
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
-    if (!isLazyLoading(dataView)) {
+    if (!dataView.isLazyLoading) {
       if (this.activeFilters.length > 0) {
         const comboProps = this.activeFilters
           .filter((filter) => filter.setting.isComplete)

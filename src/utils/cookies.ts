@@ -37,13 +37,13 @@ export interface IDefaultDateFormats{
 }
 
 export enum DateSequence{
-  DayMonthYear = 0, MontDayYear = 1
+  DayMonthYear = 0, MonthDayYear = 1
 }
 
 export function parseDateSequence(candidate: string){
   switch (candidate){
     case "DayMonthYear": return DateSequence.DayMonthYear;
-    case "MontDayYear": return DateSequence.MontDayYear;
+    case "MonthDayYear": return DateSequence.MonthDayYear;
     default: throw new Error("Cannot parse \""+candidate+"\" to DateSequence")
   }
 }
