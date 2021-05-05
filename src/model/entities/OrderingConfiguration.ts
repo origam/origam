@@ -29,7 +29,6 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getProperties } from "../selectors/DataView/getProperties";
-import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 function cycleOrdering(direction: IOrderByDirection) {
   switch (direction) {

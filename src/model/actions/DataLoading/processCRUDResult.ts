@@ -26,7 +26,6 @@ import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
-import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { IDataView } from "model/entities/types/IDataView";
 
 export enum IResponseOperation {

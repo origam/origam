@@ -24,7 +24,6 @@ import {getApi} from "model/selectors/getApi";
 import {getMenuItemId} from "model/selectors/getMenuItemId";
 import {getSessionId} from "model/selectors/getSessionId";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {getUserFilters} from "model/selectors/DataView/getUserFilters";
 import {getUserFilterLookups} from "model/selectors/DataView/getUserFilterLookups";
 
