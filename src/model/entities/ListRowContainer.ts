@@ -175,7 +175,7 @@ export class ListRowContainer implements IRowsContainer {
     await this.updateSortAndFilter();
   }
 
-  async set(rowsIn: any[][]): Promise<any>{
+  async set(rowsIn: any[][], rowOffset: number): Promise<any>{
     const dataTable = getDataTable(this);
     const rows: any[][] = [];
     for (let row of rowsIn) {
@@ -202,6 +202,11 @@ export class ListRowContainer implements IRowsContainer {
   registerResetListener(listener: () => void): void {}
 
   parent: any;
+
+  getTrueIndexById(id: string){
+    const idx = this.rows.findIndex((row) => this.rowIdGetter(row) === id);
+    return idx > -1 ? idx : undefined;
+  }
 
   get addedRowPositionLocked(): boolean {
     return this.forcedLastRowId !== undefined;

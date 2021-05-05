@@ -1,58 +1,58 @@
-export function firstGTE(
+export function firstGteIndex(
   elementGetter: (index: number) => number,
-  n: number,
+  elementCount: number,
   num: number
 ) {
-  let L = 0;
-  let R = n - 1;
+  let indexLeft= 0;
+  let indexRight = elementCount - 1;
   const T = num;
   let element;
-  while (L <= R) {
-    const m = Math.floor((L + R) / 2);
-    element = elementGetter(m);
+  while (indexLeft <= indexRight) {
+    const currentIndex = Math.floor((indexLeft + indexRight) / 2);
+    element = elementGetter(currentIndex);
     if (element < T) {
-      L = m + 1;
+      indexLeft = currentIndex + 1;
     } else if (element > T) {
-      R = m - 1;
+      indexRight = currentIndex - 1;
     } else {
-      return m;
+      return currentIndex;
     }
   }
-  return Math.max(L, R);
+  return Math.max(indexLeft, indexRight);
 }
 
-export function lastLTE(
+export function lastLteIndex(
   elementGetter: (index: number) => number,
-  n: number,
+  elementCount: number,
   num: number
 ) {
-  let L = 0;
-  let R = n - 1;
+  let indexLeft = 0;
+  let indexRight = elementCount - 1;
   const T = num;
   let element;
-  while (L <= R) {
-    const m = Math.floor((L + R) / 2);
-    element = elementGetter(m);
+  while (indexLeft <= indexRight) {
+    const currentIndex = Math.floor((indexLeft + indexRight) / 2);
+    element = elementGetter(currentIndex);
     if (element < T) {
-      L = m + 1;
+      indexLeft = currentIndex + 1;
     } else if (element > T) {
-      R = m - 1;
+      indexRight = currentIndex - 1;
     } else {
-      return m;
+      return currentIndex;
     }
   }
-  return Math.min(L, R);
+  return Math.min(indexLeft, indexRight);
 }
 
 export function rangeQuery(
   elementGetterL: (index: number) => number,
   elementGetterR: (index: number) => number,
-  n: number,
+  elementCount: number,
   start: number,
   end: number
 ) {
-  const firstGreaterThanNumber = firstGTE(elementGetterL, n, start);
-  const lastLessThanNumber = lastLTE(elementGetterR, n, end);
+  const firstGreaterThanNumber = firstGteIndex(elementGetterL, elementCount, start);
+  const lastLessThanNumber = lastLteIndex(elementGetterR, elementCount, end);
   return { lastLessThanNumber, firstGreaterThanNumber };
 }
 

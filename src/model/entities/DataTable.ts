@@ -166,6 +166,10 @@ export class DataTable implements IDataTable {
     return this.rowsContainer.rows.find((row) => this.getRowId(row) === id);
   }
 
+  getTrueIndexById(id: string){
+    return this.rowsContainer.getTrueIndexById(id);
+  }
+
   getExistingRowIdxById(id: string) {
     const idx = this.rows.findIndex((row) => this.getRowId(row) === id);
     return idx > -1 ? idx : undefined;
@@ -266,7 +270,7 @@ export class DataTable implements IDataTable {
   @action.bound
   async setRecords(rows: any[][]) {
     this.clear();
-    await this.rowsContainer.set(rows);
+    await this.rowsContainer.set(rows, 0, undefined);
     if (rows.length === 0) {
       this.isEmpty = true;
     }

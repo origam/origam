@@ -65,7 +65,7 @@ import produce from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
-import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
+import {runGeneratorInFlowWithHandler, runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
 import {IAggregation} from "./types/IAggregation";
 import {getConfigurationManager} from "../selectors/TablePanelView/getConfigurationManager";
 
@@ -295,6 +295,18 @@ export class DataView implements IDataView {
     } else {
       return this.selectedRowId
         ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
+        : undefined;
+    }
+  }
+
+  @computed get trueSelectedRowIndex(): number | undefined {
+    if (getGroupingConfiguration(this).isGrouping) {
+      return getGrouper(this).allGroups.some((group) => group.isExpanded)
+        ? getGrouper(this).getRowIndex(this.selectedRowId!)
+        : undefined;
+    } else {
+      return this.selectedRowId
+        ? this.dataTable.getTrueIndexById(this.selectedRowId)
         : undefined;
     }
   }
@@ -557,26 +569,41 @@ export class DataView implements IDataView {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
-    const dataTable = getDataTable(this);
-    const firstRow = dataTable.getFirstRow();
-    if (firstRow) {
-      this.selectRowById(dataTable.getRowId(firstRow));
-    } else {
-      this.selectRowById(undefined);
-    }
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this,
+      generator: function* (){
+        yield* self.infiniteScrollLoader?.loadFirstPage();
+        const dataTable = getDataTable(self);
+        const firstRow = dataTable.getFirstRow();
+        if (firstRow) {
+          self.selectRowById(dataTable.getRowId(firstRow));
+        } else {
+          self.selectRowById(undefined);
+        }
+      }()
+    });
+
   }
 
   @action.bound selectLastRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
-    const dataTable = getDataTable(this);
-    const lastRow = dataTable.getLastRow();
-    if (lastRow) {
-      this.selectRowById(dataTable.getRowId(lastRow));
-    } else {
-      this.selectRowById(undefined);
-    }
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this,
+      generator: function* (){
+        yield* self.infiniteScrollLoader?.loadLastPage();
+        const dataTable = getDataTable(self);
+        const lastRow = dataTable.getLastRow();
+        if (lastRow) {
+          self.selectRowById(dataTable.getRowId(lastRow));
+        } else {
+          self.selectRowById(undefined);
+        }
+      }()
+    });
   }
 
   reselectOrSelectFirst() {

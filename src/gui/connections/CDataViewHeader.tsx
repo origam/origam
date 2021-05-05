@@ -38,10 +38,8 @@ import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVi
 import { getIsMoveRowMenuVisible } from "model/selectors/DataView/getIsMoveRowMenuVisible";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
-import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
@@ -55,6 +53,7 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
+import {getTrueSelectedRowIndex} from "../../model/selectors/DataView/getTrueSelectedRowIndex";
 
 function isAddRecordShortcut(event: any) {
   return (
@@ -190,7 +189,7 @@ export class CDataViewHeaderInner extends React.Component<{
   }
 
   renderRowCount() {
-    const selectedRowIndex = getSelectedRowIndex(this.dataView);
+    const selectedRowIndex = getTrueSelectedRowIndex(this.dataView);
     const totalRowCount = getTotalRowCount(this.dataView);
     const groupRowCount = getExpandedGroupRowCount(this.dataView);
     if (groupRowCount) {
@@ -271,9 +270,9 @@ export class CDataViewHeaderInner extends React.Component<{
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
     const goToFirstRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping || isInfiniteScrollingActive(dataView);
+      getGroupingConfiguration(dataView).isGrouping; // || isInfiniteScrollingActive(dataView);
     const goToLastRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping || isInfiniteScrollingActive(dataView);
+      getGroupingConfiguration(dataView).isGrouping; // || isInfiniteScrollingActive(dataView);
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;

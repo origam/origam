@@ -39,6 +39,7 @@ export interface IDataTable {
   isCellTextResolving(property: IProperty, value: any): boolean;
   getRowByExistingIdx(idx: number): any[];
   getRowById(id: string): any[] | undefined;
+  getTrueIndexById(id: string): number | undefined;
   getExistingRowIdxById(id: string): number | undefined;
   getPropertyById(id: string): IProperty | undefined;
   getFirstRow(): any[] | undefined;

@@ -14,7 +14,7 @@ import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMon
 import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
-
+import {getDataView} from "../../../../model/selectors/DataView/getDataView";
 
 export interface IInfiniteScrollLoaderData {
   gridDimensions: IGridDimensions;
@@ -28,6 +28,8 @@ export interface IInfiniteScrollLoaderData {
 export interface IInfiniteScrollLoader extends IInfiniteScrollLoaderData {
   start(): () => void;
   dispose(): void;
+  loadLastPage(): Generator;
+  loadFirstPage(): Generator;
 }
 
 export const SCROLL_ROW_CHUNK = 1000;
@@ -49,6 +51,12 @@ export class NullIScrollLoader implements IInfiniteScrollLoader {
 
   groupFilter: string | undefined;
   visibleRowsMonitor: IVisibleRowsMonitor = null as any;
+
+  *loadLastPage(): Generator {
+  }
+
+  *loadFirstPage(): Generator {
+  }
 }
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
@@ -62,6 +70,66 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.rowsContainer.registerResetListener(() => this.handleRowContainerReset());
     this.visibleRowsMonitor = new OpenGroupVisibleRowsMonitor(this.ctx, this.gridDimensions, this.scrollState);
     this.requestProcessor.start();
+  }
+
+  *loadLastPage(){
+    const api = getApi(this.ctx);
+    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
+    let dataView = getDataView(this.ctx);
+    yield formScreenLifecycle.updateTotalRowCount(dataView);
+    if(dataView.totalRowCount === undefined){
+      return;
+    }
+    const rowsInLastChunk = (dataView.totalRowCount! % SCROLL_ROW_CHUNK) + SCROLL_ROW_CHUNK;
+    const lastStartOffset =  dataView.totalRowCount! - rowsInLastChunk;
+
+    const data = yield api.getRows({
+      MenuId: getMenuItemId(this.ctx),
+      SessionFormIdentifier: getSessionId(formScreenLifecycle),
+      DataStructureEntityId: getDataStructureEntityId(this.ctx),
+      Filter: this.getFilters(),
+      FilterLookups: getUserFilterLookups(this.ctx),
+      Ordering: getUserOrdering(this.ctx),
+      RowLimit: SCROLL_ROW_CHUNK * 2,
+      RowOffset: lastStartOffset,
+      MasterRowId: undefined,
+      ColumnNames: getColumnNamesToLoad(this.ctx),
+    })
+    this.rowsContainer.set(data, lastStartOffset, true)
+
+    this.reactionDisposer?.();
+    setTimeout(()=>{
+      const newDistanceToStart = this.distanceToStart + SCROLL_ROW_CHUNK
+      const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
+      this.scrollState.scrollTo({scrollTop: newTop});
+      this.start();
+    });
+  }
+
+  *loadFirstPage(){
+    const api = getApi(this.ctx);
+    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
+
+    const data = yield api.getRows({
+      MenuId: getMenuItemId(this.ctx),
+      SessionFormIdentifier: getSessionId(formScreenLifecycle),
+      DataStructureEntityId: getDataStructureEntityId(this.ctx),
+      Filter: this.getFilters(),
+      FilterLookups: getUserFilterLookups(this.ctx),
+      Ordering: getUserOrdering(this.ctx),
+      RowLimit: SCROLL_ROW_CHUNK ,
+      RowOffset: 0,
+      MasterRowId: undefined,
+      ColumnNames: getColumnNamesToLoad(this.ctx),
+    })
+    this.rowsContainer.set(data)
+
+    this.reactionDisposer?.();
+    setTimeout(()=>{
+      const newTop = this.gridDimensions.getRowTop(0);
+      this.scrollState.scrollTo({scrollTop: newTop});
+      this.start();
+    });
   }
 
   groupFilter: string | undefined;
@@ -223,7 +291,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     })
     const oldDistanceToStart = this.distanceToStart;
     this.rowsContainer.prependRecords(data);
-    if (this.rowsContainer.isFull && !this.rowsContainer.isFirstRowLoaded) {
+    if (!this.rowsContainer.isFirstRowLoaded) {
       const newDistanceToStart = oldDistanceToStart + SCROLL_ROW_CHUNK
       const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
       this.scrollState.scrollTo({scrollTop: newTop});

@@ -1,11 +1,8 @@
-import { action, computed, observable } from "mobx";
-import {
-  MAX_CHUNKS_TO_HOLD,
-  SCROLL_ROW_CHUNK,
-} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import { IRowsContainer } from "./types/IRowsContainer";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { fixRowIdentifier } from "utils/dataRow";
+import {action, computed, observable} from "mobx";
+import {MAX_CHUNKS_TO_HOLD, SCROLL_ROW_CHUNK,} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {IRowsContainer} from "./types/IRowsContainer";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {fixRowIdentifier} from "utils/dataRow";
 import {IProperty} from "model/entities/types/IProperty";
 
 // The constants have to be defined here for the unit tests to work.
@@ -24,7 +21,14 @@ export class ScrollRowContainer implements IRowsContainer {
   @observable
   rowChunks: RowChunk[] = [];
   private readonly rowIdGetter: (row: any[]) => string;
-  _maxRowNumberSeen = 0;
+
+  getTrueIndexById(id: string){
+    const chunk = this.findChunkByRowId(id);
+    if(!chunk){
+      return undefined;
+    }
+    return chunk.rowOffset + chunk.getRowIdxById(id)!;
+  }
 
   async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {}
 
@@ -52,15 +56,14 @@ export class ScrollRowContainer implements IRowsContainer {
   delete(row: any[]): void {
     const rowId = this.rowIdGetter(row);
     const chunk = this.findChunkByRowId(rowId);
+    if(!chunk){
+      throw new Error(`Row with id "${rowId}" was not found`);
+    }
     chunk.delete(rowId);
   }
 
   findChunkByRowId(rowId: string) {
-    const chunk = this.rowChunks.find((chunk) => chunk.has(rowId));
-    if (!chunk) {
-      throw new Error(`Row with id "${rowId}" was not found`);
-    }
-    return chunk;
+    return this.rowChunks.find((chunk) => chunk.has(rowId));
   }
 
   findChunkByRowIndex(indexInContainer: number) {
@@ -91,16 +94,17 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   @action.bound
-  async set(rowsIn: any[][]): Promise<any> {
+  async set(rowsIn: any[][], rowOffset: number = 0, isFinal: boolean | undefined = undefined): Promise<any> {
     const dataTable = getDataTable(this);
     const rows: any[][] = [];
     for (let row of rowsIn) {
       rows.push(fixRowIdentifier(row, dataTable.identifierDataIndex));
     }
     this.clear();
-    this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
+    if(rows.length !== 0){
+      this.rowChunks.push(new RowChunk(rowOffset, rows, this.rowIdGetter, isFinal));
+    }
     this.notifyResetListeners();
-    this._maxRowNumberSeen = 0;
   }
 
   substitute(row: any[]): void {
@@ -341,6 +345,11 @@ class RowChunk {
         this.idMap.set(entry[0], entry[1] + 1);
       }
     }
+  }
+
+  getRowIdxById(id: string) {
+    const idx = this.rows.findIndex((row) => this.rowIdGetter(row) === id);
+    return idx > -1 ? idx : undefined;
   }
 }
 
