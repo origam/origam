@@ -29,6 +29,7 @@ export interface IInfiniteScrollLoader extends IInfiniteScrollLoaderData {
   start(): () => void;
   dispose(): void;
   loadLastPage(): Generator;
+  loadFirstPage(): Generator;
 }
 
 export const SCROLL_ROW_CHUNK = 1000;
@@ -53,6 +54,9 @@ export class NullIScrollLoader implements IInfiniteScrollLoader {
 
   *loadLastPage(): Generator {
   }
+
+  *loadFirstPage(): Generator {
+  }
 }
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
@@ -69,7 +73,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   }
 
   *loadLastPage(){
-
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
     let dataView = getDataView(this.ctx);
@@ -98,6 +101,32 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     setTimeout(()=>{
       const newDistanceToStart = this.distanceToStart + SCROLL_ROW_CHUNK
       const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
+      this.scrollState.scrollTo({scrollTop: newTop});
+      this.start();
+    });
+  }
+
+  *loadFirstPage(){
+    const api = getApi(this.ctx);
+    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
+
+    const data = yield api.getRows({
+      MenuId: getMenuItemId(this.ctx),
+      SessionFormIdentifier: getSessionId(formScreenLifecycle),
+      DataStructureEntityId: getDataStructureEntityId(this.ctx),
+      Filter: this.getFilters(),
+      FilterLookups: getUserFilterLookups(this.ctx),
+      Ordering: getUserOrdering(this.ctx),
+      RowLimit: SCROLL_ROW_CHUNK ,
+      RowOffset: 0,
+      MasterRowId: undefined,
+      ColumnNames: getColumnNamesToLoad(this.ctx),
+    })
+    this.rowsContainer.set(data)
+
+    this.reactionDisposer?.();
+    setTimeout(()=>{
+      const newTop = this.gridDimensions.getRowTop(0);
       this.scrollState.scrollTo({scrollTop: newTop});
       this.start();
     });

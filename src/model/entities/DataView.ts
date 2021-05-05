@@ -569,13 +569,21 @@ export class DataView implements IDataView {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
-    const dataTable = getDataTable(this);
-    const firstRow = dataTable.getFirstRow();
-    if (firstRow) {
-      this.selectRowById(dataTable.getRowId(firstRow));
-    } else {
-      this.selectRowById(undefined);
-    }
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this,
+      generator: function* (){
+        yield* self.infiniteScrollLoader?.loadFirstPage();
+        const dataTable = getDataTable(self);
+        const firstRow = dataTable.getFirstRow();
+        if (firstRow) {
+          self.selectRowById(dataTable.getRowId(firstRow));
+        } else {
+          self.selectRowById(undefined);
+        }
+      }()
+    });
+
   }
 
   @action.bound selectLastRow() {
@@ -595,7 +603,7 @@ export class DataView implements IDataView {
           self.selectRowById(undefined);
         }
       }()
-    })
+    });
   }
 
   reselectOrSelectFirst() {
