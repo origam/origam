@@ -38,10 +38,8 @@ import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVi
 import { getIsMoveRowMenuVisible } from "model/selectors/DataView/getIsMoveRowMenuVisible";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
-import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";

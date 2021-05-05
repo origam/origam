@@ -94,7 +94,7 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   @action.bound
-  async set(rowsIn: any[][], rowOffset: number = 0): Promise<any> {
+  async set(rowsIn: any[][], rowOffset: number = 0, isFinal: boolean | undefined = undefined): Promise<any> {
     const dataTable = getDataTable(this);
     const rows: any[][] = [];
     for (let row of rowsIn) {
@@ -102,7 +102,7 @@ export class ScrollRowContainer implements IRowsContainer {
     }
     this.clear();
     if(rows.length !== 0){
-      this.rowChunks.push(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined));
+      this.rowChunks.push(new RowChunk(rowOffset, rows, this.rowIdGetter, isFinal));
     }
     this.notifyResetListeners();
   }

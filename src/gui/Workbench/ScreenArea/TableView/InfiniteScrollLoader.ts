@@ -95,7 +95,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
-    this.rowsContainer.set(data, lastStartOffset)
+    this.rowsContainer.set(data, lastStartOffset, true)
 
     this.reactionDisposer?.();
     setTimeout(()=>{
