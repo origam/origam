@@ -270,7 +270,7 @@ export class DataTable implements IDataTable {
   @action.bound
   async setRecords(rows: any[][]) {
     this.clear();
-    await this.rowsContainer.set(rows);
+    await this.rowsContainer.set(rows, 0);
     if (rows.length === 0) {
       this.isEmpty = true;
     }

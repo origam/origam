@@ -1,11 +1,8 @@
-import { action, computed, observable } from "mobx";
-import {
-  MAX_CHUNKS_TO_HOLD,
-  SCROLL_ROW_CHUNK,
-} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import { IRowsContainer } from "./types/IRowsContainer";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { fixRowIdentifier } from "utils/dataRow";
+import {action, computed, observable} from "mobx";
+import {MAX_CHUNKS_TO_HOLD, SCROLL_ROW_CHUNK,} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {IRowsContainer} from "./types/IRowsContainer";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {fixRowIdentifier} from "utils/dataRow";
 import {IProperty} from "model/entities/types/IProperty";
 
 // The constants have to be defined here for the unit tests to work.
@@ -97,16 +94,17 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   @action.bound
-  async set(rowsIn: any[][]): Promise<any> {
+  async set(rowsIn: any[][], rowOffset: number = 0): Promise<any> {
     const dataTable = getDataTable(this);
     const rows: any[][] = [];
     for (let row of rowsIn) {
       rows.push(fixRowIdentifier(row, dataTable.identifierDataIndex));
     }
     this.clear();
-    this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
+    if(rows.length !== 0){
+      this.rowChunks.push(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined));
+    }
     this.notifyResetListeners();
-    this._maxRowNumberSeen = 0;
   }
 
   substitute(row: any[]): void {

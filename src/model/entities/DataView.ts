@@ -65,7 +65,7 @@ import produce from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
-import {runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
+import {runGeneratorInFlowWithHandler, runInFlowWithHandler} from "../../utils/runInFlowWithHandler";
 import {IAggregation} from "./types/IAggregation";
 import {getConfigurationManager} from "../selectors/TablePanelView/getConfigurationManager";
 
@@ -582,13 +582,20 @@ export class DataView implements IDataView {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
-    const dataTable = getDataTable(this);
-    const lastRow = dataTable.getLastRow();
-    if (lastRow) {
-      this.selectRowById(dataTable.getRowId(lastRow));
-    } else {
-      this.selectRowById(undefined);
-    }
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this,
+      generator: function* (){
+        yield* self.infiniteScrollLoader?.loadLastPage();
+        const dataTable = getDataTable(self);
+        const lastRow = dataTable.getLastRow();
+        if (lastRow) {
+          self.selectRowById(dataTable.getRowId(lastRow));
+        } else {
+          self.selectRowById(undefined);
+        }
+      }()
+    })
   }
 
   reselectOrSelectFirst() {
