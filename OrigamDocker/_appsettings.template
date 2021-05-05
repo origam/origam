@@ -76,19 +76,49 @@
                 "Culture": "en-US",
                 "Caption": "English",
 				"ResetPasswordMailSubject": "Reset Password",
-				"ResetPasswordMailBodyFileName": "testResetPwFile.txt"
+				"ResetPasswordMailBodyFileName": "testResetPwFile.txt",
+				"DateCompleterConfig":{
+				  "DateSeparator": "/",
+				  "TimeSeparator": ":",
+				  "DateSequence": "MonthDayYear"
+				},
+				"DefaultDateFormats":{
+				  "Short": "MM/dd/yyyy",
+				  "Long": "MM/dd/yyyy HH:mm:ss",
+				  "Time": "HH:mm:ss"
+				}
             },
             {
                 "Culture": "cs-CZ",
                 "Caption": "Cesky",
 				"ResetPasswordMailSubject": "Obnova Hesla",
-				"ResetPasswordMailBodyFileName": "testResetPwFile.txt"
+				"ResetPasswordMailBodyFileName": "testResetPwFile.txt",
+				"DateCompleterConfig":{
+				  "DateSeparator": ".",
+				  "TimeSeparator": ":",
+				  "DateSequence": "DayMonthYear"
+				},
+				"DefaultDateFormats":{
+				  "Short": "dd.MM.yyyy",
+				  "Long": "dd.MM.yyyy HH:mm:ss",
+				  "Time": "HH:mm:ss"
+				}
             },      
 			{
                 "Culture": "de-DE",
                 "Caption": "Deutsch",
 				"ResetPasswordMailSubject": "Passwort Zurücksetzen",
-				"ResetPasswordMailBodyFileName": "testResetPwFile.txt"
+				"ResetPasswordMailBodyFileName": "testResetPwFile.txt",
+				"DateCompleterConfig":{
+				  "DateSeparator": ".",
+				  "TimeSeparator": ":",
+				  "DateSequence": "DayMonthYear"
+				},
+				"DefaultDateFormats":{
+				  "Short": "dd.MM.yyyy",
+				  "Long": "dd.MM.yyyy HH:mm:ss",
+				  "Time": "HH:mm:ss"
+				}
             }
         ]
     },
