@@ -112,7 +112,7 @@ function isValidLocalizationCookie(cookieValue: string){
 
 function getParameter(name: string, parameters: { [key: string]: string }){
   let value = parameters[name];
-  if(!value){
+  if(value === undefined || value === null){
     throw new Error("Parameter named \""+name+"\" was not found");
   }
   return value;

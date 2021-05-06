@@ -743,7 +743,7 @@ export class DataView implements IDataView {
   scrollState = new SimpleScrollState(0, 0);
 
   @observable contentBounds: BoundingRect | undefined;
-  infiniteScrollLoader: IInfiniteScrollLoader | undefined;
+  infiniteScrollLoader: IInfiniteScrollLoader | undefined = new NullIScrollLoader();
 
   parent?: any;
 
