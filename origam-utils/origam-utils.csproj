@@ -142,9 +142,12 @@
     <Reference Include="log4net">
       <HintPath>..\EnterpriseLibrary\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Mvp.Xml">
-      <HintPath>..\EnterpriseLibrary\Mvp.Xml.dll</HintPath>
-    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mvp.Xml">
+      <Version>2.3.0</Version>
+    </PackageReference>
   </ItemGroup>
 
 
