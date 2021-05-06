@@ -144,7 +144,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }
                 if (persistedClassVersions[className] > currentVersion)
                 {
-                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name.LocalName} in {documentContainer.File.FullName}");
+                    throw new Exception(
+                        $"Error when processing file \"{documentContainer.File.FullName}\". " +
+                        $"The persisted object \"{classNode.Name.LocalName}\" has a newer version of the" +
+                        $" class \"{documentContainer.File.FullName}\" (version: {persistedClassVersions[className]}) " +
+                        $"than is the current version of the class: {currentVersion}. Are you trying to open a model with an older Architect/Server?");
                 }
                 if (persistedClassVersions[className] < currentVersion)
                 {
