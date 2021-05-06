@@ -790,7 +790,13 @@ namespace Origam.ServerCore
         {
             var userConfig = OrigamPanelConfigDA.LoadConfigData(
                 screenSectionId, Guid.Empty, profileId);
-                    
+            if(userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            {
+                OrigamPanelConfigDA.CreatePanelConfigRow(
+                    userConfig.Tables["OrigamFormPanelConfig"], 
+                    screenSectionId, Guid.Empty, profileId, 
+                    OrigamPanelViewMode.Grid);
+            }
             object data = userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["SettingsData"];
             if (!(data is string strData))
             {
