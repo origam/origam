@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 
@@ -61,8 +62,30 @@ namespace Origam.ServerCore.Configuration
                                        !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder) &&
                                        (!string.IsNullOrWhiteSpace(IdentityGuiLogoUrl) ||
                                         !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
-        public string PathToClientApp => configuration["PathToClientApp"];
+        public string PathToClientApp
+        {
+            get
+            {
+                string pathToClientApp = configuration["PathToClientApp"];
+                if(!Path.IsPathRooted(pathToClientApp))
+                {
+                    throw new Exception($"The PathToClientApp \"{pathToClientApp}\" must be an absolute path");
+                }
+                return pathToClientApp;
+            }
+        }
 
-        public string PathToChatApp => configuration.GetSection("ChatConfig")["PathToChatApp"];
+        public string PathToChatApp
+        {
+            get
+            {
+                string pathToChatApp = configuration.GetSection("ChatConfig")["PathToChatApp"];
+                if(!string.IsNullOrEmpty(pathToChatApp) && !Path.IsPathRooted(pathToChatApp))
+                {
+                    throw new Exception($"The PathToChatApp \"{pathToChatApp}\" must be an absolute path");
+                }
+                return pathToChatApp;
+            }
+        }
     }
 }
