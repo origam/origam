@@ -45,7 +45,6 @@ namespace Origam.ProjectAutomation
             switch(project.TypeTemplate)
             {
                 case TypeTemplate.Default:
-                    CreateModelFolder();
                     UnzipDefaultModel(project);
                     if (project.Deployment == DeploymentType.Docker)
                     {
@@ -173,20 +172,11 @@ namespace Origam.ProjectAutomation
         {
             string zipPath =
                 Path.Combine(project.ServerTemplateFolder,"Model", ModelZipName);
-            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, modelSourcesFolder);
+            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, sourcesFolder);
         }
         private void CreateSourceFolder()
         {
             DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
-            if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
-            {
-                throw new Exception($"Sources folder {sourcesFolder} already exists and is not empty.");
-            }
-            dir.Create();
-        }
-        private void CreateModelFolder()
-        {
-            DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
             if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
             {
                 throw new Exception($"Sources folder {sourcesFolder} already exists and is not empty.");
