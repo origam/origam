@@ -295,6 +295,9 @@
                         </Component>                        
                         <Component Id="SYSTEM.BUFFERS.DLL" DiskId="1" Guid="C9F1D198-8024-474B-8D62-304AAAFEBE46">
                             <File Id="SYSTEM.BUFFERS.DLL" Name="System.Buffers.dll" Source="source\System.Buffers.dll" />
+                        </Component>                       
+                        <Component Id="SYSTEM.COLLECTIONS.IMMUTABLE.DLL" DiskId="1" Guid="DC41BC25-B7CA-411B-AD9E-14591661CDCD">
+                            <File Id="SYSTEM.COLLECTIONS.IMMUTABLE.DLL" Name="System.Collections.Immutable.dll" Source="source\System.Collections.Immutable.dll" />
                         </Component>
                         <Component Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" DiskId="1" Guid="056DD22D-45F2-4C6A-9475-9AF8BCA8C6C6">
                             <File Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="source\System.Runtime.CompilerServices.Unsafe.dll" />
@@ -2123,12 +2126,13 @@
             <ComponentRef Id="ORIGAM.LICENSING.DLL_1" />
             <ComponentRef Id="NoAccess.cshtml" />
             <ComponentRef Id="MORELINQ.DLL" />
-            <ComponentRef Id="MORELINQ.DLL_1" />pro
+            <ComponentRef Id="MORELINQ.DLL_1" />
             <ComponentRef Id="LIBGIT2SHARP.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.MEMORY.DLL" />
             <ComponentRef Id="SYSTEM.BUFFERS.DLL" />
+            <ComponentRef Id="SYSTEM.COLLECTIONS.IMMUTABLE.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" />
             <ComponentRef Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" />
