@@ -88,6 +88,7 @@
         "DateCompleterConfig":{
           "DateSeparator": ".",
           "TimeSeparator": ":",
+          "DateTimeSeparator": " ",
           "DateSequence": "MonthDayYear"
         },
         "DefaultDateFormats":{
