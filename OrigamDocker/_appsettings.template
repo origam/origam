@@ -80,6 +80,7 @@
 				"DateCompleterConfig":{
 				  "DateSeparator": "/",
 				  "TimeSeparator": ":",
+				  "DateTimeSeparator": " ",
 				  "DateSequence": "MonthDayYear"
 				},
 				"DefaultDateFormats":{
@@ -96,6 +97,7 @@
 				"DateCompleterConfig":{
 				  "DateSeparator": ".",
 				  "TimeSeparator": ":",
+				  "DateTimeSeparator": " ",
 				  "DateSequence": "DayMonthYear"
 				},
 				"DefaultDateFormats":{
@@ -112,6 +114,7 @@
 				"DateCompleterConfig":{
 				  "DateSeparator": ".",
 				  "TimeSeparator": ":",
+				  "DateTimeSeparator": " ",
 				  "DateSequence": "DayMonthYear"
 				},
 				"DefaultDateFormats":{
