@@ -52,11 +52,10 @@
     <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <Reference Include="Mvp.Xml">
-      <HintPath>..\EnterpriseLibrary\Mvp.Xml.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Mvp.Xml">
+      <Version>2.3.0</Version>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
