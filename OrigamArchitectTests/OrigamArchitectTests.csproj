@@ -127,7 +127,7 @@
       <Version>2.2.3</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
-      <Version>3.13.1</Version>
+      <Version>3.13.2</Version>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter">
       <Version>3.17.0</Version>
