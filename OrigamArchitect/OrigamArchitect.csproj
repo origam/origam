@@ -481,7 +481,7 @@
       <Version>0.26.2</Version>
     </PackageReference>
     <PackageReference Include="NPOI">
-      <Version>2.5.2</Version>
+      <Version>2.5.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
