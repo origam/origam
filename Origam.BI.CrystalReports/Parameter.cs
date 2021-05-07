@@ -28,7 +28,7 @@ namespace Origam.CrystalReportsService.Models
     {
         [DataMember]
         public string Key { get; set; }
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public string Value { get; set; }
     }
 }
