@@ -290,6 +290,9 @@
                         <Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" DiskId="1" Guid="C292EE1F-205C-4A5A-BAAE-1EBE2E1EFCB9">
                             <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" Name="System.Threading.Tasks.Extensions.dll" Source="source\System.Threading.Tasks.Extensions.dll" />
                         </Component>                      
+                        <Component Id="SYSTEM.VALUETUPLE.DLL" DiskId="1" Guid="2E2BF717-4AC5-4811-99BC-1D3C2F604F57">
+                            <File Id="SYSTEM.VALUETUPLE.DLL" Name="System.ValueTuple.dll" Source="source\System.ValueTuple.dll" />
+                        </Component>                        
                         <Component Id="SYSTEM.MEMORY.DLL" DiskId="1" Guid="8CBF2A8C-2C67-46B4-AE79-19A101388000">
                             <File Id="SYSTEM.MEMORY.DLL" Name="System.Memory.dll" Source="source\System.Memory.dll" />
                         </Component>
@@ -2124,6 +2127,7 @@
             <ComponentRef Id="LIBGIT2SHARP.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
+            <ComponentRef Id="SYSTEM.VALUETUPLE.DLL" />
             <ComponentRef Id="SYSTEM.MEMORY.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" />
