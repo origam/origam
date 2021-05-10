@@ -127,72 +127,72 @@ namespace Origam.DA.Service
             if (!indexFile.ExistsNow()) return;
             lock (Lock)
             {
-                var serializationData = LoadBinFile();
-
-                bool containsIncompatibleClasses = serializationData.PersistedTypeInfos.Any(
-                    info => Versions.TryGetCurrentClassVersion(info.FullTypeName) != info.Version);
-
-                if (containsIncompatibleClasses)
+                bool indexFileCompatible = true;
+                try
                 {
-                    return;
+                    LoadInternal(itemTracker);
                 }
-
-                serializationData.GetOrigamFiles(origamFileFactory)
-                    .ForEach(x =>
-                    {
-                        itemTracker.AddOrReplace(x);
-                        itemTracker.AddOrReplaceHash(x);
-                    });
-
-                if (log.IsDebugEnabled)
+                catch (Exception exception)
                 {
-                    log.Debug(
-                        $"Loaded index file: {indexFile}, last modified: {indexFile.LastWriteTime}, " +
-                        "tracker stats:\n" +
-                        itemTracker.GetStats());
+                    indexFileCompatible = false;
+                    log.Warn($"Could not read index file: {indexFile}. Removing it...", exception);
                 }
-                OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-                if (settings.CheckFileHashesAfterModelLoad && !itemTracker.IsEmpty)
+                if (!indexFileCompatible)
                 {
-                    CheckItemTrackerDataIsConsistentOrThrow(itemTracker,
-                        serializationData);
-                    if (!HashesAreUpToDate(itemTracker))
+                    try
                     {
                         itemTracker.Clear();
+                        indexFile.Delete();
+                        log.Warn($"The index file was removed, no data were read from it.");
+                    }
+                    catch (IOException ex)
+                    {
+                        log.Error($"Could not remove {indexFile}", ex);
                     }
                 }
             }
         }
 
-        private TrackerSerializationData LoadBinFile()
+        private void LoadInternal(ItemTracker itemTracker)
         {
-            bool indexFileNotCompatible;
+            var serializationData = new TrackerSerializationData(
+                new List<ITrackeableFile>(), new Dictionary<string, int>());
             using (var file = indexFile.OpenRead())
             {
-                try
-                {
-                    return Serializer.Deserialize<TrackerSerializationData>(file);
-                }
-                catch (ProtoException protoException)
-                {
-                    indexFileNotCompatible = true;
-                    log.Warn($"Could not read index file: {indexFile}. Removing it...", protoException);
-                }
+               serializationData = Serializer.Deserialize<TrackerSerializationData>(file);
             }
+            
+            bool containsIncompatibleClasses = serializationData.PersistedTypeInfos.Any(
+                info => Versions.TryGetCurrentClassVersion(info.FullTypeName) != info.Version);
 
-            if (indexFileNotCompatible)
+            if (containsIncompatibleClasses)
             {
-                try
+                return;
+            }
+            serializationData.GetOrigamFiles(origamFileFactory)
+                .ForEach(x =>
                 {
-                    indexFile.Delete();
-                }
-                catch (IOException ex)
+                    itemTracker.AddOrReplace(x);
+                    itemTracker.AddOrReplaceHash(x);
+                });
+            
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(
+                    $"Loaded index file: {indexFile}, last modified: {indexFile.LastWriteTime}, " +
+                    "tracker stats:\n" +
+                    itemTracker.GetStats());
+            }
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            if (settings.CheckFileHashesAfterModelLoad && !itemTracker.IsEmpty)
+            {
+                CheckItemTrackerDataIsConsistentOrThrow(itemTracker,
+                    serializationData);
+                if (!HashesAreUpToDate(itemTracker))
                 {
-                    log.Error($"Could not remove {indexFile}", ex);
+                    itemTracker.Clear();
                 }
             }
-            return new TrackerSerializationData(
-                new List<ITrackeableFile>(), new Dictionary<string, int>());
         }
 
         private bool HashesAreUpToDate(ItemTracker itemTracker)
