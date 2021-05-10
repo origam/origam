@@ -411,8 +411,6 @@
       <DependentUpon>ModelUpgradeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="origam_desktop_architect_logo.png" />
-    <Content Include="_OrigamArchitect.exe.config" />
-    <Content Include="_OrigamSettings.config" />
     <EmbeddedResource Include="ArchitectWorkbench.resx">
       <DependentUpon>ArchitectWorkbench.cs</DependentUpon>
     </EmbeddedResource>
