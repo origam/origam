@@ -189,12 +189,11 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             } else if (val2 === null) {
               cmpSign = -1;
             } else {
-              cmpSign = val1 - val2;
+              cmpSign = Math.sign(val1 - val2);
             }
             break;
           }
         }
-
         res = res + mul * (term.direction === IOrderByDirection.DESC ? -1 : 1) * cmpSign;
         mul = mul / 10;
       }
