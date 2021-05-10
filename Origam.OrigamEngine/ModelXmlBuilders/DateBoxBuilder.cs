@@ -66,9 +66,6 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			{
 				switch(format)
 				{
-					case "Long":
-						pattern = "long"; 
-						break;					
 					case "Short":
 						pattern = "short"; 
 						break;					
@@ -76,7 +73,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						pattern = "time"; 
 						break;
 					default:
-						throw new NotImplementedException("Unknown option " + format);
+						pattern = "long";
+						break;
 				}
 			}
 
