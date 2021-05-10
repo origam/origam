@@ -30,6 +30,7 @@ namespace Origam.ServerCore
 {
     public class OrigamCookieRequestCultureProvider : RequestCultureProvider
     {
+        private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly LanguageConfig languageConfig;
         private static readonly char cookieSeparator = '|';
         private static readonly string culturePrefix = "c=";
@@ -96,31 +97,36 @@ namespace Origam.ServerCore
         /// </summary>
         /// <param name="value">The cookie value to parse.</param>
         /// <returns>The <see cref="RequestCulture"/> or <c>null</c> if parsing fails.</returns>
-        private static ProviderCultureResult ParseCookieValue(string value)
+        private ProviderCultureResult ParseCookieValue(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 return null;
             }
 
-            var parts = value.Split(cookieSeparator, StringSplitOptions.RemoveEmptyEntries);
-
-            // if (parts.Length != 2)
-            // {
-            //     return null;
-            // }
-
-            var potentialCultureName = parts[0];
-            var potentialUICultureName = parts[1];
-
-            if (!potentialCultureName.StartsWith(culturePrefix) || !potentialUICultureName.StartsWith(uiCulturePrefix))
+            try
             {
-                return null;
-            }
+                var parts = value.Split(cookieSeparator, StringSplitOptions.RemoveEmptyEntries);
+                
+                var potentialCultureName = parts[0];
+                var potentialUICultureName = parts[1];
 
-            var cultureName = potentialCultureName.Substring(culturePrefix.Length);
-            var uiCultureName = potentialUICultureName.Substring(uiCulturePrefix.Length);
-            return new ProviderCultureResult(cultureName, uiCultureName);
+                if (!potentialCultureName.StartsWith(culturePrefix) || !potentialUICultureName.StartsWith(uiCulturePrefix))
+                {
+                    return null;
+                }
+
+                var cultureName = potentialCultureName.Substring(culturePrefix.Length);
+                var uiCultureName = potentialUICultureName.Substring(uiCulturePrefix.Length);
+                return new ProviderCultureResult(cultureName, uiCultureName);
+            }
+            catch (Exception ex)
+            {
+                log.Warn(ex);
+                return new ProviderCultureResult(
+                    languageConfig.DefaultCulture.Culture.Name, 
+                    languageConfig.DefaultCulture.UICulture.Name);
+            }
         }
     }
 }
