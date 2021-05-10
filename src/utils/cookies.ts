@@ -106,8 +106,14 @@ function isValidLocalizationCookie(cookieValue: string){
   if(!cookieValue){
     return false;
   }
-  let parameters = getCookieParameters(cookieValue);
-  return Object.keys(parameters).length === 9;
+  try {
+    getDefaultCsDateFormatDataFromCookie();
+    return true;
+  }
+  catch(e){
+    console.warn("Error when parsing localization cookie:" + e); // eslint-disable-line no-console
+    return false;
+  }
 }
 
 function getParameter(name: string, parameters: { [key: string]: string }){
@@ -125,4 +131,9 @@ export async function initLocaleCookie(ctx: any) {
   }
   const api = getApi(ctx);
   document.cookie = "origamCurrentLocale=" + await api.defaultLocalizationCookie();
+
+  const newCookieValue = unescape(getCookie("origamCurrentLocale"));
+  if (!isValidLocalizationCookie(newCookieValue)) {
+    throw new Error("Could not parse localization cookie: " + newCookieValue);
+  }
 }
