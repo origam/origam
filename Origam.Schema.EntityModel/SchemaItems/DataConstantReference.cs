@@ -104,7 +104,11 @@ namespace Origam.Schema.EntityModel
 			}
 			set
 			{
-				this.DataConstantId = (Guid)value.PrimaryKey["Id"];
+				DataConstantId = (Guid)value.PrimaryKey["Id"];
+				if(Name == null)
+				{
+					Name = value.Name;
+				}
 			}
 		}
 		#endregion
