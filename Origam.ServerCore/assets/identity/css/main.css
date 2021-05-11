@@ -9,6 +9,10 @@
   text-rendering: optimizeLegibility;
 }
 
+*:focus {
+  outline: none;
+}
+
 a {
   cursor: pointer;
   color: #0D0D0D;
@@ -236,4 +240,17 @@ div.input-row a.btn{
 
 .confirmation-text{
   padding-top: 12px;
+}
+
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
