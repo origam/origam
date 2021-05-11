@@ -9,6 +9,10 @@
   text-rendering: optimizeLegibility;
 }
 
+*:focus {
+  outline: none;
+}
+
 a {
   cursor: pointer;
   color: #0D0D0D;
