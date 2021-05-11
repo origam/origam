@@ -95,7 +95,7 @@
             <div class="input-row">
                 @foreach (var provider in Model.VisibleExternalProviders)
                 {
-                    <a class="btn btn-default external-login-link"
+                    <a class="btn btn-default"
                        asp-controller="External"
                        asp-action="Challenge"
                        asp-route-provider="@provider.AuthenticationScheme"
