@@ -1,5 +1,4 @@
-﻿
-body {
+﻿body {
   background-color: #E9E8F0;
   color: #0D0D0D;
   font-family: "IBM Plex Sans", sans-serif;
@@ -123,7 +122,6 @@ input[type="checkbox"], input[type="radio"] {
     font-weight: 1000;
 }
 
-
 .input-form .input-row label {
   width: 135px;
   display: block;
@@ -167,7 +165,6 @@ input[type="checkbox"], input[type="radio"] {
 #languageSelectForm, .reset-password-statement {
   font-size: 0.9em;
   padding: 0 1.5em;
-  font-size: 0.9em;
 }
 
 .detailview-module.with-title .form-group.login-remember label {
@@ -175,7 +172,6 @@ input[type="checkbox"], input[type="radio"] {
   flex-direction: row;
   align-items: center;
 }
-
 
 .input-row .btn-default {
   color: #333;
@@ -187,4 +183,57 @@ input[type="checkbox"], input[type="radio"] {
   color: #333;
   background-color: #e6e6e6;
   border-color: #adadad;
+}
+
+.svg:hover{
+  stroke: #0D0D0D;
+}
+
+.svg {
+  stroke: #77767E;
+  stroke-width: 1.5;
+  height: 20px;
+  padding-right: 3px;
+}
+
+.page-content{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+iframe
+{
+  border:0
+}
+
+.logo-container{
+  margin-bottom: 50px;
+}
+
+.centered{
+  display: flex;
+  justify-content: center;
+}
+
+.in-page-link{
+  text-decoration: underline;
+}
+
+input::placeholder {
+  color: transparent;
+}
+
+input.showPlaceholder::placeholder {
+  color: #aaaaaa;
+}
+
+div.input-row a.btn{
+  margin-right: 10px;
+}
+
+.confirmation-text{
+  padding-top: 12px;
 }
