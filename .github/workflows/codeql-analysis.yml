@@ -38,12 +38,6 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
-    - uses: actions/cache@v1
-      id: cache
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-
     - name: Checkout repository
       uses: actions/checkout@v2
 
@@ -76,7 +70,6 @@ jobs:
       uses: microsoft/setup-msbuild@v1
 
     - name: NuGet Restore
-      if: steps.cache.outputs.cache-hit != 'true'
       run: nuget restore Origam.sln
     
     - run: |
