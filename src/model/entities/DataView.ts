@@ -137,6 +137,16 @@ export class DataView implements IDataView {
     return this._isFormViewActive;
   }
 
+  private _isTableViewActive = () => false;
+
+  set isTableViewActive(value: () => boolean) {
+    this._isTableViewActive = value;
+  }
+
+  get isTableViewActive() {
+    return this._isTableViewActive;
+  }
+
   @action.bound
   setRowCount(rowCount: number) {
     this.rowCount = rowCount;
