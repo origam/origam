@@ -614,6 +614,7 @@ export function* interpretScreenXml(
         generator: tablePerspective.handleToolbarBtnClick.bind(formPerspective)(),
       });
     dataView.isFormViewActive = () => formPerspective.isActive;
+    dataView.isTableViewActive = () => tablePerspective.isActive;
     if (dataView.isMapSupported) {
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const rootStore = new MapRootStore(dataView);
