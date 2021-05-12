@@ -1166,9 +1166,6 @@
                                         <Component Id="ORIGAM.WORKFLOW.MAIL.DLL" DiskId="1" Guid="CDB625C8-0F97-4FFA-8C30-1D37D8473411">
                                             <File Id="ORIGAM.WORKFLOW.MAIL.DLL" Name="Origam.workflow.mail.dll" Source="server_source\bin\Origam.workflow.mail.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.WORKFLOW.NETMEMBERSHIPSERVICE.DLL" DiskId="1" Guid="16CDB661-79D1-4BCC-ACBD-94F9E334A587">
-                                            <File Id="ORIGAM.WORKFLOW.NETMEMBERSHIPSERVICE.DLL" Name="Origam.Workflow.NetMembershipService.dll" Source="server_source\bin\Origam.Workflow.NetMembershipService.dll" />
-                                        </Component>
                                         <Component Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.DLL_1" DiskId="1" Guid="03A926AA-53D6-440B-83D2-042EEF82E85B">
                                             <File Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.DLL_1" Name="Origam.Workflow.SimplicorService.dll" Source="server_source\bin\Origam.Workflow.SimplicorService.dll" />
                                         </Component>
@@ -1973,7 +1970,6 @@
             <ComponentRef Id="ORIGAM.WORKFLOW.DLL_1" />
             <ComponentRef Id="ORIGAM.WORKFLOW.FILESERVICE.DLL" />
             <ComponentRef Id="ORIGAM.WORKFLOW.MAIL.DLL" />
-            <ComponentRef Id="ORIGAM.WORKFLOW.NETMEMBERSHIPSERVICE.DLL" />
             <ComponentRef Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.DLL_1" />
             <ComponentRef Id="FILEHELPERS.DLL" />
             <ComponentRef Id="FLUORINEFX.DLL" />

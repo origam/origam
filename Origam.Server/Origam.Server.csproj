@@ -289,10 +289,6 @@
       <Project>{5e18ce83-b56f-44d3-a106-99cdaab33c8b}</Project>
       <Name>Origam.workflow.mail</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Workflow.NetMembershipService\Origam.Workflow.NetMembershipService.csproj">
-      <Project>{933a55d3-6641-41da-be15-e7ab2840188c}</Project>
-      <Name>Origam.Workflow.NetMembershipService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService.csproj">
       <Project>{ee92b4de-5635-4b60-80b0-532c438b280f}</Project>
       <Name>Origam.Workflow.SimplicorService</Name>
