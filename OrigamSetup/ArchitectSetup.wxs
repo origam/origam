@@ -176,17 +176,8 @@
                         <Component Id="ICSHARPCODE.SHARPZIPLIB.DLL" DiskId="1" Guid="AEB8B231-78C8-4B30-B741-AEC8BA502599">
                             <File Id="ICSHARPCODE.SHARPZIPLIB.DLL" Name="ICSharpCode.SharpZipLib.dll" Source="source\ICSharpCode.SharpZipLib.dll" />
                         </Component>
-                        <Component Id="INTEROP.MSCOMMLIB.DLL" DiskId="1" Guid="A08CEAA6-20C6-4DCD-8AAE-2BC58BA0BEEA">
-                            <File Id="INTEROP.MSCOMMLIB.DLL" Name="Interop.MSCommLib.dll" Source="source\Interop.MSCommLib.dll" />
-                        </Component>
                         <Component Id="LOG4NET.DLL" DiskId="1" Guid="6182A038-C937-418C-9B20-417F4149990E">
                             <File Id="LOG4NET.DLL" Name="log4net.dll" Source="source\log4net.dll" />
-                        </Component>
-                        <Component Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL" DiskId="1" Guid="39435537-5698-4BC0-B2BE-4CBFC525E6C6">
-                            <File Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL" Name="Microsoft.Office.Interop.Excel.dll" Source="source\Microsoft.Office.Interop.Excel.dll" />
-                        </Component>
-                        <Component Id="MICROSOFT.VBE.INTEROP.DLL" DiskId="1" Guid="AC53C804-2777-45E6-A135-6190B1897798">
-                            <File Id="MICROSOFT.VBE.INTEROP.DLL" Name="Microsoft.Vbe.Interop.dll" Source="source\Microsoft.Vbe.Interop.dll" />
                         </Component>
                         <Component Id="MIMEPARSER.DLL" DiskId="1" Guid="73635075-0190-4D72-9FEC-0594EAFFBE99">
                             <File Id="MIMEPARSER.DLL" Name="MIMEParser.dll" Source="source\MIMEParser.dll" />
@@ -217,9 +208,6 @@
                         </Component>
                         <Component Id="NPOI.OPENXMLFORMATS.DLL" DiskId="1" Guid="ccab06cd-ab3b-4ade-bf00-51397fcb129c">
                             <File Id="NPOI.OPENXMLFORMATS.DLL" Name="NPOI.OpenXmlFormats.dll" Source="source\NPOI.OpenXmlFormats.dll" />
-                        </Component>
-                        <Component Id="OFFICE.DLL" DiskId="1" Guid="C1BDD342-F8B5-491F-9E3B-7DE4B20D82E5">
-                            <File Id="OFFICE.DLL" Name="office.dll" Source="source\office.dll" />
                         </Component>
                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL" DiskId="1" Guid="065D8E2C-762C-4C16-B760-4B896DA3BF9F">
                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL" Name="Origam.ProjectAutomation.dll" Source="source\Origam.ProjectAutomation.dll" />
@@ -1178,9 +1166,6 @@
                                         <Component Id="ICSHARPCODE.SHARPZIPLIB.DLL_1" DiskId="1" Guid="D2C0FBF9-6DE5-48FE-8687-C43F8A65F781">
                                             <File Id="ICSHARPCODE.SHARPZIPLIB.DLL_1" Name="ICSharpCode.SharpZipLib.dll" Source="server_source\bin\ICSharpCode.SharpZipLib.dll" />
                                         </Component>
-                                        <Component Id="INTEROP.MSCOMMLIB.DLL_1" DiskId="1" Guid="1137459F-8EA5-451F-86AD-105A308601D1">
-                                            <File Id="INTEROP.MSCOMMLIB.DLL_1" Name="Interop.MSCommLib.dll" Source="server_source\bin\Interop.MSCommLib.dll" />
-                                        </Component>
                                         <Component Id="LDAPMEMBERSHIPPROVIDER.DLL" DiskId="1" Guid="7C62A6F3-9FA7-47AF-AA5A-991EE8E74B4E">
                                             <File Id="LDAPMEMBERSHIPPROVIDER.DLL" Name="LDAPMembershipProvider.dll" Source="server_source\bin\LDAPMembershipProvider.dll" />
                                         </Component>
@@ -1195,9 +1180,6 @@
                                         </Component>
                                         <Component Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" DiskId="1" Guid="175B027F-6DB9-44C7-920C-EE11B6F31F5C">
                                             <File Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" Name="Microsoft.AspNet.Identity.Owin.dll" Source="server_source\bin\Microsoft.AspNet.Identity.Owin.dll" />
-                                        </Component>
-                                        <Component Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL_1" DiskId="1" Guid="AC347DC6-CA33-4451-A5D6-B5F7594A961B">
-                                            <File Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL_1" Name="Microsoft.Office.Interop.Excel.dll" Source="server_source\bin\Microsoft.Office.Interop.Excel.dll" />
                                         </Component>
                                         <Component Id="MICROSOFT.OWIN.DLL" DiskId="1" Guid="1B61F39A-A924-4A88-B64C-E789F259DE0A">
                                             <File Id="MICROSOFT.OWIN.DLL" Name="Microsoft.Owin.dll" Source="server_source\bin\Microsoft.Owin.dll" />
@@ -1216,9 +1198,6 @@
                                         </Component>
                                         <Component Id="MICROSOFT.OWIN.STATICFILES.DLL" DiskId="1" Guid="FBB79CEC-75CA-4540-B1A9-F4C7A37F34DF">
                                             <File Id="MICROSOFT.OWIN.STATICFILES.DLL" Name="Microsoft.Owin.StaticFiles.dll" Source="server_source\bin\Microsoft.Owin.StaticFiles.dll" />
-                                        </Component>
-                                        <Component Id="MICROSOFT.VBE.INTEROP.DLL_1" DiskId="1" Guid="2A843D60-74C4-4F43-9E63-3F528EDDA2B6">
-                                            <File Id="MICROSOFT.VBE.INTEROP.DLL_1" Name="Microsoft.Vbe.Interop.dll" Source="server_source\bin\Microsoft.Vbe.Interop.dll" />
                                         </Component>
                                         <Component Id="MIMEPARSER.DLL_1" DiskId="1" Guid="4F2D81C0-FE54-4A16-B33A-0D52B99E6AE2">
                                             <File Id="MIMEPARSER.DLL_1" Name="MIMEParser.dll" Source="server_source\bin\MIMEParser.dll" />
@@ -1249,9 +1228,6 @@
                                         </Component>
                                         <Component Id="NPOI.OPENXMLFORMATS.DLL_1" DiskId="1" Guid="8da8a7fb-1027-4d7a-9698-33d49dbe8513">
                                             <File Id="NPOI.OPENXMLFORMATS.DLL_1" Name="NPOI.OpenXmlFormats.dll" Source="server_source\bin\NPOI.OpenXmlFormats.dll" />
-                                        </Component>
-                                        <Component Id="OFFICE.DLL_1" DiskId="1" Guid="54EC1EC1-33C6-4B49-9082-1ADEF758040D">
-                                            <File Id="OFFICE.DLL_1" Name="office.dll" Source="server_source\bin\office.dll" />
                                         </Component>
                                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL_1" DiskId="1" Guid="A836EDF8-89F6-4B88-B20E-8F68BE589260">
                                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL_1" Name="Origam.ProjectAutomation.dll" Source="server_source\bin\Origam.ProjectAutomation.dll" />
@@ -1678,10 +1654,7 @@
             <ComponentRef Id="ORIGAM.WORKFLOW.DLL" />
             <ComponentRef Id="ORIGAM.WORKFLOW.SIMPLICORSERVICE.DLL" />
             <ComponentRef Id="ICSHARPCODE.SHARPZIPLIB.DLL" />
-            <ComponentRef Id="INTEROP.MSCOMMLIB.DLL" />
             <ComponentRef Id="LOG4NET.DLL" />
-            <ComponentRef Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL" />
-            <ComponentRef Id="MICROSOFT.VBE.INTEROP.DLL" />
             <ComponentRef Id="MIMEPARSER.DLL" />
             <ComponentRef Id="MVP.XML.DLL" />
             <ComponentRef Id="MIMEKIT.DLL" />
@@ -1692,7 +1665,6 @@
             <ComponentRef Id="NPOI.OOXML.DLL" />
             <ComponentRef Id="NPOI.OPENXML4NET.DLL" />
             <ComponentRef Id="NPOI.OPENXMLFORMATS.DLL" />
-            <ComponentRef Id="OFFICE.DLL" />
             <ComponentRef Id="PROTOBUFNET.DLL" />
             <ComponentRef Id="PROTOBUFNET_CORE.DLL" />
             <ComponentRef Id="PROTOBUFNET.DLL_1" />
@@ -1974,7 +1946,6 @@
             <ComponentRef Id="FILEHELPERS.DLL" />
             <ComponentRef Id="FLUORINEFX.DLL" />
             <ComponentRef Id="ICSHARPCODE.SHARPZIPLIB.DLL_1" />
-            <ComponentRef Id="INTEROP.MSCOMMLIB.DLL_1" />
             <ComponentRef Id="LDAPMEMBERSHIPPROVIDER.DLL" />
             <ComponentRef Id="LOG4NET.DLL_1" />
             <ComponentRef Id="MARKDOWNSHARP.DLL" />
@@ -1982,14 +1953,12 @@
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL_1" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" />
-            <ComponentRef Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL_1" />
             <ComponentRef Id="MICROSOFT.OWIN.DLL" />
             <ComponentRef Id="MICROSOFT.OWIN.FILESYSTEMS.DLL" />
             <ComponentRef Id="MICROSOFT.OWIN.HOST.SYSTEMWEB.DLL" />
             <ComponentRef Id="MICROSOFT.OWIN.SECURITY.COOKIES.DLL" />
             <ComponentRef Id="MICROSOFT.OWIN.SECURITY.DLL" />
             <ComponentRef Id="MICROSOFT.OWIN.STATICFILES.DLL" />
-            <ComponentRef Id="MICROSOFT.VBE.INTEROP.DLL_1" />
             <ComponentRef Id="MIMEPARSER.DLL_1" />
             <ComponentRef Id="MVP.XML.DLL_1" />
             <ComponentRef Id="MIMEKIT.DLL_1" />
@@ -2000,7 +1969,6 @@
             <ComponentRef Id="NPOI.OOXML.DLL_1" />
             <ComponentRef Id="NPOI.OPENXML4NET.DLL_1" />
             <ComponentRef Id="NPOI.OPENXMLFORMATS.DLL_1" />
-            <ComponentRef Id="OFFICE.DLL_1" />
             <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL_1" />
             <ComponentRef Id="ORIGAM.SECURITY.IDENTITY.DLL_1" />
             <ComponentRef Id="ORIGAM.SECURITY.NETFX.DLL_1" />
