@@ -1879,70 +1879,10 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		private void ExportGridLegacy()
-		{
-			this.GridVisible = true;
-
-			StringBuilder data = new StringBuilder();
-			foreach(DataGridColumnStyle style in (grid as DataGrid).TableStyles[0].GridColumnStyles)
-			{
-				data.AppendFormat(style.HeaderText + "\t");
-			}
-			data.Append("\r\n");
-
-			bool finished = false;
-			int i = 0;
-			while(!finished)
-			{
-				try
-				{
-					for(int j = 0; j < (grid as DataGrid).TableStyles[0].GridColumnStyles.Count; j++)
-					{
-						data.AppendFormat((grid as DataGrid)[i, j].ToString().Replace("\r\n", "; ").Replace("\t", " ") + "\t");
-					}
-
-					data.Append("\r\n");
-				}
-				catch
-				{
-					finished = true;
-				}
-				i++;
-			}
-
-			Clipboard.SetDataObject(data.ToString());
-
-			Microsoft.Office.Interop.Excel.ApplicationClass xl = null;
-			try
-			{
-				xl = new Microsoft.Office.Interop.Excel.ApplicationClass();
-				xl.Visible = true;
-				Microsoft.Office.Interop.Excel.Workbook newWorkbook = 
-					xl.Workbooks.Add(Microsoft.Office.Interop.Excel.XlWBATemplate.xlWBATWorksheet);
-				
-				Microsoft.Office.Interop.Excel.Worksheet sheet = newWorkbook.ActiveSheet as Microsoft.Office.Interop.Excel.Worksheet;
-
-				sheet.Paste(sheet.Cells[1, 1], false);
-			}
-			finally
-			{
-				if(xl != null)
-				{
-					System.Runtime.InteropServices.Marshal.ReleaseComObject(xl);
-				}
-			}		
-		}
-
 		private void ExportGrid()
 		{
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
-			if(settings.LegacyExcelExport)
-			{
-				ExportGridLegacy();
-				return;
-			}
-			
 			ArrayList list = new ArrayList();
 
 			this.GridVisible = true;

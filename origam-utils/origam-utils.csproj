@@ -101,10 +101,6 @@
       <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
       <Name>Origam.OrigamEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.ModelImport\Origam.ModelImport.csproj">
-      <Project>{367D2F77-B10D-438B-BF33-B7825DCF0BF5}</Project>
-      <Name>Origam.ModelImport</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
       <Name>Origam.ReflectorCache</Name>

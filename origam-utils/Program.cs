@@ -61,15 +61,6 @@ namespace Origam.Utils
             CTRL_SHUTDOWN_EVENT = 6
         }
 
-        class ImportModelOptions
-        {
-            [Option('s', "scripts",
-                HelpText = "After model is imported, update scripts are processed.")]
-            public bool Scripts { get; set; }
-            [Option('r', "restart", HelpText = "After model is import, server restart is invoked.")]
-            public bool Restart { get; set; }
-        }
-
         class CreateHashIndexOptions
         {
             [Option('i', "input", Required = true,
@@ -165,9 +156,6 @@ namespace Origam.Utils
             [VerbOption("process-queue",
                 HelpText = "Process a queue.")]
             public ProcessQueueOptions ProcessQueue { get; set; }
-            [VerbOption("import-model",
-                HelpText = "Imports model from repository to database.")]
-            public ImportModelOptions ImportModelVerb { get; set; }
             [VerbOption("run-scripts",
                 HelpText = "Runs update scripts.")]
             public RunUpdateScriptsOptions RunUpdateScriptsVerb { get; set; }
@@ -237,10 +225,6 @@ namespace Origam.Utils
                 {
                     return ProcesQueue(
                         (ProcessQueueOptions)invokedVerbInstance);
-                }
-                case "import-model":
-                {
-                    return ImportModel((ImportModelOptions)invokedVerbInstance);
                 }
                 case "run-scripts":
                 {
@@ -339,28 +323,7 @@ namespace Origam.Utils
                 log.Error(ex.Message);
             }
         }
-        private static int ImportModel(ImportModelOptions importModelOptions)
-        {
-            OrigamEngine.OrigamEngine.ConnectRuntime(runRestartTimer: false);
-            if (log.IsInfoEnabled)
-            {
-                log.Info("Importing model...");
-            }
-            ModelImport.ModelImport modelImport = new ModelImport.ModelImport();
-            if (!modelImport.Import())
-            {
-                return 1;
-            }
-            if (importModelOptions.Scripts)
-            {
-                RunUpdateScripts();
-            }
-            if (importModelOptions.Restart)
-            {
-                RestartServerInternal();
-            }
-            return 0;
-        }
+
         private static int RunUpdateScripts()
         {
             if (log.IsInfoEnabled)

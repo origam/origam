@@ -60,7 +60,6 @@ namespace Origam
 			bool loadExternalWorkQueues,
 			int externalWorkQueueCheckPeriod,
 			string slogan,
-			bool legacyExcelExport,
 			string localizationFolder,
 			bool executeUpgradeScriptsOnStart,
 			int exportRecordsLimit,
@@ -92,7 +91,6 @@ namespace Origam
 			this.LoadExternalWorkQueues = loadExternalWorkQueues;
 			this.ExternalWorkQueueCheckPeriod = externalWorkQueueCheckPeriod;
 			this.Slogan = slogan;
-			this.LegacyExcelExport = legacyExcelExport;
 			this.LocalizationFolder = localizationFolder;
 			this.ExecuteUpgradeScriptsOnStart = executeUpgradeScriptsOnStart;
 			this.ExportRecordsLimit = exportRecordsLimit;
@@ -246,9 +244,6 @@ namespace Origam
 		[Category("Work Queue"), DefaultValue(60)]
 		public int ExternalWorkQueueCheckPeriod { get; set; } = 60;
 
-		[Category("Services"), DefaultValue(false)]
-		public bool LegacyExcelExport { get; set; } = false;
-
 		[Category("Services"), DefaultValue(-1)]
 		public int ExportRecordsLimit { get; set; } = -1;
 
@@ -318,7 +313,6 @@ namespace Origam
 				this.LoadExternalWorkQueues,
 				this.ExternalWorkQueueCheckPeriod,
 				this.Slogan,
-				this.LegacyExcelExport,
 				this.LocalizationFolder,
 				this.ExecuteUpgradeScriptsOnStart,
 				this.ExportRecordsLimit,
