@@ -100,24 +100,12 @@ namespace Origam.Workbench.Services
                     result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.SimplicorService.WarehouseServiceAgent", "Origam.Workflow.SimplicorService");
                     break;
 
-                case "Star21Service":
-                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.Star21Service.Star21ServiceAgent", "Origam.Workflow.Star21Service");
-                    break;
-
                 case "MailService":
                     result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.MailServiceAgent", "Origam.Workflow");
                     break;
 
-                case "WarehouseService":
-                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.Star21Service.WarehouseServiceAgent", "Origam.Workflow.Star21Service");
-                    break;
-
                 case "ReportService":
                     result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.ReportServiceAgent", "Origam.Workflow");
-                    break;
-
-                case "MobilePhoneService":
-                    result = (IServiceAgent)Reflector.InvokeObject("Origam.Workflow.MobilePhoneServiceAgent", "Origam.Workflow");
                     break;
 
                 case "FileSystemService":

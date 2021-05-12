@@ -82,12 +82,6 @@
  
 
   <ItemGroup>
-    <Compile Update="MobilePhoneShortMessages.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="SerialCommunicationBuffer.Designer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="SimpleModelData.Designer.cs">
       <SubType>Code</SubType>
     </Compile>
