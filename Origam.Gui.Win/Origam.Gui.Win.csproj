@@ -190,10 +190,6 @@
       <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>
       <Name>Origam.Gui</Name>
     </ProjectReference>
-    <Reference Include="Microsoft.Office.Interop.Excel">
-      <Name>Microsoft.Office.Interop.Excel</Name>
-      <HintPath>..\EnterpriseLibrary\Microsoft.Office.Interop.Excel.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
