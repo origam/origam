@@ -21,6 +21,8 @@ node_modules
 origam-html5.http
 http-client.env.json
 
+.temp
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
