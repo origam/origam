@@ -886,9 +886,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if (targetDataView.newRecordView === "0" && targetDataView.activateFormView) {
         yield targetDataView.activateFormView({ saveNewState: true });
       } else {
-        if (!targetDataView.isFormViewActive()) {
+        if (targetDataView.isTableViewActive()) {
           yield* startEditingFirstCell(targetDataView)();
-        } else {
+        }
+        else if(targetDataView.isFormViewActive()) {
           getFocusManager(targetDataView).forceAutoFocus();
         }
       }
