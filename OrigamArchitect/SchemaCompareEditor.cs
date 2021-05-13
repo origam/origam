@@ -87,7 +87,12 @@ namespace OrigamArchitect
 			lvwResults.SmallImageList = _schema.SchemaBrowser.ImageList;
 			DeploymentVersion currentVersion = null;
 			// load versions combo box
-			foreach(DeploymentVersion version in _schema.GetProvider(typeof(DeploymentSchemaItemProvider)).ChildItems)
+			var deploymentVersions = _schema.GetProvider<DeploymentSchemaItemProvider>()
+				.ChildItems
+				.ToGeneric()
+				.Cast<DeploymentVersion>()
+				.OrderBy(deploymentVersion => deploymentVersion.Version);
+			foreach(DeploymentVersion version in deploymentVersions)
 			{
 				// only version from the current extension
 				if(version.Package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey))
