@@ -54,7 +54,7 @@
     "eslint-plugin-react": "7.19.0",
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-cli": "^1.2.0",
-    "file-loader": "4.3.0",
+    "file-loader": "6.2.0",
     "flexsearch": "^0.6.32",
     "fs-extra": "^8.1.0",
     "html-to-draftjs": "^1.5.0",
