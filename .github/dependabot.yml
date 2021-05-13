@@ -27,3 +27,7 @@ updates:
       - dependency-name: "@typescript-eslint*"
       - dependency-name: "node-sass*"
       - dependency-name: "optimize-css-assets-webpack-plugin*"
+      - dependency-name: "css-loader*"
+      - dependency-name: "postcss*"
+      - dependency-name: "file-cli*"
+      - dependency-name: "postcss-preset-env*"
