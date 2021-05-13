@@ -17,7 +17,7 @@
     "@types/leaflet-draw": "^1.0.2",
     "@types/lodash": "^4.14.169",
     "@types/node": "^15.0.3",
-    "@types/numeral": "^0.0.28",
+    "@types/numeral": "^2.0.1",
     "@types/react": "^16.9.0",
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^16.9.0",
