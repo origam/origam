@@ -151,11 +151,10 @@ namespace Origam.DA.Service_net2Tests
         private void InitFilePersistenceProvider(List<string> parentFolders,
             DirectoryInfo topDir)
         {
+            var ignoredFileFilter = new FileFilter( new HashSet<string> {"bin", "bak"},new FileInfo[0],new string[0]);
             var fileChangesWatchDog = new FileChangesWatchDog(
                 topDir: topDir,
-                fileExtensionsToIgnore: new HashSet<string> {"bin", "bak"},
-                filesToIgnore: new List<FileInfo>(),
-                directoryNamesToIgnore: new List<string>());
+                ignoredFileFilter);
             var pathToIndexBin = new FileInfo(Path.Combine(topDir.FullName, "index.bin"));
             var pathFactory = new OrigamPathFactory(TestProjectDir);
             var index = new FilePersistenceIndex(pathFactory);
@@ -180,6 +179,7 @@ namespace Origam.DA.Service_net2Tests
                 new FilePersistenceProvider(
                     topDir,
                     fileEventQueue,
+                    ignoredFileFilter,
                     trackerLoaderFactory,
                     origamFileFactory,
                     index,

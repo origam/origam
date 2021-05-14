@@ -48,6 +48,7 @@ namespace Origam.DA.Service
         private FilePersistenceIndex index;
         private readonly Persistor persistor;
         private readonly FileEventQueue fileEventQueue;
+        private readonly FileFilter ignoredFileFilter;
         private readonly ILocalizationCache localizationCache;
         private readonly TrackerLoaderFactory trackerLoaderFactory;
         private readonly OrigamFileManager origamFileManager;
@@ -64,7 +65,9 @@ namespace Origam.DA.Service
 
         public FilePersistenceProvider(DirectoryInfo topDirectory,
             FileEventQueue fileEventQueue,
-            TrackerLoaderFactory trackerLoaderFactory, OrigamFileFactory origamFileFactory,
+            FileFilter ignoredFileFilter,
+            TrackerLoaderFactory trackerLoaderFactory,
+            OrigamFileFactory origamFileFactory,
             FilePersistenceIndex index, OrigamFileManager origamFileManager,
             bool checkRules, IRuntimeModelConfig runtimeModelConfig)
         {
@@ -76,6 +79,8 @@ namespace Origam.DA.Service
             TopDirectory = topDirectory;
             this.index = index;
             this.fileEventQueue = fileEventQueue;
+            this.ignoredFileFilter = ignoredFileFilter;
+
             persistor = new Persistor(
                 this,index,origamFileFactory,origamFileManager, trackerLoaderFactory);
             fileEventQueue.Start();
@@ -453,14 +458,21 @@ namespace Origam.DA.Service
 
         public List<ModelErrorSection> GetFileErrors(string[] ignoreDirectoryNames, CancellationToken cancellationToken)
         {
+            List<FileInfo> modelDirectoryFiles = TopDirectory
+                .GetAllFilesInSubDirectories()
+                .ToList();
             return 
                 new IFileSystemModelChecker[]
                     {
                         new FileNameChecker(this, index),
-                        new DuplicateIdChecker(this),
-                        new ReferenceFileChecker(this),
+                        new DuplicateIdChecker(this, modelDirectoryFiles),
+                        new ReferenceFileChecker(this, modelDirectoryFiles),
                         new DirectoryChecker(ignoreDirectoryNames, this),
-                        new XmlReferencePropertyChecker(this)
+                        new XmlReferencePropertyChecker(this),
+                        new DeadModelFilesChecker(
+                            filePersistenceProvider: this,
+                            ignoredFileFilter: ignoredFileFilter, 
+                            modelDirectoryFiles: modelDirectoryFiles)
                     }
                     .Select(checker =>
                     {

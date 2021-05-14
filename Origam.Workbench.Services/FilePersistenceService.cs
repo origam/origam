@@ -65,15 +65,20 @@ namespace Origam.Workbench.Services
             var pathFactory = new OrigamPathFactory(topDirectory);
             var pathToIndexBin = new FileInfo(Path.Combine(topDirectory.FullName, "index.bin"));
             var index = new FilePersistenceIndex(pathFactory);
+
+            var ignoredFileFilter = new FileFilter(
+                fileExtensionsToIgnore: new HashSet<string> {"bak", "debug"},
+                filesToIgnore: new List<FileInfo>
+                {
+                    pathToIndexBin, 
+                    new FileInfo(this.pathToRuntimeModelConfig)
+                },
+                directoryNamesToIgnore: new List<string> {".git", "l10n"});
             var fileChangesWatchDog =
                 GetNewWatchDog(
                     topDir: topDirectory,
                     watchFileChanges: watchFileChanges, 
-                    filesToIgnore: new List<FileInfo>
-                    {
-                        pathToIndexBin, 
-                        new FileInfo(this.pathToRuntimeModelConfig)
-                    }
+                    ignoredFileFilter: ignoredFileFilter
                 );
             FileEventQueue = 
                 new FileEventQueue(index, fileChangesWatchDog);
@@ -106,6 +111,7 @@ namespace Origam.Workbench.Services
             schemaProvider = new FilePersistenceProvider(
                 topDirectory: topDirectory,
                 fileEventQueue: FileEventQueue,
+                ignoredFileFilter: ignoredFileFilter,
                 index: index,
                 origamFileFactory: origamFileFactory,
                 trackerLoaderFactory: trackerLoaderFactory,
@@ -156,17 +162,13 @@ namespace Origam.Workbench.Services
         }
 
         private IFileChangesWatchDog GetNewWatchDog(DirectoryInfo topDir,
-            bool watchFileChanges, List<FileInfo> filesToIgnore)
+            bool watchFileChanges, FileFilter ignoredFileFilter)
         {
             if (!watchFileChanges)
             {
                 return new NullWatchDog();
             }
-            return new FileChangesWatchDog(
-                topDir: topDir,
-                fileExtensionsToIgnore: new HashSet<string>{"bak", "debug"},
-                filesToIgnore: filesToIgnore,
-                directoryNamesToIgnore: new List<string>{".git"});
+            return new FileChangesWatchDog(topDir, ignoredFileFilter);
         }
 
         public Maybe<XmlLoadError> Reload() => 

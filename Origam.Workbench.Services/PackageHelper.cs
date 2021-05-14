@@ -29,66 +29,82 @@ namespace Origam.Workbench.Services
     {
         public static void CreatePackage(string packageName, Guid packageId, Guid referencePackageId)
         {
-            IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            StopFileEventQueue(persistenceService);
+            IPersistenceService persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
+            RunWithInactiveFileEventQueue(
+                persistenceService: persistenceService, 
+                action: () =>
+                {
+                    CreatePackage(packageName, packageId, referencePackageId, persistenceService);
+                });
+        }
+
+        private static void CreatePackage(string packageName, Guid packageId,
+            Guid referencePackageId, IPersistenceService persistenceService)
+        {
             string versionNumber = "1.0.0";
             Package newExtension = new Package(new ModelElementKey(packageId));
             newExtension.PersistenceProvider = persistenceService.SchemaListProvider;
             newExtension.Name = packageName;
             newExtension.VersionString = versionNumber;
             PackageReference origamRootReference = new PackageReference();
-            origamRootReference.PersistenceProvider = persistenceService.SchemaListProvider;
+            origamRootReference.PersistenceProvider =
+                persistenceService.SchemaListProvider;
             origamRootReference.Package = newExtension;
             origamRootReference.ReferencedPackageId = referencePackageId;
             newExtension.Persist();
             origamRootReference.Persist();
 
-            IDatabasePersistenceProvider dbListProvider = persistenceService.SchemaListProvider
-                as IDatabasePersistenceProvider;
+            IDatabasePersistenceProvider dbListProvider =
+                persistenceService.SchemaListProvider
+                    as IDatabasePersistenceProvider;
             if (dbListProvider != null)
             {
                 dbListProvider.Update(null);
             }
 
-            SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            SchemaService schema =
+                ServiceManager.Services.GetService(typeof(SchemaService)) as
+                    SchemaService;
             schema.LoadSchema(packageId, false, false);
             foreach (ISchemaItemProvider provider in schema.Providers)
             {
                 if (provider.AutoCreateFolder)
                 {
-                    SchemaItemGroup group = provider.NewGroup(schema.ActiveSchemaExtensionId);
-                    group.Name = packageName;
-                    group.Persist();
+                    SchemaItemGroup group =
+                        provider.NewGroup(schema.ActiveSchemaExtensionId);
+                    @group.Name = packageName;
+                    @group.Persist();
 
                     if (provider.GetType().Name == "DeploymentSchemaItemProvider")
                     {
-                        IDeploymentService depl = ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
-                        depl.CreateNewModelVersion(group, versionNumber, versionNumber);
+                        IDeploymentService depl =
+                            ServiceManager.Services.GetService(
+                                typeof(IDeploymentService)) as IDeploymentService;
+                        depl.CreateNewModelVersion(@group, versionNumber, versionNumber);
                     }
                 }
             }
+
             if (schema.SupportsSave)
             {
                 schema.SaveSchema();
             }
-            IDeploymentService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
+
+            IDeploymentService deployment =
+                ServiceManager.Services.GetService(typeof(IDeploymentService)) as
+                    IDeploymentService;
             deployment.Deploy();
-            StartFileEventQueue(persistenceService);
         }
 
-        private static void StopFileEventQueue(IPersistenceService persistenceService)
+        private static void RunWithInactiveFileEventQueue(IPersistenceService persistenceService, Action action)
         {
-            if (persistenceService is FilePersistenceService)
+            if (persistenceService is FilePersistenceService service)
             {
-                ((FilePersistenceService)persistenceService).FileEventQueue.Stop();
+                service.FileEventQueue.IgnoreChanges(action);
             }
-        }
-
-        private static void StartFileEventQueue(IPersistenceService persistenceService)
-        {
-            if (persistenceService is FilePersistenceService)
+            else
             {
-                ((FilePersistenceService)persistenceService).FileEventQueue.Start();
+                action();
             }
         }
     }

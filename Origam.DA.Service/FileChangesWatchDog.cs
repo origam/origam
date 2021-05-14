@@ -20,9 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using log4net;
 using System.Reflection;
 
@@ -56,21 +54,14 @@ namespace Origam.DA.Service
         private static readonly ILog log 
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly DirectoryInfo topDir;
-        private readonly IEnumerable<string> fileExtensionsToIgnore;
-        private readonly IEnumerable<FileInfo> filesToIgnore;
-        private readonly IEnumerable<string> directoryNamesToIgnore;
+        private readonly FileFilter ignoreFileFilter;
         private FileSystemWatcher watcher;
 
         public FileChangesWatchDog(
-            DirectoryInfo topDir,
-            IEnumerable<string> fileExtensionsToIgnore, 
-            IEnumerable<FileInfo> filesToIgnore,
-            IEnumerable<string> directoryNamesToIgnore)
+            DirectoryInfo topDir, FileFilter ignoreFileFilter)
         {
-            this.fileExtensionsToIgnore = fileExtensionsToIgnore;
             this.topDir = topDir;
-            this.filesToIgnore = filesToIgnore;
-            this.directoryNamesToIgnore = directoryNamesToIgnore;
+            this.ignoreFileFilter = ignoreFileFilter;
         }
 
         public event EventHandler<FileSystemChangeEventArgs> FileChanged;
@@ -99,31 +90,7 @@ namespace Origam.DA.Service
         }
 
         private bool ShouldBeIgnored(string fullPath) =>
-            HasIgnoredExtension(fullPath) ||
-            IsIgnoredFile(fullPath) ||
-            IsInIgnoredDirectory(fullPath);
-
-        private bool HasIgnoredExtension(string fullPath)
-        {
-            string extension = Path.GetExtension(fullPath);
-            if (extension.StartsWith("."))
-            {
-                extension = extension.Substring(1);
-            }
-            return fileExtensionsToIgnore.Any(ext => ext == extension);
-        }
-
-        private bool IsIgnoredFile(string fullPath)
-        {
-            return filesToIgnore.Any(f => f.FullName == fullPath);
-        }
-
-        private bool IsInIgnoredDirectory(string fullPath)
-        {
-            return fullPath
-                .Split(Path.DirectorySeparatorChar)
-                .Any(dirName => directoryNamesToIgnore.Contains(dirName));
-        }
+            !ignoreFileFilter.ShouldPass(fullPath);
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {

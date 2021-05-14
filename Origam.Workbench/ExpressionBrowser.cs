@@ -862,16 +862,17 @@ namespace Origam.Workbench
 
             if (item != null)
 			{
-                TreeNode parentNode = node.Parent;
+				TreeNode parentNode = node.Parent;
+				var parentItemFiles = (parentNode?.Tag as IPersistent)
+					?.Files
+					?.ToArray() ?? new string[0];
                 if (this.DisableOtherExtensionNodes & !_schemaService.IsItemFromExtension(item))
                 {
                     node.ForeColor = Color.Gray;
                 }
-                else if (parentNode != null
-                    && parentNode.Tag is IPersistent  parentItem
-                    && parentItem.Files.Count > 0
-                    && parentItem.Files.First() == item.Files.First()
-					&& parentNode.ForeColor != OrigamColorScheme.TabActiveForeColor)
+                else if (parentItemFiles.Length > 0
+                         && parentItemFiles.First() == item.Files.FirstOrDefault()
+                         && parentNode.ForeColor != OrigamColorScheme.TabActiveForeColor)
                 {
                     // same file as parent
                     node.ForeColor = parentNode.ForeColor;

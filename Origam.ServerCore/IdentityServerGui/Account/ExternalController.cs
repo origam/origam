@@ -47,7 +47,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         /// initiate roundtrip to external authentication provider
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> Challenge(string provider, string returnUrl)
+        public Task<IActionResult> Challenge(string provider, string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
 
@@ -68,9 +68,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     { "scheme", provider },
                 }
             };
-
-            return Challenge(props, provider);
-
+            return Task.FromResult(Challenge(props, provider) as IActionResult);
         }
 
         /// <summary>

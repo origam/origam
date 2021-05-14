@@ -133,7 +133,7 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;Could not find xmlNamespace for  \&quot;{0}\&quot; in {1} and its base types&quot;.
+        ///   Looks up a localized string similar to Could not find xmlNamespace for  &quot;{0}&quot; in {1} and its base types.
         /// </summary>
         internal static string CouldNotFindXmlNamespace {
             get {
@@ -457,7 +457,7 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error when loading objects from file: \&quot;{0}\&quot;.
+        ///   Looks up a localized string similar to Error when loading objects from file: &quot;{0}&quot;.
         /// </summary>
         internal static string ErrorWhenLoadingObjects {
             get {
@@ -844,7 +844,7 @@ namespace Origam.DA.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The current meta version of type: \&quot;{0}\&quot; is {1}, but the xml file contains version {2}.
+        ///   Looks up a localized string similar to The current meta version of type: &quot;{0}&quot; is {1}, but the xml file contains version {2}.
         /// </summary>
         internal static string WrongMetaVersion {
             get {

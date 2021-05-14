@@ -359,16 +359,20 @@ namespace Origam.Workbench.Services
 			foreach (Package package in packages)
 			{
 				GetDeploymentVersions(package)
-					.Where(deplVerstion =>
-						deplVerstion.DeploymentDependencies.Count == 0)
-					.ForEach(deplVerstion =>
-						AddDeploymentDependencies(package, deplVerstion));
+					.Where(deplVersion =>
+						deplVersion.DeploymentDependencies.Count == 0)
+					.ForEach(deplVersion =>
+						AddDeploymentDependencies(package, deplVersion));
 			}
 		}
 
 		private void AddDeploymentDependencies(Package package,
 			DeploymentVersion deplVersion)
 		{
+			if (package.IncludedPackages.Count == 0)
+			{
+				return;
+			}
 			if (IsOrigamOwned(package) && deplVersion.Version >= PackageVersion.Five)
 			{
 				throw new Exception($"Cannot automatically add dependencies to Origam owned package over version 5.0 these should have been added during {nameof(DeploymentVersion)} creation.");

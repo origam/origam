@@ -77,6 +77,19 @@ namespace Origam.DA.Service
             timer.Start();
         }
 
+        public void IgnoreChanges(Action action)
+        {
+            try
+            {
+                Stop();
+                action();
+            }
+            finally
+            {
+                Start();
+            }
+        }
+
         public void Stop()
         {
             watchDog.Stop();

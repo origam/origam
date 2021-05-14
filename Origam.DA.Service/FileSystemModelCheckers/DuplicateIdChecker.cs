@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,18 +32,18 @@ namespace Origam.DA.Service.FileSystemModelCheckers
 {
     public class DuplicateIdChecker: IFileSystemModelChecker
     {
-        private DirectoryInfo topDirectory;
+        private readonly IEnumerable<FileInfo> modelDirectoryFiles;
         private readonly DuplicateTracker duplicateTracker = new DuplicateTracker();
 
-        public DuplicateIdChecker(FilePersistenceProvider filePersistenceProvider)
+        public DuplicateIdChecker(FilePersistenceProvider filePersistenceProvider,
+            IEnumerable<FileInfo> modelDirectoryFiles)
         {
-            topDirectory = filePersistenceProvider.TopDirectory;
+            this.modelDirectoryFiles = modelDirectoryFiles;
         }
 
         public ModelErrorSection GetErrors()
         {
-           topDirectory
-               .GetAllFilesInSubDirectories()
+            modelDirectoryFiles
                .Where(OrigamFile.IsPersistenceFile)
                .ForEach(PuIdsToDuplicateTracker);
 

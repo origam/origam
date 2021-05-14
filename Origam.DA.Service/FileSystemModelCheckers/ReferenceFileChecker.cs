@@ -32,22 +32,24 @@ namespace Origam.DA.Service
 {
     class ReferenceFileChecker : IFileSystemModelChecker
     {
-        private readonly DirectoryInfo topDirectory;
         private readonly FilePersistenceProvider filePersistenceProvider;
+        private readonly List<FileInfo> modelDirectoryFiles;
         private readonly ReferenceFileFactory referenceFileFactory;
 
-        public ReferenceFileChecker(FilePersistenceProvider filePersistenceProvider)
+        public ReferenceFileChecker(
+            FilePersistenceProvider filePersistenceProvider,
+            List<FileInfo> modelDirectoryFiles)
         {
-            topDirectory = filePersistenceProvider.TopDirectory;
             this.filePersistenceProvider = filePersistenceProvider;
-            var origamPathFactory = new OrigamPathFactory(topDirectory);
+            this.modelDirectoryFiles = modelDirectoryFiles;
+            var origamPathFactory = new OrigamPathFactory(
+                filePersistenceProvider.TopDirectory);
             referenceFileFactory = new ReferenceFileFactory(origamPathFactory);
         }
 
         public ModelErrorSection GetErrors()
         {
-            List<string> errors = topDirectory
-                .GetAllFilesInSubDirectories()
+            List<string> errors = modelDirectoryFiles
                 .Where(file => file.Name == OrigamFile.ReferenceFileName)
                 .Select(ReadToFileData)
                 .Select(CheckAndReturnErrors)
