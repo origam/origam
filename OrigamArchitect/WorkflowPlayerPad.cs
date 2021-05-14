@@ -25,6 +25,7 @@ using OrigamArchitect;
 using Origam.Workbench.Services;
 using Origam.Schema.MenuModel;
 using Origam.Schema;
+using Origam.UI;
 
 namespace Origam.Workbench.Pads
 {
@@ -191,7 +192,7 @@ namespace Origam.Workbench.Pads
 
         public int ImageIndex(string icon)
         {
-            throw new NotImplementedException();
+	        return this.ImageList.ImageIndex(icon);
         }
     }
 }
