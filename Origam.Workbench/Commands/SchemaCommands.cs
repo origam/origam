@@ -540,7 +540,7 @@ namespace Origam.Workbench.Commands
 			else if(itemType == "Origam.Schema.EntityModel.XsdDataStructure")
 			{
 				System.Reflection.Assembly a = Assembly.LoadWithPartialName("Origam.Schema.EntityModel.UI");
-				editor = a.CreateInstance("Origam.Schema.EntityModel.XsdEditor") as IViewContent;
+				editor = a.CreateInstance("Origam.Schema.EntityModel.UI.XsdEditor") as IViewContent;
 				if(editor == null)
 					throw new Exception(ResourceUtils.GetString("ErrorLoadEditorFailed"));
 			}
