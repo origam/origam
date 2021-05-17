@@ -28,8 +28,6 @@ export function serverValueToPanelSizeRatio(serverStoredSizeRatio: number | unde
         ? serverStoredSizeRatio / 1000_000
         : 0.5;
 
-    if (panelPositionRatio > 1) return 0.5;
-    if (panelPositionRatio < 0.1) return 0.1;
-    if (panelPositionRatio > 0.9) return 0.9;
+    if (panelPositionRatio < 0.1 || panelPositionRatio > 0.9) return 0.5; // this was either on old value representing the position in pixels or some error
     return panelPositionRatio;
 }
