@@ -37,6 +37,7 @@ using Origam.Rule;
 using Origam.Schema.RuleModel;
 using log4net;
 using System.Globalization;
+using System.Linq;
 using System.Security.Principal;
 using System.Threading;
 
@@ -656,7 +657,7 @@ namespace Origam.Workflow
 				}
 			}
 
-			if(IsFailureHandled())
+			if(IsFailureHandled(step))
 			{
 				this.CaughtException = ex;
 				return;
@@ -670,14 +671,16 @@ namespace Origam.Workflow
 		/// Returns true if there is a task in the workflow that handles failures.
 		/// </summary>
 		/// <returns></returns>
-		private bool IsFailureHandled()
+		private bool IsFailureHandled(IWorkflowStep failedStep)
 		{
-			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.CategoryConst);
-			for(int i = 0; i < tasks.Count; i++)
+			ArrayList tasks = WorkflowBlock.ChildItemsByType(WorkflowTask.CategoryConst);
+			foreach (IWorkflowStep step in tasks)
 			{
-				IWorkflowStep step = tasks[i] as IWorkflowStep;
-
-				if(CanStepRun(step))
+				var dependencyOnFailedStep = step.Dependencies
+					.Cast<WorkflowTaskDependency>()
+					.FirstOrDefault(dependency => dependency.Task == failedStep);
+				if (dependencyOnFailedStep != null &&
+				    dependencyOnFailedStep.StartEvent == WorkflowStepStartEvent.Failure)
 				{
 					return true;
 				}
