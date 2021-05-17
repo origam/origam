@@ -54,9 +54,9 @@ export class ErrorDialogController implements IErrorDialogController {
           const exMessage = _.get(exception, "message") || _.get(exception, "Message");
           if (exMessage) {
             message += exMessage;
-            message += "\n\n";
+            message += "\n";
           }
-          exception = exception.InnerException;
+          exception = exception.innerException || exception.InnerException ;
         } while (exception);
         return message;
       };
