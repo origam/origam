@@ -927,6 +927,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         dataView.clear();
       }
       yield* processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
+      getTablePanelView(targetDataView).scrollToCurrentRow();
     } finally {
       this.monitor.inFlow--;
     }
