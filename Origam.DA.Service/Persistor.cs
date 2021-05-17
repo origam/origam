@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
+using System.Threading;
 using MoreLinq;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -134,40 +134,19 @@ namespace Origam.DA.Service
 
         private void ProcessTransactionStore()
         {
-            foreach (IDeferredTask task in transactionStore.FolderRenamingTasks)
-            {
-                task.Run();
-            }
-            foreach (OrigamFile origamFile in transactionStore.Files)
-            {
-                origamFile.FinalizeSave();
-                origamFile.DeferredSaveDocument = null;
-            }
-
-            transactionStore.Clear();
+            transactionStore.ProcessTransactions();
             index.AddToPersist(trackerLoaderFactory,false);
         }
 
         public void EndTransactionDontSave()
         {
-            foreach (OrigamFile origamFile in transactionStore.Files)
-            {
-                origamFile.DeferredSaveDocument = null;
-            }
             transactionStore.Clear();
             IsInTransaction = false;
         }
 
         public PersistedObjectInfo GetObjInfoFromTransactionStore(Guid id)
         {
-            foreach (var origamFile in transactionStore.Files)
-            {
-                if (origamFile.ContainedObjects.ContainsKey(id))
-                {
-                    return origamFile.ContainedObjects[id];
-                }
-            }
-            return null;
+            return transactionStore.FindObjInfo(id);
         }
 
         private PersistedObjectInfo CreateObjectInfo(IFilePersistent instance, OrigamFile origamFile)
@@ -437,25 +416,79 @@ namespace Origam.DA.Service
 
     internal class TransactionStore
     {
+        private readonly ReaderWriterLockSlim readWriteLock =
+            new ReaderWriterLockSlim();
         public Queue<IDeferredTask> FolderRenamingTasks { get; } =
             new Queue<IDeferredTask>();
 
         private readonly IDictionary<string, OrigamFile> pathFileDict =
             new Dictionary<string, OrigamFile>();
-        public IEnumerable<OrigamFile> Files => pathFileDict.Values;
 
-        public void AddOrReplace(OrigamFile file)
-        {
-            if (file.DeferredSaveDocument == null)
-            {
-                throw new ArgumentException();
-            }
-            pathFileDict[file.Path.Relative] = file;
+         public void AddOrReplace(OrigamFile file)
+         {
+             readWriteLock.RunWriter(() =>
+             {
+                if (file.DeferredSaveDocument == null)
+                {
+                    throw new ArgumentException();
+                }
+                pathFileDict[file.Path.Relative] = file;
+             });
         }
-        public OrigamFile Get(string relativePath) => pathFileDict[relativePath];
+        public OrigamFile Get(string relativePath)
+        {
+           return readWriteLock.RunReader(() => pathFileDict[relativePath]);
+        }
 
-        public bool Contains(string relativePath) => pathFileDict.ContainsKey(relativePath);
+        public bool Contains(string relativePath)
+        {
+            return readWriteLock.RunReader(() => pathFileDict.ContainsKey(relativePath));
+        }
 
-        public void Clear() => pathFileDict.Clear();
+        public void Clear()
+        {
+            readWriteLock.RunWriter(() =>
+            {
+                foreach (OrigamFile origamFile in pathFileDict.Values)
+                {
+                    origamFile.DeferredSaveDocument = null;
+                }
+                pathFileDict.Clear();
+            });
+        }
+
+        public void ProcessTransactions()
+        {
+            readWriteLock.RunWriter(() =>
+            {
+                foreach (IDeferredTask task in FolderRenamingTasks)
+                {
+                    task.Run();
+                }
+
+                foreach (OrigamFile origamFile in pathFileDict.Values)
+                {
+                    origamFile.FinalizeSave();
+                    origamFile.DeferredSaveDocument = null;
+                }
+
+                pathFileDict.Clear();
+            });
+        }
+
+        public PersistedObjectInfo FindObjInfo(Guid id)
+        {
+            return readWriteLock.RunReader(() =>
+            {
+                foreach (var origamFile in pathFileDict.Values)
+                {
+                    if (origamFile.ContainedObjects.ContainsKey(id))
+                    {
+                        return origamFile.ContainedObjects[id];
+                    }
+                }
+                return null;
+            });
+        }
     }
 }
