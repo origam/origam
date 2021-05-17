@@ -430,6 +430,14 @@ jobs:
          artifactName: 'origam-html-chat'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: CopyFiles@2
+       displayName: Copy origam-model to staging directory
+       inputs:
+         SourceFolder: '$(Agent.BuildDirectory)\s\origam-model'
+         Contents: |
+           model/**
+           l10n/**
+         TargetFolder: '$(build.artifactstagingdirectory)\origam-model'
+     - task: CopyFiles@2
        displayName: Copy origam-html-client to origam-html-server
        inputs:
          SourceFolder: '$(build.artifactstagingdirectory)\origam-html-client'
@@ -536,7 +544,7 @@ jobs:
        displayName: 'Tag origam-model'
      - powershell: |
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-html.zip"); }
-        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Agent.BuildDirectory)\s\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
        displayName: Zip files for release
      # ------------------------------------
      # RELEASE ORIGAM_SOURCE - TAG
