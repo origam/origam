@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+
 namespace Origam.UI
 {
 	/// <summary>
@@ -27,5 +29,6 @@ namespace Origam.UI
 	public interface IPropertyPad
 	{
 		System.Windows.Forms.PropertyGrid PropertyGrid{get;}
+		Func<bool> ReadOnlyGetter { get; set; }
 	}
 }

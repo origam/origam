@@ -127,7 +127,7 @@ namespace Origam.Gui.Designer
 			
 			this.ContentLoaded += new EventHandler(ControlSetEditor_ContentLoaded);
 
-			Origam.UI.IPropertyPad propertyPad = WorkbenchSingleton.Workbench.GetPad(typeof(Origam.UI.IPropertyPad)) as Origam.UI.IPropertyPad;
+			propertyPad = WorkbenchSingleton.Workbench.GetPad(typeof(Origam.UI.IPropertyPad)) as Origam.UI.IPropertyPad;
 			
 			_propertyGrid = propertyPad.PropertyGrid;
 
@@ -1051,6 +1051,7 @@ namespace Origam.Gui.Designer
 				{
 					if(! _disposing)
 					{
+						propertyPad.ReadOnlyGetter = () => IsReadOnly;
 						_propertyGrid.SelectedObjects = new object[]{_host.RootComponent};
 					}
 				}
@@ -1135,6 +1136,7 @@ namespace Origam.Gui.Designer
 #else
 				if(!_disposing)
 				{
+					propertyPad.ReadOnlyGetter = () => IsReadOnly;
 					_propertyGrid.SelectedObjects = _selectedComponents;
 				}
 #endif
@@ -1307,8 +1309,9 @@ namespace Origam.Gui.Designer
         }
         
         private ControlSetItem _rootControl;
-		
-		#endregion 
+        private IPropertyPad propertyPad;
+
+        #endregion 
 
 		#region Add/Remove/change SchemaItem
 
@@ -1318,13 +1321,26 @@ namespace Origam.Gui.Designer
 			{
 				return;
 			}
+			if(IsReadOnly &&
+			   !Equals(evtArgs.OldValue, evtArgs.NewValue) &&
+			   evtArgs.Member.Category == "Layout") // changes to non Layout properties are handled by the propertyPad
+			{
+				Type type = evtArgs.Component.GetType();
+				PropertyInfo propertyInfo = type.GetProperty(evtArgs.Member.Name);
+				propertyInfo.SetValue(evtArgs.Component, evtArgs.OldValue);
+				MessageBox.Show(this, 
+					Origam.Workbench.ResourceUtils.GetString("ErrorElementReadOnly"), 
+					Origam.Workbench.ResourceUtils.GetString("ErrorTitle"), 
+					MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
 			Host_componentAdded(sender, new ComponentEventArgs(evtArgs.Component as IComponent));
 		}
 
 		
 		private void Host_componentAdded(object sender, ComponentEventArgs evtArgs)
 		{
-			if(ReflectChanges)
+			if(ReflectChanges && !IsReadOnly)
 			{
 				this.IsDirty = true;
 				Control control=evtArgs.Component as Control;
@@ -1415,6 +1431,11 @@ namespace Origam.Gui.Designer
 
 		private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
 		{
+			if (IsReadOnly)
+			{
+				return;
+			}
+
 			this.IsDirty = true;
 			if(ReflectChanges)
 			{
@@ -1588,6 +1609,10 @@ namespace Origam.Gui.Designer
 
 		private void ControlSetEditor_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
+			if (IsReadOnly)
+			{
+				return;
+			}
 			IMenuCommandService menuCommandService = GetService(typeof(IMenuCommandService)) as IMenuCommandService;
 			
 			if(IsDesignerHostFocused)
@@ -1667,6 +1692,7 @@ namespace Origam.Gui.Designer
 			{
 				txtName.Enabled = false;
 				cmbDataSources.Enabled = false;
+				_toolbox.Enabled = false;
 			}
 
 			if(IsForm)
@@ -1746,6 +1772,7 @@ namespace Origam.Gui.Designer
 					this._rootControl.Refresh();
 					this._rootControl.ClearCacheOnPersist = false;
 				}
+				propertyPad.ReadOnlyGetter = null;
 				_propertyGrid.SelectedObjects = null;
 			}
 			catch(Exception ex)
@@ -1764,6 +1791,7 @@ namespace Origam.Gui.Designer
 		{
 			try
 			{
+				propertyPad.ReadOnlyGetter = () => IsReadOnly;
 				_propertyGrid.SelectedObjects = _selectedComponents;
 			}
 			catch
