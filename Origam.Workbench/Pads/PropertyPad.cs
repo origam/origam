@@ -136,8 +136,21 @@ namespace Origam.Workbench.Pads
 			}
 		}
 
-		private void pgrid_PropertyValueChanged(object s, System.Windows.Forms.PropertyValueChangedEventArgs e)
+		public Func<bool> ReadOnlyGetter { get; set; } = null;
+
+		private void pgrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
+			if(ReadOnlyGetter != null && 
+			   ReadOnlyGetter() && 
+			   !Equals(e.OldValue, e.ChangedItem.Value))
+			{
+				e.ChangedItem.PropertyDescriptor.SetValue(pgrid.SelectedObject, e.OldValue);
+				MessageBox.Show(this, 
+					ResourceUtils.GetString("ErrorElementReadOnly"), 
+					ResourceUtils.GetString("ErrorTitle"), 
+					MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
 			RefreshControlList();
 		}
 
