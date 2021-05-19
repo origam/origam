@@ -18,6 +18,8 @@ variables:
   value: 2021.1.0
 - name: IS_PRERELASE
   value: true
+- name: PRODUCT_VERSION # used in setup to differentiate the version of architect
+  value: 2021.2
 
 
 resources:
@@ -247,7 +249,7 @@ jobs:
        condition: succeededOrFailed()
      - powershell: |
         (Get-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs).replace("SWF-BUILDNUMBER", "$(VERSION_NUMBER)") | Set-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs
-        (Get-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs).replace("@branch@", "$(TAG)") | Set-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs
+        (Get-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs).replace("@branch@", "$(PRODUCT_VERSION)") | Set-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs
        displayName: 'Prepare ArchitectSetup.wxs'
      - powershell: |
         xcopy $(Agent.BuildDirectory)\s\origam-model\l10n model_template\l10n /i /e /y
