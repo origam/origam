@@ -594,25 +594,21 @@ export class DataView implements IDataView {
     }
   }
 
+  @action.bound *loadFirstPage(){
+    yield* this.infiniteScrollLoader?.loadFirstPage();
+  }
+
   @action.bound selectFirstRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
-    const self = this;
-    runGeneratorInFlowWithHandler({
-      ctx: this,
-      generator: function* (){
-        yield* self.infiniteScrollLoader?.loadFirstPage();
-        const dataTable = getDataTable(self);
-        const firstRow = dataTable.getFirstRow();
-        if (firstRow) {
-          self.selectRowById(dataTable.getRowId(firstRow));
-        } else {
-          self.selectRowById(undefined);
-        }
-      }()
-    });
-
+    const dataTable = getDataTable(this);
+    const firstRow = dataTable.getFirstRow();
+    if (firstRow) {
+      this.selectRowById(dataTable.getRowId(firstRow));
+    } else {
+      this.selectRowById(undefined);
+    }
   }
 
   @action.bound selectLastRow() {
