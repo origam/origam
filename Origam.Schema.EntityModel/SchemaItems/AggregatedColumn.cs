@@ -114,6 +114,7 @@ namespace Origam.Schema.EntityModel
 		[Category("Aggregation")]
 		[EntityColumn("I07")]  
 		[NotNullModelElementRule()]
+		[NoNestedCountAggregationsRule]
         [XmlAttribute("aggregationType")]
 		public AggregationType AggregationType
 		{
