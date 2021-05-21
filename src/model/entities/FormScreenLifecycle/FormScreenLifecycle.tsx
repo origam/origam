@@ -1037,6 +1037,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } else {
         yield* this.loadData({ keepCurrentData: false });
       }
+      getFormScreen(this).setDirty(false);
       yield* this.refreshLookups();
       getFormScreen(this).clearDataCache();
     } finally {
