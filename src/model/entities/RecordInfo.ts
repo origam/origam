@@ -98,9 +98,7 @@ export class RecordInfo implements IRecordInfo {
     this.recordInfoExpanded = true;
     this.recordAuditExpanded = false;
     this.triggerInfoSectionExpand();
-    //if (this.willLoadNewInfo(menuId, dataStructureEntityId, rowId)) {
     yield* this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
-    //}
   }
 
   *onSelectedRowMaybeChanged(

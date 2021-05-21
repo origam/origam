@@ -87,6 +87,12 @@ export class ScrollRowContainer implements IRowsContainer {
 
   findChunkByRowIndex(indexInContainer: number) {
     let rowCounter = 0;
+    if(this.rowChunks.length === 0){
+      return {
+        chunk: undefined,
+        indexInChunk: undefined,
+      };
+    }
     for (let rowChunk of this.rowChunks) {
       const indexInChunk = indexInContainer - rowCounter;
       if (indexInChunk < rowChunk.rows.length) {
@@ -108,7 +114,11 @@ export class ScrollRowContainer implements IRowsContainer {
     const dataTable = getDataTable(this);
     row = fixRowIdentifier(row, dataTable.identifierDataIndex);
     const { chunk, indexInChunk } = this.findChunkByRowIndex(index);
-    chunk.insert(indexInChunk, row);
+    if(!chunk){
+      this.rowChunks.push(new RowChunk(0, [row], this.rowIdGetter, undefined));
+    }else{
+      chunk.insert(indexInChunk!, row);
+    }
     return Promise.resolve();
   }
 

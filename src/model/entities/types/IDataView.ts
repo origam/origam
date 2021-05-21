@@ -125,6 +125,7 @@ export interface IDataView extends IDataViewData {
   selectPrevRow(): void;
 
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
+  loadFirstPage(): Generator;
   selectFirstRow(): void;
   selectLastRow(): void;
   reselectOrSelectFirst(): void;
