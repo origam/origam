@@ -38,13 +38,10 @@ namespace Origam.Schema.MenuModel
 		/// <summary>
 		/// Returs the first child Menu, skipping all the ContextMenu types.
 		/// </summary>
-		public Menu MainMenu
-        {
-			get
-            {
-				return ChildItems[0] as Menu;
-            }
-        }
+		public Menu MainMenu => ChildItems
+			.ToGeneric()
+			.OfType<Menu>()
+			.FirstOrDefault();
 
 		#region ISchemaItemProvider Members
 		public override string RootItemType
