@@ -67,7 +67,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const dataView = getDataView(this);
       try {
         this.monitor.inFlow++;
-        if (getSelectedRowId(this)) {
           if (getIsBindingRoot(this)) {
             if(!getFormScreenLifecycle(this).rowSelectedReactionsDisabled(dataView)){
               yield* this.changeMasterRow();
@@ -76,7 +75,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           } else if (getIsBindingParent(this)) {
             yield* this.navigateChildren();
           }
-        }
       } catch (e) {
         // TODO: Move this method to action handler file?
         yield* handleError(this)(e);
