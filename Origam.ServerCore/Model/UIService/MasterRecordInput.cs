@@ -30,7 +30,6 @@ namespace Origam.ServerCore.Model.UIService
         public Guid SessionFormIdentifier { get; set; }
         [Required]
         public string Entity { get; set; }
-        [Required]
         public object RowId { get; set; }
     }
 }
