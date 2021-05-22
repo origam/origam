@@ -354,6 +354,12 @@ namespace Origam.ServerCommon
             ArrayList result = new ArrayList();
             lock (_getRowDataLock)
             {
+                if (id == null)
+                {
+                    CurrentRecordId = null;
+                    return result;
+                }
+
                 DataTable table = GetSessionEntity(entity);
 
                 DataRow row = GetSessionRow(entity, id);
