@@ -619,10 +619,10 @@ export function* interpretScreenXml(
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const rootStore = new MapRootStore(dataView);
       populateMapViewSetup(rootStore.mapSetupStore, dataViewXmlNode);
-      //const isReadonly = dataView.properties.some((prop) => prop.readOnly);
-      const isReadonly = !!dataView.properties.find(
+      const locationMember = dataView.properties.find(
         (prop) => prop.id === rootStore.mapSetupStore.mapLocationMember
-      )?.readOnly;
+      )
+      const isReadonly = !locationMember || locationMember.readOnly
       rootStore.mapSetupStore.isReadOnlyView = isReadonly;
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
       const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);
