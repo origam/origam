@@ -318,6 +318,7 @@ namespace OrigamArchitect
             this.cboDeploymentType.FormattingEnabled = true;
             this.cboDeploymentType.Items.AddRange(new object[] {
             "Docker",
+            "Docker Postgres",
             "Local (IIS Server)"});
             this.cboDeploymentType.Location = new System.Drawing.Point(164, 97);
             this.cboDeploymentType.Name = "cboDeploymentType";
