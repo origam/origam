@@ -87,6 +87,8 @@ namespace OrigamArchitect
                     case 0:
                         return DeploymentType.Docker;
                     case 1:
+                        return DeploymentType.DockerPostgres;
+                    case 2:
                         return DeploymentType.Local;
                     default:
                         throw new ArgumentOutOfRangeException("DeploymentType",
@@ -286,6 +288,10 @@ namespace OrigamArchitect
             {
                 txtPort.Text = "5432";
             }
+            if (Deployment == DeploymentType.DockerPostgres)
+            {
+                txtPort.Text = "5433";
+            }
         }
         private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
         {
@@ -445,7 +451,23 @@ namespace OrigamArchitect
                 case DeploymentType.Docker:
                     pageDeploymentType.NextPage = pageTemplateType;
                     break;
+                case DeploymentType.DockerPostgres:
+                    pageDeploymentType.NextPage = pageTemplateType;
+                    //Pull docker image
+                    pullDockerImage();
+                    break;
             }
+        }
+
+        private void pullDockerImage()
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.CreateNoWindow = false;
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = @"c:\Program Files\Docker\Docker\resources\bin\docker.exe";
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.Arguments = " pull origam/server:pg_master-latest";
+            Process.Start(startInfo);
         }
 
         private void pageDeploymentType_Initialize(object sender, WizardPageInitEventArgs e)
@@ -496,7 +518,7 @@ namespace OrigamArchitect
             _project.GitRepository = gitrepo.Checked;
             _project.Gitusername = txtGitUser.Text;
             _project.Gitemail = txtGitEmail.Text;
-            if( Deployment != DeploymentType.Docker)
+            if( Deployment == DeploymentType.Local)
             {
                 pageGit.NextPage = pageReview;
             }
@@ -514,7 +536,8 @@ namespace OrigamArchitect
 
         private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (DatabaseType == DatabaseType.PgSql)
+            if (DatabaseType == DatabaseType.PgSql &&
+                Deployment == DeploymentType.Docker )
             {
                 chkIntegratedAuthentication.Enabled = false;
                 chkIntegratedAuthentication.Checked = false;
@@ -525,6 +548,11 @@ namespace OrigamArchitect
             }
             else
             {
+                if(Deployment == DeploymentType.DockerPostgres)
+                {
+                    txtServerName.Text = "localhost";
+                    txtPort.Text = "5432";
+                }
                 chkIntegratedAuthentication.Enabled = true;
                 txtPort.Visible = !chkIntegratedAuthentication.Checked;
                 labelPort.Visible = !chkIntegratedAuthentication.Checked;
