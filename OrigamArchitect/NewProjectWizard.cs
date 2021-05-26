@@ -88,8 +88,6 @@ namespace OrigamArchitect
                         return DeploymentType.Docker;
                     case 1:
                         return DeploymentType.DockerPostgres;
-                    case 2:
-                        return DeploymentType.Local;
                     default:
                         throw new ArgumentOutOfRangeException("DeploymentType",
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
