@@ -34,24 +34,18 @@ namespace Origam.Security.Identity
     {
 		protected static readonly ILog log
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
+        private IManager userManager;
 
-#if NETSTANDARD
-          private IManager userManager;
-
-
-          public IdentityServiceAgent()
-          {
+        public IdentityServiceAgent()
+        {
             // according to
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
             // we can get scoped RequestServices collection from HttpContext
             userManager = SecurityManager.DIServiceProvider
                 .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
                 .HttpContext.RequestServices.GetService<IManager>();
-          }
-#else
-        private IManager userManager
-            = new AspNetManagerAdapter(AbstractUserManager.GetUserManager());
-#endif
+        }
+
         private object result;
 
         public override object Result
@@ -391,6 +385,27 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorNewPasswordNotString);
             }
+            IOrigamUser user = FindUser();
+            Task<InternalIdentityResult> task = userManager.ChangePasswordAsync(
+                user.BusinessPartnerId,
+                Parameters["OldPassword"].ToString().TrimEnd(),
+                Parameters["NewPassword"].ToString().TrimEnd());
+            if (task.IsFaulted)
+            {
+                throw task.Exception;
+            }
+            else if (!task.Result.Succeeded)
+            {
+                throw new Exception(string.Join(" ", task.Result.Errors));
+            }
+            else
+            {
+                result = true;
+            }
+        }
+
+        private IOrigamUser FindUser()
+        {
             IOrigamUser user = null;
             Task<IOrigamUser> taskFindUser = userManager.FindByNameAsync(
                 Parameters["Username"].ToString());
@@ -406,22 +421,8 @@ namespace Origam.Security.Identity
             {
                 throw new Exception(Resources.ErrorUserNotFound);
             }
-            Task<InternalIdentityResult> task = userManager.ChangePasswordAsync(
-                user.BusinessPartnerId, 
-                Parameters["OldPassword"].ToString().TrimEnd(), 
-                Parameters["NewPassword"].ToString().TrimEnd());
-            if (task.IsFaulted)
-            {
-                throw task.Exception;
-            }
-            else if (!task.Result.Succeeded)
-            {
-                throw new Exception(string.Join(" ", task.Result.Errors));
-            }
-            else
-            {
-                result = true;
-            }
+
+            return user;
         }
 
         private void ResetPassword()
@@ -473,8 +474,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorUsernameNotString);
             }
-            OrigamUser user 
-                = new OrigamUser(Parameters["Username"].ToString());
+            IOrigamUser user = FindUser();
             user.TransactionId = TransactionId;
             Task<InternalIdentityResult> task = userManager.DeleteAsync(user);
             if (task.IsFaulted)
@@ -507,7 +507,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorIsApprovedNotBool);
             }
-            OrigamUser user = new OrigamUser(Parameters["Username"].ToString());
+            IOrigamUser user = FindUser();
             user.Email = Parameters.ContainsKey("Email") 
                 ? Parameters["Email"].ToString() : null;
             user.IsApproved = Parameters.ContainsKey("IsApproved") 
@@ -605,8 +605,7 @@ namespace Origam.Security.Identity
 					emailConfirmed = (bool)Parameters["EmailConfirmed"];
 				}
 			}
-            OrigamUser user = new OrigamUser(
-                Parameters["Username"].ToString());
+            IOrigamUser user = FindUser();
             user.Email = Parameters["Email"].ToString();
             if (Parameters.ContainsKey("PasswordQuestion")) {
                 user.PasswordQuestion 

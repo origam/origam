@@ -29,7 +29,7 @@ namespace Origam.Security.Common
         string UserName { get; set; }
         DateTime CreationDate { get; }
         string Email { get; set; }
-        bool IsApproved { get; }
+        bool IsApproved { get; set; }
         bool IsLockedOut { get; set; }
         bool IsOnline { get; set; }
         DateTime LastActivityDate { get;  }
@@ -39,9 +39,10 @@ namespace Origam.Security.Common
         DateTime? LastLockoutDate { get; set; } 
         DateTime LastLoginDate { get;  }
         DateTime LastPasswordChangedDate { get;}
-        string PasswordQuestion { get; }
-        Guid ProviderUserKey { get; }
-        string TransactionId { get;  }
+        string PasswordQuestion { get; set; }
+        string PasswordAnswer { get; set; }
+        Guid ProviderUserKey { get; set; }
+        string TransactionId { get;  set; }
         bool Is2FAEnforced { get;  }
         string PasswordHash { get; set; }
         bool TwoFactorEnabled { get; set; }

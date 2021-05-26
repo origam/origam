@@ -110,10 +110,6 @@
       <Project>{66fae794-7352-440f-b24d-684686a62cf5}</Project>
       <Name>Origam.Security.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Security.NetFx\Origam.Security.NetFx.csproj">
-      <Project>{22066f4c-117c-4910-bc00-9c1a4bb14551}</Project>
-      <Name>Origam.Security.NetFx</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
       <Name>Origam.Services</Name>
@@ -121,10 +117,6 @@
     <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj">
       <Project>{01708bd3-093a-42bf-baf9-0a4cd1e69107}</Project>
       <Name>Origam.Security.Identity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Server.Utils\Origam.Server.Utils.csproj">
-      <Project>{cadb51d2-ff76-4a8e-8472-0ca5c27090bd}</Project>
-      <Name>Origam.Server.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
