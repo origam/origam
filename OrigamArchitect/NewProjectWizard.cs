@@ -60,6 +60,7 @@ namespace OrigamArchitect
         NewProjectWizardSettings _settings = new NewProjectWizardSettings();
         private WebGitXmlParser XmlParser = new WebGitXmlParser();
         private List<WebGitData> repositories = new List<WebGitData>();
+        private const bool NEEDS_ELEVATED_PRIVILEDGES = false;
 
         public NewProjectWizard()
         {
@@ -373,7 +374,7 @@ namespace OrigamArchitect
 
         private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            if (!IsAdmin())
+            if (NEEDS_ELEVATED_PRIVILEDGES && !IsAdmin())
             {
                 pageWelcome.AllowNext = false;
                 lblAdminWarning.Visible = true;
