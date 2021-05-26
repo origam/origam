@@ -20,16 +20,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
+using CSharpFunctionalExtensions;
 
-namespace Origam.ServerCore.Model.UIService
+namespace Origam.Extensions
 {
-    public class MasterRecordInput
+    public static class CsFunctionalExtensions
     {
-        [RequiredNonDefault]
-        public Guid SessionFormIdentifier { get; set; }
-        [Required]
-        public string Entity { get; set; }
-        public object RowId { get; set; }
+        public static Result<T, E> BindSuccessFailure<T, K, E>(
+            this Result<K, E> result, 
+            Func<K, Result<T, E>> onSuccess, 
+            Func<Result<T, E>> onFailure)
+        {
+            if (result.IsSuccess)
+            {
+                return onSuccess(result.Value);
+            }
+
+            return onFailure();
+        }
     }
 }

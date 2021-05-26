@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
@@ -125,7 +126,7 @@ namespace Origam.ServerCore.Controller
             return !(ServiceManager.Services
                 .GetService<IPersistenceService>()
                 .SchemaProvider
-                .RetrieveInstance(typeof(T), new Key(id)) is T instance)
+                .RetrieveInstance(typeof(T), new Key(id), true, false) is T instance)
                 ? Result.Failure<T, IActionResult>(
                     NotFound("Object with requested id not found."))
                 : Result.Success<T, IActionResult>(instance);
@@ -205,18 +206,31 @@ namespace Origam.ServerCore.Controller
         {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
-                return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .Bind(Authorize)
-                    .Bind(menuItem => GetEntityData(
-                        input.DataStructureEntityId, 
-                        (FormReferenceMenuItem)menuItem))
-                    .Bind(CheckEntityBelongsToMenu)
-                    .Bind(entityData => GetRow(
-                        dataService,
-                        entityData.Entity,
-                        input.DataStructureEntityId,
-                        Guid.Empty,
-                        input.RowId));
+                return 
+                    FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .BindSuccessFailure(
+                        onSuccess: item =>  
+                            Authorize(item)
+                            .Bind(menuItem => GetEntityData(
+                                input.DataStructureEntityId,
+                                (FormReferenceMenuItem) menuItem))
+                            .Bind(CheckEntityBelongsToMenu)
+                            .Bind(entityData => GetRow(
+                                dataService,
+                                entityData.Entity,
+                                input.DataStructureEntityId,
+                                Guid.Empty,
+                                input.RowId)),
+                        onFailure: () => 
+                            AuthorizeQueueItem(input.MenuId)
+                            .Bind(_ => FindEntity(input.DataStructureEntityId))
+                            .Bind(entity => GetRow(
+                                dataService,
+                                entity,
+                                input.DataStructureEntityId,
+                                Guid.Empty,
+                                input.RowId))
+                    );
             }
             else
             {
@@ -228,6 +242,23 @@ namespace Origam.ServerCore.Controller
                                 dataStructureEntity, input.RowId));
             }
         }
+
+        private Result<Guid, IActionResult> AuthorizeQueueItem(Guid menuId)
+        {
+            DataTable workQueues = ServiceManager.Services
+                .GetService<IWorkQueueService>()
+                .UserQueueList()
+                .Tables[0];
+            bool menuIdBelongToReachableQueue = workQueues.Rows
+                .Cast<DataRow>()
+                .Any(row => (Guid)row["Id"] == menuId);
+
+            return menuIdBelongToReachableQueue
+                ? Result.Success<Guid, IActionResult>(menuId)
+                : Result.Failure<Guid, IActionResult>(
+                    NotFound("Object with requested id not found."));
+        }
+
         protected Result<Guid, IActionResult> AmbiguousInputToEntityId(
             AmbiguousInput input)
         {

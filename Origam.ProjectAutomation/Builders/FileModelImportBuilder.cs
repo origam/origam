@@ -46,7 +46,8 @@ namespace Origam.ProjectAutomation
             {
                 case TypeTemplate.Default:
                     UnzipDefaultModel(project);
-                    if (project.Deployment == DeploymentType.Docker)
+                    if (project.Deployment == DeploymentType.Docker ||
+                        project.Deployment == DeploymentType.DockerPostgres)
                     {
                         CreateCustomAssetsFolder(project.SourcesFolder);
                         CheckNewProjectDirectory(project);

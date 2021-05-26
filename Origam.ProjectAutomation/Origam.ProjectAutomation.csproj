@@ -86,6 +86,7 @@
     <Compile Include="Builders\ConfigureAzureWebServerBuilder.cs" />
     <Compile Include="Builders\CreateGitRepository.cs" />
     <Compile Include="Builders\DockerBuilder.cs" />
+    <Compile Include="Builders\DockerCreator.cs" />
     <Compile Include="Builders\DropGitRepository.cs" />
     <Compile Include="Builders\FileModelImportBuilder.cs" />
     <Compile Include="Builders\FileModelInitBuilder.cs" />

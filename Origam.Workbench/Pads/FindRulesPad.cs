@@ -262,12 +262,14 @@ namespace Origam.Workbench.Pads
 			if(name == null) name = item.ItemType;
 			if(rootName == null) rootName = item.RootItem.ItemType;
 
-			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name, item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
-                item.PackageName,string.IsNullOrEmpty(text)?"":text});
+			string message = string.IsNullOrEmpty(text) ? "" : text;
+			ListViewItem newItem = new ListViewItem(new string[] {
+				item.Path, rootName, name, 
+				item.RootItem.Group == null ? "" : item.RootItem.Group.Path,
+                item.PackageName, message});
 			newItem.Tag = new RuleResult(item);
 			newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);
-
-			//_results.Add(item);
+			newItem.ToolTipText = message;
 			lvwResults.Items.Add(newItem);
 		}
 		#endregion
@@ -313,7 +315,7 @@ namespace Origam.Workbench.Pads
 		{
 			lvwResults.Items.Clear();
 		}
-	}
+    }
 	internal class ListViewItemRulesComparer : IComparer {
 		private readonly int col;
 		private readonly SortOrder order;

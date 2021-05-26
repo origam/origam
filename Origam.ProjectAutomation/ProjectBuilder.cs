@@ -106,10 +106,15 @@ namespace Origam.ProjectAutomation
             }
             if (_project.DatabaseType == DatabaseType.PgSql)
             {
+                tasks.Add(new FileModelImportBuilder());
+                if (_project.Deployment == DeploymentType.DockerPostgres)
+                {
+                    tasks.Add(new DockerBuilder());
+                    tasks.Add(new DockerCreator());
+                }
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);
                 tasks.Add(new ApplyDatabasePermissionsBuilder());
-                tasks.Add(new FileModelImportBuilder());
                 tasks.Add(new SettingsFinalConnectionStringBuilder());
                 tasks.Add(new FileModelInitBuilder());
                 tasks.Add(new DataDatabaseStructureBuilder());

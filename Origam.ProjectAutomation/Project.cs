@@ -58,7 +58,13 @@ namespace Origam.ProjectAutomation
         public int Port { get; set; }
         public string ConnectionDatabasePassword { get; internal set; }
         public string ConnectionDatabaseUser { get; internal set; }
-        public string UserPassword { get; } = Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9);
+        public string UserPassword { get; } = CreatePassword();
+
+        public static string CreatePassword()
+        {
+            return Guid.NewGuid().ToString().Replace("-", "").Substring(1, 9);
+        }
+
         // Root Menu package
         private string _basePackageId = "b9ab12fe-7f7d-43f7-bedc-93747647d6e4";
 
@@ -362,12 +368,14 @@ namespace Origam.ProjectAutomation
         public string WebSurname { get;  set; }
         public string WebEmail { get;  set; }
         public int ActiveConfigurationIndex { get; set; }
+        public string DockerEnvPath { get; internal set; }
         #endregion
     }
     public enum DeploymentType
     {
         Local,
         Azure,
-        Docker
+        Docker,
+        DockerPostgres
     }
 }
