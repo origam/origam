@@ -190,7 +190,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  *onRequestDeleteRow(entity: string, rowId: string, dataView: IDataView) {
+  *onRequestDeleteRow(entity: string, rowId: string, dataView: IDataView): any {
     if ((yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
       yield* this.deleteRow(entity, rowId, dataView);
     }
@@ -503,7 +503,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
-  *applyInitUIResult(args: { initUIResult: any }) {
+  *applyInitUIResult(args: { initUIResult: any }): any {
     const openedScreen = getOpenedScreen(this);
 
     assignIIds(args.initUIResult.formDefinition);
@@ -686,7 +686,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *throwChangesAway(dataView: IDataView) {
+  *throwChangesAway(dataView: IDataView): any {
     try {
       this.monitor.inFlow++;
       const api = getApi(this);
@@ -723,7 +723,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   _processedUpdateObjectResults = new WeakSet<any>();
 
-  private *runUpdateObject(dataView: IDataView) {
+  private *runUpdateObject(dataView: IDataView): any {
     const updateData = dataView.dataTable.getDirtyValueRows().map((row) => {
       return {
         RowId: dataView.dataTable.getRowId(row),
@@ -751,7 +751,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     return true;
   }
 
-  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
+  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string): any {
     try {
       this.monitor.inFlow++;
       const changes: any = {};
@@ -786,7 +786,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     return false;
   }
 
-  *readFirstChunkOfRows(args: { keepCurrentData: boolean; rootDataView: IDataView }) {
+  *readFirstChunkOfRows(args: { keepCurrentData: boolean; rootDataView: IDataView }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
@@ -863,7 +863,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     return values;
   }
 
-  *createRow(entity: string, gridId: string) {
+  *createRow(entity: string, gridId: string): any {
     try {
       this.monitor.inFlow++;
       const api = getApi(this);
@@ -898,7 +898,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *copyRow(entity: string, gridId: string, rowId: string) {
+  *copyRow(entity: string, gridId: string, rowId: string): any {
     try {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
@@ -933,7 +933,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *deleteRow(entity: string, rowId: string, targetDataView: IDataView) {
+  *deleteRow(entity: string, rowId: string, targetDataView: IDataView): any {
     try {
       this.monitor.inFlow++;
       const api = getApi(this);
@@ -960,7 +960,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  private *deleteObjectInOrderedList(rowId: string, entity: string, targetDataView: IDataView) {
+  private *deleteObjectInOrderedList(rowId: string, entity: string, targetDataView: IDataView): any {
     const api = getApi(this);
     const rowToDelete = targetDataView.dataTable.getRowById(rowId)!;
     const orderMember = targetDataView.orderMember;
@@ -985,7 +985,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *saveSession() {
+  *saveSession(): any {
     if (getIsSuppressSave(this)) {
       return true;
     }
@@ -1040,7 +1040,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *refreshSession() {
+  *refreshSession(): any {
     // TODO: Refresh lookups and rowStates !!!
     try {
       this.monitor.inFlow++;
@@ -1143,7 +1143,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   private actionRunning = false;
 
-  *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
+  *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]): any {
     if (this.actionRunning) {
       return;
     }

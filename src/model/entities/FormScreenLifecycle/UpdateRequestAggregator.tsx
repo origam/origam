@@ -27,7 +27,7 @@ interface IUpdateObjectData {
   UpdateData: IUpdateData[];
 }
 
-interface ExtPromise<T> extends Promise<T> {
+interface IExtPromise<T> extends Promise<T> {
   resolve(result?: T): void;
   reject(error?: any): void;
 }
@@ -41,7 +41,7 @@ function ExtPromise<T>() {
   });
   (promise as any).resolve = resolveFn;
   (promise as any).reject = rejectFn;
-  return promise as ExtPromise<T>;
+  return promise as IExtPromise<T>;
 }
 
 export class UpdateRequestAggregator {
@@ -52,12 +52,12 @@ export class UpdateRequestAggregator {
   }
 
   registeredRequests: Array<
-    IUpdateObjectData & { promise: ExtPromise<any>; isRunning: boolean }
+    IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean }
   > = [];
 
-  itemJustEnqueued?: IUpdateObjectData & { promise: ExtPromise<any>; isRunning: boolean };
+  itemJustEnqueued?: IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean };
 
-  currentRequest?: IUpdateObjectData & { promise: ExtPromise<any> };
+  currentRequest?: IUpdateObjectData & { promise: IExtPromise<any> };
 
   interpreter = interpret(
     createMachine(

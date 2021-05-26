@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import { Memoized } from "./common/Memoized";
 import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
-import stripHtml from "string-strip-html";
+import {stripHtml} from "string-strip-html";
 import {
   currentDataRow,
   currentRow,

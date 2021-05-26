@@ -91,7 +91,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.requestProcessor.start();
   }
 
-  *loadLastPage(){
+  *loadLastPage(): any{
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
     let dataView = getDataView(this.ctx);
@@ -125,7 +125,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     });
   }
 
-  *loadFirstPage(){
+  *loadFirstPage(): any{
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
 

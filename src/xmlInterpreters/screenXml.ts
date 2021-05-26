@@ -570,7 +570,7 @@ export function* interpretScreenXml(
 
   for (let dataView of scr.dataViews) {
     const $dataView = $formScreen.beginLifetimeScope(SCOPE_DataView);
-    $dataView.register(IDataViewTS, () => dataView).scopedInstance(SCOPE_DataView);
+    $dataView.register(IDataViewTS, () => dataView as DataView).scopedInstance(SCOPE_DataView);
 
     $dataView
       .register(IRowCursor, () => new RowCursor(() => getSelectedRowId(dataView)))
@@ -619,10 +619,10 @@ export function* interpretScreenXml(
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const rootStore = new MapRootStore(dataView);
       populateMapViewSetup(rootStore.mapSetupStore, dataViewXmlNode);
-      const locationMember = dataView.properties.find(
+      //const isReadonly = dataView.properties.some((prop) => prop.readOnly);
+      const isReadonly = !!dataView.properties.find(
         (prop) => prop.id === rootStore.mapSetupStore.mapLocationMember
-      )
-      const isReadonly = !locationMember || locationMember.readOnly
+      )?.readOnly;
       rootStore.mapSetupStore.isReadOnlyView = isReadonly;
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
       const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);

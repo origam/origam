@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { bind } from "@decorize/bind";
-import { TypeSymbol } from "dic/Container";
 import { DataViewAPI } from "modules/DataView/DataViewAPI";
 import { RowCursor } from "modules/DataView/TableCursor";
 import { DropdownEditorSetup } from "./DropdownEditor";
@@ -67,4 +66,4 @@ export class DropdownEditorApi implements IDropdownEditorApi{
     }
   }
 }
-export const IDropdownEditorApi = TypeSymbol<DropdownEditorApi>("IDropdownEditorApi");
+

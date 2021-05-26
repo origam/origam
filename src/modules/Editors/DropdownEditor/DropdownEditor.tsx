@@ -270,7 +270,11 @@ export function XmlBuildDropdownEditor(props: {
 
   useEffect(() => {
     dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
-  }, [props.isReadOnly, dropdownEditorInfrastructure.behavior.isReadOnly]);
+    
+    }, 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props.isReadOnly, dropdownEditorInfrastructure.behavior.isReadOnly]
+  );
 
   dropdownEditorInfrastructure.behavior.onClick = props.onClick;
   dropdownEditorInfrastructure.behavior.onDoubleClick = props.onDoubleClick;
