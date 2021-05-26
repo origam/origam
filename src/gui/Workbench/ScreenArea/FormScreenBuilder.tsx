@@ -167,29 +167,19 @@ export class FormScreenBuilder extends React.Component<{
           );
         case "TreePanel":
         case "Grid":
-          if (xso.attributes.ModelInstanceId !== "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE") {
-            const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
-            if (dataView) {
-              dataViewMap.set(xso.attributes.Id, dataView);
-            }
-            return (
-              <DataView
-                key={xso.$iid}
-                id={xso.attributes.Id}
-                height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
-                width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
-                isHeadless={xso.attributes.IsHeadless === "true"}
-              />
-            );
-          } else {
-            return (
-              <EmbeddedWebpage
-                key={xso.$iid}
-                id={xso.attributes.ModelInstanceId}
-                height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
-              />
-            );
+          const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
+          if (dataView) {
+            dataViewMap.set(xso.attributes.Id, dataView);
           }
+          return (
+            <DataView
+              key={xso.$iid}
+              id={xso.attributes.Id}
+              height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
+              width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
+              isHeadless={xso.attributes.IsHeadless === "true"}
+            />
+          );
         case "Tab":
           return (
             <CScreenSectionTabbedView
