@@ -254,6 +254,7 @@ export interface IApi {
     Ordering: IOrdering[];
     RowLimit: number;
     RowOffset: number;
+    Parameters: { [key: string]: string };
     ColumnNames: string[];
     MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };

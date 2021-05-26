@@ -111,6 +111,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK * 2,
       RowOffset: lastStartOffset,
+      Parameters: {},
       MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
@@ -138,6 +139,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK ,
       RowOffset: 0,
+      Parameters: {},
       MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
@@ -267,6 +269,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
       MasterRowId: undefined,
+      Parameters: {},
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
@@ -305,6 +308,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: nextStartOffset,
+      Parameters: {},
       MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })

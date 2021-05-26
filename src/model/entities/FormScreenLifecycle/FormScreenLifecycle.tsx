@@ -102,6 +102,7 @@ export const closingScreens = new WeakSet<any>();
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
+  parameters: { [key: string]: string } = {};
   focusedDataViewId: string | undefined;
   _updateRequestAggregator: UpdateRequestAggregator | undefined;
 
@@ -557,6 +558,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         FilterLookups: getUserFilterLookups(dataView),
         Ordering: ordering ? [ordering] : [],
         RowLimit: SCROLL_ROW_CHUNK,
+        Parameters: this.parameters,
         MasterRowId: masterRowId,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(dataView),
@@ -802,6 +804,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_ROW_CHUNK,
         MasterRowId: undefined,
+        Parameters: this.parameters,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });

@@ -506,6 +506,7 @@ export class OrigamAPI implements IApi {
     Ordering: IOrdering[];
     RowLimit: number;
     RowOffset: number;
+    Parameters: { [key: string]: string };
     ColumnNames: string[];
     MasterRowId: string | undefined;
     Filter: string;
