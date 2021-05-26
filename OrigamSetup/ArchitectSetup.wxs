@@ -173,10 +173,6 @@
               <File Id="ORIGAM.SECURITY.DLL" Name="Origam.Security.dll" Source="source\Origam.Security.dll">
               </File>
             </Component>
-            <Component Id="ORIGAM.SECURITY.NETFX.DLL" DiskId="1" Guid="f69bc226-2cef-482e-8e7a-ddb3a218e9c3">
-              <File Id="ORIGAM.SECURITY.NETFX.DLL" Name="Origam.Security.NetFx.dll" Source="source\Origam.Security.NetFx.dll">
-              </File>
-            </Component>
             <Component Id="ORIGAM.SECURITY.IDENTITY.DLL" DiskId="1" Guid="CDF9CB51-AA1F-4086-B196-F12EE0F8B438">
               <File Id="ORIGAM.SECURITY.IDENTITY.DLL" Name="Origam.Security.Identity.dll" Source="source\Origam.Security.Identity.dll">
               </File>
@@ -702,8 +698,6 @@
       <ComponentRef Id="ORIGAM.SECURITY.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.SECURITY.IDENTITY.DLL">
-      </ComponentRef>
-      <ComponentRef Id="ORIGAM.SECURITY.NETFX.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.SECURITY.COMMON.DLL">
       </ComponentRef>
