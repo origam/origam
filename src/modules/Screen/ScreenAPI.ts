@@ -39,7 +39,7 @@ export class ScreenAPI {
     SearchText: string;
     PageSize: number;
     PageNumber: number;
-  }) {
+  }): any {
     return yield this.api().getLookupList({
       ...args,
       SessionFormIdentifier: this.getSessionId(),

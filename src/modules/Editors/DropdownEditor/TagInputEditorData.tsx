@@ -52,7 +52,7 @@ export class TagInputEditorData implements IDropdownEditorData {
     if(this.value && this.value.includes(value)){
       return;
     }
-    const newArray = [...this.value, value];
+    const newArray = [...this.value ?? [], value];
     if (this.rowCursor.selectedId) {
       this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
     }

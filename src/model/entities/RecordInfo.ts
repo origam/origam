@@ -152,7 +152,7 @@ export class RecordInfo implements IRecordInfo {
     menuId: string,
     dataStructureEntityId: string,
     rowId: string
-  ) {
+  ): any {
     const api = getApi(this);
     this.info = [];
     const rawInfo = yield api.getRecordInfo({

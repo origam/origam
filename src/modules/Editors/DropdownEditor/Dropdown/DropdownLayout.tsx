@@ -115,6 +115,7 @@ export function DropdownLayout(props: {
       window.removeEventListener("mouseup", handleMouse, true);
       clearInterval(intervalHandle);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.isDropped, props.onDropupRequest, elmDropdownPortal]);
 
 

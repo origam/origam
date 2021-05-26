@@ -23,7 +23,7 @@ import { getApi } from "model/selectors/getApi";
 import { PeriodicLoader } from "utils/PeriodicLoader";
 
 export class Chatrooms {
-  *getChatroomsList() {
+  *getChatroomsList(): any {
     const api = getApi(this);
     const chatrooms = yield api.getChatroomList();
     this.items = chatrooms;

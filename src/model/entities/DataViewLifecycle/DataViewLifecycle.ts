@@ -137,7 +137,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   changeMasterRowCanceller: any;
 
-  *changeMasterRow() {
+  *changeMasterRow(): any {
     try {
       this.monitor.inFlow++;
       const api = getApi(this);
@@ -196,7 +196,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
 
-  *loadGetData() {
+  *loadGetData(): any {
     try {
       this.monitor.inFlow++;
       const dataView = getDataView(this);

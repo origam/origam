@@ -145,6 +145,8 @@ export const CheckList: React.FC<{
 export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
   const [controller] = useState(() => new CheckListControler());
   controller.props = props;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(controller.loadLookupList, [props.RowId]);
 
   const inputRefs: InputReference[] = [];
