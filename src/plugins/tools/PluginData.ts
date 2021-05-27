@@ -1,9 +1,9 @@
 import {IPluginData} from "../types/IPluginData";
 import {IDataView} from "../../model/entities/types/IDataView";
-import {IPluginRow, IPluginTableRow} from "../types/IPluginRow";
-import {IGroupRow, ITableRow} from "../../gui/Components/ScreenElements/Table/TableRendering/types";
-import {getDataTable} from "../../model/selectors/DataView/getDataTable";
+import { IPluginTableRow} from "../types/IPluginRow";
 import {getProperties} from "../../model/selectors/DataView/getProperties";
+import {IPluginDataView} from "../types/IPluginDataView";
+import {IPluginProperty} from "../types/IPluginProperty";
 
 
 export function createPluginData(dataView: IDataView): IPluginData | undefined {
@@ -11,27 +11,29 @@ export function createPluginData(dataView: IDataView): IPluginData | undefined {
     return undefined;
   }
   return {
-    dataView: {
-      tableRows:dataView.tableRows.map(row => Array.isArray(row) ?
-        rowToPluginRow(row, dataView)
-        : groupRowToPluginGroupRow(row)
-      )
-    }
+    dataView: new PluginDataView(dataView)
   }
 }
 
+class PluginDataView implements IPluginDataView{
+  properties: IPluginProperty[];
 
-function rowToPluginRow(row: any[], ctx: any): IPluginRow {
-  let dataTable = getDataTable(ctx);
-  let properties = getProperties(ctx);
-  return properties
-    .reduce(
-      (rowObj:{[key:string]:any}, property)=> {rowObj[property.id] = dataTable.getCellValue(row, property); return rowObj},
-      {}
-    )
-}
+  get tableRows(): IPluginTableRow[]{
+    return this.dataView.tableRows;
+  }
 
-function groupRowToPluginGroupRow(groupRow: IGroupRow){
-  return groupRow;
+  constructor(
+    private dataView: IDataView,
+  ){
+    this.properties = getProperties(this.dataView);
+  }
+
+  getValue(row: any[], propertyId: string): any {
+    const property = getProperties(this.dataView).find(prop => prop.id === propertyId);
+    if(!property){
+      throw new Error("Property named \"" + propertyId + "\" was not found");
+    }
+    return this.dataView.dataTable.getCellValue(row, property);
+  }
 }
 

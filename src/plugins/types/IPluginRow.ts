@@ -1,8 +1,4 @@
-export type IPluginTableRow = IPluginRow | IPluginGroupRow;
-
-export interface IPluginRow {
-  [key: string]: string;
-}
+export type IPluginTableRow = any[] | IPluginGroupRow;
 
 export interface IPluginGroupRow {
   groupLevel: number;

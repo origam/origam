@@ -1,8 +1,9 @@
 import React from "react";
-import {IPluginTableRow} from "../types/IPluginRow";
 import S from './AuditView.module.scss';
 import {IPlugin} from "./IPlugin";
 import {IPluginData} from "../types/IPluginData";
+import {IPluginProperty} from "../types/IPluginProperty";
+import {observer} from "mobx-react";
 
 export class AuditPlugin implements IPlugin{
   name = "AuditPlugin";
@@ -12,26 +13,30 @@ export class AuditPlugin implements IPlugin{
   }
 }
 
+@observer
 class AuditComponent extends React.Component<{ pluginData: IPluginData }> {
 
-  renderHeader(row: IPluginTableRow){
-    return Object.keys(row).map(property =><div className={S.column}>{property}</div>)
+  properties = this.props.pluginData.dataView.properties;
+  dataView = this.props.pluginData.dataView;
+
+  renderHeader(properties: IPluginProperty[]){
+    return properties.map(property =><div className={S.column}>{property.id}</div>)
   }
 
-  renderRow(row: IPluginTableRow){
-    return Object.values(row).map(value =><div className={S.column}>{value}</div>)
+  renderRow(row: any[]){
+    return this.properties.map(property =><div className={S.column}>{this.dataView.getValue(row, property.id)}</div>)
   }
 
   render(){
-    if(this.props.pluginData.dataView.tableRows.length === 0){
+    if(this.dataView.tableRows.length === 0){
       return <div>Empty</div>;
     }
     return(
       <div className={S.table}>
         <div className={S.row}>
-          {this.renderHeader(this.props.pluginData.dataView.tableRows[0])}
+          {this.renderHeader(this.properties)}
         </div>
-        {this.props.pluginData.dataView.tableRows.map(row => <div className={S.row}>{this.renderRow(row)}</div>)}
+        {this.dataView.tableRows.map(row => <div className={S.row}>{this.renderRow(row as any[])}</div>)}
       </div>
     );
   }
