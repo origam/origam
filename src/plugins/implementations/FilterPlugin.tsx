@@ -1,6 +1,6 @@
 import React from "react";
 import S from './FilterPlugin.module.scss';
-import {IFormPlugin} from "./IFormPlugin";
+import {IFormPlugin} from "../types/IFormPlugin";
 import {IPluginData} from "../types/IPluginData";
 import {toOrigamServerString} from "../../utils/moment";
 import moment from "moment";

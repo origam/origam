@@ -1,5 +1,5 @@
 import React from "react";
-import {IPluginData} from "../types/IPluginData";
+import {IPluginData} from "./IPluginData";
 
 export interface IPlugin {
   getComponent(data: IPluginData): JSX.Element;

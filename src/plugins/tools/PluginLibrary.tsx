@@ -2,7 +2,7 @@ import {getDataView} from "../../model/selectors/DataView/getDataView";
 import {createPluginData} from "./PluginData";
 import {plugins} from "../implementations/registraction";
 import React from "react";
-import {IPlugin} from "../implementations/IPlugin";
+import {IPlugin} from "../types/IPlugin";
 
 export class PluginLibrary {
   pluginNodes: Map<string, IPlugin> = new Map<string, IPlugin>();

@@ -1,6 +1,5 @@
 import React from "react";
 import {IPlugin} from "./IPlugin";
-import {IDataView} from "../../model/entities/types/IDataView";
 
 
 export interface IFormPlugin extends IPlugin{

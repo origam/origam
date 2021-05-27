@@ -86,7 +86,7 @@ import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
 import {getRowStates} from "../../selectors/RowState/getRowStates";
 import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisible";
 import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
-import {IFormPlugin, isIFormPlugin} from "../../../plugins/implementations/IFormPlugin";
+import {IFormPlugin, isIFormPlugin} from "../../../plugins/types/IFormPlugin";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
