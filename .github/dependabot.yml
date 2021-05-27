@@ -1,33 +1,6 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
-updates:
-  - package-ecosystem: "npm" 
-    directory: "/"
-    schedule:
-      interval: "daily"
-    ignore:
-      - dependency-name: "aws*"
-      - dependency-name: "terser-webpack-plugin*"
-      - dependency-name: "jest*"
-      - dependency-name: "webpack*"
-      - dependency-name: "html-webpack-plugin*"
-      - dependency-name: "resolve-url-loader*"
-      - dependency-name: "react-dev-utils*"
-      - dependency-name: "@babel*"
-      - dependency-name: "@svgr/webpack*"
-      - dependency-name: "babel-preset-react-app*"
-      - dependency-name: "babel-jest*"
-      - dependency-name: "babel-eslint*"
-      - dependency-name: "eslint*"
-      - dependency-name: "@testing-library/jest-dom*"
-      - dependency-name: "@typescript-eslint*"
-      - dependency-name: "node-sass*"
-      - dependency-name: "optimize-css-assets-webpack-plugin*"
-      - dependency-name: "css-loader*"
-      - dependency-name: "postcss*"
-      - dependency-name: "file-cli*"
-      - dependency-name: "postcss-preset-env*"
+ updates:
+   - package-ecosystem: "npm"
+     directory: "/"
+     schedule:
+       interval: "daily"
