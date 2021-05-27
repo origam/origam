@@ -1,0 +1,12 @@
+.row{
+    display: flex;
+    flex-direction: row;
+}
+
+.table{
+    overflow: auto;
+}
+
+.column{
+    min-width: 200px;
+}

@@ -51,7 +51,7 @@ import { IDataView } from "../types/IDataView";
 import { IAggregationInfo } from "../types/IAggregationInfo";
 import { SCROLL_ROW_CHUNK } from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IQueryInfo, processActionQueryInfo } from "model/actions/Actions/processActionQueryInfo";
-import { assignIIds } from "xmlInterpreters/xmlUtils";
+import {assignIIds, find} from "xmlInterpreters/xmlUtils";
 import { IOrderByDirection, IOrdering } from "../types/IOrderingConfiguration";
 import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingConfiguration";
 import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
@@ -81,10 +81,12 @@ import { IGroupingSettings } from "../types/IGroupingConfiguration";
 import { groupingUnitToString } from "../types/GroupingUnit";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
+import {runGeneratorInFlowWithHandler, runInFlowWithHandler} from "../../../utils/runInFlowWithHandler";
 import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
 import {getRowStates} from "../../selectors/RowState/getRowStates";
 import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisible";
+import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
+import {IFormPlugin, isIFormPlugin} from "../../../plugins/implementations/IFormPlugin";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -410,6 +412,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
     try {
       this.initialSelectedRowId = initUIResult.currentRecordId;
+      this.initializeFormLevelPlugins(initUIResult);
       yield* this.applyInitUIResult({ initUIResult });
       if (!this.eagerLoading) {
         yield* this.clearTotalCounts();
@@ -483,6 +486,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initialSelectedRowId = undefined;
     }
     yield* this.startAutoRefreshIfNeeded();
+  }
+
+  private initializeFormLevelPlugins(initUIResult: any) {
+    find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin")
+      .map(node => node.attributes.Name)
+      .forEach(formLevelPluginName => {
+        const plugin = pluginLibrary.get(formLevelPluginName);
+        if (isIFormPlugin(plugin)) {
+          const formPlugin = plugin as IFormPlugin;
+          formPlugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
+            {ctx: this, generator: this.refreshSession()}
+          );
+          formPlugin.setFormParameters = (parameters: { [key: string]: string }) =>
+            Object.keys(parameters)
+              .forEach(key => this.parameters[key] = parameters[key]);
+          formPlugin.initialize();
+        }
+      })
   }
 
   sortAndFilterReaction(args: { dataView: IDataView; updateTotalRowCount: boolean }) {
