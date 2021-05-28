@@ -1161,7 +1161,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				parentNode.SetAttribute ("Width", XmlConvert.ToString (renderData.Width));
 			}
 
-            if (!control.ControlItem.IsComplexType)
+			bool isIndependent = renderData.IndependentDataSourceId != Guid.Empty;
+			if (!control.ControlItem.IsComplexType)
             {
                 switch (control.ControlItem.Name)
                 {
@@ -1205,9 +1206,15 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 	                    FormLevelPluginBuilder.Build(parentNode, renderData.Text);
 	                    break;                    
                     case "SectionLevelPlugin":
-	                    SectionLevelPluginBuilder.Build(parentNode, renderData.Text,
-		                    table, structure, isPreloaded, renderData.IndependentDataSourceId != Guid.Empty, dataSources, 
-		                    control.Id.ToString());
+	                    SectionLevelPluginBuilder.Build(
+		                    parentNode: parentNode, 
+		                    text: renderData.Text,
+		                    table: table, 
+		                    dataStructure: structure, 
+		                    isPreloaded: isPreloaded,
+		                    isIndependent: isIndependent, 
+		                    dataSources: dataSources, 
+		                    modelId: control.Id.ToString());
 	                    break;
                     case "Label":
                         FormLabelBuilder.Build(parentNode, renderData.Text);
@@ -1237,7 +1244,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                     FormTools.GetItemFromControlSet(control.ControlItem.PanelControlSet).Id.ToString(),
                     control.Id.ToString(), table, dataSources,
                     table.PrimaryKey[0].ColumnName, hasMultipleSelection, formId,
-                    renderData.IndependentDataSourceId != Guid.Empty);
+                    isIndependent);
                 XmlElement formRootElement = AsPanelBuilder.FormRootElement(parentNode);
                 XmlElement propertiesElement = AsPanelBuilder.PropertiesElement(parentNode);
                 XmlElement actionsElement = AsPanelBuilder.ActionsElement(parentNode);
@@ -1276,7 +1283,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				hasParentTables = table.ParentRelations.Count > 0 & renderData.DataMember.IndexOf (".") >= 0;
 			}
 
-			if (renderData.IndependentDataSourceId != Guid.Empty) {
+			if (isIndependent) {
 				parentNode.SetAttribute ("IsRootGrid", XmlConvert.ToString (true));
 				parentNode.SetAttribute ("IsRootEntity", XmlConvert.ToString (true));
 				parentNode.SetAttribute ("IsPreloaded", XmlConvert.ToString (false));

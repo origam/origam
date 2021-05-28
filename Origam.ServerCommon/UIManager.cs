@@ -262,29 +262,28 @@ namespace Origam.Server
             DataStructureSortSet sortSet)
         {
             result.FormDefinition = formXml.OuterXml;
+            
+            XmlNodeList configurableNodes = formXml.SelectNodes("//*[@HasPanelConfiguration='true']"); 
 
-            // GRID CONFIG
-            XmlNodeList grids = formXml.SelectNodes("//*[@HasPanelConfiguration='true']"); 
-
-            foreach (XmlElement g in grids)
+            foreach (XmlElement element in configurableNodes)
             {
                 UIPanel panel = new UIPanel();
-                panel.Entity = g.GetAttribute("Entity");
-                panel.Id = XmlConvert.ToGuid(g.GetAttribute("ModelId"));
+                panel.Entity = element.GetAttribute("Entity");
+                panel.Id = XmlConvert.ToGuid(element.GetAttribute("ModelId"));
                 panel.InstanceId =
-                    XmlConvert.ToGuid(g.GetAttribute("ModelInstanceId"));
-                if (g.GetAttribute("DefaultPanelView") != "")
+                    XmlConvert.ToGuid(element.GetAttribute("ModelInstanceId"));
+                if (element.GetAttribute("DefaultPanelView") != "")
                 {
                 }
 
                 UIPanelConfig panelConfig =
-                    GetPanelConfig(workflowId, profile, data, panel, g);
+                    GetPanelConfig(workflowId, profile, data, panel, element);
                 result.PanelConfigurations.Add(panelConfig);
 
                 // default sort
                 if (sortSet != null &&
-                    (g.GetAttribute("IsHeadless") == "false" || string.IsNullOrEmpty(g.GetAttribute("IsHeadless"))) &&
-                    (g.GetAttribute("DisableActionButtons") == "false" || string.IsNullOrEmpty(g.GetAttribute("DisableActionButtons"))))
+                    element.AttributeIsFalseOrMissing("IsHeadless") &&
+                    element.AttributeIsFalseOrMissing("DisableActionButtons"))
                 {
                     List<DataStructureSortSetItem> sorts =
                         new List<DataStructureSortSetItem>();
