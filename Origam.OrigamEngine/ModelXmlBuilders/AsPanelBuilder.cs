@@ -46,6 +46,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			parentNode.SetAttribute("Name", renderData.PanelTitle);
 			parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "Grid");
 			parentNode.SetAttribute("Type", "Grid");
+			parentNode.SetAttribute("HasPanelConfiguration", XmlConvert.ToString (true));
 			parentNode.SetAttribute("ModelId", modelId);
 
 			OrigamPanelViewMode defaultPanelView = OrigamPanelViewMode.Form;

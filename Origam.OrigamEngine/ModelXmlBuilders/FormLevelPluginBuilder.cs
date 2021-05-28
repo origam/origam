@@ -19,22 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Origam.ServerCommon;
+using System.Xml;
 
-namespace Origam.Server
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-    public interface ILazyRowLoadInput: IEntityIdentification
+    public class FormLevelPluginBuilder
     {
-        string Filter { get; set; }
-        Dictionary<string, Guid> FilterLookups { get; set; }
-        List<IRowOrdering> OrderingList { get; }
-        Dictionary<string, string> Parameters { get; set; }
-        int RowLimit { get; set; }        
-        int RowOffset { get; set; }
-
-        string[] ColumnNames { get; set; }
-        Guid MasterRowId { get; set; }
+        public static void Build(XmlElement parentNode, string text)
+        {
+            parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+            parentNode.SetAttribute("Type", "FormLevelPlugin");
+            parentNode.SetAttribute("Name", text);
+        }
     }
 }

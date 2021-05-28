@@ -205,7 +205,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 		public static XmlOutput GetXml(FormControlSet item, string name, bool isPreloaded, Guid menuId, DataStructure structure, bool forceReadOnly, string confirmSelectionChangeEntity)
 		{
 			DatasetGenerator gen = new DatasetGenerator(true);
-			return GetXml(item, gen.CreateDataSet(structure), name, isPreloaded, menuId, forceReadOnly, confirmSelectionChangeEntity);
+			return GetXml(item, gen.CreateDataSet(structure), 
+				name, isPreloaded, menuId, 
+				forceReadOnly, confirmSelectionChangeEntity, structure);
 		}
 
 		public static XmlElement CreateDataSourceField(XmlDocument doc, string name, int index)
@@ -491,7 +493,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return doc;
 		}
 
-        private static void AddWorkQueueColumn(DataStructureEntity entity, string columnName,
+        internal static void AddWorkQueueColumn(DataStructureEntity entity, string columnName,
             ref bool hasMemo, ref string memoName, ref Guid memoId, ref int lastPos,
             XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
             string formatPattern)
@@ -816,7 +818,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return doc;
 		}
 
-		public static XmlOutput GetXml(FormControlSet item, DataSet dataset, string name, bool isPreloaded, Guid menuId, bool forceReadOnly, string confirmSelectionChangeEntity)
+		public static XmlOutput GetXml(FormControlSet item, DataSet dataset, 
+			string name, bool isPreloaded, Guid menuId, bool forceReadOnly, 
+			string confirmSelectionChangeEntity, DataStructure structure=null)
 		{
 			int controlCounter = 0;
 			IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
@@ -852,7 +856,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 		    RenderUIElement(xmlOutput, uiRootElement, FormTools.GetItemFromControlSet(item),
 				dataset, dataSources, ref controlCounter, isPreloaded, item.Id, workflowId, 
-				forceReadOnly, confirmSelectionChangeEntity);
+				forceReadOnly, confirmSelectionChangeEntity, structure);
 			RenderDataSources(windowElement, dataSources);
 			// check if there is no root grid
 			XmlNodeList grids = doc.SelectNodes("//*[(@Type='Grid' or @Type='TreePanel' or @Type='ReportButton') and @IsRootGrid = 'true']");
@@ -1102,7 +1106,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 		private static bool RenderUIElement(XmlOutput xmlOutput, XmlElement parentNode, AbstractSchemaItem item, 
 			DataSet dataset, Hashtable dataSources, ref int controlCounter, bool isPreloaded, Guid formId, Guid menuWorkflowId,
-			bool forceReadOnly, string confirmSelectionChangeEntity)
+			bool forceReadOnly, string confirmSelectionChangeEntity, DataStructure structure=null)
 		{
 			ControlSetItem control = item as ControlSetItem;
 			IParameterService parameterService = ServiceManager.Services.GetService (typeof(IParameterService)) as IParameterService;
@@ -1197,6 +1201,14 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                         TreeControlBuilder.Build2(parentNode, renderData.FormParameterName,
                             renderData.TreeId);
                         break;
+                    case "FormLevelPlugin":
+	                    FormLevelPluginBuilder.Build(parentNode, renderData.Text);
+	                    break;                    
+                    case "SectionLevelPlugin":
+	                    SectionLevelPluginBuilder.Build(parentNode, renderData.Text,
+		                    table, structure, isPreloaded, renderData.IndependentDataSourceId != Guid.Empty, dataSources, 
+		                    control.Id.ToString());
+	                    break;
                     case "Label":
                         FormLabelBuilder.Build(parentNode, renderData.Text);
                         break;
@@ -1249,7 +1261,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				foreach (AbstractSchemaItem child in sortedChildren) {
 					XmlElement el = xmlOutput.Document.CreateElement ("UIElement");
 					children.AppendChild (el);
-					if (!RenderUIElement (xmlOutput, el, child, dataset, dataSources, ref controlCounter, isPreloaded, formId, menuWorkflowId, forceReadOnly, confirmSelectionChangeEntity)) {
+					if (!RenderUIElement (xmlOutput, el, child, dataset, dataSources, 
+						ref controlCounter, isPreloaded, formId, menuWorkflowId,
+						forceReadOnly, confirmSelectionChangeEntity, structure)) {
 						children.RemoveChild (el);
 					}
 				}
@@ -1285,13 +1299,14 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 			// grid without navigation on a root level but without an implicit filter
 			// if there is an implicit filter it must be an independent panel
-			else if (renderData.ImplicitFilter == null || renderData.ImplicitFilter == "" &&
-			         (renderData.HideNavigationPanel || (renderData.ShowDeleteButton == false && renderData.ShowNewButton == false))) {
+			else if ((renderData.ImplicitFilter == null || renderData.ImplicitFilter == "" &&
+			         (renderData.HideNavigationPanel || (renderData.ShowDeleteButton == false && renderData.ShowNewButton == false))) &&
+			         control.ControlItem.Name != "SectionLevelPlugin") {
 				parentNode.SetAttribute ("IsRootGrid", XmlConvert.ToString (false));
 				parentNode.SetAttribute ("IsRootEntity", XmlConvert.ToString (true));
 				parentNode.SetAttribute ("IsPreloaded", XmlConvert.ToString (true));
 			}
-			// root grid with navigation
+			// root grid with navigation or SectionLevelPlugin
 			else {
 				parentNode.SetAttribute ("IsRootGrid", XmlConvert.ToString (true));
 				parentNode.SetAttribute ("IsRootEntity", XmlConvert.ToString (true));

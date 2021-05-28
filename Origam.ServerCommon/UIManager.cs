@@ -264,7 +264,7 @@ namespace Origam.Server
             result.FormDefinition = formXml.OuterXml;
 
             // GRID CONFIG
-            XmlNodeList grids = formXml.SelectNodes("//*[@Type='Grid']");
+            XmlNodeList grids = formXml.SelectNodes("//*[@HasPanelConfiguration='true']"); 
 
             foreach (XmlElement g in grids)
             {
@@ -283,8 +283,8 @@ namespace Origam.Server
 
                 // default sort
                 if (sortSet != null &&
-                    g.GetAttribute("IsHeadless") == "false" &&
-                    g.GetAttribute("DisableActionButtons") == "false")
+                    (g.GetAttribute("IsHeadless") == "false" || string.IsNullOrEmpty(g.GetAttribute("IsHeadless"))) &&
+                    (g.GetAttribute("DisableActionButtons") == "false" || string.IsNullOrEmpty(g.GetAttribute("DisableActionButtons"))))
                 {
                     List<DataStructureSortSetItem> sorts =
                         new List<DataStructureSortSetItem>();
