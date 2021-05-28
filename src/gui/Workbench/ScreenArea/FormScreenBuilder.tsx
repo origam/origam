@@ -61,12 +61,11 @@ export class FormScreenBuilder extends React.Component<{
     }
 
     function recursive(xso: any) {
-      if (xso.attributes.Type === "FormLevelPlugin") {
+      if (xso.attributes.Type === "FormLevelPlugin" ||
+          xso.attributes.Type === "SectionLevelPlugin") {
         return [pluginLibrary.getComponent(xso.attributes.Name, getDataView(xso))];
       }
-      if (xso.attributes.ModelInstanceId === "3d4c034b-cf0f-4896-8542-15e89e4ebafb") {
-        return [pluginLibrary.getComponent("AuditPlugin",  getDataView(xso))];
-      }
+
       switch (xso.attributes.Type) {
         case "WorkflowFinishedPanel": {
           return (

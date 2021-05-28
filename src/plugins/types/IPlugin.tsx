@@ -5,3 +5,4 @@ export interface IPlugin {
   getComponent(data: IPluginData): JSX.Element;
   name: string;
 }
+

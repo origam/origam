@@ -1,11 +1,11 @@
 import React from "react";
 import S from './AuditPlugin.module.scss';
-import {IPlugin} from "../types/IPlugin";
 import {IPluginData} from "../types/IPluginData";
 import {IPluginProperty} from "../types/IPluginProperty";
 import {observer} from "mobx-react";
+import {ISectionPlugin} from "../types/ISectionPlugin";
 
-export class AuditPlugin implements IPlugin{
+export class AuditPlugin implements ISectionPlugin{
   name = "AuditPlugin";
 
   getComponent(data: IPluginData): JSX.Element {
