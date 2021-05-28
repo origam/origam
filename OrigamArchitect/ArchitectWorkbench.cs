@@ -1392,8 +1392,8 @@ namespace OrigamArchitect
 					((IBrowserNode2)cont.LoadedObject).NodeId == loadedObject.NodeId)
 				.Where(content => refContent.GetType() == content.GetType())
 				.Cast<DockContent>()
-				.Single()
-				.Activate();
+				.SingleOrDefault()
+				?.Activate();
 		}
 
 		private void ReopenViewContents(
