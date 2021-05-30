@@ -37,14 +37,14 @@ namespace Origam.ProjectAutomation.Builders
             string DatabaseAdminPassword = Project.CreatePassword();
             Process.Start(@"c:\Program Files\Docker\Docker\resources\bin\docker.exe", " volume create " + project.Name);
             Thread.Sleep(2000);
-            StartDockerStart(DatabaseAdminPassword, project);
+            RunDocker(DatabaseAdminPassword, project);
             project.DatabaseUserName = "postgres";
             project.DatabasePassword = DatabaseAdminPassword;
             long dockerdateTime = DateTime.Now.AddSeconds(60).Ticks;
             while (DateTime.Now.Ticks < dockerdateTime)
             {
                 Thread.Sleep(5000);
-                if (IsDockerStart(project))
+                if (IsDockerRunning(project))
                 {
                     return;
                 }
@@ -52,7 +52,7 @@ namespace Origam.ProjectAutomation.Builders
             throw new Exception("Docker didnt start !!! Please check Docker logs.");
         }
 
-        private void StartDockerStart(string databaseAdminPassword, Project project)
+        private void RunDocker(string databaseAdminPassword, Project project)
         {
             string attrib = " run --env-file " + project.DockerEnvPath +
                 " -e PG_Origam_Password=" + databaseAdminPassword + " -it " +
@@ -68,7 +68,7 @@ namespace Origam.ProjectAutomation.Builders
             Process.Start(startInfo);
         }
 
-        private bool IsDockerStart(Project project)
+        private bool IsDockerRunning(Project project)
         {
             Process process = new Process();
             // Redirect the output stream of the child process.

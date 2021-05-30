@@ -432,6 +432,12 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
+            if (!Regex.IsMatch(txtName.Text, @"^[a-zA-Z0-9]+$"))
+            {
+                AsMessageBox.ShowError(this, "Only alphanumeric characters are allowed.", strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
             if (string.IsNullOrEmpty(cboDeploymentType.Text))
             {
                 AsMessageBox.ShowError(this, strings.SelectDeploymentType_Message, strings.NewProjectWizard_Title, null);
