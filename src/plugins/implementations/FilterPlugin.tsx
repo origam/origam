@@ -47,15 +47,15 @@ export class FilterPlugin implements IFormPlugin {
     switch(this.timeUnit){
       case "month":
         this.dateFrom = moment([ args.start.year(), args.start.month()])
-        this.dateTo = moment([ args.start.year(), args.start.month() + 1])
+        this.dateTo =  this.dateFrom.clone().add(1, 'months');
         break;
       case "day":
         this.dateFrom = moment([ args.start.year(), args.start.month(), args.start.date()])
-        this.dateTo = moment([ args.start.year(), args.start.month(), args.start.date() + 1])
+        this.dateTo = this.dateFrom.clone().add(1, 'days');
         break;
       case "hour":
         this.dateFrom = moment([ args.start.year(), args.start.month(), args.start.date(), args.start.hour()])
-        this.dateTo = moment([ args.start.year(), args.start.month(), args.start.date(), args.start.hour() + 1])
+        this.dateTo = this.dateFrom.clone().add(1, 'hours');
         break;
       default:
         throw new Error("time unit \"" + this.timeUnit + "\" not implemented" )
@@ -65,16 +65,16 @@ export class FilterPlugin implements IFormPlugin {
   subtractTime(args:{end: Moment}){
     switch(this.timeUnit){
       case "month":
-        this.dateFrom = moment([ args.end.year(), args.end.month() - 1])
         this.dateTo = moment([ args.end.year(), args.end.month() ])
+        this.dateFrom = this.dateTo.clone().add(-1, 'months')
         break;
       case "day":
-        this.dateFrom = moment([ args.end.year(), args.end.month(), args.end.date() - 1])
         this.dateTo = moment([ args.end.year(), args.end.month(), args.end.date() ])
+        this.dateFrom = this.dateTo.clone().add(-1, 'days')
         break;
       case "hour":
-        this.dateFrom = moment([ args.end.year(), args.end.month(), args.end.date(), args.end.hour() - 1])
         this.dateTo = moment([ args.end.year(), args.end.month(), args.end.date(), args.end.hour()])
+        this.dateFrom = this.dateTo.clone().add(-1, 'hours')
         break;
       default:
         throw new Error("time unit \"" + this.timeUnit + "\" not implemented" )
