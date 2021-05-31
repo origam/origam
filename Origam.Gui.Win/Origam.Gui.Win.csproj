@@ -346,6 +346,7 @@
     <Compile Include="Grid\IAsGridEditor.cs" />
     <Compile Include="DesktopEntityUIActionRunnerClient.cs" />
     <Compile Include="Commands\SqlConsoleParameters.cs" />
+    <Compile Include="SectionLevelPlugin.cs" />
     <Compile Include="Strings.Designer.cs" />
     <Compile Include="Wizards\CreateFormFromEntityCommand.cs">
       <SubType>Code</SubType>

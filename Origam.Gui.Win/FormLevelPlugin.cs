@@ -19,16 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Drawing.Design;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-
-using Origam.Workbench.Services;
 using Origam.Schema;
-using Origam.Schema.GuiModel;
+
 namespace Origam.Gui.Win
 {
     public class FormLevelPlugin : Label,
@@ -42,66 +36,6 @@ namespace Origam.Gui.Win
 
         public void EndInit()
         {
-        }
-    }   
-    
-    
-    
-    public class SectionLevelPlugin : Label,
-        IOrigamMetadataConsumer, ISupportInitialize, IAsDataConsumer
-    {
-        public AbstractSchemaItem OrigamMetadata { get; set; }
-        public void BeginInit()
-        {
-        }
-	    
-
-        public void EndInit()
-        {
-        }
-        
-        private string dataMember;
-        private object dataSource;
-        
-        [
-            DefaultValue((string) null),
-            TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"),
-            RefreshProperties(RefreshProperties.Repaint),
-            Category("Data"),
-            Description("Data source of the tree.")
-        ]
-        public object DataSource
-        {
-            get => dataSource;
-            set
-            {
-                if (dataSource != value)
-                {
-                    dataSource = value;
-                }
-            }
-        }
-        
-        [
-            DefaultValue(""),
-            Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor)),
-            RefreshProperties(RefreshProperties.Repaint),
-            Category("Data"),
-            Description("Data member of the tree.")
-        ]
-        public string DataMember
-        {
-            get
-            {
-                return this.dataMember;
-            }
-            set
-            {
-                if (this.dataMember != value)
-                {
-                    this.dataMember = value;
-                }
-            }
         }
     }
 }
