@@ -61,7 +61,7 @@ namespace Origam.ProjectAutomation.Builders
             while (DateTime.Now.Ticks < dockerdateTime)
             {
                 Thread.Sleep(5000);
-                if (IsDockerRunning(project))
+                if (IsDockerRunning())
                 {
                     return true;
                 }
@@ -83,7 +83,7 @@ namespace Origam.ProjectAutomation.Builders
             startInfo.Arguments = attrib;
             Process.Start(startInfo);
         }
-        private bool IsDockerRunning(Project project)
+        private bool IsDockerRunning()
         {
             string output = GetDockerConsole("logs " + VolumeName);
             if (output.Contains("Press [CTRL+C] to stop"))
