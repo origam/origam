@@ -43,6 +43,7 @@ namespace Origam.ProjectAutomation
 
         public void Create(Project project)
         {
+            dataDatabaseBuilder.ResetDataservice();
             //Wizard connection
             project.DataConnectionString =
             dataDatabaseBuilder.BuildConnectionString(project, true);
@@ -57,6 +58,10 @@ namespace Origam.ProjectAutomation
                         configureWebServerBuilder.WebSiteUrl(project.WebRootName);
                     break;
                 case DeploymentType.Docker:
+                    project.BaseUrl =
+                        dockerBuilder.WebSiteUrl(project);
+                    break;
+                case DeploymentType.DockerPostgres:
                     project.BaseUrl =
                         dockerBuilder.WebSiteUrl(project);
                     break;

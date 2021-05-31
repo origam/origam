@@ -273,6 +273,10 @@ namespace OrigamArchitect
                     "Microsoft Sql Server",
                     "Postgre Sql Server"});
                 txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(_settings.DatabaseTypeText);
+                if(Deployment == DeploymentType.DockerPostgres)
+                {
+                    txtDatabaseType.SelectedIndex = 1;
+                }
             }
             TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
         }

@@ -194,9 +194,9 @@ namespace Origam.ProjectAutomation
         }
         public override void Rollback()
         {
-            if (Directory.Exists(modelSourcesFolder))
+            if (Directory.Exists(sourcesFolder))
             {
-                GitManager.DeleteDirectory(modelSourcesFolder);
+                GitManager.DeleteDirectory(sourcesFolder);
             }
         }
     }

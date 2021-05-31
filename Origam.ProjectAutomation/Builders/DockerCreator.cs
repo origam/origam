@@ -29,29 +29,45 @@ namespace Origam.ProjectAutomation.Builders
     {
         public override string Name => "Start Docker Container";
         private string VolumeName;
+        private string DockerExePath = @"c:\Program Files\Docker\Docker\resources\bin\docker.exe";
 
         public override void Execute(Project project)
         {
             IsDockerInstaled();
             VolumeName = project.Name;
+            DoesContainerExist();
             string DatabaseAdminPassword = Project.CreatePassword();
-            Process.Start(@"c:\Program Files\Docker\Docker\resources\bin\docker.exe", " volume create " + project.Name);
+            Process.Start(DockerExePath, " volume create " + project.Name);
             Thread.Sleep(2000);
             RunDocker(DatabaseAdminPassword, project);
             project.DatabaseUserName = "postgres";
             project.DatabasePassword = DatabaseAdminPassword;
+            if(!WaitForDocker())
+            { 
+                throw new Exception("Docker didn't start. Please check Docker logs.");
+            }
+        }
+        private void DoesContainerExist()
+        {
+            string output = GetDockerConsole("volume list");
+            if (output.Contains("VolumeName"))
+            {
+                throw new Exception("Data Postgres container already exists.");
+            }
+        }
+        private bool WaitForDocker()
+        {
             long dockerdateTime = DateTime.Now.AddSeconds(60).Ticks;
             while (DateTime.Now.Ticks < dockerdateTime)
             {
                 Thread.Sleep(5000);
                 if (IsDockerRunning(project))
                 {
-                    return;
+                    return true;
                 }
             }
-            throw new Exception("Docker didnt start !!! Please check Docker logs.");
+            return false;
         }
-
         private void RunDocker(string databaseAdminPassword, Project project)
         {
             string attrib = " run --env-file " + project.DockerEnvPath +
@@ -62,21 +78,41 @@ namespace Origam.ProjectAutomation.Builders
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = false;
             startInfo.UseShellExecute = false;
-            startInfo.FileName = @"c:\Program Files\Docker\Docker\resources\bin\docker.exe";
+            startInfo.FileName = DockerExePath;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             startInfo.Arguments = attrib;
             Process.Start(startInfo);
         }
-
         private bool IsDockerRunning(Project project)
+        {
+            string output = GetDockerConsole("logs " + VolumeName);
+            if (output.Contains("Press [CTRL+C] to stop"))
+            {
+                return true;
+            }
+            if (output.Contains("OrigamServer.dll"))
+            {
+                throw new Exception("Docker started with an error. Please check Docker logs.");
+            }
+            return false;
+        }
+        private void IsDockerInstaled()
+        {
+            string output = GetDockerConsole("ps");
+            if (!output.Contains("COMMAND"))
+            {
+                throw new Exception("Docker Desktop is not installed or is not running.");
+            }
+        }
+        private string GetDockerConsole(string argument)
         {
             Process process = new Process();
             // Redirect the output stream of the child process.
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.StartInfo.FileName = @"c:\Program Files\Docker\Docker\resources\bin\docker.exe";
-            process.StartInfo.Arguments = "logs " + project.Name;
+            process.StartInfo.FileName = DockerExePath;
+            process.StartInfo.Arguments = argument;
+            process.StartInfo.CreateNoWindow = true;
             process.Start();
             // Do not wait for the child process to exit before
             // reading to the end of its redirected stream.
@@ -84,42 +120,10 @@ namespace Origam.ProjectAutomation.Builders
             // Read the output stream first and then wait.
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-            if(output.Contains("Press [CTRL+C] to stop"))
-            {
-                return true;
-            }
-            if (output.Contains("OrigamServer.dll"))
-            {
-                throw new Exception("Docker start with error !!! Please check Docker logs.");
-            }
-            return false;
+            return output;
         }
-
-        private void IsDockerInstaled()
-        {
-            Process p = new Process();
-            // Redirect the output stream of the child process.
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.FileName = @"c:\Program Files\Docker\Docker\resources\bin\docker.exe";
-            p.StartInfo.Arguments = "ps";
-            p.Start();
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            string output = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
-            if (!output.Contains("COMMAND"))
-            {
-                throw new Exception("Docker Desktop is not install or start !!");
-            }
-        }
-
         public override void Rollback()
         {
-            Process.Start(@"c:\Program Files\Docker\Docker\resources\bin\docker.exe", " volume rm " + VolumeName);
-            Process.Start(@"c:\Program Files\Docker\Docker\resources\bin\docker.exe", " rm " + VolumeName);
         }
     }
 }
