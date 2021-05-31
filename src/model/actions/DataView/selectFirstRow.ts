@@ -22,7 +22,9 @@ import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelV
 
 export function selectFirstRow(ctx: any) {
   return function* selectFirstRow() {
-    getDataView(ctx).selectFirstRow();
+    let dataView = getDataView(ctx);
+    yield* dataView.infiniteScrollLoader?.loadFirstPage();
+    dataView.selectFirstRow();
     getTablePanelView(ctx).scrollToCurrentRow();
   };
 }
