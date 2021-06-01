@@ -98,17 +98,6 @@ export class FilterPlugin implements IFormPlugin {
   }
 }
 
-// enum TimeUnit {Hour, Day, Month}
-//
-// function timeUnitFromString(strValue : string){
-//   switch (strValue){
-//     case "month": return TimeUnit.Month;
-//     case "day": return TimeUnit.Day;
-//     case "hour": return TimeUnit.Hour;
-//   }
-//   throw new Error("Cannot parse" + strValue + " to TimeUnit")
-// }
-
 @observer
 class FilterComponent extends  React.Component<{filterPlugin: FilterPlugin}> {
   plugin = this.props.filterPlugin;
