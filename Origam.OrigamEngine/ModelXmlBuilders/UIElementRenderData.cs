@@ -193,6 +193,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
         public UIStyle Style = null;
 
         public UIStyle CalendarViewStyle = null;
+
+        public bool AllowNavigation { get; set; }
         
         public static UIElementRenderData GetRenderData(ControlSetItem control, bool forceReadOnly)
 		{
@@ -440,6 +442,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						break;
 					case "OrderMember":
 						renderData.OrderMember = property.Value;
+						break;					
+					case "AllowNavigation":
+						renderData.AllowNavigation = property.BoolValue;
 						break;
                     case "StyleId":
                         if (!property.GuidValue.Equals(Guid.Empty))
