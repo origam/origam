@@ -66,6 +66,7 @@ namespace Origam.Server
 
                 if (frmi != null)
                 {
+                    uir.DataRequested = !frmi.IsLazyLoaded;
                     if (selectedItems.Count > 1)
                     {
                         throw new Exception(Resources.ErrorOpenFormMultipleRecords);

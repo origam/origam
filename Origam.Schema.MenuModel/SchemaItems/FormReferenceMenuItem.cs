@@ -565,6 +565,9 @@ namespace Origam.Schema.MenuModel
 				}
 			}
 		}
+
+		public bool IsLazyLoaded => ListDataStructure != null;
+
 		#endregion
 	}
 }
