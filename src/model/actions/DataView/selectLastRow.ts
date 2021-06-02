@@ -23,7 +23,8 @@ import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelVie
 export function selectLastRow(ctx: any) {
   return function* selectLastRow() {
     let dataView = getDataView(ctx);
-    yield* dataView.infiniteScrollLoader?.loadLastPage();
+    const loadLastPage = dataView.infiniteScrollLoader?.loadLastPage;
+    if(loadLastPage)yield* loadLastPage();
     dataView.selectLastRow();
     getTablePanelView(ctx).scrollToCurrentRow();
   };
