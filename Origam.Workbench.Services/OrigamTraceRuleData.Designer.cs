@@ -283,9 +283,9 @@ namespace Origam.Workbench.Services {
             
             private global::System.Data.DataColumn columnRuleId;
             
-            private global::System.Data.DataColumn columnDataIn;
+            private global::System.Data.DataColumn columnInput;
             
-            private global::System.Data.DataColumn columnDataOut;
+            private global::System.Data.DataColumn columnOutput;
             
             private global::System.Data.DataColumn columnRecordCreated;
             
@@ -350,17 +350,17 @@ namespace Origam.Workbench.Services {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn DataInColumn {
+            public global::System.Data.DataColumn InputColumn {
                 get {
-                    return this.columnDataIn;
+                    return this.columnInput;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn DataOutColumn {
+            public global::System.Data.DataColumn OutputColumn {
                 get {
-                    return this.columnDataOut;
+                    return this.columnOutput;
                 }
             }
             
@@ -449,13 +449,13 @@ namespace Origam.Workbench.Services {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public OrigamTraceRuleRow AddOrigamTraceRuleRow(string RuleName, System.Guid RuleId, string DataIn, string DataOut, System.DateTime RecordCreated, System.Guid RecordCreatedBy, System.Guid RecordUpdatedBy, System.Guid Id, System.Guid refOrigamTraceWorkflowId, System.DateTime RecordUpdated) {
+            public OrigamTraceRuleRow AddOrigamTraceRuleRow(string RuleName, System.Guid RuleId, string Input, string Output, System.DateTime RecordCreated, System.Guid RecordCreatedBy, System.Guid RecordUpdatedBy, System.Guid Id, System.Guid refOrigamTraceWorkflowId, System.DateTime RecordUpdated) {
                 OrigamTraceRuleRow rowOrigamTraceRuleRow = ((OrigamTraceRuleRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         RuleName,
                         RuleId,
-                        DataIn,
-                        DataOut,
+                        Input,
+                        Output,
                         RecordCreated,
                         RecordCreatedBy,
                         RecordUpdatedBy,
@@ -486,8 +486,8 @@ namespace Origam.Workbench.Services {
             internal void InitVars() {
                 this.columnRuleName = base.Columns["RuleName"];
                 this.columnRuleId = base.Columns["RuleId"];
-                this.columnDataIn = base.Columns["DataIn"];
-                this.columnDataOut = base.Columns["DataOut"];
+                this.columnInput = base.Columns["Input"];
+                this.columnOutput = base.Columns["Output"];
                 this.columnRecordCreated = base.Columns["RecordCreated"];
                 this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
                 this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
@@ -503,10 +503,10 @@ namespace Origam.Workbench.Services {
                 base.Columns.Add(this.columnRuleName);
                 this.columnRuleId = new global::System.Data.DataColumn("RuleId", typeof(global::System.Guid), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnRuleId);
-                this.columnDataIn = new global::System.Data.DataColumn("DataIn", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDataIn);
-                this.columnDataOut = new global::System.Data.DataColumn("DataOut", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDataOut);
+                this.columnInput = new global::System.Data.DataColumn("Input", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnInput);
+                this.columnOutput = new global::System.Data.DataColumn("Output", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOutput);
                 this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnRecordCreated);
                 this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Element);
@@ -696,33 +696,33 @@ namespace Origam.Workbench.Services {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string DataIn {
+            public string Input {
                 get {
                     try {
-                        return ((string)(this[this.tableOrigamTraceRule.DataInColumn]));
+                        return ((string)(this[this.tableOrigamTraceRule.InputColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'DataIn\' in table \'OrigamTraceRule\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Input\' in table \'OrigamTraceRule\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableOrigamTraceRule.DataInColumn] = value;
+                    this[this.tableOrigamTraceRule.InputColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string DataOut {
+            public string Output {
                 get {
                     try {
-                        return ((string)(this[this.tableOrigamTraceRule.DataOutColumn]));
+                        return ((string)(this[this.tableOrigamTraceRule.OutputColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'DataOut\' in table \'OrigamTraceRule\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Output\' in table \'OrigamTraceRule\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableOrigamTraceRule.DataOutColumn] = value;
+                    this[this.tableOrigamTraceRule.OutputColumn] = value;
                 }
             }
             
@@ -849,26 +849,26 @@ namespace Origam.Workbench.Services {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsDataInNull() {
-                return this.IsNull(this.tableOrigamTraceRule.DataInColumn);
+            public bool IsInputNull() {
+                return this.IsNull(this.tableOrigamTraceRule.InputColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetDataInNull() {
-                this[this.tableOrigamTraceRule.DataInColumn] = global::System.Convert.DBNull;
+            public void SetInputNull() {
+                this[this.tableOrigamTraceRule.InputColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsDataOutNull() {
-                return this.IsNull(this.tableOrigamTraceRule.DataOutColumn);
+            public bool IsOutputNull() {
+                return this.IsNull(this.tableOrigamTraceRule.OutputColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetDataOutNull() {
-                this[this.tableOrigamTraceRule.DataOutColumn] = global::System.Convert.DBNull;
+            public void SetOutputNull() {
+                this[this.tableOrigamTraceRule.OutputColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
