@@ -467,7 +467,7 @@
       <Version>2.2.9</Version>
     </PackageReference>
     <PackageReference Include="AvalonEdit">
-      <Version>6.1.1</Version>
+      <Version>6.1.2.30</Version>
     </PackageReference>
     <PackageReference Include="DockPanelSuite">
       <Version>3.0.6</Version>
