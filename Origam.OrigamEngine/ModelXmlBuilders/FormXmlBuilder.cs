@@ -1304,14 +1304,6 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					parentNode.SetAttribute ("IsPreloaded", XmlConvert.ToString (isPreloaded));
 				}
 			}
-			// grid without navigation on a root level but without an implicit filter
-			// if there is an implicit filter it must be an independent panel
-			else if ((renderData.ImplicitFilter == null || renderData.ImplicitFilter == "" &&
-			         (renderData.HideNavigationPanel || (renderData.ShowDeleteButton == false && renderData.ShowNewButton == false)))) {
-				parentNode.SetAttribute ("IsRootGrid", XmlConvert.ToString (false));
-				parentNode.SetAttribute ("IsRootEntity", XmlConvert.ToString (true));
-				parentNode.SetAttribute ("IsPreloaded", XmlConvert.ToString (true));
-			}
 			else if (control.ControlItem.Name == "SectionLevelPlugin")
 			{
 				if (renderData.AllowNavigation)
@@ -1326,6 +1318,14 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					parentNode.SetAttribute ("IsRootEntity", XmlConvert.ToString (true));
 					parentNode.SetAttribute ("IsPreloaded", XmlConvert.ToString (true));
 				}
+			}
+			// grid without navigation on a root level but without an implicit filter
+			// if there is an implicit filter it must be an independent panel
+			else if ((renderData.ImplicitFilter == null || renderData.ImplicitFilter == "" &&
+			         (renderData.HideNavigationPanel || (renderData.ShowDeleteButton == false && renderData.ShowNewButton == false)))) {
+				parentNode.SetAttribute ("IsRootGrid", XmlConvert.ToString (false));
+				parentNode.SetAttribute ("IsRootEntity", XmlConvert.ToString (true));
+				parentNode.SetAttribute ("IsPreloaded", XmlConvert.ToString (true));
 			}
 			// root grid with navigation or SectionLevelPlugin
 			else {
