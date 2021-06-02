@@ -411,5 +411,10 @@ namespace Origam.DA.Service
 			        throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
 	        }
         }
-	}
+        protected override string SqlPrimaryIndex()
+        {
+			return " PRIMARY KEY";
+
+		}
+    }
 }
