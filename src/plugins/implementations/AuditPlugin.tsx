@@ -16,15 +16,21 @@ export class AuditPlugin implements ISectionPlugin{
 @observer
 class AuditComponent extends React.Component<{ pluginData: IPluginData }> {
 
-  properties = this.props.pluginData.dataView.properties;
   dataView = this.props.pluginData.dataView;
+  propertiesToRender: IPluginProperty[] = [];
+
+  constructor(props: any) {
+    super(props);
+    this.propertiesToRender = ["RecordCreated", "refColumnId", "OldValue", "NewValue", "RecordCreatedBy"]
+      .map(propId => this.props.pluginData.dataView.properties.find(prop=> prop.id === propId)!);
+  }
 
   renderHeader(properties: IPluginProperty[]){
-    return properties.map(property =><div className={S.column}>{property.id}</div>)
+    return properties.map(property =><div className={S.column}>{property.name}</div>)
   }
 
   renderRow(row: any[]){
-    return this.properties.map(property =><div className={S.column}>{this.dataView.getValue(row, property.id)}</div>)
+    return this.propertiesToRender.map(property =><div className={S.column}>{this.dataView.getCellText(row, property.id)}</div>)
   }
 
   render(){
@@ -34,7 +40,7 @@ class AuditComponent extends React.Component<{ pluginData: IPluginData }> {
     return(
       <div className={S.table}>
         <div className={S.row}>
-          {this.renderHeader(this.properties)}
+          {this.renderHeader(this.propertiesToRender)}
         </div>
         {this.dataView.tableRows.map(row => <div className={S.row}>{this.renderRow(row as any[])}</div>)}
       </div>

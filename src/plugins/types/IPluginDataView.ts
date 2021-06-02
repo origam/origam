@@ -4,5 +4,5 @@ import {IPluginProperty} from "./IPluginProperty";
 export interface IPluginDataView {
   tableRows: IPluginTableRow[];
   properties: IPluginProperty[];
-  getValue(row: any[], propertyId: string): any;
+  getCellText(value: any, propertyId: string): any;
 }

@@ -28,12 +28,12 @@ class PluginDataView implements IPluginDataView{
     this.properties = getProperties(this.dataView);
   }
 
-  getValue(row: any[], propertyId: string): any {
+  getCellText(row: any[], propertyId: string): any {
     const property = getProperties(this.dataView).find(prop => prop.id === propertyId);
     if(!property){
       throw new Error("Property named \"" + propertyId + "\" was not found");
     }
-    return this.dataView.dataTable.getCellValue(row, property);
+    return this.dataView.dataTable.getCellText(row, property);
   }
 }
 
