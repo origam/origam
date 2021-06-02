@@ -462,5 +462,10 @@ namespace Origam.DA.Service
 
             return sqlParam;
         }
+
+        protected override string SqlPrimaryIndex()
+        {
+            return " PRIMARY KEY NONCLUSTERED";
+        }
     }
 }
