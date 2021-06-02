@@ -174,7 +174,6 @@ export interface IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
-    AdditionalRequestParameters?: object | undefined;
     IsSingleRecordEdit?: boolean;
     RequestCurrentRecordId: boolean;
   }): Promise<any>;
