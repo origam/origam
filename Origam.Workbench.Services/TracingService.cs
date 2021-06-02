@@ -156,8 +156,8 @@ namespace Origam.Workbench.Services
 				{
 					row.refOrigamTraceWorkflowId = workflowInstanceId;
 				}
-				if(ruleInput != null) row.DataIn = ruleInput;
-				if(ruleResult != null) row.DataOut = ruleResult;
+				if(ruleInput != null) row.Input = ruleInput;
+				if(ruleResult != null) row.Output = ruleResult;
 				row.RuleId = ruleId;
 				row.RuleName = ruleName;
 				

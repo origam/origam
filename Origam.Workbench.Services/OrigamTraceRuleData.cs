@@ -25,5 +25,8 @@ namespace Origam.Workbench.Services
 
     public partial class OrigamTraceRuleData
     {
+        partial class OrigamTraceRuleDataTable
+        {
+        }
     }
 }
