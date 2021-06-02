@@ -715,9 +715,12 @@ namespace Origam.DA.Service
             else
                 ddl.Append(" NOT NULL");
             if (field.IsPrimaryKey)
-                ddl.Append(" PRIMARY KEY ");
+                ddl.Append(SqlPrimaryIndex());
             return ddl.ToString();
         }
+
+        protected abstract string SqlPrimaryIndex();
+
         public string IndexDefinitionDdl(IDataEntity entity, DataEntityIndex index, bool complete)
         {
             StringBuilder ddl = new StringBuilder();

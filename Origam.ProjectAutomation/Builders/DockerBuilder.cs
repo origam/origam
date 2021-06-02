@@ -23,6 +23,7 @@ namespace Origam.ProjectAutomation.Builders
                 envfile = Directory.GetFiles(newProjectFolder, "*.env")[0];
                 ProcessEnviromentFile(envfile,project);
                 ProcessCmdFile(project,envfile);
+                project.DockerEnvPath = envfile;
             }
         }
         private void ProcessCmdFile(Project project, string envfile)
@@ -30,11 +31,22 @@ namespace Origam.ProjectAutomation.Builders
             string cmdfile = Path.Combine(newProjectFolder, project.Name + ".cmd");
             if (File.Exists(cmdfile))
             {
-                string text = File.ReadAllText(cmdfile);
-                text = text.Replace("{envfilepath}", Path.Combine(project.SourcesFolder, "NewProject", envfile));
-                text = text.Replace("{parentpathproject}", project.SourcesFolder);
-                text = text.Replace("{dockerport}", project.DockerPort.ToString());
-                File.WriteAllText(cmdfile, text);
+                if (project.Deployment == DeploymentType.Docker)
+                {
+                    string text = File.ReadAllText(cmdfile);
+                    text = text.Replace("{envfilepath}", Path.Combine(project.SourcesFolder, "NewProject", envfile));
+                    text = text.Replace("{parentpathproject}", project.SourcesFolder);
+                    text = text.Replace("{dockerport}", project.DockerPort.ToString());
+                    File.WriteAllText(cmdfile, text);
+                }
+                else if(project.Deployment == DeploymentType.DockerPostgres)
+                {
+                    string text = "docker exec -it " + project.Name + " bash startOrigamServer.sh";
+                    File.WriteAllText(cmdfile, text);
+                    cmdfile = Path.Combine(newProjectFolder, "StartDocker" + project.Name + ".cmd");
+                    text = "docker start " + project.Name;
+                    File.WriteAllText(cmdfile, text);
+                }
             }
         }
         private void ProcessEnviromentFile(string envfile, Project project)

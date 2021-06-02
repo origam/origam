@@ -29,6 +29,12 @@ namespace Origam.ProjectAutomation
     {
         AbstractSqlDataService _dataService = null;
 
+        internal AbstractSqlDataService DataService()
+        {
+            _dataService = null;
+            return _dataService;
+        }
+
         internal AbstractSqlDataService DataService(DatabaseType DatabaseType)
         {
            

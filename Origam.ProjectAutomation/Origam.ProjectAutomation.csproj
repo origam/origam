@@ -86,6 +86,7 @@
     <Compile Include="Builders\ConfigureAzureWebServerBuilder.cs" />
     <Compile Include="Builders\CreateGitRepository.cs" />
     <Compile Include="Builders\DockerBuilder.cs" />
+    <Compile Include="Builders\DockerCreator.cs" />
     <Compile Include="Builders\DropGitRepository.cs" />
     <Compile Include="Builders\FileModelImportBuilder.cs" />
     <Compile Include="Builders\FileModelInitBuilder.cs" />
@@ -132,9 +133,9 @@
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
       <Name>Origam.DA.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Security.NetFx\Origam.Security.NetFx.csproj">
-      <Project>{22066F4C-117C-4910-BC00-9C1A4BB14551}</Project>
-      <Name>Origam.Security.NetFx</Name>
+    <ProjectReference Include="..\Origam.Security.Common\Origam.Security.Common.csproj">
+      <Project>{66fae794-7352-440f-b24d-684686a62cf5}</Project>
+      <Name>Origam.Security.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>

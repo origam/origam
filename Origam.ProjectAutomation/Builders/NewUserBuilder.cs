@@ -1,6 +1,5 @@
 ﻿using Origam.DA;
-using Origam.Security.Identity;
-using Origam.Workbench.Services;
+using Origam.Security.Common;
 using System;
 using static Origam.DA.Common.Enums;
 
@@ -9,20 +8,16 @@ namespace Origam.ProjectAutomation.Builders
     public class NewUserBuilder : AbstractDatabaseBuilder
     {
         DatabaseType _databaseType;
-        private string _loginName;
-        private bool _integratedAuthentication;
 
         public override string Name => "Create Web User";
 
         public override void Execute(Project project)
         {
-            AdaptivePasswordHasherWithLegacySupport adaptivePassword = new AdaptivePasswordHasherWithLegacySupport();
+            var adaptivePassword = new InternalPasswordHasherWithLegacySupport();
             string hashPassword = adaptivePassword.HashPassword(project.WebUserPassword);
 
             _databaseType = project.DatabaseType;
             DataService(_databaseType).DbUser = project.Name;
-            _loginName = DataService(_databaseType).DbUser;
-            _integratedAuthentication = project.DatabaseIntegratedAuthentication;
             DataService(_databaseType).ConnectionString = BuildConnectionString(project);
             QueryParameterCollection parameters = new QueryParameterCollection();
             parameters.Add(new QueryParameter("Id", Guid.NewGuid().ToString()));

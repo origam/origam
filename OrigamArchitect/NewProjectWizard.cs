@@ -60,6 +60,7 @@ namespace OrigamArchitect
         NewProjectWizardSettings _settings = new NewProjectWizardSettings();
         private WebGitXmlParser XmlParser = new WebGitXmlParser();
         private List<WebGitData> repositories = new List<WebGitData>();
+        private const bool NEEDS_ELEVATED_PRIVILEDGES = false;
 
         public NewProjectWizard()
         {
@@ -87,7 +88,7 @@ namespace OrigamArchitect
                     case 0:
                         return DeploymentType.Docker;
                     case 1:
-                        return DeploymentType.Local;
+                        return DeploymentType.DockerPostgres;
                     default:
                         throw new ArgumentOutOfRangeException("DeploymentType",
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
@@ -272,6 +273,10 @@ namespace OrigamArchitect
                     "Microsoft Sql Server",
                     "Postgre Sql Server"});
                 txtDatabaseType.SelectedIndex = txtDatabaseType.FindStringExact(_settings.DatabaseTypeText);
+                if(Deployment == DeploymentType.DockerPostgres)
+                {
+                    txtDatabaseType.SelectedIndex = 1;
+                }
             }
             TxtDatabaseType_SelectedIndexChanged(null, EventArgs.Empty);
         }
@@ -285,6 +290,10 @@ namespace OrigamArchitect
             if (DatabaseType == DatabaseType.PgSql)
             {
                 txtPort.Text = "5432";
+            }
+            if (Deployment == DeploymentType.DockerPostgres)
+            {
+                txtPort.Text = "5433";
             }
         }
         private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -369,7 +378,7 @@ namespace OrigamArchitect
 
         private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
         {
-            if (!IsAdmin())
+            if (NEEDS_ELEVATED_PRIVILEDGES && !IsAdmin())
             {
                 pageWelcome.AllowNext = false;
                 lblAdminWarning.Visible = true;
@@ -427,6 +436,12 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
+            if (!Regex.IsMatch(txtName.Text, @"^[a-zA-Z0-9]+$"))
+            {
+                AsMessageBox.ShowError(this, "Only alphanumeric characters are allowed.", strings.NewProjectWizard_Title, null);
+                e.Cancel = true;
+                return;
+            }
             if (string.IsNullOrEmpty(cboDeploymentType.Text))
             {
                 AsMessageBox.ShowError(this, strings.SelectDeploymentType_Message, strings.NewProjectWizard_Title, null);
@@ -445,7 +460,23 @@ namespace OrigamArchitect
                 case DeploymentType.Docker:
                     pageDeploymentType.NextPage = pageTemplateType;
                     break;
+                case DeploymentType.DockerPostgres:
+                    pageDeploymentType.NextPage = pageTemplateType;
+                    //Pull docker image
+                    pullDockerImage();
+                    break;
             }
+        }
+
+        private void pullDockerImage()
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.CreateNoWindow = false;
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = @"c:\Program Files\Docker\Docker\resources\bin\docker.exe";
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.Arguments = " pull origam/server:pg_master-latest";
+            Process.Start(startInfo);
         }
 
         private void pageDeploymentType_Initialize(object sender, WizardPageInitEventArgs e)
@@ -496,7 +527,7 @@ namespace OrigamArchitect
             _project.GitRepository = gitrepo.Checked;
             _project.Gitusername = txtGitUser.Text;
             _project.Gitemail = txtGitEmail.Text;
-            if( Deployment != DeploymentType.Docker)
+            if( Deployment == DeploymentType.Local)
             {
                 pageGit.NextPage = pageReview;
             }
@@ -514,7 +545,8 @@ namespace OrigamArchitect
 
         private void TxtDatabaseType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (DatabaseType == DatabaseType.PgSql)
+            if (DatabaseType == DatabaseType.PgSql &&
+                Deployment == DeploymentType.Docker )
             {
                 chkIntegratedAuthentication.Enabled = false;
                 chkIntegratedAuthentication.Checked = false;
@@ -525,6 +557,11 @@ namespace OrigamArchitect
             }
             else
             {
+                if(Deployment == DeploymentType.DockerPostgres)
+                {
+                    txtServerName.Text = "localhost";
+                    txtPort.Text = "5432";
+                }
                 chkIntegratedAuthentication.Enabled = true;
                 txtPort.Visible = !chkIntegratedAuthentication.Checked;
                 labelPort.Visible = !chkIntegratedAuthentication.Checked;

@@ -46,7 +46,8 @@ namespace Origam.ProjectAutomation
             {
                 case TypeTemplate.Default:
                     UnzipDefaultModel(project);
-                    if (project.Deployment == DeploymentType.Docker)
+                    if (project.Deployment == DeploymentType.Docker ||
+                        project.Deployment == DeploymentType.DockerPostgres)
                     {
                         CreateCustomAssetsFolder(project.SourcesFolder);
                         CheckNewProjectDirectory(project);
@@ -193,9 +194,9 @@ namespace Origam.ProjectAutomation
         }
         public override void Rollback()
         {
-            if (Directory.Exists(modelSourcesFolder))
+            if (Directory.Exists(sourcesFolder))
             {
-                GitManager.DeleteDirectory(modelSourcesFolder);
+                GitManager.DeleteDirectory(sourcesFolder);
             }
         }
     }

@@ -43,6 +43,7 @@ namespace Origam.ProjectAutomation
 
         public void Create(Project project)
         {
+            dataDatabaseBuilder.ResetDataservice();
             //Wizard connection
             project.DataConnectionString =
             dataDatabaseBuilder.BuildConnectionString(project, true);
@@ -57,6 +58,10 @@ namespace Origam.ProjectAutomation
                         configureWebServerBuilder.WebSiteUrl(project.WebRootName);
                     break;
                 case DeploymentType.Docker:
+                    project.BaseUrl =
+                        dockerBuilder.WebSiteUrl(project);
+                    break;
+                case DeploymentType.DockerPostgres:
                     project.BaseUrl =
                         dockerBuilder.WebSiteUrl(project);
                     break;
@@ -106,10 +111,15 @@ namespace Origam.ProjectAutomation
             }
             if (_project.DatabaseType == DatabaseType.PgSql)
             {
+                tasks.Add(new FileModelImportBuilder());
+                if (_project.Deployment == DeploymentType.DockerPostgres)
+                {
+                    tasks.Add(new DockerBuilder());
+                    tasks.Add(new DockerCreator());
+                }
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);
                 tasks.Add(new ApplyDatabasePermissionsBuilder());
-                tasks.Add(new FileModelImportBuilder());
                 tasks.Add(new SettingsFinalConnectionStringBuilder());
                 tasks.Add(new FileModelInitBuilder());
                 tasks.Add(new DataDatabaseStructureBuilder());

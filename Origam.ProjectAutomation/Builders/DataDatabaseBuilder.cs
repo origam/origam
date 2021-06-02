@@ -53,7 +53,10 @@ namespace Origam.ProjectAutomation
                 project.DatabasePassword, project.DatabaseIntegratedAuthentication, false);
             
         }
-
+        public void ResetDataservice()
+        {
+            DataService();
+        }
         public string BuildConnectionString(Project project, bool pooling)
         {
             _databaseType = project.DatabaseType;
