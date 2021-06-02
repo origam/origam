@@ -127,9 +127,11 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   }
 
   *loadFirstPage(){
+    if(this.rowsContainer.isFirstRowLoaded){
+      return
+    }
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
-
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
