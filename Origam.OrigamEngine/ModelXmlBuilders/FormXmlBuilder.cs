@@ -1208,7 +1208,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                     case "SectionLevelPlugin":
 	                    SectionLevelPluginBuilder.Build(
 		                    parentNode: parentNode, 
-		                    renderData: renderData,
+		                    text: renderData.Text,
 		                    table: table, 
 		                    dataStructure: structure, 
 		                    isPreloaded: isPreloaded,
