@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -31,10 +32,12 @@ namespace Origam.DA.Service
         public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
         {
             var newDoc = new OrigamXmlDocument();
-            foreach (XmlAttribute attribute in doc.FileElement.Attributes)
-            {
-                newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value);
-            }
+            doc.FileElement.Attributes
+                .Cast<XmlAttribute>()
+                .OrderBy(attribute => attribute.Value)
+                .ForEach(attribute => 
+                    newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value));
+            
             doc.ChildNodes
                 .Cast<XmlNode>()
                 .OrderBy(node => node.Name)
@@ -46,7 +49,9 @@ namespace Origam.DA.Service
         {
             node.ChildNodes
                 .Cast<XmlNode>()
-                .OrderBy(childNode => childNode.Name)
+                .OrderBy(childNode => childNode.NamespaceURI)
+                .ThenBy(childNode => childNode.LocalName)
+                .ThenBy(childNode => childNode.Attributes?["x:id"]?.Value ?? "zzzzzzzz")
                 .ForEach(childNode =>
                 {
                     var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
@@ -69,28 +74,6 @@ namespace Origam.DA.Service
                         localName: attr.LocalName,
                         namespaceURI: attr.NamespaceURI,
                         value: attr.Value));
-        }
-
-        public static XDocument CopyAndSort(XDocument document)
-        {
-            return new XDocument(Sort(document.Root));
-        }
-        
-        private static XElement Sort(XElement element)
-        {
-            XElement newElement = new XElement(
-                element.Name,
-                element
-                    .Elements()
-                    .OrderBy(x => x.Name.LocalName)
-                    .Select(Sort));
-                    
-            newElement.Add(
-                element
-                    .Attributes()
-                    .OrderBy(attr => attr.Name.LocalName));
-
-            return newElement;
         }
     }
 }
