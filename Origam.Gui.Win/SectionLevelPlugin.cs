@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 
 namespace Origam.Gui.Win
@@ -68,17 +69,15 @@ namespace Origam.Gui.Win
             Category("Data"),
             Description("Data member of the tree.")
         ]
+        [NotNullModelElementRule]
         public string DataMember
         {
-            get
-            {
-                return this.dataMember;
-            }
+            get => dataMember;
             set
             {
-                if (this.dataMember != value)
+                if (dataMember != value)
                 {
-                    this.dataMember = value;
+                    dataMember = value;
                 }
             }
         }
