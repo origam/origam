@@ -87,7 +87,7 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                 ),                
                 new ModelErrorSection
                 (
-                    caption : "These files are empty or contain incomplete data and they add nothing to the model. Please remove them.",
+                    caption : "These files are empty or contain incomplete data so they add nothing to the model. Please remove them.",
                     errorMessages :  unexpectedFiles
                         .Where(file => file.Extension == "origam")
                         .Select(file => $"\"file://{file.FullName}\"")
