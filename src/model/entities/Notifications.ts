@@ -26,7 +26,7 @@ export class Notifications {
   @observable
   notificationBox: any;
 
-  *getNotificationBoxContent() {
+  *getNotificationBoxContent(): any {
     this.notificationBox = yield getApi(this).getNotificationBoxContent();
   }
 

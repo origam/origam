@@ -56,7 +56,7 @@ export class RowState implements IRowState {
   isSomethingLoading = false;
 
   triggerLoadImm = flow(
-    function*(this: RowState) {
+    function*(this: RowState): any {
       if (this.isSomethingLoading) {
         return;
       }

@@ -190,8 +190,3 @@ function removeTimeZone(isoDateString: string | null | undefined) {
   if (!isoDateString) return isoDateString;
   return isoDateString.substring(0, 23);
 }
-
-interface IDateFormats{
-  momentFormat: string;
-  userModelFormat: string
-}

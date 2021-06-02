@@ -448,7 +448,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     isNewSession: boolean,
     requestParameters?: object | undefined,
     isSingleRecordEdit?: boolean
-  ) {
+  ): any {
     const api = getApi(this);
     if(requestParameters){
       return yield api.initUI(requestParameters as any);
@@ -474,7 +474,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
   }
 
-  *initPortal() {
+  *initPortal(): any {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 

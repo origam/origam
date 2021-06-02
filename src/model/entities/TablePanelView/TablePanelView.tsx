@@ -160,7 +160,7 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
+  *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean): any {
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);
 

@@ -127,7 +127,7 @@ export class BlobEditor extends React.Component<{
     await this.props.api!.getBlob({ downloadToken: token });
   }
 
-  *upload() {
+  *upload(): any {
     this.progressValue = 0;
     this.speedValue = 0;
     this.isUploading = true;
@@ -180,7 +180,7 @@ export class BlobEditor extends React.Component<{
     }
   }
 
-  *delete() {
+  *delete(): any {
     if (
       yield new Promise(
         action((resolve: (value: boolean) => void) => {

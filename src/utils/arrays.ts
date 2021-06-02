@@ -83,7 +83,7 @@ declare global {
 
 declare global {
   interface Array<T> {
-    groupBy<T, K>(keyGetter: (key: T) => K):  Map<K, T[]>;
+    groupBy<K>(keyGetter: (key: T) => K):  Map<K, T[]>;
   }
 }
 

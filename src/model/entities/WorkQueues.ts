@@ -26,7 +26,7 @@ import { PeriodicLoader } from "utils/PeriodicLoader";
 export class WorkQueues implements IWorkQueues {
   $type_IWorkQueues: 1 = 1;
 
-  *getWorkQueueList() {
+  *getWorkQueueList(): any {
     const api = getApi(this);
     const workQueues = yield api.getWorkQueueList();
     this.items = workQueues;

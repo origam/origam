@@ -241,6 +241,7 @@ function RichTextEditor(props: {
   const [internalEditorState, setInternalEditorState] = useState(() => EditorState.createEmpty());
   const [internalEditorStateHtml, setInternalEditorStateHtml] = useState("");
 
+  
   const onEditorStateChange = useCallback(
     (newEditorState: any) => {
       setInternalEditorState(newEditorState);
@@ -248,6 +249,7 @@ function RichTextEditor(props: {
       setInternalEditorStateHtml(html);
       props.onChange?.(html);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setInternalEditorState, setInternalEditorStateHtml, props.onChange]
   );
 

@@ -572,7 +572,7 @@ export function* interpretScreenXml(
 
   for (let dataView of scr.dataViews) {
     const $dataView = $formScreen.beginLifetimeScope(SCOPE_DataView);
-    $dataView.register(IDataViewTS, () => dataView).scopedInstance(SCOPE_DataView);
+    $dataView.register(IDataViewTS, () => dataView as DataView).scopedInstance(SCOPE_DataView);
 
     $dataView
       .register(IRowCursor, () => new RowCursor(() => getSelectedRowId(dataView)))

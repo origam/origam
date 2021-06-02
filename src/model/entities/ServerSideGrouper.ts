@@ -69,7 +69,7 @@ export class ServerSideGrouper implements IGrouper {
     runGeneratorInFlowWithHandler({ctx: this, generator: self.loadGroups()});
   }
         
-  private *loadGroups() {
+  private *loadGroups(): any {
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (!firstGroupingColumn) {
       this.topLevelGroups.length = 0;
@@ -163,7 +163,7 @@ export class ServerSideGrouper implements IGrouper {
     flow(() => this.reload(group))();
   }
   
-  private *reload(group: IGroupTreeNode) {
+  private *reload(group: IGroupTreeNode): any {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnSettings = groupingConfiguration.nextColumnToGroupBy(group.columnId);
     const dataView = getDataView(this);

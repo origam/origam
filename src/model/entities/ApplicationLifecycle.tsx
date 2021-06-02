@@ -55,7 +55,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     yield* this.requestSignout();
   }
 
-  *requestSignout() {
+  *requestSignout(): any {
     const workbench = getWorkbench(this);
     const openedScreens = workbench && getOpenedScreens(workbench);
     let isSomeDirtyScreen = false;
@@ -89,7 +89,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     yield* this.reuseAuthToken();
   }
 
-  *performLogin(args: { userName: string; password: string }) {
+  *performLogin(args: { userName: string; password: string }):any {
     try {
       const api = getApi(this);
       const token = yield api.login({
