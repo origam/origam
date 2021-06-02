@@ -26,6 +26,6 @@ namespace Origam.DA.Service
 {
     interface IFileSystemModelChecker
     {
-        ModelErrorSection GetErrors();
+        IEnumerable<ModelErrorSection> GetErrors();
     }
 }

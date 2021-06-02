@@ -41,7 +41,7 @@ namespace Origam.DA.Service.FileSystemModelCheckers
             this.modelDirectoryFiles = modelDirectoryFiles;
         }
 
-        public ModelErrorSection GetErrors()
+        public IEnumerable<ModelErrorSection> GetErrors()
         {
             modelDirectoryFiles
                .Where(OrigamFile.IsPersistenceFile)
@@ -57,7 +57,7 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                })
                .ToList();
 
-           return new ModelErrorSection("Duplicate Ids", errorMessages);
+           yield return new ModelErrorSection("Duplicate Ids", errorMessages);
         }
 
         private void PuIdsToDuplicateTracker(FileInfo file)

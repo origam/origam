@@ -39,7 +39,7 @@ namespace Origam.DA.Service.FileSystemModeCheckers
             this.filePersistenceProvider = filePersistenceProvider;
         }
 
-        public ModelErrorSection GetErrors()
+        public IEnumerable<ModelErrorSection> GetErrors()
         {
             var allInstances = filePersistenceProvider
                 .RetrieveList<IFilePersistent>()
@@ -62,7 +62,7 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                 .ToList();
 
 
-            return new ModelErrorSection
+            yield return new ModelErrorSection
             (
                 caption : "Invalid References Between Origam Files",
                 errorMessages : errors

@@ -44,7 +44,7 @@ namespace Origam.DA.Service
             topDirectory = this.filePersistenceProvider.TopDirectory.FullName;
         }
 
-        public ModelErrorSection GetErrors()
+        public IEnumerable<ModelErrorSection> GetErrors()
         {
             IFilePersistent[] allPersistedObjects = filePersistenceProvider
                 .RetrieveList<IFilePersistent>()
@@ -72,7 +72,7 @@ namespace Origam.DA.Service
                 })
                 .ToList();
 
-            return new ModelErrorSection("Objects persisted in wrong files (object name is different from file name)", errors);
+            yield return new ModelErrorSection("Objects persisted in wrong files (object name is different from file name)", errors);
         }
 
         private IEnumerable<Guid> GetChildrenIds(AbstractSchemaItem item)
