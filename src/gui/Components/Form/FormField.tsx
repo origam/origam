@@ -76,7 +76,7 @@ export class FormField extends React.Component<{
         // if there is some difference in chekbox sizes between various platforms.
         return {
           top: this.props.top,
-          left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width,
+          left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width + 4,
           color: this.props.captionColor,
         };
       case ICaptionPosition.Top:
