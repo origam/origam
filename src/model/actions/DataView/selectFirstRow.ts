@@ -23,7 +23,7 @@ import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelV
 export function selectFirstRow(ctx: any) {
   return function* selectFirstRow() {
     let dataView = getDataView(ctx);
-    yield* dataView.infiniteScrollLoader?.loadFirstPage();
+    if(dataView.infiniteScrollLoader) yield* dataView.infiniteScrollLoader!.loadFirstPage();
     dataView.selectFirstRow();
     getTablePanelView(ctx).scrollToCurrentRow();
   };
