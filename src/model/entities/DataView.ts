@@ -661,8 +661,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound *loadFirstPage(): any {
-    const loadFirstPage = this.infiniteScrollLoader?.loadFirstPage;
-    if (loadFirstPage) yield* loadFirstPage();
+    if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadFirstPage();
   }
 
   @action.bound selectFirstRow() {
@@ -686,8 +685,7 @@ export class DataView implements IDataView {
     runGeneratorInFlowWithHandler({
       ctx: this,
       generator: (function* () {
-        const loadLastPage = self.infiniteScrollLoader?.loadLastPage;
-        if(loadLastPage)yield* loadLastPage();
+        if(self.infiniteScrollLoader) yield* self.infiniteScrollLoader!.loadLastPage();
         const dataTable = getDataTable(self);
         const lastRow = dataTable.getLastRow();
         if (lastRow) {
