@@ -47,7 +47,7 @@ namespace Origam.DA.Service
             referenceFileFactory = new ReferenceFileFactory(origamPathFactory);
         }
 
-        public ModelErrorSection GetErrors()
+        public IEnumerable<ModelErrorSection> GetErrors()
         {
             List<string> errors = modelDirectoryFiles
                 .Where(file => file.Name == OrigamFile.ReferenceFileName)
@@ -56,7 +56,7 @@ namespace Origam.DA.Service
                 .Where(errMessage => !string.IsNullOrEmpty(errMessage))
                 .ToList();
 
-            return new ModelErrorSection
+            yield return new ModelErrorSection
             (
                 caption : "Invalid Reference Files",
                 errorMessages : errors

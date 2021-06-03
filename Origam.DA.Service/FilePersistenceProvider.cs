@@ -474,7 +474,7 @@ namespace Origam.DA.Service
                             ignoredFileFilter: ignoredFileFilter, 
                             modelDirectoryFiles: modelDirectoryFiles)
                     }
-                    .Select(checker =>
+                    .SelectMany(checker =>
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         return checker.GetErrors();

@@ -44,7 +44,7 @@ namespace Origam.DA.Service.FileSystemModelCheckers
             this.modelDirectoryFiles = modelDirectoryFiles;
         }
 
-        public ModelErrorSection GetErrors()
+        public IEnumerable<ModelErrorSection> GetErrors()
         {
             var fileNamesToIgnore = new []
             {
@@ -74,14 +74,26 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                 .Where(file => !knownFilePaths.Contains(file.FullName))
                 .Where(file => !fileNamesToIgnore.Contains(file.Name))
                 .Where(file => ignoredFileFilter.ShouldPass(file.FullName))
-                .Select(file => $"\"file://{file.FullName}\"")
                 .ToList();
 
-            return new ModelErrorSection
-            (
-                caption : "Unexpected files in the model directories. These files can cause errors if left in the model directory",
-                errorMessages : unexpectedFiles
-            );
+            return  new []{ 
+                new ModelErrorSection
+                (
+                    caption : "These files are not referenced by any model element. Please remove them.",
+                    errorMessages : unexpectedFiles
+                        .Where(file => file.Extension != ".origam")
+                        .Select(file => $"\"file://{file.FullName}\"")
+                        .ToList()
+                ),                
+                new ModelErrorSection
+                (
+                    caption : "These files are empty or contain incomplete data so they add nothing to the model. Please remove them.",
+                    errorMessages :  unexpectedFiles
+                        .Where(file => file.Extension == ".origam")
+                        .Select(file => $"\"file://{file.FullName}\"")
+                        .ToList()
+                )
+            };
         }
     }
 }
