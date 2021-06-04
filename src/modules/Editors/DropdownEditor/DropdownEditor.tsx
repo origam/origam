@@ -99,7 +99,7 @@ export function DropdownEditor(props: {
               />
             )
           }
-          renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} />}
+          renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} minSideMargin={50} />}
         />
       )}
     </Observer>
