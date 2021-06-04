@@ -7,13 +7,16 @@ import moment from "moment";
 import {Moment} from "moment/moment";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
+import {IOption, SimpleDropdown} from "../../modules/Editors/SimpleDropdown";
 
 export class FilterPlugin implements IFormPlugin {
   $type_IFormPlugin: 1 = 1;
   name = "FilterPlugin";
 
+  timeUnits = [{value: "month", label: "Month"}, {value: "day", label: "Day"}, {value: "hour", label: "Hour"}]
+
   @observable
-  timeUnit = "day";
+  selectedTimeUnit = this.timeUnits[1];
 
   private async refresh() {
     this.setFormParameters?.({
@@ -44,7 +47,7 @@ export class FilterPlugin implements IFormPlugin {
   }
 
   addTime(args:{start: Moment}){
-    switch(this.timeUnit){
+    switch(this.selectedTimeUnit.value){
       case "month":
         this.dateFrom = moment([ args.start.year(), args.start.month()])
         this.dateTo =  this.dateFrom.clone().add(1, 'months');
@@ -58,12 +61,12 @@ export class FilterPlugin implements IFormPlugin {
         this.dateTo = this.dateFrom.clone().add(1, 'hours');
         break;
       default:
-        throw new Error("time unit \"" + this.timeUnit + "\" not implemented" )
+        throw new Error("time unit \"" + this.selectedTimeUnit.value + "\" not implemented" )
     }
   }
 
   subtractTime(args:{end: Moment}){
-    switch(this.timeUnit){
+    switch(this.selectedTimeUnit.value){
       case "month":
         this.dateTo = moment([ args.end.year(), args.end.month() ])
         this.dateFrom = this.dateTo.clone().add(-1, 'months')
@@ -77,7 +80,7 @@ export class FilterPlugin implements IFormPlugin {
         this.dateFrom = this.dateTo.clone().add(-1, 'hours')
         break;
       default:
-        throw new Error("time unit \"" + this.timeUnit + "\" not implemented" )
+        throw new Error("time unit \"" + this.selectedTimeUnit.value + "\" not implemented" )
     }
   }
 
@@ -91,8 +94,8 @@ export class FilterPlugin implements IFormPlugin {
     await this.refresh();
   }
 
-  async setTimeunit(value: string){
-    this.timeUnit = value;
+  async setTimeunit(timeUnit: IOption<string>){
+    this.selectedTimeUnit = timeUnit;
     this.addTime({start: moment()});
     await this.refresh();
   }
@@ -102,20 +105,17 @@ export class FilterPlugin implements IFormPlugin {
 class FilterComponent extends  React.Component<{filterPlugin: FilterPlugin}> {
   plugin = this.props.filterPlugin;
 
-  async onTimeUnitChanged(event: any){
-    await this.plugin.setTimeunit(event.target.value);
-  }
-
   render() {
     return (
       <div>
         <div className={S.row}>
           <button onClick={() => this.plugin.previousIntervalClick()}>Prev</button>
-          <select id="timeSpan" name="timeSpan" value={this.plugin.timeUnit} onChange={(event: any) => this.onTimeUnitChanged(event)}>
-            <option value="month">Month</option>
-            <option value="day">Day</option>
-            <option value="hour">Hour</option>
-          </select>
+          <SimpleDropdown
+            width={"150px"}
+            options={this.plugin.timeUnits}
+            selectedOption={this.plugin.selectedTimeUnit}
+            onOptionClick={(timeUnit) => this.plugin.setTimeunit(timeUnit)}
+          />
           <button onClick={() => this.plugin.nextIntervalClick()}>Next</button>
         </div>
         <div>
