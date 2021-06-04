@@ -7,7 +7,8 @@ import moment from "moment";
 import {Moment} from "moment/moment";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
-import {IOption, SimpleDropdown} from "../../modules/Editors/SimpleDropdown";
+import {IOption, SimpleDropdown} from "../../gui/Components/PublicComponenets/SimpleDropdown";
+import {Button} from "../../gui/Components/PublicComponenets/Button";
 
 export class FilterPlugin implements IFormPlugin {
   $type_IFormPlugin: 1 = 1;
@@ -102,27 +103,31 @@ export class FilterPlugin implements IFormPlugin {
 }
 
 @observer
-class FilterComponent extends  React.Component<{filterPlugin: FilterPlugin}> {
+class FilterComponent extends React.Component<{filterPlugin: FilterPlugin}> {
   plugin = this.props.filterPlugin;
 
   render() {
     return (
-      <div>
-        <div className={S.row}>
-          <button onClick={() => this.plugin.previousIntervalClick()}>Prev</button>
+      <div className={S.mainRow}>
+        <h1>
+          {this.plugin.dateFrom.format('MMMM Do YYYY, HH:mm') + " - " + this.plugin.dateTo.format('MMMM Do YYYY, HH:mm')}
+        </h1>
+        <div className={S.controlsColumn}>
           <SimpleDropdown
-            width={"150px"}
+            width={"170px"}
             options={this.plugin.timeUnits}
             selectedOption={this.plugin.selectedTimeUnit}
             onOptionClick={(timeUnit) => this.plugin.setTimeunit(timeUnit)}
           />
-          <button onClick={() => this.plugin.nextIntervalClick()}>Next</button>
-        </div>
-        <div>
-          {"from: " + toOrigamServerString(this.plugin.dateFrom)}
-        </div>
-        <div>
-          {"to: " + toOrigamServerString(this.plugin.dateTo)}
+          <div className={S.buttonRow}>
+            <Button
+              onClick={() => this.plugin.previousIntervalClick()}
+              label={"Prev"}/>
+            <Button
+              onClick={() => this.plugin.nextIntervalClick()}
+              label={"Next"}/>
+          </div>
+
         </div>
       </div>
     );
