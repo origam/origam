@@ -38,21 +38,21 @@ export class SimpleDropdown<T> extends React.Component<{
 }> {
 
   @observable
-  isDroped = false;
+  isDropped = false;
 
   onOptionClick(option: IOption<T>){
-    this.isDroped = false;
+    this.isDropped = false;
     this.props.onOptionClick(option);
   }
 
   render() {
     return (
       <DropdownLayout
-        isDropped={this.isDroped}
+        isDropped={this.isDropped}
         renderCtrl={() => (
           <DropDownControl
             width={this.props.width}
-            onClick={() => this.isDroped = !this.isDroped}
+            onClick={() => this.isDropped = !this.isDropped}
             value={this.props.selectedOption.label}
           />
         )}
