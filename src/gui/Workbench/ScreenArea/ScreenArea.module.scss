@@ -26,14 +26,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow: hiddwen;
   display: flex;
   flex-direction: column;
-  background-color: var(--color35);
+  background-color: var(--grey2);
 }
 
 .TabHandles {
   height: 20px;
   display: flex;
   flex-direction: row;
-  background-color: var(--color8);
+  background-color: var(--grey5);
   user-select: none;
 }
 
@@ -42,7 +42,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding: 2px 20px 2px 10px;
   margin: 0px 1px 1px 0px;
   cursor: pointer;
-  background-color: var(--color12);
+  background-color: var(--grey4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,17 +59,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .TabHandleCloseBtn:hover {
-  background-color: var(--color29);
+  background-color: var(--blue6);
   color:var(--white);
 }
 
 .TabHandle:hover {
-  background-color: var(--color29);
+  background-color: var(--blue6);
 }
 
 .TabHandle.active {
   margin-bottom: 0;
-  background-color: var(--color35);
+  background-color: var(--grey2);
   color:var(--black);
 }
 

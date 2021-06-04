@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .dataViewToolbar {
   height: 20px;
-  background-color: var(--color29);
+  background-color: var(--blue6);
   color: var(--white);
   display: flex;
   flex-direction: row;
@@ -27,7 +27,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dataViewToolbar :global(.red) {
-  color: var(--color36);
+  color: var(--red);
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
     1px 1px 0 #fff;
 }
@@ -68,15 +68,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .toolbarBtn:global(.active) {
-  background-color: var(--color7);
+  background-color: var(--blue7);
 }
 
 .toolbarBtn:global(:hover:not(.disabled)) {
-  background-color: var(--color7);
+  background-color: var(--blue7);
 }
 
 .toolbarBtn:global(.disabled) {
-  color: var(--color24);
+  color: var(--grey25);
 }
 
 .toolbarBtn:global(.disabled):hover {
@@ -117,7 +117,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropDownMenuItem:not(:global(.disabled)):hover {
-  background-color: var(--color29);
+  background-color: var(--blue6);
   color:var(--white);
 }
 
@@ -146,8 +146,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .panelViewAction:global(.disabled) {
-  /*color: var(--color13);
-  background-color: rgba(139, 0, 0, 0.6);
-  cursor: not-allowed;*/
   display: none;
 }

@@ -34,10 +34,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: relative;
   @include hoverItemAnimation;
   &:global(.isActive) {
-    color: var(--blue);
+    color: var(--blue1);
     font-weight: 700;
     svg:global(.icon) {
-      stroke: var(--blue);
+      stroke: var(--blue1);
       stroke-width: 2;
     }
   }

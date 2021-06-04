@@ -35,11 +35,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
  white-space: nowrap;
   @include hoverItemAnimation;
   background: var(--white) !important;
-  color: var(--blue);
+  color: var(--blue1);
   padding: 0 0.25em;
   &:hover {
     font-weight: 400;
-    background: var(--blue) !important;
+    background: var(--blue1) !important;
     color: var(--white);
   }
 }

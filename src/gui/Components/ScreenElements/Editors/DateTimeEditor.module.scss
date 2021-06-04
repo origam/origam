@@ -62,11 +62,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .calendarWidgetCell:hover {
-  background-color: var(--color10);
+  background-color: var(--greay25);
 }
 
 .calendarWidgetSelectedDay {
-  background: var(--blue);
+  background: var(--blue1);
   color: var(--white);
   font-weight: 700;
   @include border-radius(5em);
@@ -86,7 +86,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .calendarWidgetNeighbourMonthCell {
-  //background-color: var(--color35);
+  //background-color: var(--grey2);
   color: var(--grey3);
 }
 
@@ -105,7 +105,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border: none;
   cursor: pointer;
   box-sizing: content-box;
-  color: var(--blue);
+  color: var(--blue1);
   height: 1em;
   line-height: 0.8em;
   margin: 0 0.25em;
@@ -114,7 +114,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   @extend %transition;
 
   &:hover {
-    background: var(--blue);
+    background: var(--blue1);
     color: var(--white);
     @include border-radius(5em);
   }

@@ -29,7 +29,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: row;
     align-items: center;
-    //border-top: 1px solid var(--color9);
+    //border-top: 1px solid var(--grey2);
     overflow: hidden;
    white-space: nowrap;
     &:global(.ord1) {
@@ -44,17 +44,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       font-weight: bold;
     }
     &:global(.withCursor) {
-      background-color: var(--blue);
+      background-color: var(--blue1);
       color:var(--white) !important;
     }
     &:global(.selected) {
       font-weight: bold;
-      color: var(--blue);
+      color: var(--blue1);
     }
   }
 
   :global(.isHoveredRow) :global(.cell) {
-    background-color: var(--color14);
+    background-color: var(--blue4);
     color:var(--black) !important;
   }
 
@@ -64,13 +64,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     right: 0;
     height: 100%;
     width: 2px;
-    background-color: var(--color3);
+    background-color: var(--grey3);
   }
 }
 
 .input {
   &:global(.isLink) {
-    color: var(--blue) !important;
+    color: var(--blue1) !important;
     cursor: pointer !important;
   }
 }

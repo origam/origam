@@ -37,14 +37,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   word-wrap: normal;
   @include border-radius(2px);
   @extend %transition;
-  background: var(--blue);
-  border: 1px solid var(--blue);
+  background: var(--blue1);
+  border: 1px solid var(--blue1);
   color: var(--white);
   cursor: pointer;
   margin: 0 0 0.5em 0;
   &:hover {
     background: var(--white);
-    color: var(--blue);
+    color: var(--blue1);
   }
 }
 
@@ -74,12 +74,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   min-height: 20px;
   display: flex;
   align-items: center;
-  color: var(--blue);
+  color: var(--blue1);
   cursor: pointer;
   font-weight: 400;
   padding: 0 0.5em;
   &:hover {
-    background: var(--blue);
+    background: var(--blue1);
     color: var(--white);
   }
 }

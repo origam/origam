@@ -44,7 +44,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:global(.isHighLighted) {
     color: var(--white);
-    background-color: var(--blue);
+    background-color: var(--blue1);
     font-weight: bold;
     svg:global(.icon) {
       stroke: var(--white);
@@ -54,11 +54,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:global(.isActiveScreen) {
     background-color: var(--white);
-    color: var(--blue);
+    color: var(--blue1);
     font-weight: 700;
 
     svg:global(.icon) {
-      stroke: var(--blue);
+      stroke: var(--blue1);
       stroke-width: 2;
     }
   }

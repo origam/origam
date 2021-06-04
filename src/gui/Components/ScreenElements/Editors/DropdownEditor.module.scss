@@ -35,7 +35,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .lookupListHeaderCell {
   background-color: var(--grey1) !important;
-  border-left: 1px solid var(--color3);
+  border-left: 1px solid var(--grey3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,18 +52,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
  white-space: nowrap;
   cursor: pointer;
   &:global(.selected) {
-    background-color: var(--color6);
+    background-color: var(--grey25);
   }
   &:global(.choosen) {
     font-weight: 700;
   }
   &:not(.selected):hover {
-    background-color: var(--color39);
+    background-color: var(--grey25);
   }
 }
 
 .oddItem {
-  background-color: var(--color17);
+  background-color: var(--grey2);
 }
 
 .evenItem {

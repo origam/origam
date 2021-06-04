@@ -172,7 +172,7 @@ function formatColumnValue(value: string){
 
 export function drawGroupCellBackground() {
   const ctx2d = context2d();
-  ctx2d.fillStyle =  getComputedStyle(document.documentElement).getPropertyValue('--color6');
+  ctx2d.fillStyle =  getComputedStyle(document.documentElement).getPropertyValue('--grey25');
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
     CPR() * currentRowTop(),
@@ -201,7 +201,7 @@ export function drawEmptyGroupCellBackground() {
 function drawSelectedRowBorder() {
   const ctx2d = context2d();
   ctx2d.beginPath();
-  ctx2d.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--blue');
+  ctx2d.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--blue1');
   ctx2d.lineWidth = selectRowBorderWidth * CPR();
   ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
   ctx2d.lineTo(

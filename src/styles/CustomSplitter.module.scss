@@ -25,13 +25,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:global(.isDragging) {
     position: relative;
     z-index: 1000;
-    background: var(--blue);
+    background: var(--blue1);
     @include opacity(0.8);
-    border-color: var(--blue) !important;
+    border-color: var(--blue1) !important;
   }
   &:not(:global(.isDragging)):hover {
     :global(.dividerLine) {
-      border-color: var(--blue) !important; 
+      border-color: var(--blue1) !important;
     }
     background: var(--white);
   }

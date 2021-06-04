@@ -40,17 +40,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color12);
-  color: var(--color6);
+  background-color: var(--grey4);
+  color: var(--grey25);
   height: 20px;
   padding: 2px 10px 2px 10px;
-  border-right: 1px solid var(--color35);
+  border-right: 1px solid var(--grey2);
   cursor: default;
 }
 
 .tabHandle:hover,
 .tabHandle:global(.active) {
-  background-color: var(--color29);
+  background-color: var(--blue6);
   color:var(--white);
 }
 

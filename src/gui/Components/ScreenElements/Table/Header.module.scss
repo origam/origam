@@ -25,7 +25,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
  white-space: nowrap;
   box-sizing: border-box;
-  /*border-right: 1px solid var(--color3);*/
+  /*border-right: 1px solid var(--grey3);*/
   position: relative;
   /*overflow: hidden;*/
   flex-shrink: 0;
@@ -54,7 +54,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
   .Header_order {
     background: var(--grey1);
-    color: var(--blue);
+    color: var(--blue1);
     font-size: $font-size;
     height: 25px;
     line-height: 25px;
@@ -65,7 +65,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .header:global(.changing-order):hover {
-  background-color: var(--color28);
+  background-color: var(--brown);
   color:var(--white);
 }
 
@@ -88,7 +88,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: absolute;
   right: 4px;
   font-size: 11px;
-  background-color: var(--color35);
+  background-color: var(--grey2);
   padding: 2px;
   height: 20px;
 }
@@ -105,13 +105,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   width: 9px;
   @extend %transition;
   &:hover, &:focus {
-    background: var(--blue);
+    background: var(--blue1);
   }
   &:last-of-type {
     border-right-color: var(--grey2);
   }
   &:global(.isColumnDropTarget) {
-    border-color: var(--color28);
+    border-color: var(--brown);
   }
 }
 

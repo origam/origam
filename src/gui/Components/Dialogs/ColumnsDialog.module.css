@@ -43,20 +43,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding-right: 10px;
   white-space: nowrap;
   overflow: hidden;
-  border-bottom: 1px solid var(--color35);
+  border-bottom: 1px solid var(--grey2);
 }
 
 .columnTableCell:global(.header) {
   font-weight: bold;
-  /*border-right: 1px solid var(--color26);*/
+  /*border-right: 1px solid var(--grey1);*/
 }
 
 .columnTableCell:global(.odd) {
-  background-color: var(--color26);
+  background-color: var(--grey1);
 }
 
 .columnTableCell:global(.even) {
-  background-color: var(--color27);
+  background-color: var(--white);
 }
 
 .columnWidthHandle {
@@ -65,9 +65,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 100%;
   cursor: w-resize;
   right: 0;
-  background-color: var(--color26);
+  background-color: var(--grey1);
 }
 
 .columnWidthHandle:hover {
-  background-color: var(--color29);
+  background-color: var(--blue6);
 }

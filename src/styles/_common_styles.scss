@@ -25,7 +25,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   -webkit-box-shadow: -1px 3px 7px -2px rgba(var(--black), 0.801);
   -moz-box-shadow: -1px 3px 7px -2px rgba(var(--black), 0.801);
   box-shadow: -1px 3px 7px -2px rgba(var(--black), 0.801);
-  border: 1px solid #cecece;
+  border: 1px solid var(--grey25);
 }
 
 @mixin progressIndicator {
@@ -56,55 +56,55 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     width: $indefiniteMarkerWidth;
     height: 100%;
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,73b1e7+34,0a77d5+50,73b1e7+66,73b1e7+66,ffffff+100 */
-    background: #ffffff; /* Old browsers */
+    background: var(--white); /* Old browsers */
     background: -moz-linear-gradient(
       left,
-      #ffffff 0%,
-      #73b1e7 34%,
-      #0a77d5 50%,
-      #73b1e7 66%,
-      #73b1e7 66%,
-      #ffffff 100%
+      var(--white) 0%,
+      var(--blue3) 34%,
+      var(--blue2) 50%,
+      var(--blue3) 66%,
+      var(--blue3) 66%,
+      var(--white) 100%
     ); /* FF3.6-15 */
     background: -webkit-linear-gradient(
       left,
-      #ffffff 0%,
-      #73b1e7 34%,
-      #0a77d5 50%,
-      #73b1e7 66%,
-      #73b1e7 66%,
-      #ffffff 100%
+      var(--white) 0%,
+      var(--blue3) 34%,
+      var(--blue2) 50%,
+      var(--blue3) 66%,
+      var(--blue3) 66%,
+      var(--white) 100%
     ); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(
       to right,
-      #ffffff 0%,
-      #73b1e7 34%,
-      #0a77d5 50%,
-      #73b1e7 66%,
-      #73b1e7 66%,
-      #ffffff 100%
+      var(--white) 0%,
+      var(--blue3) 34%,
+      var(--blue2) 50%,
+      var(--blue3) 66%,
+      var(--blue3) 66%,
+      var(--white) 100%
     ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
   }
 }
 
-$textColorNoHover: #3e3d45;
-$textColorHover: #0d0d0d;
+$textColorNoHover: var(--grey5);
+$textColorHover: var(--black);
 
 @mixin dialogButton {
   height: 30px;
   border-radius: 15px;
   font-size: 12px;
-  color: #3e3d45;
-  border: 1px solid #b0afb7;
-  background-color: #e7e7e7;
+  color: var(--grey5);
+  border: 1px solid var(--grey3);
+  background-color: var(--grey2);
   padding: 5px 8px 5px 8px;
   cursor: pointer;
   margin-right: 5px;
   margin-left: 5px;
   @include hoverItemAnimation;
   &:hover {
-    background: #B0AFB7;
-    color: #0D0D0D;
+    background: var(--grey3);
+    color: var(--black);
   }
 }

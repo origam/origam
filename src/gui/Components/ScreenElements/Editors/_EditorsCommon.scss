@@ -36,12 +36,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:hover {
     background: var(--white);
-    border-color: var(--blue);
+    border-color: var(--blue1);
   }
 
   &:focus {
     background: var(--white);
-    border-color: var(--blue);
+    border-color: var(--blue1);
   }
 
   &:read-only {
@@ -71,7 +71,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   z-index: 100;
 
   & :global(.red) {
-    color: var(--color36);
+    color: var(--red);
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
   }
 }
@@ -95,6 +95,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:hover {
     transform: scale(1.2, 1.2);
-    color: var(--blue);
+    color: var(--blue1);
   }
 }

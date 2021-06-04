@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .tagInput {
   flex-grow: 1;
-  border: 1px solid var(--color11);
+  border: 1px solid var(--grey3);
   overflow-y:scroll;
 }
 

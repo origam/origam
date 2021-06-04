@@ -53,7 +53,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--white);
-  background-color: var(--color20);
+  background-color: var(--grey1);
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -87,7 +87,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .resultIemRowSelected{
-  background-color: var(--blue);
+  background-color: var(--blue1);
   color:var(--white) !important;
 }
 .resultIemRowSelected div svg{
@@ -97,7 +97,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .resultIemRowHovered {
   cursor: pointer;
-  background-color: var(--color14);
+  background-color: var(--blue4);
   color:var(--black) !important;
 }
 

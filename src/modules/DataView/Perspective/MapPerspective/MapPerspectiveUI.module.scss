@@ -32,10 +32,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     margin-top: -1px;
     border-radius: 5px;
     background-color:var(--white);
-    border: 1px solid var(--color6);
+    border: 1px solid var(--grey25);
     box-shadow: 0 1px 2px rgba(var(--black), 0.65);
     li {
-      border-left: 1px solid var(--color6);
+      border-left: 1px solid var(--grey25);
     }
     li:first-of-type {
       border-left: none;
@@ -45,7 +45,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       border: none;
 
       &:hover {
-        background-color: var(--color15);
+        background-color: var(--grey2);
       }
     }
   }
@@ -79,7 +79,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
       cursor: pointer;
       background: none;
       height: 100%;
-      color: var(--color21);
+      color: var(--grey3);
       transition: color 0.3s linear;
       &:hover {
         color:var(--black);
@@ -112,7 +112,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color33);
+      background-color: var(--grey25);
     }
   }
   :global(.c1) {
@@ -128,7 +128,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border: none;
   cursor: pointer;
   background-color:var(--white);
-  color: var(--color21);
+  color: var(--grey3);
   
   transition: color 0.3s linear;
   &:hover {
@@ -136,6 +136,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 
   &:global(.isActive) {
-    color: var(--blue);
+    color: var(--blue1);
   }
 }
