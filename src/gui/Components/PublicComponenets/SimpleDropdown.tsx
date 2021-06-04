@@ -26,7 +26,7 @@ import {
   CtxDropdownRefBody,
   CtxDropdownRefCtrl
 } from "modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
-import S from "modules/Editors/SimpleDropdown.module.scss";
+import S from "./SimpleDropdown.module.scss";
 import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
 
 @observer
@@ -58,6 +58,7 @@ export class SimpleDropdown<T> extends React.Component<{
         )}
         renderDropdown={() => (
           <DropdownLayoutBody
+            minSideMargin={0}
             render={() => (
               <DropDownBody
                 width={this.props.width}
