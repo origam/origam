@@ -83,7 +83,7 @@ export function DropDownControl(props: {
 
   return (
     <div
-      style={{width: props.width}}
+      style={{width: props.width, height: "19px"}}
       onClick={()=>props.onClick()}
       ref={ref}
       className={CS.control}>
