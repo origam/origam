@@ -291,7 +291,7 @@ function drawCellValue() {
     return;
   }
   if (isLoading) {
-    ctx2d.fillStyle = "#888888";
+    ctx2d.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color23');
     ctx2d.fillText(
       "Loading...",
       CPR() * (currentColumnLeft() + getPaddingLeft()),
@@ -313,14 +313,18 @@ function getBackGroundColor() {
   const backgroundColor = getRowStateRowBgColor(tablePanelView(), recordId());
 
   if (isColumnOrderChangeSource) {
-    return "#eeeeff";
+    return  getComputedStyle(document.documentElement).getPropertyValue('--color4');
   } else if (isRowCursor) {
-    return backgroundColor ? shadeHexColor(backgroundColor, -0.1)! : "#EDF2FF";
+    return backgroundColor
+      ? shadeHexColor(backgroundColor, -0.1)!
+      : getComputedStyle(document.documentElement).getPropertyValue('--color43');
   } else {
     if (backgroundColor) {
       return backgroundColor;
     } else {
-      return rowIndex() % 2 === 1 ? "#f7f6fa" : "#ffffff";
+      return rowIndex() % 2 === 1
+        ? getComputedStyle(document.documentElement).getPropertyValue('--grey1')
+        : getComputedStyle(document.documentElement).getPropertyValue('--white');
     }
   }
 }

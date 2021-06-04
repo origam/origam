@@ -21,18 +21,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @import "src/styles/definitions.scss";
 
 .divider {
-  background: $white;
+  background: var(--white);
   &:global(.isDragging) {
     position: relative;
     z-index: 1000;
-    background: $blue;
+    background: var(--blue);
     @include opacity(0.8);
-    border-color: $blue !important;
+    border-color: var(--blue) !important;
   }
   &:not(:global(.isDragging)):hover {
     :global(.dividerLine) {
-      border-color: $blue !important; 
+      border-color: var(--blue) !important; 
     }
-    background: $white;
+    background: var(--white);
   }
 }

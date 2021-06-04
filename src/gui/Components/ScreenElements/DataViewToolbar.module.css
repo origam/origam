@@ -19,15 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .dataViewToolbar {
   height: 20px;
-  background-color: #8998c5;
-  color: #ffffff;
+  background-color: var(--color29);
+  color: var(--white);
   display: flex;
   flex-direction: row;
-  white-space: nowrap;
+ var(--white)-space: nowrap;
 }
 
 .dataViewToolbar :global(.red) {
-  color: #ff0000;
+  color: var(--color36);
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
     1px 1px 0 #fff;
 }
@@ -43,7 +43,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .loading {
   font-size: 14px;
   padding-right: 10px;
-  color: white;
+  color:var(--white);
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
 }
@@ -64,19 +64,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 100%;
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: var(--white);
 }
 
 .toolbarBtn:global(.active) {
-  background-color: #435ba3;
+  background-color: var(--color7);
 }
 
 .toolbarBtn:global(:hover:not(.disabled)) {
-  background-color: #435ba3;
+  background-color: var(--color7);
 }
 
 .toolbarBtn:global(.disabled) {
-  color: #d6d6d6;
+  color: var(--color24);
 }
 
 .toolbarBtn:global(.disabled):hover {
@@ -89,8 +89,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropDownMenu {
-  background-color: white;
-  border: 1px solid black;
+  background-color:var(--white);
+  border: 1px solidvar(--black);
 
   position: absolute;
   z-index: 2000;
@@ -100,7 +100,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .dropDownMenuItem {
   padding: 0px 10px 0px 5px;
-  color: black;
+  color:var(--black);
   height: 20px;
   display: flex;
   align-items: center;
@@ -117,8 +117,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropDownMenuItem:not(:global(.disabled)):hover {
-  background-color: #8998c5;
-  color: white;
+  background-color: var(--color29);
+  color:var(--white);
 }
 
 .dropDownItemIcon {
@@ -134,7 +134,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .panelViewAction {
-  color: white;
+  color:var(--white);
   background-color: darkred;
   height: 100%;
   font-weight: bold;
@@ -146,7 +146,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .panelViewAction:global(.disabled) {
-  /*color: #707ea8;
+  /*color: var(--color13);
   background-color: rgba(139, 0, 0, 0.6);
   cursor: not-allowed;*/
   display: none;

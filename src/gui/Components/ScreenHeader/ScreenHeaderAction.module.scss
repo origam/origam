@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @import "../../../styles/common_styles";
 
 .root {
-  color: #77767e;
+  color: var(--grey4);
   padding: 1.2em 0.9em;
   position: relative;
   flex-shrink: 0;
@@ -30,24 +30,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: pointer;
   &:hover {
     svg {
-      stroke: #0d0d0d;
+      stroke: var(--black);
       stroke-width: 1.5;
     }
   }
   &:global(.isGreenOnHover):not(:global(.isActive)):hover svg {
-    stroke: #69d07f;
+    stroke: var(--green);
   }
   &:global(.isOrangeOnHover):not(:global(.isActive)):hover svg {
-    stroke: #fe8933;
+    stroke: var(--orange);
   }
   &:global(.isActive) svg {
-    stroke: #4C84FF;
+    stroke: var(--blue);
     stroke-width: 2;
   }
   svg {
     height: 1.6667em;
     overflow: inherit;
-    stroke: #77767e;
+    stroke: var(--grey4);
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 1;

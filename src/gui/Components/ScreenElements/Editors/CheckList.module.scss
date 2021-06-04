@@ -23,10 +23,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   width: 100%;
   height: 100%;
-  background: #f9f9fc;
-  border: 1px solid #b0afb7;
+  background: var(--color19);
+  border: 1px solid var(--grey3);
   box-sizing: border-box;
-  color: #0d0d0d;
+  color: var(--black);
   padding: 0 3px;
   border-radius: 2px;
   transition: all 300ms linear;
@@ -40,21 +40,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow-y: hidden;
 
   &:global(.isReadonly) {
-    background-color: #e9e8f0;
+    background-color: var(--grey2);
     cursor: not-allowed;
-    border: 1px solid #e9e8f0;
+    border: 1px solid var(--grey2);
   }
 }
 
 .focusedLabel {
-  background-color: #4c84ff;
-  color: white;
+  background-color: var(--blue);
+  color:var(--white);
 }
 
 :global(.isReadonly) {
   .focusedLabel {
-    background-color: #d8d8d8;
-    color: rgb(17, 17, 17);
+    background-color: var(--color42);
+    color: var(--color253);
   }
 }
 
@@ -74,7 +74,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   @include hoverItemAnimation;
 
   &:hover {
-    color: #4c84ff;
+    color: var(--blue);
   }
   :global(.checkbox) {
     padding: 5px;
@@ -86,7 +86,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   :global(.content) {
     flex-grow: 1;
     overflow: hidden;
-    white-space: nowrap;
+   white-space: nowrap;
   }
 }
 
@@ -94,12 +94,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   .item {
     cursor: not-allowed; 
     &:hover {
-      background-color: #e9e8f0;
-      color: black;
+      background-color: var(--grey2);
+      color:var(--black);
     }
   }
   input {
-    background-color: #e9e8f0;
+    background-color: var(--grey2);
     cursor: not-allowed !important; 
     opacity: 0.5;
   }

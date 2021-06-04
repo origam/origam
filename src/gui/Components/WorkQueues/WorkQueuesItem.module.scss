@@ -34,21 +34,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   color: $textColorNoHover;
 
-  background-color: #f7f6fa;
+  background-color: var(--grey1);
 
   @include hoverItemAnimation;
 
   &:global(.isOpenedScreen) {
-    background-color: #ffffff;
+    background-color: var(--white);
   }
 
   &:global(.isActiveScreen) {
-    background-color: #ffffff;
-    color: #4c84ff;
+    background-color: var(--white);
+    color: var(--blue);
     font-weight: 700;
 
     svg:global(.icon) {
-      stroke: #4c84ff;
+      stroke: var(--blue);
       stroke-width: 2;
     }
   }
@@ -60,7 +60,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:global(.isEmphasized) {
     font-weight: 700;
     svg:global(.icon) {
-      stroke: #0d0d0d;
+      stroke: var(--black);
       stroke-width: 1.5;
     }
   }
@@ -68,7 +68,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:not(:global(.isActive)):global(.isEmphasized):hover {
     font-weight: 1000;
     svg:global(.icon) {
-      stroke: #0d0d0d;
+      stroke: var(--black);
       stroke-width: 2.5;
     }
   }
@@ -76,7 +76,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:not(:global(.isActive)):hover {
     color: $textColorHover;
     svg:global(.icon) {
-      stroke: #0d0d0d;
+      stroke: var(--black);
       stroke-width: 1.5;
     }
   }

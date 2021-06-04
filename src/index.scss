@@ -21,8 +21,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #ffffff;
-  color: #0d0d0d;
+  background-color: var(--white);
+  color: var(--black);
   font-family: "IBM Plex Sans", sans-serif;
   font-size: 12px;
   font-weight: 500;
@@ -101,10 +101,10 @@ body,
 }
 
 .tippy-tooltip.tippy-tooltip--regular, .tippy-popper.tippy-tooltip.light-theme[data-animatefill] {
-  background-color: white !important;
+  background-color:var(--white) !important;
 }
 
 .leaflet-control-container,
 .leaflet-draw-actions a {
-  color: black !important;
+  color:var(--black) !important;
 }

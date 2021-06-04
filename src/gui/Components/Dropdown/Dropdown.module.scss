@@ -23,11 +23,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color:var(--white);
   z-index: 2000;
   @include popoverShadow;
 
-  box-shadow: 0 0.5em 1.5em 0 rgba($black, 0.25);
-  border: 1px solid $grey3;
+  box-shadow: 0 0.5em 1.5em 0 rgba(var(--black), 0.25);
+  border: 1px solid var(--grey3);
   @include border-radius(4px);
 }

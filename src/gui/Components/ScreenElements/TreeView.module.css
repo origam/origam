@@ -33,7 +33,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .treeView{
-    background: #ffffff;
+    background: var(--white);
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -58,5 +58,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .nodeSelected{
-    background: #ebf3ff;
+    background: var(--color38);
 }

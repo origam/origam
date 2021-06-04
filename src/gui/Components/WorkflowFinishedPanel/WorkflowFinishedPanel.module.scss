@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @import "../../../styles/common_styles";
 
 .root {
-  background: white;
+  background:var(--white);
   padding: 20px;
   display: flex;
   flex-direction: row;

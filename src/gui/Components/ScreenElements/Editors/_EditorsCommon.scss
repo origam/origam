@@ -29,26 +29,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
   border-radius: 2px;
   @include hoverItemAnimation;
-  background: $grey1;
-  border: 1px solid $grey3;
-  color: $black;
+  background: var(--grey1);
+  border: 1px solid var(--grey3);
+  color: var(--black);
   padding: 0.25em 0.34em;
 
   &:hover {
-    background: #ffffff;
-    border-color: #4c84ff;
+    background: var(--white);
+    border-color: var(--blue);
   }
 
   &:focus {
-    background: #ffffff;
-    border-color: #4c84ff;
+    background: var(--white);
+    border-color: var(--blue);
   }
 
   &:read-only {
     cursor: not-allowed;
-    background: $grey2;
-    border: 1px solid $grey2;
-    color: $grey5;
+    background: var(--grey2);
+    border: 1px solid var(--grey2);
+    color: var(--grey5);
   }
 
   &:global(.isRightAligned) {
@@ -71,7 +71,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   z-index: 100;
 
   & :global(.red) {
-    color: #ff0000;
+    color: var(--color36);
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
   }
 }
@@ -86,7 +86,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background-color: transparent;
   cursor: pointer;
   @include hoverItemAnimation;
-  color: $black;
+  color: var(--black);
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -95,6 +95,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:hover {
     transform: scale(1.2, 1.2);
-    color: $blue;
+    color: var(--blue);
   }
 }

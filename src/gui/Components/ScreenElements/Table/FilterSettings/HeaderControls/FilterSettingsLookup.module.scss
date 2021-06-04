@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .droppedPanel {
   @include popoverShadow;
-  box-shadow: 0 0.5em 1.5em 0 rgba($black, 0.25);
-  border: 1px solid $grey3;
+  box-shadow: 0 0.5em 1.5em 0 rgba(var(--black), 0.25);
+  border: 1px solid var(--grey3);
   @include border-radius(4px);
 }
 
@@ -32,31 +32,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  white-space: nowrap;
+ white-space: nowrap;
   @include hoverItemAnimation;
-  background: $white !important;
-  color: $blue;
+  background: var(--white) !important;
+  color: var(--blue);
   padding: 0 0.25em;
   &:hover {
     font-weight: 400;
-    background: $blue !important;
-    color: $white;
+    background: var(--blue) !important;
+    color: var(--white);
   }
 }
 
 .optionGridCell:global(.a) {
-  background-color: white;
+  background-color:var(--white);
 }
 
 .optionGridCell:global(.b) {
-  background-color: #F7F6FA;
+  background-color: var(--grey1);
 }
 
 .noItemsFound {
   font-style: italic;
-  background-color: white;
+  background-color:var(--white);
   color: grey;
-  white-space: nowrap;
+ white-space: nowrap;
   padding: 5px;
 }
 

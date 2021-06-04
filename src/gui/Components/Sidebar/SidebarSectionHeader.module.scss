@@ -23,7 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 50px;
   width: 100%;
   flex-shrink: 0;
-  color: #77767e;
+  color: var(--grey4);
   cursor: pointer;
   text-decoration: none;
   font-style: normal;
@@ -34,23 +34,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: relative;
   @include hoverItemAnimation;
   &:global(.isActive) {
-    color: #4c84ff;
+    color: var(--blue);
     font-weight: 700;
     svg:global(.icon) {
-      stroke: #4c84ff;
+      stroke: var(--blue);
       stroke-width: 2;
     }
   }
   &:not(:global(.isActive)):hover {
-    color: #0d0d0d;
+    color: var(--black);
     svg:global(.icon) {
-      stroke: #0d0d0d;
+      stroke: var(--black);
       stroke-width: 1.5;
     }
   }
   svg:global(.icon) {
     @include hoverItemAnimation;
-    stroke: #77767e;
+    stroke: var(--grey4);
   }
 }
 

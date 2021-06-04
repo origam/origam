@@ -29,33 +29,33 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: row;
     align-items: center;
-    //border-top: 1px solid #ebeaee;
+    //border-top: 1px solid var(--color9);
     overflow: hidden;
-    white-space: nowrap;
+   white-space: nowrap;
     &:global(.ord1) {
-      background-color: #f7f6fa;
+      background-color: var(--grey1);
     }
     &:global(.ord2) {
-      background-color: #ffffff;
+      background-color: var(--white);
     }
     &:global(.header) {
-      background-color: #f7f6fa;
+      background-color: var(--grey1);
       //justify-content: center;
       font-weight: bold;
     }
     &:global(.withCursor) {
-      background-color: $blue;
-      color: white !important;
+      background-color: var(--blue);
+      color:var(--white) !important;
     }
     &:global(.selected) {
       font-weight: bold;
-      color: $blue;
+      color: var(--blue);
     }
   }
 
   :global(.isHoveredRow) :global(.cell) {
-    background-color: #acc6ff;
-    color: black !important;
+    background-color: var(--color14);
+    color:var(--black) !important;
   }
 
   :global(.resizeHandle) {
@@ -64,13 +64,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     right: 0;
     height: 100%;
     width: 2px;
-    background-color: #bbbbbb;
+    background-color: var(--color3);
   }
 }
 
 .input {
   &:global(.isLink) {
-    color: #4c84ff !important;
+    color: var(--blue) !important;
     cursor: pointer !important;
   }
 }

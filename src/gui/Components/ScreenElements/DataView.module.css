@@ -38,8 +38,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .dataViewLoadingLabel {
   padding: 20px;
-  background-color: #8998c5;
-  color: white;
+  background-color: var(--color29);
+  color:var(--white);
   text-transform: uppercase;
 }
 
