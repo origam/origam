@@ -413,8 +413,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
     try {
       this.initialSelectedRowId = initUIResult.currentRecordId;
-      this.initializeFormLevelPlugins(initUIResult);
       yield* this.applyInitUIResult({ initUIResult });
+      this.initializeFormLevelPlugins(initUIResult);
       if (!this.eagerLoading) {
         yield* this.clearTotalCounts();
         yield* this.loadData({ keepCurrentData: true });
@@ -490,7 +490,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   private initializeFormLevelPlugins(initUIResult: any) {
-    find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin")
+    let formLevelPlugins = find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin");
+    if(formLevelPlugins.length > 0){
+      const formScreen = getFormScreen(this);
+      for (let dataView of formScreen.dataViews) {
+        dataView.clear()
+      }
+    }
+    formLevelPlugins
       .map(node => pluginLibrary.get(node.attributes.Name))
       .forEach(plugin => {
         if (!isIFormPlugin(plugin)) {
