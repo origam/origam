@@ -4,14 +4,14 @@
 
 To build the app you need:
 
-- nodejs 11.12.0 (build process will be very probably successful on most of the more recent versions)
+- nodejs 14.*
 - yarn (any recent version should be fine)
 
 ### How to build
 
 ```
-git clone https://bitbucket.org/origamsource/origam-html5.git
-cd origam-html5
+git clone https://bitbucket.org/origam/origam-html.git
+cd origam-html
 yarn
 yarn build
 ```
@@ -27,8 +27,8 @@ chrome://flags/#allow-insecure-localhost
 Then in the command line
 
 ```
-git clone https://bitbucket.org/origamsource/origam-html5.git
-cd origam-html5
+git clone https://bitbucket.org/origam/origam-html.git
+cd origam-html
 set HTTPS=true
 yarn start
 ```
