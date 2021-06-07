@@ -97,7 +97,7 @@ export class FilterPlugin implements IFormPlugin {
 
   async setTimeunit(timeUnit: IOption<string>){
     this.selectedTimeUnit = timeUnit;
-    this.addTime({start: moment()});
+    this.addTime({start: this.dateFrom});
     await this.refresh();
   }
 }
