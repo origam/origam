@@ -117,6 +117,7 @@ namespace Origam.Workflow
 		{
 			if (e.Engine.WorkflowUniqueId.Equals(workflowUniqueId))
 			{
+				UnsubscribeEvents();
 				AsyncCallFinished?.Invoke(null, new AsyncReturnValues{Result = e.Engine.ReturnValue});
 			}
 		}
