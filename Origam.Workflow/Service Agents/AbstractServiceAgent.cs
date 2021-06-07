@@ -69,7 +69,7 @@ namespace Origam.Workflow
             return data;
         }
 
-		internal T TryGetParameter<T>(string parameterName)
+		public T TryGetParameter<T>(string parameterName)
 		{
 			if (Parameters.Contains(parameterName))
 			{
@@ -82,7 +82,7 @@ namespace Origam.Workflow
 			return default(T);
 		}
 
-		internal T GetParameter<T>(string parameterName)
+		public T GetParameter<T>(string parameterName)
         {
             if (!Parameters.Contains(parameterName))
             {
