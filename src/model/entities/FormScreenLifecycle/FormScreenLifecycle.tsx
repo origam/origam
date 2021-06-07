@@ -87,6 +87,7 @@ import {getRowStates} from "../../selectors/RowState/getRowStates";
 import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisible";
 import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
 import {IFormPlugin, isIFormPlugin} from "../../../plugins/types/IFormPlugin";
+import {ISectionPlugin, isISectionPlugin} from "../../../plugins/types/ISectionPlugin";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -490,20 +491,30 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   private initializeFormLevelPlugins(initUIResult: any) {
     find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin")
-      .map(node => node.attributes.Name)
-      .forEach(formLevelPluginName => {
-        const plugin = pluginLibrary.get(formLevelPluginName);
-        if (isIFormPlugin(plugin)) {
-          const formPlugin = plugin as IFormPlugin;
-          formPlugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
-            {ctx: this, generator: this.refreshSession()}
-          );
-          formPlugin.setFormParameters = (parameters: { [key: string]: string }) =>
-            Object.keys(parameters)
-              .forEach(key => this.parameters[key] = parameters[key]);
-          formPlugin.initialize();
+      .map(node => pluginLibrary.get(node.attributes.Name))
+      .forEach(plugin => {
+        if (!isIFormPlugin(plugin)) {
+          throw new Error(`Plugin ${plugin.name} is not FormLevelPlugin`)
         }
+        const formPlugin = plugin as IFormPlugin;
+        formPlugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
+          {ctx: this, generator: this.refreshSession()}
+        );
+        formPlugin.setFormParameters = (parameters: { [key: string]: string }) =>
+          Object.keys(parameters)
+            .forEach(key => this.parameters[key] = parameters[key]);
+        formPlugin.initialize();
       })
+
+    find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "SectionLevelPlugin")
+      .map(node => pluginLibrary.get(node.attributes.Name))
+      .forEach(plugin => {
+        if (!isISectionPlugin(plugin)) {
+          throw new Error(`Plugin ${plugin.name} is not SectionLevelPlugin`)
+        }
+        const sectionPlugin = plugin as ISectionPlugin;
+        sectionPlugin.getFormParameters = () => JSON.parse(JSON.stringify(this.parameters));
+      });
   }
 
   sortAndFilterReaction(args: { dataView: IDataView; updateTotalRowCount: boolean }) {
