@@ -26,6 +26,13 @@ export const localizations = [
     }
   },
   {
+    locale: "cs-CZ",
+    translations: {
+      empty: "nic",
+      recordSummary: "{userCount} { userCount, plural,one {uživatel změnil} few {uživatelé změnili} other {uživatelů změnilo}} {recordCount} { recordCount, plural,one {záznam} few {záznamy} other {záznamů}}"
+    }
+  },
+  {
     locale: "en-US",
     translations: {
       empty: "leer",

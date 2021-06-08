@@ -29,6 +29,16 @@ export const localizations = [
     }
   },
   {
+    locale: "cs-CZ",
+    translations: {
+      prev: "Předchozí",
+      next: "Další",
+      month: "Měsíc",
+      day: "Den",
+      hour: "Hodina",
+    }
+  },
+  {
     locale: "en-US",
     translations: {
       prev: "Prev",
