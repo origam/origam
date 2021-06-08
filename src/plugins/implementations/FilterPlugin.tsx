@@ -9,6 +9,8 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import {IOption, SimpleDropdown} from "../../gui/Components/PublicComponenets/SimpleDropdown";
 import {Button} from "../../gui/Components/PublicComponenets/Button";
+import {Localizer} from "../tools/Localizer";
+import {localizations} from "./FilterPluginLocalization";
 
 export class FilterPlugin implements IFormPlugin {
   $type_IFormPlugin: 1 = 1;
@@ -44,7 +46,12 @@ export class FilterPlugin implements IFormPlugin {
   }
 
   getComponent(data: IPluginData): JSX.Element {
-    return <FilterComponent filterPlugin={this}/>;
+    let localizer = new Localizer(localizations, "en-US");
+    for (let timeUnit of this.timeUnits) {
+      timeUnit.label = localizer.translate(timeUnit.value)
+    }
+    return <FilterComponent filterPlugin={this}
+                            localizer={localizer}/>;
   }
 
   addTime(args:{start: Moment}){
@@ -103,8 +110,13 @@ export class FilterPlugin implements IFormPlugin {
 }
 
 @observer
-class FilterComponent extends React.Component<{filterPlugin: FilterPlugin}> {
+class FilterComponent extends React.Component<{
+  filterPlugin: FilterPlugin,
+  localizer: Localizer
+}> {
+
   plugin = this.props.filterPlugin;
+  translate = (key: string, parameters?: {[key: string]: any}) => this.props.localizer.translate(key, parameters);
 
   render() {
     return (
@@ -122,12 +134,11 @@ class FilterComponent extends React.Component<{filterPlugin: FilterPlugin}> {
           <div className={S.buttonRow}>
             <Button
               onClick={() => this.plugin.previousIntervalClick()}
-              label={"Prev"}/>
+              label={this.translate("prev")}/>
             <Button
               onClick={() => this.plugin.nextIntervalClick()}
-              label={"Next"}/>
+              label={this.translate("next")}/>
           </div>
-
         </div>
       </div>
     );

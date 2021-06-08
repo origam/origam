@@ -8,13 +8,18 @@ import {observable} from "mobx";
 import moment from "moment";
 import {IPluginTableRow} from "../types/IPluginRow";
 import {IPluginDataView} from "../types/IPluginDataView";
+import {Localizer} from "../tools/Localizer";
+import {localizations} from "./AuditPluginLocalization";
 
 export class AuditPlugin implements ISectionPlugin{
   $type_ISectionPlugin: 1 = 1;
   name = "AuditPlugin";
-
+  
   getComponent(data: IPluginData): JSX.Element {
-    return <AuditComponent pluginData={data} getFormParameters={this.getFormParameters}/>;
+    return <AuditComponent
+      pluginData={data}
+      getFormParameters={this.getFormParameters}
+      localizer={new Localizer(localizations, "en-US")}/>;
   }
 
   @observable
@@ -25,8 +30,10 @@ export class AuditPlugin implements ISectionPlugin{
 class AuditComponent extends React.Component<{
   pluginData: IPluginData,
   getFormParameters: (() => { [parameter: string]: string }) | undefined;
+  localizer: Localizer
 }> {
 
+  translate = (key: string, parameters?: {[key: string]: any}) => this.props.localizer.translate(key, parameters);
   dataView = this.props.pluginData.dataView;
   propertiesToRender: IPluginProperty[] = [];
 
@@ -69,17 +76,13 @@ class AuditComponent extends React.Component<{
   render(){
     const groupContainer = this.getGroupContainer();
     if(this.dataView.tableRows.length === 0 || !groupContainer){
-      return <div>Empty</div>;
+      return <div>{this.translate("empty")}</div>;
     }
-    const numberOfUsers = new Set(
-      this.dataView.tableRows
-        .map(row => this.dataView.getCellText(row, "RecordCreatedBy"))
-    ).size
 
     return(
       <div>
         <div className={S.summary}>
-          <b>{this.dataView.tableRows.length}</b>{" records changed by "}<b>{numberOfUsers}</b>{" user" + (numberOfUsers === 1 ? "" : "s")}
+          {this.renderSummary()}
         </div>
         {Array.from(groupContainer.groups.keys())
           .sort((a, b) => a-b)
@@ -102,6 +105,19 @@ class AuditComponent extends React.Component<{
             .map(row => <div className={S.row}>{this.renderRow(row as any[])}</div>)}
         </div>
       </div>
+    );
+  }
+
+  private renderSummary() {
+    const userCount = new Set(
+      this.dataView.tableRows
+        .map(row => this.dataView.getCellText(row, "RecordCreatedBy"))
+    ).size
+
+    return (
+      <>{this.translate(
+        "recordSummary",
+        {recordCount: this.dataView.tableRows.length, userCount: userCount})}</>
     );
   }
 }
