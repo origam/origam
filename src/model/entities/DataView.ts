@@ -85,7 +85,6 @@ import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDa
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
 import {
-  runGeneratorInFlowWithHandler,
   runInFlowWithHandler,
 } from "../../utils/runInFlowWithHandler";
 import { IAggregation } from "./types/IAggregation";
@@ -102,8 +101,6 @@ export class DataView implements IDataView {
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
-    //this.showSelectionCheckboxes = true;
-    //this.showSelectionCheckboxes = false;
     this.properties.forEach((o) => (o.parent = this));
     this.actions.forEach((o) => (o.parent = this));
     this.defaultActions = this.actions.filter((action) => action.isDefault);

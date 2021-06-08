@@ -38,7 +38,7 @@ export class Localizer {
       : new MessageFormat(this.locale);
   }
 
-  getLocalization(locale: string){
+  private getLocalization(locale: string){
     let localization = this.localizations.find(localization => localization.locale === locale);
     if(!localization){
       localization = this.localizations.find(localization => localization.locale === locale.split("-")[0]);
@@ -49,7 +49,7 @@ export class Localizer {
     return localization
   }
 
-  translate(key: string, parameters?: {[key: string]: any}) {
+  public translate(key: string, parameters?: {[key: string]: any}) {
     let translation = this.activeLocalization.translations[key]
       ?? this.defaultLocalization.translations[key];
     if(!translation){

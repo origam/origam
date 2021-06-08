@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EmbeddedWebpage } from "gui/Components/EmbeddedWebpage/EmbeddedWebpage";
 import { Splitter } from "gui/Components/Splitter/Splitter";
 import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedView";
 import { MobXProviderContext, observer } from "mobx-react";

@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import {getDataView} from "../../model/selectors/DataView/getDataView";
 import {createPluginData} from "./PluginData";
 import {plugins} from "../implementations/registraction";
-import React from "react";
 import {IPlugin} from "../types/IPlugin";
 
 export class PluginLibrary {
