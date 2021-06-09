@@ -60,7 +60,7 @@ export const DialogScreen: React.FC<{
               /*!props.openedScreen.content.isLoading
                 ? props.openedScreen.content.formScreen!.title
                 : */ props
-                .openedScreen.title
+                .openedScreen.tabTitle
             }
             titleIsWorking={
               props.openedScreen.content.isLoading ||
