@@ -37,7 +37,7 @@ export function questionSaveDataAfterRecordChange(ctx: any) {
       const closeDialog = getDialogStack(ctx).pushDialog(
         "",
         <ChangeMasterRecordDialog
-          screenTitle={getOpenedScreen(ctx).title}
+          screenTitle={getOpenedScreen(ctx).tabTitle}
           onSaveClick={() => {
             closeDialog();
             resolve(IQuestionChangeRecordAnswer.Yes); // eslint-disable-line @typescript-eslint/no-use-before-define
