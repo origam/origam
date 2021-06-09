@@ -174,7 +174,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const closeDialog = getDialogStack(this).pushDialog(
           "",
           <YesNoQuestion
-            screenTitle={getOpenedScreen(this).title}
+            screenTitle={getOpenedScreen(this).tabTitle}
             message={question}
             onYesClick={() => {
               closeDialog();
@@ -1221,7 +1221,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const closeDialog = getDialogStack(this).pushDialog(
           "",
           <QuestionSaveData
-            screenTitle={getOpenedScreen(this).title}
+            screenTitle={getOpenedScreen(this).tabTitle}
             onSaveClick={() => {
               closeDialog();
               resolve(IQuestionSaveDataAnswer.Save);
@@ -1246,7 +1246,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const closeDialog = getDialogStack(this).pushDialog(
           "",
           <QuestionDeleteData
-            screenTitle={getOpenedScreen(this).title}
+            screenTitle={getOpenedScreen(this).tabTitle}
             onNoClick={() => {
               closeDialog();
               resolve(IQuestionDeleteDataAnswer.No);

@@ -36,12 +36,14 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
     public menuItemId: string,
     public order: number
   ) {
-    this.title = title;
+    this.tabTitle = title;
+    this.formTitle = title;
   }
 
   reloader: IReloader | null = null;
   @observable stackPosition: number = 0;
-  @observable title = "";
+  @observable tabTitle = "";
+  @observable formTitle = "";
   @observable isActive = false;
   isDialog = false;
   isClosed = false;
@@ -54,7 +56,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   setContent(screen: IFormScreenEnvelope): void {}
 
   setTitle(title: string): void {
-    this.title = title;
+    this.tabTitle = title;
   }
 
   setReloader(reloader: IReloader | null): void {

@@ -53,15 +53,19 @@ export class OpenedScreen implements IOpenedScreen {
   @observable content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
 
-  get title(){
+  get tabTitle(){
     return this.content.formScreen?.dynamicTitle ?? this._title;
+  }
+
+  get formTitle(){
+    return this.content.formScreen?.dynamicTitle ?? this.content.formScreen?.title ?? "";
   }
 
   get hasDynamicTitle(){
     return !!this.content.formScreen?.dynamicTitle
   }
 
-  set title(value: string){
+  set tabTitle(value: string){
     this._title = value;
   }
 

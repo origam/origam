@@ -39,7 +39,7 @@ export function *createOpenedScreen(
     menuItemId,
     menuItemType,
     order,
-    title,
+    tabTitle: title,
     content,
     dialogInfo,
     lazyLoading,
