@@ -13,7 +13,7 @@ export interface IOpenedScreenData {
   lazyLoading: boolean;
   dialogInfo?: IDialogInfo;
   order: number;
-  title: string;
+  tabTitle: string;
   content: IFormScreenEnvelope;
   parameters: { [key: string]: any };
   isSleeping?: boolean;
@@ -29,6 +29,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   isClosed: boolean;
   stackPosition: number;
   isBeingClosed: boolean;
+  formTitle: string;
 
   setActive(state: boolean): void;
   setContent(screen: IFormScreenEnvelope): void;

@@ -436,7 +436,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const initUIResult = yield api.initUI({
       Type: screen.menuItemType,
-      Caption: screen.title,
+      Caption: screen.tabTitle,
       ObjectId: screen.menuItemId,
       FormSessionId: screen.content!.preloadedSessionId,
       IsNewSession: isNewSession,
