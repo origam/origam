@@ -28,6 +28,7 @@ namespace Origam.Services
 	public interface ISchemaService : IWorkbenchService
 	{
 		ISchemaItemProvider GetProvider(Type type);
+		T GetProvider<T>() where T : ISchemaItemProvider;
 		Guid ActiveSchemaExtensionId { get; }
         Guid StorageSchemaExtensionId { get; set; }
         Package ActiveExtension { get; }
