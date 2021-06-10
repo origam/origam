@@ -982,29 +982,30 @@ namespace Origam.Gui.Designer
 		}
 
 
-		private ControlItem GetControlbyType(string type)
+		private ControlItem GetControlbyType(Type type)
 		{
 			ControlItem con=null;
 			if(_controls==null)
 				_controls=_schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
 
-			foreach(ISchemaItem item in _controls.ChildItems)
+			foreach(ControlItem item in _controls.ChildItems)
 			{
 				ModelToolboxItem tbi = _toolbox.SelectedTool as ModelToolboxItem;
 				if(tbi != null && tbi.IsComplexType && tbi.PanelControlSet != null)
 				{
 					PanelControlSet compare = tbi.PanelControlSet;
-					if (((ControlItem)item).IsComplexType && ((ControlItem)item).PanelControlSet.PrimaryKey.Equals(compare.PrimaryKey))
+					if (item.IsComplexType && item.PanelControlSet.PrimaryKey.Equals(compare.PrimaryKey))
 					{
-						con=((ControlItem)item);
+						con = item;
 						break;
 					}
 				}
 				else
 				{
-					if (((ControlItem)item).ControlType==type)
+					if (item.ControlType == type.FullName || 
+					    item.ControlType == DynamicTypeFactory.GetOriginalType(type).FullName )
 					{
-						con=((ControlItem)item);
+						con = item;
 						break;
 					}
 				}
@@ -1390,7 +1391,7 @@ namespace Origam.Gui.Designer
 
 			ControlSetItem creator=null;
 
-			ControlItem refControl=	GetControlbyType(control.GetType().ToString());
+			ControlItem refControl = GetControlbyType(control.GetType());
 			if(refControl!=null)
 			{
 				Control controlContainer=null;
@@ -1738,7 +1739,7 @@ namespace Origam.Gui.Designer
 
         private void SetControlItemRef(Type type)
         {
-            _panelControlItemRef = GetControlbyType(type.ToString());
+            _panelControlItemRef = GetControlbyType(type);
             if (_panelControlItemRef == null)
                 throw new NullReferenceException("Type " + type + " has no reference in Meta model database");
         }

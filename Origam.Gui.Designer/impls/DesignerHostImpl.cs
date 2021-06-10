@@ -27,15 +27,18 @@ using System.ComponentModel.Design;
 using System.ComponentModel.Design.Serialization;
 using System.Drawing;
 using System.Drawing.Design;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.Windows.Forms.VisualStyles;
 using Origam.Schema.GuiModel;
 using Origam.Gui.Win;
 using Origam.DA;
+using Origam.Services;
 using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.PropertyGrid;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Designer
 {
@@ -174,15 +177,7 @@ namespace Origam.Gui.Designer
 
 		private IComponent TryCreateComponent(Type componentClass, string name)
 		{
-			IComponent newComponent=null;
-			if(this.IsComplexControl)
-			{
-                newComponent = Generator.LoadControl(FormTools.GetItemFromControlSet(this.PanelSet)) as IComponent;
-			}
-			else 
-			{
-				newComponent = Activator.CreateInstance(componentClass)as IComponent;
-			}
+			IComponent newComponent = CreateComponentInstance(componentClass);
 			Add(newComponent,name);
 			if(this.IsFieldControl && this.DataSet !=null && newComponent is IAsControl)
 			{
@@ -216,6 +211,53 @@ namespace Origam.Gui.Designer
 			this.PanelSet =null;
 			this.IsComplexControl =false;
 			return newComponent;
+		}
+
+		private IComponent CreateComponentInstance(Type type)
+		{
+			if (IsComplexControl)
+			{
+				return Generator.LoadControl(FormTools.GetItemFromControlSet(PanelSet));
+			}
+			
+			ControlItem refControl = ServiceManager.Services
+				.GetService<ISchemaService>()
+				.GetProvider<UserControlSchemaItemProvider>()
+				.ChildItems.ToGeneric()
+				.Cast<ControlItem>()
+				.FirstOrDefault(item =>
+					item.ControlType == type.FullName);
+
+			var missingPropertyItems = refControl?
+				.ChildItemsByType(ControlPropertyItem.CategoryConst)
+				.Cast<ControlPropertyItem>()
+				.Where(propItem => type.GetProperty(propItem.Name) == null)
+				.ToList();
+			
+			if (missingPropertyItems == null || missingPropertyItems.Count == 0)
+			{
+				return Activator.CreateInstance(type) as IComponent;
+			}
+
+			DynamicTypeFactory dynamicTypeFactory = new DynamicTypeFactory();
+			Type newType =
+				dynamicTypeFactory.CreateNewTypeWithDynamicProperties(
+					type,
+					missingPropertyItems.Select(propItem =>
+						new DynamicProperty
+						{
+							Name = propItem.Name,
+							SystemType = propItem.SystemType,
+							Category = "Data"
+						})
+				);
+			IComponent component = Activator.CreateInstance(newType) as IComponent;
+			if (component is Control control)
+			{
+				control.Name = type.Name;
+				control.Text = type.Name;
+			}
+			return component;
 		}
 
 		IComponent System.ComponentModel.Design.IDesignerHost.CreateComponent(Type componentClass)
@@ -578,7 +620,8 @@ namespace Origam.Gui.Designer
 				{
 					throw new Exception("Failed to get INameCreationService.");
 				}
-				name = nameCreationService.CreateName(this,component.GetType());
+				Type nameType = DynamicTypeFactory.GetOriginalType(component.GetType());
+				name = nameCreationService.CreateName(this, nameType);
 			}
 
 			// if we own the component and the name has changed
@@ -799,6 +842,11 @@ namespace Origam.Gui.Designer
 
 		public void OnComponentChanged(object component, MemberDescriptor member, object oldValue, object newValue)
 		{
+			if (Equals(oldValue, newValue))
+			{
+				return;
+			}
+
 			if (ComponentChanged != null) 
 			{
 				ComponentChangedEventArgs ce = new ComponentChangedEventArgs(component, member, oldValue, newValue);

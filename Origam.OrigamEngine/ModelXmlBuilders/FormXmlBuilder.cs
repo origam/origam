@@ -1225,6 +1225,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                         parentNode.SetAttribute("Title", "UNKNOWN CONTROL:" + control.Name);
                         break;
                 }
+
+                AddDynamicProperties(parentNode, renderData);
             }
             else // complex type = screen section
             {
@@ -1337,7 +1339,15 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return true;
 		}
 
-        private static void RenderActions(IParameterService parameterService, 
+		private static void AddDynamicProperties(XmlElement parentNode, UIElementRenderData renderData)
+		{
+			foreach (var pair in renderData.DynamicProperties)
+			{
+				parentNode.SetAttribute(pair.Key, pair.Value);
+			}
+		}
+
+		private static void RenderActions(IParameterService parameterService, 
             ArrayList validActions, XmlElement actionsElement, Hashtable inputParameters)
         {
             // render action buttons
