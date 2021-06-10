@@ -295,31 +295,12 @@ export class CScreenToolbar extends React.Component<{}> {
       <ScreenToolbar>
         <>
           <ScreenToolbarActionGroup>
-            {/*<ScreenToolbarAction
-                onClick={onSaveSessionClick(formScreen)}
-                icon={
-                  <Icon
-                    src="./icons/save.svg"
-                    className={isDirty ? "isRed isHoverGreen" : ""}
-                  />
-                }
-              />*/}
             <ScreenToolbarAction
               onMouseDown={onReloadWebScreenClick(activeScreen)}
               icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
+              label={T("Refresh", "refresh_tool_tip")}
             />
           </ScreenToolbarActionGroup>
-
-          {/*<ScreenToolbarActionGroup>
-              <ScreenToolbarAction
-                icon={<Icon src="./icons/invoice.svg" />}
-                label="Action 3"
-              />
-              <ScreenToolbarAction
-                icon={<Icon src="./icons/word.svg" />}
-                label="Action 4"
-              />
-            </ScreenToolbarActionGroup>*/}
         </>
         <ScreenToolbarPusher />
         <ScreenToolbarAction
