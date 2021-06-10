@@ -40,11 +40,10 @@ namespace Origam.DA.Service_net2Tests
         [Test]
         public void ShouldSortAttributes()
         {
-
             var doc = new OrigamXmlDocument();
-            string path = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
-            string xml = File.ReadAllText(path);
-            doc.LoadXml(xml);
+            string unsortedXmlPath = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
+            string unsortedXml = File.ReadAllText(unsortedXmlPath);
+            doc.LoadXml(unsortedXml);
 
             XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
             {
@@ -52,30 +51,15 @@ namespace Origam.DA.Service_net2Tests
                 NewLineOnAttributes = true
             };
 
-            string sortedDoc = OrigamDocumentSorter
+            string sortedXml = OrigamDocumentSorter
                 .CopyAndSort(doc)
                 .ToBeautifulString(xmlWriterSettings);
-            File.WriteAllText(Path.Combine(TestFilesDir.FullName, "Sorted.origam"), sortedDoc);
+            
+            string sortedXmlPath = Path.Combine(TestFilesDir.FullName, "Sorted.origam");
+            string expectedXml = File.ReadAllText(sortedXmlPath);
+            Assert.That(sortedXml, Is.EqualTo(expectedXml));
         } 
         
-        [Test]
-        public void ShouldSortAttributesXDocument()
-        {
-            string path = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
-            XDocument xDocument = XDocument.Load(path);
-            
-            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
-            {
-                Indent = true,
-                NewLineOnAttributes = true
-            };
-
-            string beautifulString = OrigamDocumentSorter
-                .CopyAndSort(xDocument)
-                .ToBeautifulString(xmlWriterSettings);
-            File.WriteAllText(Path.Combine(TestFilesDir.FullName, "Sorted.origam"), beautifulString);
-        }
-
         protected override TestContext TestContext => TestContext.CurrentContext;
         protected override string DirName => "OrigamDocumentSorter";
     }

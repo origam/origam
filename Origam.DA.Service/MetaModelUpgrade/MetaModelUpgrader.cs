@@ -106,8 +106,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             else
             {
+                var xmlDocument = new OrigamXmlDocument(xFileData.Document.XDocument);
                 string upgradedXmlString = OrigamDocumentSorter
-                    .CopyAndSort(xFileData.Document.XDocument)
+                    .CopyAndSort(xmlDocument)
                     .ToBeautifulString();
 
                 fileWriter.Write(xFileData.File, upgradedXmlString);

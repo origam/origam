@@ -232,6 +232,9 @@
     <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0_WithChild.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="OrigamDocumentSorter\TestFiles\Sorted.origam">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ScriptContainersTests\TestFiles\BusinessPartner.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

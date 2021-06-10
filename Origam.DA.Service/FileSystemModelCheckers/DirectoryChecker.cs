@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +42,7 @@ namespace Origam.DA.Service
             this.ignoreDirectoryNames = ignoreDirectoryNames;
         }      
 
-        public ModelErrorSection GetErrors()
+        public IEnumerable<ModelErrorSection> GetErrors()
         {
             DirectoryInfo[] packageDirectories = topDirectory.GetDirectories()
                 .Where(dir => !ignoreDirectoryNames.Contains(dir.Name))
@@ -59,12 +60,11 @@ namespace Origam.DA.Service
             errors.AddRange(FindErrorsInPackageSubDirectories(packageSubDirectories));
             errors.AddRange(FindErrorsInGroupDirectories(groupDirectories));
 
-            return new ModelErrorSection
+            yield return new ModelErrorSection
             (
                 caption: "Invalid Contents in Directories",
                 errorMessages: errors
             );
-
         }
 
         private IEnumerable<string> FindErrorsInGroupDirectories(IEnumerable<DirectoryInfo> groupDirectories)

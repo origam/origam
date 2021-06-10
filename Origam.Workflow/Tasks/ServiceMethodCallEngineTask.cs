@@ -77,8 +77,11 @@ namespace Origam.Workflow.Tasks
 
 			if (ServiceAgent is IAsyncAgent)
 			{
-				OnAsyncAgentOnAsyncCallFinished(this, 
-					new AsyncReturnValues {Exception = exception});
+				if(exception != null)
+                {
+					OnAsyncAgentOnAsyncCallFinished(this,
+					new AsyncReturnValues { Exception = exception });
+				}
 			}
 			else
 			{
