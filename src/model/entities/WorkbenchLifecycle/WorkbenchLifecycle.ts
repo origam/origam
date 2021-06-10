@@ -455,7 +455,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
     return yield api.initUI({
       Type: screen.menuItemType,
-      Caption: screen.title,
+      Caption: screen.tabTitle,
       ObjectId: screen.menuItemId,
       FormSessionId: screen.content!.preloadedSessionId,
       IsNewSession: isNewSession,

@@ -99,8 +99,13 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     if(dataView.totalRowCount === undefined){
       return;
     }
-    const rowsInLastChunk = (dataView.totalRowCount! % SCROLL_ROW_CHUNK) + SCROLL_ROW_CHUNK;
-    const lastStartOffset =  dataView.totalRowCount! - rowsInLastChunk;
+    let lastStartOffset
+    if(dataView.totalRowCount > SCROLL_ROW_CHUNK){
+      const rowsInLastChunk = (dataView.totalRowCount! % SCROLL_ROW_CHUNK) + SCROLL_ROW_CHUNK;
+      lastStartOffset =  dataView.totalRowCount! - rowsInLastChunk;
+    }else{
+      lastStartOffset = 0;
+    }
 
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),

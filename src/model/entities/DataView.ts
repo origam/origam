@@ -658,8 +658,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound *loadFirstPage(): any {
-    const loadFirstPage = this.infiniteScrollLoader?.loadFirstPage;
-    if (loadFirstPage) yield* loadFirstPage();
+    if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadFirstPage();
   }
 
   @action.bound selectFirstRow() {

@@ -55,7 +55,7 @@ export class CScreenTabbedViewHandleRow extends React.Component {
 @observer
 class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
   getLabel(item: IOpenedScreen) {
-    const text = item.title;
+    const text = item.tabTitle;
     const order = item.order > 0 && !item.hasDynamicTitle ? `[${item.order}]` : "";
     return [text, order].join(" ");
   }
