@@ -53,5 +53,6 @@ namespace Origam.Gui
         public EntityUIAction Action { get; set; } = null;
 
         public Hashtable Parameters { get; set; } = new Hashtable();
+        public bool IsModalDialog { get; set; }
     }
 }

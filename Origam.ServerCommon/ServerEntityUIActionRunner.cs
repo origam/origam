@@ -271,6 +271,10 @@ namespace Origam.Server
             {
                 resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
             }
+            else if(ewa==null && processData.IsModalDialog)
+            {
+                resultList.Add(new PanelActionResult(ActionResultType.DestroyForm));
+            }
         }
 
         protected virtual void ExecuteSelectionDialogAction(ExecuteActionProcessData processData)
