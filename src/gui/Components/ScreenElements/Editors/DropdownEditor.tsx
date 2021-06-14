@@ -186,7 +186,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         Entity: this.props.Entity,
         SessionFormIdentifier: this.props.SessionFormIdentifier,
         DataStructureEntityId: this.props.DataStructureEntityId, // Data view entity identifier
-        ColumnNames: [this.props.Identifier || "Id", ...this.props.ColumnNames], // Columns to download
+        ColumnNames: [this.props.Identifier || "Id", ...this.props.ColumnNames ?? []], // Columns to download
         Property: this.props.Property!, // Columnn Id
         Id: this.props.RowId!, // Id of the selected row
         LookupId: this.props.LookupId!, // Id of the lookup object
