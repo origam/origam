@@ -41,7 +41,10 @@ export class TablePerspective implements IIId, IPerspectiveContrib {
     yield* this.perspective.deactivate();
     this.isActive = true;
     yield* this.viewConfiguration.anounceActivePerspective(IPanelViewType.Table);
+    this.onTablePerspectiveShown?.();
   }
+
+  onTablePerspectiveShown: (() => void) | undefined;
 
   @bind
   *deactivate() {
