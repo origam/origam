@@ -73,7 +73,19 @@ class OpEditors extends React.Component<{
   onCurrentValueChanged: (currentValue: string) => void;
   currentValue: string;
   onChange: () => void;
+  autoFocus: boolean;
 }> {
+
+  inputRef = (elm: any) => (this.inputTag = elm);
+  inputTag: any;
+
+  componentDidMount() {
+    if(this.props.autoFocus){
+      setTimeout(()=>{
+        this.inputTag?.focus();
+      });
+    }
+  }
 
   render(){
     switch (this.props.setting.type) {
@@ -91,6 +103,7 @@ class OpEditors extends React.Component<{
             value={this.props.currentValue ?? ""}
             onChange={(event: any) => this.props.onCurrentValueChanged(event.target.value)}
             onBlur={this.props.onChange}
+            ref={this.inputRef}
           />
         );
       case "null":
@@ -105,6 +118,7 @@ class OpEditors extends React.Component<{
 @observer
 export class FilterSettingsString extends React.Component<{
   setting?: any;
+  autoFocus: boolean;
 }> {
   
   static get defaultSettings(){
@@ -154,7 +168,8 @@ export class FilterSettingsString extends React.Component<{
           setting={this.props.setting} 
           onChange={this.handleChange}
           currentValue={this.currentValue}
-          onCurrentValueChanged={value => this.onCurrentValueChanged(value)}/>
+          onCurrentValueChanged={value => this.onCurrentValueChanged(value)}
+          autoFocus={this.props.autoFocus}/>
       </>
     );
   }

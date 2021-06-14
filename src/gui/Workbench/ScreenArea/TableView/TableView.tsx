@@ -372,13 +372,13 @@ class HeaderRenderer implements IHeaderRendererData {
           onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
           onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
           onClick={onColumnHeaderClick(this.tablePanelView)}
-          additionalHeaderContent={this.makeAdditionalHeaderContent(header.id, property)}
+          additionalHeaderContent={this.makeAdditionalHeaderContent(header.id, property, args.columnIndex === 0)}
         />
       </Provider>
     );
   }
 
-  makeAdditionalHeaderContent(columnId: string, property: IProperty) {
+  makeAdditionalHeaderContent(columnId: string, property: IProperty, autoFocus: boolean) {
     const filterControlsDisplayed = this.tablePanelView.filterConfiguration
       .isFilterControlsDisplayed;
     if (!filterControlsDisplayed && this.dataView.aggregationData.length === 0) {
@@ -386,7 +386,7 @@ class HeaderRenderer implements IHeaderRendererData {
     }
     const headerContent: JSX.Element[] = [];
     if (filterControlsDisplayed) {
-      headerContent.push(<FilterSettings key={`filter-settings-${columnId}`} />);
+      headerContent.push(<FilterSettings key={`filter-settings-${columnId}`} autoFocus={autoFocus} />);
     }
     if (this.dataView.aggregationData.length !== 0) {
       const aggregation = this.dataView.aggregationData.find((agg) => agg.columnId === columnId);

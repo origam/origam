@@ -33,7 +33,7 @@ import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { getAllLookupIds } from "model/entities/getAllLookupIds";
 import {FilterSettingsTagInput} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsTagInput";
 
-export const FilterSettings: React.FC = observer((props) => {
+export const FilterSettings: React.FC<{autoFocus: boolean}> = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
 
   function getSettings(defaultValue: IFilterSetting) {
@@ -47,13 +47,13 @@ export const FilterSettings: React.FC = observer((props) => {
 
   switch (property.column) {
     case "Text":
-      return <FilterSettingsString setting={getSettings(FilterSettingsString.defaultSettings)} />;
+      return <FilterSettingsString setting={getSettings(FilterSettingsString.defaultSettings)} autoFocus={props.autoFocus}/>;
     case "CheckBox":
       return <FilterSettingsBoolean setting={getSettings(FilterSettingsBoolean.defaultSettings)} />;
     case "Date":
-      return <FilterSettingsDate setting={getSettings(FilterSettingsDate.defaultSettings)} />;
+      return <FilterSettingsDate setting={getSettings(FilterSettingsDate.defaultSettings)} autoFocus={props.autoFocus} />;
     case "Number":
-      return <FilterSettingsNumber setting={getSettings(FilterSettingsNumber.defaultSettings)} />;
+      return <FilterSettingsNumber setting={getSettings(FilterSettingsNumber.defaultSettings)} autoFocus={props.autoFocus}/>;
     case "ComboBox":
       const setting = getSettings(FilterSettingsLookup.defaultSettings);
       setting.lookupId = property.lookupId;
@@ -62,6 +62,7 @@ export const FilterSettings: React.FC = observer((props) => {
           setting={setting}
           property={property}
           lookup={property.lookup!}
+          autoFocus={props.autoFocus}
           getOptions={flow(function* (searchTerm: string) {
             let allLookupIds = yield* getAllLookupIds(property);
             const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allLookupIds);
@@ -83,6 +84,7 @@ export const FilterSettings: React.FC = observer((props) => {
           setting={getSettings(FilterSettingsTagInput.defaultSettings)}
           property={property}
           lookup={property.lookup!}
+          autoFocus={props.autoFocus}
           getOptions={flow(function* (searchTerm: string) {
             let allLookupIds = yield* getAllLookupIds(property);
             const lookupMap: Map<any, any> =

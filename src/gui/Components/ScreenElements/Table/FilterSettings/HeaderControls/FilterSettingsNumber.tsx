@@ -74,7 +74,19 @@ class OpEditors extends React.Component<{
   currentValue2: any;
   onCurrentValue1Changed: ((value1: any) => void);
   onCurrentValue2Changed: ((value2: any) => void);
+  autoFocus: boolean;
 }> {
+
+  inputRef = (elm: any) => (this.inputTag = elm);
+  inputTag: any;
+
+  componentDidMount() {
+    if(this.props.autoFocus){
+      setTimeout(()=>{
+        this.inputTag?.focus();
+      });
+    }
+  }
 
   render(){
     switch (this.props.setting.type) {
@@ -91,6 +103,7 @@ class OpEditors extends React.Component<{
             value={this.props.currentValue1 ?? ""}
             onChange={(event: any) => this.props.onCurrentValue1Changed(event.target.value)}
             onBlur={this.props.onBlur}
+            ref={this.inputRef}
           />
         );
   
@@ -104,6 +117,7 @@ class OpEditors extends React.Component<{
               value={this.props.currentValue1 ?? ""}
               onChange={(event: any) => this.props.onCurrentValue1Changed(event.target.value)}
               onBlur={this.props.onBlur}
+              ref={this.inputRef}
             />
             <input
               type="number"
@@ -125,6 +139,7 @@ class OpEditors extends React.Component<{
 @observer
 export class FilterSettingsNumber extends React.Component<{
   setting?: any;
+  autoFocus: boolean;
 }> {
 
   static get defaultSettings(){
@@ -213,7 +228,8 @@ export class FilterSettingsNumber extends React.Component<{
           currentValue1={this.currentValue1}
           currentValue2={this.currentValue2}
           onCurrentValue1Changed={val1 => this.onCurrentValue1Changed(val1)} 
-          onCurrentValue2Changed={val2 => this.onCurrentValue2Changed(val2)} 
+          onCurrentValue2Changed={val2 => this.onCurrentValue2Changed(val2)}
+          autoFocus={this.props.autoFocus}
           />
       </>
     );

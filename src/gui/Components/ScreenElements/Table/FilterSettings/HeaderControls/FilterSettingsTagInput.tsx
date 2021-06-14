@@ -90,6 +90,7 @@ class OpEditors extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
+  autoFocus: boolean;
 }> {
 
   render() {
@@ -104,6 +105,7 @@ class OpEditors extends React.Component<{
             getOptions={this.props.getOptions}
             values={setting.val1 ?? []}
             setting={setting}
+            autoFocus={this.props.autoFocus}
           />
         );
       case "null":
@@ -120,6 +122,7 @@ export class FilterSettingsTagInput extends React.Component<{
   lookup: ILookup;
   property: IProperty;
   setting: IFilterSetting;
+  autoFocus: boolean;
 }> {
   static get defaultSettings(){
     return new TagInputFilterSetting(OPERATORS[0].type)
@@ -135,6 +138,7 @@ export class FilterSettingsTagInput extends React.Component<{
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
           property={this.props.property}
+          autoFocus={this.props.autoFocus}
         />
       </>
     );
@@ -192,6 +196,7 @@ export function FilterBuildDropdownEditor(props: {
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   values: Array<any>;
   setting: IFilterSetting;
+  autoFocus: boolean;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const workbench = mobxContext.workbench;
@@ -274,6 +279,7 @@ export function FilterBuildDropdownEditor(props: {
             isReadOnly={false}
             isInvalid={false}
             isFocused={false}
+            autoFocus={props.autoFocus}
             refocuser={undefined}
             onClick={undefined}
           />
