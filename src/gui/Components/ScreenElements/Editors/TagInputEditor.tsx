@@ -58,12 +58,14 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       onDoubleClick?(event: any): void;
       onEditorBlur?(event: any): void;
       customInputClass?: string;
+      autoFocus?: boolean;
     }) => {
       const beh = useContext(CtxDropdownEditor).behavior;
       const ref = useContext(CtxDropdownRefCtrl);
       const data = useContext(CtxDropdownEditor).editorData;
 
       const value = Array.isArray(props.value) ? [...props.value] : props.value;
+      let inputElement: any | undefined = undefined;
 
       function getStyle() {
         if (props.customStyle) {
@@ -96,12 +98,16 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const refInput = useMemo(() => {
         return (elm: any) => {
           beh.refInputElement(elm);
+          inputElement = elm;
         };
       }, [beh]);
 
       useEffect(() => {
         if (beh.subscribeToFocusManager && beh.elmInputElement) {
           beh.subscribeToFocusManager(beh.elmInputElement);
+        }
+        if(props.autoFocus){
+          setTimeout(()=> inputElement?.focus());
         }
       }, [beh]);
 

@@ -23,6 +23,7 @@ import {getDataTable} from "model/selectors/DataView/getDataTable";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import {flow} from "mobx";
 import {handleError} from "model/actions/handleError";
+import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
 
 export function onDeleteRowClick(ctx: any) {
   return flow(function* onDeleteRowClick(event: any) {
@@ -38,6 +39,7 @@ export function onDeleteRowClick(ctx: any) {
           dataTable.getRowId(selectedRow),
           dataView
         );
+        getTablePanelView(ctx)?.triggerOnFocusTable();
       }
     } catch (e) {
       yield* handleError(ctx)(e);

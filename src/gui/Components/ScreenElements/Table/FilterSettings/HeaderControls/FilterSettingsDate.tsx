@@ -71,6 +71,7 @@ const OpEditors: React.FC<{
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
   onKeyDown?: (event: any) => void;
+  autoFocus: boolean;
 }> = observer((props) => {
   const { setting } = props;
   const dateFormatCs = getDefaultCsDateFormatDataFromCookie().defaultLongDateFormat;
@@ -93,6 +94,7 @@ const OpEditors: React.FC<{
               props.onChange && props.onChange(setting)
             })
           }}
+          autoFocus={props.autoFocus}
           onEditorBlur={props.onBlur}
           onKeyDown={props.onKeyDown}
         />
@@ -142,6 +144,7 @@ const OpEditors: React.FC<{
 @observer
 export class FilterSettingsDate extends React.Component<{
   setting?: any;
+  autoFocus: boolean
 }> {
 
   static get defaultSettings(){
@@ -180,7 +183,7 @@ export class FilterSettingsDate extends React.Component<{
     return (
       <>
         <OpCombo setting={this.props.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.props.setting} onChange={this.handleChange} />
+        <OpEditors setting={this.props.setting} onChange={this.handleChange} autoFocus={this.props.autoFocus} />
       </>
     );
   }
