@@ -85,7 +85,6 @@ import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDa
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
 import {
-  runGeneratorInFlowWithHandler,
   runInFlowWithHandler,
 } from "../../utils/runInFlowWithHandler";
 import { IAggregation } from "./types/IAggregation";
@@ -664,6 +663,10 @@ export class DataView implements IDataView {
     if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadFirstPage();
   }
 
+  @action.bound *loadLastPage(): any {
+    if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadLastPage();
+  }
+
   @action.bound selectFirstRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
@@ -681,20 +684,13 @@ export class DataView implements IDataView {
     if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
-    const self = this;
-    runGeneratorInFlowWithHandler({
-      ctx: this,
-      generator: (function* () {
-        if(self.infiniteScrollLoader) yield* self.infiniteScrollLoader!.loadLastPage();
-        const dataTable = getDataTable(self);
-        const lastRow = dataTable.getLastRow();
-        if (lastRow) {
-          self.selectRowById(dataTable.getRowId(lastRow));
-        } else {
-          self.selectRowById(undefined);
-        }
-      })(),
-    });
+    const dataTable = getDataTable(this);
+    const lastRow = dataTable.getLastRow();
+    if (lastRow) {
+      this.selectRowById(dataTable.getRowId(lastRow));
+    } else {
+      this.selectRowById(undefined);
+    }
   }
 
   reselectOrSelectFirst() {

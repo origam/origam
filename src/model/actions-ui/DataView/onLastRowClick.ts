@@ -20,11 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import {flow} from "mobx";
 import {selectLastRow} from "../../actions/DataView/selectLastRow";
 import {handleError} from "../../actions/handleError";
+import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
 
 export function onLastRowClick(ctx: any) {
   return flow(function* onLastRowClick(event: any) {
     try {
       yield* selectLastRow(ctx)();
+      getTablePanelView(ctx)?.triggerOnFocusTable();
     } catch (e) {
       yield* handleError(ctx)(e);
       throw e;
