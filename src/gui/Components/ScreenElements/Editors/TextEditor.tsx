@@ -166,6 +166,7 @@ export class TextEditor extends React.Component<{
               this.currentValue = newValue;
               this.props.onChange?.(undefined, newValue);
             }}
+            refInput={this.refInput}
             onBlur={this.props.onEditorBlur}
             onFocus={this.handleFocus}
           />
@@ -237,6 +238,7 @@ function RichTextEditor(props: {
   onChange?: (newValue: any) => void;
   onBlur?: (event: any) => void;
   onFocus?: (event: any) => void;
+  refInput?: (elm: any) => void;
 }) {
   const [internalEditorState, setInternalEditorState] = useState(() => EditorState.createEmpty());
   const [internalEditorStateHtml, setInternalEditorStateHtml] = useState("");
@@ -252,6 +254,12 @@ function RichTextEditor(props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [setInternalEditorState, setInternalEditorStateHtml, props.onChange]
   );
+
+  useEffect(() => {
+    if(props.refInput){
+      props.refInput(document.querySelector("[role='textbox']"));
+    }
+  });
 
   useEffect(() => {
     if (props.value !== internalEditorStateHtml) {
