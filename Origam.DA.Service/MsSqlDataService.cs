@@ -177,7 +177,7 @@ namespace Origam.DA.Service
 				}	
 			}
 			string message = string.Format("{0} {1}", recordErrorMessage, customMessage);
-			throw new OrigamException(message, ex.Message, ex);
+            throw new UserOrigamException(message, ex.Message, ex);
 		}
 
         internal override void BulkInsert(
