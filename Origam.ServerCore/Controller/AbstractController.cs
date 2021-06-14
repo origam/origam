@@ -109,6 +109,11 @@ namespace Origam.ServerCore.Controller
             }
             catch (Exception ex)
             {
+                if (ex is IUserException)
+                {
+                    return StatusCode(420, ex);
+                }
+
                 log.LogError(ex, ex.Message);
                 return StatusCode(500, ex);
             }
