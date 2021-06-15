@@ -27,8 +27,6 @@ import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
 import { IFocusAble } from "../../../model/entities/FocusManager";
-import {ISortingConfig} from "../../../model/entities/types/ISortingConfig";
-import {latinize} from "../../../utils/string";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -38,7 +36,7 @@ export class DropdownEditorBehavior {
     private setup: () => DropdownEditorSetup,
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
-    private sortingConfig: ISortingConfig,
+    private prepareForSortAndFilter: (text: string) => string,
     public onDoubleClick?: (event: any) => void,
     public onClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusAble) => void,
@@ -381,16 +379,8 @@ export class DropdownEditorBehavior {
   }
 
   compareLookupItems(item1: string[], item2: string[]) {
-    let label1 = item1[1];
-    let label2 = item2[1];
-    if (!this.sortingConfig.caseSensitive) {
-      label1 = label1.toLowerCase();
-      label2 = label2.toLowerCase();
-    }
-    if (!this.sortingConfig.accentSensitive) {
-      label1 = latinize(label1);
-      label2 = latinize(label2);
-    }
+    let label1 = this.prepareForSortAndFilter(item1[1]);
+    let label2 = this.prepareForSortAndFilter(item2[1]);
     return compareStrings(label1, label2);
   }
 

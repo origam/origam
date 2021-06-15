@@ -49,7 +49,7 @@ import { ILookup } from "model/entities/types/ILookup";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
-import {getSortingConfig} from "../../../../../../model/selectors/PortalSettings/getSortingConfig";
+import { prepareForSortAndFilter } from "../../../../../../model/selectors/PortalSettings/getSortingConfig";
 
 const OPERATORS = [
     Operator.in,
@@ -282,7 +282,7 @@ export function FilterBuildDropdownEditor(props: {
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
       false,
-      getSortingConfig(props.property)
+      text => prepareForSortAndFilter(props.property, text)
     );
 
 
