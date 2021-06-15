@@ -47,6 +47,7 @@ import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/He
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import {getSortingConfig} from "../../../../../../model/selectors/PortalSettings/getSortingConfig";
 
 const OPERATORS = [
     Operator.in,
@@ -220,7 +221,8 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorDataTable,
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
-      false
+      false,
+      getSortingConfig(props.property)
     );
 
     const drivers = new DropdownColumnDrivers();

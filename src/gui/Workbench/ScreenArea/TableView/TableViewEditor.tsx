@@ -47,6 +47,7 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
+import {getSortingConfig} from "../../../../model/selectors/PortalSettings/getSortingConfig";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -180,6 +181,7 @@ export class TableViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
+            sortingConfig={getSortingConfig(this.props.property)}
             subscribeToFocusManager={(input) => input.focus()} // will cause the editor to take focus after opening
           />
         );
@@ -204,6 +206,7 @@ export class TableViewEditor extends React.Component<{
               xmlNode={this.props.property!.xmlNode}
               isReadOnly={readOnly}
               autoSort={this.props.property!.autoSort}
+              sortingConfig={getSortingConfig(this.props.property)}
               tagEditor={
                 <TagInputEditor
                   value={this.props.getCellValue!()}

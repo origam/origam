@@ -39,6 +39,7 @@ import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusAble } from "../../../model/entities/FocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
 import {getMomentFormat} from "../../../xmlInterpreters/getMomentFormat";
+import {ISortingConfig} from "../../../model/entities/types/ISortingConfig";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -121,6 +122,7 @@ export function XmlBuildDropdownEditor(props: {
   onClick?: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown?(event: any): void;
+  sortingConfig: ISortingConfig;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -154,11 +156,12 @@ export function XmlBuildDropdownEditor(props: {
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
       props.isReadOnly,
+      props.sortingConfig,
       props.onDoubleClick,
       props.onClick,
       props.subscribeToFocusManager,
       props.onKeyDown,
-      props.autoSort
+      props.autoSort,
     );
 
     const rat = props.xmlNode.attributes;
