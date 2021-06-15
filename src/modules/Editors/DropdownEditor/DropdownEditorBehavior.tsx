@@ -27,6 +27,7 @@ import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
 import { IFocusAble } from "../../../model/entities/FocusManager";
+import {compareStrings} from "../../../utils/string";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -408,15 +409,6 @@ export class DropdownEditorBehavior {
   elmDropdownBody: any;
 }
 
-function compareStrings(a: string, b: string) {
-  if (a < b) {
-    return -1;
-  }
-  if (a > b) {
-    return 1;
-  }
-  return 0;
-}
 
 decorate(DropdownEditorBehavior, {
   isReadOnly: observable,

@@ -181,7 +181,7 @@ export class TableViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
-            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)}
+            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)!}
             subscribeToFocusManager={(input) => input.focus()} // will cause the editor to take focus after opening
           />
         );
@@ -206,7 +206,7 @@ export class TableViewEditor extends React.Component<{
               xmlNode={this.props.property!.xmlNode}
               isReadOnly={readOnly}
               autoSort={this.props.property!.autoSort}
-              prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)}
+              prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)!}
               tagEditor={
                 <TagInputEditor
                   value={this.props.getCellValue!()}

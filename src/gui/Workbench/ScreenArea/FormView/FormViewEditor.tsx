@@ -228,7 +228,7 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             isLink={this.props.property?.isLink}
-            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)}
+            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)!}
             onClick={(event) => {
               onDropdownEditorClick(this.props.property)(event, this.props.property, row);
             }}
@@ -249,7 +249,7 @@ export class FormViewEditor extends React.Component<{
               )
             }
             autoSort={this.props.property?.autoSort}
-            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)}
+            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)!}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}

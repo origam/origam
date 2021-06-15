@@ -282,7 +282,7 @@ export function FilterBuildDropdownEditor(props: {
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
       false,
-      text => prepareForSortAndFilter(props.property, text)
+      text => prepareForSortAndFilter(props.property, text)!
     );
 
 
