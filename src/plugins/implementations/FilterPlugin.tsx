@@ -41,10 +41,7 @@ export class FilterPlugin implements IFormPlugin {
   selectedTimeUnit = this.timeUnits[1];
 
   private async refresh() {
-    this.setFormParameters?.({
-      OrigamDataAuditLog_DateFrom: toOrigamServerString(this.dateFrom),
-      OrigamDataAuditLog_DateTo: toOrigamServerString(this.dateTo)
-    });
+    this.setParameters();
     await this.requestSessionRefresh?.();
   }
 
@@ -55,13 +52,27 @@ export class FilterPlugin implements IFormPlugin {
 
   requestSessionRefresh:  (() => Promise<any>) | undefined;
   setFormParameters:  ((parameters: { [key: string]: string }) => void) | undefined;
+  fromParameterName: string | undefined;
+  toParameterName: string | undefined;
 
-  initialize() {
+  initialize(xmlAttributes: {[key: string]: string}) {
     this.addTime({start: moment()});
-    this.setFormParameters?.({
-      OrigamDataAuditLog_DateFrom: toOrigamServerString(this.dateFrom),
-      OrigamDataAuditLog_DateTo: toOrigamServerString(this.dateTo)
-    });
+    this.fromParameterName = xmlAttributes["FromParameterName"];
+    this.toParameterName = xmlAttributes["ToParameterName"];
+    if(!this.toParameterName){
+      throw new Error("ToParameterName attribute of the FilterPlugin is not set")
+    }
+    if(!this.fromParameterName){
+      throw new Error("FromParameterName attribute of the FilterPlugin is not set")
+    }
+    this.setParameters();
+  }
+
+  private setParameters() {
+    const parameters: { [key: string]: string } = {};
+    parameters[this.fromParameterName!] = toOrigamServerString(this.dateFrom);
+    parameters[this.toParameterName!] = toOrigamServerString(this.dateTo);
+    this.setFormParameters?.(parameters);
   }
 
   getComponent(data: IPluginData): JSX.Element {

@@ -21,6 +21,7 @@ import React from "react";
 import {IPluginData} from "./IPluginData";
 
 export interface IPlugin {
+  initialize(xmlAttributes: {[key: string]: string}): void;
   getComponent(data: IPluginData): JSX.Element;
   name: string;
 }

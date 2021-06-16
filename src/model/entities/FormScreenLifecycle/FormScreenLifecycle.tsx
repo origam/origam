@@ -498,8 +498,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     }
     formLevelPlugins
-      .map(node => pluginLibrary.get(node.attributes.Name))
-      .forEach(plugin => {
+      .forEach(node => {
+        const plugin = pluginLibrary.get(node.attributes.Name);
         if (!isIFormPlugin(plugin)) {
           throw new Error(`Plugin ${plugin.name} is not FormLevelPlugin`)
         }
@@ -510,17 +510,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formPlugin.setFormParameters = (parameters: { [key: string]: string }) =>
           Object.keys(parameters)
             .forEach(key => this.parameters[key] = parameters[key]);
-        formPlugin.initialize();
+        formPlugin.initialize(node.attributes);
       })
 
     find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "SectionLevelPlugin")
-      .map(node => pluginLibrary.get(node.attributes.Name))
-      .forEach(plugin => {
+      .forEach(node => {
+        const plugin = pluginLibrary.get(node.attributes.Name);
         if (!isISectionPlugin(plugin)) {
           throw new Error(`Plugin ${plugin.name} is not SectionLevelPlugin`)
         }
         const sectionPlugin = plugin as ISectionPlugin;
         sectionPlugin.getFormParameters = () => JSON.parse(JSON.stringify(this.parameters));
+        sectionPlugin.initialize(node.attributes)
       });
   }
 

@@ -21,7 +21,6 @@ import {IPlugin} from "./IPlugin";
 
 
 export interface IFormPlugin extends IPlugin{
-  initialize(): void;
   requestSessionRefresh:  (() => Promise<any>) | undefined;
   setFormParameters:  ((parameters: { [key: string]: string }) => void) | undefined;
 }

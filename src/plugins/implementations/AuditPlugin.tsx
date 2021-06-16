@@ -33,7 +33,11 @@ import {localizations} from "./AuditPluginLocalization";
 export class AuditPlugin implements ISectionPlugin{
   $type_ISectionPlugin: 1 = 1;
   name = "AuditPlugin";
-  
+
+  initialize(xmlAttributes: {[key: string]: string}): void{
+
+  }
+
   getComponent(data: IPluginData): JSX.Element {
     return <AuditComponent
       pluginData={data}
