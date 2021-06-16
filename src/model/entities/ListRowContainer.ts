@@ -206,6 +206,10 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   appendRecords(rowsIn: any[][]){
+    let dataView = getDataView(this);
+    if(dataView.type === "SectionLevelPlugin"){
+      throw new Error(dataView.name + " is a SectionLevelPlugin which does not allow navigation. This is not implemented. Please set the \"AllowNavigation\" property to true.");
+    }
     throw new Error("Not implemented");
   }
 
