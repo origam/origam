@@ -31,12 +31,12 @@ import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getPath } from "model/selectors/MainMenu/menuNode";
-import { latinize } from "utils/string";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
 import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
 import { getIconUrl } from "gui/getIconUrl";
 import {IMenuItemIcon} from "gui/Workbench/MainMenu/IMenuItemIcon";
+import {prepareForSortAndFilter} from "../selectors/PortalSettings/getSortingConfig";
 
 
 export class Searcher implements ISearcher {
@@ -196,10 +196,10 @@ export class Searcher implements ISearcher {
   doSearchTerm = _.throttle(this.doSearchTermImm, 100);
 
   @action.bound doSearchTermImm(term: string) {
-    const latinizedTerm = latinize(term.trim()).toLowerCase();
-    this.searchInMenu(latinizedTerm);
-    this.searchInWorkQueues(latinizedTerm);
-    this.searchInChat(latinizedTerm);
+    const searchTerm = prepareForSortAndFilter(this,term.trim())!;
+    this.searchInMenu(searchTerm);
+    this.searchInWorkQueues(searchTerm);
+    this.searchInChat(searchTerm);
   }
 
   getIconUrl(icon: string | IMenuItemIcon){
@@ -207,10 +207,10 @@ export class Searcher implements ISearcher {
     return getIconUrl(icon,customAssetsRoute + "/" + icon)
   }
 
-  private searchInChat(latinizedTerm: string) {
+  private searchInChat(term: string) {
     const chatSearchResults = this.chatsIndex
       .filter(container => {
-        return container.latinizedLowerLabel.includes(latinizedTerm);
+        return container.latinizedLowerLabel.includes(term);
       })
       .map((container: any) => {
         const item = container.node;
@@ -319,13 +319,13 @@ export class Searcher implements ISearcher {
   @action.bound
   indexWorkQueues(items: any[]){
     this.workQueueIndex = items
-      .map(item => new NodeContainer(latinize(item.name).toLowerCase(), item));
+      .map(item => new NodeContainer(prepareForSortAndFilter(this, item.name)!, item));
   }
 
   @action.bound
   indexChats(items: any[]){
     this.chatsIndex = items
-      .map(item => new NodeContainer(latinize(item.topic).toLowerCase(), item));
+      .map(item => new NodeContainer(prepareForSortAndFilter(this, item.topic)!, item));
   }
 
   @action.bound
@@ -337,7 +337,7 @@ export class Searcher implements ISearcher {
       switch (node.name) {
         case "Submenu":
         case "Command":
-          this.nodeIndex.push(new NodeContainer(latinize(node.attributes.label).toLowerCase(),node));
+          this.nodeIndex.push(new NodeContainer(prepareForSortAndFilter(this, node.attributes.label)! ,node));
       }
       node.elements.forEach((element: any) => recursive(element));
     };
