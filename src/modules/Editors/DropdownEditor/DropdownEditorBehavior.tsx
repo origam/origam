@@ -27,6 +27,7 @@ import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
 import { IFocusAble } from "../../../model/entities/FocusManager";
+import {compareStrings} from "../../../utils/string";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -36,11 +37,12 @@ export class DropdownEditorBehavior {
     private setup: () => DropdownEditorSetup,
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
+    private prepareForSortAndFilter: (text: string) => string,
     public onDoubleClick?: (event: any) => void,
     public onClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusAble) => void,
     private onKeyDown?: (event: any) => void,
-    private autoSort?: boolean
+    private autoSort?: boolean,
   ) {}
 
   @observable isDropped = false;
@@ -351,7 +353,7 @@ export class DropdownEditorBehavior {
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
         if (self.autoSort) {
-          items.sort(compareLookupItems);
+          items.sort((i1: string[], i2: string[]) => self.compareLookupItems(i1, i2));
         }
         if (setup.dropdownType === EagerlyLoadedGrid) {
           self.dataTable.setData(items);
@@ -375,6 +377,12 @@ export class DropdownEditorBehavior {
         self.runningPromise = undefined;
       }
     })();
+  }
+
+  compareLookupItems(item1: string[], item2: string[]) {
+    let label1 = this.prepareForSortAndFilter(item1[1]);
+    let label2 = this.prepareForSortAndFilter(item2[1]);
+    return compareStrings(label1, label2);
   }
 
   @action.bound handleUseEffect() {
@@ -401,15 +409,6 @@ export class DropdownEditorBehavior {
   elmDropdownBody: any;
 }
 
-function compareLookupItems(a: any[], b: any[]) {
-  if (a[1] < b[1]) {
-    return -1;
-  }
-  if (a[1] > b[1]) {
-    return 1;
-  }
-  return 0;
-}
 
 decorate(DropdownEditorBehavior, {
   isReadOnly: observable,

@@ -17,9 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {ISortingConfig} from "./ISortingConfig";
+
 export interface IPortalSettings {
   showChat: boolean;
   showWorkQueues: boolean;
   helpUrl: string;
   showToolTipsForMemoFieldsOnly: boolean;
+  sortingConfig: ISortingConfig;
 }
