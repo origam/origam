@@ -84,6 +84,6 @@ namespace Origam.Gui.Win
         
         [DefaultValue(false), Category("Data"), 
          Description("")]
-        public bool AllowNavigation { get; set; }
+        public bool AllowNavigation { get; set; } = true;
     }
 }
