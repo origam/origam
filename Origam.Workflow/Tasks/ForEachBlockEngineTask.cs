@@ -94,7 +94,7 @@ namespace Origam.Workflow.Tasks
 		private void ResumeIteration()
 		{
 			ForeachWorkflowBlock block = this.Step as ForeachWorkflowBlock;
-			_call = this.Engine.GetSubEngine(block);
+			_call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
 			_call.IterationTotal = _iter.Count;
 
 			while (_iter.MoveNext())

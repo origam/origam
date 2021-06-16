@@ -62,10 +62,11 @@ namespace Origam.Workflow
         public Boolean Trace { get; set; } = false;
         private readonly OperationTimer localOperationTimer = new OperationTimer();
 
-		public WorkflowEngine()
+        public WorkflowEngine(string transactionId = null)
 		{
 			this.WorkflowUniqueId = Guid.NewGuid();
 			this.WorkflowInstanceId = this.WorkflowUniqueId;
+			this.transactionId = transactionId;
 
 			_documentationService = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
 		}
@@ -142,24 +143,21 @@ namespace Origam.Workflow
 			}
 		}
 
-		string _transactionId = null;
 		public string TransactionId
 		{
-			get
+			get => transactionId;
+		}
+
+		public void SetTransactionId(string transactionId, WorkflowTransactionBehavior transactionBehavior)
+		{
+			if (transactionBehavior ==
+			    WorkflowTransactionBehavior.InheritExisting)
 			{
-				return _transactionId;
-			}
-			set
-			{
-                if (_transactionBehavior
-                == WorkflowTransactionBehavior.InheritExisting)
-                {
-                    _transactionId = value;
-                }
+				this.transactionId = transactionId;
 			}
 		}
 
-        WorkflowTransactionBehavior _transactionBehavior 
+		WorkflowTransactionBehavior _transactionBehavior 
             = WorkflowTransactionBehavior.InheritExisting;
 
         public WorkflowTransactionBehavior TransactionBehavior
@@ -354,6 +352,8 @@ namespace Origam.Workflow
 		}
 
 		private bool _isRepeatable = false;
+		private string transactionId = null;
+
 		public bool IsRepeatable
 		{
 			get
@@ -970,7 +970,7 @@ namespace Origam.Workflow
 			}
 		}
 
-		internal WorkflowEngine GetSubEngine(IWorkflowBlock block)
+		internal WorkflowEngine GetSubEngine(IWorkflowBlock block, WorkflowTransactionBehavior transactionBehavior)
 		{
 			WorkflowEngine call = new WorkflowEngine();
 
@@ -980,9 +980,9 @@ namespace Origam.Workflow
 			call.CallingWorkflow = this;
 			call.WorkflowBlock = block;
 			call.Host = this.Host;
-            call.TransactionBehavior = this.TransactionBehavior;
+            call.TransactionBehavior = transactionBehavior;
 			call.WorkflowInstanceId = this.WorkflowInstanceId;
-			call.TransactionId = this.TransactionId;
+			call.SetTransactionId(TransactionId, transactionBehavior);
 
 			call.IterationTotal = this.IterationTotal;
 			call.IterationNumber = this.IterationNumber;

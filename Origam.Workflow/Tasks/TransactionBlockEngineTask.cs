@@ -60,12 +60,12 @@ namespace Origam.Workflow.Tasks
 
 			TransactionWorkflowBlock block = this.Step as TransactionWorkflowBlock;
 
-			_call = this.Engine.GetSubEngine(block);
+			_call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
 
 			// if the transaction is atomic, we start it, except if the transaction exists already
 			if(block.TransactionType == TransactionTypes.Atomic & this.Engine.TransactionId == null)
 			{
-				_call.TransactionId = Guid.NewGuid().ToString();
+				_call.SetTransactionId(Guid.NewGuid().ToString(), WorkflowTransactionBehavior.InheritExisting);
 				if(log.IsInfoEnabled)
 				{
 					log.Info("Starting new atomic transaction: " + _call.TransactionId);

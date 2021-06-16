@@ -71,7 +71,7 @@ namespace Origam.Workflow.Tasks
 			int i = 0;
 			LoopWorkflowBlock block = this.Step as LoopWorkflowBlock;
 
-			_call = this.Engine.GetSubEngine(block);
+			_call = this.Engine.GetSubEngine(block, Engine.TransactionBehavior);
 
 			do
 			{

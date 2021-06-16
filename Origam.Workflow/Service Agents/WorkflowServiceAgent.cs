@@ -64,7 +64,7 @@ namespace Origam.Workflow
 			engine.PersistenceProvider = this.PersistenceProvider;
 			engine.WorkflowBlock = wf;
             engine.TransactionBehavior = wf.TransactionBehavior;
-			engine.TransactionId = this.TransactionId;
+            engine.SetTransactionId(TransactionId, wf.TransactionBehavior);
 			engine.WorkflowInstanceId = this.TraceWorkflowId;
 			engine.CallingWorkflow = this.WorkflowEngine as WorkflowEngine;
 		    engine.Name = string.IsNullOrEmpty(wf.Name) ?
