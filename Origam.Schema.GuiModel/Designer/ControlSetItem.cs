@@ -198,6 +198,7 @@ namespace Origam.Schema.GuiModel
 
 			foreach(PropertyValueItem property in this.ChildItemsByType(PropertyValueItem.CategoryConst))
 			{
+				if (property.ControlPropertyItem == null) continue;
 				if(this.ControlItem.Name == "AsCombo" & property.ControlPropertyItem.Name == "LookupId") lookupId = property.GuidValue;
 				if(this.ControlItem.Name == "AsReportPanel" & property.ControlPropertyItem.Name == "ReportId") reportId = property.GuidValue;
 				if((this.ControlItem.Name == "AsPanel" | this.ControlItem.IsComplexType) & property.ControlPropertyItem.Name == "IconId") graphicsId = property.GuidValue;

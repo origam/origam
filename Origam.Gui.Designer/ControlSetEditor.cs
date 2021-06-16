@@ -837,7 +837,7 @@ namespace Origam.Gui.Designer
 
 			foreach(AbstractPropertyValueItem item in controlSetItem.ChildItemsByType(strType))
 			{
-				if(item.ControlPropertyItem.PrimaryKey.Equals(propertyToFind.PrimaryKey))
+				if(Equals(item.ControlPropertyItem?.PrimaryKey,propertyToFind.PrimaryKey))
 				{
 					result=item;
 					break;

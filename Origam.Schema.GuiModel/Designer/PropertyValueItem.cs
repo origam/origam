@@ -50,7 +50,12 @@ namespace Origam.Schema.GuiModel
         {
             get
             {
-                switch (ControlPropertyItem.PropertyType)
+	            if (ControlPropertyItem == null)
+	            {
+		            return null;
+	            }
+
+	            switch (ControlPropertyItem.PropertyType)
                 {
                     case ControlPropertyValueType.Integer:
                         return XmlConvert.ToString(IntValue);
@@ -257,7 +262,7 @@ namespace Origam.Schema.GuiModel
 					ModelElementKey key = new ModelElementKey();
 					key.Id = this.ControlPropertyId;
 
-					_property = (ControlPropertyItem)this.PersistenceProvider.RetrieveInstance(typeof(ControlPropertyItem), key);
+					_property = (ControlPropertyItem)this.PersistenceProvider.RetrieveInstance(typeof(ControlPropertyItem), key, true, false);
 				}
 
 				return _property;
