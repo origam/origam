@@ -77,6 +77,10 @@
     ]
   },
   "BehindProxy": "false",
+  "ClientSortingAndFilteringConfig": {
+    "CaseSensitive": "false",
+    "AccentSensitive": "true"
+  },
   "LanguageConfig": {
     "Default": "en-US",
     "Allowed": [

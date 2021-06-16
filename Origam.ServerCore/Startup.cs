@@ -124,6 +124,7 @@ namespace Origam.ServerCore
             services.AddTransient<IPrincipal>(
                 provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
+            services.Configure<ClientSortingAndFilteringConfig>(options => Configuration.GetSection("ClientSortingAndFilteringConfig").Bind(options));
             services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
             services.Configure<CustomAssetsConfig>(options => Configuration.GetSection("CustomAssetsConfig").Bind(options));
             services.Configure<UserLockoutConfig>(options => Configuration.GetSection("UserLockoutConfig").Bind(options));
