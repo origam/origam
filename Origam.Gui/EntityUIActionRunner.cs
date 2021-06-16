@@ -134,7 +134,7 @@ namespace Origam.Gui
                 WorkflowEngine engine = WorkflowEngine.PrepareWorkflow(
                     entityWorkflowAction.Workflow,
                     new Hashtable(processData.Parameters), false, "");
-                engine.TransactionId = transactionId;
+                engine.SetTransactionId(transactionId, entityWorkflowAction.Workflow.TransactionBehavior);
                 using(WorkflowHost host = new WorkflowHost())
                 {
                     host.SupportsUI = false;

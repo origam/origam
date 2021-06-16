@@ -73,7 +73,7 @@ namespace Origam.Workflow.Tasks
 		{
             WorkflowCallTask task = this.Step as WorkflowCallTask;
 
-            _call = this.Engine.GetSubEngine(task.Workflow);
+            _call = this.Engine.GetSubEngine(task.Workflow, task.Workflow.TransactionBehavior);
             _call.Name = task.Workflow.Name;
 
             if (ProfilingTools.IsDebugEnabled)

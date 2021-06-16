@@ -974,10 +974,9 @@ namespace Origam.Workflow
             {
                 log.Debug("State machine is starting workflow: " + workflow.Name);
             }
-            WorkflowEngine engine = new WorkflowEngine();
+            WorkflowEngine engine = new WorkflowEngine(transactionId);
             engine.PersistenceProvider = _persistence.SchemaProvider;
             engine.WorkflowBlock = workflow;
-            engine.TransactionId = transactionId;
             foreach (StateMachineEventParameterMapping mapping in ev.ParameterMappings)
             {
                 DataRowVersion version = DatasetTools.GetRowVersion(dataRow,
