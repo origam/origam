@@ -49,6 +49,7 @@ import { ILookup } from "model/entities/types/ILookup";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
+import { prepareForSortAndFilter } from "../../../../../../model/selectors/PortalSettings/getSortingConfig";
 
 const OPERATORS = [
     Operator.in,
@@ -106,6 +107,7 @@ class OpEditors extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
+  autoFocus: boolean;
 }> {
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
@@ -132,6 +134,7 @@ class OpEditors extends React.Component<{
             getOptions={this.props.getOptions}
             onChange={this.handleSelectedItemsChange}
             values={this.props.setting.val1 ?? []}
+            autoFocus={this.props.autoFocus}
           />
         );
       case "starts":
@@ -159,6 +162,7 @@ export class FilterSettingsLookup extends React.Component<{
   lookup: ILookup;
   property: IProperty;
   setting: IFilterSetting;
+  autoFocus: boolean;
 }> {
   static get defaultSettings(){
     return new LookupFilterSetting(OPERATORS[0].type)
@@ -176,6 +180,7 @@ export class FilterSettingsLookup extends React.Component<{
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
           property={this.props.property}
+          autoFocus={this.props.autoFocus}
         />
       </>
     );
@@ -250,6 +255,7 @@ export function FilterBuildDropdownEditor(props: {
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   onChange(selectedItems: Array<any>): void;
   values: Array<any>;
+  autoFocus: boolean;
 }) {
   const mobxContext = useContext(MobXProviderContext);
 
@@ -275,7 +281,8 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorDataTable,
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
-      false
+      false,
+      text => prepareForSortAndFilter(props.property, text)!
     );
 
 
@@ -344,6 +351,7 @@ export function FilterBuildDropdownEditor(props: {
             refocuser={undefined}
             onChange={onItemRemoved}
             onClick={undefined}
+            autoFocus={props.autoFocus}
           />
         }
       />

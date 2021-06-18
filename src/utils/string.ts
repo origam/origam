@@ -36,5 +36,19 @@ export function latinize(str: string)
   return str.replace(/[^A-Za-z0-9\[\] ]/g,function(a){return Latinize.latin_map[a]||a})
 };
 
-
 /* eslint-enable */
+
+export function compareStrings(a: string | undefined | null, b: string | undefined | null) {
+  if (a === undefined || a === null)  {
+    return 1;
+  } else if (b === undefined || b === null) {
+    return -1;
+  }
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+}

@@ -29,6 +29,11 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getProperties } from "../selectors/DataView/getProperties";
+import {
+  prepareAnyForSortAndFilter,
+  prepareForSortAndFilter
+} from "../selectors/PortalSettings/getSortingConfig";
+import {compareStrings} from "../../utils/string";
 
 function cycleOrdering(direction: IOrderByDirection) {
   switch (direction) {
@@ -155,30 +160,14 @@ export class OrderingConfiguration implements IOrderingConfiguration {
           case "Text":
           case "Date":
           case "ComboBox":
-            const txt1 = dataTable.getOriginalCellText(row1, prop);
-            const txt2 = dataTable.getOriginalCellText(row2, prop);
-            if (txt1 === undefined) {
-              cmpSign = 1;
-            } else if (txt2 === undefined) {
-              cmpSign = -1;
-            } else if (txt1 === null) {
-              cmpSign = 1;
-            } else if (txt2 === null) {
-              cmpSign = -1;
-            } else {
-              cmpSign = txt1.localeCompare(txt2);
-            }
+            const txt1 = prepareForSortAndFilter(this, dataTable.getOriginalCellText(row1, prop));
+            const txt2 = prepareForSortAndFilter(this, dataTable.getOriginalCellText(row2, prop));
+            cmpSign = compareStrings(txt1, txt2);
             break;
           case "CheckBox": {
-            const val1 = dataTable.getOriginalCellValue(row1, prop);
-            const val2 = dataTable.getOriginalCellValue(row2, prop);
-            if (val1 === null) {
-              cmpSign = 1;
-            } else if (val2 === null) {
-              cmpSign = -1;
-            } else {
-              cmpSign = `${val1}`.localeCompare(`${val2}`);
-            }
+            const val1 = prepareAnyForSortAndFilter(this, dataTable.getOriginalCellValue(row1, prop));
+            const val2 = prepareAnyForSortAndFilter(this, dataTable.getOriginalCellValue(row2, prop));
+            cmpSign = compareStrings(`${val1}`, `${val2}`);
             break;
           }
           case "Number": {

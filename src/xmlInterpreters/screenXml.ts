@@ -92,6 +92,7 @@ import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
 import {getMomentFormat, replaceDefaultDateFormats} from "./getMomentFormat";
+import {getTablePanelView} from "../model/selectors/TablePanelView/getTablePanelView";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -605,6 +606,7 @@ export function* interpretScreenXml(
     const $tablePerspective = $dataView.beginLifetimeScope(SCOPE_TablePerspective);
     $tablePerspective.resolve(ITablePerspectiveDirector).setup();
     const tablePerspective = $tablePerspective.resolve(ITablePerspective);
+    tablePerspective.onTablePerspectiveShown = () =>  getTablePanelView(dataView)?.triggerOnFocusTable();
 
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();

@@ -47,6 +47,7 @@ import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/He
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import { prepareForSortAndFilter } from "../../../../../../model/selectors/PortalSettings/getSortingConfig";
 
 const OPERATORS = [
     Operator.in,
@@ -90,6 +91,7 @@ class OpEditors extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
+  autoFocus: boolean;
 }> {
 
   render() {
@@ -104,6 +106,7 @@ class OpEditors extends React.Component<{
             getOptions={this.props.getOptions}
             values={setting.val1 ?? []}
             setting={setting}
+            autoFocus={this.props.autoFocus}
           />
         );
       case "null":
@@ -120,6 +123,7 @@ export class FilterSettingsTagInput extends React.Component<{
   lookup: ILookup;
   property: IProperty;
   setting: IFilterSetting;
+  autoFocus: boolean;
 }> {
   static get defaultSettings(){
     return new TagInputFilterSetting(OPERATORS[0].type)
@@ -135,6 +139,7 @@ export class FilterSettingsTagInput extends React.Component<{
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
           property={this.props.property}
+          autoFocus={this.props.autoFocus}
         />
       </>
     );
@@ -192,6 +197,7 @@ export function FilterBuildDropdownEditor(props: {
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   values: Array<any>;
   setting: IFilterSetting;
+  autoFocus: boolean;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const workbench = mobxContext.workbench;
@@ -215,7 +221,8 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorDataTable,
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
-      false
+      false,
+      text => prepareForSortAndFilter(props.property, text)!
     );
 
     const drivers = new DropdownColumnDrivers();
@@ -274,6 +281,7 @@ export function FilterBuildDropdownEditor(props: {
             isReadOnly={false}
             isInvalid={false}
             isFocused={false}
+            autoFocus={props.autoFocus}
             refocuser={undefined}
             onClick={undefined}
           />

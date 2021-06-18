@@ -661,6 +661,10 @@ export class DataView implements IDataView {
     if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadFirstPage();
   }
 
+  @action.bound *loadLastPage(): any {
+    if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadLastPage();
+  }
+
   @action.bound selectFirstRow() {
     if (getGroupingConfiguration(this).isGrouping) {
       return;

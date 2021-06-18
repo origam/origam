@@ -149,7 +149,7 @@ export class ListRowContainer implements IRowsContainer {
 
   internalRowOrderingFunc(row1: any[], row2: any[]) {
     if(this.forcedLastRowId !== undefined){
-      const orderings=this.orderingConfiguration.orderings;
+      const orderings = this.orderingConfiguration.orderings;
       const directionMultiplier = orderings.length === 1 && orderings[0].direction === IOrderByDirection.DESC
         ? -1 
         : 1;

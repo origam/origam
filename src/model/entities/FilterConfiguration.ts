@@ -25,6 +25,7 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
+import {prepareAnyForSortAndFilter, prepareForSortAndFilter} from "../selectors/PortalSettings/getSortingConfig";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
@@ -112,65 +113,59 @@ export class FilterConfiguration implements IFilterConfiguration {
   userFilterPredicate(row: any[], term: IFilter) {
     const dataTable = getDataTable(this);
     const prop = dataTable.getPropertyById(term.propertyId)!;
-    const cellValue = dataTable.getOriginalCellValue(row, prop);
+    const cellValue = prepareAnyForSortAndFilter(this,dataTable.getOriginalCellValue(row, prop));
     switch (prop.column) {
       case "Text": {
+        const filterVal1 = prepareAnyForSortAndFilter(this,term.setting.val1);
+        const cellText = prepareForSortAndFilter(this, dataTable.getOriginalCellText(row, prop))!;
         if (cellValue === undefined) return true;
 
         switch (term.setting.type) {
           case "contains": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return cellValue.toLocaleLowerCase().includes(t2);
+            return cellText.includes(filterVal1);
           }
           case "ends": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return cellValue.toLocaleLowerCase().endsWith(t2);
+            return cellText.endsWith(filterVal1);
           }
           case "eq": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return cellValue.toLocaleLowerCase() === t2;
+            return cellText === filterVal1;
           }
           case "ncontains": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return !cellValue.toLocaleLowerCase().includes(t2);
+            return !cellText.includes(filterVal1);
           }
           case "nends": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return !cellValue.toLocaleLowerCase().endsWith(t2);
+            return !cellText.endsWith(filterVal1);
           }
           case "neq": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return cellValue.toLocaleLowerCase() !== t2;
+            return cellText !== filterVal1;
           }
           case "nnull": {
             return cellValue !== null;
           }
           case "nstarts": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return !cellValue.toLocaleLowerCase().startsWith(t2);
+            return !cellText.startsWith(filterVal1);
           }
           case "null": {
             return cellValue === null;
           }
           case "starts": {
-            if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
+            if (filterVal1 === "" || filterVal1 === undefined) return true;
             if (cellValue === null) return false;
-            const t2 = term.setting.val1.toLocaleLowerCase();
-            return cellValue.toLocaleLowerCase().startsWith(t2);
+            return cellText.startsWith(filterVal1);
           }
         }
         break;
@@ -303,37 +298,34 @@ export class FilterConfiguration implements IFilterConfiguration {
         break;
       }
       case "ComboBox": {
+        const filterVal1 = prepareAnyForSortAndFilter(this,term.setting.val1) || [];
+        const filterVal2 = prepareAnyForSortAndFilter(this,term.setting.val2) || "";
+        const cellText = prepareForSortAndFilter(this, dataTable.getOriginalCellText(row, prop))!;
         switch (term.setting.type) {
           case "starts": {
-            const txt1 = dataTable.getOriginalCellText(row, prop);
-            const val2 = term.setting.val2 || "";
-            if (val2 === "") return true;
-            if (txt1 === null) return false;
-            return txt1.toLocaleLowerCase().startsWith(val2.toLocaleLowerCase());
+            if (filterVal2 === "") return true;
+            if (cellText === null) return false;
+            return cellText.startsWith(filterVal2);
           }
           case "nstarts": {
-            const txt1 = dataTable.getOriginalCellText(row, prop);
-            const val2 = term.setting.val2 || "";
-            if (val2 === "") return true;
-            if (txt1 === null) return false;
-            return !txt1.toLocaleLowerCase().startsWith(val2.toLocaleLowerCase());
+            if (filterVal2 === "") return true;
+            if (cellText === null) return false;
+            return !cellText.startsWith(filterVal2);
           }
           case "in":
           case "eq": {
-            const val1 = term.setting.val1 || [];
-            if (val1.length === 0) return true;
+            if (filterVal1.length === 0) return true;
             if (cellValue === null) return false;
-            if (val1.findIndex((item: any) => item === cellValue) > -1) {
+            if (filterVal1.findIndex((item: any) => item === cellText) > -1) {
               return true;
             }
             return false;
           }
           case "nin":
           case "neq": {
-            const val1 = term.setting.val1 || [];
-            if (val1.length === 0) return true;
+            if (filterVal1.length === 0) return true;
             if (cellValue === null) return false;
-            if (val1.findIndex((item: any) => item === cellValue) > -1) {
+            if (filterVal1.findIndex((item: any) => item === cellValue) > -1) {
               return false;
             }
             return true;
@@ -345,48 +337,45 @@ export class FilterConfiguration implements IFilterConfiguration {
             return cellValue !== null;
           }
           case "contains": {
-            const cellText = dataTable.getOriginalCellText(row, prop);
-            const val2 = term.setting.val2 || "";
-            if (val2 === "") return true;
+            if (filterVal2 === "") return true;
             if (cellText === null) return false;
-            return cellText.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
+            return cellText.includes(filterVal2);
           }
           case "ncontains": {
-            const cellText = dataTable.getOriginalCellText(row, prop);
-            const val2 = term.setting.val2 || "";
-            if (val2 === "") return true;
+            if (filterVal2 === "") return true;
             if (cellText === null) return false;
-            return !cellText.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
+            return !cellText.includes(filterVal2);
           }
         }
         break;
       }
       case "TagInput": {
-        const values = dataTable.getOriginalCellValue(row, prop);
+        const cellValues = prepareAnyForSortAndFilter(this, dataTable.getOriginalCellValue(row, prop));
+        const filterValues1 = prepareAnyForSortAndFilter(this, term.setting.val1);
         switch (term.setting.type) {
           case "in":
           case "eq": {
-            if (term.setting.val1 === undefined || term.setting.val1.length === 0) return true;
-            if (!values || values.length === 0) return false; 
-            return values.some( (val: any) =>
-              term.setting.val1.some(
+            if (filterValues1 === undefined || filterValues1.length === 0) return true;
+            if (!cellValues || cellValues.length === 0) return false;
+            return cellValues.some( (val: any) =>
+                filterValues1.some(
                 (filterVal: any) => filterVal === val)
               );
           }
           case "nin":
           case "neq": {
-            if (term.setting.val1 === undefined || term.setting.val1.length === 0) return true;
-            if (!values || values.length === 0) return true; 
-            return values.every( (val: any) =>
-              term.setting.val1.every(
+            if (filterValues1 === undefined || filterValues1.length === 0) return true;
+            if (!cellValues || cellValues.length === 0) return true;
+            return cellValues.every( (val: any) =>
+                filterValues1.every(
                 (filterVal: any) => filterVal !== val)
               );
           }
           case "null": {
-            return !values || values.length === 0;
+            return !cellValues || cellValues.length === 0;
           }
           case "nnull": {
-            return values && values.length > 0;
+            return cellValues && cellValues.length > 0;
           }
 
         }
@@ -409,13 +398,14 @@ export class FilterConfiguration implements IFilterConfiguration {
     const dataTable = getDataTable(this);
     const dataSource = getDataSource(dataTable);
     const sourceField = dataSource.getFieldByName(implicitFilter.propertyId)!;
-    const cellValue = dataTable.getCellValueByDataSourceField(row, sourceField);
+    const cellValue = prepareAnyForSortAndFilter(this, dataTable.getCellValueByDataSourceField(row, sourceField));
+    const filterValue = prepareAnyForSortAndFilter(this, implicitFilter.value);
 
     switch (parseInt(implicitFilter.operatorCode)) {
       case 1:
-        return implicitFilter.value === String(cellValue);
+        return filterValue === String(cellValue);
       case 10:
-        return implicitFilter.value !== String(cellValue);
+        return filterValue !== String(cellValue);
       case 15:
         return cellValue === null;
       case 16:

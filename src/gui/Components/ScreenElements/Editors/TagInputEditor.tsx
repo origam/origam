@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useEffect, useMemo, useRef } from "react";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 
 import CS from "./CommonStyle.module.css";
 import S from "./TagInputEditor.module.css";
@@ -58,6 +58,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       onDoubleClick?(event: any): void;
       onEditorBlur?(event: any): void;
       customInputClass?: string;
+      autoFocus?: boolean;
     }) => {
       const beh = useContext(CtxDropdownEditor).behavior;
       const ref = useContext(CtxDropdownRefCtrl);
@@ -92,10 +93,12 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
           data.remove(removedItem);
         }
       }
+      const [inputElement, setInputElement] = useState<any | undefined>(undefined);
 
       const refInput = useMemo(() => {
         return (elm: any) => {
           beh.refInputElement(elm);
+          setInputElement(elm);
         };
       }, [beh]);
 
@@ -103,7 +106,10 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         if (beh.subscribeToFocusManager && beh.elmInputElement) {
           beh.subscribeToFocusManager(beh.elmInputElement);
         }
-      }, [beh]);
+        if(props.autoFocus){
+          setTimeout(()=> inputElement?.focus());
+        }
+      }, [beh, inputElement, props.autoFocus]);
 
       const previousValueRef = useRef<string[]>();
 

@@ -174,6 +174,7 @@ export class DateTimeEditor extends React.Component<{
   isInvalid?: boolean;
   invalidMessage?: string;
   isFocused?: boolean;
+  autoFocus?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
   onChange?: (event: any, isoDay: string | undefined | null) => void;
@@ -249,10 +250,13 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound
   makeFocusedIfNeeded() {
-    if (this.props.isFocused && this.elmInput) {
-      this.elmInput.select();
-      this.elmInput.scrollLeft = 0;
-    }
+      setTimeout(()=>{
+          if ((this.props.autoFocus || this.props.isFocused) && this.elmInput) {
+              this.elmInput.select();
+              this.elmInput.focus();
+              this.elmInput.scrollLeft = 0;
+          }
+      });
   }
 
   _hLocationInterval: any;
