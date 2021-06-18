@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useEffect, useMemo, useRef } from "react";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 
 import CS from "./CommonStyle.module.css";
 import S from "./TagInputEditor.module.css";
@@ -65,7 +65,6 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const data = useContext(CtxDropdownEditor).editorData;
 
       const value = Array.isArray(props.value) ? [...props.value] : props.value;
-      let inputElement: any | undefined = undefined;
 
       function getStyle() {
         if (props.customStyle) {
@@ -94,11 +93,12 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
           data.remove(removedItem);
         }
       }
+      const [inputElement, setInputElement] = useState<any | undefined>(undefined);
 
       const refInput = useMemo(() => {
         return (elm: any) => {
           beh.refInputElement(elm);
-          inputElement = elm;
+          setInputElement(elm);
         };
       }, [beh]);
 
@@ -109,7 +109,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         if(props.autoFocus){
           setTimeout(()=> inputElement?.focus());
         }
-      }, [beh]);
+      }, [beh, inputElement, props.autoFocus]);
 
       const previousValueRef = useRef<string[]>();
 
