@@ -26,6 +26,5 @@ namespace Origam.Schema.EntityModel
 		Default = 0,
 		Element = 1,
 		Attribute = 2,
-		Hidden = 3,
 	}
 }
