@@ -64,6 +64,7 @@ namespace Origam.Server
             processData.SessionFormIdentifier = sessionFormIdentifier;
             processData.RequestingGrid = requestingGrid;
             processData.ActionId = actionId;
+            processData.IsModalDialog = this.sessionStore.IsModalDialog;
             processData.Entity = entity;
             processData.SelectedItems = selectedItems;
             processData.Type = (PanelActionType)Enum.Parse(

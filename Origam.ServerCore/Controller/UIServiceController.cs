@@ -63,6 +63,7 @@ namespace Origam.ServerCore.Controller
     public class UIServiceController : AbstractController
     {
         private readonly IStringLocalizer<SharedResources> localizer;
+        private readonly ClientSortingAndFilteringConfig clientSortingAndFilteringConfig;
         private readonly IDataLookupService lookupService;
         private readonly RequestLocalizationOptions localizationOptions;
         private readonly CustomAssetsConfig customAssetsConfig;
@@ -75,11 +76,13 @@ namespace Origam.ServerCore.Controller
             ILogger<AbstractController> log,
             IOptions<RequestLocalizationOptions> localizationOptions,
             IOptions<CustomAssetsConfig> customAssetsOptions,
+            IOptions<ClientSortingAndFilteringConfig> sortingConfig,
             IOptions<HtmlClientConfig> htmlClientConfigOptions,
             IOptions<ChatConfig> chatConfigOptions)
             : base(log, sessionObjects)
         {
             this.localizer = localizer;
+            this.clientSortingAndFilteringConfig = sortingConfig.Value;
             this.localizationOptions = localizationOptions.Value;
             customAssetsConfig = customAssetsOptions.Value;
             htmlClientConfig = htmlClientConfigOptions.Value;
@@ -1064,6 +1067,7 @@ namespace Origam.ServerCore.Controller
                 : chatConfig.ChatRefreshInterval;
             result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
             result.ShowToolTipsForMemoFieldsOnly = htmlClientConfig.ShowToolTipsForMemoFieldsOnly;
+            result.SortingConfig = clientSortingAndFilteringConfig;
         }
     }
 }
