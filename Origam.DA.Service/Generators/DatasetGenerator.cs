@@ -452,11 +452,13 @@ namespace Origam.DA.Service
 							case DataStructureColumnXmlMappingType.Element:
 								tableColumn.ColumnMapping = MappingType.Element;
 								break;
-							case DataStructureColumnXmlMappingType.Hidden:
-								tableColumn.ColumnMapping = MappingType.Hidden;
-								break;
 							default:
 								throw new ArgumentOutOfRangeException("XmlMappingType", finalColumn.XmlMappingType, "Unknown XmlMappingType");
+						}
+
+						if (column.HideInOutput)
+						{
+							tableColumn.ColumnMapping = MappingType.Hidden;
 						}
 
 						tableColumn.ExtendedProperties.Add("OnCopyAction", finalColumn.Field.OnCopyAction);
