@@ -54,6 +54,7 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Server;
 using System.Linq;
+using MoreLinq;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 
@@ -114,6 +115,7 @@ namespace Origam.ServerCommon.Pages
             else
             {
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
+                RemoveHiddenColumns(data);
                 if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
                     if (xsltPage.ProcessReadFieldRowLevelRulesForGETRequests)
@@ -251,6 +253,18 @@ namespace Origam.ServerCommon.Pages
                     } while (current.MoveToNextAttribute());
                     Analytics.Instance.Log(type, message, properties);
                 }
+            }
+        }
+
+        private void RemoveHiddenColumns(DataSet data)
+        {
+            foreach (DataTable table in data.Tables)
+            {
+               table.Columns
+                   .Cast<DataColumn>()
+                   .Where(x => x.ColumnMapping == MappingType.Hidden)
+                   .ToArray()
+                   .ForEach(column => table.Columns.Remove(column));
             }
         }
 
