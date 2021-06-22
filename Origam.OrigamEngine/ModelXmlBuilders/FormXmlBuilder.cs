@@ -372,15 +372,15 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			foreach(WorkQueueClassEntityMapping mapping in mappedColumns)
 			{
-				AddWorkQueueColumn(entity, mapping.Name, ref hasMemo, ref memoName, ref memoId, 
+				AddColumn(entity, mapping.Name, ref hasMemo, ref memoName, ref memoId, 
 					ref lastPos, propertiesElement,	propertyNamesElement, table, mapping.FormatPattern);
 			}
 
-			AddWorkQueueColumn(entity, "IsLocked", ref hasMemo, ref memoName, ref memoId, 
+			AddColumn(entity, "IsLocked", ref hasMemo, ref memoName, ref memoId, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-			AddWorkQueueColumn(entity, "refLockedByBusinessPartnerId", ref hasMemo, ref memoName, ref memoId, 
+			AddColumn(entity, "refLockedByBusinessPartnerId", ref hasMemo, ref memoName, ref memoId, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-			AddWorkQueueColumn(entity, "ErrorText", ref hasMemo, ref memoName, ref memoId, 
+			AddColumn(entity, "ErrorText", ref hasMemo, ref memoName, ref memoId, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
 
 			SetUserConfig(doc, listElement, wqc.DefaultPanelConfiguration, queueId, Guid.Empty);
@@ -493,17 +493,17 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return doc;
 		}
 
-        internal static void AddWorkQueueColumn(DataStructureEntity entity, string columnName,
+        internal static void AddColumn(DataStructureEntity entity, string columnName,
             ref bool hasMemo, ref string memoName, ref Guid memoId, ref int lastPos,
             XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
             string formatPattern)
         {
-            AddWorkQueueColumn(entity, columnName, ref hasMemo, ref memoName, ref memoId,
+            AddColumn(entity, columnName, ref hasMemo, ref memoName, ref memoId,
                 ref lastPos, propertiesElement, propertyNamesElement, table, formatPattern, 
                 "", true, null, null);
         }
 
-        private static void AddWorkQueueColumn(DataStructureEntity entity, string columnName,
+        private static void AddColumn(DataStructureEntity entity, string columnName,
 		    ref bool hasMemo, ref string memoName, ref Guid memoId, ref int lastPos,
 			XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
 			string formatPattern, string label, bool readOnly, string lookupParameterName,
@@ -702,18 +702,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             int lastPos = 5;
             if (entityRow.WorkflowCount > 0)
             {
-                AddWorkQueueColumn(entity, "refOrigamWorkflowId", ref hasMemo, ref memoName, ref memoId,
+                AddColumn(entity, "refOrigamWorkflowId", ref hasMemo, ref memoName, ref memoId,
                     ref lastPos, propertiesElement, propertyNamesElement, table, null, 
                     dataset.Tables["OrigamRecord"].Columns["refOrigamWorkflowId"].Caption,
                     false, "OrigamWorkflow_parOrigamEntityId", "'" + entityRow.Id.ToString() + "'");
-                AddWorkQueueColumn(entity, "refOrigamStateId", ref hasMemo, ref memoName, ref memoId,
+                AddColumn(entity, "refOrigamStateId", ref hasMemo, ref memoName, ref memoId,
                     ref lastPos, propertiesElement, propertyNamesElement, table, null,
                     dataset.Tables["OrigamRecord"].Columns["refOrigamStateId"].Caption, false, 
                     "OrigamState_parOrigamWorkflowId", "refOrigamWorkflowId");
             }
             foreach (var column in entityRow.GetOrigamFieldRows())
             {
-                AddWorkQueueColumn(entity, column.MappedColumn, ref hasMemo, ref memoName, ref memoId,
+                AddColumn(entity, column.MappedColumn, ref hasMemo, ref memoName, ref memoId,
                     ref lastPos, propertiesElement, propertyNamesElement, table, null, column.Label, 
                     false, "OrigamRecord_parOrigamEntityId", 
                     column.IsrefLookupOrigamEntityIdNull() ? null : "'" + column.refLookupOrigamEntityId.ToString() + "'");

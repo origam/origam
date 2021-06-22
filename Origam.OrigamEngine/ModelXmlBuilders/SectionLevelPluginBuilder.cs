@@ -67,7 +67,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             
             foreach(var column in entity.Columns)
             {
-                FormXmlBuilder.AddWorkQueueColumn(entity, column.Name, ref hasMemo, ref memoName, ref memoId, 
+                FormXmlBuilder.AddColumn(entity, column.Name, ref hasMemo, ref memoName, ref memoId, 
                     ref lastPos, propertiesElement,	propertyNamesElement, table, null);
             }
         }
