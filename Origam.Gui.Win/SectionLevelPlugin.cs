@@ -83,7 +83,7 @@ namespace Origam.Gui.Win
         }
         
         [DefaultValue(false), Category("Data"), 
-         Description("")]
+         Description("Must be set for exactly one plugin per screen to true if there is no master grid present.")]
         public bool AllowNavigation { get; set; } = true;
     }
 }
