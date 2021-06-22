@@ -21,4 +21,4 @@ import {FilterPlugin} from "./FilterPlugin";
 import {AuditPlugin} from "./AuditPlugin";
 
 
-export const plugins = [new FilterPlugin(), new AuditPlugin()];
+export const plugins = [()=> new FilterPlugin(), () => new AuditPlugin()];

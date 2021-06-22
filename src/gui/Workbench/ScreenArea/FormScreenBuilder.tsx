@@ -37,6 +37,8 @@ import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 import {serverValueToPanelSizeRatio} from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
 import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
+import {getSessionId} from "../../../model/selectors/getSessionId";
+import {getFormScreenLifecycle} from "../../../model/selectors/FormScreen/getFormScreenLifecycle";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -59,10 +61,21 @@ export class FormScreenBuilder extends React.Component<{
       return dataView;
     }
 
+
     function recursive(xso: any) {
       if (xso.attributes.Type === "FormLevelPlugin" ||
-          xso.attributes.Type === "SectionLevelPlugin") {
-        return [pluginLibrary.getComponent(xso.attributes.Name, getDataView(xso))];
+          xso.attributes.Type === "SectionLevelPlugin")
+      {
+        let dataView = getDataView(xso);
+        let sessionId = getSessionId(self.formScreen);
+        getFormScreenLifecycle(self.formScreen);
+        return pluginLibrary.getComponent(
+          {
+            name: xso.attributes.Name,
+            modelInstanceId: xso.attributes.ModelInstanceId,
+            sessionId:sessionId,
+            ctx: dataView
+          });
       }
 
       switch (xso.attributes.Type) {

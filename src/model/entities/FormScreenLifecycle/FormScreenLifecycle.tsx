@@ -414,7 +414,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.initialSelectedRowId = initUIResult.currentRecordId;
       yield* this.applyInitUIResult({ initUIResult });
-      this.initializeFormLevelPlugins(initUIResult);
+      this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield* this.clearTotalCounts();
         yield* this.loadData({ keepCurrentData: true });
@@ -489,7 +489,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.startAutoRefreshIfNeeded();
   }
 
-  private initializeFormLevelPlugins(initUIResult: any) {
+  private initializePlugins(initUIResult: any) {
     let formLevelPlugins = find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin");
     if(formLevelPlugins.length > 0){
       const formScreen = getFormScreen(this);
@@ -497,9 +497,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         dataView.clear()
       }
     }
+    let sessionId = getSessionId(this);
     formLevelPlugins
       .forEach(node => {
-        const plugin = pluginLibrary.get(node.attributes.Name);
+        const plugin = pluginLibrary.createInstance(
+          {
+            name: node.attributes.Name,
+            modelInstanceId: node.attributes.ModelInstanceId,
+            sessionId: sessionId
+          });
         if (!isIFormPlugin(plugin)) {
           throw new Error(`Plugin ${plugin.name} is not FormLevelPlugin`)
         }
@@ -515,7 +521,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
     find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "SectionLevelPlugin")
       .forEach(node => {
-        const plugin = pluginLibrary.get(node.attributes.Name);
+        const plugin = pluginLibrary.createInstance(
+          {
+            name: node.attributes.Name,
+            modelInstanceId: node.attributes.ModelInstanceId,
+            sessionId: sessionId
+          })
         if (!isISectionPlugin(plugin)) {
           throw new Error(`Plugin ${plugin.name} is not SectionLevelPlugin`)
         }
