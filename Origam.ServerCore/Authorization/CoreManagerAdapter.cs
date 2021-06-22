@@ -222,5 +222,10 @@ namespace Origam.ServerCore.Authorization
                 ? InternalIdentityResult.Success 
                 : InternalIdentityResult.Failed(errors);
         }
+
+        public IOrigamUser CreateUserObject(string userName)
+        {
+            return new User(userName);
+        }
     }
 }

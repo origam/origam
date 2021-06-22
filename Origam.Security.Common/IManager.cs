@@ -45,5 +45,6 @@ namespace Origam.Security.Identity
         Task<TokenResult> GetPasswordResetTokenFromEmailAsync(string email);
         Task<string> GeneratePasswordResetTokenAsync1(string userId);
         Task<XmlDocument> GetPasswordAttributesAsync();
+        IOrigamUser CreateUserObject(string userName);
     }
 }
