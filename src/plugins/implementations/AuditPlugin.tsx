@@ -30,9 +30,9 @@ import {IPluginDataView} from "../types/IPluginDataView";
 import {Localizer} from "../tools/Localizer";
 import {localizations} from "./AuditPluginLocalization";
 
-export class AuditPlugin implements ISectionPlugin{
+export default class AuditPlugin implements ISectionPlugin{
   $type_ISectionPlugin: 1 = 1;
-  name = "AuditPlugin";
+  id: string = ""
 
   initialize(xmlAttributes: {[key: string]: string}): void{
 

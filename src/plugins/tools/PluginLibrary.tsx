@@ -19,29 +19,37 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {getDataView} from "../../model/selectors/DataView/getDataView";
 import {createPluginData} from "./PluginData";
-import {plugins} from "../implementations/registraction";
 import {IPlugin} from "../types/IPlugin";
+import React from "react";
+import { Fragment } from "react";
+
+const pluginFactoryFunctions: Map<string,()=>IPlugin> = new Map<string, () => IPlugin>();
+
+var req = (require as any).context("../implementations", true, /.*\.tsx$/);
+req.keys().forEach((key: any) => {
+  const pluginClass = req(key).default;
+  if(pluginClass){
+    pluginFactoryFunctions.set(pluginClass.name, () => Reflect.construct(pluginClass,[]))
+  }
+}
+);
+
 
 export class PluginLibrary {
-  // factoryFunctions: Map<string, () => IPlugin> = new Map<string, () => IPlugin>();
   pluginInstances: Map<string, IPlugin> = new Map<string, IPlugin>();
 
-  // register(plugin: () => IPlugin){
-  //   this.factoryFunctions.set(plugin.name, plugin)
-  // }
-
   getComponent(args: {name: string ,modelInstanceId: string, sessionId: string, ctx: any}): JSX.Element {
-    const plugin = this.createInstance({
+    const plugin = this.get({
       name: args.name,
       modelInstanceId: args.modelInstanceId,
       sessionId: args.sessionId
     });
     const dataView = getDataView(args.ctx);
     const pluginData = createPluginData(dataView)
-    return plugin.getComponent(pluginData!);
+    return <Fragment key={plugin.id}>{plugin.getComponent(pluginData!)}</Fragment>;
   }
 
-  createInstance(args: {name: string, modelInstanceId: string, sessionId: string} ): IPlugin {
+  get(args: {name: string, modelInstanceId: string, sessionId: string} ): IPlugin {
     if(!args.modelInstanceId){
       throw new Error("modelInstanceId must have a value")
     }
@@ -56,33 +64,17 @@ export class PluginLibrary {
       return this.pluginInstances.get(pluginId)!;
     }
     const plugin = this.makePluginInstance(args.name);
-    if(!plugin.name){
-      throw new Error("Plugin name cannot be empty")
-    }
     plugin.id = pluginId;
     this.pluginInstances.set(plugin.id,  plugin);
     return plugin;
   }
 
   makePluginInstance(name: string){
-    for (let factoryFunction of plugins) {
-      const plugin = factoryFunction();
-      if(plugin.name === name){
-        return plugin;
-      }
+    if(!pluginFactoryFunctions.has(name)){
+      throw new Error(`Cannot find plugin class named: ${name}`)
     }
-    throw new Error("Cannot find plugin named: " + name)
+    return pluginFactoryFunctions.get(name)!();
   }
-
-  // getInstance(id: string): IPlugin {
-  //   if(!this.pluginInstances.has(id, )){
-  //     throw new Error("Cannot find plugin with Id: " + id)
-  //   }
-  //   return this.pluginInstances.get(id)!;
-  // }
 }
 
 export const pluginLibrary = new PluginLibrary();
-// for (let plugin of plugins) {
-//   pluginLibrary.register(plugin)
-// }

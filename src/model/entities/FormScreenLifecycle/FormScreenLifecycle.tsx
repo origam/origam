@@ -500,14 +500,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     let sessionId = getSessionId(this);
     formLevelPlugins
       .forEach(node => {
-        const plugin = pluginLibrary.createInstance(
+        const plugin = pluginLibrary.get(
           {
             name: node.attributes.Name,
             modelInstanceId: node.attributes.ModelInstanceId,
             sessionId: sessionId
           });
         if (!isIFormPlugin(plugin)) {
-          throw new Error(`Plugin ${plugin.name} is not FormLevelPlugin`)
+          throw new Error(`Plugin ${node.attributes.Name} is not FormLevelPlugin`)
         }
         const formPlugin = plugin as IFormPlugin;
         formPlugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
@@ -521,14 +521,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
     find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "SectionLevelPlugin")
       .forEach(node => {
-        const plugin = pluginLibrary.createInstance(
+        const plugin = pluginLibrary.get(
           {
             name: node.attributes.Name,
             modelInstanceId: node.attributes.ModelInstanceId,
             sessionId: sessionId
           })
         if (!isISectionPlugin(plugin)) {
-          throw new Error(`Plugin ${plugin.name} is not SectionLevelPlugin`)
+          throw new Error(`Plugin ${node.attributes.Name} is not SectionLevelPlugin`)
         }
         const sectionPlugin = plugin as ISectionPlugin;
         sectionPlugin.getFormParameters = () => JSON.parse(JSON.stringify(this.parameters));

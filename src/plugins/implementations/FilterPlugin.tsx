@@ -31,9 +31,9 @@ import {Button} from "../../gui/Components/PublicComponenets/Button";
 import {Localizer} from "../tools/Localizer";
 import {localizations} from "./FilterPluginLocalization";
 
-export class FilterPlugin implements IFormPlugin {
+export default class FilterPlugin implements IFormPlugin {
   $type_IFormPlugin: 1 = 1;
-  name = "FilterPlugin";
+  id: string = "";
 
   timeUnits = [{value: "month", label: "Month"}, {value: "day", label: "Day"}, {value: "hour", label: "Hour"}]
 
@@ -80,8 +80,9 @@ export class FilterPlugin implements IFormPlugin {
     for (let timeUnit of this.timeUnits) {
       timeUnit.label = localizer.translate(timeUnit.value)
     }
-    return <FilterComponent filterPlugin={this}
-                            localizer={localizer}/>;
+    return <FilterComponent
+      filterPlugin={this}
+      localizer={localizer}/>;
   }
 
   addTime(args:{start: Moment}){
