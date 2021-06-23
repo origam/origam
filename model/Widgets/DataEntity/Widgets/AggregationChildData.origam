@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:ac="http://schemas.origam.com/Origam.Schema.EntityModel.AggregatedColumn/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -9,6 +9,36 @@
     tmi:mappedObjectName="AggregationChildData"
     asi:name="AggregationChildData"
     ade:readOnly="false">
+    <ac:DataEntityColumn
+      asi:abstract="false"
+      ac:aggregationType="Sum"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      ac:field="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/Price/ed743e1a-fd2d-4fc0-9320-01612c9ddc15"
+      x:id="7172f724-90a1-4594-94ba-2864df198e24"
+      adec:isPrimaryKey="false"
+      adec:label="Price"
+      asi:name="SumSubAggregatedPrice"
+      adec:onCopyAction="Copy"
+      ac:relation="Widgets/DataEntity/Widgets/AggregationChildData.origam#AggregationChildData/AggregationChildChildData/e9ea2c94-a041-4249-9695-0a7cc4663053"
+      adec:xmlMappingType="Attribute" />
+    <ac:DataEntityColumn
+      asi:abstract="false"
+      ac:aggregationType="Count"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      ac:field="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/Price/ed743e1a-fd2d-4fc0-9320-01612c9ddc15"
+      x:id="e3934108-c673-484f-ac37-ed6c8c01ab3e"
+      adec:isPrimaryKey="false"
+      adec:label="Price"
+      asi:name="CountSubAggregatedPrice"
+      adec:onCopyAction="Copy"
+      ac:relation="Widgets/DataEntity/Widgets/AggregationChildData.origam#AggregationChildData/AggregationChildChildData/e9ea2c94-a041-4249-9695-0a7cc4663053"
+      adec:xmlMappingType="Attribute" />
     <dei:DataEntityIndex
       asi:abstract="false"
       dei:generateDeploymentScript="true"
@@ -22,6 +52,21 @@
         asi:name="0_refAggregationParentFunctionId"
         deif:sortOrder="Ascending" />
     </dei:DataEntityIndex>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="e9ea2c94-a041-4249-9695-0a7cc4663053"
+      asi:name="AggregationChildChildData"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/51b96080-40a4-42be-a93f-7ce703e015a3"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c9677c7d-a2ce-482e-97d8-dfc9602f050c"
+        asi:name="AggregationChildChildDataKey1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/refAggregationChildDataId/e66d65a7-b304-4f87-a5aa-3ddae19658b9" />
+    </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"

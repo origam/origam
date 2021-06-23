@@ -80,6 +80,36 @@
       adec:onCopyAction="Copy"
       ac:relation="Widgets/DataEntity/Widgets/AggregationParentFunction.origam#AggregationParentFunction/AggregationChildData/ccf340a2-6300-464f-ad07-0a7798d6d873"
       adec:xmlMappingType="Attribute" />
+    <ac:DataEntityColumn
+      asi:abstract="false"
+      ac:aggregationType="Sum"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      ac:field="Widgets/DataEntity/Widgets/AggregationChildData.origam#AggregationChildData/SubAggregatedPrice/7172f724-90a1-4594-94ba-2864df198e24"
+      x:id="86e89502-70d8-4e39-989e-9379c545cf7f"
+      adec:isPrimaryKey="false"
+      adec:label="Price"
+      asi:name="SumSubAggregatedPrice"
+      adec:onCopyAction="Copy"
+      ac:relation="Widgets/DataEntity/Widgets/AggregationParentFunction.origam#AggregationParentFunction/AggregationChildData/ccf340a2-6300-464f-ad07-0a7798d6d873"
+      adec:xmlMappingType="Attribute" />
+    <ac:DataEntityColumn
+      asi:abstract="false"
+      ac:aggregationType="Sum"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      ac:field="Widgets/DataEntity/Widgets/AggregationChildData.origam#AggregationChildData/CountSubAggregatedPrice/e3934108-c673-484f-ac37-ed6c8c01ab3e"
+      x:id="69f6c4e3-4a9a-4972-8320-cd335fc987cc"
+      adec:isPrimaryKey="false"
+      adec:label="Price"
+      asi:name="SumCountSubAggregatedPrice"
+      adec:onCopyAction="Copy"
+      ac:relation="Widgets/DataEntity/Widgets/AggregationParentFunction.origam#AggregationParentFunction/AggregationChildData/ccf340a2-6300-464f-ad07-0a7798d6d873"
+      adec:xmlMappingType="Attribute" />
     <eri:EntityRelation
       asi:abstract="false"
       x:id="ccf340a2-6300-464f-ad07-0a7798d6d873"
