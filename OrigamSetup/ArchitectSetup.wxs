@@ -8,7 +8,7 @@
 -->
 <?define OrigamProductName = "ORIGAM Architect (@branch@)" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="0.0.0.0" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="EA0B5189-DCF2-4E24-81A7-2BE0E377FB1E">
+    <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="EA0B5189-DCF2-4E24-81A7-2BE0E377FB1E">
         <Package Id="*" Keywords="Installer" Description="ORIGAM Architect" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
         <Media Id="1" Cabinet="install.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" CompressionLevel="high" />
         <Property Id="DiskPrompt" Value="Advantage Solutions's ORIGAM Architect Installation [1]" />
@@ -503,13 +503,13 @@
                                         <File Id="RESETPASSWORD.CSHTML" Name="ResetPassword.cshtml" Source="server_source\ResetPassword.cshtml" />
                                     </Component>
                                     <Component Id="PortalClient" DiskId="1" Guid="4C9A99F1-1F5D-4000-8412-5844854B4C02">
-                                        <File Id="PORTAL_ID.SWF" Name="Portal_SWF-BUILDNUMBER.swf" Source="server_source\Portal_SWF-BUILDNUMBER.swf" />
+                                        <File Id="PORTAL_ID.SWF" Name="Portal_@version@.swf" Source="server_source\Portal_@version@.swf" />
                                     </Component>
                                     <Component Id="PortalClientDebug" DiskId="1" Guid="6F7F41AC-EE95-4072-B871-9C31DAE08952">
-                                        <File Id="PORTAL_ID_DBG.SWF" Name="Portal_SWF-BUILDNUMBER_dbg.swf" Source="server_source\Portal_SWF-BUILDNUMBER_dbg.swf" />
+                                        <File Id="PORTAL_ID_DBG.SWF" Name="Portal_@version@_dbg.swf" Source="server_source\Portal_@version@_dbg.swf" />
                                     </Component>
                                     <Component Id="Theme" DiskId="1" Guid="98F40532-A431-4690-A761-3EF74C4F5F9B">
-                                        <File Id="THEME_ID.SWF" Name="theme_SWF-BUILDNUMBER.swf" Source="server_source\theme_SWF-BUILDNUMBER.swf" />
+                                        <File Id="THEME_ID.SWF" Name="theme_@version@.swf" Source="server_source\theme_@version@.swf" />
                                     </Component>
                                     <Component Id="RECOVER.CSHTML" DiskId="1" Guid="D79D9085-0169-4573-9F64-D06FE529F8E2">
                                         <File Id="RECOVER.CSHTML" Name="Recover.cshtml" Source="server_source\Recover.cshtml" />
