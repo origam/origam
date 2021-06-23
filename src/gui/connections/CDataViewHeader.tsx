@@ -1,3 +1,22 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { scopeFor } from "dic/Container";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import {
@@ -56,6 +75,7 @@ import { IConfigurationManager } from "model/entities/TablePanelView/types/IConf
 import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
+import {getAreCrudButtonsEnabled} from "../../model/selectors/DataView/getAreCrudButtonsEnabled";
 
 function isAddRecordShortcut(event: any) {
   return (
@@ -266,6 +286,7 @@ export class CDataViewHeaderInner extends React.Component<{
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
+    const crudButtonsEnabled = getAreCrudButtonsEnabled(dataView);
 
     const $cont = scopeFor(dataView);
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
@@ -330,6 +351,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                 className="isGreenHover"
                                 onClick={onCreateRowClickEvt}
                                 onShortcut={onCreateRowClickEvt}
+                                isDisabled={!crudButtonsEnabled}
                                 shortcutPredicate={isAddRecordShortcut}
                               >
                                 <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
@@ -342,6 +364,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                 onMouseDown={onDeleteRowClickEvt}
                                 onShortcut={onDeleteRowClickEvt}
                                 shortcutPredicate={isDeleteRecordShortcut}
+                                isDisabled={!crudButtonsEnabled}
                               >
                                 <Icon
                                   src="./icons/minus.svg"
