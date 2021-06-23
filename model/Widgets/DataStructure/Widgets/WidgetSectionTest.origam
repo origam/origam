@@ -26,7 +26,19 @@
         dse:ignoreImplicitFilters="false"
         asi:name="WidgetSectionTestDetail"
         dse:relationType="Normal"
-        dse:useUpsert="false" />
+        dse:useUpsert="false">
+        <dse:DataStructureEntity
+          asi:abstract="false"
+          dse:allFields="true"
+          dse:concurrencyHandling="Standard"
+          dse:entity="Widgets/DataEntity/Widgets/WidgetSectionTestDetail.origam#WidgetSectionTestDetail/WidgetSectionTestDetailDetail/5c4bb79a-6736-4ec5-a6d9-97993a2b005a"
+          x:id="3ad8f7a6-01d3-4906-8fd7-1a0fc48382ae"
+          dse:ignoreCondition="None"
+          dse:ignoreImplicitFilters="false"
+          asi:name="WidgetSectionTestDetailDetail"
+          dse:relationType="Normal"
+          dse:useUpsert="false" />
+      </dse:DataStructureEntity>
     </dse:DataStructureEntity>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
