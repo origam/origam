@@ -90,7 +90,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .dropDownMenu {
   background-color:var(--white);
-  border: 1px solidvar(--black);
+  border: 1px solid var(--black);
 
   position: absolute;
   z-index: 2000;
