@@ -73,6 +73,7 @@ import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import {getTrueSelectedRowIndex} from "../../model/selectors/DataView/getTrueSelectedRowIndex";
+import {getAreCrudButtonsEnabled} from "../../model/selectors/DataView/getAreCrudButtonsEnabled";
 
 function isAddRecordShortcut(event: any) {
   return (
@@ -282,6 +283,7 @@ export class CDataViewHeaderInner extends React.Component<{
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
+    const crudButtonsEnabled = getAreCrudButtonsEnabled(dataView);
 
     const $cont = scopeFor(dataView);
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
@@ -346,6 +348,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                 className="isGreenHover"
                                 onClick={onCreateRowClickEvt}
                                 onShortcut={onCreateRowClickEvt}
+                                isDisabled={!crudButtonsEnabled}
                                 shortcutPredicate={isAddRecordShortcut}
                               >
                                 <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
@@ -358,6 +361,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                 onMouseDown={onDeleteRowClickEvt}
                                 onShortcut={onDeleteRowClickEvt}
                                 shortcutPredicate={isDeleteRecordShortcut}
+                                isDisabled={!crudButtonsEnabled}
                               >
                                 <Icon
                                   src="./icons/minus.svg"
