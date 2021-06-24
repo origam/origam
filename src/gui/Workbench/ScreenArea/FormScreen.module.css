@@ -37,7 +37,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding: 10px;
   flex-shrink: 0;
   flex-grow: 0;
-  /* border: 1px solidvar(--black);*/
   display: flex;
   align-items: center;
   font-size: 18px;
@@ -96,6 +95,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 :global(.screenSplitterHandle):hover {
-  background-color: var(--greay25);
+  background-color: var(--grey25);
 }
 

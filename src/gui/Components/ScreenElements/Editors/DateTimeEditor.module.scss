@@ -62,7 +62,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .calendarWidgetCell:hover {
-  background-color: var(--greay25);
+  background-color: var(--grey25);
 }
 
 .calendarWidgetSelectedDay {
@@ -166,7 +166,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .formatHintTooltip {
   padding: 5px;
   position: fixed;
-  border: 1px solidvar(--black);
+  border: 1px solid var(--black);
   background-color:var(--white);
   z-index: 5000;
 }

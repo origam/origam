@@ -51,7 +51,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 
   :global(.markerHighlighted) img { 
-    border: 2px solidvar(--yellow);
+    border: 2px solid var(--yellow);
     background-color: rgba(255, 255, 0, 0.274);
   }
 }
@@ -98,7 +98,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: fixed;
   z-index: 10000;
   background-color:var(--white);
-  border: 1px solidvar(--black);
+  border: 1px solid var(--black);
   border-radius: 3px;
   max-height: 300px;
 

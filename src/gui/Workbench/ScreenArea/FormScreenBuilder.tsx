@@ -68,12 +68,11 @@ export class FormScreenBuilder extends React.Component<{
       {
         let dataView = getDataView(xso);
         let sessionId = getSessionId(self.formScreen);
-        getFormScreenLifecycle(self.formScreen);
         return pluginLibrary.getComponent(
           {
             name: xso.attributes.Name,
             modelInstanceId: xso.attributes.ModelInstanceId,
-            sessionId:sessionId,
+            sessionId: sessionId,
             ctx: dataView
           });
       }
