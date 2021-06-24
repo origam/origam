@@ -97,7 +97,12 @@ export class FormScreen implements IFormScreen {
   getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
     this.dataSources.filter(dataSource => dataSource.entity === childEntity)
     .forEach(dataSource => getRowStates(dataSource).clearAll());
-    return this.getDataCache.getData(childEntity, parentRecordId, rootRecordId);
+    return this.getDataCache.getData({
+      childEntity: childEntity,
+      parentRecordId: parentRecordId,
+      rootRecordId: rootRecordId,
+      useCachedValue: !this.isDirty
+    });
   }
 
   clearDataCache(){
@@ -273,10 +278,10 @@ class GetDataCache {
 
   dataMap = new Map<string, Promise<any>>();
 
-  public async getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
-    const cacheKey = this.makeChacheKey(childEntity, parentRecordId, rootRecordId);
-    if (!this.dataMap.has(cacheKey)) {
-      const dataPromise = this.callGetData(childEntity, parentRecordId, rootRecordId);
+  public async getData(args:{childEntity: string, parentRecordId: string, rootRecordId: string, useCachedValue: boolean}) {
+    const cacheKey = this.makeCacheKey(args.childEntity, args.parentRecordId, args.rootRecordId);
+    if (!args.useCachedValue || !this.dataMap.has(cacheKey)) {
+      const dataPromise = this.callGetData(args.childEntity, args.parentRecordId, args.rootRecordId);
       this.dataMap.set(cacheKey, dataPromise);
     }
     return this.dataMap.get(cacheKey);
@@ -297,7 +302,7 @@ class GetDataCache {
     return dataPromise;
   }
 
-  private makeChacheKey(childEntity: string, parentRecordId: string, rootRecordId: string) {
+  private makeCacheKey(childEntity: string, parentRecordId: string, rootRecordId: string) {
     return childEntity + parentRecordId + rootRecordId;
   }
 }
