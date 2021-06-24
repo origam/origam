@@ -28,7 +28,7 @@ import {
 } from "modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
 import S from "./SimpleDropdown.module.scss";
 import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
-
+import {uuidv4} from "../../../utils/uuid";
 @observer
 export class SimpleDropdown<T> extends React.Component<{
   width: string,
@@ -36,9 +36,49 @@ export class SimpleDropdown<T> extends React.Component<{
   selectedOption: IOption<T>,
   onOptionClick: (option: IOption<T>) => void
 }> {
+  id = "SimpleDropdown_"+uuidv4()
 
   @observable
-  isDropped = false;
+  _isDropped = false;
+
+  get isDropped(){
+    return this._isDropped;
+  }
+
+  set isDropped(value: boolean){
+    if(value){
+      document.addEventListener("mousedown", event => this.documentClickListener(event))
+      document.addEventListener("wheel", event => this.documentWheelListener(event))
+    }else{
+      document.removeEventListener("mousedown", event => this.documentClickListener(event));
+      document.removeEventListener("wheel", event => this.documentWheelListener(event));
+    }
+    this._isDropped = value;
+  }
+
+  documentWheelListener(event: any) {
+    const simpleDropdown = document.getElementById(this.id);
+    const dropdownPortal = document.getElementById("dropdown-portal");
+    let targetElement = event.target;
+    if(!targetElement){
+      return;
+    }
+    if(!dropdownPortal!.contains(targetElement) && !simpleDropdown!.contains(targetElement)){
+      this.isDropped = false;
+    }
+  }
+
+  documentClickListener(event: any) {
+    const dropdownPortal = document.getElementById("dropdown-portal");
+    const simpleDropdown = document.getElementById(this.id);
+    let targetElement = event.target;
+    if(!targetElement){
+      return;
+    }
+    if(!dropdownPortal!.contains(targetElement) && !simpleDropdown!.contains(targetElement)){
+      this.isDropped = false;
+    }
+  }
 
   onOptionClick(option: IOption<T>){
     this.isDropped = false;
@@ -47,36 +87,39 @@ export class SimpleDropdown<T> extends React.Component<{
 
   render() {
     return (
-      <DropdownLayout
-        isDropped={this.isDropped}
-        renderCtrl={() => (
-          <DropDownControl
-            width={this.props.width}
-            onClick={() => this.isDropped = !this.isDropped}
-            value={this.props.selectedOption.label}
-          />
-        )}
-        renderDropdown={() => (
-          <DropdownLayoutBody
-            minSideMargin={0}
-            render={() => (
-              <DropDownBody
-                width={this.props.width}
-                options={this.props.options}
-                selected={this.props.selectedOption}
-                onOptionClick={option => this.onOptionClick(option)}
-              />
-            )}
-          />
-        )}
-      />
+      <div
+        id={this.id}>
+        <DropdownLayout
+          isDropped={this.isDropped}
+          renderCtrl={() => (
+            <DropDownControl
+              width={this.props.width}
+              onMouseDown={() => this.isDropped = !this.isDropped}
+              value={this.props.selectedOption.label}
+            />
+          )}
+          renderDropdown={() => (
+            <DropdownLayoutBody
+              minSideMargin={0}
+              render={() => (
+                <DropDownBody
+                  width={this.props.width}
+                  options={this.props.options}
+                  selected={this.props.selectedOption}
+                  onOptionClick={option => this.onOptionClick(option)}
+                />
+              )}
+            />
+          )}
+        />
+      </div>
     );
   }
 }
 
 
 export function DropDownControl(props: {
-  onClick: ()=> void;
+  onMouseDown: ()=> void;
   value: string;
   width: string
 }) {
@@ -85,7 +128,7 @@ export function DropDownControl(props: {
   return (
     <div
       style={{width: props.width, height: "19px"}}
-      onClick={()=>props.onClick()}
+      onMouseDown={()=>props.onMouseDown()}
       ref={ref}
       className={CS.control}>
       <input
