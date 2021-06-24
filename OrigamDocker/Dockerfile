@@ -4,7 +4,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 RUN apt-get update
 RUN apt-get -y install git sudo nginx ssh
-RUN apt-get -y install libgdiplus
 RUN useradd -ms /bin/bash origam
 RUN usermod -aG sudo origam
 RUN echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
@@ -30,7 +29,8 @@ WORKDIR /home/origam/libgdiplus
 RUN ./autogen.sh --with-pango --prefix=/usr
 RUN make
 RUN sudo make install
-
+WORKDIR /home/origam
+RUN rm -r libgdiplus
 #End of rebuild libgdiplus
 
 WORKDIR /home/origam
