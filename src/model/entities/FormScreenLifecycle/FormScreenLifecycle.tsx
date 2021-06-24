@@ -504,14 +504,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         if (!isIFormPlugin(plugin)) {
           throw new Error(`Plugin ${node.attributes.Name} is not FormLevelPlugin`)
         }
-        const formPlugin = plugin as IFormPlugin;
-        formPlugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
+        plugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
           {ctx: this, generator: this.refreshSession()}
         );
-        formPlugin.setFormParameters = (parameters: { [key: string]: string }) =>
+        plugin.setFormParameters = (parameters: { [key: string]: string }) =>
           Object.keys(parameters)
             .forEach(key => this.parameters[key] = parameters[key]);
-        formPlugin.initialize(node.attributes);
+        plugin.initialize(node.attributes);
       })
 
     find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "SectionLevelPlugin")
@@ -527,9 +526,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         }
         const dataView = getDataViewByGridId(this, node.attributes.ModelInstanceId);
         dataView!.clear();
-        const sectionPlugin = plugin as ISectionPlugin;
-        sectionPlugin.getFormParameters = () => JSON.parse(JSON.stringify(this.parameters));
-        sectionPlugin.initialize(node.attributes)
+        plugin.getFormParameters = () => JSON.parse(JSON.stringify(this.parameters));
+        plugin.initialize(node.attributes)
       });
   }
 
