@@ -10,6 +10,8 @@ variables:
   value: master
 - name: VERSION_NUMBER # version number of the build
   value: 2021.2.0.$(Build.BuildId)
+- name: PRODUCT_NUMBER # product number to be used in the installation file
+  value: 21.2.0.$(Build.BuildId)
 - name: TAG # tag to be used
   value: 2021.2-beta.1
 - name: TAG_LATEST # tag to be used
@@ -170,7 +172,7 @@ jobs:
          RemoveSourceFolder: true
        displayName: 'origam-client clean up'
      - powershell: |
-        (Get-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs).replace("SWF-BUILDNUMBER", "$(VERSION_NUMBER)") | Set-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs
+        (Get-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs).replace("@product_version@", "$(PRODUCT_NUMBER)") | Set-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs
         (Get-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs).replace("@branch@", "$(PRODUCT_VERSION)") | Set-Content $(Agent.BuildDirectory)\s\origam-source\OrigamSetup\ArchitectSetup.wxs
        displayName: 'Prepare ArchitectSetup.wxs'
      - powershell: |
