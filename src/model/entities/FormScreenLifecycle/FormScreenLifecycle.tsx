@@ -88,6 +88,7 @@ import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisi
 import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
 import {IFormPlugin, isIFormPlugin} from "../../../plugins/types/IFormPlugin";
 import {ISectionPlugin, isISectionPlugin} from "../../../plugins/types/ISectionPlugin";
+import {getDataViewById} from "../../selectors/DataView/getDataViewById";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -491,12 +492,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   private initializePlugins(initUIResult: any) {
     let formLevelPlugins = find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin");
-    if(formLevelPlugins.length > 0){
-      const formScreen = getFormScreen(this);
-      for (let dataView of formScreen.dataViews) {
-        dataView.clear()
-      }
-    }
     let sessionId = getSessionId(this);
     formLevelPlugins
       .forEach(node => {
@@ -530,6 +525,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         if (!isISectionPlugin(plugin)) {
           throw new Error(`Plugin ${node.attributes.Name} is not SectionLevelPlugin`)
         }
+        const dataView = getDataViewByGridId(this, node.attributes.ModelInstanceId);
+        dataView!.clear();
         const sectionPlugin = plugin as ISectionPlugin;
         sectionPlugin.getFormParameters = () => JSON.parse(JSON.stringify(this.parameters));
         sectionPlugin.initialize(node.attributes)
