@@ -54,5 +54,11 @@ class PluginDataView implements IPluginDataView{
     }
     return this.dataView.dataTable.getCellText(row, property);
   }
+
+  getRowId(row: IPluginTableRow){
+    return Array.isArray(row)
+      ? this.dataView.dataTable.getRowId(row)
+      : row.columnLabel + row.columnValue + row.groupLevel + row.isExpanded;
+  }
 }
 

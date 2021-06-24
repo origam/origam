@@ -24,4 +24,5 @@ export interface IPluginDataView {
   tableRows: IPluginTableRow[];
   properties: IPluginProperty[];
   getCellText(value: any, propertyId: string): any;
+  getRowId(row: IPluginTableRow): string;
 }

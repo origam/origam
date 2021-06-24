@@ -30,8 +30,8 @@ export class Localizer {
 
   constructor(private localizations: ILocalization[], defaultLocale: string) {
     this.locale = getLocaleFromCookie()
-    this.activeLocalization =  this.getLocalization(this.locale);
-    this.defaultLocalization =  this.getLocalization(defaultLocale);
+    this.activeLocalization = this.getLocalization(this.locale);
+    this.defaultLocalization = this.getLocalization(defaultLocale);
     this.messageFormat = new MessageFormat(this.locale);
     this.defaultMessageFormat = this.locale === defaultLocale
       ? this.messageFormat

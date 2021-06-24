@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
+import React, { Fragment } from "react";
 import S from './AuditPlugin.module.scss';
 import {IPluginData} from "../types/IPluginData";
 import {IPluginProperty} from "../types/IPluginProperty";
@@ -68,15 +68,18 @@ class AuditComponent extends React.Component<{
 
   renderHeader(properties: IPluginProperty[]){
     return properties.map(property =>
-      <>
+      <Fragment key={property.id}>
         <div className={S.header}>{property.name}</div>
         <div className={S.headerSeparator}></div>
-      </>
+      </Fragment>
     );
   }
 
   renderRow(row: any[]){
-    return this.propertiesToRender.map(property =><div className={S.column}>{this.dataView.getCellText(row, property.id)}</div>)
+    return this.propertiesToRender.map(property =>
+      <div key={property.id} className={S.column}>
+        {this.dataView.getCellText(row, property.id)}
+      </div>)
   }
 
   getGroupContainer(){
@@ -125,7 +128,10 @@ class AuditComponent extends React.Component<{
         <div className={S.rows}>
           {groupContainer.groups
             .get(subTimeunitValue)!
-            .map(row => <div className={S.row}>{this.renderRow(row as any[])}</div>)}
+            .map(row =>
+              <div key={this.dataView.getRowId(row)} className={S.row}>
+                {this.renderRow(row as any[])}
+              </div>)}
         </div>
       </div>
     );
