@@ -526,7 +526,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         }
         const dataView = getDataViewByGridId(this, node.attributes.ModelInstanceId);
         dataView!.clear();
-        plugin.getFormParameters = () => JSON.parse(JSON.stringify(this.parameters));
+        plugin.getFormParameters = () => _.cloneDeep(this.parameters);
         plugin.initialize(node.attributes)
       });
   }
