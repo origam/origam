@@ -39,9 +39,10 @@ export class Localizer {
   }
 
   private getLocalization(locale: string){
-    let localization = this.localizations.find(localization => localization.locale === locale);
+    const localeLower= locale.toLowerCase();
+    let localization = this.localizations.find(localization => localization.locale.toLowerCase() === localeLower);
     if(!localization){
-      localization = this.localizations.find(localization => localization.locale === locale.split("-")[0]);
+      localization = this.localizations.find(localization => localization.locale.toLowerCase() === localeLower.split("-")[0]);
     }
     if(!localization){
       throw new Error(`Plugin localization for locale: "${locale}" was not found`)
