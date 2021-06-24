@@ -23,7 +23,7 @@ import { Rect } from "react-measure";
 import { CtxDropdownBodyRect, CtxDropdownCtrlRect } from "./DropdownCommon";
 
 export function DropdownLayoutBody(
-  props: PropsWithChildren<{ render: () => React.ReactNode, minSideMargin: number }> = {render: ()=> null, minSideMargin: 50}
+  props: PropsWithChildren<{ render: () => React.ReactNode, minSideMargin: number }>
 ) {
 
   const rectBody = useContext(CtxDropdownBodyRect);
@@ -67,3 +67,8 @@ export function DropdownLayoutBody(
     </div>
   );
 }
+
+DropdownLayoutBody.defaultProps = {
+  render: ()=> null,
+  minSideMargin: 50
+};
