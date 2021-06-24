@@ -280,7 +280,13 @@ class GetDataCache {
 
   public async getData(args:{childEntity: string, parentRecordId: string, rootRecordId: string, useCachedValue: boolean}) {
     const cacheKey = this.makeCacheKey(args.childEntity, args.parentRecordId, args.rootRecordId);
-    if (!args.useCachedValue || !this.dataMap.has(cacheKey)) {
+    if(!args.useCachedValue){
+      if(this.dataMap.has(cacheKey)){
+        this.dataMap.delete(cacheKey);
+      }
+      return await this.callGetData(args.childEntity, args.parentRecordId, args.rootRecordId);
+    }
+    if(!this.dataMap.has(cacheKey)) {
       const dataPromise = this.callGetData(args.childEntity, args.parentRecordId, args.rootRecordId);
       this.dataMap.set(cacheKey, dataPromise);
     }
