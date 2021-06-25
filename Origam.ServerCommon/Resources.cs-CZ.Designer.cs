@@ -22,7 +22,7 @@ namespace Origam.ServerCommon {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources_cs_CZ {
+    public class Resources_cs_CZ {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -279,7 +279,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Data formuláře obsahují chyby. Nejdříve chyby opravte a pak pokračujte..
         /// </summary>
-        internal static string ErrorInForm {
+        public static string ErrorInForm {
             get {
                 return ResourceManager.GetString("ErrorInForm", resourceCulture);
             }
