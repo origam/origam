@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:csl="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStoreLink/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.0" xmlns:wct="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowCallTask/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:csl="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStoreLink/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wct="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowCallTask/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="0fea481a-24ab-4e98-8793-617ab5bb7272"
     asi:name="SendNotification"
-    w:traceLevel="None"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -55,7 +54,6 @@
       aws:roles="*"
       aws:startConditionRule="Root/Rule/_common/SR_NotificationChannelType_Email.origam#SR_NotificationChannelType_Email/0f9d3c7b-7ca7-48b8-9a76-348a2ded5ff1"
       aws:startConditionRuleContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/notificationChannelTypeId/8a40dacf-1afd-40f0-baee-fb8018b27139"
-      aws:traceLevel="InheritFromParent"
       twb:transactionType="None">
       <wct:WorkflowTask
         asi:abstract="false"
@@ -64,7 +62,6 @@
         wt:outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
         wt:outputMethod="Ignore"
         aws:roles="*"
-        aws:traceLevel="InheritFromParent"
         wct:workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b">
         <csl:ContextStoreLink
           asi:abstract="false"
@@ -115,7 +112,6 @@
       aws:roles="*"
       aws:startConditionRule="Root/Rule/_common/SR_NotificationChannelType_EmailQueued.origam#SR_NotificationChannelType_EmailQueued/fcc896b2-d960-43ba-a531-efc3f4f5a48a"
       aws:startConditionRuleContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/notificationChannelTypeId/8a40dacf-1afd-40f0-baee-fb8018b27139"
-      aws:traceLevel="InheritFromParent"
       twb:transactionType="None">
       <wct:WorkflowTask
         asi:abstract="false"
@@ -124,7 +120,6 @@
         wt:outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
         wt:outputMethod="Ignore"
         aws:roles="*"
-        aws:traceLevel="InheritFromParent"
         wct:workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b">
         <csl:ContextStoreLink
           asi:abstract="false"
