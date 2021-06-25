@@ -605,7 +605,8 @@ namespace Origam.Security.Identity
 					emailConfirmed = (bool)Parameters["EmailConfirmed"];
 				}
 			}
-            IOrigamUser user = FindUser();
+            IOrigamUser user = userManager.CreateUserObject(
+                Parameters["Username"].ToString());
             user.Email = Parameters["Email"].ToString();
             if (Parameters.ContainsKey("PasswordQuestion")) {
                 user.PasswordQuestion 
