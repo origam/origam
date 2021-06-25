@@ -30,7 +30,6 @@ import { DataView } from "../../Components/ScreenElements/DataView";
 import { Label } from "../../Components/ScreenElements/Label";
 import { VBox } from "../../Components/ScreenElements/VBox";
 import { WorkflowFinishedPanel } from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel";
-
 import actions from "model/actions-ui-tree";
 import { HBox } from "gui/Components/ScreenElements/HBox";
 import { IDataView } from "model/entities/types/IDataView";
@@ -38,7 +37,6 @@ import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 import {serverValueToPanelSizeRatio} from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
 import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
 import {getSessionId} from "../../../model/selectors/getSessionId";
-import {getFormScreenLifecycle} from "../../../model/selectors/FormScreen/getFormScreenLifecycle";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
