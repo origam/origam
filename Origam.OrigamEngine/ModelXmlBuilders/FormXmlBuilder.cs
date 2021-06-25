@@ -1484,7 +1484,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 							case "HideOnForm":			hideOnForm = property.BoolValue;										break;
 							case "StyleId":				styleId = property.GuidValue;											break;
 							case "Format":
-								if(property.Value != null)
+								if(property.Value == null)
+								{
+									format = "Long";
+								}
+								else
 								{
 									XmlDocument formatDoc = new XmlDocument();
 									formatDoc.LoadXml(property.Value);
