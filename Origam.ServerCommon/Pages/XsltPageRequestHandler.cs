@@ -115,7 +115,6 @@ namespace Origam.ServerCommon.Pages
             else
             {
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
-                RemoveHiddenColumns(data);
                 if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
                     if (xsltPage.ProcessReadFieldRowLevelRulesForGETRequests)
@@ -255,19 +254,7 @@ namespace Origam.ServerCommon.Pages
                 }
             }
         }
-
-        private void RemoveHiddenColumns(DataSet data)
-        {
-            foreach (DataTable table in data.Tables)
-            {
-               table.Columns
-                   .Cast<DataColumn>()
-                   .Where(x => x.ColumnMapping == MappingType.Hidden)
-                   .ToArray()
-                   .ForEach(column => table.Columns.Remove(column));
-            }
-        }
-
+        
         private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
         {
             DataTableCollection datatables = data.Tables;

@@ -38,6 +38,11 @@ namespace Origam.JSON
             writer.WriteStartObject();
             foreach (DataColumn column in row.Table.Columns)
             {
+                if (column.ColumnMapping == MappingType.Hidden)
+                {
+                    continue;
+                }
+
                 if (serializer.NullValueHandling == NullValueHandling.Ignore 
                     && (row[column] == null || row[column] == DBNull.Value))
                     continue;
