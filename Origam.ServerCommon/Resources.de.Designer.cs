@@ -22,7 +22,7 @@ namespace Origam.ServerCommon {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources_de {
+    public class Resources_de {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -270,7 +270,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Formulareintrag enthält Fehler (einige Plichtfelder sind leer). Beheben Sie diese Fehler, bevor Sie weiterfahren..
         /// </summary>
-        internal static string ErrorInForm {
+        public static string ErrorInForm {
             get {
                 return ResourceManager.GetString("ErrorInForm", resourceCulture);
             }

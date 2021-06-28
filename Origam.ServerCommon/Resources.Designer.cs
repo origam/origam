@@ -324,7 +324,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Form data contain errors (some mandatory fields are empty). Correct these errors before proceding..
         /// </summary>
-        internal static string ErrorInForm {
+        public static string ErrorInForm {
             get {
                 return ResourceManager.GetString("ErrorInForm", resourceCulture);
             }
