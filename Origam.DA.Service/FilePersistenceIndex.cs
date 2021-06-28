@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading;
 using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 
 namespace Origam.DA.Service
@@ -89,7 +90,7 @@ namespace Origam.DA.Service
                 itemTrackerWasJustLoadedFromBin = false;
                 return trackerLoaderFactory.XmlLoader.LoadInto(
                     itemTracker: itemTracker,
-                    tryUpgrade: false);
+                    mode: MetaModelUpgradeMode.Ignore);
             });
         }
         
@@ -203,7 +204,7 @@ namespace Origam.DA.Service
         }
 
         public void InitItemTracker(TrackerLoaderFactory trackerLoaderFactory,
-            bool tryUpgrade)
+            MetaModelUpgradeMode mode)
         {
             readWriteLock.RunWriter(() =>
             {
@@ -217,7 +218,7 @@ namespace Origam.DA.Service
                 {
                     Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
                         itemTracker: itemTracker,
-                        tryUpgrade: false);
+                        mode: MetaModelUpgradeMode.ThrowIfOutdated);
                     if(error.HasValue)
                     {
                         throw new Exception(error.Value.Message);
@@ -232,7 +233,7 @@ namespace Origam.DA.Service
 #else
                 Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
                     itemTracker: itemTracker,
-                    tryUpgrade: tryUpgrade);
+                    mode: mode);
                 if(error.HasValue)
                 {
                     throw new Exception(error.Value.Message);

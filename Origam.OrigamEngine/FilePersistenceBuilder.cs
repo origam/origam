@@ -66,9 +66,9 @@ namespace Origam.OrigamEngine
             
             
 #if !ORIGAM_CLIENT
-            bool tryUpgrade = true;
+            MetaModelUpgradeMode mode = MetaModelUpgradeMode.Upgrade;
 #else
-            bool tryUpgrade = false;
+            MetaModelUpgradeMode mode = MetaModelUpgradeMode.Ignore;
 #endif
             string pathToRuntimeModelConfig = ConfigurationManager
                 .GetActiveConfiguration().PathToRuntimeModelConfig;
@@ -77,7 +77,7 @@ namespace Origam.OrigamEngine
                 defaultFolders: defaultFolders,
                 watchFileChanges: watchFileChanges,
                 checkRules: checkRules,useBinFile: useBinFile,
-                tryUpgrade: tryUpgrade,
+                mode: mode,
                 pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 
@@ -97,7 +97,7 @@ namespace Origam.OrigamEngine
                 defaultFolders: defaultFolders,
                 watchFileChanges: false,
                 useBinFile: false,
-                tryUpgrade: false,
+                mode: MetaModelUpgradeMode.Ignore,
                 pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 

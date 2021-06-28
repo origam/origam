@@ -25,20 +25,22 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using CSharpFunctionalExtensions;
-using Origam.Extensions;
 using Origam.Workbench.Services;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
+
+    public enum MetaModelUpgradeMode
+    {
+        Upgrade, ThrowIfOutdated, Ignore
+    }
+
     public interface IMetaModelUpgradeService : IWorkbenchService
     {
         event EventHandler<UpgradeProgressInfo> UpgradeProgress;
         event EventHandler UpgradeStarted;
         event EventHandler UpgradeFinished;
-        List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData);
+        List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData, MetaModelUpgradeMode mode);
         void Cancel();
     }
 
@@ -57,7 +59,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
         }
 
-        public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData)
+        public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData, MetaModelUpgradeMode mode)
         {
             return xmlFileData;
         }
@@ -69,16 +71,30 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
     public class MetaModelUpgradeService: IMetaModelUpgradeService
     {
-        private MetaModelUpgrader _metaModelUpgrader;
+        private MetaModelAnalyzer metaModelAnalyzer;
         public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
         public event EventHandler UpgradeStarted;
         public event EventHandler UpgradeFinished;
         private bool canceled;
         private int filesProcessed;
 
-        public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData)
+        public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData, MetaModelUpgradeMode mode)
         {
-            _metaModelUpgrader = new MetaModelUpgrader();
+            IMetaModelUpgrader metaModelUpgrader;
+            switch (mode)
+            {
+                case MetaModelUpgradeMode.Ignore:
+                    return xmlFileData;
+                case MetaModelUpgradeMode.Upgrade:
+                    metaModelUpgrader = new MetaModelUpgrader();
+                    break;
+                case MetaModelUpgradeMode.ThrowIfOutdated:
+                    metaModelUpgrader = new DisabledMetaModelUpgrader();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, "Not implemented");
+            }
+            metaModelAnalyzer = new MetaModelAnalyzer(metaModelUpgrader);
 
             filesProcessed = 0;
             UpgradeStarted?.Invoke(null, EventArgs.Empty);
@@ -114,12 +130,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
             bool wasUpgraded;
             try
             {
-                wasUpgraded = _metaModelUpgrader.TryUpgrade(xFileData);
+                wasUpgraded = metaModelAnalyzer.TryUpgrade(xFileData);
             }
             catch (Exception ex)
             {
                 UpgradeFinished?.Invoke(null, EventArgs.Empty);
-                throw new Exception($"An error has occured when trying to upgrade file: {fileData.FileInfo.FullName}", ex) ;
+                throw new Exception($"An error has occured when processing file: {fileData.FileInfo.FullName}", ex) ;
             }
 
             filesProcessed += 1;
