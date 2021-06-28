@@ -40,7 +40,6 @@ namespace Origam.DA.Service
             
             doc.ChildNodes
                 .Cast<XmlNode>()
-                .OrderBy(node => node.Name)
                 .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc));
             return newDoc;
         }
@@ -49,8 +48,8 @@ namespace Origam.DA.Service
         {
             node.ChildNodes
                 .Cast<XmlNode>()
-                .OrderBy(childNode => childNode.NamespaceURI)
-                .ThenBy(childNode => childNode.LocalName)
+                .OrderBy(childNode => childNode.LocalName)
+                .ThenBy(childNode => childNode.Attributes?["name"]?.Value ?? "zzzzzzzz")
                 .ThenBy(childNode => childNode.Attributes?["x:id"]?.Value ?? "zzzzzzzz")
                 .ForEach(childNode =>
                 {
