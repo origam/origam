@@ -280,6 +280,11 @@ namespace Origam.ServerCore
             Guid sessionFormIdentifier)
         {
             var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            if (sessionStore.Data.HasErrors)
+            {
+                throw new RuleException(Origam.ServerCommon.Resources.ErrorInForm);
+            }
+
             if((sessionStore.ConfirmationRule == null) ||
                !sessionStore.Data.HasChanges())
             {
