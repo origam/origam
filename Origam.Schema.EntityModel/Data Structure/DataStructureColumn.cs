@@ -397,6 +397,7 @@ namespace Origam.Schema.EntityModel
 
 		[Category("Entity Column"), DefaultValue(false)]
 		[XmlAttribute("hideInOutput")]
+		[Description("Will remove the column from json and xml representations when requested through an api call.")]
 		public bool HideInOutput { get; set; }
 
 		private UpsertType _upsertType = UpsertType.Replace;
