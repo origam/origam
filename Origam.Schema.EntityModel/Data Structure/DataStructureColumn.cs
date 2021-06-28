@@ -45,7 +45,7 @@ namespace Origam.Schema.EntityModel
 	[ExpressionBrowserTreeSortAtribute(typeof(ComparerSortByName))]
 	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("Field")]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.0.1")]
     public class DataStructureColumn : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureColumn";
@@ -394,6 +394,11 @@ namespace Origam.Schema.EntityModel
 				_xmlMappingType = value;
 			}
 		}
+
+		[Category("Entity Column"), DefaultValue(false)]
+		[XmlAttribute("hideInOutput")]
+		[Description("Will remove the column from json and xml representations when requested through an api call.")]
+		public bool HideInOutput { get; set; }
 
 		private UpsertType _upsertType = UpsertType.Replace;
 		[Category("Update"), DefaultValue(UpsertType.Replace)]

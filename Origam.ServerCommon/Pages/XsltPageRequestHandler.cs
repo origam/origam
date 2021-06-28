@@ -54,6 +54,7 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Server;
 using System.Linq;
+using MoreLinq;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 
@@ -253,7 +254,7 @@ namespace Origam.ServerCommon.Pages
                 }
             }
         }
-
+        
         private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
         {
             DataTableCollection datatables = data.Tables;
