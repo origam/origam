@@ -265,9 +265,7 @@ export class DataView implements IDataView {
     this.selectedRowIds.delete(id);
     this.dataTable.deleteRow(row);
 
-    if (idToSelectNext) {
-      this.setSelectedRowId(idToSelectNext);
-    }
+    this.setSelectedRowId(idToSelectNext);
   }
 
   @action.bound
