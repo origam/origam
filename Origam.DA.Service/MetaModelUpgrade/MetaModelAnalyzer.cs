@@ -25,42 +25,28 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Xml;
 using System.Xml.Linq;
-using MoreLinq;
 using Origam.DA.Common;
 using Origam.Extensions;
-using Origam.Schema;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
     public class MetaModelAnalyzer
     {
         private readonly IMetaModelUpgrader metaModelUpgrader;
-        // private readonly ScriptContainerLocator scriptLocator;
         private readonly IFileWriter fileWriter;
 
         private readonly Version firstVersion = new Version("6.0.0");
-        // public MetaModelAnalyzer(Assembly scriptAssembly, IFileWriter fileWriter, IMetaModelUpgrader metaModelUpgrader)
-        // {
-        //     // scriptLocator = new ScriptContainerLocator(scriptAssembly);
-        //     this.fileWriter = fileWriter;
-        //     this.metaModelUpgrader = metaModelUpgrader;
-        // }
-
         public MetaModelAnalyzer(IFileWriter fileWriter, IMetaModelUpgrader metaModelUpgrader)
         {
             this.fileWriter = fileWriter;
             this.metaModelUpgrader = metaModelUpgrader;
-            // scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
 
         public MetaModelAnalyzer(IMetaModelUpgrader metaModelUpgrader)
         {
             this.metaModelUpgrader = metaModelUpgrader;
             fileWriter = new FileWriter();
-            // scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
         
         public bool TryUpgrade(XFileData xFileData)
