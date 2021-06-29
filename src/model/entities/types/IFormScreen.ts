@@ -26,6 +26,7 @@ import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
 import { IPanelConfiguration } from "./IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
 import { ScreenPictureCache } from "../ScreenPictureCache";
+import {DataViewCache} from "../DataViewCache";
 
 /*
 export interface ILoadedFormScreenData {
@@ -149,10 +150,11 @@ export interface IFormScreen extends IFormScreenData {
   dataUpdateCRS: CriticalSection;
 
   pictureCache: ScreenPictureCache;
+  dataViewCache: DataViewCache;
 
   clearDataCache(): void;
   getPanelPosition(id: string): number | undefined;
-  getData(childEntity: string, parentRecordId: string, rootRecordId: string): Promise<any>;
+  getData(childEntity: string, modelInstanceId: string, parentRecordId: string, rootRecordId: string): Promise<any>;
   getBindingsByChildId(childId: string): IComponentBinding[];
   getBindingsByParentId(parentId: string): IComponentBinding[];
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;
