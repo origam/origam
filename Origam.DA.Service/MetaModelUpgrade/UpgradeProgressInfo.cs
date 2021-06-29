@@ -1,5 +1,4 @@
-#region license
-
+﻿#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -18,27 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #endregion
 
-using System;
-
-namespace Origam.DA.Common
+namespace Origam.DA.Service.MetaModelUpgrade
 {
-    public class ClassMetaVersionAttribute : Attribute
+    public class UpgradeProgressInfo
     {
-        public static readonly Version FirstVersion = new Version("1.0.0");
-        public Version Value { get; }
+        public int TotalFiles { get;}
+        public int FilesDone { get; }
 
-        public ClassMetaVersionAttribute(string versionStr)
+        public UpgradeProgressInfo(int totalFiles, int filesDone)
         {
-            var version = new Version(versionStr);
-            if (version < FirstVersion)
-            {
-                throw new ArgumentException($"Cannot set class version to {version}. The minimum is {FirstVersion}");
-            }
-
-            Value = version;
+            TotalFiles = totalFiles;
+            FilesDone = filesDone;
         }
     }
 }

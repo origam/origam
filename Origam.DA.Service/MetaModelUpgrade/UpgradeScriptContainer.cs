@@ -61,7 +61,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        public void Upgrade(DocumentContainer documentContainer, XElement classNode,
+        public bool Upgrade(DocumentContainer documentContainer, XElement classNode,
             Version fromVersion, Version toVersion)
         {
             Version endVersion = toVersion == Versions.Last 
@@ -92,6 +92,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 upgradeScript.Upgrade(classNode, documentContainer.Document);
             }
             documentContainer.ScheduleNamespaceUpgrade(this, endVersion);
+            return true;
         }
 
 

@@ -49,7 +49,7 @@ namespace Origam.DA.Service
             this.metaModelUpgradeService = metaModelUpgradeService;
         }
 
-        public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, bool tryUpgrade)
+        public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, MetaModelUpgradeMode mode)
         {
             Result<List<XmlFileData>, XmlLoadError> result = FindMissingFiles(itemTracker);
 
@@ -57,10 +57,9 @@ namespace Origam.DA.Service
             {
                 return result.Error;
             }
-            
-            List<XmlFileData> dataToAdd = tryUpgrade
-                ? metaModelUpgradeService.Upgrade(result.Value)
-                : result.Value;
+
+            List<XmlFileData> dataToAdd =
+                metaModelUpgradeService.Upgrade(result.Value, mode);
 
             AddOrigamFiles(itemTracker, dataToAdd);
             RemoveOrigamFilesThatNoLongerExist(itemTracker);
