@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, flow, observable } from "mobx";
+import {action, computed, flow, observable} from "mobx";
 import {
   IOrderByColumnSetting,
   IOrderByDirection,
@@ -25,14 +25,11 @@ import {
   IOrderingConfiguration,
 } from "./types/IOrderingConfiguration";
 import _ from "lodash";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
-import { getProperties } from "../selectors/DataView/getProperties";
-import {
-  prepareAnyForSortAndFilter,
-  prepareForSortAndFilter
-} from "../selectors/PortalSettings/getSortingConfig";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
+import {getProperties} from "../selectors/DataView/getProperties";
+import {prepareAnyForSortAndFilter, prepareForSortAndFilter} from "../selectors/PortalSettings/getSortingConfig";
 import {compareStrings} from "../../utils/string";
 
 function cycleOrdering(direction: IOrderByDirection) {
@@ -45,6 +42,12 @@ function cycleOrdering(direction: IOrderByDirection) {
     default:
       return IOrderByDirection.ASC;
   }
+}
+
+function flipOrdering(direction: IOrderByDirection) {
+  return direction === IOrderByDirection.DESC
+    ? IOrderByDirection.ASC
+    : IOrderByDirection.DESC;
 }
 
 export class OrderingConfiguration implements IOrderingConfiguration {
@@ -101,8 +104,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     if (!curOrd) {
       this.userOrderings.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
-      this.userOrderings.push(this.newOrdering(columnId, cycleOrdering(curOrd.direction)));
-      this.userOrderings = this.userOrderings.filter((item) => item.direction !== IOrderByDirection.NONE);
+      this.userOrderings.push(this.newOrdering(columnId, flipOrdering(curOrd.direction)));
     }
 
     if (!_.isEqual(orderingClone, this.userOrderings)) {
@@ -118,9 +120,6 @@ export class OrderingConfiguration implements IOrderingConfiguration {
       this.userOrderings.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
       curOrd.direction = cycleOrdering(curOrd.direction);
-      /*this.ordering = this.ordering.filter(
-        item => item.direction !== IOrderByDirection.NONE
-      );*/
     }
 
     if (!_.isEqual(orderingClone, this.userOrderings)) {
