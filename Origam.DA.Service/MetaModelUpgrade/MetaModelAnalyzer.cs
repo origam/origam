@@ -35,8 +35,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         private readonly IMetaModelUpgrader metaModelUpgrader;
         private readonly IFileWriter fileWriter;
-
-        private readonly Version firstVersion = new Version("6.0.0");
+        
         public MetaModelAnalyzer(IFileWriter fileWriter, IMetaModelUpgrader metaModelUpgrader)
         {
             this.fileWriter = fileWriter;
@@ -119,10 +118,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
                 if (!persistedClassVersions.Contains(className))
                 {
-                    if (currentVersion != firstVersion)
+                    if (currentVersion != ClassMetaVersionAttribute.FirstVersion)
                     {
                         scriptsRun = metaModelUpgrader.RunUpgradeScripts(classNode, documentContainer, className,
-                            firstVersion, currentVersion);
+                            ClassMetaVersionAttribute.FirstVersion, currentVersion);
                     }
                     continue;
                 }
@@ -171,6 +170,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             return classNode.Attributes()
                 .Select(attr => attr.Name.NamespaceName)
+                .Concat(new[]{classNode.Name.NamespaceName})
                 .Where(name => name != OrigamFile.ModelPersistenceUri)
                 .Distinct()
                 .Select(OrigamNameSpace.CreateOrGet);

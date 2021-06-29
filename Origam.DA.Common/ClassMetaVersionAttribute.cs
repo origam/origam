@@ -27,11 +27,18 @@ namespace Origam.DA.Common
 {
     public class ClassMetaVersionAttribute : Attribute
     {
+        public static readonly Version FirstVersion = new Version("1.0.0");
         public Version Value { get; }
 
-        public ClassMetaVersionAttribute(string version)
+        public ClassMetaVersionAttribute(string versionStr)
         {
-            Value = new Version(version);
+            var version = new Version(versionStr);
+            if (version < FirstVersion)
+            {
+                throw new ArgumentException($"Cannot set class version to {version}. The minimum is {FirstVersion}");
+            }
+
+            Value = version;
         }
     }
 }

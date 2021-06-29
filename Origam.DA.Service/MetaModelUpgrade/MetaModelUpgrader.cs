@@ -54,11 +54,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Version persistedClassVersion,
             Version currentClassVersion)
         {
-            // do not try to upgrade first versions
-            if (currentClassVersion.Equals(new Version("1.0.0")))
-            {
-                return false;
-            }
             var upgradeScriptContainer = scriptLocator.TryFindByTypeName(className);
             if (upgradeScriptContainer == null)
             {
@@ -80,16 +75,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
     
     public class DisabledMetaModelUpgrader: IMetaModelUpgrader
     {
-
         public bool RunUpgradeScripts(XElement classNode,
             DocumentContainer documentContainer, string className,
             Version persistedClassVersion,
             Version currentClassVersion)
         {
-            if (currentClassVersion.Equals(new Version("1.0.0")))
-            {
-                return false;
-            }
             throw new Exception($"An instance of class {className} with version: {persistedClassVersion} was found. This class version is outdated, the current version is {currentClassVersion}. Please open the model in Architect to solve the issue.");
         }
 
