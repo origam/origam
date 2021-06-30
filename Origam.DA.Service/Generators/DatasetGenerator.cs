@@ -1487,7 +1487,17 @@ namespace Origam.DA.Service
                     }
                     result = string.Format("CONVERT({0} * {1}, System.Int64) / {1}", expression, Math.Pow(10, precision));
                     break;
-
+				case "Abs":
+                    expressionArg = item.GetChildByName("Expression").ChildItems[0];
+                    var renderedExpressionArgument = RenderExpression(expressionArg, entity);
+					result = "IIF("
+						+ renderedExpressionArgument + " > 0"
+						+ ", "
+						+ renderedExpressionArgument
+						+ ", "
+						+ renderedExpressionArgument + " * -1"
+						+ ")";
+                    break;
 				default:
 					result = "dbo." + item.Name + "()";
 					break;
