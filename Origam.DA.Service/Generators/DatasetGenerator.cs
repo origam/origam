@@ -1499,7 +1499,9 @@ namespace Origam.DA.Service
 						+ ")";
                     break;
 				default:
-                    throw new Exception($"{item.Function.Name} is a database function. ForceDatabaseCalculation needs to be set to true.");
+                    throw new Exception($"{item.Function.Name} is a database function and " 
+                        + "cannot be used for in-memory calculation. Either set ForceDatabaseCalculation "
+                        + $"to true in {item.Path} or use a data rule.");
 			}
 
 			return "(" + result + ")";
