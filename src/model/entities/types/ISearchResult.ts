@@ -39,3 +39,5 @@ export interface IServerSearchResult extends ISearchResult
 export interface IMenuSearchResult  extends ISearchResult {
   type: string;
 }
+
+export const isIMenuSearchResult = (o: any): o is IMenuSearchResult => "type" in o;

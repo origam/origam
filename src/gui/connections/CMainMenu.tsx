@@ -113,23 +113,6 @@ class CMainMenuCommandItem extends React.Component<{
     return getFavorites(this.workbench);
   }
 
-  onAddToFavoritesClicked() {
-    const closeDialog = getDialogStack(this.workbench).pushDialog(
-      "",
-      <ChooseFavoriteFolderDialog
-        onOkClick={(folderId: string) => {
-          runInFlowWithHandler({
-            ctx: this.workbench,
-            action: () => this.favorites.add(folderId, this.menuId),
-          });
-          closeDialog();
-        }}
-        onCancelClick={() => closeDialog()}
-        favorites={getFavorites(this.workbench).favoriteFolders}
-      />
-    );
-  }
-
   onRemoveFromFavoritesClicked() {
     runInFlowWithHandler({
       ctx: this.workbench,
@@ -220,7 +203,7 @@ class CMainMenuCommandItem extends React.Component<{
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
-                  this.onAddToFavoritesClicked();
+                  onAddToFavoritesClicked(this.workbench, this.menuId);
                 }}
               >
                 {T("Put to favourites", "put_to_favourites")}
@@ -241,6 +224,24 @@ class CMainMenuCommandItem extends React.Component<{
       />
     );
   }
+}
+
+export function onAddToFavoritesClicked(ctx: any, menuId: string) {
+  const favorites = getFavorites(ctx);
+  const closeDialog = getDialogStack(ctx).pushDialog(
+    "",
+    <ChooseFavoriteFolderDialog
+      onOkClick={(folderId: string) => {
+        runInFlowWithHandler({
+          ctx: ctx,
+          action: () => favorites.add(folderId, menuId),
+        });
+        closeDialog();
+      }}
+      onCancelClick={() => closeDialog()}
+      favorites={favorites.favoriteFolders}
+    />
+  );
 }
 
 @observer
