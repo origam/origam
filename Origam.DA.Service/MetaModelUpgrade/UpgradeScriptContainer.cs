@@ -46,7 +46,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
         Version LastVersionInContainer => upgradeScripts
             .OrderBy(script => script.ToVersion)
             .Last()
-            .ToVersion;
+            .ToVersion;        
+        Version FirstVersionInContainer => upgradeScripts
+            .OrderBy(script => script.FromVersion)
+            .First()
+            .FromVersion;
 
         private PropertyToNamespaceMapping NamespaceMapping
         {
@@ -78,7 +82,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             if (scriptsToRun[0].FromVersion != fromVersion)
             {
-                throw new Exception($"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found");
+                if (fromVersion == ClassMetaVersionAttribute.FirstVersion &&
+                    FirstVersionInContainer == new Version(6,0,0))
+                {
+                    // The first version used to be 6.0.0, the script container was probably created with that assumption. 
+                    return Upgrade(documentContainer, classNode, new Version(6,0,0), toVersion);
+                }
+                else
+                {
+                    throw new Exception($"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found");
+                }
             }
             if (scriptsToRun.Last().ToVersion != endVersion)
             {
