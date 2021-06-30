@@ -239,10 +239,18 @@ namespace Origam.ServerCore
 
             if(!string.IsNullOrEmpty(startUpConfiguration.PathToChatApp))
             {
-                app.UseStaticFiles(new StaticFileOptions()
+                app.UseStaticFiles(new StaticFileOptions
                 {
                     FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToChatApp),
-                    RequestPath = new PathString("/chatrooms")
+                    RequestPath = new PathString("/chatrooms"),
+                    OnPrepareResponse = ctx =>
+                    {
+                        if (ctx.File.Name == "index.html")
+                        {
+                            ctx.Context.Response.Headers.Append(
+                                "Cache-Control", $"no-store, max-age=0");
+                        }
+                    }
                 });
             }
             app.UseStaticFiles(new StaticFileOptions
