@@ -1499,8 +1499,7 @@ namespace Origam.DA.Service
 						+ ")";
                     break;
 				default:
-					result = "dbo." + item.Name + "()";
-					break;
+                    throw new Exception($"{item.Function.Name} is a database function. ForceDatabaseCalculation needs to be set to true.");
 			}
 
 			return "(" + result + ")";
