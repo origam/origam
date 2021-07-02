@@ -93,7 +93,7 @@ namespace Origam.ServerCore
      
         public Task<IdentityResult> DeleteAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName);
+            DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName, user.TransactionId);
             if (origamUserRow == null)
             {
                 throw new Exception($"User {user.UserName} already doesn't have access to the system.");
@@ -122,16 +122,20 @@ namespace Origam.ServerCore
 
         public Task<IOrigamUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            var origamUserRow = FindOrigamUserRowByUserName(normalizedUserName);
+            return FindByNameAsync(normalizedUserName, null, cancellationToken);
+        }
+        public Task<IOrigamUser> FindByNameAsync(string normalizedUserName, string transactionId, CancellationToken cancellationToken)
+        {
+            var origamUserRow = FindOrigamUserRowByUserName(normalizedUserName, transactionId);
             if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
 
 
-            var businessPartnerRow = FindBusinessPartnerRowByUserName(normalizedUserName);
+            var businessPartnerRow = FindBusinessPartnerRowByUserName(normalizedUserName, transactionId);
             if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
             return Task.FromResult(
                 UserTools.Create(
-                origamUserRow: origamUserRow, 
+                origamUserRow: origamUserRow,
                 businessPartnerRow: businessPartnerRow));
         }
 
@@ -163,7 +167,7 @@ namespace Origam.ServerCore
      
         public Task<IdentityResult> UpdateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName);
+            DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName, user.TransactionId);
             if(origamUserRow == null)
             {
                 return 
@@ -206,7 +210,7 @@ namespace Origam.ServerCore
             if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
             string userName = (string)businessPartnerRow["UserName"];
-            DataRow origamUserRow = FindOrigamUserRowByUserName(userName);
+            DataRow origamUserRow = FindOrigamUserRowByUserName(userName, null);
             if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
             
             return Task.FromResult(
@@ -270,11 +274,11 @@ namespace Origam.ServerCore
             return businessPartnerDataSet.Tables["BusinessPartner"].Rows[0];
         }
 
-        private static DataRow FindBusinessPartnerRowByUserName(string normalizedUserName)
+        private static DataRow FindBusinessPartnerRowByUserName(string normalizedUserName, string transactionId)
         {
             DataSet businessPartnerDataSet = GetBusinessPartnerDataSet(
                 GET_BUSINESS_PARTNER_BY_USER_NAME,
-                "BusinessPartner_parUserName", normalizedUserName);
+                "BusinessPartner_parUserName", normalizedUserName, transactionId);
             if (businessPartnerDataSet.Tables["BusinessPartner"].Rows.Count ==
                 0)
             {
@@ -283,11 +287,11 @@ namespace Origam.ServerCore
             return businessPartnerDataSet.Tables["BusinessPartner"].Rows[0];
         }
 
-        private DataRow FindOrigamUserRowByUserName(string normalizedUserName)
+        private DataRow FindOrigamUserRowByUserName(string normalizedUserName, string transactionId)
         {
             DataSet origamUserDataSet = GetOrigamUserDataSet(
                 GET_ORIGAM_USER_BY_USER_NAME,
-                "OrigamUser_parUserName", normalizedUserName);
+                "OrigamUser_parUserName", normalizedUserName, transactionId);
             if (origamUserDataSet.Tables["OrigamUser"].Rows.Count == 0)
             {
                 return null;

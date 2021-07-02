@@ -26,7 +26,7 @@ namespace Origam.Security.Identity
 {
     public interface IManager
     {
-        Task<IOrigamUser> FindByNameAsync(string name);
+        Task<IOrigamUser> FindByNameAsync(string name, string transactionId);
         Task<bool> ChangePasswordQuestionAndAnswerAsync(string userName, string password, string question, string answer);
         Task<bool> IsLockedOutAsync(string userId);
         Task<bool> GetTwoFactorEnabledAsync(string userId);

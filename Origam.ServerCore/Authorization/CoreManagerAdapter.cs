@@ -19,33 +19,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using log4net;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Origam.Security.Common;
 using Origam.Security.Identity;
-using Origam.ServerCore.Controllers;
 using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Authorization
 {
     public class CoreManagerAdapter: IManager
     {
-        private readonly UserManager<IOrigamUser> coreUserManager;
+        private readonly CoreUserManager<IOrigamUser> coreUserManager;
         private readonly IMailService mailService;
         protected static readonly ILog log
             = LogManager.GetLogger(typeof(CoreManagerAdapter));
         private readonly IStringLocalizer<SharedResources> localizer;
 
-        public CoreManagerAdapter(UserManager<IOrigamUser> coreUserManager,
+        public CoreManagerAdapter(CoreUserManager<IOrigamUser> coreUserManager,
             IMailService mailService, IStringLocalizer<SharedResources> localizer)
         {
             this.coreUserManager = coreUserManager;
@@ -53,9 +48,9 @@ namespace Origam.ServerCore.Authorization
             this.localizer = localizer;
         }
 
-        public async Task<IOrigamUser> FindByNameAsync(string name)
+        public async Task<IOrigamUser> FindByNameAsync(string name,string transaction = null)
         {
-           return await coreUserManager.FindByNameAsync(name);
+           return await coreUserManager.FindByNameAsync(name, transaction);
         }
         private async Task<IOrigamUser> FindByIdAsync(string userId)
         {

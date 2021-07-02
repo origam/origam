@@ -103,7 +103,7 @@ namespace Origam.ServerCore
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
             services.AddScoped<SignInManager<IOrigamUser>>();
             services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
-            services.AddScoped<UserManager<IOrigamUser>, CoreUserManager>();
+            services.AddScoped<CoreUserManager<IOrigamUser>, CoreUserManager<IOrigamUser>>();
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<LanguageConfig>();
             services.AddLocalization();

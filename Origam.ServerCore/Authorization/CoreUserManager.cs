@@ -32,9 +32,10 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Authorization
 {
-    public class CoreUserManager : UserManager<IOrigamUser>
+    public class CoreUserManager<TUser> : UserManager<IOrigamUser>
     {
         private readonly IStringLocalizer<SharedResources> localizer;
+        private readonly UserStore userStore;
 
         public CoreUserManager(
             IUserStore<IOrigamUser> store, 
@@ -50,6 +51,7 @@ namespace Origam.ServerCore.Authorization
                 passwordValidators, keyNormalizer, errors, services, logger)
         {
             this.localizer = localizer;
+            this.userStore = store as UserStore;
         }
 
         // invoked, when e-mail is changed (comes also with EmailConfirmed change)
@@ -79,6 +81,11 @@ namespace Origam.ServerCore.Authorization
                 origamUserDataSet, false, 
                 user.TransactionId);
             return IdentityResult.Success;
+        }
+
+        public Task<IOrigamUser> FindByNameAsync(string name, string transactionId)
+        {
+           return userStore.FindByNameAsync(name, transactionId, CancellationToken);
         }
     }
 }

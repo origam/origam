@@ -135,7 +135,7 @@ namespace Origam.Security.Identity
                     Resources.ErrorUsernameNotString);
             }
             Task<IOrigamUser> task = userManager.FindByNameAsync(
-                Parameters["Username"].ToString());
+                Parameters["Username"].ToString(), TransactionId);
             if (task.IsFaulted)
             {
                 throw task.Exception;
@@ -408,7 +408,7 @@ namespace Origam.Security.Identity
         {
             IOrigamUser user = null;
             Task<IOrigamUser> taskFindUser = userManager.FindByNameAsync(
-                Parameters["Username"].ToString());
+                Parameters["Username"].ToString(),TransactionId);
             if (taskFindUser.IsFaulted)
             {
                 throw taskFindUser.Exception;
