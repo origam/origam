@@ -61,7 +61,7 @@
     "web-vitals": "^2.0.1",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
-    "xstate": "^4.20.1"
+    "xstate": "^4.20.2"
   },
   "homepage": "./",
   "scripts": {
