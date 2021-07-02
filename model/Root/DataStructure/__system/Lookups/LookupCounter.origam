@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="95732afe-9d93-41ca-a0d3-b550f186a5ee"
@@ -19,9 +19,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/Counter.origam#Counter/Description/9c673323-d8ac-4498-9a05-edb73f8d903e"
-        x:id="94a3137a-cc15-479c-9c0a-c4c43bad40c9"
-        asi:name="Description"
+        dsc:field="Root/DataEntity/__system/Counter.origam#Counter/ReferenceCode/b4c0ec14-7b66-4ae5-84ca-91b42d9778b4"
+        x:id="880c29b6-89b1-47f5-8a39-d53db48d2d46"
+        asi:name="ReferenceCode"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -30,9 +30,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/Counter.origam#Counter/ReferenceCode/b4c0ec14-7b66-4ae5-84ca-91b42d9778b4"
-        x:id="880c29b6-89b1-47f5-8a39-d53db48d2d46"
-        asi:name="ReferenceCode"
+        dsc:field="Root/DataEntity/__system/Counter.origam#Counter/Description/9c673323-d8ac-4498-9a05-edb73f8d903e"
+        x:id="94a3137a-cc15-479c-9c0a-c4c43bad40c9"
+        asi:name="Description"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
