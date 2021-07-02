@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="24ec7286-942e-4ed8-9934-d7619f6216d7"
@@ -30,23 +30,23 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamRoleId/0f00bccd-2c1e-464d-9e0d-8e145f617855"
-        x:id="52e8e2d6-8036-4e0d-a4c6-9189f185cf3c"
-        asi:name="refOrigamRoleId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
         dsc:field="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamApplicationRoleId/0f85ea5c-a327-4fad-917d-ec09a9a4f686"
         x:id="309a3fae-0bec-4021-84f1-c5a7f833ca66"
         asi:name="OrigamApplicationRole_Name"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="true"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamRoleId/0f00bccd-2c1e-464d-9e0d-8e145f617855"
+        x:id="52e8e2d6-8036-4e0d-a4c6-9189f185cf3c"
+        asi:name="refOrigamRoleId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
         dsc:writeOnly="false"
         dsc:xmlMappingType="Default" />
       <dsc:DataStructureColumn

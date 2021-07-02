@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="bd424149-b499-49d2-9ae3-36a155ea3145"
@@ -16,6 +16,28 @@
       asi:name="OrigamParameters"
       dse:relationType="Normal"
       dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/DateValue/13046e78-f59b-442d-8ac4-68ae7de04c2a"
+        x:id="0d13cb7d-0421-4320-b7ca-fde435ec0006"
+        asi:name="DateValue"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/BooleanValue/b361aa2f-cd26-4ab9-bd60-76333a318026"
+        x:id="8f9ed4a7-9d37-4701-bf63-a97dbb7c2637"
+        asi:name="BooleanValue"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
@@ -41,28 +63,6 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/StringValue/fd044d05-63cc-42c4-9448-18c0492d5702"
-        x:id="ac74e87c-30f3-4fe2-af2e-2fc56234cfdb"
-        asi:name="StringValue"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/CurrencyValue/bc10925f-96d8-4ece-9a5d-baab7f0d928a"
-        x:id="d2bfa734-31d9-47ef-ab08-3924e3b12ea7"
-        asi:name="CurrencyValue"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/GuidValue/1ab55c41-1ee3-4264-b736-7e2c683f4516"
         x:id="abccbfd2-093a-4248-b81a-782ae1768118"
         asi:name="GuidValue"
@@ -74,9 +74,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/BooleanValue/b361aa2f-cd26-4ab9-bd60-76333a318026"
-        x:id="8f9ed4a7-9d37-4701-bf63-a97dbb7c2637"
-        asi:name="BooleanValue"
+        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/StringValue/fd044d05-63cc-42c4-9448-18c0492d5702"
+        x:id="ac74e87c-30f3-4fe2-af2e-2fc56234cfdb"
+        asi:name="StringValue"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -96,9 +96,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/DateValue/13046e78-f59b-442d-8ac4-68ae7de04c2a"
-        x:id="0d13cb7d-0421-4320-b7ca-fde435ec0006"
-        asi:name="DateValue"
+        dsc:field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/CurrencyValue/bc10925f-96d8-4ece-9a5d-baab7f0d928a"
+        x:id="d2bfa734-31d9-47ef-ab08-3924e3b12ea7"
+        asi:name="CurrencyValue"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -113,16 +113,16 @@
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/OrigamParameters/3b6c0d18-c3ac-4377-b7a8-baa5920bec24"
-        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
-        x:id="c7265b62-4f6a-4e53-9cc9-19e83e9bf574"
-        asi:name="OrigamParameters_GetId"
+        dsfsf:filter="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/GetNoProfile/bd2d36c2-b0af-41fc-a09b-42d2c8089b2a"
+        x:id="857405c1-4904-4e8c-b307-f9b704119999"
+        asi:name="OrigamParameters_GetNoProfile"
         dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/OrigamParameters/3b6c0d18-c3ac-4377-b7a8-baa5920bec24"
-        dsfsf:filter="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/GetNoProfile/bd2d36c2-b0af-41fc-a09b-42d2c8089b2a"
-        x:id="857405c1-4904-4e8c-b307-f9b704119999"
-        asi:name="OrigamParameters_GetNoProfile"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="c7265b62-4f6a-4e53-9cc9-19e83e9bf574"
+        asi:name="OrigamParameters_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
   </ds:DataStructure>
