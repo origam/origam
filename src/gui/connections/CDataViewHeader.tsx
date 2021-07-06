@@ -345,7 +345,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           <DataViewHeaderGroup noShrink={true}>
                             {isAddButton && (
                               <DataViewHeaderAction
-                                className="isGreenHover"
+                                className={crudButtonsEnabled ? "isGreenHover" : ""}
                                 onClick={onCreateRowClickEvt}
                                 onShortcut={onCreateRowClickEvt}
                                 isDisabled={!crudButtonsEnabled}
@@ -361,7 +361,6 @@ export class CDataViewHeaderInner extends React.Component<{
                                 onMouseDown={onDeleteRowClickEvt}
                                 onShortcut={onDeleteRowClickEvt}
                                 shortcutPredicate={isDeleteRecordShortcut}
-                                isDisabled={!crudButtonsEnabled}
                               >
                                 <Icon
                                   src="./icons/minus.svg"
