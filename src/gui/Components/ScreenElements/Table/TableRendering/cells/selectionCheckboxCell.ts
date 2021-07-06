@@ -134,7 +134,7 @@ export function drawSelectionCheckboxBackground() {
   const ctx2d = context2d();
   const selectedRowId = getSelectedRowId(tablePanelView());
   const isRowCursor = selectedRowId && recordId() === selectedRowId;
-  ctx2d.fillStyle = "#ffffff";
+  ctx2d.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--white');
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
     CPR() * currentRowTop(),

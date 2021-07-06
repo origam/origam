@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .formField {
   position: absolute;
-  /* background-color: #ffffff;*/
+  /* background-color: var(--white);*/
   overflow: visible;
   /* padding: 3px;*/
   display: flex;
@@ -29,7 +29,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .formFieldName {
   position: absolute;
-  /* border: 1px solid black; */
   box-sizing: border-box;
   height: 20px;
   overflow: hidden;
@@ -42,7 +41,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .unknownEditor {
   width: 100%;
   height: 100%;
-  border: 1px solid black;
-  background-color: #aaaaaa;
+  border: 1px solid var(--black);
+  background-color: var(--grey3);
   overflow: hidden;
 }

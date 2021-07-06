@@ -36,10 +36,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .divider {
-  background-color: blue;
+  background-color:var(--blue1);
   flex-shrink: 0;
   :global(.dividerLine) {
-    border-color: $white !important;
+    border-color: var(--white) !important;
 		border-style: solid !important;
 		@extend %transition;
   }
@@ -52,7 +52,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     :global(.dividerLine) {
       width: 1px;
       height: 100%;
-      border-left: 1px dotted #d3d3d3;
+      border-left: 1px dotted var(--grey25);
       border-width: 0 1px 0 1px !important;
     }
   }
@@ -65,16 +65,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     :global(.dividerLine) {
       height: 1px;
       width: 100%;
-      border-top: 1px dotted #d3d3d3;
+      border-top: 1px dotted var(--grey25);
       border-width: 1px 0 1px 0 !important;
     }
   }
   &:global(.isDragging) {
     position: relative;
-    background-color: yellow;
+    background-color:var(--yellow);
   }
   &:not(:global(.isDragging)):hover {
-    background-color: red;
+    background-color:var(--red);
   }
 }
 

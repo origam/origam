@@ -44,7 +44,7 @@ export interface IOpenNewForm {
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext: any,
-    additionalRequestParameters: object,
+    requestParameters: object,
     formSessionId?: string,
     isSessionRebirth?: boolean,
     registerSession?: true,

@@ -52,8 +52,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 28px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid white;
-  background-color: #F7F6FB;
+  border-bottom: 1px solid var(--white);
+  background-color: var(--grey1);
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -65,11 +65,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .arrow{
   font-size: 20px;
-  color: black;
+  color:var(--black);
 }
 
 .resultArea{
-  border-top: 1px solid #B0AFB7;
+  border-top: 1px solid var(--grey3);
   overflow-x: auto;
   overflow-y: auto;
   max-height: 35vh;
@@ -87,18 +87,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .resultIemRowSelected{
-  background-color: $blue;
-  color: white !important;
+  background-color: var(--blue1);
+  color:var(--white) !important;
 }
 .resultIemRowSelected div svg{
-  stroke: white;
+  stroke:var(--white);
   stroke-width: 1.5;
 }
 
 .resultIemRowHovered {
   cursor: pointer;
-  background-color: #acc6ff;
-  color: black !important;
+  background-color: var(--blue4);
+  color:var(--black) !important;
 }
 
 .itemIcon{

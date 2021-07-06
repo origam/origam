@@ -23,4 +23,7 @@ import {getOpenedScreen} from "./getOpenedScreen";
 export function isLazyLoading(ctx: any) {
   const openScreen = getOpenedScreen(ctx);
   return openScreen.lazyLoading && openScreen.menuItemType !== IMainMenuItemType.FormRefWithSelection;
+  // openScreen.menuItemType !== IMainMenuItemType.FormRefWithSelection means menu item opens a selection dialog
+  // (which is never lazy loaded) and value of the "openScreen.lazyLoading" field is actually relevant to the form
+  // which will be open after the selection dialog is closed.
 }

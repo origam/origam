@@ -34,7 +34,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border-radius: 22px;
   background-size: cover;
   background-position: center;
-  border: 1px solid $grey2;
+  border: 1px solid var(--grey2);
   height: 3em;
   width: 3em;
   overflow: hidden;
@@ -72,19 +72,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
   align-items: center;
   white-space: nowrap;
-  color: #77767e;
+  color: var(--grey4);
   cursor: pointer;
   @include hoverItemAnimation;
 }
 
 .userNameLabel:hover  {
-  color: #0d0d0d;
+  color: var(--black);
 }
 
 actionSection {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid $grey2;
+  border-top: 1px solid var(--grey2);
   margin: 0;
   padding: 0;
 
@@ -92,7 +92,7 @@ actionSection {
 
 menuItemDivider {
   height:1px;
-  border-top: 1px solid #cecece;
+  border-top: 1px solid var(--grey25);
   margin-top: 5px;
   margin-bottom: 5px;
   display: none;

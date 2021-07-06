@@ -116,6 +116,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK * 2,
       RowOffset: lastStartOffset,
+      Parameters: {},
       MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
@@ -131,9 +132,11 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   }
 
   *loadFirstPage(): any{
+    if(this.rowsContainer.isFirstRowLoaded){
+      return
+    }
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
-
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
@@ -143,6 +146,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK ,
       RowOffset: 0,
+      Parameters: {},
       MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
@@ -272,6 +276,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
       MasterRowId: undefined,
+      Parameters: {},
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
@@ -310,6 +315,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: nextStartOffset,
+      Parameters: {},
       MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })

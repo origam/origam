@@ -375,7 +375,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext?: any,
-    additionalRequestParameters?: object | undefined,
+    requestParameters?: object | undefined,
     formSessionId?: string,
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
@@ -412,7 +412,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const initUIResult = yield* this.initUIForScreen(
         newScreen,
         !isSessionRebirth,
-        additionalRequestParameters,
+        requestParameters,
         isSingleRecordEdit
       );
       yield* newFormScreen.start(initUIResult);
@@ -446,24 +446,25 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *initUIForScreen(
     screen: IOpenedScreen,
     isNewSession: boolean,
-    additionalRequestParameters?: object | undefined,
+    requestParameters?: object | undefined,
     isSingleRecordEdit?: boolean
   ): any {
     const api = getApi(this);
-    const initUIResult = yield api.initUI({
+    if(requestParameters){
+      return yield api.initUI(requestParameters as any);
+    }
+    return yield api.initUI({
       Type: screen.menuItemType,
       Caption: screen.tabTitle,
       ObjectId: screen.menuItemId,
       FormSessionId: screen.content!.preloadedSessionId,
       IsNewSession: isNewSession,
-      RegisterSession: true, //!!registerSession,
+      RegisterSession: true,
       DataRequested: !screen.lazyLoading,
       Parameters: screen.parameters,
-      AdditionalRequestParameters: additionalRequestParameters,
       IsSingleRecordEdit: isSingleRecordEdit,
       RequestCurrentRecordId: true
     });
-    return initUIResult;
   }
 
   *openNewUrl(url: string, title: string) {

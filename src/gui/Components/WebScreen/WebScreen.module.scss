@@ -34,7 +34,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   .progressIndicator {
     @include progressIndicator;
     top: 0;
-    background-color: white;
+    background-color:var(--white);
   }
 
   .transparentOverlay {

@@ -51,7 +51,7 @@ import { IDataView } from "../types/IDataView";
 import { IAggregationInfo } from "../types/IAggregationInfo";
 import { SCROLL_ROW_CHUNK } from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IQueryInfo, processActionQueryInfo } from "model/actions/Actions/processActionQueryInfo";
-import { assignIIds } from "xmlInterpreters/xmlUtils";
+import {assignIIds, find} from "xmlInterpreters/xmlUtils";
 import { IOrderByDirection, IOrdering } from "../types/IOrderingConfiguration";
 import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingConfiguration";
 import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
@@ -81,10 +81,13 @@ import { IGroupingSettings } from "../types/IGroupingConfiguration";
 import { groupingUnitToString } from "../types/GroupingUnit";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
+import {runGeneratorInFlowWithHandler, runInFlowWithHandler} from "../../../utils/runInFlowWithHandler";
 import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
 import {getRowStates} from "../../selectors/RowState/getRowStates";
 import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisible";
+import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
+import {isIFormPlugin} from "../../../plugins/types/IFormPlugin";
+import {isISectionPlugin} from "../../../plugins/types/ISectionPlugin";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -102,6 +105,7 @@ export const closingScreens = new WeakSet<any>();
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
+  parameters: { [key: string]: string } = {};
   focusedDataViewId: string | undefined;
   _updateRequestAggregator: UpdateRequestAggregator | undefined;
 
@@ -410,6 +414,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.initialSelectedRowId = initUIResult.currentRecordId;
       yield* this.applyInitUIResult({ initUIResult });
+      this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield* this.clearTotalCounts();
         yield* this.loadData({ keepCurrentData: true });
@@ -482,6 +487,47 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initialSelectedRowId = undefined;
     }
     yield* this.startAutoRefreshIfNeeded();
+  }
+
+  private initializePlugins(initUIResult: any) {
+    let formLevelPlugins = find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin");
+    let sessionId = getSessionId(this);
+    formLevelPlugins
+      .forEach(node => {
+        const plugin = pluginLibrary.get(
+          {
+            name: node.attributes.Name,
+            modelInstanceId: node.attributes.ModelInstanceId,
+            sessionId: sessionId
+          });
+        if (!isIFormPlugin(plugin)) {
+          throw new Error(`Plugin ${node.attributes.Name} is not FormLevelPlugin`)
+        }
+        plugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
+          {ctx: this, generator: this.refreshSession()}
+        );
+        plugin.setFormParameters = (parameters: { [key: string]: string }) =>
+          Object.keys(parameters)
+            .forEach(key => this.parameters[key] = parameters[key]);
+        plugin.initialize(node.attributes);
+      })
+
+    find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "SectionLevelPlugin")
+      .forEach(node => {
+        const plugin = pluginLibrary.get(
+          {
+            name: node.attributes.Name,
+            modelInstanceId: node.attributes.ModelInstanceId,
+            sessionId: sessionId
+          })
+        if (!isISectionPlugin(plugin)) {
+          throw new Error(`Plugin ${node.attributes.Name} is not SectionLevelPlugin`)
+        }
+        const dataView = getDataViewByGridId(this, node.attributes.ModelInstanceId);
+        dataView!.clear();
+        plugin.getFormParameters = () => _.cloneDeep(this.parameters);
+        plugin.initialize(node.attributes)
+      });
   }
 
   sortAndFilterReaction(args: { dataView: IDataView; updateTotalRowCount: boolean }) {
@@ -557,6 +603,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         FilterLookups: getUserFilterLookups(dataView),
         Ordering: ordering ? [ordering] : [],
         RowLimit: SCROLL_ROW_CHUNK,
+        Parameters: this.parameters,
         MasterRowId: masterRowId,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(dataView),
@@ -802,6 +849,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_ROW_CHUNK,
         MasterRowId: undefined,
+        Parameters: this.parameters,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });

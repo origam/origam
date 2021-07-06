@@ -34,8 +34,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .label {
   padding: 20px;
-  border: 1px solid white;
-  background-color: #8998c5;
+  border: 1px solid var(--white);
+  background-color: var(--blue6);
   text-transform: uppercase;
-  color: white;
+  color:var(--white);
 }

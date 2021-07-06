@@ -22,9 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   top: 8px;
   left: calc(12px + 1.6667em);
 
-  background: #fe5461;
-  border: 1px solid #ffffff;
-  color: #ffffff;
+  background: var(--red);
+  border: 1px solid var(--white);
+  color: var(--white);
   font-size: 0.9em;
   font-weight: 700;
   height: 1.6em;

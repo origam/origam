@@ -1,0 +1,44 @@
+@import "../../../styles/common_styles";
+@import "../../../styles/definitions";
+
+.button {
+  @include dialogButton;
+
+  background: var(--grey1);
+  color: var(--white);
+  border: 1px solid var(--grey3);
+  box-sizing: border-box;
+  font-weight: 700;
+  margin: 0 0.5em;
+  min-width: 75px;
+  padding: 0 1.5em;
+  @include border-radius(3em);
+
+  background: var(--grey2);
+  border-color: var(--grey3);
+  color: var(--grey5);
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
+  &:hover {
+    background: var(--grey3);
+    color: var(--black);
+  }
+}
+
+.focusedButton{
+  &:focus,&:global(.isPrimary) {
+    background: var(--blue1);
+    border-color: var(--blue1);
+    color: var(--white);
+
+    &:hover {
+      background: var(--white);
+      color: var(--blue1);
+    }
+  }
+}

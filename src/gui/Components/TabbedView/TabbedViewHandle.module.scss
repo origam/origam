@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 @import "../../../styles/common_styles";
 
 .root {
-  color: #3e3d45;
+  color: var(--grey5);
   height: 25px;
   //margin: 0 0.2em 0 0.2em;
   padding: 0 10px 0 10px;
@@ -35,30 +35,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:global(.isActive) {
     .label {
-      color: #4c84ff;
-      //  border-bottom: 2px solid #4c84ff;
+      color: var(--blue1);
+      //  border-bottom: 2px solid var(--blue1);
       // font-weight: 700;
     }
-    background-color: white;
+    background-color:var(--white);
   }
 
   &:hover {
-    //background-color: white;
-    color: #0d0d0d;
+    //background-color:var(--white);
+    color: var(--black);
   }
 
   &:global(.isDirty) {
     .label {
-      color: #fe5461;
+      color: var(--red);
     }
   }
 
   &:not(:global(.isActive)):hover {
-    color: #0d0d0d;
+    color: var(--black);
     cursor: pointer;
     .closeBtn {
       svg {
-        stroke: #0d0d0d;
+        stroke: var(--black);
       }
     }
   }
@@ -67,7 +67,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .label {
   border-bottom: 2px solid transparent;
   //margin: 0 5px 0 5px;
-  white-space: nowrap;
+ white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -80,14 +80,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     margin: 0 0 0 0.5em;
     width: 1.1em;
     height: 1.1em;
-    stroke: #77767e;
+    stroke: var(--grey4);
     stroke-width: 1;
     overflow: inherit;
     @include hoverItemAnimation;
   }
   &:hover {
     svg {
-      stroke: #fe5461 !important;
+      stroke: var(--red) !important;
       stroke-width: 2.5;
     }
   }

@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   height: 50px;
-  background: #ffffff;
+  background: var(--white);
   padding: 0 1em 0 2em;
   display: flex;
   align-items: center;
@@ -49,10 +49,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .workflowActionBtn {
   @include dialogButton();
-  background: #E9E8F0;
-  border: 1px solid $grey3;
+  background: var(--grey2);
+  border: 1px solid var(--grey3);
   box-sizing: border-box;
-  color: $black;
+  color: var(--black);
   font-size: $font-size;
   height: 2em;
     margin: 0 0.5em;
@@ -65,7 +65,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     margin-right: 0;
   }
   &:hover {
-    background: $grey3;
-      color: $black;
+    background: var(--grey3);
+      color: var(--black);
   }
 }

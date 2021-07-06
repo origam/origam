@@ -19,5 +19,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .canvas {
   box-sizing: border-box;
-  border-right: 1px solid #bbbbbb;
+  border-right: 1px solid var(--grey3);
 }

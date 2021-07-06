@@ -25,14 +25,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
   align-items: center;
-  white-space: nowrap;
+ white-space: nowrap;
   @include hoverItemAnimation;
-  color: $blue;
+  color: var(--blue1);
   height: 30px;
   padding: 0 1em;
 
   &:not(:global(.isDisabled)):hover {
-    background-color: $blue;
+    background-color: var(--blue1);
     //font-weight: 400;
   }
 
@@ -42,27 +42,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 
   &:global(.redItem) {
-    color: $red;
-    background-color: white;
+    color: var(--red);
+    background-color:var(--white);
     &:hover {
-      color: white;
-      background-color: $red;
+      color:var(--white);
+      background-color: var(--red);
     }
   }
   /*&:last-of-type {
-    color: $red;
+    color: var(--red);
     &:hover {
-      background: $red;
+      background: var(--red);
     }
   }*/
   &:hover {
-    background: $blue;
-    color: $white;
+    background: var(--blue1);
+    color: var(--white);
   }
   &:global(.isDisabled) {
-    color: $grey3;
+    color: var(--grey3);
     &:hover {
-      background: $grey1;
+      background: var(--grey1);
     }
   }
 }

@@ -30,14 +30,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   text-decoration: none;
   font-style: normal;
   color: $textColorNoHover;
-  background-color: #f7f6fa;
+  background-color: var(--grey1);
   transition: all 300ms linear;
   @include hoverItemAnimation;
 
   &:not(:global(.isActive)):hover {
     color: $textColorHover;
     svg:global(.icon) {
-      stroke: #0d0d0d;
+      stroke: var(--black);
       stroke-width: 1.5;
     }
   }
@@ -78,7 +78,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 28px;
   display: flex;
   align-items: center;
-  background-color: #F7F6FB;
+  background-color: var(--grey1);
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -95,5 +95,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .arrow{
   font-size: 20px;
-  color: black;
+  color:var(--black);
 }

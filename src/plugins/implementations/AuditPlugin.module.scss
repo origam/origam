@@ -1,0 +1,83 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.rows{
+
+}
+
+.table{
+    overflow: auto;
+}
+
+.column{
+    min-width: 200px;
+    padding-left: 0.3em;
+}
+
+.summary{
+    padding-top: 10px;
+    font-size: 14px;
+}
+
+.groupHeader{
+    @extend .row;
+    padding: 10px 0.1em 5px 0.3em;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.header{
+    min-width: 191px;
+    background: var(--grey1);
+    font-weight: 700;
+    padding: 0 0.1em 0 0.3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    //width: 100%
+}
+
+.headerSeparator{
+    flex-shrink: 0;
+    background: var(--grey2);
+    border-color: var(--grey1);
+    border-style: solid;
+    border-width: 0 4px;
+    cursor: ew-resize;
+    margin: 0;
+    padding: 0;
+    width: 9px;
+    &:last-of-type {
+        //border-right-color: var(--grey1);
+        background: var(--grey1);
+        border-width: 0 0px;
+    }
+}
+
+div.rows div.row:nth-child(odd) div{
+    background-color: var(--white);
+}
+div.rows div.row:nth-child(even) div{
+    background-color: var(--grey1);
+}

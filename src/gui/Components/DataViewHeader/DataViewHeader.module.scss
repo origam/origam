@@ -24,7 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   min-height: 0px;
   max-height: 0px;
   flex-shrink: 0;
-  background: #ffffff;
+  background: var(--white);
   padding: 0 1em 0 2em;
   display: flex;
   flex-direction: row;
@@ -33,18 +33,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-wrap: nowrap;
   position: relative;
   width: 100%;
-  // box-shadow: -1px 3px 7px -2px rgba(0, 0, 0, 0.4);
   z-index: 150;
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid var(--grey25);
 
   border-style: solid;
-  border-color: $grey2 !important;
+  border-color: var(--grey2) !important;
   border-width: 0 0 1px 0;
   
   &:global(.isVisible) {
     min-height: 35px;
     max-height: 35px;
-    border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid var(--grey25);
   }
 
   .inner {

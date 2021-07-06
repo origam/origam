@@ -101,8 +101,6 @@ export class DataView implements IDataView {
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
-    //this.showSelectionCheckboxes = true;
-    //this.showSelectionCheckboxes = false;
     this.properties.forEach((o) => (o.parent = this));
     this.actions.forEach((o) => (o.parent = this));
     this.defaultActions = this.actions.filter((action) => action.isDefault);

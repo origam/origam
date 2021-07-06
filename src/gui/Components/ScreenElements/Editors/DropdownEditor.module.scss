@@ -27,19 +27,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   left: 0px;*/
   width: 300px;
   height: 200px;
-  background-color: white;
+  background-color:var(--white);
   overflow: hidden;
 
   @include popoverShadow;
 }
 
 .lookupListHeaderCell {
-  background-color: #f7f6fa !important;
-  border-left: 1px solid #bbbbbb;
+  background-color: var(--grey1) !important;
+  border-left: 1px solid var(--grey3);
   display: flex;
   align-items: center;
   justify-content: center;
-  white-space: nowrap;
+ white-space: nowrap;
   font-weight: 700;
 
 }
@@ -49,25 +49,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   padding-left: 10px;
   overflow: hidden;
-  white-space: nowrap;
+ white-space: nowrap;
   cursor: pointer;
   &:global(.selected) {
-    background-color: #cccccc;
+    background-color: var(--grey25);
   }
   &:global(.choosen) {
     font-weight: 700;
   }
   &:not(.selected):hover {
-    background-color: #dddddd;
+    background-color: var(--grey25);
   }
 }
 
 .oddItem {
-  background-color: #efefef;
+  background-color: var(--grey2);
 }
 
 .evenItem {
-  background-color: #ffffff;
+  background-color: var(--white);
 }
 
 .highlightedPhrase {

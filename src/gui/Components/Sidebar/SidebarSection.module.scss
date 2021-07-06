@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   user-select: none;
-  background-color: #ffffff;
+  background-color: var(--white);
   border-left: 2px solid transparent;
   flex-shrink: 0;
   flex-grow: 0;
@@ -28,8 +28,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: column;
   transition: 100ms;
   &:global(.isActive) {
-    border-left: 2px solid #4c84ff;
-    background-color: #F7F6FA;
+    border-left: 2px solid var(--blue1);
+    background-color: var(--grey1);
     flex-grow: 1;
     flex-shrink: 1;
     overflow: hidden;

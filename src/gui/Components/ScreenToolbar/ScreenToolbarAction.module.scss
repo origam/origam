@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   display: flex;
   flex-direction: row;
-  color: #77767e;
+  color: var(--grey4);
   padding: 1.2em 0.9em;
   position: relative;
   white-space: nowrap;
@@ -39,15 +39,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:hover {
     .icon {
       svg {
-        stroke: #0d0d0d;
+        stroke: var(--black);
         stroke-width: 1.5;
         &:global(.isHoverGreen) {
-          stroke: #69d07f;
+          stroke: var(--green);
         }
       }
     }
     .label {
-      color: black;
+      color:var(--black);
     }
   }
 
@@ -67,10 +67,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow: inherit;
   svg {
     overflow: inherit;
-    stroke: #77767e;
+    stroke: var(--grey4);
     stroke-width: 1;
     &:global(.isRed) {
-      stroke: #fe5461;
+      stroke: var(--red);
     }
     @include hoverItemAnimation;
   }
@@ -85,12 +85,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 :global(.isRed) .label {
-  color: #fe5461;
+  color: var(--red);
   &:hover {
-    //color: #fe5461 !important;
+    //color: var(--red) !important;
   }
 }
 
 :global(.isHoverGreen):hover .label {
-  color: #69d07f;
+  color: var(--green);
 }

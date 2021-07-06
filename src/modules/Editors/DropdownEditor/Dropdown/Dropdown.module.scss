@@ -29,49 +29,49 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   :global(.input) {
     flex: 1 0 0;
     min-width: 0px;
-    border: 1px solid #b0afb7;
+    border: 1px solid var(--grey3);
     border-right: none;
-    background-color: #f9f9fc;
+    background-color: var(--white);
     border-radius: 2px 0 0 2px;
     padding: 0.25em 0.34em;
     margin: 0;
     &:focus {
       background-color: #fff;
-      border: 1px solid #4c84ff;
+      border: 1px solid var(--blue1);
       margin-right: -1px;
       z-index: 100;
     }
     &:read-only {
       cursor: not-allowed;
-      background: #e9e8f0;
-      border: 1px solid #e9e8f0;
-      color: #3e3d45;
+      background: var(--grey2);
+      border: 1px solid var(--grey2);
+      color: var(--grey5);
     }
   }
 
   :global(.inputBtn) {
     flex: 0 0 0;
-    border: 1px solid #b0afb7;
+    border: 1px solid var(--grey3);
     border-right: none;
-    background-color: #f9f9fc;
+    background-color: var(--white);
     padding-left: 4px;
     padding-right: 4px;
     cursor: pointer;
     margin: 0;
     &:global(.lastOne) {
-      border: 1px solid #b0afb7;
+      border: 1px solid var(--grey3);
       border-radius: 0 2px 2px 0;
     }
     &:global(.readOnly) {
       cursor: not-allowed;
-      background: #e9e8f0;
-      border: 1px solid #e9e8f0;
-      color: #c6c5d1;
+      background: var(--grey2);
+      border: 1px solid var(--grey2);
+      color: var(--grey3);
     }
 
     &:focus {
       background-color: #fff;
-      border: 1px solid #4c84ff;
+      border: 1px solid var(--blue1);
       margin-right: -1px;
       z-index: 100;
     }
@@ -82,10 +82,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   z-index: 2000;
   display: inline-block;
   // overflow: hidden;
-  border: 1px solid #b0afb7;
-  background-color: #f9f9fc;
+  border: 1px solid var(--grey3);
+  background-color: var(--white);
   border-radius: 2px;
-  box-shadow: 1px 2px 5px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 2px 5px 1px rgba(var(--black-rgb), 0.1);
 }
 
 .notification {

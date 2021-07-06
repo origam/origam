@@ -174,7 +174,6 @@ export interface IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
-    AdditionalRequestParameters?: object | undefined;
     IsSingleRecordEdit?: boolean;
     RequestCurrentRecordId: boolean;
   }): Promise<any>;
@@ -254,6 +253,7 @@ export interface IApi {
     Ordering: IOrdering[];
     RowLimit: number;
     RowOffset: number;
+    Parameters: { [key: string]: string };
     ColumnNames: string[];
     MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };

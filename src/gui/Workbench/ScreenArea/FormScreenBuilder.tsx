@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EmbeddedWebpage } from "gui/Components/EmbeddedWebpage/EmbeddedWebpage";
 import { Splitter } from "gui/Components/Splitter/Splitter";
 import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedView";
 import { MobXProviderContext, observer } from "mobx-react";
@@ -31,12 +30,13 @@ import { DataView } from "../../Components/ScreenElements/DataView";
 import { Label } from "../../Components/ScreenElements/Label";
 import { VBox } from "../../Components/ScreenElements/VBox";
 import { WorkflowFinishedPanel } from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel";
-
 import actions from "model/actions-ui-tree";
 import { HBox } from "gui/Components/ScreenElements/HBox";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 import {serverValueToPanelSizeRatio} from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
+import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
+import {getSessionId} from "../../../model/selectors/getSessionId";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -51,7 +51,30 @@ export class FormScreenBuilder extends React.Component<{
   buildScreen() {
     const self = this;
     const dataViewMap = new Map<string, IDataView>();
+    function getDataView(xso: any){
+      const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
+      if (dataView) {
+        dataViewMap.set(xso.attributes.Id, dataView);
+      }
+      return dataView;
+    }
+
+
     function recursive(xso: any) {
+      if (xso.attributes.Type === "FormLevelPlugin" ||
+          xso.attributes.Type === "SectionLevelPlugin")
+      {
+        let dataView = getDataView(xso);
+        let sessionId = getSessionId(self.formScreen);
+        return pluginLibrary.getComponent(
+          {
+            name: xso.attributes.Name,
+            modelInstanceId: xso.attributes.ModelInstanceId,
+            sessionId: sessionId,
+            ctx: dataView
+          });
+      }
+
       switch (xso.attributes.Type) {
         case "WorkflowFinishedPanel": {
           return (
@@ -167,29 +190,19 @@ export class FormScreenBuilder extends React.Component<{
           );
         case "TreePanel":
         case "Grid":
-          if (xso.attributes.ModelInstanceId !== "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE") {
-            const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
-            if (dataView) {
-              dataViewMap.set(xso.attributes.Id, dataView);
-            }
-            return (
-              <DataView
-                key={xso.$iid}
-                id={xso.attributes.Id}
-                height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
-                width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
-                isHeadless={xso.attributes.IsHeadless === "true"}
-              />
-            );
-          } else {
-            return (
-              <EmbeddedWebpage
-                key={xso.$iid}
-                id={xso.attributes.ModelInstanceId}
-                height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
-              />
-            );
+          const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
+          if (dataView) {
+            dataViewMap.set(xso.attributes.Id, dataView);
           }
+          return (
+            <DataView
+              key={xso.$iid}
+              id={xso.attributes.Id}
+              height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
+              width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
+              isHeadless={xso.attributes.IsHeadless === "true"}
+            />
+          );
         case "Tab":
           return (
             <CScreenSectionTabbedView

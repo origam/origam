@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root {
   position: absolute;
-  background-color: #ffffff;
+  background-color: var(--white);
   padding: 1.5em;
 
   &:global(.hasTitle) {

@@ -140,19 +140,10 @@ export class OrigamAPI implements IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any };
-    AdditionalRequestParameters: object | undefined;
     IsSingleRecordEdit?: boolean;
     RequestCurrentRecordId: boolean;
   }) {
-    let requestData;
-    if (data.AdditionalRequestParameters) {
-      const additionalRequestParameters = data.AdditionalRequestParameters;
-      delete data["AdditionalRequestParameters"];
-      requestData = { ...data, ...additionalRequestParameters };
-    } else {
-      requestData = data;
-    }
-    const result = (await this.axiosInstance.post("/UIService/InitUI", requestData)).data;
+    const result = (await this.axiosInstance.post("/UIService/InitUI", data)).data;
     return {
       ...result,
       formDefinition: xmlJs.xml2js(result.formDefinition, {
@@ -506,6 +497,7 @@ export class OrigamAPI implements IApi {
     Ordering: IOrdering[];
     RowLimit: number;
     RowOffset: number;
+    Parameters: { [key: string]: string };
     ColumnNames: string[];
     MasterRowId: string | undefined;
     Filter: string;

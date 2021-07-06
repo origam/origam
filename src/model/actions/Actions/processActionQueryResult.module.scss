@@ -35,13 +35,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
         flex: 0 0 1.5em;
         &:global(.error) {
           svg {
-            fill: #ff5360;
+            fill: var(--red);
             stroke: transparent;
           }
         }
         &:global(.warning) {
           svg {
-            fill: #fec006;
+            fill: var(--yellow);
             stroke: transparent;
           }
         }
