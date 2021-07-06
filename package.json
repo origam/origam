@@ -58,7 +58,7 @@
     "react-virtualized": "^9.22.3",
     "string-strip-html": "^8.3.0",
     "typescript": "^4.3.5",
-    "web-vitals": "^2.0.1",
+    "web-vitals": "^2.1.0",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
     "xstate": "^4.20.2"
