@@ -47,7 +47,6 @@ import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import {flashColor2htmlColor, htmlColor2FlashColor} from "utils/flashColorFormat";
 import {onTextFieldAutoUpdate} from "../../../../model/actions-ui/DataView/OnTextFieldAutoUpdate";
-import {prepareForSortAndFilter} from "../../../../model/selectors/PortalSettings/getSortingConfig";
 
 
 @inject(({ property, formPanelView }) => {
@@ -228,7 +227,6 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             isLink={this.props.property?.isLink}
-            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)!}
             onClick={(event) => {
               onDropdownEditorClick(this.props.property)(event, this.props.property, row);
             }}
@@ -249,7 +247,6 @@ export class FormViewEditor extends React.Component<{
               )
             }
             autoSort={this.props.property?.autoSort}
-            prepareForSortAndFilter={text => prepareForSortAndFilter(this.props.property, text)!}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
