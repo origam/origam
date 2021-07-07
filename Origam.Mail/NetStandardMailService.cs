@@ -122,7 +122,7 @@ namespace Origam.Mail
                 catch(Exception ex)
                 {
                     log.Error(ex);
-                    retVal = -1;
+                    throw;
                 }
 
                 /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
