@@ -151,6 +151,7 @@ export class FormViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
             onClick={undefined}
+            wrapText={true}
             onEditorBlur={this.props.onEditorBlur}
             onAutoUpdate={value => onTextFieldAutoUpdate(this.props.property!, value)}
             isRichText={this.props.isRichText}
