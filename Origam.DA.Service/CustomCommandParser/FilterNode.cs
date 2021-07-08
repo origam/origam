@@ -206,7 +206,16 @@ namespace Origam.DA.Service.CustomCommandParser
         private string GetSqlOfLeafNode()
         {
             string nodeSql = RenderNodeSql();
-            if (Operator.StartsWith("n") && Column.IsNullable)
+            nodeSql = AddIsNullToNegativeOperators(nodeSql);
+            return nodeSql;
+        }
+
+        private string AddIsNullToNegativeOperators(string nodeSql)
+        {
+            if (Operator != "nnull" && 
+                Operator != "null" && 
+                Operator.StartsWith("n") &&
+                Column.IsNullable)
             {
                 string isNullSql = renderer.BinaryOperator(
                     leftValue: RenderedColumnName,
@@ -214,6 +223,7 @@ namespace Origam.DA.Service.CustomCommandParser
                     rightValue: null);
                 return renderer.LogicalAndOr("OR", new []{nodeSql, isNullSql});
             }
+
             return nodeSql;
         }
 
