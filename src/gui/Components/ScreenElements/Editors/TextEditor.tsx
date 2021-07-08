@@ -47,6 +47,7 @@ export class TextEditor extends React.Component<{
   maxLength?: number;
   isRichText: boolean;
   customStyle?: any;
+  wrapText: boolean;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
@@ -140,6 +141,13 @@ export class TextEditor extends React.Component<{
     );
   }
 
+  getMultilineDivClass() {
+    if(this.props.wrapText){
+      return S.input + " " + S.wrapText;
+    }
+    return S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
+  }
+
   private renderValueTag() {
     const maxLength = this.props.maxLength === 0 ? undefined : this.props.maxLength;
     if (this.props.isRichText) {
@@ -198,7 +206,7 @@ export class TextEditor extends React.Component<{
     if (this.props.isReadOnly) {
       return (
         <div
-          className={S.input}
+          className={this.getMultilineDivClass()}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
           onBlur={this.props.onEditorBlur}
@@ -231,6 +239,13 @@ export class TextEditor extends React.Component<{
       );
     }
   }
+}
+
+function isMultiLine(text: string | null){
+  if(text === null || text === undefined){
+    return false;
+  }
+   return text.includes("\n")  || text.includes("\r");
 }
 
 function RichTextEditor(props: {
