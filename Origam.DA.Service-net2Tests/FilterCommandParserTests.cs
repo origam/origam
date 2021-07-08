@@ -451,6 +451,59 @@ namespace Origam.DA.ServiceTests
             }
         }
 
+        private static object[] filterCasesNullableColumns =
+        {
+            new object[]
+            {
+                "[\"name\", \"nnull\", null]",
+                "[name] IS NOT NULL",
+                new List<ParameterData>()
+            },             
+            new object[]
+            {
+                "[\"name\", \"null\", null]",
+                "[name] IS NULL",
+                new List<ParameterData>()
+            },           
+            new object[]
+            {
+                "[\"name\", \"neq\", \"Tom\"]",
+                "([name] <> @name_neq OR [name] IS NULL)",
+                new List<ParameterData> {
+                    new ParameterData
+                    (
+                        columnName: "name", 
+                        parameterName: "name_neq", 
+                        value: "Tom",
+                        dataType: OrigamDataType.String
+                    )
+                } 
+            },
+        };
+        [Test, TestCaseSource(nameof(filterCasesNullableColumns))]
+        public void ShouldParseFilterOnNullableColumn(string filter, string expectedSqlWhere,
+            List<ParameterData> expectedParameters)
+        {
+            var sut = new FilterCommandParser(
+                filterRenderer: new MsSqlFilterRenderer(),
+                whereFilterInput: filter, 
+                sqlRenderer: new MsSqlRenderer(),
+                columns: new List<ColumnInfo>
+                {
+                    new ColumnInfo{Name = "name", DataType = OrigamDataType.String, IsNullable = true},
+                });
+
+            Assert.That(sut.Sql, Is.EqualTo(expectedSqlWhere));
+            Assert.That(sut.ParameterDataList, Has.Count.EqualTo(expectedParameters.Count));
+            foreach (var parameterData in sut.ParameterDataList)
+            {
+                var expectedData = expectedParameters.Find(data =>
+                    data.ParameterName == parameterData.ParameterName);
+                Assert.That(parameterData.ColumnName, Is.EqualTo(expectedData.ColumnName));
+                Assert.That(parameterData.Value, Is.EqualTo(expectedData.Value));
+            }
+        }
+
         [TestCase(
             "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
             new [] {"city_name", "name", "age", "id"})]
