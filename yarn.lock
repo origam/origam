@@ -1846,10 +1846,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/leaflet-draw@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.4.tgz#5200eab13f4df741eec0d330ac9ecf7e3fdd702b"
-  integrity sha512-SL+5ggsLWjsSp2wgcOAOKH1dTntBtbgA3vRkYZ/IAIj1SgVPClQMulwtoGam8OR4Z+qq3eOl1A8hPWXrauHfkA==
+"@types/leaflet-draw@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.5.tgz#9e65c1261d055b62b38c542ce7d49be67ddf8581"
+  integrity sha512-m/vmhI1XjiBZphwKwmmcOoxbMd0ybN78uZb1c9//zOG0aWVYJd3XTnIW1pnPhxhIB4EB1tgjmWjq0YQM/IyuXg==
   dependencies:
     "@types/leaflet" "*"
 
