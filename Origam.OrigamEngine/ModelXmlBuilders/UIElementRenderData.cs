@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Origam.DA.Service;
 using Origam.Gui;
 using Origam.Schema.GuiModel;
@@ -193,6 +194,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
         public UIStyle Style = null;
 
         public UIStyle CalendarViewStyle = null;
+
+        public bool AllowNavigation { get; set; }
+
+        public Dictionary<string, string> DynamicProperties =
+	        new Dictionary<string, string>();
         
         public static UIElementRenderData GetRenderData(ControlSetItem control, bool forceReadOnly)
 		{
@@ -440,6 +446,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						break;
 					case "OrderMember":
 						renderData.OrderMember = property.Value;
+						break;					
+					case "AllowNavigation":
+						renderData.AllowNavigation = property.BoolValue;
 						break;
                     case "StyleId":
                         if (!property.GuidValue.Equals(Guid.Empty))
@@ -453,6 +462,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                             renderData.CalendarViewStyle = GetStyle(property);
                         }
                         break;
+                    default:
+	                    renderData.DynamicProperties[property.Name] = property.Value;
+	                    break;
                 }
 			}
 			return renderData;

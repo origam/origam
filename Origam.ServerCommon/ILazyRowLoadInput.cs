@@ -30,7 +30,7 @@ namespace Origam.Server
         string Filter { get; set; }
         Dictionary<string, Guid> FilterLookups { get; set; }
         List<IRowOrdering> OrderingList { get; }
-
+        Dictionary<string, string> Parameters { get; set; }
         int RowLimit { get; set; }        
         int RowOffset { get; set; }
 

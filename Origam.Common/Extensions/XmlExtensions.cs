@@ -142,5 +142,12 @@ namespace Origam.Extensions
                 return XDocument.Load(nodeReader);
             }
         }
+            
+        public static bool AttributeIsFalseOrMissing(this XmlElement element, string attributeName)
+        {
+            string value = element.GetAttribute(attributeName);
+            return value == "false" ||
+                   string.IsNullOrEmpty(value);
+        }
     }
 }

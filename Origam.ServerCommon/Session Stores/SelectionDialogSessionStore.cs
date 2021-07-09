@@ -223,7 +223,7 @@ namespace Origam.Server
             if (formRef != null)
             {
                 // Request data for normal (non-lazily-loaded) screens
-                request.DataRequested = formRef.ListDataStructure == null;
+                request.DataRequested = !formRef.IsLazyLoaded;
             }
             result.Request = request;
             return result;

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using System;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace Origam.Schema.GuiModel
@@ -113,6 +114,27 @@ namespace Origam.Schema.GuiModel
 				return new SchemaItemCollection();
 			}
 		}
+
+		[Browsable(false)]
+		public Type SystemType {
+			get
+			{
+				switch(PropertyType) {
+					case ControlPropertyValueType.Integer:
+						return typeof(int);
+					case ControlPropertyValueType.Boolean:
+						return typeof(bool);
+					case ControlPropertyValueType.Xml:
+					case ControlPropertyValueType.String:
+						return typeof(string);
+					case ControlPropertyValueType.UniqueIdentifier:
+						return typeof(Guid);
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+		}
+
 		#endregion
 
 	}

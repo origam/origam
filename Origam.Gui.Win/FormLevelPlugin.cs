@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -19,21 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
+using System.ComponentModel;
+using System.Windows.Forms;
 using Origam.Schema;
-using Origam.Workbench.Services;
 
-namespace Origam.Services
+namespace Origam.Gui.Win
 {
-	public interface ISchemaService : IWorkbenchService
-	{
-		ISchemaItemProvider GetProvider(Type type);
-		T GetProvider<T>() where T : ISchemaItemProvider;
-		Guid ActiveSchemaExtensionId { get; }
-        Guid StorageSchemaExtensionId { get; set; }
-        Package ActiveExtension { get; }
+    public class FormLevelPlugin : Label,
+        IOrigamMetadataConsumer, ISupportInitialize
+    {
+        public AbstractSchemaItem OrigamMetadata { get; set; }
+        public void BeginInit()
+        {
+        }
+	    
 
-        bool IsSchemaLoaded { get; }
-        bool UnloadSchema();
-	}
+        public void EndInit()
+        {
+        }
+    }
 }

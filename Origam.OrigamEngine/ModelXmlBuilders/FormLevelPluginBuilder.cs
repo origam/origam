@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -19,21 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using Origam.Schema;
-using Origam.Workbench.Services;
+using System.Xml;
 
-namespace Origam.Services
+namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-	public interface ISchemaService : IWorkbenchService
-	{
-		ISchemaItemProvider GetProvider(Type type);
-		T GetProvider<T>() where T : ISchemaItemProvider;
-		Guid ActiveSchemaExtensionId { get; }
-        Guid StorageSchemaExtensionId { get; set; }
-        Package ActiveExtension { get; }
-
-        bool IsSchemaLoaded { get; }
-        bool UnloadSchema();
-	}
+    public class FormLevelPluginBuilder
+    {
+        public static void Build(XmlElement parentNode, string text)
+        {
+            parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
+            parentNode.SetAttribute("Type", "FormLevelPlugin");
+            parentNode.SetAttribute("Name", text);
+        }
+    }
 }

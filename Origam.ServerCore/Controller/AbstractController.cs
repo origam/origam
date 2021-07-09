@@ -418,6 +418,15 @@ namespace Origam.ServerCore.Controller
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
             };
+            
+            if (input.Parameters != null)
+            {
+                foreach (var pair in input.Parameters)
+                {
+                    query.Parameters.Add(new QueryParameter(
+                        pair.Key, pair.Value));
+                } 
+            }
             return AddMethodAndSource(
                 input.SessionFormIdentifier, input.MasterRowId, entityData, query);
         }
