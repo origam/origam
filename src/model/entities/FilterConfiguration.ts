@@ -25,7 +25,7 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
-import {prepareAnyForSortAndFilter, prepareForSortAndFilter} from "../selectors/PortalSettings/getSortingConfig";
+import {prepareAnyForFilter, prepareForFilter} from "../selectors/PortalSettings/getStringFilterConfig";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
@@ -113,11 +113,11 @@ export class FilterConfiguration implements IFilterConfiguration {
   userFilterPredicate(row: any[], term: IFilter) {
     const dataTable = getDataTable(this);
     const prop = dataTable.getPropertyById(term.propertyId)!;
-    const cellValue = prepareAnyForSortAndFilter(this,dataTable.getOriginalCellValue(row, prop));
+    const cellValue = prepareAnyForFilter(this,dataTable.getOriginalCellValue(row, prop));
     switch (prop.column) {
       case "Text": {
-        const filterVal1 = prepareAnyForSortAndFilter(this,term.setting.val1);
-        const cellText = prepareForSortAndFilter(this, dataTable.getOriginalCellText(row, prop))!;
+        const filterVal1 = prepareAnyForFilter(this,term.setting.val1);
+        const cellText = prepareForFilter(this, dataTable.getOriginalCellText(row, prop))!;
         if (cellValue === undefined) return true;
 
         switch (term.setting.type) {
@@ -298,9 +298,9 @@ export class FilterConfiguration implements IFilterConfiguration {
         break;
       }
       case "ComboBox": {
-        const filterVal1 = prepareAnyForSortAndFilter(this,term.setting.val1) || [];
-        const filterVal2 = prepareAnyForSortAndFilter(this,term.setting.val2) || "";
-        const cellText = prepareForSortAndFilter(this, dataTable.getOriginalCellText(row, prop))!;
+        const filterVal1 = prepareAnyForFilter(this,term.setting.val1) || [];
+        const filterVal2 = prepareAnyForFilter(this,term.setting.val2) || "";
+        const cellText = prepareForFilter(this, dataTable.getOriginalCellText(row, prop))!;
         switch (term.setting.type) {
           case "starts": {
             if (filterVal2 === "") return true;
@@ -350,8 +350,8 @@ export class FilterConfiguration implements IFilterConfiguration {
         break;
       }
       case "TagInput": {
-        const cellValues = prepareAnyForSortAndFilter(this, dataTable.getOriginalCellValue(row, prop));
-        const filterValues1 = prepareAnyForSortAndFilter(this, term.setting.val1);
+        const cellValues = prepareAnyForFilter(this, dataTable.getOriginalCellValue(row, prop));
+        const filterValues1 = prepareAnyForFilter(this, term.setting.val1);
         switch (term.setting.type) {
           case "in":
           case "eq": {
@@ -398,8 +398,8 @@ export class FilterConfiguration implements IFilterConfiguration {
     const dataTable = getDataTable(this);
     const dataSource = getDataSource(dataTable);
     const sourceField = dataSource.getFieldByName(implicitFilter.propertyId)!;
-    const cellValue = prepareAnyForSortAndFilter(this, dataTable.getCellValueByDataSourceField(row, sourceField));
-    const filterValue = prepareAnyForSortAndFilter(this, implicitFilter.value);
+    const cellValue = prepareAnyForFilter(this, dataTable.getCellValueByDataSourceField(row, sourceField));
+    const filterValue = prepareAnyForFilter(this, implicitFilter.value);
 
     switch (parseInt(implicitFilter.operatorCode)) {
       case 1:

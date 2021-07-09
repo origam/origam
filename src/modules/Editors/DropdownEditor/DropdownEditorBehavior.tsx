@@ -37,7 +37,6 @@ export class DropdownEditorBehavior {
     private setup: () => DropdownEditorSetup,
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
-    private prepareForSortAndFilter: (text: string) => string,
     public onDoubleClick?: (event: any) => void,
     public onClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusAble) => void,
@@ -353,7 +352,7 @@ export class DropdownEditorBehavior {
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
         if (self.autoSort) {
-          items.sort((i1: string[], i2: string[]) => self.compareLookupItems(i1, i2));
+          items.sort((i1: string[], i2: string[]) => compareStrings(i1[1], i2[1]));
         }
         if (setup.dropdownType === EagerlyLoadedGrid) {
           self.dataTable.setData(items);
@@ -377,12 +376,6 @@ export class DropdownEditorBehavior {
         self.runningPromise = undefined;
       }
     })();
-  }
-
-  compareLookupItems(item1: string[], item2: string[]) {
-    let label1 = this.prepareForSortAndFilter(item1[1]);
-    let label2 = this.prepareForSortAndFilter(item2[1]);
-    return compareStrings(label1, label2);
   }
 
   @action.bound handleUseEffect() {

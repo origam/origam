@@ -1,4 +1,4 @@
-export interface ISortingConfig{
+export interface IFilterConfig {
   caseSensitive: boolean;
   accentSensitive: boolean;
 }

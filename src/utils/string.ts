@@ -18,6 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable */
+import {getLocaleFromCookie} from "./cookies";
+
 declare global {
   interface String {
     latinize(): String;
@@ -44,11 +46,6 @@ export function compareStrings(a: string | undefined | null, b: string | undefin
   } else if (b === undefined || b === null) {
     return -1;
   }
-  if (a < b) {
-    return -1;
-  }
-  if (a > b) {
-    return 1;
-  }
-  return 0;
+  const locale = getLocaleFromCookie();
+  return a.localeCompare(b, locale);
 }

@@ -36,7 +36,7 @@ import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsLis
 import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
 import { getIconUrl } from "gui/getIconUrl";
 import {IMenuItemIcon} from "gui/Workbench/MainMenu/IMenuItemIcon";
-import {prepareForSortAndFilter} from "../selectors/PortalSettings/getSortingConfig";
+import {prepareForFilter} from "../selectors/PortalSettings/getStringFilterConfig";
 
 
 export class Searcher implements ISearcher {
@@ -196,7 +196,7 @@ export class Searcher implements ISearcher {
   doSearchTerm = _.throttle(this.doSearchTermImm, 100);
 
   @action.bound doSearchTermImm(term: string) {
-    const searchTerm = prepareForSortAndFilter(this,term.trim())!;
+    const searchTerm = prepareForFilter(this,term.trim())!;
     this.searchInMenu(searchTerm);
     this.searchInWorkQueues(searchTerm);
     this.searchInChat(searchTerm);
@@ -319,13 +319,13 @@ export class Searcher implements ISearcher {
   @action.bound
   indexWorkQueues(items: any[]){
     this.workQueueIndex = items
-      .map(item => new NodeContainer(prepareForSortAndFilter(this, item.name)!, item));
+      .map(item => new NodeContainer(prepareForFilter(this, item.name)!, item));
   }
 
   @action.bound
   indexChats(items: any[]){
     this.chatsIndex = items
-      .map(item => new NodeContainer(prepareForSortAndFilter(this, item.topic)!, item));
+      .map(item => new NodeContainer(prepareForFilter(this, item.topic)!, item));
   }
 
   @action.bound
@@ -337,7 +337,7 @@ export class Searcher implements ISearcher {
       switch (node.name) {
         case "Submenu":
         case "Command":
-          this.nodeIndex.push(new NodeContainer(prepareForSortAndFilter(this, node.attributes.label)! ,node));
+          this.nodeIndex.push(new NodeContainer(prepareForFilter(this, node.attributes.label)! ,node));
       }
       node.elements.forEach((element: any) => recursive(element));
     };
