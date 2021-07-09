@@ -31,6 +31,9 @@ namespace Origam.Mail
 {
     public class NetStandardMailService : AbstractMailService
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
         private readonly string userName;
         private readonly string password;
         private readonly bool useSsl;
@@ -106,12 +109,20 @@ namespace Origam.Mail
 
                 try
                 {
+                    MailLogUtils.SendMessageAndLog(smtpClient, m);
+                    if (log.IsDebugEnabled)
+                    {
+                        log.Debug("Sending mail:");
+                        log.Debug(MailLogUtils.ToLogString(smtpClient));
+                        log.Debug(MailLogUtils.ToLogString(m));
+                    }
                     smtpClient.Send(m);
                     retVal++;
                 }
-                catch
+                catch(Exception ex)
                 {
-                    retVal = -1;
+                    log.Error(ex);
+                    throw;
                 }
 
                 /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
@@ -210,8 +221,24 @@ namespace Origam.Mail
                     m.Attachments.Add(att);
                 }
 
-                smtpClient.Send(m);
-                retVal++;
+                try
+                {
+                    MailLogUtils.SendMessageAndLog(smtpClient, m);
+                    if (log.IsDebugEnabled)
+                    {
+                        log.Debug("Sending mail:");
+                        log.Debug(MailLogUtils.ToLogString(smtpClient));
+                        log.Debug( MailLogUtils.ToLogString(m));
+                    }
+                    smtpClient.Send(m);
+                    log.Debug("Mail sent");
+                    retVal++;
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex);
+                    throw;
+                }
 
                 /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
                 /// podle ktereho bude proveden update logu se statusem a casem odeslaneho mailu
