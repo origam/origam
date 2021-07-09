@@ -114,7 +114,7 @@ namespace Origam.Mail
                     {
                         log.Debug("Sending mail:");
                         log.Debug(MailLogUtils.ToLogString(smtpClient));
-                        log.Debug( MailLogUtils.ToLogString(m));
+                        log.Debug(MailLogUtils.ToLogString(m));
                     }
                     smtpClient.Send(m);
                     retVal++;
