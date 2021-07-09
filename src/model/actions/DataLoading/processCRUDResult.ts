@@ -27,6 +27,7 @@ import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import { IDataView } from "model/entities/types/IDataView";
+import {getDataViewCache} from "../../selectors/FormScreen/getDataViewCache";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -70,6 +71,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
       for (let dataView of dataViews) {
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
         dataView.substituteRecord(resultItem.wrappedObject);
+        getDataViewCache(dataView).UpdateData(dataView);
         if(resortTables){
           yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
         }
@@ -101,6 +103,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
           yield dataView.dataTable.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);
           dataView.selectRow(dataSourceRow);
         }
+        getDataViewCache(dataView).UpdateData(dataView);
       }
       getFormScreen(ctx).setDirty(true);
       break;
@@ -111,6 +114,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
           dataView.deleteRowAndSelectNext(row);
+          getDataViewCache(dataView).UpdateData(dataView);
         }
       }
       getFormScreen(ctx).setDirty(true);

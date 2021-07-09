@@ -17,25 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IDataView } from "./types/IDataView";
-import { IDataSource } from "./types/IDataSource";
-import { IComponentBinding } from "./types/IComponentBinding";
-import { IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
-import { action, computed, observable } from "mobx";
-import { IAction } from "./types/IAction";
+import {IDataView} from "./types/IDataView";
+import {IDataSource} from "./types/IDataSource";
+import {IComponentBinding} from "./types/IComponentBinding";
+import {IFormScreenLifecycle02} from "./types/IFormScreenLifecycle";
+import {action, computed, observable} from "mobx";
+import {IAction} from "./types/IAction";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
-import {
-  IFormScreen,
-  IFormScreenData,
-  IFormScreenEnvelope,
-  IFormScreenEnvelopeData,
-} from "./types/IFormScreen";
-import { IPanelConfiguration } from "./types/IPanelConfiguration";
-import { CriticalSection } from "utils/sync";
-import {getSessionId} from "model/selectors/getSessionId";
-import { getApi } from "model/selectors/getApi";
+import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData,} from "./types/IFormScreen";
+import {IPanelConfiguration} from "./types/IPanelConfiguration";
+import {CriticalSection} from "utils/sync";
 import {getRowStates} from "model/selectors/RowState/getRowStates";
-import { ScreenPictureCache } from "./ScreenPictureCache";
+import {ScreenPictureCache} from "./ScreenPictureCache";
+import {DataViewCache} from "./DataViewCache";
 
 export class FormScreen implements IFormScreen {
   
@@ -53,7 +47,7 @@ export class FormScreen implements IFormScreen {
 
   dataUpdateCRS = new CriticalSection();
   pictureCache = new ScreenPictureCache();
-  getDataCache = new GetDataCache(this);
+  dataViewCache = new DataViewCache(this);
 
   @observable isDirty: boolean = false;
   dynamicTitleSource: string | undefined;
@@ -94,14 +88,19 @@ export class FormScreen implements IFormScreen {
     this.panelConfigurations.get(id)!.position = size;
   }
 
-  getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
+  getData(childEntity: string, modelInstanceId: string, parentRecordId: string, rootRecordId: string) {
     this.dataSources.filter(dataSource => dataSource.entity === childEntity)
     .forEach(dataSource => getRowStates(dataSource).clearAll());
-    return this.getDataCache.getData(childEntity, parentRecordId, rootRecordId);
+    return this.dataViewCache.getData({
+      childEntity: childEntity,
+      modelInstanceId: modelInstanceId,
+      parentRecordId: parentRecordId,
+      rootRecordId: rootRecordId
+    });
   }
 
   clearDataCache(){
-    this.getDataCache.clear();
+    this.dataViewCache.clear();
   }
 
 
@@ -268,36 +267,3 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
 }
 
 
-class GetDataCache {
-  constructor(private ctx: any) {}
-
-  dataMap = new Map<string, Promise<any>>();
-
-  public async getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
-    const cacheKey = this.makeChacheKey(childEntity, parentRecordId, rootRecordId);
-    if (!this.dataMap.has(cacheKey)) {
-      const dataPromise = this.callGetData(childEntity, parentRecordId, rootRecordId);
-      this.dataMap.set(cacheKey, dataPromise);
-    }
-    return this.dataMap.get(cacheKey);
-  }
-
-  public clear(){
-    this.dataMap.clear();
-  }
-
-  private callGetData(childEntity: string, parentRecordId: string, rootRecordId: string) {
-    const api = getApi(this.ctx);
-    const dataPromise = api.getData({
-      SessionFormIdentifier: getSessionId(this.ctx),
-      ChildEntity: childEntity,
-      ParentRecordId: parentRecordId,
-      RootRecordId: rootRecordId,
-    });
-    return dataPromise;
-  }
-
-  private makeChacheKey(childEntity: string, parentRecordId: string, rootRecordId: string) {
-    return childEntity + parentRecordId + rootRecordId;
-  }
-}

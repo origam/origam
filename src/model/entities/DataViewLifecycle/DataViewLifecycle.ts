@@ -227,7 +227,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         const masterRowId = getMasterRowId(this);
         data = !parentRowId || !masterRowId
           ? []
-          : yield getFormScreen(this).getData(getEntity(this), parentRowId, masterRowId);
+          : yield getFormScreen(this).getData(getEntity(this), dataView.modelInstanceId, parentRowId, masterRowId);
       }
       yield dataView.setRecords(data);
       dataView.selectFirstRow();
