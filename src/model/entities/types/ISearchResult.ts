@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IMenuItemIcon} from "gui/Workbench/MainMenu/IMenuItemIcon";
 
 export interface ISearchResult
 {
@@ -39,3 +38,5 @@ export interface IServerSearchResult extends ISearchResult
 export interface IMenuSearchResult  extends ISearchResult {
   type: string;
 }
+
+export const isIMenuSearchResult = (o: any): o is IMenuSearchResult => "type" in o;
