@@ -17,7 +17,7 @@
     "@types/lodash": "^4.14.171",
     "@types/node": "^15.14.0",
     "@types/numeral": "^2.0.1",
-    "@types/react": "^17.0.13",
+    "@types/react": "^17.0.14",
     "@types/react-color": "^3.0.5",
     "@types/react-dom": "^17.0.9",
     "@types/react-draft-wysiwyg": "^1.13.3",
