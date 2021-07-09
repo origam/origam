@@ -19,15 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { Fragment } from "react";
 import S from './AuditPlugin.module.scss';
-import {IPluginData} from "../types/IPluginData";
-import {IPluginProperty} from "../types/IPluginProperty";
+import {IPluginData} from "../../types/IPluginData";
+import {IPluginProperty} from "../../types/IPluginProperty";
 import {observer} from "mobx-react";
-import {ISectionPlugin} from "../types/ISectionPlugin";
+import {ISectionPlugin} from "../../types/ISectionPlugin";
 import {observable} from "mobx";
 import moment from "moment";
-import {IPluginTableRow} from "../types/IPluginRow";
-import {IPluginDataView} from "../types/IPluginDataView";
-import {Localizer} from "../tools/Localizer";
+import {IPluginTableRow} from "../../types/IPluginRow";
+import {IPluginDataView} from "../../types/IPluginDataView";
+import {Localizer} from "../../tools/Localizer";
 import {localizations} from "./AuditPluginLocalization";
 
 export default class AuditPlugin implements ISectionPlugin{

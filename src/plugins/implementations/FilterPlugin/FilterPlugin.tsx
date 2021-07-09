@@ -19,16 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from './FilterPlugin.module.scss';
-import {IFormPlugin} from "../types/IFormPlugin";
-import {IPluginData} from "../types/IPluginData";
-import {toOrigamServerString} from "../../utils/moment";
+import {IFormPlugin} from "../../types/IFormPlugin";
+import {IPluginData} from "../../types/IPluginData";
+import {toOrigamServerString} from "../../../utils/moment";
 import moment from "moment";
 import {Moment} from "moment/moment";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
-import {IOption, SimpleDropdown} from "../../gui/Components/PublicComponenets/SimpleDropdown";
-import {Button} from "../../gui/Components/PublicComponenets/Button";
-import {Localizer} from "../tools/Localizer";
+import {IOption, SimpleDropdown} from "../../../gui/Components/PublicComponenets/SimpleDropdown";
+import {Button} from "../../../gui/Components/PublicComponenets/Button";
+import {Localizer} from "../../tools/Localizer";
 import {localizations} from "./FilterPluginLocalization";
 
 export default class FilterPlugin implements IFormPlugin {
