@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
@@ -19,9 +19,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__system/OrigamFeatureList.origam#OrigamFeatureList/IsFeatureOn/585c8876-543d-4125-bafb-e28b0124dee5"
-        x:id="c1cfe05a-476c-417e-9d26-88e384b04ea8"
-        asi:name="IsFeatureOn"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="a71cde70-2b79-420b-aaf3-c8d20e6ea620"
+        asi:name="Id"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -30,9 +30,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="a71cde70-2b79-420b-aaf3-c8d20e6ea620"
-        asi:name="Id"
+        dsc:field="Root/DataEntity/__system/OrigamFeatureList.origam#OrigamFeatureList/IsFeatureOn/585c8876-543d-4125-bafb-e28b0124dee5"
+        x:id="c1cfe05a-476c-417e-9d26-88e384b04ea8"
+        asi:name="IsFeatureOn"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"

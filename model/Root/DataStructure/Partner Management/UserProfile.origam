@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="8e628d99-986a-4b46-9e78-01a2a91ee85a"
@@ -31,9 +31,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-        x:id="25ad1ba2-2a3a-4dbb-8e0f-07eb18777117"
-        asi:name="Id"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
+        x:id="043e7046-c1b5-4fae-8b06-1df92412b0ff"
+        asi:name="RecordCreated"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -42,9 +42,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
-        x:id="043e7046-c1b5-4fae-8b06-1df92412b0ff"
-        asi:name="RecordCreated"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="25ad1ba2-2a3a-4dbb-8e0f-07eb18777117"
+        asi:name="Id"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -60,17 +60,6 @@
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="true"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserName/15c44b5f-c719-440e-983f-44f177593f63"
-        x:id="aa586781-0d41-442a-9a5e-387af39be421"
-        asi:name="UserName"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
         dsc:writeOnly="false"
         dsc:xmlMappingType="Default" />
       <dsc:DataStructureColumn
@@ -102,6 +91,17 @@
         dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Name/7a5f60a2-895a-49d7-b009-929b4a6a4c5a"
         x:id="a6a65074-0832-4655-b87a-d030725bdf89"
         asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserName/15c44b5f-c719-440e-983f-44f177593f63"
+        x:id="aa586781-0d41-442a-9a5e-387af39be421"
+        asi:name="UserName"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"

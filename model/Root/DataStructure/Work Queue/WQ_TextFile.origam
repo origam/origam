@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="0e157367-9ecd-42e1-8e68-da905adceb6b"
@@ -19,9 +19,10 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refLockedByBusinessPartnerId/1883087e-d17b-43e0-81ae-4019a9ce3021"
-        x:id="394e015e-7ab4-4082-b0f5-22e732c7327f"
-        asi:name="refLockedByBusinessPartnerId"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d1/3fd57777-7700-4943-a19f-3437f9df299a"
+        x:id="040abf2a-aed6-4f8e-8a3c-da07e2c83513"
+        dsc:label="File Creation Time"
+        asi:name="FileCreationTime"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -30,9 +31,21 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="9f5f281b-9937-46de-bf5a-2577a3a7e708"
-        asi:name="Id"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s1/a115749e-6c25-4395-967d-ba92da75171c"
+        x:id="0b4c2b27-4118-4af2-90b5-7b10b000476a"
+        dsc:label="File Name"
+        asi:name="FileName"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/IsLocked/c019bbfc-551e-4dee-abe6-f777a13b77a9"
+        x:id="1b0f6471-ea5c-4abf-b5c4-f3e984162e9d"
+        asi:name="IsLocked"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -64,76 +77,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m1/bd384927-d6ca-43b6-bbab-cda60627cb88"
-        x:id="58bf8952-81b9-443a-883c-48fc938493cb"
-        asi:name="Data"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreatedBy/cbcf7bb8-10d0-4576-98f5-1210b10bae5f"
-        x:id="4fb22925-aecb-4515-a47b-6200efa4caf6"
-        asi:name="RecordCreatedBy"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordUpdatedBy/ad2d2efe-9cb0-4141-ac28-25b8ed68580b"
         x:id="2b6dd609-1d52-4f63-8454-7363e42b321b"
         asi:name="RecordUpdatedBy"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s1/a115749e-6c25-4395-967d-ba92da75171c"
-        x:id="0b4c2b27-4118-4af2-90b5-7b10b000476a"
-        dsc:label="File Name"
-        asi:name="FileName"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refWorkQueueId/f37a5473-98ef-4e6b-9c30-ccc12e99adcc"
-        x:id="5877b244-34e7-4b9d-bad1-8f553a3aca08"
-        asi:name="refWorkQueueId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refId/127907f1-e422-46bb-85d1-898b232d027d"
-        x:id="7868d62b-04d7-4507-81fd-908b5b0ada14"
-        asi:name="refId"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/ErrorText/4bfd4aa8-2d12-4293-9360-542e23e904ce"
-        x:id="5c045988-2907-446b-b7bc-a1589e6bd41a"
-        asi:name="ErrorText"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -153,10 +99,53 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d2/2aa64133-36c8-4d90-a696-1aa729d9fb78"
-        x:id="e79616f5-7240-4c0a-8e8c-d2da8ffd3314"
-        dsc:label="Last Write Time"
-        asi:name="FileLastWriteTime"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refLockedByBusinessPartnerId/1883087e-d17b-43e0-81ae-4019a9ce3021"
+        x:id="394e015e-7ab4-4082-b0f5-22e732c7327f"
+        asi:name="refLockedByBusinessPartnerId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreatedBy/cbcf7bb8-10d0-4576-98f5-1210b10bae5f"
+        x:id="4fb22925-aecb-4515-a47b-6200efa4caf6"
+        asi:name="RecordCreatedBy"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refWorkQueueId/f37a5473-98ef-4e6b-9c30-ccc12e99adcc"
+        x:id="5877b244-34e7-4b9d-bad1-8f553a3aca08"
+        asi:name="refWorkQueueId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m1/bd384927-d6ca-43b6-bbab-cda60627cb88"
+        x:id="58bf8952-81b9-443a-883c-48fc938493cb"
+        asi:name="Data"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/ErrorText/4bfd4aa8-2d12-4293-9360-542e23e904ce"
+        x:id="5c045988-2907-446b-b7bc-a1589e6bd41a"
+        asi:name="ErrorText"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -177,10 +166,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d1/3fd57777-7700-4943-a19f-3437f9df299a"
-        x:id="040abf2a-aed6-4f8e-8a3c-da07e2c83513"
-        dsc:label="File Creation Time"
-        asi:name="FileCreationTime"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refId/127907f1-e422-46bb-85d1-898b232d027d"
+        x:id="7868d62b-04d7-4507-81fd-908b5b0ada14"
+        asi:name="refId"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -189,15 +177,47 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/IsLocked/c019bbfc-551e-4dee-abe6-f777a13b77a9"
-        x:id="1b0f6471-ea5c-4abf-b5c4-f3e984162e9d"
-        asi:name="IsLocked"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="9f5f281b-9937-46de-bf5a-2577a3a7e708"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/d2/2aa64133-36c8-4d90-a696-1aa729d9fb78"
+        x:id="e79616f5-7240-4c0a-8e8c-d2da8ffd3314"
+        dsc:label="Last Write Time"
+        asi:name="FileLastWriteTime"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
         dsc:writeOnly="false"
         dsc:xmlMappingType="Default" />
     </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="25b1ea62-7a67-4e42-b5f2-576ce189219f"
+      asi:name="GetByRel3">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="6b729e5d-78e3-47c9-9c05-bf5b9440dff1"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel3Id/51bd863a-1a1d-435e-b70a-afdf937b0358"
+        x:id="e7810c58-426d-4b2e-8f37-a8e1bf7f3fd2"
+        asi:name="WorkQueueEntry_GetByrefRel3Id"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
@@ -208,46 +228,6 @@
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
         dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
         x:id="6a84b268-9fc0-4ff8-86cd-c481d9a8bc48"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="61c7d00d-bff1-467b-8b5b-2a938642a54e"
-      asi:name="GetByRel7">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel7Id/c6a2495b-48a0-4b34-b89e-ef40ab5f1bcf"
-        x:id="1fd6053b-d6fd-4ffd-b0b6-0dd030a510d1"
-        asi:name="WorkQueueEntry_GetByrefRel7Id"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="91fae85f-8df3-4cbc-b5b7-fea862a2d93b"
-        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
-      x:id="58b2a418-6b74-49ae-b773-2af86a6be87a"
-      asi:name="GetByRel2">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel2Id/90f68b03-0bf9-49fa-82d4-8884a97c59cd"
-        x:id="bf19fd1f-96a9-4420-b9dc-c6408fe3ba6e"
-        asi:name="WorkQueueEntry_GetByrefRel2Id"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="aedd8bc7-b92d-4ffd-bb3a-e6fa5b740ccc"
         asi:name="WorkQueueEntry_GetByrefWorkQueueId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
@@ -274,41 +254,41 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="990df456-a5ff-4810-8410-538af8db48f8"
-      asi:name="GetByRel6">
+      x:id="3c8ab353-99b3-4c40-b438-7b0c7cb5bbf1"
+      asi:name="GetByRel1">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel6Id/09b292b0-8a9e-4516-95e1-a3aad8b1d7cf"
-        x:id="32562305-1a28-4bb4-8bd5-a8aa489f7381"
-        asi:name="WorkQueueEntry_GetByrefRel6Id"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel1Id/a83f681e-41d1-4ff1-84a0-cfa86196dec2"
+        x:id="89f869d2-7676-47e2-a137-46af02f506cc"
+        asi:name="WorkQueueEntry_GetByrefRel1Id"
         dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
         dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="3d0e213f-cb54-4f4a-a13c-c3f0587c3953"
+        x:id="ddc64445-2af2-49e2-9dbd-f3e6065e2833"
         asi:name="WorkQueueEntry_GetByrefWorkQueueId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="25b1ea62-7a67-4e42-b5f2-576ce189219f"
-      asi:name="GetByRel3">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel3Id/51bd863a-1a1d-435e-b70a-afdf937b0358"
-        x:id="e7810c58-426d-4b2e-8f37-a8e1bf7f3fd2"
-        asi:name="WorkQueueEntry_GetByrefRel3Id"
-        dsfsf:passWhenParameterMatch="false" />
+      x:id="58b2a418-6b74-49ae-b773-2af86a6be87a"
+      asi:name="GetByRel2">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
         dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="6b729e5d-78e3-47c9-9c05-bf5b9440dff1"
+        x:id="aedd8bc7-b92d-4ffd-bb3a-e6fa5b740ccc"
         asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel2Id/90f68b03-0bf9-49fa-82d4-8884a97c59cd"
+        x:id="bf19fd1f-96a9-4420-b9dc-c6408fe3ba6e"
+        asi:name="WorkQueueEntry_GetByrefRel2Id"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
@@ -334,34 +314,41 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="3c8ab353-99b3-4c40-b438-7b0c7cb5bbf1"
-      asi:name="GetByRel1">
+      x:id="61c7d00d-bff1-467b-8b5b-2a938642a54e"
+      asi:name="GetByRel7">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel1Id/a83f681e-41d1-4ff1-84a0-cfa86196dec2"
-        x:id="89f869d2-7676-47e2-a137-46af02f506cc"
-        asi:name="WorkQueueEntry_GetByrefRel1Id"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel7Id/c6a2495b-48a0-4b34-b89e-ef40ab5f1bcf"
+        x:id="1fd6053b-d6fd-4ffd-b0b6-0dd030a510d1"
+        asi:name="WorkQueueEntry_GetByrefRel7Id"
         dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
         dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
-        x:id="ddc64445-2af2-49e2-9dbd-f3e6065e2833"
+        x:id="91fae85f-8df3-4cbc-b5b7-fea862a2d93b"
         asi:name="WorkQueueEntry_GetByrefWorkQueueId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="e4bf2b90-7bc4-4412-9fc5-9d6faf455e8f"
-      asi:name="GetById">
+      x:id="990df456-a5ff-4810-8410-538af8db48f8"
+      asi:name="GetByRel6">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
-        x:id="fdd01e28-7dfd-441d-b6b0-5853e0562505"
-        asi:name="WorkQueueEntry_GetId"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel6Id/09b292b0-8a9e-4516-95e1-a3aad8b1d7cf"
+        x:id="32562305-1a28-4bb4-8bd5-a8aa489f7381"
+        asi:name="WorkQueueEntry_GetByrefRel6Id"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="3d0e213f-cb54-4f4a-a13c-c3f0587c3953"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
@@ -384,17 +371,23 @@
         asi:name="WorkQueueEntry_GetByrefRel4Id"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="e4bf2b90-7bc4-4412-9fc5-9d6faf455e8f"
+      asi:name="GetById">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="fdd01e28-7dfd-441d-b6b0-5853e0562505"
+        asi:name="WorkQueueEntry_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
     <dsss:DataStructureSortSet
       asi:abstract="false"
       x:id="22f0001d-fbc6-46a9-a709-f832e2fccc03"
       asi:name="ByFileCreationTimeAndSequenceNumber">
-      <dsssi:DataStructureSortSetItem
-        asi:abstract="false"
-        dsssi:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
-        dsssi:fieldName="FileCreationTime"
-        x:id="ead27922-bf3d-42cc-ab67-470745e9b0a9"
-        asi:name="WorkQueueEntry_0_FileCreationTime"
-        dsssi:sortDirection="Ascending" />
       <dsssi:DataStructureSortSetItem
         asi:abstract="false"
         dsssi:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
@@ -403,6 +396,13 @@
         asi:name="WorkQueueEntry_1_SequenceNumber"
         dsssi:sortDirection="Ascending"
         dsssi:sortOrder="1" />
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/WorkQueueEntry/e0648829-7ecb-49a7-ae73-a70b61e9886c"
+        dsssi:fieldName="FileCreationTime"
+        x:id="ead27922-bf3d-42cc-ab67-470745e9b0a9"
+        asi:name="WorkQueueEntry_0_FileCreationTime"
+        dsssi:sortDirection="Ascending" />
     </dsss:DataStructureSortSet>
   </ds:DataStructure>
 </x:file>
