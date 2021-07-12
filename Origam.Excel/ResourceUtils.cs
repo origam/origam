@@ -26,7 +26,7 @@ namespace Origam.Excel
 {
 	public class ResourceUtils
 	{
-		private static readonly string BASENAME = "Origam.Excel";
+		private static readonly string BASENAME = "Origam.Excel.Strings";
 
 		private static ResourceManager _rm = null;
 		
