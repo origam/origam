@@ -32,6 +32,9 @@
                                 <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="$(var.OrigamProductName) " Advertise="yes" Icon="StartMenuIcon.exe" IconIndex="0" />
                             </File>
                         </Component>
+						<Component Id="ORIGAMSCHEDULER.EXE" DiskId="1" Guid="B841E6EC-AD09-4EA1-B1B8-AE42FC6449CE">
+                            <File Id="ORIGAMSCHEDULER.EXE" Name="OrigamScheduler.exe" Source="source\OrigamScheduler.exe"/>
+                        </Component>
                         <Component Id="securitySettingsConfig" Guid="">
                             <File Id="SECURITYCONFIGURATION.CONFIG" Name="securityconfiguration.config" Source="config\securityconfiguration.config" />
                         </Component>
@@ -1615,6 +1618,7 @@
         <Feature Id="Architect" Level="1">
             <ComponentRef Id="ConfigFile" />
             <ComponentRef Id="ORIGAMARCHITECT.EXE" />
+			<ComponentRef Id="ORIGAMSCHEDULER.EXE" />
             <ComponentRef Id="securitySettingsConfig" />
             <ComponentRef Id="ExeConfig" />
             <ComponentRef Id="StartMenuShortcuts" />
