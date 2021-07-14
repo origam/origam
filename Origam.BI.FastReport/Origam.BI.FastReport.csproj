@@ -50,7 +50,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2021.3.6" />
+    <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2021.3.15" />
   </ItemGroup>
 
   <ItemGroup>
