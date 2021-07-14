@@ -83,10 +83,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
             if (scriptsToRun[0].FromVersion != fromVersion)
             {
                 if (fromVersion == ClassMetaVersionAttribute.FirstVersion &&
-                    FirstVersionInContainer == new Version(6,0,0))
+                    FirstVersionInContainer == ClassMetaVersionAttribute.FormerFirstVersion)
                 {
                     // The first version used to be 6.0.0, the script container was probably created with that assumption. 
-                    return Upgrade(documentContainer, classNode, new Version(6,0,0), toVersion);
+                    return Upgrade(documentContainer, classNode, ClassMetaVersionAttribute.FormerFirstVersion, toVersion);
                 }
                 else
                 {

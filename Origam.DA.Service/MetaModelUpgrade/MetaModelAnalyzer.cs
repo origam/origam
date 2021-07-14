@@ -118,7 +118,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
                 if (!persistedClassVersions.Contains(className))
                 {
-                    if (currentVersion != ClassMetaVersionAttribute.FirstVersion)
+                    if (currentVersion != ClassMetaVersionAttribute.FirstVersion &&
+                        currentVersion != ClassMetaVersionAttribute.FormerFirstVersion)
                     {
                         scriptsRun = metaModelUpgrader.RunUpgradeScripts(classNode, documentContainer, className,
                             ClassMetaVersionAttribute.FirstVersion, currentVersion);

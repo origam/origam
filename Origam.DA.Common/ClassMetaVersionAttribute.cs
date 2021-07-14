@@ -28,6 +28,11 @@ namespace Origam.DA.Common
     public class ClassMetaVersionAttribute : Attribute
     {
         public static readonly Version FirstVersion = new Version("1.0.0");
+        // The first version used to be 6.0.0, to differentiate the new class
+        // versions from old namespace versions in the xml files which ranged
+        // from 1.0.0 to 5.0.0. It was later decided to change the first (minimum)
+        // version to 1.0.0 
+        public static readonly Version FormerFirstVersion = new Version("6.0.0");
         public Version Value { get; }
 
         public ClassMetaVersionAttribute(string versionStr)
