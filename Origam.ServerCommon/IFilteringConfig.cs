@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.Server
 {
-    public interface ISortingConfig
+    public interface IFilteringConfig
     {
         bool CaseSensitive { get; set; }
         bool AccentSensitive { get; set; }
