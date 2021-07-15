@@ -493,8 +493,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       helpUrl: portalInfo.helpUrl,
       showToolTipsForMemoFieldsOnly: portalInfo.showToolTipsForMemoFieldsOnly,
       filterConfig: {
-        caseSensitive: portalInfo.sortingConfig.caseSensitive,
-        accentSensitive: portalInfo.sortingConfig.accentSensitive
+        caseSensitive: portalInfo.filteringConfig.caseSensitive,
+        accentSensitive: portalInfo.filteringConfig.accentSensitive
       }
     };
     const menuUI = findMenu(portalInfo.menu);
