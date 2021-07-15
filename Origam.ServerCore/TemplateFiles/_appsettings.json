@@ -77,7 +77,7 @@
     ]
   },
   "BehindProxy": "false",
-  "ClientSortingAndFilteringConfig": {
+  "ClientFilteringConfig": {
     "CaseSensitive": "false",
     "AccentSensitive": "true"
   },
