@@ -187,8 +187,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         isSingleRecordEdit: args.isSingleRecordEdit,
       });
     }
-    // debugger;
-    // yield * this.onMainMenuItemClick({event: args.event, item: menuItem});
   }
 
   async getReportTabUrl(menuId: string) {

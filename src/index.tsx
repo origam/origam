@@ -46,7 +46,6 @@ async function main() {
   if (locationHash.startsWith(BACKEND_OVR_HASH)) {
     const backendUrl = locationHash.replace(BACKEND_OVR_HASH, "");
     const newUrl = backendUrl + `#origamBackendOverrideReturn=${window.location.origin}`;
-    // debugger;
     Cookie.set("backendUrl", backendUrl);
     window.location.assign(newUrl);
     return;
@@ -65,7 +64,6 @@ async function main() {
       }
     }
   }
-  // debugger;
   const user = await ensureLogin();
   if (user) {
     if (window.sessionStorage.getItem("teleportAfterLogin")) {

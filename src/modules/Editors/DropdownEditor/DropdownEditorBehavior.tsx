@@ -74,6 +74,9 @@ export class DropdownEditorBehavior {
       } else {
         this.ensureRequestRunning();
       }
+      if(this.chosenRowId !== null && !Array.isArray(this.chosenRowId)){
+        this.cursorRowId = this.chosenRowId;
+      }
     }
     this.isDropped = true;
     this.scrollToChosenRowIfPossible();
