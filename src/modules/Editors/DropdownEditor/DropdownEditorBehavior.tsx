@@ -48,6 +48,7 @@ export class DropdownEditorBehavior {
   @observable isWorking = false;
   @observable userEnteredValue = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
+  dontClearScrollToRow = true;
 
   @observable cursorRowId = "";
 
@@ -94,6 +95,9 @@ export class DropdownEditorBehavior {
       } else {
         this.ensureRequestRunning();
       }
+      if(this.chosenRowId !== null && !Array.isArray(this.chosenRowId)){
+        this.cursorRowId = this.chosenRowId;
+      }
     }
     this.isDropped = true;
     this.scrollToChosenRowIfPossible();
@@ -111,6 +115,7 @@ export class DropdownEditorBehavior {
     if (this.chosenRowId && !_.isArray(this.chosenRowId)) {
       const index = this.dataTable.getRowIndexById(this.chosenRowId);
       if (index > -1) {
+        this.dontClearScrollToRow = true;
         this.scrollToRowIndex = index + 1;
       }
     }
@@ -120,6 +125,7 @@ export class DropdownEditorBehavior {
   scrollToCursoredRowIfNeeded() {
     const index = this.dataTable.getRowIndexById(this.cursorRowId);
     if (index > -1) {
+      this.dontClearScrollToRow = true;
       this.scrollToRowIndex = index + 1;
     }
   }
@@ -309,6 +315,11 @@ export class DropdownEditorBehavior {
         this.willLoadPage++;
         this.ensureRequestRunning();
       }
+    }
+    if(this.dontClearScrollToRow){
+      this.dontClearScrollToRow = false;
+    }else{
+      this.scrollToRowIndex = undefined;
     }
   }
 
