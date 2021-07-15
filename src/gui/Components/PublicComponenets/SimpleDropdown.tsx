@@ -28,7 +28,7 @@ import {
 } from "modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
 import S from "./SimpleDropdown.module.scss";
 import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
-import {uuidv4} from "../../../utils/uuid";
+import { v4 as uuidv4 } from 'uuid';
 @observer
 export class SimpleDropdown<T> extends React.Component<{
   width: string,

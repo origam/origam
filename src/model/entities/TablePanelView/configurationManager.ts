@@ -22,7 +22,7 @@ import {TableConfiguration} from "model/entities/TablePanelView/tableConfigurati
 import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { observable } from "mobx";
-import {uuidv4} from "utils/uuid";
+import { v4 as uuidv4 } from 'uuid';
 import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 

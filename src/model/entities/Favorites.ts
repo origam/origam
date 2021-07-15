@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import xmlJs from "xml-js";
 import { observable } from "mobx";
 import { getApi } from "model/selectors/getApi";
-import { uuidv4 } from "utils/uuid";
+import { v4 as uuidv4 } from 'uuid';
 import { T } from "utils/translation";
 
 export class Favorites {
