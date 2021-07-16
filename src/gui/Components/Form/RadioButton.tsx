@@ -20,12 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/Form/RadioButton.module.scss";
 import {IFocusAble} from "model/entities/FocusManager";
-import {uuidv4} from "../../../utils/uuid";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export class RadioButton extends React.Component<{
   caption: string;
-  top: number;
+  top: number
   left: number;
   width: number;
   height: number;
