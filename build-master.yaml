@@ -75,9 +75,13 @@ jobs:
          restoreSolution: '$(Agent.BuildDirectory)/s/origam-source/**/*.sln'
          feedsToUse: 'select'
      - powershell: |
-        $fileName = Get-ChildItem "**\AssemblyInfo.cs" -Recurse
+        $fileName = Get-ChildItem "*" -Include AssemblyInfo.cs -Recurse
         $filename | %{
          (gc $_) -replace "0.0.0.0", "$(VERSION_NUMBER)" |Set-Content $_.fullname
+        }
+        $fileName = Get-ChildItem "*" -Include *.csproj -Recurse
+        $filename | %{
+         (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
         }
         (Get-Content "$(Agent.BuildDirectory)\s\origam-source\Origam.ServerCore\Controller\AboutController.cs") -replace "Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\origam-source\Origam.ServerCore\Controller\AboutController.cs"
        displayName: 'Build Number'
