@@ -109,8 +109,10 @@ namespace Origam.Schema.WorkflowModel
 				else
 				{
 					this.ContextStoreId = (Guid)value.PrimaryKey["Id"];
-
-					//this.Name = this.ContextStore.Name;
+					if(this.Name == "NewContextReference")
+                    {
+						this.Name = this.ContextStore.Name;
+					}
 				}
 			}
 		}
