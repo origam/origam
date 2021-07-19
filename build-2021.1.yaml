@@ -75,7 +75,7 @@ jobs:
          restoreSolution: '$(Agent.BuildDirectory)/s/origam-source/**/*.sln'
          feedsToUse: 'select'
      - powershell: |
-        $fileName = Get-ChildItem "**\AssemblyInfo.cs" -Recurse
+        $fileName = Get-ChildItem "*" -Include AssemblyInfo.cs,*.csproj -Recurse
         $filename | %{
          (gc $_) -replace "0.0.0.0", "$(VERSION_NUMBER)" |Set-Content $_.fullname
         }
