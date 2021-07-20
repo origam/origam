@@ -110,13 +110,6 @@ namespace Origam.Mail
                 try
                 {
                     MailLogUtils.SendMessageAndLog(smtpClient, m);
-                    if (log.IsDebugEnabled)
-                    {
-                        log.Debug("Sending mail:");
-                        log.Debug(MailLogUtils.ToLogString(smtpClient));
-                        log.Debug(MailLogUtils.ToLogString(m));
-                    }
-                    smtpClient.Send(m);
                     retVal++;
                 }
                 catch(Exception ex)
@@ -224,14 +217,6 @@ namespace Origam.Mail
                 try
                 {
                     MailLogUtils.SendMessageAndLog(smtpClient, m);
-                    if (log.IsDebugEnabled)
-                    {
-                        log.Debug("Sending mail:");
-                        log.Debug(MailLogUtils.ToLogString(smtpClient));
-                        log.Debug( MailLogUtils.ToLogString(m));
-                    }
-                    smtpClient.Send(m);
-                    log.Debug("Mail sent");
                     retVal++;
                 }
                 catch (Exception ex)
