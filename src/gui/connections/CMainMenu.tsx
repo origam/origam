@@ -187,8 +187,8 @@ class CMainMenuCommandItem extends React.Component<{
             >
               {T("Open in New Tab", "open_in_new_tab")}
             </DropdownItem>
-            {props.node.attributes.type === "FormReferenceMenuItem" ||
-             props.node.attributes.type === "FormReferenceMenuItem_WithSelection" &&
+            {(props.node.attributes.type === "FormReferenceMenuItem" ||
+             props.node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
