@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.0" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="c63a999f-b117-4618-8aaa-a38789039452"
     asi:name="Identity_CreateUser_GUI_Save"
-    w:traceLevel="None"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -27,7 +26,6 @@
       x:id="2c8c0249-abf8-4f58-95b0-1429e43dc5e9"
       asi:name="01_Validate"
       aws:roles="*"
-      aws:traceLevel="InheritFromParent"
       aws:validationRule="Security/Rule/Security/ValidateNewUser.origam#ValidateNewUser/6fc55ed1-8605-422e-93b9-7eee08be9bfd"
       aws:validationRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e" />
     <twb:WorkflowTask
@@ -35,7 +33,6 @@
       x:id="948e9557-dd95-4fda-b273-e12889340bd3"
       asi:name="02_SaveUserAndCallMembership"
       aws:roles="*"
-      aws:traceLevel="InheritFromParent"
       twb:transactionType="Atomic">
       <smct:WorkflowTask
         asi:abstract="false"
@@ -45,8 +42,7 @@
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
         smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
-        smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/CreateUser/3721b774-d828-49e2-b80d-93dc7d189a75"
-        aws:traceLevel="InheritFromParent">
+        smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/CreateUser/3721b774-d828-49e2-b80d-93dc7d189a75">
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
           x:id="da2cd46f-e157-4273-813d-1da325f00e3f"
@@ -137,8 +133,7 @@
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
         smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-        smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083"
-        aws:traceLevel="InheritFromParent">
+        smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
           x:id="ef3bec35-8a85-4a3e-a314-070d240432f3"

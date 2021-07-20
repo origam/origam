@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.0" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="6e6d4e02-812a-4c95-afd1-eb2428802e2b"
     asi:name="SendEmail"
-    w:traceLevel="None"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -102,8 +101,7 @@
       smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62"
       aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
-      aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentRecordId/e90181d2-df88-4cc6-a8c1-2e9e88f2b488"
-      aws:traceLevel="InheritFromParent">
+      aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentRecordId/e90181d2-df88-4cc6-a8c1-2e9e88f2b488">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="f0464a39-38e8-4d85-a157-7eca4a5cde56"
@@ -138,8 +136,7 @@
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
-      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
-      aws:traceLevel="InheritFromParent">
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="a7754d7c-d581-4bda-a951-b2415bb9fcd0"
@@ -243,8 +240,7 @@
       smct:service="Root/Service/MailService.origam#MailService/3240b59e-08ec-4dc2-bbf5-a2c6cb1bfd7c"
       smct:serviceMethod="Root/Service/MailService.origam#MailService/SendMail/b5b0f1e1-3a75-4815-b65a-aef501604df7"
       aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsEmpty.origam#SR_SimpleContextValue_IsEmpty/76df31d0-66f4-4b52-9d6c-0bc15ff38fb9"
-      aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2"
-      aws:traceLevel="InheritFromParent">
+      aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="22ccf918-0058-40c3-a2d5-0e7659e3600e"
@@ -282,7 +278,6 @@
       aws:roles="*"
       aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
       aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2"
-      aws:traceLevel="InheritFromParent"
       twb:transactionType="None">
       <smct:WorkflowTask
         asi:abstract="false"
@@ -294,8 +289,7 @@
         smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
         smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
         aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
-        aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
-        aws:traceLevel="InheritFromParent">
+        aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9">
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
           x:id="3b6bd81b-c368-4769-96d0-110f79b5b07d"
@@ -354,8 +348,7 @@
         wt:outputMethod="Ignore"
         aws:roles="*"
         smct:service="Root/Service/WorkQueueService.origam#WorkQueueService/59ff3c8c-036b-4ac9-9953-cd9eeb5dabfc"
-        smct:serviceMethod="Root/Service/WorkQueueService.origam#WorkQueueService/Add/f58c3c70-8eb9-4cdc-b74e-a2a06efe7a02"
-        aws:traceLevel="InheritFromParent">
+        smct:serviceMethod="Root/Service/WorkQueueService.origam#WorkQueueService/Add/f58c3c70-8eb9-4cdc-b74e-a2a06efe7a02">
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
           x:id="df32ec85-4641-4235-bfd3-2d1b31bd8d02"
