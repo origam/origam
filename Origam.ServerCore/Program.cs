@@ -39,6 +39,7 @@ namespace Origam.ServerCore
         public static void Main(string[] args)
         {
             Log4NetProviderOptions options = new Log4NetProviderOptions();
+            options.Watch = true;
             log4NetProvider = new Log4NetProvider(options);
             ILogger startupLogger = log4NetProvider.CreateLogger();
             try
