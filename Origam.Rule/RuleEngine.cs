@@ -1370,7 +1370,6 @@ namespace Origam.Rule
 				new Guid("8225b839-f336-4171-b05d-7b9aa5d39afc"));
 
 			q.Parameters.Add(new QueryParameter("OrigamCalendar_parId", calendarGuid));
-			q.Parameters.Add(new QueryParameter("OrigamCalendarDetail_parDate", result));
 
 			DataSet ds = LoadData(q);
 			CalendarDataset calendar = new CalendarDataset();
