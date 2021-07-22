@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="ad5aab7b-2a58-448c-a159-5e572a278b5d"
+    mappedObjectName="Movie"
+    name="Movie"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <EntityUIAction
+      abstract="false"
+      actionType="OpenForm"
+      default="false"
+      x:id="ceb30ffa-4902-461d-a074-bff2c9aa3036"
+      label="Dummy3"
+      modal="false"
+      mode="ActiveRecord"
+      name="Dum3"
+      order="10"
+      placement="Toolbar"
+      refreshAfterReturn="None"
+      roles="*"
+      screen="test7/FormControlSet/test7/Director.origam#Director/e8ebd7ff-9767-41ae-b4e0-55be4d9b1f5d"
+      screenSection="test7/PanelControlSet/test7/Director Section.origam#Director Section/4ce22786-a098-402f-ae70-3014fbbc820b"
+      x:type="Origam.Schema.MenuModel.EntityMenuAction"
+      valueType="SavedValue" />
+  </DataEntity>
+</x:file>

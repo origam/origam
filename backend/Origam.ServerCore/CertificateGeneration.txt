@@ -1,0 +1,8 @@
+To generate certificate for JWT signing/verification
+
+"C:\Program Files\Git\usr\bin\openssl.exe" req -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 365 -out serverCore.cer
+
+"C:\Program Files\Git\usr\bin\openssl.exe"   pkcs12 -export -in serverCore.cer -inkey serverCore.key -out serverCore.pfx
+
+Public key:
+"C:\Program Files\Git\usr\bin\openssl.exe" x509 -inform PEM -in serverCore.cer -outform PEM -pubkey -noout > public.key

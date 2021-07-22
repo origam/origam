@@ -1,0 +1,1 @@
+﻿// to be put into the folder assets/identity/js

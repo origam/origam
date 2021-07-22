@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension" 
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Bundle UpgradeCode="A9E7D1E0-FF75-4A45-B94B-8EFCDAE11D65" Version="1.0.0" Name="ORIGAM Architect Installation Bundle" Manufacturer="Advantage Solutions s. r. o.">
+    <Variable Name="DOWNLOAD_URL" Hidden="yes" Persisted="yes" Value="http://192.168.99.19/download/"/>
+    <Variable Name="NET_11_32_SP" Hidden="yes" Persisted="yes" Value="0"/>
+    <Variable Name="NET_11_64_SP" Hidden="yes" Persisted="yes" Value="0"/>
+    <util:RegistrySearch Id="NetSearch32" Variable="NET_11_32_EXISTS"
+                         Root="HKLM" Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v1.1.4322" Value="Install" Result="exists"/>
+    <util:RegistrySearch Id="SpSearch32" Variable="NET_11_32_SP"
+                         Root="HKLM" Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v1.1.4322" Value="SP" Result="value" Format="raw" After="NetSearch32"/>
+    <util:RegistrySearch Id="NetSearch64" Variable="NET_11_64_EXISTS"
+                         Root="HKLM" Key="SOFTWARE\Wow6432Node\Microsoft\NET Framework Setup\NDP\v1.1.4322" Value="Install" Result="exists" After="SpSearch32"/>
+    <util:RegistrySearch Id="SpSearch64" Variable="NET_11_64_SP"
+                         Root="HKLM" Key="SOFTWARE\Wow6432Node\Microsoft\NET Framework Setup\NDP\v1.1.4322" Value="SP" Format="raw" Result="value" After="NetSearch64"/>
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
+      <bal:WixStandardBootstrapperApplication SuppressOptionsUI="yes" LicenseFile="binary\architect-bundle-eula.en-us.rtf"/>
+    </BootstrapperApplicationRef>
+    <Chain>
+      <ExePackage Name=".NET 1.1" SourceFile="lib\dotnetfx.exe" InstallCondition="not NET_11_32_EXISTS and not NET_11_64_EXISTS" Vital="no" Compressed="no" 
+                  DownloadUrl="[DOWNLOAD_URL]dotnetfx.exe" Permanent="yes"/>
+      <ExePackage Name=".NET 1.1 SP1" SourceFile="lib\NDP1.1sp1-KB867460-X86.exe" 
+                  InstallCondition="not (NET_11_32_SP = 1) and not (NET_11_64_SP = 1)" Vital="no" 
+                  Compressed="no" DownloadUrl="[DOWNLOAD_URL]NDP1.1sp1-KB867460-X86.exe" Permanent="yes"/>
+      <MsiPackage SourceFile="ArchitectSetup.msi" Visible="yes" Compressed="no" DisplayInternalUI="yes"
+                  DownloadUrl="[DOWNLOAD_URL]ArchitectSetup.msi"/>
+    </Chain>
+  </Bundle>
+</Wix>

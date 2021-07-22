@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\src\origam-backend.git\OrigamEngineWebAPI\publish" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/Origam.DA.dll" publishTime="05/31/2013 19:52:58" />
+    <file relUrl="Global.asax" publishTime="03/05/2013 09:17:45" />
+    <file relUrl="bin/Microsoft.Office.Interop.Excel.xml" publishTime="01/10/2010 21:10:04" />
+    <file relUrl="bin/Origam.Schema.DeploymentModel.dll" publishTime="05/31/2013 19:53:12" />
+    <file relUrl="bin/Origam.Rule.dll" publishTime="05/31/2013 19:53:16" />
+    <file relUrl="bin/Origam.Schema.MenuModel.dll" publishTime="05/31/2013 19:53:10" />
+    <file relUrl="bin/office.xml" publishTime="01/10/2010 21:10:04" />
+    <file relUrl="bin/Origam.Schema.WorkflowModel.dll" publishTime="05/31/2013 19:53:08" />
+    <file relUrl="bin/Origam.BI.dll" publishTime="05/31/2013 19:53:15" />
+    <file relUrl="bin/Origam.Security.dll" publishTime="05/31/2013 19:53:09" />
+    <file relUrl="bin/OrigamEngineWebAPI.pdb" publishTime="08/15/2013 10:09:01" />
+    <file relUrl="bin/office.dll" publishTime="08/31/2009 02:00:22" />
+    <file relUrl="bin/Origam.Gui.Win.dll" publishTime="05/31/2013 19:53:19" />
+    <file relUrl="bin/Origam.DA.Service.dll" publishTime="05/31/2013 19:53:13" />
+    <file relUrl="bin/Origam.Workbench.dll" publishTime="05/31/2013 19:53:03" />
+    <file relUrl="bin/Origam.dll" publishTime="05/31/2013 19:52:53" />
+    <file relUrl="DataService.asmx" publishTime="08/15/2013 09:43:38" />
+    <file relUrl="bin/Origam.UI.dll" publishTime="05/31/2013 19:52:57" />
+    <file relUrl="bin/Origam.Schema.RuleModel.dll" publishTime="05/31/2013 19:53:06" />
+    <file relUrl="bin/Origam.Schema.GuiModel.dll" publishTime="05/31/2013 19:53:07" />
+    <file relUrl="bin/Microsoft.Office.Interop.Excel.dll" publishTime="08/31/2009 02:00:20" />
+    <file relUrl="bin/Origam.Schema.dll" publishTime="05/31/2013 19:53:01" />
+    <file relUrl="bin/Microsoft.Practices.EnterpriseLibrary.Security.dll" publishTime="04/18/2013 17:54:13" />
+    <file relUrl="bin/Origam.BI.CrystalReports.dll" publishTime="05/31/2013 19:53:17" />
+    <file relUrl="bin/Origam.Mail.dll" publishTime="05/31/2013 19:52:56" />
+    <file relUrl="bin/Microsoft.Practices.EnterpriseLibrary.Configuration.dll" publishTime="04/18/2013 17:54:13" />
+    <file relUrl="WorkflowService.asmx" publishTime="08/15/2013 09:43:55" />
+    <file relUrl="bin/Origam.Schema.EntityModel.dll" publishTime="05/31/2013 19:53:05" />
+    <file relUrl="Web.config" publishTime="08/15/2013 10:14:13" />
+    <file relUrl="bin/OrigamEngineWebAPI.dll" publishTime="08/15/2013 10:09:01" />
+    <file relUrl="bin/Origam.Schema.LookupModel.dll" publishTime="05/31/2013 19:53:11" />
+    <file relUrl="bin/Origam.OrigamEngine.dll" publishTime="05/31/2013 19:53:27" />
+    <file relUrl="bin/Origam.Workbench.Services.dll" publishTime="05/31/2013 19:53:14" />
+    <file relUrl="bin/Microsoft.Vbe.Interop.dll" publishTime="08/31/2009 02:00:20" />
+    <file relUrl="bin/Origam.Workflow.dll" publishTime="05/31/2013 19:53:21" />
+  </publishProfile>
+</publishData>

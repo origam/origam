@@ -1,0 +1,490 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.10.6030</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4E0A953-DAE4-4920-BC2B-062B5A0DF40F}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName />
+    <AssemblyName>OrigamArchitect</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>OrigamArchitect</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <OldToolsVersion>0.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
+    <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
+    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MIMEParser\MIMEParser.csproj">
+      <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
+      <Name>MIMEParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.CrystalReports.NetFx\Origam.BI.CrystalReports.NetFx.csproj">
+      <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
+      <Name>Origam.BI.CrystalReports.NetFx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj">
+      <Project>{183e889e-77ab-46b0-8d4f-30bb68671907}</Project>
+      <Name>Origam.BI.FastReport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.PrintIt\Origam.BI.PrintIt.csproj">
+      <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
+      <Name>Origam.BI.PrintIt</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
+      <Project>{720e0ebb-4b5c-491c-a621-8fa974e0307b}</Project>
+      <Name>Origam.BI.SSRS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Excel\Origam.Excel.csproj">
+      <Project>{EAB7C8D5-A75D-4940-9DDE-D6788FC9CD93}</Project>
+      <Name>Origam.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Git\Origam.Git.csproj">
+      <Project>{17625f1f-b028-47db-8c76-05c8f8f4e158}</Project>
+      <Name>Origam.Git</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
+      <Project>{76038b9a-f924-4f7f-b4cc-4b9a0a6a55e3}</Project>
+      <Name>Origam.Gui.Designer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
+      <Name>Origam.OrigamEngine</Name>
+      <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">
+      <Name>Origam.BI</Name>
+      <Project>{54BFF654-2A00-4A8A-86B0-06F124D769A1}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+      <Name>Origam.Common.NetFX</Name>
+      <Project>{84251D2B-43A4-4228-8D2A-8729722C25E4}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
+      <Name>Origam.DA.Common</Name>
+      <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
+      <Name>Origam.DA.Service</Name>
+      <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui.Win\Origam.Gui.Win.csproj">
+      <Name>Origam.Gui.Win</Name>
+      <Project>{B57D7691-81BB-419C-AE82-26340CF77D10}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Mail\Origam.Mail.csproj">
+      <Name>Origam.Mail</Name>
+      <Project>{9D53BB7F-97DE-4592-B958-F57AE3F83FF3}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
+      <Name>Origam.ReflectorCache</Name>
+      <Project>{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
+      <Name>Origam.Rule</Name>
+      <Project>{4F05DB44-2BBD-4B54-8D37-E8038D1EE1E7}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel.UI\Origam.Schema.DeploymentModel.UI.csproj">
+      <Project>{681A9BF2-3189-44AD-A628-0A9EE25DDE6E}</Project>
+      <Name>Origam.Schema.DeploymentModel.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
+      <Project>{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}</Project>
+      <Name>Origam.Schema.DeploymentModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel.UI\Origam.Schema.EntityModel.UI.csproj">
+      <Name>Origam.Schema.EntityModel.UI</Name>
+      <Project>{01AADFB6-2A85-4BFA-8998-392CA17E3E48}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
+      <Name>Origam.Schema.EntityModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
+      <Name>Origam.Schema.GuiModel</Name>
+      <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel.UI\Origam.Schema.LookupModel.UI.csproj">
+      <Name>Origam.Schema.LookupModel.UI</Name>
+      <Project>{A167CB98-7655-4F6E-8B13-5633195DD12A}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel\Origam.Schema.LookupModel.csproj">
+      <Project>{2274C5EB-E849-4ABB-8631-D429AD2994FF}</Project>
+      <Name>Origam.Schema.LookupModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj">
+      <Name>Origam.Schema.MenuModel</Name>
+      <Project>{01C6A542-4D42-4AFA-9744-5E92E71A8251}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.RuleModel\Origam.Schema.RuleModel.csproj">
+      <Project>{b2ffc838-98f6-4d52-8bff-99546b1b8a4d}</Project>
+      <Name>Origam.Schema.RuleModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.TestModel\Origam.Schema.TestModel.csproj">
+      <Name>Origam.Schema.TestModel</Name>
+      <Project>{4133A401-C886-48FC-B088-999C4591366F}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel.UI\Origam.Schema.WorkflowModel.UI.csproj">
+      <Name>Origam.Schema.WorkflowModel.UI</Name>
+      <Project>{D561DB91-154B-43CE-88C1-F97E47539C73}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
+      <Name>Origam.Schema.WorkflowModel</Name>
+      <Project>{5B6E4021-152C-4276-A1AE-E3B9BA223024}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj">
+      <Project>{01708bd3-093a-42bf-baf9-0a4cd1e69107}</Project>
+      <Name>Origam.Security.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
+      <Name>Origam.Security</Name>
+      <Project>{93B972C4-D58D-4681-A8B8-95A34C7C2980}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services.NetFx\Origam.Services.NetFx.csproj">
+      <Project>{442db093-b99e-4a53-ae94-e611a26d901f}</Project>
+      <Name>Origam.Services.NetFx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
+      <Name>Origam.Services</Name>
+      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common.NetFx\Origam.UI.Common.NetFx.csproj">
+      <Project>{b2b8b03e-cfd0-454f-94f0-10b817db3441}</Project>
+      <Name>Origam.UI.Common.NetFx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
+      <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
+      <Name>Origam.UI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI\Origam.UI.csproj">
+      <Name>Origam.UI</Name>
+      <Project>{79DD815D-6900-4074-8886-7E7D6946460B}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.BaseComponents\Origam.Workbench.BaseComponents.csproj">
+      <Name>Origam.Workbench.BaseComponents</Name>
+      <Project>{35DFEDDC-C519-4228-B6AD-AD22BD4C4BB0}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Diagram\Origam.Workbench.Diagram.csproj">
+      <Name>Origam.Workbench.Diagram</Name>
+      <Project>{8C587DCB-0E49-4DCA-9AD5-EACC69C980C3}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
+      <Name>Origam.Workbench.Services</Name>
+      <Project>{ECA06542-5635-455E-B513-07F60222CA7D}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj">
+      <Name>Origam.Workbench</Name>
+      <Project>{A992112A-47F0-4588-A62B-D7C1164DC9D7}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj">
+      <Project>{27826cc4-81ad-4c2a-88ea-6102f119ffa6}</Project>
+      <Name>Origam.Workflow.FileService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService.csproj">
+      <Project>{ee92b4de-5635-4b60-80b0-532c438b280f}</Project>
+      <Name>Origam.Workflow.SimplicorService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
+      <Name>Origam.Workflow</Name>
+      <Project>{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj">
+      <Project>{2380e7b2-c993-4167-abca-22ff07a91b2a}</Project>
+      <Name>Origam.BI.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Gui\Origam.Gui.csproj">
+      <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>
+      <Name>Origam.Gui</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Licensing\Origam.Licensing.csproj">
+      <Project>{4b1412b7-3287-4e64-a0fa-ab0aefa8b4e7}</Project>
+      <Name>Origam.Licensing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ProjectAutomation\Origam.ProjectAutomation.csproj">
+      <Project>{f2f5cd17-b2a5-4b5f-9868-628bb76a1959}</Project>
+      <Name>Origam.ProjectAutomation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Windows.Editor\Origam.Windows.Editor.csproj">
+      <Project>{76a9b204-b2fd-4393-9084-420cec16e95f}</Project>
+      <Name>Origam.Windows.Editor</Name>
+    </ProjectReference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Design">
+      <Name>System.Design</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArchitectWorkbench.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\Commands.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\GenerateXamlCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\WindowCommands.cs" />
+    <Compile Include="ControlsLookUpService.cs" />
+    <Compile Include="DebugInfo.cs" />
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ModelUpgradeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModelUpgrade.Designer.cs">
+      <DependentUpon>ModelUpgradeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProjectWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewProjectWizard.Designer.cs">
+      <DependentUpon>NewProjectWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewProjectWizardSettings.cs" />
+    <Compile Include="OrigamTheme.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RegisterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegisterForm.Designer.cs">
+      <DependentUpon>RegisterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SchemaCompareEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SchemaItemAncestorCollectionEditor.cs" />
+    <Compile Include="SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="strings.cs-CZ.Designer.cs">
+      <DependentUpon>strings.cs-CZ.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkflowPlayerPad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkQueuePad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkQueueWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Content Include="App.ico" />
+    <Content Include="build.xml" />
+    <EmbeddedResource Include="ModelUpgradeForm.resx">
+      <DependentUpon>ModelUpgradeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="origam_desktop_architect_logo.png" />
+    <EmbeddedResource Include="ArchitectWorkbench.resx">
+      <DependentUpon>ArchitectWorkbench.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewProjectWizard.resx">
+      <DependentUpon>NewProjectWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegisterForm.resx">
+      <DependentUpon>RegisterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SchemaCompareEditor.resx">
+      <DependentUpon>SchemaCompareEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="strings.cs-CZ.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.cs-CZ.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SystemInformation.resx">
+      <DependentUpon>SystemInformation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkflowPlayerPad.resx">
+      <DependentUpon>WorkflowPlayerPad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkQueuePad.resx">
+      <DependentUpon>WorkQueuePad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkQueueWindow.resx">
+      <DependentUpon>WorkQueueWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="App.config" />
+    <None Include="origam.vstheme.gz" />
+    <None Include="Properties\DataSources\Origam.ProjectAutomation.Project.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Origam\Workbench\" />
+    <Folder Include="Wizards\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AeroWizard">
+      <Version>2.2.9</Version>
+    </PackageReference>
+    <PackageReference Include="AvalonEdit">
+      <Version>6.1.2.30</Version>
+    </PackageReference>
+    <PackageReference Include="DockPanelSuite">
+      <Version>3.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="DockPanelSuite.ThemeVS2015">
+      <Version>3.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="LibGit2Sharp">
+      <Version>0.26.2</Version>
+    </PackageReference>
+    <PackageReference Include="NPOI">
+      <Version>2.5.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

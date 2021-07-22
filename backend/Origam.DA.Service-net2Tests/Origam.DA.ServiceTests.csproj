@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{874DE143-FDF1-4DEE-BC67-1CCE34ACB760}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Origam.DA.ServiceTests</RootNamespace>
+    <AssemblyName>Origam.DA.ServiceTests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
+    <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
+    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
+    <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Debug.cs" />
+    <Compile Include="InstanceWriterTests.cs" />
+    <Compile Include="MetaModelUpgraderTests\MetaModelUpgraderTests.cs" />
+    <Compile Include="MetaModelUpgraderTests\ClassUpgradeTestBase.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestBaseClass.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass2.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass3.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass4.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestRenamedClass.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestPersistedClassScriptContainer.cs" />
+    <Compile Include="MetaModelUpgraderTests\Version6UpGraderTests.cs" />
+    <Compile Include="OrderByCommandParserTests.cs" />
+    <Compile Include="OrigamDocumentSorter\OrigamDocumentSorterTests.cs" />
+    <Compile Include="EqualityExtensions.cs" />
+    <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTests.cs" />
+    <Compile Include="FilePersistenceProviderTests\PersitHelper.cs" />
+    <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTestWithOrigamRuntime.cs" />
+    <Compile Include="FilePersistenceProviderTests\XmlLoaderTest.cs" />
+    <Compile Include="FilterCommandParserTests.cs" />
+    <Compile Include="FlatFileSearchTests\FlatFileSearcherTests.cs" />
+    <Compile Include="SchemaItemComparator.cs" />
+    <Compile Include="SchemaItemsToCompare.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptContainersTests\EntityUIActionScriptContainerTests.cs" />
+    <Compile Include="ScriptContainersTests\PackageScriptContainerTests.cs" />
+    <Compile Include="ScriptContainersTests\StateMachineEventParameterMappingTests.cs" />
+    <Compile Include="TypeTools.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
+      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
+      <Name>Origam.Common.NetFX</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
+      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
+      <Name>Origam.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
+      <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
+      <Name>Origam.OrigamEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
+      <Project>{B4E4DC00-766A-4CA3-83D8-0A5383462F53}</Project>
+      <Name>Origam.DA.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
+      <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
+      <Name>Origam.DA.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
+      <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
+      <Name>Origam.ReflectorCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Project>{FDF55D1B-BB0D-4191-AE53-98DE5A4465B5}</Project>
+      <Name>Origam.Schema.EntityModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.GuiModel\Origam.Schema.GuiModel.csproj">
+      <Project>{ECFF4A9D-9196-4962-823C-A65D552FF6D8}</Project>
+      <Name>Origam.Schema.GuiModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.LookupModel\Origam.Schema.LookupModel.csproj">
+      <Project>{2274C5EB-E849-4ABB-8631-D429AD2994FF}</Project>
+      <Name>Origam.Schema.LookupModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj">
+      <Project>{01C6A542-4D42-4AFA-9744-5E92E71A8251}</Project>
+      <Name>Origam.Schema.MenuModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.RuleModel\Origam.Schema.RuleModel.csproj">
+      <Project>{B2FFC838-98F6-4D52-8BFF-99546B1B8A4D}</Project>
+      <Name>Origam.Schema.RuleModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
+      <Project>{5B6E4021-152C-4276-A1AE-E3B9BA223024}</Project>
+      <Name>Origam.Schema.WorkflowModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
+      <Project>{93b972c4-d58d-4681-a8b8-95a34c7c2980}</Project>
+      <Name>Origam.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
+      <Project>{199DDE99-9EE7-4CCE-B71D-7FC1CC0896AA}</Project>
+      <Name>Origam.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.TestCommon\Origam.TestCommon.csproj">
+      <Project>{c6bb0572-3720-4841-8dd6-6992644b7b5f}</Project>
+      <Name>Origam.TestCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
+      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
+      <Name>Origam.UI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
+      <Project>{ECA06542-5635-455E-B513-07F60222CA7D}</Project>
+      <Name>Origam.Workbench.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="FilePersistenceProviderTests\TestFiles\.origamGroupReference">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="OrigamDocumentSorter\TestFiles\Unsorted.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FilePersistenceProviderTests\TestFiles\.origamPackage">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FilePersistenceProviderTests\TestFiles\.origamGroup">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FlatFileSearchTests\TestFiles\FaultyFile.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FlatFileSearchTests\TestFiles\Language.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestDeadClass2V6.0.1.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestDeadClassV5.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestDeadClassV6.0.1.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestOrigamGroupReferenceV5.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass2V6.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass3V6.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass4V6.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV5.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV6.0.1.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV6.0.1_WrongVersion.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV6.0.2_WithDeadBaseClass.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0_WithChild.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OrigamDocumentSorter\TestFiles\Sorted.origam">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ScriptContainersTests\TestFiles\BusinessPartner.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ScriptContainersTests\TestFiles\Security_V5.0.0_.origamPackage">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ScriptContainersTests\TestFiles\TestEntityAction.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_OrigamSettings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="securityconfiguration.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Moq">
+      <Version>4.16.1</Version>
+    </PackageReference>
+    <PackageReference Include="NUnit">
+      <Version>3.13.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+</Project>

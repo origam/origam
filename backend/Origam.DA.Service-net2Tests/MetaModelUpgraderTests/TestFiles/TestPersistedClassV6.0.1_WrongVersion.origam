@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:tpc="http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.1" xmlns:tbc="http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1">
+  <tpc:TestPersistedClass
+    tpc:name="test v0"
+    tpc:newProperty1="5"
+    tpc:newProperty2="5"
+    tbc:TestBaseClassProperty="5"
+/>
+</x:file>
