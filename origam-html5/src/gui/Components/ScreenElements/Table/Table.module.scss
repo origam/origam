@@ -1,0 +1,136 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "src/styles/definitions.scss";
+
+.headers {
+  min-height: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.scrolleeShifted {
+  display: flex;
+  flex-direction: row;
+}
+
+.table {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.loadingOverlay {
+  z-index: 500;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(var(--black-rgb), 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingIcon {
+  color:var(--white);
+}
+
+.headers {
+  min-height: 20px;
+  display: flex;
+  flex-direction: row;
+  z-index: 100;
+  :global(.Scrollee_scrollee) {
+    background: var(--grey1);
+  } 
+}
+
+.header {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ white-space: nowrap;
+  box-sizing: border-box;
+  border-right: 1px solid var(--grey3);
+  position: relative;
+  background-color: var(--grey2);
+  overflow: hidden;
+}
+
+/*
+.label {
+  margin-left: 3px;
+  margin-right: 3px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.order {
+  position: absolute;
+  right: 4px;
+  font-size: 11px;
+  background-color: var(--grey2);
+  padding: 2px;
+}*/
+
+.cellAreaContainer {
+  position: relative;
+  flex-grow: 1;
+}
+
+.canvasRow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.toolTip {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  z-index: 100;
+}
+
+.toolTipContainer{
+  border-radius: 0px;
+  border: 1px;
+}
+
+.tooltipContent{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: left;
+}
+
+.toolTipLine {
+ white-space: pre-wrap;
+  text-align: left;
+}

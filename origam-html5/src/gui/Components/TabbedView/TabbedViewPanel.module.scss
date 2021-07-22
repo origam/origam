@@ -1,0 +1,47 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*.root {
+  flex-grow: 1;
+  display: none;
+  &:global(.isActive) {
+    display: block;
+  }
+}*/
+
+.root {
+  flex-grow: 1;
+  // display: none;
+  position: absolute;
+  // -1px To - why the hell - get rid off grey line between handle and the tab content.
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  //display: none;
+  display: flex;
+  flex-direction: column;
+  transform: translate(-0.01%, -0.01%);
+  max-width: 0px;
+  &:global(.isActive) {
+    //display: flex;
+    transform: unset;
+    max-width: unset;
+  }
+}

@@ -1,0 +1,72 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "../../../styles/common_styles";
+@import "../../../styles/definitions";
+
+.root {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+ white-space: nowrap;
+  @include hoverItemAnimation;
+  color: var(--blue1);
+  height: 30px;
+  padding: 0 1em;
+
+  &:not(:global(.isDisabled)):hover {
+    background-color: var(--blue1);
+    //font-weight: 400;
+  }
+
+  &:global(.isDisabled) {
+    color: grey;
+    cursor: not-allowed;
+  }
+
+  &:global(.redItem) {
+    color: var(--red);
+    background-color:var(--white);
+    &:hover {
+      color:var(--white);
+      background-color: var(--red);
+    }
+  }
+  /*&:last-of-type {
+    color: var(--red);
+    &:hover {
+      background: var(--red);
+    }
+  }*/
+  &:hover {
+    background: var(--blue1);
+    color: var(--white);
+  }
+  &:global(.isDisabled) {
+    color: var(--grey3);
+    &:hover {
+      background: var(--grey1);
+    }
+  }
+}
+
+.isSelected{
+  font-weight: bold;
+}

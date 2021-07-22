@@ -1,0 +1,126 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "src/styles/definitions.scss";
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+ white-space: nowrap;
+  box-sizing: border-box;
+  /*border-right: 1px solid var(--grey3);*/
+  position: relative;
+  /*overflow: hidden;*/
+  flex-shrink: 0;
+  font-weight: 700;
+  border-top: 1px solid var(--grey2);
+  cursor: default;
+
+  background: var(--grey1);
+  border: none;
+  min-height: 25px;
+  padding: 0 0.1em 0 0.3em;
+
+  transition: background-color 200ms linear;
+
+  &:first-of-type {
+    padding-left: 1.8em;
+  }
+  &:hover {
+    background: var(--grey2);
+    .Header_order {
+      background: var(--grey2);
+    }
+  }
+  &.changing-order {
+    color: var(--black);
+  }
+  .Header_order {
+    background: var(--grey1);
+    color: var(--blue1);
+    font-size: $font-size;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 0.5em;
+    right: -3px;
+    @extend %transition;
+  }
+}
+
+.header:global(.changing-order):hover {
+  background-color: var(--brown);
+  color:var(--white);
+}
+
+.label {
+  box-sizing: border-box;
+  align-items: center;
+  flex-grow: 1;
+  display: block;
+  line-height: 25px;
+  margin: 0;
+  justify-content: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+ white-space: nowrap;
+  word-wrap: normal;
+  width: 100%;
+}
+
+.order {
+  position: absolute;
+  right: 4px;
+  font-size: 11px;
+  background-color: var(--grey2);
+  padding: 2px;
+  height: 20px;
+}
+
+.columnWidthHandle {
+  flex-shrink: 0;
+  background: var(--grey2);
+  border-color: var(--grey1);
+  border-style: solid;
+  border-width: 0 4px;
+  cursor: ew-resize;
+  margin: 0;
+  padding: 0;
+  width: 9px;
+  @extend %transition;
+  &:hover, &:focus {
+    background: var(--blue1);
+  }
+  &:last-of-type {
+    border-right-color: var(--grey2);
+  }
+  &:global(.isColumnDropTarget) {
+    border-color: var(--brown);
+  }
+}
+
+
+.inHeaderRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+  min-height: 25px;
+}

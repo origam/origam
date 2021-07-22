@@ -1,0 +1,85 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "../../../styles/common_styles";
+@import "../../../styles/definitions";
+
+.root {
+  min-height: 0px;
+  max-height: 0px;
+  flex-shrink: 0;
+  background: var(--white);
+  padding: 0 1em 0 2em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  position: relative;
+  width: 100%;
+  z-index: 150;
+  border-top: 1px solid var(--grey25);
+
+  border-style: solid;
+  border-color: var(--grey2) !important;
+  border-width: 0 0 1px 0;
+  
+  &:global(.isVisible) {
+    min-height: 35px;
+    max-height: 35px;
+    border-bottom: 1px solid var(--grey25);
+  }
+
+  .inner {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    flex-wrap: nowrap;
+  }
+
+  :global(.fullspaceBlock) {
+    min-height: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  h2 {
+    font-size: $h2-fontsize;
+    line-height: $h2-lineheight;
+    font-weight: 700;
+    margin: 0 1.5em 0 0;
+    padding: 0;
+    //max-width: 50%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+    white-space: nowrap;
+  }
+}
+
+
+

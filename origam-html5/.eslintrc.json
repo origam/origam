@@ -1,0 +1,14 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    "require-yield": 0,
+    "no-mixed-operators": 0,
+    "no-extend-native": 0,
+    "import/no-anonymous-default-export": 0,
+    "no-use-before-define": 0,
+    "@typescript-eslint/no-use-before-define": 0,
+    "jsx-a11y/iframe-has-title": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "no-console": 1
+  }
+}

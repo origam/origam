@@ -1,0 +1,94 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "../../../styles/common_styles";
+
+.root {
+  color: var(--grey5);
+  height: 25px;
+  //margin: 0 0.2em 0 0.2em;
+  padding: 0 10px 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+  border-radius: 0px 0px 0 0;
+
+  cursor: pointer;
+  @include hoverItemAnimation;
+
+  &:global(.isActive) {
+    .label {
+      color: var(--blue1);
+      //  border-bottom: 2px solid var(--blue1);
+      // font-weight: 700;
+    }
+    background-color:var(--white);
+  }
+
+  &:hover {
+    //background-color:var(--white);
+    color: var(--black);
+  }
+
+  &:global(.isDirty) {
+    .label {
+      color: var(--red);
+    }
+  }
+
+  &:not(:global(.isActive)):hover {
+    color: var(--black);
+    cursor: pointer;
+    .closeBtn {
+      svg {
+        stroke: var(--black);
+      }
+    }
+  }
+}
+
+.label {
+  border-bottom: 2px solid transparent;
+  //margin: 0 5px 0 5px;
+ white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.closeBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  svg {
+    margin: 0 0 0 0.5em;
+    width: 1.1em;
+    height: 1.1em;
+    stroke: var(--grey4);
+    stroke-width: 1;
+    overflow: inherit;
+    @include hoverItemAnimation;
+  }
+  &:hover {
+    svg {
+      stroke: var(--red) !important;
+      stroke-width: 2.5;
+    }
+  }
+}

@@ -1,0 +1,57 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "../../../styles/common_styles";
+
+.root {
+  color: var(--grey4);
+  padding: 1.2em 0.9em;
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    svg {
+      stroke: var(--black);
+      stroke-width: 1.5;
+    }
+  }
+  &:global(.isGreenOnHover):not(:global(.isActive)):hover svg {
+    stroke: var(--green);
+  }
+  &:global(.isOrangeOnHover):not(:global(.isActive)):hover svg {
+    stroke: var(--orange);
+  }
+  &:global(.isActive) svg {
+    stroke: var(--blue1);
+    stroke-width: 2;
+  }
+  svg {
+    height: 1.6667em;
+    overflow: inherit;
+    stroke: var(--grey4);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1;
+    width: 1.6667em;
+    @include hoverItemAnimation;
+  }
+}
