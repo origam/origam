@@ -1,0 +1,8 @@
+﻿CREATE TABLE "MapElement" (
+	"Name" Varchar(100) NOT NULL,
+	"Location" Text NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

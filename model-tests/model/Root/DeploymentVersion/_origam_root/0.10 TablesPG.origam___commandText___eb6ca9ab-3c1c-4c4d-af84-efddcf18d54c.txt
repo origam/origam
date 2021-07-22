@@ -1,0 +1,9 @@
+﻿CREATE TABLE "OrigamSyncConnection" (
+	"Name" Varchar(200) NOT NULL,
+	"refOrigamSyncSystemId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamSyncConnection_ix_refOrigamSyncSystemId" ON "OrigamSyncConnection" ("refOrigamSyncSystemId" ASC);

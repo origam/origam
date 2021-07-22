@@ -1,0 +1,4 @@
+﻿create type dbo.AsapListValue as TABLE
+(
+	ListValue nvarchar(max) not null
+)

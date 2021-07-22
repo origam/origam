@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Float"
+    x:id="e826c002-ece3-47fc-b537-14a05b1c628d"
+    asi:name="Divide"
+    f:type="Standard">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="59b32cc0-d0f7-49a8-a76b-c9177b2b8875"
+      asi:name="Left" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="fbe71ae8-6e68-4f79-a160-deeb9904a61b"
+      asi:name="Right"
+      fp:ordinalPosition="1" />
+  </f:Function>
+</x:file>

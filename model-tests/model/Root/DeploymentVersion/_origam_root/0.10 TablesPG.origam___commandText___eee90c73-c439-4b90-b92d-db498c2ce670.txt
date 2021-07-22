@@ -1,0 +1,10 @@
+﻿CREATE TABLE "WorkQueueExternalSourceType_l10n" (
+	"Name" Varchar(200) NOT NULL,
+	"refWorkQueueExternalSourceTypeId" Uuid NOT NULL,
+	"refLanguageId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "WorkQueueExternalSourceType_l10n_ix_unq_WorkQueueExternalSourceType" ON "WorkQueueExternalSourceType_l10n" ("refWorkQueueExternalSourceTypeId" ASC, "refLanguageId" ASC);

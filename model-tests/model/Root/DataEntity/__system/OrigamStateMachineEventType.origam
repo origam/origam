@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:erf="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationFilter/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="0bcc1f88-dce5-4e37-94bc-9c9092e0c974"
+    ade:label="State Machine Event Type"
+    tmi:localizationRelation="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/OrigamStateMachineEventType_l10n/149cff12-62e3-45b9-a9c6-709b9e351210"
+    tmi:mappedObjectName="OrigamStateMachineEventType"
+    asi:name="OrigamStateMachineEventType"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="41cb572b-38b8-4f7c-8a0f-4738cef025db" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="bb7c1aed-f39b-4c53-9f9b-7f4892b6ab81"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="149cff12-62e3-45b9-a9c6-709b9e351210"
+      asi:name="OrigamStateMachineEventType_l10n"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamStateMachineEventType_l10n.origam#OrigamStateMachineEventType_l10n/26fae9c2-5331-4d82-a6d0-37e1389dbfdb"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="84281fd5-719f-4fda-b979-9665f506fbe1"
+        asi:name="OrigamStateMachineEventType_l10nKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamStateMachineEventType_l10n.origam#OrigamStateMachineEventType_l10n/refOrigamStateMachineEventTypeId/fa3cadf4-4c56-448e-b83e-0853249e3b87" />
+      <erf:EntityRelationFilter
+        asi:abstract="false"
+        erf:filter="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/GetByLanguageId/afb5b84b-f4a3-4e3a-a382-c110624f71c9"
+        x:id="402c7796-26b4-49c5-9e57-8f7120228673"
+        asi:name="GetByLanguageId" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="748c1777-854f-4466-b8a7-859d3e24290b"
+      asi:name="OrigamStateMachineEventType_l10n_all"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamStateMachineEventType_l10n.origam#OrigamStateMachineEventType_l10n/26fae9c2-5331-4d82-a6d0-37e1389dbfdb"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c2681239-8c87-40be-907f-392602a847a7"
+        asi:name="OrigamStateMachineEventType_l10n_allKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamStateMachineEventType_l10n.origam#OrigamStateMachineEventType_l10n/refOrigamStateMachineEventTypeId/fa3cadf4-4c56-448e-b83e-0853249e3b87" />
+    </eri:EntityRelation>
+  </tmi:DataEntity>
+</x:file>

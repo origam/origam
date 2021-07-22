@@ -1,0 +1,41 @@
+﻿
+ALTER TABLE [BusinessPartner] ADD CONSTRAINT FK_BusinessPartner_ParentId_BusinessPartner
+	FOREIGN KEY (
+		[ParentId]
+	)
+
+	REFERENCES [BusinessPartner] (
+		[Id]
+	)
+ALTER TABLE [BusinessPartner] ADD CONSTRAINT FK_BusinessPartner_refDimension3Id_Dimension3
+	FOREIGN KEY (
+		[refDimension3Id]
+	)
+
+	REFERENCES [Dimension3] (
+		[Id]
+	)
+ALTER TABLE [BusinessPartner] ADD CONSTRAINT FK_BusinessPartner_refDimension1Id_Dimension1
+	FOREIGN KEY (
+		[refDimension1Id]
+	)
+
+	REFERENCES [Dimension1] (
+		[Id]
+	)
+ALTER TABLE [BusinessPartner] ADD CONSTRAINT FK_BusinessPartner_refDimension2Id_Dimension2
+	FOREIGN KEY (
+		[refDimension2Id]
+	)
+
+	REFERENCES [Dimension2] (
+		[Id]
+	)
+ALTER TABLE [BusinessPartner] ADD CONSTRAINT FK_BusinessPartner_refDimension4Id_Dimension4
+	FOREIGN KEY (
+		[refDimension4Id]
+	)
+
+	REFERENCES [Dimension4] (
+		[Id]
+	)

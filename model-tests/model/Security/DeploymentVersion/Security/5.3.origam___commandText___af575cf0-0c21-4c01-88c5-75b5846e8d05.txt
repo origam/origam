@@ -1,0 +1,62 @@
+﻿CREATE TRIGGER LockOutSynchronizer ON [dbo].[OrigamUser]
+	FOR UPDATE
+AS
+
+BEGIN 
+	DECLARE @OldLockOutValue bit,  @NewLockOutValue bit, @OldLastLockOutDateValue datetime, @NewLastLockOutDateValue datetime
+
+	SELECT @OldLockOutValue = IsLockedOut FROM DELETED
+	SELECT @OldLastLockOutDateValue = LastLockoutDate FROM DELETED
+
+	SELECT @NewLockOutValue = IsLockedOut FROM INSERTED
+	SELECT @NewLastLockOutDateValue = LastLockoutDate FROM INSERTED
+
+
+	IF @OldLockOutValue <> @NewLockOutValue AND 
+	  (@OldLastLockOutDateValue = @NewLastLockOutDateValue OR
+	   @OldLastLockOutDateValue IS NULL AND @NewLastLockOutDateValue IS NULL)
+	BEGIN 
+		
+		DECLARE @lastLocoutDateValue datetime
+		IF  @NewLockOutValue = 1 
+		BEGIN
+			SET @lastLocoutDateValue =  '3020-01-01'
+		END
+		ELSE
+		BEGIN
+			SET @lastLocoutDateValue = NULL
+		END
+
+	    UPDATE [dbo].[OrigamUser]
+			SET LastLockoutDate = @lastLocoutDateValue
+		FROM [dbo].[OrigamUser]
+		INNER JOIN INSERTED i on i.Id = [dbo].[OrigamUser].Id
+	END
+
+	ELSE 
+	BEGIN 
+		IF   @OldLockOutValue = @NewLockOutValue AND 
+		    (@OldLastLockOutDateValue <> @NewLastLockOutDateValue OR 
+			 @OldLastLockOutDateValue IS NULL AND @NewLastLockOutDateValue IS NOT NULL OR  
+			 @OldLastLockOutDateValue IS NOT NULL AND @NewLastLockOutDateValue IS NULL)
+		BEGIN 
+
+			DECLARE @IsLockedOutValue bit
+			DECLARE @NewLastLockOutDateFloat float
+
+			IF @NewLastLockOutDateValue IS NULL OR cast(@NewLastLockOutDateValue as float) < CURRENT_TIMESTAMP
+			BEGIN
+				SET @IsLockedOutValue = 0
+			END
+			ELSE
+			BEGIN
+				SET @IsLockedOutValue = 1
+			END
+
+			UPDATE [dbo].[OrigamUser]
+				SET IsLockedOut =  @IsLockedOutValue
+			FROM [dbo].[OrigamUser]
+			INNER JOIN INSERTED i on i.Id = [dbo].[OrigamUser].Id
+		END
+	END
+END

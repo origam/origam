@@ -1,0 +1,49 @@
+﻿
+ALTER TABLE "OrigamTooltipHelp" ADD CONSTRAINT FK_OrigamTooltipHelp_refOrigamTooltipHelpSubcontextId_OrigamTooltipHelpSubcontext
+	FOREIGN KEY (
+		"refOrigamTooltipHelpSubcontextId"
+	)
+
+	REFERENCES "OrigamTooltipHelpSubcontext" (
+		"Id"
+	);
+ALTER TABLE "OrigamTooltipHelp" ADD CONSTRAINT FK_OrigamTooltipHelp_refOrigamTooltipHelpGroupId_OrigamTooltipHelpGroup
+	FOREIGN KEY (
+		"refOrigamTooltipHelpGroupId"
+	)
+
+	REFERENCES "OrigamTooltipHelpGroup" (
+		"Id"
+	);
+ALTER TABLE "OrigamTooltipHelp" ADD CONSTRAINT FK_OrigamTooltipHelp_refOrigamTooltipHelpDestroyEventId_OrigamTooltipHelpDestroyEvent
+	FOREIGN KEY (
+		"refOrigamTooltipHelpDestroyEventId"
+	)
+
+	REFERENCES "OrigamTooltipHelpDestroyEvent" (
+		"Id"
+	);
+ALTER TABLE "OrigamTooltipHelp" ADD CONSTRAINT FK_OrigamTooltipHelp_refOrigamTooltipHelpContextId_OrigamTooltipHelpContext
+	FOREIGN KEY (
+		"refOrigamTooltipHelpContextId"
+	)
+
+	REFERENCES "OrigamTooltipHelpContext" (
+		"Id"
+	);
+ALTER TABLE "OrigamTooltipHelp" ADD CONSTRAINT FK_OrigamTooltipHelp_refOrigamTooltipHelpContextComponentId_OrigamTooltipHelpContextComponent
+	FOREIGN KEY (
+		"refOrigamTooltipHelpContextComponentId"
+	)
+
+	REFERENCES "OrigamTooltipHelpContextComponent" (
+		"Id"
+	);
+ALTER TABLE "OrigamTooltipHelp" ADD CONSTRAINT FK_OrigamTooltipHelp_refOrigamTooltipHelpPositionId_OrigamTooltipHelpPosition
+	FOREIGN KEY (
+		"refOrigamTooltipHelpPositionId"
+	)
+
+	REFERENCES "OrigamTooltipHelpPosition" (
+		"Id"
+	);

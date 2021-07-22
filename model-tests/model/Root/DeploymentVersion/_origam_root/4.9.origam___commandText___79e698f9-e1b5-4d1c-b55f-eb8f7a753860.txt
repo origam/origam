@@ -1,0 +1,9 @@
+﻿CREATE TABLE [AsapMap] (
+	[ReferenceCode] NVARCHAR(40) NOT NULL,
+	[Description] NVARCHAR(200) NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE UNIQUE INDEX [ix_Unique] ON [AsapMap] ([ReferenceCode] ASC)

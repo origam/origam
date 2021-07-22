@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [AsapTooltipHelpSubcontext] ADD CONSTRAINT FK_AsapTooltipHelpSubcontext_refAsapTooltipHelpContextId_AsapTooltipHelpContext
+	FOREIGN KEY (
+		[refAsapTooltipHelpContextId]
+	)
+
+	REFERENCES [AsapTooltipHelpContext] (
+		[Id]
+	)

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:erf="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationFilter/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="b4127512-a378-441e-a920-30571e5192ea"
+    tmi:localizationRelation="Root/DataEntity/Work Queue/WorkQueueNotificationEvent.origam#WorkQueueNotificationEvent/WorkQueueNotificationEvent_l10n/33479fdb-803b-4f15-9df2-4c311c41d2a3"
+    tmi:mappedObjectName="WorkQueueNotificationEvent"
+    asi:name="WorkQueueNotificationEvent"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="d5f61f11-03a1-4a3c-90ef-9abe9ad07ea4" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="7fd39e2a-d818-4ef3-8352-d5ab76f138ae"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="33479fdb-803b-4f15-9df2-4c311c41d2a3"
+      asi:name="WorkQueueNotificationEvent_l10n"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueNotificationEvent_l10n.origam#WorkQueueNotificationEvent_l10n/cc5a2d10-33f9-45d9-87ec-062f531560bd"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="ee72ba69-321e-4ade-bfab-430ef267e959"
+        asi:name="WorkQueueNotificationEvent_l10nKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueNotificationEvent_l10n.origam#WorkQueueNotificationEvent_l10n/refWorkQueueNotificationEventId/7fe19138-44c9-4abd-aadc-1bdc47937d08" />
+      <erf:EntityRelationFilter
+        asi:abstract="false"
+        erf:filter="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/GetByLanguageId/afb5b84b-f4a3-4e3a-a382-c110624f71c9"
+        x:id="87d96252-3df9-476d-afbe-91b7527fbe8e"
+        asi:name="GetByLanguageId" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="bcc44448-d1db-4af9-8bf8-a5afd5ae4158"
+      asi:name="WorkQueueNotificationEvent_l10n_all"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueNotificationEvent_l10n.origam#WorkQueueNotificationEvent_l10n/cc5a2d10-33f9-45d9-87ec-062f531560bd"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="ccd60e52-58e7-4667-8aad-b74e322c7ca9"
+        asi:name="WorkQueueNotificationEvent_l10n_allKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueNotificationEvent_l10n.origam#WorkQueueNotificationEvent_l10n/refWorkQueueNotificationEventId/7fe19138-44c9-4abd-aadc-1bdc47937d08" />
+    </eri:EntityRelation>
+  </tmi:DataEntity>
+</x:file>

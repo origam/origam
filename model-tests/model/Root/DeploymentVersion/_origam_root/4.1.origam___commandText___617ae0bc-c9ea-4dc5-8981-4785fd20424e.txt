@@ -1,0 +1,1 @@
+﻿GRANT EXEC ON TYPE::[dbo].[AsapListValue] TO [public]

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="aaee6cf9-234a-40d4-a576-d598e90fb9e0"
+    x:isFolder="true"
+    g:name="Root Menu"
+    g:rootItemType="DeploymentVersion" />
+</x:file>

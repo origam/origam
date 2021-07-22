@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "BusinessPartnerOrigamRole" ADD CONSTRAINT FK_BusinessPartnerOrigamRole_refBusinessPartnerId_BusinessPartner
+	FOREIGN KEY (
+		"refBusinessPartnerId"
+	)
+
+	REFERENCES "BusinessPartner" (
+		"Id"
+	);
+ALTER TABLE "BusinessPartnerOrigamRole" ADD CONSTRAINT FK_BusinessPartnerOrigamRole_refOrigamRoleId_OrigamRole
+	FOREIGN KEY (
+		"refOrigamRoleId"
+	)
+
+	REFERENCES "OrigamRole" (
+		"Id"
+	);

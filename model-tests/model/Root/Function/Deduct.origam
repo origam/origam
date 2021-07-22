@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Float"
+    x:id="c3ae24f8-edab-47be-bd5b-7e5543271d17"
+    asi:name="Deduct"
+    f:type="Standard">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="7d5a88f3-9568-41cc-acaf-0f4f2cdd1d3f"
+      asi:name="Left" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="f7aa4712-2f44-4e12-8660-f2f5915d0c51"
+      asi:name="Right"
+      fp:ordinalPosition="1" />
+  </f:Function>
+</x:file>

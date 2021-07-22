@@ -1,0 +1,25 @@
+﻿
+ALTER TABLE "WorkQueueNotificationContact" ADD CONSTRAINT FK_WorkQueueNotificationContact_refWorkQueueNotificationId_WorkQueueNotification
+	FOREIGN KEY (
+		"refWorkQueueNotificationId"
+	)
+
+	REFERENCES "WorkQueueNotification" (
+		"Id"
+	);
+ALTER TABLE "WorkQueueNotificationContact" ADD CONSTRAINT FK_WorkQueueNotificationContact_refOrigamNotificationChannelTypeId_OrigamNotificationChannelType
+	FOREIGN KEY (
+		"refOrigamNotificationChannelTypeId"
+	)
+
+	REFERENCES "OrigamNotificationChannelType" (
+		"Id"
+	);
+ALTER TABLE "WorkQueueNotificationContact" ADD CONSTRAINT FK_WorkQueueNotificationContact_refWorkQueueNotificationContactTypeId_WorkQueueNotificationContactType
+	FOREIGN KEY (
+		"refWorkQueueNotificationContactTypeId"
+	)
+
+	REFERENCES "WorkQueueNotificationContactType" (
+		"Id"
+	);

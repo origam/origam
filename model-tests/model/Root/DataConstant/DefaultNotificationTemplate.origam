@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="Xml"
+    x:id="cc1ce58e-df69-442d-99fd-fff244a7daab"
+    asi:name="DefaultNotificationTemplate"
+    dc:userDefinable="false"
+    dc:value="&#xD;&#xA;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#xD;&#xA;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; version=&quot;1.0&quot;&#xD;&#xA;xmlns:AS=&quot;http://schema.advantages.cz/AsapFunctions&quot;&#xD;&#xA;xmlns:date=&quot;http://exslt.org/dates-and-times&quot; exclude-result-prefixes=&quot;AS date&quot;&gt;&#xD;&#xA;&#xD;&#xA;&lt;xsl:param name=&quot;RecipientRow&quot; /&gt;&#xD;&#xA;&#xD;&#xA;&lt;xsl:template match=&quot;ROOT&quot;&gt;&#xD;&#xA;    &lt;ROOT&gt;&#xD;&#xA;          &lt;OrigamNotification&gt;&#xD;&#xA;                 &lt;xsl:attribute name=&quot;Subject&quot;&gt;&#xD;&#xA;                      &lt;xsl:value-of select=&quot;''&quot;/&gt;&#xD;&#xA;                 &lt;/xsl:attribute&gt;&#xD;&#xA;                 &lt;Body&gt;&#xD;&#xA;                 &lt;/Body&gt;&#xD;&#xA;          &lt;/OrigamNotification&gt;&#xD;&#xA;     &lt;/ROOT&gt;&#xD;&#xA;&lt;/xsl:template&gt;&#xD;&#xA;&#xD;&#xA;&lt;/xsl:stylesheet&gt;&#xD;&#xA;" />
+</x:file>

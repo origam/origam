@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="883ce0c6-7eb7-4610-b625-302d47c7e092"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/255e42d6-2e60-47c1-bf28-d452eb5852a3"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="WorkQueueNotificationEvent"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/255e42d6-2e60-47c1-bf28-d452eb5852a3"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueNotificationEvent.origam#LookupWorkQueueNotificationEvent/GetId/7dd4be08-ffdb-4269-a17f-973694ad2d64"
+    adl:valueValueMember="Id" />
+</x:file>

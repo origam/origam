@@ -1,0 +1,10 @@
+﻿CREATE TABLE "WidgetRichTextTest" (
+	"TextMandatoryMemo" Text NOT NULL,
+	"TextNullableMemo" Text NULL,
+	"TextMandatoryLimited20" Varchar(20) NOT NULL,
+	"TextNullableLimited20" Varchar(20) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamCalendarDetail" ADD CONSTRAINT FK_OrigamCalendarDetail_refOrigamCalendarId_OrigamCalendar
+	FOREIGN KEY (
+		"refOrigamCalendarId"
+	)
+
+	REFERENCES "OrigamCalendar" (
+		"Id"
+	);

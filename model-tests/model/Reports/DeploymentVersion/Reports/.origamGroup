@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="0779cb7f-52be-493c-9e4b-1434587e563e"
+    x:isFolder="true"
+    g:name="Reports"
+    g:rootItemType="DeploymentVersion" />
+</x:file>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="71ccfb5e-fde3-46e4-8934-15115274a37c"
+    ds:localized="false"
+    asi:name="OrigamMapLayer">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamMapLayer.origam#OrigamMapLayer/70ab17d0-8f89-41af-a348-85dfed1330e3"
+      x:id="ec134543-02c7-4d8e-8dda-48c3d3c281d3"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamMapLayer"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamMapLayer.origam#OrigamMapLayer/OrigamMapLayerParameter/861f1b3a-f662-4ea5-940b-55dac3be5d4c"
+        x:id="0d627fb0-295f-4f8f-829c-bd506146534e"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamMapLayerParameter"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+  </ds:DataStructure>
+</x:file>

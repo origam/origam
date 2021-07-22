@@ -1,0 +1,1 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'FRM_SerialNumberRanges', 'Menu > Settings > General > Serial Number Ranges', 1, getdate())

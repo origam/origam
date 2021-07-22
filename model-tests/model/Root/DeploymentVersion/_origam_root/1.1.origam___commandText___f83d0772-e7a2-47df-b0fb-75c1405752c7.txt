@@ -1,0 +1,14 @@
+﻿CREATE TABLE [AsapPanelFilter] (
+	[PanelId] UNIQUEIDENTIFIER NOT NULL,
+	[IsDefault] BIT NOT NULL,
+	[IsGlobal] BIT NOT NULL,
+	[ProfileId] UNIQUEIDENTIFIER NULL,
+	[Name] NVARCHAR(300) NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_Main] ON [AsapPanelFilter] ([PanelId] ASC, [ProfileId] ASC)

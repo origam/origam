@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="d536cacd-8a11-49b4-ae4c-4029ac0a05f1"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig.origam#LookupOrigamSyncProviderConfig/8488507a-1492-4016-b1e0-49392ffb7ee8"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="OrigamSyncProviderConfig"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig.origam#LookupOrigamSyncProviderConfig/8488507a-1492-4016-b1e0-49392ffb7ee8"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig.origam#LookupOrigamSyncProviderConfig/GetId/e9a00db5-33df-4149-8e3c-fcb0899bdda3"
+    adl:valueValueMember="Id" />
+</x:file>

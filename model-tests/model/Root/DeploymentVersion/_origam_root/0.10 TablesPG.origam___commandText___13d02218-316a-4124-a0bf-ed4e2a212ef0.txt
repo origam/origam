@@ -1,0 +1,7 @@
+﻿CREATE TABLE "OrigamCharacterTranslation" (
+	"Name" Varchar(200) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

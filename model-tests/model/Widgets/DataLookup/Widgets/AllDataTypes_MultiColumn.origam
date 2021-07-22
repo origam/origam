@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:dlmb="http://schemas.origam.com/Origam.Schema.LookupModel.DataLookupMenuBinding/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="9c54ca12-51ec-40bb-bd20-7a4d6dfaa008"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/71ef0806-6153-46fb-8e36-6f4c5d70cccb"
+    adl:listDisplayMember="Text1;Text2;Boolean1;Currency1;Date1;Integer1;Long1"
+    adl:listValueMember="Id"
+    asi:name="AllDataTypes_MultiColumn"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/71ef0806-6153-46fb-8e36-6f4c5d70cccb"
+    adl:valueDisplayMember="Text1"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/GetId/b7403f66-240b-4ec9-b4b0-ae11e268fda5"
+    adl:valueValueMember="Id">
+    <dlmb:DataLookupMenuBinding
+      asi:abstract="false"
+      x:id="c058945a-18b7-412f-ab79-1ca053c14d35"
+      dlmb:level="100"
+      dlmb:menuItem="Widgets/Menu/Menu.origam#Menu/_hidden/AllDataTypes_Edit1/213e6abf-4123-42ce-bba0-ae63e5b4896c"
+      asi:name="Edit1_True"
+      dlmb:roles="*"
+      dlmb:selectionConstant="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
+      dlmb:selectionLookup="Widgets/DataLookup/Widgets/AllDataTypes_Boolean1_ById.origam#AllDataTypes_Boolean1_ById/1e4b33fc-57c5-44d9-b1b8-06fbc88b5ceb" />
+    <dlmb:DataLookupMenuBinding
+      asi:abstract="false"
+      x:id="0ab6fac0-1326-4a83-a808-0d3882436c33"
+      dlmb:level="100"
+      dlmb:menuItem="Widgets/Menu/Menu.origam#Menu/_hidden/AllDataTypes_Edit2/c8c2158d-ff28-4c6c-8a02-dd6f98ae1a64"
+      asi:name="Edit2_False"
+      dlmb:roles="*"
+      dlmb:selectionConstant="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      dlmb:selectionLookup="Widgets/DataLookup/Widgets/AllDataTypes_Boolean1_ById.origam#AllDataTypes_Boolean1_ById/1e4b33fc-57c5-44d9-b1b8-06fbc88b5ceb" />
+  </dsdl:DataLookup>
+</x:file>

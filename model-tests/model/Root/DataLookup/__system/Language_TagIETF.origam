@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="7823d8af-4968-48c3-a772-287475d429e1"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
+    adl:listDisplayMember="TagIETF"
+    adl:listValueMember="Id"
+    asi:name="Language_TagIETF"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/47f9b1ab-adca-46e3-878e-f7fcac761bf2"
+    adl:valueDisplayMember="TagIETF"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupLanguage_TagIETF.origam#LookupLanguage_TagIETF/GetId/6f62e598-635a-494a-95db-af07d2529a89"
+    adl:valueValueMember="Id" />
+</x:file>

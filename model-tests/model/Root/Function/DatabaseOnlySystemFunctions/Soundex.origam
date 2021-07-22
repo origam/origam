@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="String"
+    x:id="af17d8f2-1126-4551-9324-1737107b7ebb"
+    asi:name="Soundex"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="9592a5dc-5c1d-46bc-b845-0c1482145423"
+      asi:name="Text" />
+  </f:Function>
+</x:file>

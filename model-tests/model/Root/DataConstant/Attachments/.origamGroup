@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="9e00cfe2-ad80-40f2-aeb2-321dcc57325e"
+    x:isFolder="true"
+    g:name="Attachments"
+    g:rootItemType="DataConstant" />
+</x:file>

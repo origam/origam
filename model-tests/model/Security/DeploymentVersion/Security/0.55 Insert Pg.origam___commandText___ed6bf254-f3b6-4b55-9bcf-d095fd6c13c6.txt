@@ -1,0 +1,2 @@
+﻿insert into "OrigamApplicationRole" ("Id","Name","IsSystemRole","RecordCreated")
+(select gen_random_uuid(), "Name", true, now() from "OrigamRole")

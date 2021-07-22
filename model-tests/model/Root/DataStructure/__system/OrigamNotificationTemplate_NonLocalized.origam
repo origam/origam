@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSet/6.0.0" xmlns:dsdsd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSetDefault/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="2fcf9282-ca26-48f9-bc73-5acab18ea6d5"
+    ds:localized="false"
+    asi:name="OrigamNotificationTemplate_NonLocalized">
+    <dsds:DataStructureDefaultSet
+      asi:abstract="false"
+      x:id="d376673b-df0f-46f2-90c0-66d1fee0ca5c"
+      asi:name="default">
+      <dsdsd:DataStructureDefaultSetDefault
+        asi:abstract="false"
+        dsdsd:default="Root/DataConstant/DefaultNotificationTemplate.origam#DefaultNotificationTemplate/cc1ce58e-df69-442d-99fd-fff244a7daab"
+        dsdsd:entity="Root/DataStructure/__system/OrigamNotificationTemplate_NonLocalized.origam#OrigamNotificationTemplate_NonLocalized/OrigamNotificationTemplate/54830886-dcc1-4df6-8f02-aec893004c90"
+        dsdsd:field="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/Template/14f56de5-d2f2-4917-beb7-2df934c76b43"
+        x:id="33e68147-8b1b-44fe-b4a0-249af92256ff"
+        asi:name="OrigamNotificationTemplate_Template_DefaultNotificationTemplate" />
+    </dsds:DataStructureDefaultSet>
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/0760e633-9e95-4f62-9443-360eaa624854"
+      x:id="54830886-dcc1-4df6-8f02-aec893004c90"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamNotificationTemplate"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate_l10n_all/58b38019-12e4-4938-ba26-08defbd60f16"
+        x:id="f13d3ec5-901d-4f1f-907e-00b7096fb633"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamNotificationTemplate_l10n_all"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="a277dc31-f029-4039-9cd0-a8dae0314fb0"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamNotificationTemplate_NonLocalized.origam#OrigamNotificationTemplate_NonLocalized/OrigamNotificationTemplate/54830886-dcc1-4df6-8f02-aec893004c90"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="2b3cdf25-003a-49fd-96c0-4bd060237e5d"
+        asi:name="OrigamNotificationTemplate_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

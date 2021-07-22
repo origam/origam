@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="147f35ca-c3b2-4abd-9038-e44fa17f958b"
+    ci:isComplex="false"
+    asi:name="GridLayoutPanel"
+    ci:namespace="Origam.Gui.Win"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Gui.Win.GridLayoutPanel">
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="24c4b924-ed94-49a7-a4a8-2984e93691af"
+      cpi:localizable="false"
+      asi:name="TabIndex"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="536397af-9465-4c15-b4f0-3cd0623b2bf3"
+      cpi:localizable="false"
+      asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="9f77d2e2-9d9a-4cb5-8978-7be78e2a0cfa"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="3bd918a0-5bd1-44f3-9ef4-9261b265a5c9"
+      cpi:localizable="false"
+      asi:name="Text"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="8b0caff8-d075-4990-9c8d-965d84b2600d"
+      cpi:localizable="false"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="dddefea7-1cfa-4b79-b686-cdabaf7ec045"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+  </ci:Control>
+</x:file>

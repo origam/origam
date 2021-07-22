@@ -1,0 +1,1 @@
+﻿ALTER TABLE [WidgetSectionTestDetailDetail] ADD [Text1] NVarChar(100) NOT NULL

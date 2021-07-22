@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="5977e400-477f-4046-86e7-4c2ea7c39c34"
+    x:isFolder="true"
+    g:name="Root Menu"
+    g:rootItemType="Rule" />
+</x:file>

@@ -1,0 +1,12 @@
+﻿CREATE TABLE "DimensionTransformationMatrix" (
+	"refSource4DimensionEntityId" Uuid NULL,
+	"refSource2DimensionEntityId" Uuid NULL,
+	"refTargetDimensionEntityId" Uuid NOT NULL,
+	"refSource3DimensionEntityId" Uuid NULL,
+	"refSource1DimensionEntityId" Uuid NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "DimensionTransformationMatrix_ix_refTargetDimensionEntityId" ON "DimensionTransformationMatrix" ("refTargetDimensionEntityId" ASC);

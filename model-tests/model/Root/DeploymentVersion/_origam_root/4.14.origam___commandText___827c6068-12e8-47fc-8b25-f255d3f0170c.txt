@@ -1,0 +1,189 @@
+﻿--
+-- refresh data in language master data
+--
+IF NOT EXISTS (select * from Language WHERE TagIETF = 'en-US')
+INSERT INTO Language (Id, Name, TagIETF, RecordCreated)
+VALUES ('4574d756-8970-4369-9125-94defcfeeec6', 'English (US)', 'en-US', SYSDATETIME())
+
+IF NOT EXISTS (select * from Language WHERE TagIETF = 'cs-CZ')
+INSERT INTO Language (Id, Name, TagIETF, RecordCreated)
+VALUES ('5477d278-ba2b-46ea-9bd3-509d4c699762', 'Čeština', 'cs-CZ', SYSDATETIME())
+
+IF NOT EXISTS (select * from Language WHERE TagIETF = 'de-DE')
+INSERT INTO Language (Id, Name, TagIETF, RecordCreated)
+VALUES ('8b92f824-289c-4f93-a245-ecb67b81de1b', 'Deutsch (Deutschland)', 'de-DE', SYSDATETIME())
+
+IF NOT EXISTS (select * from Language WHERE TagIETF = 'de-CH')
+INSERT INTO Language (Id, Name, TagIETF, RecordCreated)
+VALUES ('81fef0eb-8492-4a26-9532-44b8567d0a1b', 'Deutsch (Schweiz)', 'de-CH', SYSDATETIME())
+
+
+--
+-- Refresh data in AsapStateMachineEventType
+--
+
+
+IF NOT EXISTS (select * from AsapStateMachineEventType WHERE Name = 'StateEntry')
+INSERT [dbo].[AsapStateMachineEventType] ([Name], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'StateEntry', NULL, NULL, N'371e5c12-3896-4bab-bfd1-a25f74d25104', CAST(0x0000A46800F2D16B AS DateTime), NULL)
+
+IF NOT EXISTS (select * from AsapStateMachineEventType WHERE Name = 'StateTransition')
+INSERT [dbo].[AsapStateMachineEventType] ([Name], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'StateTransition', NULL, NULL, N'02b5f4d9-2187-44f6-8c32-4cd76c099fd6', CAST(0x0000A46800F2D16C AS DateTime), NULL)
+
+IF NOT EXISTS (select * from AsapStateMachineEventType WHERE Name = 'StateExit')
+INSERT [dbo].[AsapStateMachineEventType] ([Name], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'StateExit', NULL, NULL, N'd4b3b294-6a20-45d8-80bd-1583901e5ac3', CAST(0x0000A46800F2D16C AS DateTime), NULL)
+
+IF NOT EXISTS (select * from AsapStateMachineEventType WHERE Name = 'RecordCreated')
+INSERT [dbo].[AsapStateMachineEventType] ([Name], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'RecordCreated', NULL, NULL, N'8b2464f5-3278-433c-b68e-74c339c19ddb', CAST(0x0000A46800F2D16D AS DateTime), NULL)
+
+IF NOT EXISTS (select * from AsapStateMachineEventType WHERE Name = 'RecordUpdated')
+INSERT [dbo].[AsapStateMachineEventType] ([Name], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'RecordUpdated', NULL, NULL, N'6828f423-f9f5-4011-b0bf-305473731fd7', CAST(0x0000A46800F2D16D AS DateTime), NULL)
+
+IF NOT EXISTS (select * from AsapStateMachineEventType WHERE Name = 'RecordDeleted')
+INSERT [dbo].[AsapStateMachineEventType] ([Name], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'RecordDeleted', NULL, NULL, N'aa050ca9-b3a6-4abd-aced-146895b379ea', CAST(0x0000A46800F2D16D AS DateTime), NULL)
+
+IF NOT EXISTS (select * from AsapStateMachineEventType WHERE Name = 'ValueUpdated')
+INSERT [dbo].[AsapStateMachineEventType] ([Name], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated]) VALUES (N'ValueUpdated', NULL, NULL, N'c14b5bc9-bcd2-4e0a-a254-77a09606bf87', CAST(0x0000A46800F2D16D AS DateTime), NULL)
+
+
+
+
+--
+-- delete old work queue localization
+--
+
+delete from WorkQueueNotificationContactType_l10n
+delete from AsapNotificationChannelType_l10n
+delete from WorkQueueCommandType_l10n
+delete from WorkQueueNotificationEvent_l10n
+delete from WorkQueueExternalSourceType_l10n
+delete from AsapStateMachineEventType_l10n
+
+--
+-- Update base language translations
+--
+update WorkQueueNotificationContactType set name='Inserted Value' WHERE Id='3535C6F5-C48D-4AE9-BA21-43852D4F66F8'
+
+update AsapNotificationChannelType set name='Email' WHERE Id='3A0BBBB5-A7F0-4667-93D0-071F935702BE'
+
+
+update WorkQueueCommandType set name='Remove' WHERE Id='8D4117E0-590B-4495-9FD3-DE46D9E768AF'
+update WorkQueueCommandType set name='Queue Command' WHERE Id='E7B1761F-7126-4A20-9DA3-80872DE80227'
+update WorkQueueCommandType set name='Move To Queue' WHERE Id='CB9D374C-DA12-46FF-8810-980597AE0A21'
+
+update WorkQueueNotificationEvent set name='Message Creation' WHERE Id='FE40902F-8A44-477E-96F9-D157EEE16A0F'
+update WorkQueueNotificationEvent set name='Once a Day' WHERE Id='96340243-E360-4409-9EE6-26192748EAD0'
+update WorkQueueNotificationEvent set name='Message Removal' WHERE Id='DC3B0836-B94F-4502-BB20-2C3AA3206F63'
+update WorkQueueNotificationEvent set name='Escalation' WHERE Id='E1B66E46-7961-4D91-8C71-AB9E57E656A5'
+
+update WorkQueueExternalSourceType set name='IMAP' WHERE Id='57BED127-45CC-46F1-B29B-53C635F665B3'
+update WorkQueueExternalSourceType set name='File' WHERE Id='07329B7B-90E8-4594-B738-C04856FC998E'
+update WorkQueueExternalSourceType set name='POP3' WHERE Id='4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5'
+update WorkQueueExternalSourceType set name='Sequential Workflow' WHERE Id='75E3B51A-E4F5-48ED-941C-597F49FCC775'
+update WorkQueueExternalSourceType set name='Web Request' WHERE Id='CB882379-80E7-41FD-BDE7-C65045660CA7'
+
+update AsapStateMachineEventType set name='StateEntry' WHERE Id='371E5C12-3896-4BAB-BFD1-A25F74D25104'
+update AsapStateMachineEventType set name='StateTransition' WHERE Id='02B5F4D9-2187-44F6-8C32-4CD76C099FD6'
+update AsapStateMachineEventType set name='StateExit' WHERE Id='D4B3B294-6A20-45D8-80BD-1583901E5AC3'
+update AsapStateMachineEventType set name='RecordCreated' WHERE Id='8B2464F5-3278-433C-B68E-74C339C19DDB'
+update AsapStateMachineEventType set name='RecordUpdated' WHERE Id='6828F423-F9F5-4011-B0BF-305473731FD7'
+update AsapStateMachineEventType set name='RecordDeleted' WHERE Id='AA050CA9-B3A6-4ABD-ACED-146895B379EA'
+update AsapStateMachineEventType set name='ValueUpdated' WHERE Id='C14B5BC9-BCD2-4E0A-A254-77A09606BF87'
+
+
+--
+-- insert new values from translations czech
+--
+insert into WorkQueueNotificationContactType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationContactTypeId) VALUES (NEWID(),'Vložená hodnota', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '3535C6F5-C48D-4AE9-BA21-43852D4F66F8')
+
+insert into AsapNotificationChannelType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapNotificationChannelTypeId) VALUES (NEWID(),'E-mail', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '3A0BBBB5-A7F0-4667-93D0-071F935702BE')
+
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Odstranění', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '8D4117E0-590B-4495-9FD3-DE46D9E768AF')
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Příkaz fronty', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'E7B1761F-7126-4A20-9DA3-80872DE80227')
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Přesun do fronty', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'CB9D374C-DA12-46FF-8810-980597AE0A21')
+
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Vytvoření záznamu', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'FE40902F-8A44-477E-96F9-D157EEE16A0F')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'1x denně', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '96340243-E360-4409-9EE6-26192748EAD0')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Zrušení zprávy', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'DC3B0836-B94F-4502-BB20-2C3AA3206F63')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Eskalace', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'E1B66E46-7961-4D91-8C71-AB9E57E656A5')
+
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'IMAP', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '57BED127-45CC-46F1-B29B-53C635F665B3')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Soubor', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '07329B7B-90E8-4594-B738-C04856FC998E')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'POP3', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Sekvenční workflow', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '75E3B51A-E4F5-48ED-941C-597F49FCC775')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Webový požadavek', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'CB882379-80E7-41FD-BDE7-C65045660CA7')
+
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Vstup do stavu', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '371E5C12-3896-4BAB-BFD1-A25F74D25104')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Změna stavu', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '02B5F4D9-2187-44F6-8C32-4CD76C099FD6')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Výstup ze stavu', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'D4B3B294-6A20-45D8-80BD-1583901E5AC3')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Vytvoření záznamu', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '8B2464F5-3278-433C-B68E-74C339C19DDB')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Změna záznamu', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), '6828F423-F9F5-4011-B0BF-305473731FD7')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Smazání záznamu', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'AA050CA9-B3A6-4ABD-ACED-146895B379EA')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Změna hodnoty', (select Id from language where TagIETF like '%cs-CZ%'),SYSDATETIME(), 'C14B5BC9-BCD2-4E0A-A254-77A09606BF87')
+
+
+--
+-- insert new values from translations swiss
+--
+insert into WorkQueueNotificationContactType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationContactTypeId) VALUES (NEWID(),'Eingegebener Wert', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '3535C6F5-C48D-4AE9-BA21-43852D4F66F8')
+
+insert into AsapNotificationChannelType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapNotificationChannelTypeId) VALUES (NEWID(),'E-Mail', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '3A0BBBB5-A7F0-4667-93D0-071F935702BE')
+
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Entfernen', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '8D4117E0-590B-4495-9FD3-DE46D9E768AF')
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Queue Befehl', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'E7B1761F-7126-4A20-9DA3-80872DE80227')
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Zu anderer Queue verschieben', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'CB9D374C-DA12-46FF-8810-980597AE0A21')
+
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Nachrichten erstellen', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'FE40902F-8A44-477E-96F9-D157EEE16A0F')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'1x täglich', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '96340243-E360-4409-9EE6-26192748EAD0')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Nachricht löschen', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'DC3B0836-B94F-4502-BB20-2C3AA3206F63')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Eskalation', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'E1B66E46-7961-4D91-8C71-AB9E57E656A5')
+
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'IMAP', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '57BED127-45CC-46F1-B29B-53C635F665B3')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Datei', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '07329B7B-90E8-4594-B738-C04856FC998E')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'POP3', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Sequentieller Workflow', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '75E3B51A-E4F5-48ED-941C-597F49FCC775')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Web Anfrage', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'CB882379-80E7-41FD-BDE7-C65045660CA7')
+
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Zustandseingang', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '371E5C12-3896-4BAB-BFD1-A25F74D25104')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Zustandsübergang', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '02B5F4D9-2187-44F6-8C32-4CD76C099FD6')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Zustandsausgang', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'D4B3B294-6A20-45D8-80BD-1583901E5AC3')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Datensatz erstellt', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '8B2464F5-3278-433C-B68E-74C339C19DDB')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Datensatz aktualisiert', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), '6828F423-F9F5-4011-B0BF-305473731FD7')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Datensatz gelöscht', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'AA050CA9-B3A6-4ABD-ACED-146895B379EA')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Wert aktualisiert', (select Id from language where TagIETF like '%de-CH%'),SYSDATETIME(), 'C14B5BC9-BCD2-4E0A-A254-77A09606BF87')
+
+
+
+--
+-- insert new values from translations german
+--
+insert into WorkQueueNotificationContactType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationContactTypeId) VALUES (NEWID(),'Eingegebener Wert', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '3535C6F5-C48D-4AE9-BA21-43852D4F66F8')
+
+insert into AsapNotificationChannelType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapNotificationChannelTypeId) VALUES (NEWID(),'E-Mail', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '3A0BBBB5-A7F0-4667-93D0-071F935702BE')
+
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Entfernen', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '8D4117E0-590B-4495-9FD3-DE46D9E768AF')
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Queue Befehl', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'E7B1761F-7126-4A20-9DA3-80872DE80227')
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) VALUES (NEWID(),'Zu anderer Queue verschieben', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'CB9D374C-DA12-46FF-8810-980597AE0A21')
+
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Nachrichten erstellen', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'FE40902F-8A44-477E-96F9-D157EEE16A0F')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'1x täglich', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '96340243-E360-4409-9EE6-26192748EAD0')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Nachricht löschen', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'DC3B0836-B94F-4502-BB20-2C3AA3206F63')
+insert into WorkQueueNotificationEvent_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueNotificationEventId) VALUES (NEWID(),'Eskalation', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'E1B66E46-7961-4D91-8C71-AB9E57E656A5')
+
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'IMAP', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '57BED127-45CC-46F1-B29B-53C635F665B3')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Datei', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '07329B7B-90E8-4594-B738-C04856FC998E')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'POP3', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '4C15F1A1-4BD8-4FA6-9A37-DF5AA19F02A5')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Sequentieller Workflow', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '75E3B51A-E4F5-48ED-941C-597F49FCC775')
+insert into WorkQueueExternalSourceType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueExternalSourceTypeId) VALUES (NEWID(),'Web Anfrage', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'CB882379-80E7-41FD-BDE7-C65045660CA7')
+
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Zustandseingang', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '371E5C12-3896-4BAB-BFD1-A25F74D25104')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Zustandsübergang', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '02B5F4D9-2187-44F6-8C32-4CD76C099FD6')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Zustandsausgang', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'D4B3B294-6A20-45D8-80BD-1583901E5AC3')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Datensatz erstellt', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '8B2464F5-3278-433C-B68E-74C339C19DDB')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Datensatz aktualisiert', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), '6828F423-F9F5-4011-B0BF-305473731FD7')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Datensatz gelöscht', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'AA050CA9-B3A6-4ABD-ACED-146895B379EA')
+insert into AsapStateMachineEventType_l10n (Id,Name,refLanguageId,RecordCreated,refAsapStateMachineEventTypeId) VALUES (NEWID(),'Wert aktualisiert', (select Id from language where TagIETF like '%de-DE%'),SYSDATETIME(), 'C14B5BC9-BCD2-4E0A-A254-77A09606BF87')
+
+

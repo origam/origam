@@ -1,0 +1,2 @@
+﻿ALTER TABLE [OrigamUser] ADD [EmailConfirmed] BIT NOT NULL CONSTRAINT [DF_OrigamUser_EmailConfirmed] DEFAULT 0
+ALTER TABLE [OrigamUser] DROP CONSTRAINT [DF_OrigamUser_EmailConfirmed]

@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamMap" (
+	"ReferenceCode" Varchar(40) NOT NULL,
+	"InitialZoom" Integer NULL,
+	"MapCenter" Text NULL,
+	"Description" Varchar(200) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamMap_ix_Unique" ON "OrigamMap" ("ReferenceCode" ASC);

@@ -1,0 +1,2 @@
+﻿INSERT INTO "OrigamMapLayerType" ("Id", "Name", "RecordCreated") VALUES ('{1ee61797-3f5d-4fb1-9c50-e033dee563ab}', 'Mapnik', now());
+INSERT INTO "OrigamMapLayerType" ("Id", "Name", "RecordCreated") VALUES ('{da06ffa0-bcee-4923-aafe-b74945f2feaa}', 'WMS', now());

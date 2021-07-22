@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="24b52598-7679-487b-a15c-e0ab3b37b21c"
+    ds:localized="false"
+    asi:name="OrigamCalendar">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamCalendar.origam#OrigamCalendar/bbdc7e44-355e-4b25-bb67-17769fb34b89"
+      x:id="53943234-56c9-41de-9766-758c6f2540e8"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamCalendar"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamCalendar.origam#OrigamCalendar/OrigamCalendarDetail/4bd3b316-870b-40ce-8dfd-3d2144256140"
+        x:id="e434347d-0a46-40c9-8322-65b22d261cac"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamCalendarDetail"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="8225b839-f336-4171-b05d-7b9aa5d39afc"
+      asi:name="GetHolidays">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamCalendar.origam#OrigamCalendar/OrigamCalendar/53943234-56c9-41de-9766-758c6f2540e8"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="9de3c4b8-3839-4842-87e8-06d9e2640c87"
+        asi:name="OrigamCalendar_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamCalendar.origam#OrigamCalendar/OrigamCalendar/OrigamCalendarDetail/e434347d-0a46-40c9-8322-65b22d261cac"
+        dsfsf:filter="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/GetDateMoreOrEqual/8ddb9a95-17ad-4c28-955b-0c7e7d8cf101"
+        x:id="ad7da03d-4e41-4ea1-bc2e-756d04e59505"
+        asi:name="OrigamCalendarDetail_GetDateMoreOrEqual"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

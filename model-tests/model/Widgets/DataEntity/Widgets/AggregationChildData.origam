@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:ac="http://schemas.origam.com/Origam.Schema.EntityModel.AggregatedColumn/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="db44d966-41a2-4078-b3e7-f54a6613b81e"
+    tmi:mappedObjectName="AggregationChildData"
+    asi:name="AggregationChildData"
+    ade:readOnly="false">
+    <ac:DataEntityColumn
+      asi:abstract="false"
+      ac:aggregationType="Sum"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      ac:field="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/Price/ed743e1a-fd2d-4fc0-9320-01612c9ddc15"
+      x:id="7172f724-90a1-4594-94ba-2864df198e24"
+      adec:isPrimaryKey="false"
+      adec:label="Price"
+      asi:name="SumSubAggregatedPrice"
+      adec:onCopyAction="Copy"
+      ac:relation="Widgets/DataEntity/Widgets/AggregationChildData.origam#AggregationChildData/AggregationChildChildData/e9ea2c94-a041-4249-9695-0a7cc4663053"
+      adec:xmlMappingType="Attribute" />
+    <ac:DataEntityColumn
+      asi:abstract="false"
+      ac:aggregationType="Count"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      ac:field="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/Price/ed743e1a-fd2d-4fc0-9320-01612c9ddc15"
+      x:id="e3934108-c673-484f-ac37-ed6c8c01ab3e"
+      adec:isPrimaryKey="false"
+      adec:label="Price"
+      asi:name="CountSubAggregatedPrice"
+      adec:onCopyAction="Copy"
+      ac:relation="Widgets/DataEntity/Widgets/AggregationChildData.origam#AggregationChildData/AggregationChildChildData/e9ea2c94-a041-4249-9695-0a7cc4663053"
+      adec:xmlMappingType="Attribute" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="2c211c3b-b643-4511-afd2-2210404ef0d1"
+      asi:name="ix_AggregationParentFunction"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Widgets/DataEntity/Widgets/AggregationChildData.origam#AggregationChildData/refAggregationParentFunctionId/fc7d3827-fdc5-4ae6-8cff-2d3374e83faf"
+        x:id="5fe6ccbd-21a2-4e83-93cd-44753aa29246"
+        asi:name="0_refAggregationParentFunctionId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="e9ea2c94-a041-4249-9695-0a7cc4663053"
+      asi:name="AggregationChildChildData"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/51b96080-40a4-42be-a93f-7ce703e015a3"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c9677c7d-a2ce-482e-97d8-dfc9602f050c"
+        asi:name="AggregationChildChildDataKey1"
+        ercpi:relatedEntityField="Widgets/DataEntity/Widgets/AggregationChildChildData.origam#AggregationChildChildData/refAggregationChildDataId/e66d65a7-b304-4f87-a5aa-3ddae19658b9" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Widgets/DataEntity/Widgets/AggregationParentFunction.origam#AggregationParentFunction/e8473f4b-d403-4ccb-b43f-c0a42fb3c1dd"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="fc7d3827-fdc5-4ae6-8cff-2d3374e83faf"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refAggregationParentFunctionId"
+      asi:name="refAggregationParentFunctionId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="a4cb3d93-86a6-4a54-a014-2d15b1f501e3"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="Price"
+      asi:name="Price"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="533e4526-587f-42ad-9583-42aa73b5ee16" />
+  </tmi:DataEntity>
+</x:file>

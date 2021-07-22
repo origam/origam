@@ -1,0 +1,9 @@
+﻿CREATE TABLE "OrigamChatMessageBusinessPartner" (
+	"refOrigamChatMessageId" Uuid NOT NULL,
+	"refBusinessPartnerId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamChatMessageBusinessPartner_ix_OrigamChatMessage" ON "OrigamChatMessageBusinessPartner" ("refOrigamChatMessageId" ASC);

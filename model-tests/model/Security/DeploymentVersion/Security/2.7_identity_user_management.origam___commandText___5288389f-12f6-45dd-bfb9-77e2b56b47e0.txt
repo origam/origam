@@ -1,0 +1,4 @@
+﻿UPDATE AsapFeatureList 
+SET ReferenceCode = 'IDENTITY_USER_MANAGEMENT', 
+Description = 'When turned on new buttons will be available in the user management for adding/removing/unlocking users and changing password.' 
+WHERE ReferenceCode = 'NET_MEMBERSHIP_EXCLUSIVE_USE'

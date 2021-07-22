@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Float"
+    x:id="d55f4aef-3e3a-455d-9db2-4120978669a7"
+    asi:name="Round"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="1acaabf3-40d9-48b0-9a17-126bbefda2d2"
+      asi:name="Precision"
+      fp:ordinalPosition="1" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="69da06ea-0257-40a5-a1d4-d3801708cf24"
+      asi:name="Expression" />
+  </f:Function>
+</x:file>

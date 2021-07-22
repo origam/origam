@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="Boolean"
+    x:id="f15d5dc0-015f-48a4-91d3-6394851369df"
+    asi:name="Attachment_Compress"
+    dc:userDefinable="false"
+    dc:value="true" />
+</x:file>

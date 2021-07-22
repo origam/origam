@@ -1,0 +1,9 @@
+﻿CREATE TABLE [AggregationChildData] (
+	[refAggregationParentFunctionId] UniqueIdentifier NOT NULL,
+	[Price] Money NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);
+CREATE  INDEX  [ix_AggregationParentFunction] ON [AggregationChildData] ([refAggregationParentFunctionId] ASC);

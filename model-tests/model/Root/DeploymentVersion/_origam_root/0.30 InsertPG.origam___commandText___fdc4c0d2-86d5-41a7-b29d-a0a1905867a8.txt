@@ -1,0 +1,1 @@
+﻿INSERT INTO "OrigamMapLayerType" ("Id", "Name", "RecordCreated") VALUES ('{030a7bcf-c3f0-4009-844c-647640d99310}', 'OSM', now())

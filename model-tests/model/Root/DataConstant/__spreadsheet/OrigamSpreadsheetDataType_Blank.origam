@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="Integer"
+    x:id="c775d5a9-c87a-4360-98a0-ab36a29ebd53"
+    asi:name="OrigamSpreadsheetDataType_Blank"
+    dc:userDefinable="false"
+    dc:value="3" />
+</x:file>

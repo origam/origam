@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="All"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="f924f620-294c-4e57-96a1-e5ff2942f19e"
+    tmi:mappedObjectName="ResourceGroupMember"
+    asi:name="ResourceGroupMember"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="cdc26643-ff5c-48c3-9e22-cd787a0cb341" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="08f09597-bbc1-45a9-938d-51f287e1d2a4"
+      adec:isPrimaryKey="false"
+      adec:label="Skupina"
+      fmi:mappedColumnName="refGroupResourceId"
+      asi:name="refGroupResourceId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
+      adec:isPrimaryKey="false"
+      adec:label="Člen"
+      fmi:mappedColumnName="refMemberResourceId"
+      asi:name="refMemberResourceId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="977b7d00-fecb-4879-b7d6-427c25789dc4"
+      asi:name="ix_Resource"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
+        x:id="ab9eeb69-43f7-433b-a3bd-1eab3e43b899"
+        asi:name="0_refResourceId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="713c62b3-bc66-4970-ba64-f02f4029c6d9"
+      asi:name="ix_MemberResource"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
+        x:id="cdf69dd5-f8fd-4f7f-86f7-28bd6caf9b70"
+        asi:name="0_refMemberResourceId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+  </tmi:DataEntity>
+</x:file>

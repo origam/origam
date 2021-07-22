@@ -1,0 +1,24 @@
+﻿-- delete not implemented notification events
+DELETE FROM "WorkQueueNotificationEvent_l10n" where "refWorkQueueNotificationEventId"
+in ('{96340243-E360-4409-9EE6-26192748EAD0}',
+	'{DC3B0836-B94F-4502-BB20-2C3AA3206F63}',
+	'{E1B66E46-7961-4D91-8C71-AB9E57E656A5}');
+
+DELETE FROM "WorkQueueNotificationEvent" where "Id"
+in ('{96340243-E360-4409-9EE6-26192748EAD0}',
+	'{DC3B0836-B94F-4502-BB20-2C3AA3206F63}',
+	'{E1B66E46-7961-4D91-8C71-AB9E57E656A5}');
+
+
+INSERT INTO "WorkQueueNotificationEvent" ("Id", "Name") 
+VALUES ('{a0eb8b8d-8942-4608-97e0-566ba0ae1f7a}', 'Command');
+
+INSERT INTO "WorkQueueNotificationEvent_l10n" ("Id", "Name", "refWorkQueueNotificationEventId", "refLanguageId")
+select '{e94f51b3-559a-4389-8254-8b8d94c67fe9}', 'Befehl','{a0eb8b8d-8942-4608-97e0-566ba0ae1f7a}',(select "Id" From "Language" where "TagIETF" like '%de-DE%')
+where exists (select count(*) From "Language" where "TagIETF" like '%de-DE%');
+ 
+
+INSERT INTO "WorkQueueNotificationEvent_l10n" ("Id", "Name", "refWorkQueueNotificationEventId", "refLanguageId")
+select '{7cd8d5ae-4b13-46bf-97c7-7c111df35d3c}', 'Befehl','{a0eb8b8d-8942-4608-97e0-566ba0ae1f7a}',(select "Id" From "Language" where "TagIETF" like '%de-CH%') 
+  where  exists (select count(*) From "Language" where "TagIETF" like '%de-CH%');
+

@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamFeatureList" (
+	"Description" Text NULL,
+	"DisplayName" Varchar(255) NOT NULL,
+	"ReferenceCode" Varchar(50) NOT NULL,
+	"IsFeatureOn" Boolean NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

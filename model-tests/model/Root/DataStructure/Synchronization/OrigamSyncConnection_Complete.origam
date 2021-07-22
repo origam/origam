@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="c2b8c1eb-05cc-4866-9737-116fce0ff292"
+    ds:localized="false"
+    asi:name="OrigamSyncConnection_Complete">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/994886a2-0850-4745-9e33-bec58cf6756e"
+      x:id="1c1ff246-62dc-4f62-a4d6-13ee177c3c7e"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamSyncConnection"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/OrigamSyncConnectionParameter/5597e156-a54f-4702-9c3c-a6dd3a470bf7"
+        x:id="209c7829-acd8-4c24-9124-bcb925561727"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamSyncConnectionParameter"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="b2d15b8a-fbbd-417c-9e01-d0ed23e4f8b1"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Synchronization/OrigamSyncConnection_Complete.origam#OrigamSyncConnection_Complete/OrigamSyncConnection/1c1ff246-62dc-4f62-a4d6-13ee177c3c7e"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="4956f781-8b95-4575-adeb-ffe172ecd80d"
+        asi:name="OrigamSyncConnection_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

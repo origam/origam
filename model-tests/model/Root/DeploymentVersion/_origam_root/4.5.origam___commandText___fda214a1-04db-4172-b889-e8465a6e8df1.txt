@@ -1,0 +1,1 @@
+﻿DROP INDEX ix_Unique ON AsapStyleColor

@@ -1,0 +1,33 @@
+﻿
+ALTER TABLE [Resource] ADD CONSTRAINT FK_Resource_refBusinessPartnerId_BusinessPartner
+	FOREIGN KEY (
+		[refBusinessPartnerId]
+	)
+
+	REFERENCES [BusinessPartner] (
+		[Id]
+	)
+ALTER TABLE [Resource] ADD CONSTRAINT FK_Resource_refOrganizationId_Organization
+	FOREIGN KEY (
+		[refOrganizationId]
+	)
+
+	REFERENCES [Organization] (
+		[Id]
+	)
+ALTER TABLE [Resource] ADD CONSTRAINT FK_Resource_refBusinessUnitId_BusinessUnit
+	FOREIGN KEY (
+		[refBusinessUnitId]
+	)
+
+	REFERENCES [BusinessUnit] (
+		[Id]
+	)
+ALTER TABLE [Resource] ADD CONSTRAINT FK_Resource_refResourceTypeId_ResourceType
+	FOREIGN KEY (
+		[refResourceTypeId]
+	)
+
+	REFERENCES [ResourceType] (
+		[Id]
+	)

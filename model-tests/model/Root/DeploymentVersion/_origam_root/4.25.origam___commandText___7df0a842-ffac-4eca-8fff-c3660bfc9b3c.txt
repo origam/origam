@@ -1,0 +1,2 @@
+﻿ALTER TABLE [OrigamOnlineUser] ADD [DirtyScreens] INT NOT NULL CONSTRAINT [DF_OrigamOnlineUser_DirtyScreens] DEFAULT 0
+ALTER TABLE [OrigamOnlineUser] DROP CONSTRAINT [DF_OrigamOnlineUser_DirtyScreens]

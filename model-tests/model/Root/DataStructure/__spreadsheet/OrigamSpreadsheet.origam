@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    ds:dataSetClass="Origam.Workflow.FileService.OrigamSpreadsheet, Origam.Workflow.FileService"
+    x:id="c131aa04-6310-455d-a7cd-4e19dd012241"
+    ds:localized="false"
+    asi:name="OrigamSpreadsheet">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetWorkbook.origam#OrigamSpreadsheetWorkbook/851ca8d8-9133-4d91-8a03-0f2cfd402527"
+      x:id="a8fd7ba5-98c7-44ad-8037-6247edf7bd44"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="Workbook"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetWorkbook.origam#OrigamSpreadsheetWorkbook/Sheet/3d73eea8-1ffc-4321-b6b0-67c932ddfce8"
+        x:id="a0c98567-c891-470c-860b-a8e425c75715"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="Sheet"
+        dse:relationType="Normal"
+        dse:useUpsert="false">
+        <dse:DataStructureEntity
+          asi:abstract="false"
+          dse:allFields="true"
+          dse:concurrencyHandling="Standard"
+          dse:entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetSheet.origam#OrigamSpreadsheetSheet/Row/8a9aacae-0c47-444f-80d0-26bca98cbf15"
+          x:id="19b737fd-7c7f-4239-8120-3b24cd4b6ca8"
+          dse:ignoreCondition="None"
+          dse:ignoreImplicitFilters="false"
+          asi:name="Row"
+          dse:relationType="Normal"
+          dse:useUpsert="false">
+          <dse:DataStructureEntity
+            asi:abstract="false"
+            dse:allFields="true"
+            dse:concurrencyHandling="Standard"
+            dse:entity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/Cell/a929969c-8875-48c6-9ef5-718c3e456bf8"
+            x:id="b024f92e-d96b-4833-bba1-bbaf64ee4b86"
+            dse:ignoreCondition="None"
+            dse:ignoreImplicitFilters="false"
+            asi:name="Cell"
+            dse:relationType="Normal"
+            dse:useUpsert="false" />
+        </dse:DataStructureEntity>
+      </dse:DataStructureEntity>
+    </dse:DataStructureEntity>
+  </ds:DataStructure>
+</x:file>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="9b905782-c91c-4af8-8277-f0c851310921"
+    ds:localized="false"
+    asi:name="OrigamTooltipHelpContext_Complete">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamTooltipHelpContext.origam#OrigamTooltipHelpContext/f14e958d-51ba-4d01-b885-720fad41d316"
+      x:id="968883ec-37e0-4d2d-a0f2-9d61d055420a"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamTooltipHelpContext"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamTooltipHelpContext.origam#OrigamTooltipHelpContext/OrigamTooltipHelpSubcontext/7b9b51ad-8d03-4f8e-bd5d-580b3203dc38"
+        x:id="f34cdd8e-23ea-40de-92c7-fbbed316409d"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamTooltipHelpSubcontext"
+        dse:relationType="Normal"
+        dse:useUpsert="false">
+        <dse:DataStructureEntity
+          asi:abstract="false"
+          dse:allFields="true"
+          dse:concurrencyHandling="Standard"
+          dse:entity="Root/DataEntity/__system/OrigamTooltipHelpSubcontext.origam#OrigamTooltipHelpSubcontext/OrigamTooltipHelpContextComponent/1964ec06-12f2-4b5c-8c10-47655a17863e"
+          x:id="56c810fb-9c27-46ab-8fa8-d5b7a7b8a590"
+          dse:ignoreCondition="None"
+          dse:ignoreImplicitFilters="false"
+          asi:name="OrigamTooltipHelpContextComponent"
+          dse:relationType="Normal"
+          dse:useUpsert="false" />
+      </dse:DataStructureEntity>
+    </dse:DataStructureEntity>
+  </ds:DataStructure>
+</x:file>

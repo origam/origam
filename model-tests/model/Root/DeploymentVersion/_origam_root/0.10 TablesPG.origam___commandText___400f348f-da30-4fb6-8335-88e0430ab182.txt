@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamMapLayerParameter" (
+	"refOrigamMapLayerId" Uuid NOT NULL,
+	"Value" Text NOT NULL,
+	"Name" Varchar(40) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamMapLayerParameter_ix_Unique" ON "OrigamMapLayerParameter" ("refOrigamMapLayerId" ASC, "Name" ASC);

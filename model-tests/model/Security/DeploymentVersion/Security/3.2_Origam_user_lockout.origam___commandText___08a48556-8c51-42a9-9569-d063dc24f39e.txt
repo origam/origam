@@ -1,0 +1,2 @@
+﻿ALTER TABLE [OrigamUser] ADD [FailedPasswordAttemptCount] INT NOT NULL CONSTRAINT [DF_OrigamUser_FailedPasswordAttemptCount] DEFAULT 0
+ALTER TABLE [OrigamUser] DROP CONSTRAINT [DF_OrigamUser_FailedPasswordAttemptCount]

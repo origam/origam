@@ -1,0 +1,12 @@
+﻿CREATE TABLE "AllDataTypes" (
+	"Text1" Varchar(50) NOT NULL,
+	"Date1" Timestamp(3) NULL,
+	"Integer1" Integer NULL,
+	"Currency1" Money NULL,
+	"Boolean1" Boolean NULL,
+	"Long1" Bigint NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

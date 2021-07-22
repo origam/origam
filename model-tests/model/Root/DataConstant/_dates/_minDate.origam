@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="Date"
+    x:id="66f34839-6a92-4284-a25c-5d7c38de0d4b"
+    asi:name="_minDate"
+    dc:userDefinable="false"
+    dc:value="2000-01-01T00:00:00" />
+</x:file>

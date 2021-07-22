@@ -1,0 +1,8 @@
+﻿CREATE TABLE [WidgetSectionTestDetailDetail] (
+	[refWidgetSectionTestDetailId] UniqueIdentifier NOT NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);
+CREATE  INDEX  [ix_WidgetSectionTestDetail] ON [WidgetSectionTestDetailDetail] ([refWidgetSectionTestDetailId] ASC);

@@ -1,0 +1,10 @@
+﻿CREATE TABLE "WidgetSectionTestDetail" (
+	"refWidgetSectionTestMasterId" Uuid NOT NULL,
+	"Text1" Varchar(100) NULL,
+	"Text2" Varchar(100) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "WidgetSectionTestDetail_ix_WidgetSectionTestMaster" ON "WidgetSectionTestDetail" ("refWidgetSectionTestMasterId" ASC);

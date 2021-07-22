@@ -1,0 +1,4 @@
+﻿INSERT INTO AsapFeatureList (Id, ReferenceCode, DisplayName, Description, IsFeatureOn, RecordCreated)
+VALUES (newid(), 'NET_MEMBERSHIP_EXCLUSIVE_USE', 'User Management Extensions',
+'When turned on new buttons will be available in the user management for adding/removing/unlocking users and changing password. Use this feature only when the configured membership provider supports these functions.',
+1, getdate())

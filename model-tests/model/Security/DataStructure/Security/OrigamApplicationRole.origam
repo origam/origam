@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="33797eea-c45e-4c90-bd5b-8e39fdeaafc8"
+    ds:localized="false"
+    asi:name="OrigamApplicationRole">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/c0dab8c0-ad91-428f-a89b-67795a427729"
+      x:id="b800053a-7e1c-4b5b-abcf-3419f747f876"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamApplicationRole"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/OrigamRoleOrigamApplicationRole/e1ce8af3-f91e-4e1f-b7b1-e415e899a087"
+        x:id="79e1ddad-a755-4b01-8ea3-71961e249591"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamRoleOrigamApplicationRole"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="68c5a57b-d481-4a9b-9a42-dfac478950a5"
+      asi:name="GetUserDefined">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Security/DataStructure/Security/OrigamApplicationRole.origam#OrigamApplicationRole/OrigamApplicationRole/b800053a-7e1c-4b5b-abcf-3419f747f876"
+        dsfsf:filter="Security/DataEntity/Security/OrigamApplicationRole.origam#OrigamApplicationRole/GetUserDefined/e11bff8b-5588-46eb-86ff-a2460a5aaeb7"
+        x:id="3de1d838-998b-41b3-8ea8-d2ab3fe141d0"
+        asi:name="OrigamApplicationRole_GetUserDefined"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

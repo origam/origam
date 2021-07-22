@@ -1,0 +1,8 @@
+﻿ALTER TABLE [AsapRoleAsapApplicationRole] ADD CONSTRAINT [FK_AsapRoleAsapApplicationRole_refAsapRoleId_AsapRole]
+	FOREIGN KEY (
+		[refAsapRoleId]
+	)
+
+	REFERENCES [AsapRole] (
+		[Id]
+	)

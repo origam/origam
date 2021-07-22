@@ -1,0 +1,10 @@
+﻿CREATE TABLE [WidgetSectionTestDetail] (
+	[refWidgetSectionTestMasterId] UniqueIdentifier NOT NULL,
+	[Text1] NVarChar(100) NULL,
+	[Text2] NVarChar(100) NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);
+CREATE  INDEX  [ix_WidgetSectionTestMaster] ON [WidgetSectionTestDetail] ([refWidgetSectionTestMasterId] ASC);

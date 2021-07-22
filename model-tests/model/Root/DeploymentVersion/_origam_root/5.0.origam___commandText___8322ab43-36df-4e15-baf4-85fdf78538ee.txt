@@ -1,0 +1,31 @@
+﻿CREATE PROCEDURE RenameColumns
+  @tableName NVARCHAR(100), @find NVARCHAR(100), @replace NVARCHAR(100)
+
+AS
+
+BEGIN
+	DECLARE @oldName NVARCHAR(100)
+	DECLARE @newName NVARCHAR(100)
+	DECLARE @tableAndOldColumnName NVARCHAR(100)
+	DECLARE @getColumnName CURSOR
+
+	SET @getColumnName = CURSOR FOR
+	select COLUMN_NAME
+	from INFORMATION_SCHEMA.COLUMNS
+	where TABLE_NAME= @tableName AND  COLUMN_NAME like '%'+@find+'%'
+
+	OPEN @getColumnName
+	FETCH NEXT
+	FROM @getColumnName INTO @oldName
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SET @newName = REPLACE( @oldName,  @find, @replace)
+		SET @tableAndOldColumnName =  @tableName + '.' + @oldName
+		EXEC sp_rename @tableAndOldColumnName, @newName, 'COLUMN'; 
+		FETCH NEXT
+		FROM @getColumnName INTO @oldName
+	END
+
+	CLOSE @getColumnName
+	DEALLOCATE @getColumnName
+END;

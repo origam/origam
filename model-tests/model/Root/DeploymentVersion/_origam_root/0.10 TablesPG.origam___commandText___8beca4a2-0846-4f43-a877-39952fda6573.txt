@@ -1,0 +1,12 @@
+﻿CREATE TABLE "OrigamMapOrigamMapLayer" (
+	"SortOrder" Integer NOT NULL,
+	"DefaultEnabled" Boolean NOT NULL,
+	"refOrigamMapId" Uuid NOT NULL,
+	"refOrigamMapLayerId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamMapOrigamMapLayer_ix_OrigamMap" ON "OrigamMapOrigamMapLayer" ("refOrigamMapId" ASC, "refOrigamMapLayerId" ASC);
+CREATE UNIQUE  INDEX  "OrigamMapOrigamMapLayer_ix_SortOrder" ON "OrigamMapOrigamMapLayer" ("refOrigamMapId" ASC, "SortOrder" ASC);

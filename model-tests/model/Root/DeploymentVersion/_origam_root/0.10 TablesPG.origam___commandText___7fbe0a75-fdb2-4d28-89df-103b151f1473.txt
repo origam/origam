@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrigamSyncProviderConfig" ADD CONSTRAINT FK_OrigamSyncProviderConfig_refOrigamSyncProviderId_OrigamSyncProvider
+	FOREIGN KEY (
+		"refOrigamSyncProviderId"
+	)
+
+	REFERENCES "OrigamSyncProvider" (
+		"Id"
+	);
+ALTER TABLE "OrigamSyncProviderConfig" ADD CONSTRAINT FK_OrigamSyncProviderConfig_refOrganizationId_Organization
+	FOREIGN KEY (
+		"refOrganizationId"
+	)
+
+	REFERENCES "Organization" (
+		"Id"
+	);

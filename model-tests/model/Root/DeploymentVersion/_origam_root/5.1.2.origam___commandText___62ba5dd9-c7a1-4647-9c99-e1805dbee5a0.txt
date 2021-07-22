@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamFeatureList] ALTER COLUMN [Description] nvarchar(max) NULL

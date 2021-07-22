@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ar="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractReport/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:wr="http://schemas.origam.com/Origam.Schema.GuiModel.WebReport/6.0.1">
+  <wr:Report
+    asi:abstract="false"
+    wr:forceExternalUrl="false"
+    x:id="ea61f39c-a1a9-406b-8c86-d33af8db89dd"
+    wr:isUrlEscaped="false"
+    asi:name="WebReport"
+    wr:openMethod="OrigamTab"
+    wr:url="https://www.origam.com" />
+</x:file>

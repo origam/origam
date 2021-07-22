@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="dfe07009-c933-44c7-8df8-b5c204e0d856"
+    asi:name="Identity_UnlockUser"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="964c6899-e0bc-48a5-8d9e-10be95641b5f"
+      cs:isReturnValue="false"
+      asi:name="UserName" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="704c7821-e10f-4900-aad1-36a31a1b9ca7"
+      asi:name="01_CallMembershipService_UnlockUser"
+      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_UnlockUser.origam#Identity_UnlockUser/UserName/964c6899-e0bc-48a5-8d9e-10be95641b5f"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/UnlockUser/58b4c9ff-c280-43ce-ba33-25210260be36"
+      aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
+      aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_UnlockUser.origam#Identity_UnlockUser/UserName/964c6899-e0bc-48a5-8d9e-10be95641b5f">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="6c9ef4a5-2000-4240-8711-00876bd52deb"
+        asi:name="Username"
+        smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UnlockUser/Username/3fe0ba4d-e79e-41c6-8e63-a356ef94fa96">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_UnlockUser.origam#Identity_UnlockUser/UserName/964c6899-e0bc-48a5-8d9e-10be95641b5f"
+          x:id="55558416-b28e-417d-8fd6-126e73208b74"
+          asi:name="UserName"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>
