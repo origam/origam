@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="3d70293a-7eb6-49ea-98b8-d1014ada283f"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/584a09b4-b8c8-4752-a82f-15ec2a815144"
+    adl:listDisplayMember="Name"
+    adl:listMethod="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/GetByCurrentUserId/9898f7bb-4778-4c39-bc0e-bd754d0f1352"
+    adl:listValueMember="Id"
+    asi:name="Resource_ByCurrentUser"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/584a09b4-b8c8-4752-a82f-15ec2a815144"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResource_ByCurrentUser.origam#LookupResource_ByCurrentUser/GetId/c221a285-6881-48b8-afa5-d856a3c53474"
+    adl:valueValueMember="Id" />
+</x:file>

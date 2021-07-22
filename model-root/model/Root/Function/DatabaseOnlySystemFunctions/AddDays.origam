@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Date"
+    x:id="65954a87-6a6d-4a57-93aa-3fb669ee87ca"
+    asi:name="AddDays"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="bb16ff10-d077-48f9-876b-475c062bd048"
+      asi:name="Days"
+      fp:ordinalPosition="1" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="f8965ec4-a2ba-41b0-8a89-7c0f1e44fb9d"
+      asi:name="Date" />
+  </f:Function>
+</x:file>

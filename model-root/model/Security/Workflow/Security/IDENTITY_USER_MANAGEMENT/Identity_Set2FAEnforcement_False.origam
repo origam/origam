@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="fe88120c-f9f6-4f14-b678-e8efe40f7d2c"
+    asi:name="Identity_Set2FAEnforcement_False"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="223e040a-0d8f-4c07-85e1-442e0f59e239"
+      cs:isReturnValue="false"
+      asi:name="UserId" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="1227c3b2-c1b0-4499-a7b1-c5592b0686a8"
+      asi:name="01_Set2FAEnforcement_False"
+      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_Set2FAEnforcement_False.origam#Identity_Set2FAEnforcement_False/UserId/223e040a-0d8f-4c07-85e1-442e0f59e239"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/Set2FAEnforcement/5d99129c-2be0-48b3-aafd-da1b133c3538">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="469eb7dd-00f5-4ff9-a6c1-4fbc6321d811"
+        asi:name="UserId"
+        smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/Set2FAEnforcement/UserId/c47c12d5-f3e8-43f5-8819-31b9d5afeb01">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="UniqueIdentifier"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_Set2FAEnforcement_False.origam#Identity_Set2FAEnforcement_False/UserId/223e040a-0d8f-4c07-85e1-442e0f59e239"
+          x:id="3b15e564-bdbb-4abb-a382-a5fe7c6319da"
+          asi:name="UserId"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="e148f2fe-e0bb-45db-aadb-936a7f0fea2b"
+        asi:name="Enforce"
+        smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/Set2FAEnforcement/Enforce/0a074518-634f-4593-a685-75921eaf4b8d">
+        <dcr:DataConstantReference
+          asi:abstract="false"
+          dcr:constant="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+          x:id="26be5653-07ca-463e-b880-ba10e2806650"
+          asi:name="false" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="cd77ad29-7048-467b-92e1-7064c6dc693e"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupCounter.origam#LookupCounter/95732afe-9d93-41ca-a0d3-b550f186a5ee"
+    adl:listDisplayMember="ReferenceCode;Description"
+    adl:listValueMember="ReferenceCode"
+    asi:name="LookupCounter"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupCounter.origam#LookupCounter/95732afe-9d93-41ca-a0d3-b550f186a5ee"
+    adl:valueDisplayMember="ReferenceCode"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupCounter.origam#LookupCounter/GetByReferenceCode/11720f6a-d8d9-4e0d-87ea-50f467565815"
+    adl:valueValueMember="ReferenceCode" />
+</x:file>

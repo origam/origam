@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamCharacterTranslationDetail" ADD CONSTRAINT FK_OrigamCharacterTranslationDetail_refOrigamCharacterTranslationId_OrigamCharacterTranslation
+	FOREIGN KEY (
+		"refOrigamCharacterTranslationId"
+	)
+
+	REFERENCES "OrigamCharacterTranslation" (
+		"Id"
+	);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+    adl:isFilteredServerside="true"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/f905e3d5-6255-46c3-96e9-4eab51df333a"
+    adl:listDisplayMember="ReferenceCode;Text"
+    adl:listMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/DefaultBusinessPartner/df9202a0-18ad-4584-ba6b-9ef0be33e5de"
+    adl:listSortSet="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/Default/959c425e-2b24-4974-b916-8cef2c0d6d71"
+    adl:listValueMember="Id"
+    asi:name="LookupBusinessPartner"
+    adl:searchByFirstColumnOnly="false"
+    adl:serversideFilterParameter="BusinessPartner_parSearchText"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/f905e3d5-6255-46c3-96e9-4eab51df333a"
+    adl:valueDisplayMember="ReferenceCode;Text"
+    adl:valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/GetId/d8e44ef4-b151-46c9-bf2a-d4515f37821d"
+    adl:valueSortSet="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/Default/959c425e-2b24-4974-b916-8cef2c0d6d71"
+    adl:valueValueMember="Id" />
+</x:file>

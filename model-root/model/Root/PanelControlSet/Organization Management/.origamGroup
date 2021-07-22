@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="0790a04c-cbfd-434e-88bd-c4fa7a0e29bc"
+    x:isFolder="true"
+    g:name="Organization Management"
+    g:rootItemType="PanelControlSet" />
+</x:file>

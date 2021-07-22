@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
+  <ci:Control
+    asi:abstract="true"
+    x:id="dc4e66c4-895b-4ba8-9e11-3faa37508816"
+    ci:isComplex="false"
+    asi:name="FormLevelPlugin"
+    ci:namespace="Origam.Gui.Win"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Gui.Win.FormLevelPlugin">
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="cd2edcaf-841a-4c9d-a432-4527cf712187"
+      cpi:localizable="false"
+      asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="a0876f6d-86be-4518-9172-40e5f983a93d"
+      cpi:localizable="false"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="9f39672a-cf11-4420-92d0-f87786eb3ad5"
+      cpi:localizable="false"
+      asi:name="TabIndex"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="0a9a1593-787e-40e8-9381-70322f5c6df8"
+      cpi:localizable="true"
+      asi:name="Text"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="4bd7f602-bd4e-4170-b18d-78ec0fc2e865"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="e9fa9389-9114-46b3-89d9-437d4a383d96"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
+  </ci:Control>
+</x:file>

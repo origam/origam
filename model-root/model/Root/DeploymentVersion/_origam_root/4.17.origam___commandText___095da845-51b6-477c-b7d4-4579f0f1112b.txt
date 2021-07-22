@@ -1,0 +1,2 @@
+﻿ALTER TABLE [WorkQueueCommand] ADD [IsAutoDeleted] BIT NOT NULL CONSTRAINT [DF_WorkQueueCommand_IsAutoDeleted] DEFAULT 0
+ALTER TABLE [WorkQueueCommand] DROP CONSTRAINT [DF_WorkQueueCommand_IsAutoDeleted]

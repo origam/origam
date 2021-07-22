@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Boolean"
+    x:id="0039c9ba-bb25-455b-8c5c-89d3c1f78fab"
+    asi:name="Exists"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="967afec3-3c30-4fca-8df0-1ac1ea0c3491"
+      asi:name="Lookup" />
+  </f:Function>
+</x:file>

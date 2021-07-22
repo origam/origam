@@ -1,0 +1,3 @@
+﻿DELETE FROM AsapRoleAsapApplicationRole WHERE refAsapApplicationRoleId IN
+(SELECT Id FROM AsapApplicationRole WHERE Name = 'SYS_AsapClient_GlobalTransaction')
+DELETE FROM AsapApplicationRole WHERE Name = 'SYS_AsapClient_GlobalTransaction'

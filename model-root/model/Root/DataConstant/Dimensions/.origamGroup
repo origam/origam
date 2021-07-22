@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="c9d1a23f-2466-42c5-a9b8-6ab02836a12b"
+    x:isFolder="true"
+    g:name="Dimensions"
+    g:rootItemType="DataConstant" />
+</x:file>

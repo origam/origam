@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<OrigamLocalization>
+  <Element Id="9d1da549-e85f-4133-9ea1-63535172e0ea" Path="OrigamDataAuditLog/OrigamDataAuditLogRootControl/AsDropDown1/Caption">
+    <Value OriginalText="Column">Spalte</Value>
+  </Element>
+  <Element Id="1729845a-e0c9-46a9-95f6-ec15853d6da4" Path="OrigamDataAuditLog/OrigamDataAuditLogRootControl/PanelTitle">
+    <Value OriginalText="Audit Log">Analysebericht</Value>
+  </Element>
+  <Element Id="7f3509ba-7b5f-4c21-b235-36fae9a1b1d4" Path="AuditLogScreen/AuditLogScreenRootControl/NewControlSetItem/PanelTitle">
+    <Value OriginalText="Audit Log">Analysebericht</Value>
+  </Element>
+  <Element Id="18bdd6b8-570a-4e64-b1cd-0cf67caa3b73" Path="AuditContextMenu/Audit">
+    <DisplayName OriginalText="Audit">Audit</DisplayName>
+  </Element>
+  <Element Id="777c0ff3-6e87-4c1b-aac8-6ab50457e6b5" Path="IOrigamEntity2/Audit">
+    <Caption OriginalText="Show Audit">Analysebericht</Caption>
+  </Element>
+</OrigamLocalization>

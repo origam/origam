@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="6bb1b2ce-64f9-4151-85b7-0ece4da510cd"
+    ds:localized="false"
+    asi:name="LookupBusinessUnit_Id_ByNameAndOrg">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Organization Management/BusinessUnit.origam#BusinessUnit/5008fdde-0119-4bd3-8ee1-4d04e4382d0d"
+      x:id="3f9d1a0e-0611-45f8-ae77-7c06b7b45f5c"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="BusinessUnit"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="8d6a6fa3-3d6b-43af-89fb-c892b5bbb351"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="a3f0bccc-f4f8-4366-8c27-30a03b23ed76"
+      asi:name="GetByName">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/BusinessUnit/3f9d1a0e-0611-45f8-ae77-7c06b7b45f5c"
+        dsfsf:filter="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/GetByOrganizationId/670e7103-5012-413f-aaf5-05a2f9aadac6"
+        x:id="597dc62b-2680-441a-9315-d0a608c13df7"
+        asi:name="BusinessUnit_GetByOrganizationId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Organization Management/LookupBusinessUnit_Id_ByNameAndOrg.origam#LookupBusinessUnit_Id_ByNameAndOrg/BusinessUnit/3f9d1a0e-0611-45f8-ae77-7c06b7b45f5c"
+        dsfsf:filter="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/GetByName/ae56db0b-e4af-4e42-a0fd-323efd15c2b9"
+        x:id="c0745910-2a5d-4b4b-9681-d9a3a6548c35"
+        asi:name="BusinessUnit_GetByName"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  <xt:Transformation
+    asi:abstract="false"
+    xt:engineType="XslCompiledTransform"
+    x:id="fd51c50d-c167-4144-8af7-acce5bc84103"
+    asi:name="_deleteAll"
+    xt:text="-***-ExternalFile:_deleteAll.origam___text___fd51c50d-c167-4144-8af7-acce5bc84103.xslt" />
+</x:file>

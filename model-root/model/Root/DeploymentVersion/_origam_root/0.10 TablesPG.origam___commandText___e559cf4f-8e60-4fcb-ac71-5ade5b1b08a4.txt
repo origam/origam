@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamFormPanelConfig" ADD CONSTRAINT FK_OrigamFormPanelConfig_refOrigamPanelFilterId_OrigamPanelFilter
+	FOREIGN KEY (
+		"refOrigamPanelFilterId"
+	)
+
+	REFERENCES "OrigamPanelFilter" (
+		"Id"
+	);

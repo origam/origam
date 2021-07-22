@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <w:Workflow
+    asi:abstract="true"
+    x:id="c5edb03a-08f3-4497-ab85-20fe241d1f29"
+    asi:name="IWorkQueueLoader"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="true"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="f405cef2-2fad-4d58-a71c-10df3831e966"
+      cs:isReturnValue="false"
+      asi:name="resultState" />
+    <cs:ContextStore
+      asi:abstract="true"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="a14dd149-a680-4085-b400-802b43f2c379"
+      cs:isReturnValue="false"
+      asi:name="userName" />
+    <cs:ContextStore
+      asi:abstract="true"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="b0caa6ec-8a54-4524-8387-8504e34d206c"
+      cs:isReturnValue="false"
+      asi:name="attachments"
+      cs:structure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f" />
+    <cs:ContextStore
+      asi:abstract="true"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="5c200c7e-3118-4660-aa74-8ba521a4d81c"
+      cs:isReturnValue="false"
+      asi:name="password" />
+    <cs:ContextStore
+      asi:abstract="true"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="5b42a43e-2c4b-40ea-ac95-b4171bc5e19a"
+      cs:isReturnValue="false"
+      asi:name="lastState" />
+  </w:Workflow>
+</x:file>

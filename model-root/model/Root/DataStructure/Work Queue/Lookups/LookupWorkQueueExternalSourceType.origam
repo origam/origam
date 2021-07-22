@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="8641a00a-16cf-495c-8572-6104c6d185e6"
+    ds:localized="true"
+    asi:name="LookupWorkQueueExternalSourceType">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/aabafcf4-3e62-4fab-98d8-676873aaa873"
+      x:id="3bc07e04-4350-4eb9-8bd5-f041211e6891"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkQueueExternalSourceType"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="09340a64-c667-4c06-9b2f-1f72e7fad97a"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/Name/3895fa30-5b7e-4c44-a738-5a2df5587a1f"
+        x:id="b6ebf4c3-6ac4-49a0-bd9d-407469f9d5ee"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/WorkQueueExternalSourceType_l10n/debc7873-cbba-4411-bb9d-f17c31c22825"
+        x:id="933dce06-c1d1-45ec-92c4-75e4db8bcab2"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="WorkQueueExternalSourceType_l10n"
+        dse:relationType="LeftJoin"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="66d84e26-c254-4372-9853-861c3151d7b3"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueExternalSourceType.origam#LookupWorkQueueExternalSourceType/WorkQueueExternalSourceType/3bc07e04-4350-4eb9-8bd5-f041211e6891"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="a1a1acb5-5dba-4876-99fc-980ba4f47f27"
+        asi:name="WorkQueueExternalSourceType_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

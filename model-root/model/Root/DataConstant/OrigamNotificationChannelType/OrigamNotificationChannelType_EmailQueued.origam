@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="2535dd8e-8e20-4b0d-a987-19306728236a"
+    dc:lookup="Root/DataLookup/Work Queue/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/009eb501-4c82-47d8-a9c6-e74edcd4c180"
+    asi:name="OrigamNotificationChannelType_EmailQueued"
+    dc:userDefinable="false"
+    dc:value="88db965b-ff44-4b82-8820-acc45cd5d123" />
+</x:file>

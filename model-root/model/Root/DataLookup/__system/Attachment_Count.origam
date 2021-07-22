@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="fbf2cadd-e529-401d-80ce-d68de0a89f13"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_Count.origam#LookupAttachment_Count/3aef6112-9cad-4c2c-928c-26f6e248ed8b"
+    adl:listDisplayMember="Count"
+    adl:listValueMember="Count"
+    asi:name="Attachment_Count"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_Count.origam#LookupAttachment_Count/3aef6112-9cad-4c2c-928c-26f6e248ed8b"
+    adl:valueDisplayMember="Count"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupAttachment_Count.origam#LookupAttachment_Count/GetByParentRecordId/1aa22fbb-df48-4a11-b3df-a3f09cfcbce9"
+    adl:valueValueMember="Count" />
+</x:file>

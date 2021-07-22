@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="9d799828-3ced-492b-93fc-00215ac40ae8"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/83d38cdb-b42f-4627-9519-ef2f6f6509eb"
+    adl:listDisplayMember="Name"
+    adl:listMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/GetSales/411f2d80-78d4-4b2b-b44e-be7d99cbf63e"
+    adl:listValueMember="Id"
+    asi:name="Dimension4_Sales"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/83d38cdb-b42f-4627-9519-ef2f6f6509eb"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimension4.origam#LookupDimension4/GetId/295c15c9-365b-46e7-8130-9cf43f35152b"
+    adl:valueValueMember="Id" />
+</x:file>

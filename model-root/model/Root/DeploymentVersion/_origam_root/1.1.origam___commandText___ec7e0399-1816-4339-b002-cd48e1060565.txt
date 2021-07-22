@@ -1,0 +1,15 @@
+﻿CREATE TABLE [AsapPanelColumnConfig] (
+	[ProfileId] UNIQUEIDENTIFIER NOT NULL,
+	[PanelId] UNIQUEIDENTIFIER NOT NULL,
+	[ColumnName] NVARCHAR(300) NOT NULL,
+	[ColumnWidth] INT NOT NULL,
+	[Position] INT NULL,
+	[IsHidden] BIT NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_Main] ON [AsapPanelColumnConfig] ([PanelId] ASC, [ProfileId] ASC)

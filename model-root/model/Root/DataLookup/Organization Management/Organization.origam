@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Organization Management/LookupOrganization.origam#LookupOrganization/0a4ba940-2133-4ce2-b68f-71434ca12176"
+    adl:listDisplayMember="ReferenceCode;Name"
+    adl:listValueMember="Id"
+    asi:name="Organization"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Organization Management/LookupOrganization.origam#LookupOrganization/0a4ba940-2133-4ce2-b68f-71434ca12176"
+    adl:valueDisplayMember="ReferenceCode;Name"
+    adl:valueMethod="Root/DataStructure/Organization Management/LookupOrganization.origam#LookupOrganization/GetId/1ea40ce9-253f-46dc-80eb-1679a9d51267"
+    adl:valueValueMember="Id" />
+</x:file>

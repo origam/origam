@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="85b4fb5b-dbdc-4005-b2e3-2f0ddb1bcca0"
+    asi:name="Identity_CreateUserFromExistingBusinessPartner"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="b1ca3931-5be5-450a-a213-24eec01bac83"
+      cs:isReturnValue="false"
+      asi:name="UserProfile_New"
+      cs:structure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="c306d89b-a489-4c52-995b-c4e2ffb74b9b"
+      cs:isReturnValue="false"
+      asi:name="BusinessPartnerId" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      aws:features="IDENTITY_USER_MANAGEMENT"
+      x:id="af29f51b-adee-4472-a2ed-1f26672afd87"
+      asi:name="01_LoadData_UserProfile_New"
+      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUserFromExistingBusinessPartner.origam#Identity_CreateUserFromExistingBusinessPartner/UserProfile_New/b1ca3931-5be5-450a-a213-24eec01bac83"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="6c4141ef-74c1-435d-94a8-206e4bcbdfac"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34"
+          x:id="ee55567d-2bcf-4dac-a92c-0f7bad050827"
+          dsr:method="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/GetId/f1b68611-ea24-4c41-a109-5090ecc7c19a"
+          asi:name="UserProfile_New" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="9601ab11-df21-4640-a637-41446baab4ff"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUserFromExistingBusinessPartner.origam#Identity_CreateUserFromExistingBusinessPartner/BusinessPartnerId/c306d89b-a489-4c52-995b-c4e2ffb74b9b"
+          x:id="aec49424-5bc9-47ed-ac5e-e2b6eaf9f018"
+          asi:name="BusinessPartner_parId"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="0f9fedd3-4131-4ef0-b49f-9a215266f7de"
+      uift:isFinalForm="true"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="02_Show_ChangeUsernameScreen"
+      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUserFromExistingBusinessPartner.origam#Identity_CreateUserFromExistingBusinessPartner/UserProfile_New/b1ca3931-5be5-450a-a213-24eec01bac83"
+      wt:outputMethod="AppendMergeExisting"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Security/FormControlSet/Security/CreateNewMembershipUser.origam#CreateNewMembershipUser/6672d3c7-79f2-4a95-a2ec-605686f447ad">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="2be639a5-f33a-44bf-9792-33755187063a"
+        asi:name="After_01_LoadData_UserProfile_New"
+        wtd:startEvent="Success"
+        wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUserFromExistingBusinessPartner.origam#Identity_CreateUserFromExistingBusinessPartner/01_LoadData_UserProfile_New/af29f51b-adee-4472-a2ed-1f26672afd87" />
+    </uift:WorkflowTask>
+  </w:Workflow>
+</x:file>

@@ -1,0 +1,14 @@
+﻿CREATE TABLE "Attachment" (
+	"Note" Varchar(3900) NULL,
+	"FileName" Varchar(3900) NULL,
+	"Data" Bytea NULL,
+	"refParentRecordEntityId" Uuid NULL,
+	"refParentRecordId" Uuid NOT NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+CREATE  INDEX  "Attachment_ix_refParentRecordId" ON "Attachment" ("refParentRecordId" ASC);

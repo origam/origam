@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dsds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSet/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="ee5cb6a9-8724-41ae-b599-f89913868f34"
+    ds:localized="false"
+    asi:name="UserProfile_New">
+    <dsds:DataStructureDefaultSet
+      asi:abstract="false"
+      x:id="4bcdf629-e2ac-4870-ac08-dff6ed5705bb"
+      asi:name="Defaults" />
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      x:id="856d97bb-94d3-41f5-87dd-7eb6bc7b5fd0"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="true"
+      asi:name="BusinessPartner"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserRoles/2f004dbe-8a11-442c-b163-6fa5f6e69388"
+        x:id="aff38aee-4c47-40b0-aed5-a71781cc1994"
+        asi:name="UserRoles"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/BusinessPartnerOrigamRole/bd05e4af-804f-4307-99eb-6bbcee6bfa6a"
+        x:id="1c5408d1-10aa-499d-94e3-871a97cab033"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="BusinessPartnerOrigamRole"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="f1b68611-ea24-4c41-a109-5090ecc7c19a"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/BusinessPartner/856d97bb-94d3-41f5-87dd-7eb6bc7b5fd0"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="5d9d98dd-0a24-4eed-9170-eef17997fcc6"
+        asi:name="BusinessPartner_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsrs:DataStructureRuleSet
+      asi:abstract="false"
+      x:id="41fbf476-a1ed-464d-b2d6-231f6c509570"
+      asi:name="Rules" />
+  </ds:DataStructure>
+</x:file>

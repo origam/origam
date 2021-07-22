@@ -1,0 +1,1 @@
+﻿INSERT INTO WorkQueueExternalSourceType (Id, Name, RecordCreated) VALUES ('cb882379-80e7-41fd-bde7-c65045660ca7', 'Web Request', getdate())

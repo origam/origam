@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="25c09180-0a59-4d00-bd96-d2211456b03b"
+    asi:name="AttachmentSave"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="b788b71a-55e2-430c-b644-18e0794b6cd0"
+      cs:isReturnValue="false"
+      asi:name="AttachmentEdit"
+      cs:structure="Attachments/DataStructure/Attachments/AttachmentEdit.origam#AttachmentEdit/e536ac3c-8a50-4ccd-9b9f-0ef408f2fc2c" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="0b7a8085-145b-413b-8ba3-4426962ddd5f"
+      asi:name="StoreData_AttachmentEdit"
+      wt:outputContextStore="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/AttachmentEdit/b788b71a-55e2-430c-b644-18e0794b6cd0"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="ece20c53-5ece-467d-87d8-2b9869bd18f9"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Attachments/Workflow/Attachments/AttachmentSave.origam#AttachmentSave/AttachmentEdit/b788b71a-55e2-430c-b644-18e0794b6cd0"
+          x:id="7165cc2b-aae2-4932-88fe-f5014bf3b2c2"
+          asi:name="AttachmentEdit"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="8e3cdb8b-45eb-42d7-b2aa-c3ce497d165d"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f"
+          x:id="37ea9a21-fc6e-4477-95a6-5b420e0dab15"
+          asi:name="Attachment" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="38168328-ecfb-4518-ac5c-305e7b1109b1"
+        asi:name="ForceBulkInsert"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/ForceBulkInsert/010bc65c-5867-41d6-a3f0-8daa9b2377cd" />
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

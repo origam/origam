@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [WorkQueueNotificationEvent_l10n] ADD CONSTRAINT FK_WorkQueueNotificationEvent_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		[refLanguageId]
+	)
+
+	REFERENCES [Language] (
+		[Id]
+	)
+ALTER TABLE [WorkQueueNotificationEvent_l10n] ADD CONSTRAINT FK_WorkQueueNotificationEvent_l10n_refWorkQueueNotificationEventId_WorkQueueNotificationEvent
+	FOREIGN KEY (
+		[refWorkQueueNotificationEventId]
+	)
+
+	REFERENCES [WorkQueueNotificationEvent] (
+		[Id]
+	)

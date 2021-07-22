@@ -1,0 +1,1 @@
+﻿ALTER TABLE [WorkQueue] ADD [QueueProcessor] NVarChar(50) NULL

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="f39a1fb3-d4ad-45f8-87bb-a5047aedc38c"
+    dc:lookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
+    asi:name="OrigamStateMachineEventType_RecordCreated"
+    dc:userDefinable="false"
+    dc:value="8b2464f5-3278-433c-b68e-74c339c19ddb" />
+</x:file>

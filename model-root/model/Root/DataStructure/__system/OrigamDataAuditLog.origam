@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="530eba45-40db-470d-8e53-8b98ace758ad"
+    ds:localized="false"
+    asi:name="OrigamDataAuditLog">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/1d8e4557-fa7c-4f1d-868d-9138ecf6bb97"
+      x:id="e5eabac7-cf91-437c-b4d5-94f1d885fbde"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="AuditRecord"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="e0602afa-e86d-4f03-bcb8-aee19f976961"
+      asi:name="GetByRecordId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/AuditRecord/e5eabac7-cf91-437c-b4d5-94f1d885fbde"
+        dsfsf:filter="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/GetByParentRecordIdOrSecondReferenceKey/07192def-61bf-4ddf-a18d-4cf33aac3df7"
+        x:id="6ad90e6d-a452-42f6-816d-c8390c07d253"
+        asi:name="AuditRecord_GetByParentRecordIdOrSecondReferenceKey"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

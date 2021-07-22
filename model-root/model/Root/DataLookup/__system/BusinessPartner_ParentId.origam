@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="7c1b488c-0791-4042-9058-9d42457dac0c"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
+    adl:listDisplayMember="ParentId"
+    adl:listValueMember="Id"
+    asi:name="BusinessPartner_ParentId"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/c342d6a7-9bb8-47b2-b76e-ea464daa30f9"
+    adl:valueDisplayMember="ParentId"
+    adl:valueMethod="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner_ParentId.origam#LookupBusinessPartner_ParentId/GetId/f655c3fb-eeb1-43a9-912f-71efdb31f97a"
+    adl:valueValueMember="Id" />
+</x:file>

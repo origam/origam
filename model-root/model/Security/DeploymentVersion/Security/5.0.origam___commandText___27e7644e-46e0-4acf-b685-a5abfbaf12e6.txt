@@ -1,0 +1,4 @@
+﻿EXEC sp_rename  'AsapApplicationRole','OrigamApplicationRole';
+EXEC sp_rename  'AsapRole','OrigamRole';
+EXEC sp_rename  'AsapRoleAsapApplicationRole','OrigamRoleOrigamApplicationRole';
+EXEC sp_rename  'BusinessPartnerAsapRole','BusinessPartnerOrigamRole'

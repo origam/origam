@@ -1,0 +1,36 @@
+﻿CREATE TABLE Tmp_AsapRole
+	(
+	RecordCreatedBy uniqueidentifier NULL,
+	RecordUpdatedBy uniqueidentifier NULL,
+	Id uniqueidentifier NOT NULL,
+	RecordCreated datetime NULL,
+	RecordUpdated datetime NULL,
+	Name nvarchar(255) NOT NULL
+	)  ON [PRIMARY]
+
+IF EXISTS(SELECT * FROM AsapRole)
+	 EXEC('INSERT INTO Tmp_AsapRole (RecordCreatedBy, RecordUpdatedBy, Id, RecordCreated, RecordUpdated, Name)
+		SELECT RecordCreatedBy, RecordUpdatedBy, Id, RecordCreated, RecordUpdated, Name FROM AsapRole TABLOCKX')
+
+ALTER TABLE BusinessPartnerAsapRole
+	DROP CONSTRAINT FK_BusinessPartnerAsapRole_refAsapRoleId_AsapRole
+
+DROP TABLE AsapRole
+
+EXECUTE sp_rename N'Tmp_AsapRole', N'AsapRole', 'OBJECT'
+
+ALTER TABLE AsapRole ADD CONSTRAINT
+	PK__AsapRole__49E3F248 PRIMARY KEY NONCLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+
+ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
+	FK_BusinessPartnerAsapRole_refAsapRoleId_AsapRole FOREIGN KEY
+	(
+	refAsapRoleId
+	) REFERENCES dbo.AsapRole
+	(
+	Id
+	)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="41d4296a-44ae-457a-b4ba-7dcf970bcbf3"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionEntity.origam#LookupDimensionEntity/ec51bbd6-4231-4e7c-8d01-72b112888e5f"
+    adl:listDisplayMember="Name"
+    adl:listMethod="Root/DataStructure/Dimensions/Lookups/LookupDimensionEntity.origam#LookupDimensionEntity/GetTarget/7c25b0b9-dd71-4973-9b92-ab9091aa4876"
+    adl:listValueMember="Id"
+    asi:name="DimensionEntity_TargetOnly"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionEntity.origam#LookupDimensionEntity/ec51bbd6-4231-4e7c-8d01-72b112888e5f"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimensionEntity.origam#LookupDimensionEntity/GetId/5a848866-efc6-4c1e-8687-6fc9e173e7c3"
+    adl:valueValueMember="Id" />
+</x:file>

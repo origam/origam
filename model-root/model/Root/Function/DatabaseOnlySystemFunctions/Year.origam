@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Date"
+    x:id="1b064e56-324e-41b6-91a0-b2ff514fa4a5"
+    asi:name="Year"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="eb4879ae-11b8-40f8-9c0a-dfbf40a72a26"
+      asi:name="Expression" />
+  </f:Function>
+</x:file>

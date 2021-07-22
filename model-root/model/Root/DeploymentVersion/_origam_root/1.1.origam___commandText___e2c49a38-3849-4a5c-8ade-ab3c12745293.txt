@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [AsapTraceWorkflowStep] ADD CONSTRAINT FK_AsapTraceWorkflowStep_refAsapTraceWorkflowId_AsapTraceWorkflow
+	FOREIGN KEY (
+		[refAsapTraceWorkflowId]
+	)
+
+	REFERENCES [AsapTraceWorkflow] (
+		[Id]
+	)

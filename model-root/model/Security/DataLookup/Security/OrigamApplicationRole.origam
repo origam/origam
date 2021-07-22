@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="1d3b2c32-c166-4705-bacd-70a38e5557ca"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"
+    adl:listDisplayMember="Name;Description"
+    adl:listValueMember="Id"
+    asi:name="OrigamApplicationRole"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/cafef34a-6a0c-4f3a-8a7c-e4a07a624e72"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Security/DataStructure/Security/LookupOrigamApplicationRole.origam#LookupOrigamApplicationRole/GetId/2e5e1db3-17fb-46b8-b501-a29b357824d4"
+    adl:valueValueMember="Id" />
+</x:file>

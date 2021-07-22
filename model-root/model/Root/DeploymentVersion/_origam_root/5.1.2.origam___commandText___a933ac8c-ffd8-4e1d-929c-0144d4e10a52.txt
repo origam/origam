@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamMapLayerParameter] ALTER COLUMN [Value] nvarchar(max) NOT NULL

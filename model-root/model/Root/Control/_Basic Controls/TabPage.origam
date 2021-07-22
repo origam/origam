@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="6d13ec20-3b17-456e-ae43-3021cb067a70"
+    ci:isComplex="false"
+    asi:name="TabPage"
+    ci:namespace="System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:toolboxVisibility="Nowhere"
+    ci:typeName="System.Windows.Forms.TabPage">
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="869d8cd1-d517-4dd1-9a79-6b011cc36958"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="22a5ca13-cfef-4039-a68c-a0a88f9ba0b3"
+      cpi:localizable="true"
+      asi:name="Text"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="ce6911cf-7112-49a6-aef7-a244ec326e6c"
+      cpi:localizable="false"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="1a418c27-6bf2-4caf-9f93-d93f8a97ac8f"
+      cpi:localizable="false"
+      asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="e77a1850-3060-4f5d-af2a-e9b8ea7c7d7c"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
+  </ci:Control>
+</x:file>

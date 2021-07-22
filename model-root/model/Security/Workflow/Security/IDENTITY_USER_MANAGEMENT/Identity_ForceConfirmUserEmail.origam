@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="b3d7c4f4-e6d2-45f4-8e1e-cca6743d570f"
+    asi:name="Identity_ForceConfirmUserEmail"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="b0cc0921-206e-40af-ac87-1d1facdfe227"
+      cs:isReturnValue="false"
+      asi:name="UserId" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="7b294699-7889-4775-a109-f83f600c5495"
+      asi:name="01_CallMembershipService_ForceConfirmEmail"
+      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/UserId/b0cc0921-206e-40af-ac87-1d1facdfe227"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+      smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/ForceConfirmEmail/eafdc1fd-a7d2-4c43-a172-33727d718223"
+      aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
+      aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/UserId/b0cc0921-206e-40af-ac87-1d1facdfe227">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c47f3011-0c1d-42df-8271-493748771bee"
+        asi:name="UserId"
+        smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ForceConfirmEmail/UserId/1500dcac-9d37-4b2d-8434-8bd017611b7d">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/UserId/b0cc0921-206e-40af-ac87-1d1facdfe227"
+          x:id="90e5150b-9aa6-47e4-9b61-f6948ef93e75"
+          asi:name="UserId"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+  </w:Workflow>
+</x:file>

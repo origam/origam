@@ -1,0 +1,14 @@
+﻿CREATE OR REPLACE FUNCTION castdate(num text
+	)
+    RETURNS timestamp without time zone
+    LANGUAGE 'sql'
+
+    COST 100
+    VOLATILE 
+AS $BODY$
+SELECT '1900-01-01 00:00:00'::date +
+    (('x'||substring(x::text,3,8))::bit(32)::int::text||'days')::interval +
+    ((('x'||substring(x::text,11,8))::bit(32)::int /300)::text||' seconds')::interval
+FROM (VALUES 
+    (num))  as x(x);$BODY$;
+

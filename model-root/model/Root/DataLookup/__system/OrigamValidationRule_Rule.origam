@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="7908622a-9c06-49ea-a008-1a48fc38aea1"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/ad2545cb-945a-49fd-af7f-103bcc670977"
+    adl:listDisplayMember="Rule"
+    adl:listValueMember="Id"
+    asi:name="OrigamValidationRule_Rule"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/ad2545cb-945a-49fd-af7f-103bcc670977"
+    adl:valueDisplayMember="Rule"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamValidationRule_Rule.origam#LookupOrigamValidationRule_Rule/GetId/0b246bc7-fcb3-46a3-ba9f-d5275f1a9f12"
+    adl:valueValueMember="Id" />
+</x:file>

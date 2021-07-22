@@ -1,0 +1,7 @@
+﻿INSERT INTO "OrigamStyleColor" ("Id", "Name", "Description", "Color")
+	VALUES('{ed8e7f0c-57e0-4033-a75c-0cb00dfd80e5}', 'grid-sort-odd-row-background-color-2011',
+	'Grid: Background for sorted column', (select c2."Color" from "OrigamStyleColor" c2 where c2."Name" = 'grid-alternating-background-color-2011'));
+
+INSERT INTO "OrigamStyleColor" ("Id", "Name", "Description", "Color")
+	VALUES('{b0ea2cdc-b36a-4fb7-9be2-aaaf0cec9740}', 'grid-sort-even-row-background-color-2011',
+	'Grid: Background for sorted column (alternating rows)', (select c2."Color" from "OrigamStyleColor" c2 where c2."Name" = 'grid-alternating-background-color-2011'));

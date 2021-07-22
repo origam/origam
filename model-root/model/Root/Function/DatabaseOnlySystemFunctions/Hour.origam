@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Date"
+    x:id="613479c2-bc64-41a2-9d51-66b0953ee56c"
+    asi:name="Hour"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="de6fdbb0-0ed6-4f2d-bd2d-58ac23f7e14c"
+      asi:name="Expression" />
+  </f:Function>
+</x:file>

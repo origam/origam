@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ar="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:er="http://schemas.origam.com/Origam.Schema.RuleModel.EntityRule/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xpr="http://schemas.origam.com/Origam.Schema.RuleModel.XPathRule/6.0.0">
+  <er:Rule
+    asi:abstract="false"
+    ar:dataType="Boolean"
+    x:id="3add35c4-0e70-4bbc-9d94-7866d3aa521d"
+    xpr:isPathRelative="false"
+    asi:name="IsBusinessPartner_HasUsernameAnd2FANotEnforced"
+    xpr:xPath="string(/row/UserName) and not(AS:Is2FAEnforced(string(/row/Id)))" />
+</x:file>

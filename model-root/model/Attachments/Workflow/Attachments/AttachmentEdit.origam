@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="494af33b-3585-4051-b75a-256b3903e81d"
+    asi:name="AttachmentEdit"
+    w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="bbab6fcc-4604-4230-a34a-9e3e7e1edac1"
+      cs:isReturnValue="false"
+      asi:name="AttachmentEdit"
+      cs:structure="Attachments/DataStructure/Attachments/AttachmentEdit.origam#AttachmentEdit/e536ac3c-8a50-4ccd-9b9f-0ef408f2fc2c" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="1316d12c-a243-4365-840f-b3afb7425a69"
+      cs:isReturnValue="false"
+      asi:name="recordId" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="334e112a-7c4d-4a9f-a3e1-6f871cf967a0"
+      cs:isReturnValue="false"
+      asi:name="entityId" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="cbb9f7ef-a160-4ed8-a9eb-5ec9f609070e"
+      asi:name="LoadData_AttachmentEdit"
+      wt:outputContextStore="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/AttachmentEdit/bbab6fcc-4604-4230-a34a-9e3e7e1edac1"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="3804665b-7107-450d-ac7a-95818c419232"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Root/DataStructure/__system/AttachmentList.origam#AttachmentList/44a25061-750f-4b42-a6de-09f3363f8621"
+          x:id="083e443b-7966-4b85-9d34-2148922e2436"
+          dsr:method="Root/DataStructure/__system/AttachmentList.origam#AttachmentList/Attachment/0fda540f-e5de-4ab6-93d2-76b0abe6fd77"
+          asi:name="AttachmentList" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="97ddb10a-f29a-4f46-8d1f-13be3eaa2c71"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/recordId/1316d12c-a243-4365-840f-b3afb7425a69"
+          x:id="5003eace-930f-410e-af1f-d9c41d6755c7"
+          asi:name="Attachment_parRefParentRecordId"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="e1e044b9-1c96-49b8-a817-e13d078d99c7"
+        asi:name="After_NewParentRecord"
+        wtd:startEvent="Success"
+        wtd:task="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/NewParentRecord/d2be46d5-c773-4c26-ae14-6dc9f2478fdb" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="d2be46d5-c773-4c26-ae14-6dc9f2478fdb"
+      asi:name="NewParentRecord"
+      wt:outputContextStore="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/AttachmentEdit/bbab6fcc-4604-4230-a34a-9e3e7e1edac1"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="4e7e3aad-6d54-4543-a568-7e652fb00646"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/entityId/334e112a-7c4d-4a9f-a3e1-6f871cf967a0"
+          x:id="687f621c-c0b8-4c20-a148-6956f3269291"
+          asi:name="parentEntityId"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/recordId/1316d12c-a243-4365-840f-b3afb7425a69"
+          x:id="ae431188-2462-4c15-a595-21d4c7b00430"
+          asi:name="parentRecordId"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="7f5fe090-4503-4630-bc25-6d320a19c546"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="7297ce47-1ee6-44a8-8a8a-ffa528ba951b"
+          asi:name="AttachmentEdit_EntityParent"
+          tr:transformation="Attachments/Transformation/Attachments/AttachmentEdit_EntityParent.origam#AttachmentEdit_EntityParent/de2cc87d-03d6-41f9-ad09-5de333f2d6b8" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="b8f92cdf-8008-406a-a649-b5cbb74421b0"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/AttachmentEdit/bbab6fcc-4604-4230-a34a-9e3e7e1edac1"
+          x:id="1cd05e69-ee8c-4034-95f0-b7efe15f6c93"
+          asi:name="AttachmentEdit"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+    <uift:WorkflowTask
+      asi:abstract="false"
+      uift:allowSave="false"
+      uift:autoNext="false"
+      x:id="cbe0ebb6-4a23-42b6-861c-8d36c91ddf89"
+      uift:isFinalForm="true"
+      uift:isRefreshSuppressedBeforeFirstSave="true"
+      asi:name="ShowUI"
+      wt:outputContextStore="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/AttachmentEdit/bbab6fcc-4604-4230-a34a-9e3e7e1edac1"
+      wt:outputMethod="FullMerge"
+      uift:refreshPortalAfterSave="False"
+      aws:roles="*"
+      uift:screen="Attachments/FormControlSet/Attachments/AttachmentEdit.origam#AttachmentEdit/b0d86f8e-4567-49d8-9f18-5cdf47a0b1a1">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="3f584a04-b8e8-4f21-b6a9-20cde1122771"
+        asi:name="After_LoadData_AttachmentEdit"
+        wtd:startEvent="Success"
+        wtd:task="Attachments/Workflow/Attachments/AttachmentEdit.origam#AttachmentEdit/LoadData_AttachmentEdit/cbb9f7ef-a160-4ed8-a9eb-5ec9f609070e" />
+    </uift:WorkflowTask>
+  </w:Workflow>
+</x:file>

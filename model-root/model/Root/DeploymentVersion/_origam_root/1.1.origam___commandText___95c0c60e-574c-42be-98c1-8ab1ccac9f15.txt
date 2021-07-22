@@ -1,0 +1,5 @@
+﻿INSERT [dbo].[AsapParameters] ([FloatValue], [StringValue], [DateValue], [BooleanValue], [IntValue],
+ [GuidValue], [CurrencyValue], [RecordUpdated], [RecordCreatedServer], [Id], [RecordUpdatedServer],
+  [RecordCreatedBy], [RecordCreated], [RecordUpdatedBy]) 
+VALUES (NULL, NULL, NULL, 0, 0, N'00000000-0000-0000-0000-000000000000', 0.0000, NULL, NULL, 
+N'e42f864f-5018-4967-abdc-5910439adc9a', NULL, NULL, NULL, NULL)

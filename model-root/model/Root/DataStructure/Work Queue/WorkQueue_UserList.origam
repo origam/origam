@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="3a23f4e1-368c-4163-a790-4eed173af83d"
+    ds:localized="false"
+    asi:name="WorkQueue_UserList">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/ef0e8e1a-1917-4027-a70a-2bca2c7bb245"
+      x:id="8c9f38df-d469-4ada-94b7-1aaa1f4eedbb"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkQueue"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/CntTotal/06c5703c-7615-4e37-b332-30af45bc6ca7"
+        x:id="152d60a7-3e43-4c46-80db-c4f0c9afb73a"
+        asi:name="CntTotal"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/Name/ec110293-d14e-48c0-9764-f9aa09495b3f"
+        x:id="2b80db9f-53d3-46ef-b401-d623115e1ccc"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="5fd55b28-02ea-4020-add4-7b7a1aff8931"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/QueueProcessor/789a925f-fb14-4665-b3a4-018d1b8198db"
+        x:id="60f6a914-b18a-4f0c-81ff-fa359fa2998b"
+        asi:name="QueueProcessor"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/Roles/a93c1dee-3e35-4456-9877-a20526e1efd6"
+        x:id="64355536-3a69-48ca-a409-7caf49a99e52"
+        asi:name="Roles"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/CntExpired/f04d9577-b0cd-46fb-a92e-c3e548c46338"
+        x:id="8b1768bf-6ae6-476b-bd2b-a2caec82eb4a"
+        asi:name="CntExpired"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/IsMessageCountDisplayed/96113e75-13a8-47c9-a170-663809367169"
+        x:id="ad61e797-8ae4-4db9-b4de-1ff5907be421"
+        asi:name="IsMessageCountDisplayed"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/CntFromMe/59e07ada-edba-4d68-84cc-66586a0c46ef"
+        x:id="b3314973-9842-4704-81a8-261b99bb25a0"
+        asi:name="CntFromMe"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/ReferenceCode/22c153e5-243a-430c-b8ad-5f9ea1d6ed91"
+        x:id="b9add041-55a4-4cce-a129-5a1350c57dfa"
+        asi:name="ReferenceCode"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueClass/ccc6fb93-2e10-416e-a910-954f47d6d989"
+        x:id="c7efe3ae-17b8-4649-9ebe-39092615175c"
+        asi:name="WorkQueueClass"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/CntToMe/c39717ad-7b15-46cd-a43b-443a4fbc9eea"
+        x:id="f11534bb-8168-4f1a-bb37-a5d5a71afd34"
+        asi:name="CntToMe"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="ed3d93ca-bd4e-4830-8d26-f7120c8fc7ff"
+      asi:name="GetActive">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WorkQueue_UserList.origam#WorkQueue_UserList/WorkQueue/8c9f38df-d469-4ada-94b7-1aaa1f4eedbb"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/GetActive/b5c2b495-619c-49cf-982e-c8e341a41255"
+        x:id="f23f2e3d-ddf9-4656-8b38-ac4a7f79c508"
+        asi:name="WorkQueue_GetActive"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

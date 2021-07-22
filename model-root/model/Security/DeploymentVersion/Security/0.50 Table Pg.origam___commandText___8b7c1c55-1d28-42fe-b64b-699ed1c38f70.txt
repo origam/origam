@@ -1,0 +1,17 @@
+﻿CREATE TABLE "OrigamUser" (
+	"FailedPasswordAttemptCount" Integer NOT NULL,
+	"LastLoginDate" Timestamp(3) NULL,
+	"refBusinessPartnerId" Uuid NOT NULL,
+	"IsLockedOut" Boolean NOT NULL,
+	"LastLockoutDate" Timestamp(3) NULL,
+	"UserName" Varchar(255) NULL,
+	"Is2FAEnforced" Boolean NOT NULL,
+	"EmailConfirmed" Boolean NOT NULL,
+	"FailedPasswordAttemptWindowStart" Timestamp(3) NULL,
+	"Password" Varchar(100) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamUser_UserName" ON "OrigamUser" ("UserName" ASC);

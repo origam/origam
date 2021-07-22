@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="0593c75d-3112-4eda-b4fd-2bf9bf6c82f1"
+    ade:label="Serial Number Range"
+    tmi:mappedObjectName="Counter"
+    asi:name="Counter"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="aca338e8-4cb3-4418-a9b3-3da38ed0679b" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="40"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="b4c0ec14-7b66-4ae5-84ca-91b42d9778b4"
+      adec:isPrimaryKey="false"
+      adec:label="Code"
+      fmi:mappedColumnName="ReferenceCode"
+      asi:name="ReferenceCode"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="300"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="9c673323-d8ac-4498-9a05-edb73f8d903e"
+      adec:isPrimaryKey="false"
+      adec:label="Description"
+      fmi:mappedColumnName="Description"
+      asi:name="Description"
+      adec:onCopyAction="PrependCopyText"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="34341cdb-cad9-4150-bb2c-f778f58b2d0f"
+      adec:isPrimaryKey="false"
+      adec:label="Manage Validity By Date"
+      fmi:mappedColumnName="ManageValidityByDate"
+      asi:name="ManageValidityByDate"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="cbd17add-3d41-45ac-ac41-bffe387e835c"
+      asi:name="ix_ReferenceCode"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/Counter.origam#Counter/ReferenceCode/b4c0ec14-7b66-4ae5-84ca-91b42d9778b4"
+        x:id="906002b9-c447-4a58-8fc8-960f12352b7f"
+        asi:name="0_ReferenceCode"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="a049f084-75c7-4eb7-a028-19cca880e05b"
+      asi:name="GetByReferenceCode">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="a704ff4c-20e2-49d8-b6de-902345779dc5"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="faf5208d-6cdb-49c9-9867-03a2da158d49"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr:ParameterReference
+            asi:abstract="false"
+            x:id="39d0a825-f023-46d5-87b9-b7e18adecea4"
+            asi:name="parReferenceCode"
+            pr:parameter="Root/DataEntity/__system/Counter.origam#Counter/parReferenceCode/125897fc-6842-4128-9a93-a4b1c74382c2" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="5eb41e50-133f-4852-97bf-94ec4fb4253a"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/__system/Counter.origam#Counter/ReferenceCode/b4c0ec14-7b66-4ae5-84ca-91b42d9778b4"
+            x:id="65609d34-3465-4a04-9d53-7347fac901fa"
+            asi:name="ReferenceCode" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="d0baa1e1-3a12-4f27-a3c4-6281ac33d7c6"
+      asi:name="CounterDetail"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/CounterDetail.origam#CounterDetail/927dd50b-1a42-4cc9-b427-69245216ac8c"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="a2b624a7-5b6b-4c64-8dd6-914fe89fd3ed"
+        asi:name="CounterDetailKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/CounterDetail.origam#CounterDetail/refCounterId/08e22bfe-69f5-4e24-878f-0188526ddc59" />
+    </eri:EntityRelation>
+    <sip:Parameter
+      asi:abstract="false"
+      sip:allowNulls="false"
+      sip:dataLength="40"
+      sip:dataType="String"
+      x:id="125897fc-6842-4128-9a93-a4b1c74382c2"
+      asi:name="parReferenceCode" />
+  </tmi:DataEntity>
+</x:file>

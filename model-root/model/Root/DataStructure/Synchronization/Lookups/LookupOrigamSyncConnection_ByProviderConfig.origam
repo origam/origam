@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="a9eec7da-0b48-48d5-a2de-67e418afc4c5"
+    ds:localized="false"
+    asi:name="LookupOrigamSyncConnection_ByProviderConfig">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/994886a2-0850-4745-9e33-bec58cf6756e"
+      x:id="b4183aa6-5b49-4856-8ecd-e132f60874bd"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamSyncConnection"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="2e4b5905-4276-41ac-8a1c-a70b79281915"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/Name/6eb2f3f6-fecf-4929-a73d-001d914f5b5a"
+        x:id="ea3c333c-e6e3-4b5b-a033-0259c6fa5c99"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/OrigamSyncProvider/ab432a61-7cd0-4147-873a-6093f648ff83"
+        x:id="cf995a42-dad4-40c1-a9fb-b5b7e68fea88"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamSyncProvider"
+        dse:relationType="FilterParent"
+        dse:useUpsert="false">
+        <dse:DataStructureEntity
+          asi:abstract="false"
+          dse:allFields="false"
+          dse:concurrencyHandling="Standard"
+          dse:entity="Root/DataEntity/Synchronization/OrigamSyncProvider.origam#OrigamSyncProvider/OrigamSyncProviderConfig/1d59ae19-5f91-4a1e-93ae-d5109a521a22"
+          x:id="95a0de60-e9b3-417e-afc3-ed17066d06ed"
+          dse:ignoreCondition="None"
+          dse:ignoreImplicitFilters="false"
+          asi:name="OrigamSyncProviderConfig"
+          dse:relationType="FilterParent"
+          dse:useUpsert="false" />
+      </dse:DataStructureEntity>
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="d35c8f03-5176-4262-b6b8-adf44214a1d9"
+      asi:name="GetByProviderConfig">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConnection_ByProviderConfig.origam#LookupOrigamSyncConnection_ByProviderConfig/OrigamSyncConnection/OrigamSyncProvider/OrigamSyncProviderConfig/95a0de60-e9b3-417e-afc3-ed17066d06ed"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="68ce2c10-9139-4dc6-a9dc-704fc0fa8c27"
+        asi:name="OrigamSyncProviderConfig_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="e700abab-688b-47f5-9a61-cdeea4287c27"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConnection_ByProviderConfig.origam#LookupOrigamSyncConnection_ByProviderConfig/OrigamSyncConnection/b4183aa6-5b49-4856-8ecd-e132f60874bd"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="d9f7c115-51fa-4cab-9f57-2652ed64dcd5"
+        asi:name="OrigamSyncConnection_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

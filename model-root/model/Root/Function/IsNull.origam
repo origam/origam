@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="String"
+    x:id="6f50fc55-b84d-4768-88d2-83627e77465d"
+    asi:name="IsNull"
+    f:type="Standard">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="b756a885-9870-45d1-b991-1ec5ed6d9c5f"
+      asi:name="Expression" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="40a3cb22-4c82-4023-8243-ef0ced48d90b"
+      asi:name="ReplacementValue" />
+  </f:Function>
+</x:file>

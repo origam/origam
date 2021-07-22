@@ -1,0 +1,2 @@
+﻿ALTER TABLE [OrigamUser] ADD [Is2FAEnforced] BIT NOT NULL CONSTRAINT [DF_OrigamUser_Is2FAEnforced] DEFAULT 0
+ALTER TABLE [OrigamUser] DROP CONSTRAINT [DF_OrigamUser_Is2FAEnforced]

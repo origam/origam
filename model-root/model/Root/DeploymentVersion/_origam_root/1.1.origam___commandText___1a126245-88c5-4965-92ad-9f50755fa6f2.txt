@@ -1,0 +1,12 @@
+﻿CREATE TABLE [AsapCalendarDetail] (
+	[Date] DATETIME NOT NULL,
+	[refAsapCalendarId] UNIQUEIDENTIFIER NOT NULL,
+	[Name] NVARCHAR(100) NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_refAsapCalendarId] ON [AsapCalendarDetail] ([refAsapCalendarId] ASC)

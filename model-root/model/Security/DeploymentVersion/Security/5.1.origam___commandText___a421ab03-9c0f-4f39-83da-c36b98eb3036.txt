@@ -1,0 +1,3 @@
+﻿ALTER TABLE "OrigamUser" ADD CONSTRAINT "FK_OrigamUser_refBusinessPartnerId_BusinessPartner"
+	FOREIGN KEY ("refBusinessPartnerId")
+	REFERENCES "BusinessPartner" ("Id");

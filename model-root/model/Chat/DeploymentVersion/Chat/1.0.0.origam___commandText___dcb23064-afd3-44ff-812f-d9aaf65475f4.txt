@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamChatRoomBusinessPartner" (
+	"refOrigamChatRoomId" Uuid NOT NULL,
+	"IsInvited" Boolean NOT NULL,
+	"LastSeen" Timestamp(3) NULL,
+	"refBusinessPartnerId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

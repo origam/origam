@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"
+    ds:localized="false"
+    asi:name="WorkQueueCommand">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/b40f9da9-c8fa-490f-9c49-6db804c534f0"
+      x:id="b40967ba-d5db-4e88-9ab0-577c33a3357c"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkQueueCommand"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="421aec03-1eec-43f9-b0bb-17cfc24510a0"
+      asi:name="GetByWorkQueue">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/WorkQueueCommand/b40967ba-d5db-4e88-9ab0-577c33a3357c"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/GetByWorkQueueId/cfe21dd3-fb31-4ace-9c3f-4eaa1c6b186e"
+        x:id="138e4417-56bb-4b5b-bba8-a6732fb48966"
+        asi:name="WorkQueueCommand_GetByWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/WorkQueueCommand/b40967ba-d5db-4e88-9ab0-577c33a3357c"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="e9186097-0b71-499b-adf4-25f2196cafc6"
+        asi:name="WorkQueueCommand_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

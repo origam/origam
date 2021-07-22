@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="564b3d59-4dab-4b2b-a7c4-2dcbda415c5b"
+    ds:localized="false"
+    asi:name="LookupSourceDimensionEntity_ByTarget">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Dimensions/DimensionEntity.origam#DimensionEntity/96fc3981-2505-42f7-bfa1-b70ab7e74003"
+      x:id="827fe717-e371-4751-b7b4-d3db5f6bb217"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="DimensionEntity"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="5e843c50-899e-4405-824d-92d642afcab4"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Dimensions/DimensionEntity.origam#DimensionEntity/Name/20d1a3fc-b840-4f8a-84c6-3761f2bac436"
+        x:id="690f77d9-36c8-46de-8669-42fb57c06de4"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Dimensions/DimensionEntity.origam#DimensionEntity/SourceDimensionEntityRelation/7554e357-b1d9-4e92-bdeb-cd429af21e76"
+        x:id="b2a51628-e02a-49e7-890f-c26c93f878de"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="SourceDimensionEntityRelation"
+        dse:relationType="FilterParent"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="b533b0d9-2ca0-43a2-9ab6-b6c93a5f8e8b"
+      asi:name="GetByTarget">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Dimensions/Lookups/LookupSourceDimensionEntity_ByTarget.origam#LookupSourceDimensionEntity_ByTarget/DimensionEntity/SourceDimensionEntityRelation/b2a51628-e02a-49e7-890f-c26c93f878de"
+        dsfsf:filter="Root/DataEntity/Dimensions/DimensionEntityRelation.origam#DimensionEntityRelation/GetByTargetDimensionEntityId/4ba34aa4-937a-4080-992c-0d4a22884a2e"
+        x:id="24cfa666-f487-4b74-bbd5-7587bb3d4176"
+        asi:name="SourceDimensionEntityRelation_GetByTargetDimensionEntityId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="b65a280a-262b-4faa-826d-c260d696a8bb"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Dimensions/Lookups/LookupSourceDimensionEntity_ByTarget.origam#LookupSourceDimensionEntity_ByTarget/DimensionEntity/827fe717-e371-4751-b7b4-d3db5f6bb217"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="f774bc58-7b67-4767-b415-9385c2913fbf"
+        asi:name="DimensionEntity_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="05f6579e-3498-4f0d-b8be-6f0e9f344939"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamStateMachineEventType.origam#LookupOrigamStateMachineEventType/7d366ad1-beac-47e0-9028-e947f9e43a20"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="OrigamStateMachineEventType"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamStateMachineEventType.origam#LookupOrigamStateMachineEventType/7d366ad1-beac-47e0-9028-e947f9e43a20"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamStateMachineEventType.origam#LookupOrigamStateMachineEventType/GetId/392c5eef-86e3-441b-ab7d-5244e10cf0ea"
+    adl:valueValueMember="Id" />
+</x:file>

@@ -1,0 +1,8 @@
+﻿ALTER TABLE [BusinessPartnerAsapRole] ADD CONSTRAINT [FK_BusinessPartnerAsapRole_refBusinessPartnerId_BusinessPartner]
+	FOREIGN KEY (
+		[refBusinessPartnerId]
+	)
+
+	REFERENCES [BusinessPartner] (
+		[Id]
+	)

@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamSyncConnectionParameter" (
+	"Key" Varchar(100) NOT NULL,
+	"Value" Varchar(200) NULL,
+	"refOrigamSyncConnectionId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamSyncConnectionParameter_ix_OrigamSyncConnection" ON "OrigamSyncConnectionParameter" ("refOrigamSyncConnectionId" ASC);

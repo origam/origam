@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="379a7561-42a9-45fe-9c0a-e2b571a60902"
+    dc:lookup="Root/DataLookup/Dimensions/DimensionEntity.origam#DimensionEntity/8f6b1abf-b38d-4220-928c-384aa66603c8"
+    asi:name="DimensionEntity_BusinessPartner"
+    dc:userDefinable="false"
+    dc:value="6b996dc9-acf6-466e-973b-72005b25607f" />
+</x:file>

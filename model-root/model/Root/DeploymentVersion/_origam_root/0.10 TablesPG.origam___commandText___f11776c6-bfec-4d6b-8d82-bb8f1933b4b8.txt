@@ -1,0 +1,18 @@
+﻿CREATE TABLE "OrigamTraceWorkflowStep" (
+	"Category" Varchar(255) NOT NULL,
+	"Subcategory" Varchar(255) NOT NULL,
+	"Remark" Varchar(500) NULL,
+	"WorkflowStepId" Uuid NOT NULL,
+	"WorkflowStepPath" Text NOT NULL,
+	"Data1" Text NULL,
+	"Data2" Text NULL,
+	"refOrigamTraceWorkflowId" Uuid NOT NULL,
+	"Message" Text NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+CREATE  INDEX  "OrigamTraceWorkflowStep_ix_refOrigamTraceWorkflowId" ON "OrigamTraceWorkflowStep" ("refOrigamTraceWorkflowId" ASC);
