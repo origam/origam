@@ -129,8 +129,6 @@ export interface IDataView extends IDataViewData {
   tableRows: ITableRow[];
   onReload(): void;
 
-  onPanelKeyDown(event: any): void;
-
   gridDimensions: IGridDimensions;
   contentBounds: BoundingRect | undefined;
   infiniteScrollLoader: IInfiniteScrollLoader | undefined;

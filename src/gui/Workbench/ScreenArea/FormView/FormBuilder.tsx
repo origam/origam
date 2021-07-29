@@ -37,7 +37,6 @@ export class FormBuilder extends React.Component<{
   static contextType = CtxPanelVisibility
 
   onKeyDown(event: any) {
-    this.props.dataView?.onPanelKeyDown(event);
     if (event.key === "Tab") {
       DomEvent.preventDefault(event);
       if (event.shiftKey) {

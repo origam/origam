@@ -105,9 +105,6 @@ export class DataView implements IDataView {
     this.orderProperty = this.properties.find((prop) => prop.id === this.orderMember)!;
     this.dataTable.rowRemovedListeners.push(() => (this.selectAllCheckboxChecked = false));
   }
-  onPanelKeyDown(event: any): void {
-    throw new Error("Method not implemented.");
-  }
 
   private _isFormViewActive = () => false;
 
