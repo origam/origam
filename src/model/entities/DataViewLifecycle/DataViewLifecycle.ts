@@ -45,6 +45,7 @@ import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import {getFilterConfiguration} from "../../selectors/DataView/getFilterConfiguration";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -76,7 +77,9 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           } else if (getIsBindingParent(this)) {
             yield* this.navigateChildren();
           }
-        getTablePanelView(this)?.triggerOnFocusTable();
+          if(!getFilterConfiguration(this).isFilterControlsDisplayed){
+            getTablePanelView(this)?.triggerOnFocusTable();
+          }
       } catch (e) {
         // TODO: Move this method to action handler file?
         yield* handleError(this)(e);
