@@ -73,7 +73,10 @@ namespace Origam.ServerCore.Configuration
                 }
                 return pathToClientApp;
             }
-        }
+        }   
+        
+        public bool ReloadModelWhenFilesChangesDetected =>
+            configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
 
         public string PathToChatApp
         {

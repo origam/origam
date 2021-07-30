@@ -4,6 +4,7 @@
     "PathToChatApp": "",
     "ChatRefreshInterval": 1000
   },
+  "ReloadModelWhenFilesChangesDetected": "false",
   "UserConfig": {
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",

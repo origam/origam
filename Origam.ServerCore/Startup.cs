@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
+using CSharpFunctionalExtensions;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -46,7 +47,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Origam.DA.Service;
 using Origam.ServerCore.Middleware;
+using Origam.Workbench.Services;
 
 namespace Origam.ServerCore
 {
@@ -199,6 +202,7 @@ namespace Origam.ServerCore
                 .GetService<IOptions<RequestLocalizationOptions>>().Value;
             app.UseRequestLocalization(localizationOptions);
             app.UseIdentityServer();
+            app.UseMiddleware<FatalErrorMiddleware>();
             app.MapWhen(
                 IsPublicUserApiRoute,
                 apiBranch => {
@@ -269,7 +273,7 @@ namespace Origam.ServerCore
             // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
             
             SecurityManager.SetDIServiceProvider(app.ApplicationServices);
-            OrigamEngine.OrigamEngine.ConnectRuntime();
+            OrigamUtils.ConnectOrigamRuntime(loggerFactory, startUpConfiguration.ReloadModelWhenFilesChangesDetected);
         }
         private bool IsRestrictedUserApiRoute(HttpContext context)
         {
