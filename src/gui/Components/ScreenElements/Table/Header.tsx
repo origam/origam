@@ -149,7 +149,7 @@ export class Header extends React.Component<{
             )}
           </div>
           {this.props.additionalHeaderContent && (
-            <div className={S.inHeaderRow}>{this.props.additionalHeaderContent()}</div>
+            <div className={S.additionalContentsRow}>{this.props.additionalHeaderContent()}</div>
           )}
         </div>
         <div
