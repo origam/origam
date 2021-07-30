@@ -38,6 +38,7 @@ import { DataViewAPI } from "../../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../../modules/DataView/TableCursor";
 import {IInfiniteScrollLoader} from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {IAggregation} from "./IAggregation";
+import {GridFocusManager} from "../GridFocusManager";
 
 export interface IDataViewData {
   id: string;
@@ -86,7 +87,7 @@ export interface IDataViewData {
 
 export interface IDataView extends IDataViewData {
   $type_IDataView: 1;
-  
+
   orderProperty: IProperty | undefined;
   isBindingRoot: boolean;
   isBindingParent: boolean;
@@ -110,6 +111,7 @@ export interface IDataView extends IDataViewData {
   toolbarActions: IAction[];
   dialogActions: IAction[];
   focusManager: FocusManager;
+  gridFocusManager: GridFocusManager;
   firstEnabledDefaultAction: IAction | undefined;
   defaultActions: IAction[];
   aggregationData: IAggregation[];

@@ -89,6 +89,7 @@ import {
 } from "../../utils/runInFlowWithHandler";
 import { IAggregation } from "./types/IAggregation";
 import { getConfigurationManager } from "../selectors/TablePanelView/getConfigurationManager";
+import {getGridFocusManager, GridFocusManager} from "./GridFocusManager";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -97,6 +98,8 @@ class SavedViewState {
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
   focusManager: FocusManager = new FocusManager(this);
+  gridFocusManager: GridFocusManager = new GridFocusManager(this);
+
   @observable aggregationData: IAggregation[] = [];
 
   constructor(data: IDataViewData) {
@@ -721,6 +724,9 @@ export class DataView implements IDataView {
     const self = this;
     if (!this.selectedRowId) {
       return;
+    }
+    if(!isLazyLoading(this)){
+      getGridFocusManager(this).focusTableIfNeeded();
     }
 
     if (getFormScreenLifecycle(this).focusedDataViewId === this.id) {

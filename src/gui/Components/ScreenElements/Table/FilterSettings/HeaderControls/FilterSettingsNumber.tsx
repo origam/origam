@@ -140,6 +140,7 @@ class OpEditors extends React.Component<{
 export class FilterSettingsNumber extends React.Component<{
   setting?: any;
   autoFocus: boolean;
+  onChange: ()=>void;
 }> {
 
   static get defaultSettings(){
@@ -197,6 +198,7 @@ export class FilterSettingsNumber extends React.Component<{
       runInAction(() => {
         this.props.setting.val1 = this.currentValue1 === "" ? undefined : this.currentValue1;
         this.handleSettingChange();
+        this.props.onChange();
       })
     }, EDITOR_DALEY_MS);
     return () => {
