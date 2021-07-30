@@ -726,7 +726,9 @@ export class DataView implements IDataView {
       return;
     }
     if(!isLazyLoading(this)){
-      getGridFocusManager(this).focusTableIfNeeded();
+      setTimeout(()=>{
+        getGridFocusManager(this).focusTableIfNeeded();
+      });
     }
 
     if (getFormScreenLifecycle(this).focusedDataViewId === this.id) {
