@@ -128,9 +128,6 @@ export class DataView implements IDataView {
       () => (this.selectAllCheckboxChecked = false)
     );
   }
-  onPanelKeyDown(event: any): void {
-    throw new Error("Method not implemented.");
-  }
 
   private _isFormViewActive = () => false;
 
