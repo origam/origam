@@ -316,7 +316,7 @@ export class FilterConfiguration implements IFilterConfiguration {
           case "eq": {
             if (filterVal1.length === 0) return true;
             if (cellValue === null) return false;
-            if (filterVal1.findIndex((item: any) => item === cellText) > -1) {
+            if (filterVal1.findIndex((item: any) => item === cellValue) > -1) {
               return true;
             }
             return false;
