@@ -86,6 +86,16 @@ namespace Origam.DA.Service
             fileEventQueue.Start();
             InstancePersisted += (sender, persistent) =>
                 ReferenceIndexManager.UpdateReferenceIndex(persistent);
+            runtimeModelConfig.ConfigurationReloaded += OnRuntimeModelConfigReloaded;
+        }
+
+        private void OnRuntimeModelConfigReloaded(object sender, List<Guid> invalidatedItemIds)
+        {
+            foreach (Guid itemId in invalidatedItemIds)
+            {
+                FindPersistedObjectInfo(itemId)?
+                    .OrigamFile.RemoveFromCache(itemId);
+            }
         }
 
         #region UNUSED
@@ -260,7 +270,7 @@ namespace Origam.DA.Service
 
         public override void RemoveFromCache(IPersistent instance)
         {
-            index.GetById(instance.Id)?.OrigamFile.RemoveFromCache(instance);
+            index.GetById(instance.Id)?.OrigamFile.RemoveFromCache(instance.Id);
         }
 
         public override List<T> RetrieveList<T>(IDictionary<string, object> filter=null)
@@ -364,6 +374,7 @@ namespace Origam.DA.Service
             localizationCache.Dispose();
             index?.Dispose();
             origamFileManager.Dispose();
+            runtimeModelConfig.ConfigurationReloaded -= OnRuntimeModelConfigReloaded;
         }
 
         public override T[] FullTextSearch<T>(string text)

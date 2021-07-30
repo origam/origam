@@ -87,11 +87,11 @@ namespace Origam.DA.Service
             }
         }
 
-        public void RemoveFromCache(IPersistent instance)
+        public void RemoveFromCache(Guid instanceId)
         {
             lock (Lock)
             {
-                loadedLocalizedObjects?.Remove(instance.Id);
+                loadedLocalizedObjects?.Remove(instanceId);
             }
         }
 
@@ -180,7 +180,6 @@ namespace Origam.DA.Service
                         retrievedId.Value, provider, parentId);
                     loadedObj.UseObjectCache=useCache;
                     yield return loadedObj;
-
                 }
             }
         }

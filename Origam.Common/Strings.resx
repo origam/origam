@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CantSaveConfig" xml:space="preserve">
-    <value>Cannot save configuration. Configuration names must be unique.</value>
+    <value>Cannot save configuration.</value>
   </data>
   <data name="InvalidProperty" xml:space="preserve">
     <value>Invalid property or field name</value>
@@ -176,5 +176,8 @@ under certain conditions.</value>
   </data>
   <data name="SessionStoreDisposed" xml:space="preserve">
     <value>Session store has already been disposed</value>
+  </data>
+  <data name="CantSaveConfigDuplicateName" xml:space="preserve">
+    <value>Cannot save configuration. Configuration names must be unique.</value>
   </data>
 </root>

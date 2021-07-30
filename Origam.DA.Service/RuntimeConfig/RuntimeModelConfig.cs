@@ -25,6 +25,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Origam.DA.ObjectPersistence;
@@ -36,34 +37,77 @@ namespace Origam.DA.Service
     public class RuntimeModelConfig : IRuntimeModelConfig
     {
         private readonly string pathToConfigFile;
+        private readonly FileSystemWatcher watcher;
+        private readonly object lockObj = new object();
+        
+        public event EventHandler<List<Guid>> ConfigurationReloaded;
 
         private List<ConfigItem> configItems;
-
         public RuntimeModelConfig(string pathToConfigFile)
         {
             this.pathToConfigFile = pathToConfigFile;
+            
+            watcher = new FileSystemWatcher
+            {
+                Path = Path.GetDirectoryName(pathToConfigFile),
+                Filter = Path.GetFileName(pathToConfigFile),
+                NotifyFilter = NotifyFilters.LastWrite 
+            };
+            watcher.Changed += OnConfigFileChanged;
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
+        {
+            var oldIds = configItems.Select(item => item.Id).ToList();
+            Thread.Sleep(100); // trying to avoid IOException (The process cannot access the file XY because it is being used by another process.)
+            configItems = ParseConfigFile();
+            var newIds = configItems.Select(item => item.Id);
+            var invalidatedItemIds = oldIds
+                .Concat(newIds)
+                .Distinct()
+                .ToList();
+            ConfigurationReloaded?.Invoke(this, invalidatedItemIds);
         }
 
         private List<ConfigItem> ParseConfigFile()
         {
-            if (!File.Exists(pathToConfigFile))
+            lock (lockObj)
             {
-                return new List<ConfigItem>();
-            }
-            try
-            {
-                string json = File.ReadAllText(pathToConfigFile);
-                if (string.IsNullOrWhiteSpace(json))
+                if (!File.Exists(pathToConfigFile))
                 {
-                    json = "[]";
+                    return new List<ConfigItem>();
                 }
-                return JsonConvert.DeserializeObject<List<ConfigItem>>(json);
+                return TryParseConfigFile();
             }
-            catch (Exception ex)
+        }
+
+        private List<ConfigItem> TryParseConfigFile()
+        {
+            for (int i = 0; i < 5; i++)
             {
-                throw new Exception(
-                    String.Format(Strings.ErrorParsingConfig, pathToConfigFile), ex);
+                try
+                {
+                    string json = File.ReadAllText(pathToConfigFile);
+                    return string.IsNullOrWhiteSpace(json)
+                        ? new List<ConfigItem>()
+                        : JsonConvert.DeserializeObject<List<ConfigItem>>(json);
+                }
+                catch (Exception ex)
+                {
+                    if (ex is IOException && i < 3)
+                    {
+                        Thread.Sleep(100);
+                        continue;
+                    }
+
+                    throw new Exception(
+                        String.Format(Strings.ErrorParsingConfig,
+                            pathToConfigFile), ex);
+                }
             }
+
+            throw new NotImplementedException(); // this code should be never reached
         }
 
         public void SetConfigurationValues(IFilePersistent instance)
@@ -138,14 +182,18 @@ namespace Origam.DA.Service
 
         public void UpdateConfig(IPersistent instance)
         {
-            try
+            lock (lockObj)
             {
-                UpdateConfigInternal(instance);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(String.Format(
-                    Origam.Strings.CantSaveConfig, instance.Id, pathToConfigFile), ex);
+                try
+                {
+                    UpdateConfigInternal(instance);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(String.Format(
+                        Origam.Strings.CantSaveConfig, instance.Id,
+                        pathToConfigFile), ex);
+                }
             }
         }
 

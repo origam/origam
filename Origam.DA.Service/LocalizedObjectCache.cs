@@ -86,7 +86,10 @@ namespace Origam.DA.Service
 
         public void Remove(Guid id)
         {
-            objectDict[locale].Remove(id);
+            foreach (var dictionary in objectDict.Values)
+            {
+                dictionary.Remove(id);
+            }
         }
 
         public void AddRange(IEnumerable<IFilePersistent> newInstances)
