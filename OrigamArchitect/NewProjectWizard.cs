@@ -44,6 +44,9 @@ using static Origam.NewProjectEnums;
 using Origam.Extensions;
 using Origam.DA.Service;
 using NPOI.Util;
+using Origam.Docker;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace OrigamArchitect
 {
@@ -152,6 +155,8 @@ namespace OrigamArchitect
             _settings.BinFolder = txtBinFolderRoot.Text;
             _settings.DatabaseServerName = txtServerName.Text;
             _settings.DatabaseTypeText = txtDatabaseType.GetItemText(txtDatabaseType.SelectedItem);
+            _settings.DockerApiAdress = txtDockerApiAdress.Text;
+            _settings.DockerSourceFolder = txtdosourcefolder.Text;
             _settings.Save();
         }
 
@@ -236,6 +241,24 @@ namespace OrigamArchitect
             _project.DatabaseType = DatabaseType;
             _project.Port = Port;
             _project.NewPackageId = Guid.NewGuid().ToString();
+            if(Deployment == DeploymentType.DockerPostgres)
+            {
+                string tag = "";
+                if (DatabaseType == DatabaseType.MsSql)
+                {
+                    tag = "pg_master-latest";
+                    _project.DatabaseUserName = "sa";
+                }
+                if (DatabaseType == DatabaseType.PgSql)
+                {
+                    tag = "mssql_master-latest";
+                    _project.DatabaseUserName = "postgres";
+                }
+                _project.DatabasePassword = Project.CreatePassword();
+                DockerManager dockerManager = new DockerManager(tag.GetAssemblyVersion(),
+                        txtDockerApiAdress.Text);
+                dockerManager.PullImage();
+            }
         }
 
         private void chkIntegratedAuthentication_CheckedChanged(object sender, EventArgs e)
@@ -361,6 +384,7 @@ namespace OrigamArchitect
         private void pagePaths_Initialize(object sender, WizardPageInitEventArgs e)
         {
             txtSourcesFolder.Text = _settings.SourcesFolder;
+            txtdosourcefolder.Text = _settings.DockerSourceFolder;
             txtBinFolderRoot.Text = _settings.BinFolder;
             txtTemplateFolder.Text = Path.Combine(Application.StartupPath, @"Project Templates\Default");
             txtBinFolderRoot.Visible = false;
@@ -462,28 +486,36 @@ namespace OrigamArchitect
                     break;
                 case DeploymentType.DockerPostgres:
                     pageDeploymentType.NextPage = pageTemplateType;
-                    //Pull docker image
-                    pullDockerImage();
+                    //Pull docker Origam/Server image.
+                    DockerManager dockerManager = new DockerManager("master-latest".GetAssemblyVersion(),
+                        txtDockerApiAdress.Text);
+                    Task<Origam.Docker.OperatingSystem> task = Task.Run(() =>
+                    {
+                        return new Origam.Docker.OperatingSystem(dockerManager.IsDockerInstaledAsync());
+                    }
+                    );
+                    Origam.Docker.OperatingSystem dockerOs = task.Result;
+                    if(dockerOs.IsOnline())
+                    {
+                        AsMessageBox.ShowError(this, "Can't connect to docker instance. Check docker address.", strings.NewProjectWizard_Title, null);
+                        e.Cancel = true;
+                        return;
+                    }
+                    dockerManager.PullImage();
+                    _project.DockerApiAddress = txtDockerApiAdress.Text;
+                    _project.DockerOs = dockerOs;
                     break;
             }
         }
-
-        private void pullDockerImage()
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.CreateNoWindow = false;
-            startInfo.UseShellExecute = false;
-            startInfo.FileName = @"c:\Program Files\Docker\Docker\resources\bin\docker.exe";
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.Arguments = " pull origam/server:pg_master-latest";
-            Process.Start(startInfo);
-        }
-
         private void pageDeploymentType_Initialize(object sender, WizardPageInitEventArgs e)
         {
             if (cboDeploymentType.SelectedIndex < 0)
             {
                 cboDeploymentType.SelectedIndex = 0;
+            }
+            if(string.IsNullOrEmpty(txtDockerApiAdress.Text))
+            {
+                txtDockerApiAdress.Text = _settings.DockerApiAdress;
             }
         }
 
@@ -491,7 +523,22 @@ namespace OrigamArchitect
         {
 
         }
-
+        private void PageGit_Init(object sender, WizardPageConfirmEventArgs e)
+        {
+            if (Deployment == DeploymentType.DockerPostgres)
+            {
+                txtdosourcefolder.Show();
+                dockerlabel.Show();
+                dockerlabeldescription.Show();
+                txtdosourcefolder.Text = _settings.DockerSourceFolder;
+            }
+            else
+            {
+                txtdosourcefolder.Hide();
+                dockerlabel.Hide();
+                dockerlabeldescription.Hide();
+            }
+        }
         private void PageGit_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             if (string.IsNullOrEmpty(txtGitUser.Text) && gitrepo.Checked)
@@ -527,6 +574,7 @@ namespace OrigamArchitect
             _project.GitRepository = gitrepo.Checked;
             _project.Gitusername = txtGitUser.Text;
             _project.Gitemail = txtGitEmail.Text;
+            _project.DockerSourcePath = txtdosourcefolder.Text;
             if( Deployment == DeploymentType.Local)
             {
                 pageGit.NextPage = pageReview;
@@ -559,8 +607,7 @@ namespace OrigamArchitect
             {
                 if(Deployment == DeploymentType.DockerPostgres)
                 {
-                    txtServerName.Text = "localhost";
-                    txtPort.Text = "5432";
+                    txtPort.Text = "5433";
                 }
                 chkIntegratedAuthentication.Enabled = true;
                 txtPort.Visible = !chkIntegratedAuthentication.Checked;
@@ -792,6 +839,22 @@ namespace OrigamArchitect
             _project.WebFirstName = txtWebFirstname.Text;
             _project.WebSurname = txtWebSurname.Text;
             _project.WebEmail = txtWebEmail.Text;
+        }
+
+        private void cboDeploymentType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cboDeploymentType.SelectedIndex == 1)
+            {
+                txtDockerApiAdress.Show();
+                dockerlabel.Show();
+                dockerlabeldescription.Show();
+            }
+            else
+            {
+                txtDockerApiAdress.Hide();
+                dockerlabel.Hide();
+                dockerlabeldescription.Hide();
+            }
         }
     }
 }

@@ -43,6 +43,9 @@ namespace OrigamArchitect
             this.lblWelcome1 = new System.Windows.Forms.Label();
             this.btnAdminElevate = new System.Windows.Forms.Button();
             this.pageDeploymentType = new AeroWizard.WizardPage();
+            this.dockerlabeldescription = new System.Windows.Forms.Label();
+            this.dockerlabel = new System.Windows.Forms.Label();
+            this.txtDockerApiAdress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
@@ -85,6 +88,8 @@ namespace OrigamArchitect
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.pageGit = new AeroWizard.WizardPage();
+            this.dockerSourceFolder = new System.Windows.Forms.Label();
+            this.txtdosourcefolder = new System.Windows.Forms.TextBox();
             this.lblgitemail = new System.Windows.Forms.Label();
             this.lblgituser = new System.Windows.Forms.Label();
             this.txtGitEmail = new System.Windows.Forms.TextBox();
@@ -270,6 +275,9 @@ namespace OrigamArchitect
             // 
             // pageDeploymentType
             // 
+            this.pageDeploymentType.Controls.Add(this.dockerlabeldescription);
+            this.pageDeploymentType.Controls.Add(this.dockerlabel);
+            this.pageDeploymentType.Controls.Add(this.txtDockerApiAdress);
             this.pageDeploymentType.Controls.Add(this.label1);
             this.pageDeploymentType.Controls.Add(this.lblName);
             this.pageDeploymentType.Controls.Add(this.txtName);
@@ -281,6 +289,31 @@ namespace OrigamArchitect
             this.pageDeploymentType.Text = "Deployment Type";
             this.pageDeploymentType.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDeploymentType_Commit);
             this.pageDeploymentType.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageDeploymentType_Initialize);
+            // 
+            // dockerlabeldescription
+            // 
+            this.dockerlabeldescription.AutoSize = true;
+            this.dockerlabeldescription.Location = new System.Drawing.Point(158, 203);
+            this.dockerlabeldescription.Name = "dockerlabeldescription";
+            this.dockerlabeldescription.Size = new System.Drawing.Size(200, 15);
+            this.dockerlabeldescription.TabIndex = 1;
+            this.dockerlabeldescription.Text = "Default value is http://localhost:2375";
+            // 
+            // dockerlabel
+            // 
+            this.dockerlabel.AutoSize = true;
+            this.dockerlabel.Location = new System.Drawing.Point(4, 157);
+            this.dockerlabel.Name = "dockerlabel";
+            this.dockerlabel.Size = new System.Drawing.Size(89, 15);
+            this.dockerlabel.TabIndex = 16;
+            this.dockerlabel.Text = "Docker Address";
+            // 
+            // txtDockerApiAdress
+            // 
+            this.txtDockerApiAdress.Location = new System.Drawing.Point(161, 154);
+            this.txtDockerApiAdress.Name = "txtDockerApiAdress";
+            this.txtDockerApiAdress.Size = new System.Drawing.Size(556, 23);
+            this.txtDockerApiAdress.TabIndex = 15;
             // 
             // label1
             // 
@@ -319,10 +352,11 @@ namespace OrigamArchitect
             this.cboDeploymentType.Items.AddRange(new object[] {
             "Docker",
             "Docker Postgres"});
-            this.cboDeploymentType.Location = new System.Drawing.Point(164, 97);
+            this.cboDeploymentType.Location = new System.Drawing.Point(161, 97);
             this.cboDeploymentType.Name = "cboDeploymentType";
             this.cboDeploymentType.Size = new System.Drawing.Size(241, 23);
             this.cboDeploymentType.TabIndex = 4;
+            this.cboDeploymentType.SelectedIndexChanged += new System.EventHandler(this.cboDeploymentType_SelectedIndexChanged);
             // 
             // lblDeploymentType
             // 
@@ -682,6 +716,8 @@ namespace OrigamArchitect
             // 
             // pageGit
             // 
+            this.pageGit.Controls.Add(this.dockerSourceFolder);
+            this.pageGit.Controls.Add(this.txtdosourcefolder);
             this.pageGit.Controls.Add(this.lblgitemail);
             this.pageGit.Controls.Add(this.lblgituser);
             this.pageGit.Controls.Add(this.txtGitEmail);
@@ -698,6 +734,23 @@ namespace OrigamArchitect
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Configure Source Control";
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
+            this.pageGit.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageGit_Init);
+            // 
+            // dockerSourceFolder
+            // 
+            this.dockerSourceFolder.AutoSize = true;
+            this.dockerSourceFolder.Location = new System.Drawing.Point(3, 280);
+            this.dockerSourceFolder.Name = "dockerSourceFolder";
+            this.dockerSourceFolder.Size = new System.Drawing.Size(117, 15);
+            this.dockerSourceFolder.TabIndex = 1;
+            this.dockerSourceFolder.Text = "Docker Model Folder";
+            // 
+            // txtdosourcefolder
+            // 
+            this.txtdosourcefolder.Location = new System.Drawing.Point(163, 276);
+            this.txtdosourcefolder.Name = "txtdosourcefolder";
+            this.txtdosourcefolder.Size = new System.Drawing.Size(530, 23);
+            this.txtdosourcefolder.TabIndex = 18;
             // 
             // lblgitemail
             // 
@@ -1407,5 +1460,10 @@ namespace OrigamArchitect
         private System.Windows.Forms.TextBox txtWebFirstname;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox txtWebUserPasswordConfirmed;
+        private System.Windows.Forms.Label dockerlabel;
+        private System.Windows.Forms.TextBox txtDockerApiAdress;
+        private System.Windows.Forms.Label dockerSourceFolder;
+        private System.Windows.Forms.TextBox txtdosourcefolder;
+        private System.Windows.Forms.Label dockerlabeldescription;
     }
 }
