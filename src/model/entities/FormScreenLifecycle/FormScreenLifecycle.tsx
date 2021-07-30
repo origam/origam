@@ -859,7 +859,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield rootDataView.setRecords(loadedData);
       }
       if (this.initialSelectedRowId) {
-        rootDataView.selectRowById(this.initialSelectedRowId);
+        rootDataView.setSelectedRowId(this.initialSelectedRowId);
       } else {
         rootDataView.reselectOrSelectFirst();
       }

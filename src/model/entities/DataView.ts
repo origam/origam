@@ -600,7 +600,7 @@ export class DataView implements IDataView {
         : getDataTable(this).getNextExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.selectRowById(newId);
+      this.setSelectedRowId(newId);
     }
   }
 
@@ -614,7 +614,7 @@ export class DataView implements IDataView {
         : getDataTable(this).getPrevExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.selectRowById(newId);
+      this.setSelectedRowId(newId);
     }
   }
 
@@ -673,9 +673,9 @@ export class DataView implements IDataView {
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
-      this.selectRowById(dataTable.getRowId(firstRow));
+      this.setSelectedRowId(dataTable.getRowId(firstRow));
     } else {
-      this.selectRowById(undefined);
+      this.setSelectedRowId(undefined);
     }
   }
 
@@ -686,9 +686,9 @@ export class DataView implements IDataView {
     const dataTable = getDataTable(this);
     const lastRow = dataTable.getLastRow();
     if (lastRow) {
-      this.selectRowById(dataTable.getRowId(lastRow));
+      this.setSelectedRowId(dataTable.getRowId(lastRow));
     } else {
-      this.selectRowById(undefined);
+      this.setSelectedRowId(undefined);
     }
   }
 
@@ -700,14 +700,8 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound selectRowById(id: string | undefined) {
-    if (id !== this.selectedRowId) {
-      this.setSelectedRowId(id);
-    }
-  }
-
   @action.bound selectRow(row: any[]) {
-    this.selectRowById(this.dataTable.getRowId(row));
+    this.setSelectedRowId(this.dataTable.getRowId(row));
   }
 
   @action.bound

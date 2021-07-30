@@ -222,7 +222,7 @@ export class TablePanelView implements ITablePanelView {
       return;
     }
     yield dataView.lifecycle.runRecordChangedReaction(function* () {
-      yield dataView.selectRowById(rowId);
+      yield dataView.setSelectedRowId(rowId);
     });
   }
 
@@ -262,7 +262,7 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound selectCell(rowId: string | undefined, columnId: string | undefined) {
     this.selectedColumnId = columnId;
-    getDataView(this).selectRowById(rowId);
+    getDataView(this).setSelectedRowId(rowId);
   }
 
   isFirstColumnSelected(): boolean {

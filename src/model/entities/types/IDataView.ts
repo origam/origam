@@ -132,7 +132,6 @@ export interface IDataView extends IDataViewData {
   selectFirstRow(): void;
   selectLastRow(): void;
   reselectOrSelectFirst(): void;
-  selectRowById(id: string | undefined): void;
   selectRow(row: any[]): void;
   setSelectedRowId(id: string | undefined): void;
   setRecords(rows: any[][]): Promise<any>;
