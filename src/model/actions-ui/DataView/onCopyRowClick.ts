@@ -24,8 +24,6 @@ import { getEntity } from "../../selectors/DataView/getEntity";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { handleError } from "../../actions/handleError";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
-
 
 export function onCopyRowClick(ctx: any) {
   return flow(function* onCopyRowClick(event: any) {
@@ -42,7 +40,6 @@ export function onCopyRowClick(ctx: any) {
         return;
       }
       yield* formScreenLifecycle.onCopyRow(entity, gridId, selectedRowId);
-      getTablePanelView(ctx)?.triggerOnFocusTable();
     } catch (e) {
       yield* handleError(ctx)(e);
       throw e;
