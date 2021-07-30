@@ -36,7 +36,7 @@ import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
-import { IFocusAble } from "../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../model/entities/FormFocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
 import {getMomentFormat} from "../../../xmlInterpreters/getMomentFormat";
 

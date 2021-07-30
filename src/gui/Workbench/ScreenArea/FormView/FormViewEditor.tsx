@@ -38,7 +38,7 @@ import {isReadOnly} from "model/selectors/RowState/isReadOnly";
 import {XmlBuildDropdownEditor} from "modules/Editors/DropdownEditor/DropdownEditor";
 import {BoolEditor} from "gui/Components/ScreenElements/Editors/BoolEditor";
 import {DateTimeEditor} from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import {FocusManager} from "model/entities/FocusManager";
+import {FormFocusManager} from "model/entities/FormFocusManager";
 import {DomEvent} from "leaflet";
 import {onDropdownEditorClick} from "model/actions/DropdownEditor/onDropdownEditorClick";
 import {shadeHexColor} from "utils/colorUtils";
@@ -75,11 +75,11 @@ export class FormViewEditor extends React.Component<{
   onEditorBlur?: (event: any) => Promise<any>;
   backgroundColor?: string;
 }> {
-  focusManager: FocusManager;
+  focusManager: FormFocusManager;
 
   constructor(props: any) {
     super(props);
-    this.focusManager = getDataView(this.props.property).focusManager;
+    this.focusManager = getDataView(this.props.property).formFocusManager;
   }
 
   getEditor() {
@@ -195,7 +195,7 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isReadOnly={readOnly}
             onChange={this.props.onChange}
-            onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
+            onClick={() => getDataView(this.props.property).formFocusManager.stopAutoFocus()}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
@@ -283,7 +283,7 @@ export class FormViewEditor extends React.Component<{
               )
             }
             onKeyDown={this.makeOnKeyDownCallBack()}
-            onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
+            onClick={() => getDataView(this.props.property).formFocusManager.stopAutoFocus()}
           />
         );
       case "Color":
@@ -343,7 +343,7 @@ export class FormViewEditor extends React.Component<{
       runInFlowWithHandler({
         ctx: this.props.property,
         action: async () => {
-          dataView.focusManager.stopAutoFocus();
+          dataView.formFocusManager.stopAutoFocus();
           if (event.key === "Tab") {
             DomEvent.preventDefault(event);
             if (event.shiftKey) {

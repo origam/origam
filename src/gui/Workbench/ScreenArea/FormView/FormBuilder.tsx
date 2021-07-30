@@ -60,9 +60,9 @@ export class FormBuilder extends React.Component<{
     if (event.key === "Tab") {
       DomEvent.preventDefault(event);
       if (event.shiftKey) {
-        this.props.dataView!.focusManager.focusPrevious(document.activeElement);
+        this.props.dataView!.formFocusManager.focusPrevious(document.activeElement);
       } else {
-        this.props.dataView!.focusManager.focusNext(document.activeElement);
+        this.props.dataView!.formFocusManager.focusNext(document.activeElement);
       }
       return;
     }
@@ -82,7 +82,7 @@ export class FormBuilder extends React.Component<{
         rowId || ""
       );
     }
-    const focusManager = self.props.dataView!.focusManager;
+    const focusManager = self.props.dataView!.formFocusManager;
 
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
@@ -141,7 +141,7 @@ export class FormBuilder extends React.Component<{
               focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }
             labelColor={foreGroundColor}
-            onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
+            onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
               flow(function* () {
@@ -192,7 +192,7 @@ export class FormBuilder extends React.Component<{
                         subscribeToFocusManager={(radioInput) =>
                           focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
                         }
-                        onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
+                        onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
                         labelColor={foreGroundColor}
                       />
                     </Provider>

@@ -32,7 +32,7 @@ import { ClientSideGrouper } from "../ClientSideGrouper";
 import { IGridDimensions, IScrollState } from "../../../gui/Components/ScreenElements/Table/types";
 import { ITableRow } from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
 import { BoundingRect } from "react-measure";
-import { FocusManager } from "../FocusManager";
+import { FormFocusManager } from "../FormFocusManager";
 import { DataViewData } from "../../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../../modules/DataView/TableCursor";
@@ -110,7 +110,7 @@ export interface IDataView extends IDataViewData {
   panelMenuActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
-  focusManager: FocusManager;
+  formFocusManager: FormFocusManager;
   gridFocusManager: GridFocusManager;
   firstEnabledDefaultAction: IAction | undefined;
   defaultActions: IAction[];

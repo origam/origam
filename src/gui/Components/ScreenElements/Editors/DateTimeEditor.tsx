@@ -24,7 +24,7 @@ import { observer, Observer } from "mobx-react";
 import moment, { Moment } from "moment";
 import * as React from "react";
 import { toOrigamServerString } from "utils/moment";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FormFocusManager";
 import {getDefaultCsDateFormatDataFromCookie} from "../../../../utils/cookies";
 import DateCompleter from "./DateCompleter";
 import S from "./DateTimeEditor.module.scss";

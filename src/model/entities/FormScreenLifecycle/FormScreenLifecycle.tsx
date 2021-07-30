@@ -68,7 +68,7 @@ import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { startEditingFirstCell } from "model/actions/DataView/startEditingFirstCell";
-import { getFocusManager } from "model/selectors/DataView/getFocusManager";
+import { getFormFocusManager } from "model/selectors/DataView/getFormFocusManager";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChildren";
@@ -786,7 +786,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       UpdateData: updateData,
     });
 
-    dataView.focusManager.stopAutoFocus();
+    dataView.formFocusManager.stopAutoFocus();
 
     // This might run more times in parallel, but we want to apply the result just once.
     // Parallel promises will be resolved all by the same result of merged update request.
@@ -938,7 +938,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           yield* startEditingFirstCell(targetDataView)();
         }
         else if(targetDataView.isFormViewActive()) {
-          getFocusManager(targetDataView).forceAutoFocus();
+          getFormFocusManager(targetDataView).forceAutoFocus();
         }
       }
     } finally {

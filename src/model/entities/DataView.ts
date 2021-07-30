@@ -51,7 +51,7 @@ import { GridDimensions } from "../../gui/Workbench/ScreenArea/TableView/GridDim
 import { SimpleScrollState } from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
 import { BoundingRect } from "react-measure";
 import { IGridDimensions } from "../../gui/Components/ScreenElements/Table/types";
-import { FocusManager } from "./FocusManager";
+import { FormFocusManager } from "./FormFocusManager";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
@@ -97,7 +97,7 @@ class SavedViewState {
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
-  focusManager: FocusManager = new FocusManager(this);
+  formFocusManager: FormFocusManager = new FormFocusManager(this);
   gridFocusManager: GridFocusManager = new GridFocusManager(this);
 
   @observable aggregationData: IAggregation[] = [];
@@ -854,7 +854,7 @@ export class DataView implements IDataView {
 
   // Called by client scripts
   focusFormViewControl(name: string) {
-    this.focusManager.focus(name);
+    this.formFocusManager.focus(name);
   }
 
   // Called by client scripts
