@@ -51,7 +51,7 @@ import { GridDimensions } from "../../gui/Workbench/ScreenArea/TableView/GridDim
 import { SimpleScrollState } from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
 import { BoundingRect } from "react-measure";
 import { IGridDimensions } from "../../gui/Components/ScreenElements/Table/types";
-import { FocusManager } from "./FocusManager";
+import { FormFocusManager } from "./FormFocusManager";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
@@ -89,6 +89,7 @@ import {
 } from "../../utils/runInFlowWithHandler";
 import { IAggregation } from "./types/IAggregation";
 import { getConfigurationManager } from "../selectors/TablePanelView/getConfigurationManager";
+import {getGridFocusManager, GridFocusManager} from "./GridFocusManager";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -96,7 +97,9 @@ class SavedViewState {
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
-  focusManager: FocusManager = new FocusManager(this);
+  formFocusManager: FormFocusManager = new FormFocusManager(this);
+  gridFocusManager: GridFocusManager = new GridFocusManager(this);
+
   @observable aggregationData: IAggregation[] = [];
 
   constructor(data: IDataViewData) {
@@ -594,7 +597,7 @@ export class DataView implements IDataView {
         : getDataTable(this).getNextExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.selectRowById(newId);
+      this.setSelectedRowId(newId);
     }
   }
 
@@ -608,7 +611,7 @@ export class DataView implements IDataView {
         : getDataTable(this).getPrevExistingRowId(selectedRowId);
     }
     if (newId) {
-      this.selectRowById(newId);
+      this.setSelectedRowId(newId);
     }
   }
 
@@ -667,9 +670,9 @@ export class DataView implements IDataView {
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
-      this.selectRowById(dataTable.getRowId(firstRow));
+      this.setSelectedRowId(dataTable.getRowId(firstRow));
     } else {
-      this.selectRowById(undefined);
+      this.setSelectedRowId(undefined);
     }
   }
 
@@ -680,9 +683,9 @@ export class DataView implements IDataView {
     const dataTable = getDataTable(this);
     const lastRow = dataTable.getLastRow();
     if (lastRow) {
-      this.selectRowById(dataTable.getRowId(lastRow));
+      this.setSelectedRowId(dataTable.getRowId(lastRow));
     } else {
-      this.selectRowById(undefined);
+      this.setSelectedRowId(undefined);
     }
   }
 
@@ -694,14 +697,8 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound selectRowById(id: string | undefined) {
-    if (id !== this.selectedRowId) {
-      this.setSelectedRowId(id);
-    }
-  }
-
   @action.bound selectRow(row: any[]) {
-    this.selectRowById(this.dataTable.getRowId(row));
+    this.setSelectedRowId(this.dataTable.getRowId(row));
   }
 
   @action.bound
@@ -718,6 +715,11 @@ export class DataView implements IDataView {
     const self = this;
     if (!this.selectedRowId) {
       return;
+    }
+    if(!isLazyLoading(this)){
+      setTimeout(()=>{
+        getGridFocusManager(this).focusTableIfNeeded();
+      });
     }
 
     if (getFormScreenLifecycle(this).focusedDataViewId === this.id) {
@@ -845,7 +847,7 @@ export class DataView implements IDataView {
 
   // Called by client scripts
   focusFormViewControl(name: string) {
-    this.focusManager.focus(name);
+    this.formFocusManager.focus(name);
   }
 
   // Called by client scripts

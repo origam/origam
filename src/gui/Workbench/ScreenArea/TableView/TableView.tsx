@@ -386,7 +386,7 @@ class HeaderRenderer implements IHeaderRendererData {
     }
     const headerContent: JSX.Element[] = [];
     if (filterControlsDisplayed) {
-      headerContent.push(<FilterSettings key={`filter-settings-${columnId}`} autoFocus={autoFocus} />);
+      headerContent.push(<FilterSettings key={`filter-settings-${columnId}`} autoFocus={autoFocus} ctx={this.dataView} />);
     }
     if (this.dataView.aggregationData.length !== 0) {
       const aggregation = this.dataView.aggregationData.find((agg) => agg.columnId === columnId);

@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { isGlobalAutoFocusDisabled } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 
-export class FocusManager {
+export class FormFocusManager {
   autoFocusDisabled = false;
 
   stopAutoFocus() {

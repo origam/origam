@@ -37,7 +37,7 @@ import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { handleError } from "model/actions/handleError";
-import { IFocusAble } from "model/entities/FocusManager";
+import { IFocusAble } from "model/entities/FormFocusManager";
 import cx from "classnames";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";

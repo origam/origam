@@ -156,7 +156,7 @@ export class MapObjectsStore {
   @action.bound
   handleLayerClick(id: string) {
     if (this.setup.isReadOnlyView) {
-      getDataView(this.dataView).selectRowById(id);
+      getDataView(this.dataView).setSelectedRowId(id);
       this.search.selectSearchResultById(id);
       this.navigationStore.highlightSelectedSearchResult();
     }

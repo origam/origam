@@ -25,7 +25,7 @@ import { inject } from "mobx-react";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
-import {IFocusAble} from "model/entities/FocusManager";
+import {IFocusAble} from "model/entities/FormFocusManager";
 
 export const CheckBox: React.FC<{
   checked: boolean;

@@ -71,7 +71,7 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   expanded: string[]=[]
 
   onRowClick(node: Node) {
-    this.props.dataView.selectRowById(node.id);
+    this.props.dataView.setSelectedRowId(node.id);
   }
 
   onCaretClick(node: Node) {

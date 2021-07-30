@@ -25,7 +25,7 @@ import S from "./ColorEditor.module.scss";
 import { ColorResult, SketchPicker } from "react-color";
 import { createMachine, interpret } from "xstate";
 
-import { IFocusAble } from "model/entities/FocusManager";
+import { IFocusAble } from "model/entities/FormFocusManager";
 
 @observer
 export default class ColorEditor extends React.Component<{

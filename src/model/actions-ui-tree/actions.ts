@@ -37,7 +37,7 @@ export default {
           if (!action.isEnabled) {
             return;
           }
-          getDataView(ctx).focusManager.stopAutoFocus();
+          getDataView(ctx).formFocusManager.stopAutoFocus();
           const lifecycle = getFormScreenLifecycle(ctx);
           const gridId = getGridId(ctx);
           const entity = getEntity(ctx);

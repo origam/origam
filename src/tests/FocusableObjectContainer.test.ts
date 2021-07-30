@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FocusAbleObjectContainer, IFocusAble } from "../model/entities/FocusManager";
+import { FocusAbleObjectContainer, IFocusAble } from "../model/entities/FormFocusManager";
 
 class DummyFocusable implements IFocusAble{
   disabled: boolean = false;

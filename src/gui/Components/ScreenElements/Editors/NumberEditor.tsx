@@ -26,7 +26,7 @@ import {
   formatNumber,
   getCurrentDecimalSeparator,
 } from "../../../../model/entities/NumberFormating";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
 @observer
 export class NumberEditor extends React.Component<{

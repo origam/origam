@@ -26,7 +26,7 @@ import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./Dropd
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
-import { IFocusAble } from "../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../model/entities/FormFocusManager";
 import {compareStrings} from "../../../utils/string";
 
 export class DropdownEditorBehavior {

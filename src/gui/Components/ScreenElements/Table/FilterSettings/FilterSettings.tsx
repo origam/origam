@@ -32,8 +32,9 @@ import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSe
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { getAllLookupIds } from "model/entities/getAllLookupIds";
 import {FilterSettingsTagInput} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsTagInput";
+import {getGridFocusManager} from "../../../../../model/entities/GridFocusManager";
 
-export const FilterSettings: React.FC<{autoFocus: boolean}> = observer((props) => {
+export const FilterSettings: React.FC<{autoFocus: boolean, ctx: any}> = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
 
   function getSettings(defaultValue: IFilterSetting) {
@@ -45,15 +46,25 @@ export const FilterSettings: React.FC<{autoFocus: boolean}> = observer((props) =
     return setting;
   }
 
+  function onFilterValueChange(){
+    getGridFocusManager(props.ctx).focusTableOnReload = false;
+  }
+
   switch (property.column) {
     case "Text":
-      return <FilterSettingsString setting={getSettings(FilterSettingsString.defaultSettings)} autoFocus={props.autoFocus}/>;
+      return <FilterSettingsString
+        setting={getSettings(FilterSettingsString.defaultSettings)}
+        onChange={onFilterValueChange}
+        autoFocus={props.autoFocus}/>;
     case "CheckBox":
       return <FilterSettingsBoolean setting={getSettings(FilterSettingsBoolean.defaultSettings)} />;
     case "Date":
       return <FilterSettingsDate setting={getSettings(FilterSettingsDate.defaultSettings)} autoFocus={props.autoFocus} />;
     case "Number":
-      return <FilterSettingsNumber setting={getSettings(FilterSettingsNumber.defaultSettings)} autoFocus={props.autoFocus}/>;
+      return <FilterSettingsNumber
+        setting={getSettings(FilterSettingsNumber.defaultSettings)}
+        onChange={onFilterValueChange}
+        autoFocus={props.autoFocus}/>;
     case "ComboBox":
       const setting = getSettings(FilterSettingsLookup.defaultSettings);
       setting.lookupId = property.lookupId;

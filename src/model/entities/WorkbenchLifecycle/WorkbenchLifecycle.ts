@@ -433,7 +433,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const hasTheRow = (dataView as IDataView).dataTable.rows
           .find(row => dataView.dataTable.getRowId(row) === rowIdToSelect) !== undefined;
         if (hasTheRow && dataView.activateFormView && !dataView.isHeadless) {
-          dataView.selectRowById(rowIdToSelect);
+          dataView.setSelectedRowId(rowIdToSelect);
           yield dataView.activateFormView({saveNewState: false});
           break;
         }

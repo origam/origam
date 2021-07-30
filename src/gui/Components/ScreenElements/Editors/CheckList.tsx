@@ -28,7 +28,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FormFocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import cx from "classnames";
 
