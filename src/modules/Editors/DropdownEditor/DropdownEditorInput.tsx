@@ -71,6 +71,10 @@ export function DropdownEditorInput(props:{
           onClick={beh.onClick}
           value={beh.inputValue || ""}
           style={getStyle()}
+          autoComplete={"off"}
+          autoCorrect={"off"}
+          autoCapitalize={"off"}
+          spellCheck={"false"}
         />
       )}
     </Observer>
