@@ -131,12 +131,6 @@ namespace Origam.Mail
                     log.Error(ex);
                     throw;
                 }
-
-                /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
-                /// podle ktereho bude proveden update logu se statusem a casem odeslaneho mailu
-                /// .
-                /// Temito vysledky bude naplnen dataset, na nej dan data adapter a bude
-                /// proveden update.
             }
             return retVal;
         }
@@ -238,12 +232,6 @@ namespace Origam.Mail
                     log.Error(ex);
                     throw;
                 }
-
-                /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
-                /// podle ktereho bude proveden update logu se statusem a casem odeslaneho mailu
-                /// .
-                /// Temito vysledky bude naplnen dataset, na nej dan data adapter a bude
-                /// proveden update.
             }
             return retVal;
         }
