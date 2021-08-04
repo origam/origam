@@ -34,7 +34,7 @@ namespace Origam.Mail
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
-        private readonly string userName;
+        private readonly string username;
         private readonly string password;
         private readonly bool useSsl;
         private readonly string defaultServer;
@@ -45,17 +45,31 @@ namespace Origam.Mail
         {
         }
 
-        public NetStandardMailService(string server, int port, string pickupDirectoryLocation,
-           string userName = null, string password = null, bool useSsl = true)
+        public NetStandardMailService(
+            string server, int port, string pickupDirectoryLocation,
+            string username = null, string password = null, bool useSsl = true)
         {
-            if (string.IsNullOrWhiteSpace(password) &&
-                !string.IsNullOrWhiteSpace(userName))
+            if( !string.IsNullOrWhiteSpace(pickupDirectoryLocation)
+            && !string.IsNullOrWhiteSpace(server))
             {
-                throw new ArgumentException(nameof(password)+" cannot be empty if fromAddress is not empty");
+                throw new ArgumentException(
+                    "It is not possible to specify both server and pickup directory.");
             }
-            if(string.IsNullOrWhiteSpace(server)) throw new ArgumentException(nameof(server)+" cannot be empty");
-
-            this.userName = userName;
+            if (string.IsNullOrWhiteSpace(pickupDirectoryLocation))
+            {
+                if (string.IsNullOrWhiteSpace(password) 
+                    && !string.IsNullOrWhiteSpace(username))
+                {
+                    throw new ArgumentException(nameof(password) 
+                        + " cannot be empty if fromAddress is not empty");
+                }
+                if (string.IsNullOrWhiteSpace(server))
+                {
+                    throw new ArgumentException(nameof(server)
+                        + " cannot be empty");
+                }
+            }
+            this.username = username;
             this.password = password;
             this.useSsl = useSsl;
             defaultServer = server;
@@ -236,27 +250,23 @@ namespace Origam.Mail
 
         private SmtpClient BuildSmtpClient(string server, int port)
         {
-            //local variables
-            SmtpClient smtpClient = new SmtpClient();
-            
+            var smtpClient = new SmtpClient();
             if (server != null)
             {
                 smtpClient.Host = server;
                 smtpClient.Port = port;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             }
-            else
-            {
-                SetConfigValues(smtpClient);
-            }
-            
-            if (!string.IsNullOrWhiteSpace(pickupDirectoryLocation))
+            else if (!string.IsNullOrWhiteSpace(pickupDirectoryLocation))
             {
                 smtpClient.PickupDirectoryLocation = pickupDirectoryLocation;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
                 smtpClient.EnableSsl = false;
             }
-
+            else
+            {
+                SetConfigValues(smtpClient);
+            }
             return smtpClient;
         }
 
@@ -267,7 +277,7 @@ namespace Origam.Mail
             smtpClient.EnableSsl = useSsl;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(userName, password);
+            smtpClient.Credentials = new NetworkCredential(username, password);
         }
     }
 }
