@@ -163,37 +163,39 @@ namespace Origam.Mail
                     string toName = "";
                     string toAddress = "";
                     OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref toName, ref toAddress);
-
-                    if (recipient != null & recipient != String.Empty) m.To.Add(new MailAddress(toAddress, toName));
+                    if (string.IsNullOrEmpty(recipient))
+                    {
+                        m.To.Add(new MailAddress(toAddress, toName));
+                    }
                 }
 
-                string[] cc = null;
                 if (!mailrow.IsCCNull())
                 {
-                    cc = mailrow.CC.Split(";".ToCharArray());
-
+                    var cc = mailrow.CC.Split(";".ToCharArray());
                     foreach (string recipient in cc)
                     {
                         string ccName = "";
                         string ccAddress = "";
                         OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref ccName, ref ccAddress);
-
-                        if (recipient != null & recipient != String.Empty) m.CC.Add(new MailAddress(ccAddress, ccName));
+                        if (!string.IsNullOrEmpty(recipient))
+                        {
+                            m.CC.Add(new MailAddress(ccAddress, ccName));
+                        }
                     }
                 }
 
-                string[] bcc = null;
                 if (!mailrow.IsBCCNull())
                 {
-                    bcc = mailrow.BCC.Split(";".ToCharArray());
-
+                    var bcc = mailrow.BCC.Split(";".ToCharArray());
                     foreach (string recipient in bcc)
                     {
                         string bccName = "";
                         string bccAddress = "";
                         OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref bccName, ref bccAddress);
-
-                        if (recipient != null & recipient != String.Empty) m.Bcc.Add(new MailAddress(bccAddress, bccName));
+                        if (!string.IsNullOrEmpty(recipient))
+                        {
+                            m.Bcc.Add(new MailAddress(bccAddress, bccName));
+                        }
                     }
                 }
 
