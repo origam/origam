@@ -21,7 +21,7 @@ import { action } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 import S from "./TextEditor.module.scss";
-import { IFocusAble } from "../../../../model/entities/FormFocusManager";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -41,15 +41,13 @@ export class TextEditor extends React.Component<{
   isPassword?: boolean;
   isInvalid: boolean;
   invalidMessage?: string;
-  isFocused: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
   maxLength?: number;
   isRichText: boolean;
   customStyle?: any;
   wrapText: boolean;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
-  refocuser?: (cb: () => void) => () => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
@@ -63,11 +61,9 @@ export class TextEditor extends React.Component<{
   updateInterval: NodeJS.Timeout | undefined;
 
   componentDidMount() {
-    this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     if (this.props.isMultiline) {
       this.disposers.push(this.startAutoUpdate());
     }
-    this.makeFocusedIfNeeded();
   }
 
   private startAutoUpdate() {
@@ -82,20 +78,6 @@ export class TextEditor extends React.Component<{
 
   componentWillUnmount() {
     this.disposers.forEach((d) => d());
-  }
-
-  componentDidUpdate(prevProps: { isFocused: boolean }) {
-    if (!prevProps.isFocused && this.props.isFocused) {
-      this.makeFocusedIfNeeded();
-    }
-  }
-
-  @action.bound
-  makeFocusedIfNeeded() {
-    if (this.props.isFocused && this.elmInput) {
-      this.elmInput.select();
-      this.elmInput.scrollLeft = 0;
-    }
   }
 
   @action.bound

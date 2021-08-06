@@ -26,7 +26,7 @@ import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./Dropd
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
-import { IFocusAble } from "../../../model/entities/FormFocusManager";
+import { IFocusable } from "../../../model/entities/FormFocusManager";
 import {compareStrings} from "../../../utils/string";
 
 export class DropdownEditorBehavior {
@@ -39,7 +39,7 @@ export class DropdownEditorBehavior {
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
     public onClick?: (event: any) => void,
-    public subscribeToFocusManager?: (obj: IFocusAble) => void,
+    public subscribeToFocusManager?: (obj: IFocusable) => void,
     private onKeyDown?: (event: any) => void,
     private autoSort?: boolean,
   ) {}

@@ -27,6 +27,7 @@ import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
+import {getGridFocusManager} from "model/entities/GridFocusManager";
 
 export function onFieldKeyDown(ctx: any) {
 
@@ -74,6 +75,7 @@ export function onFieldKeyDown(ctx: any) {
             tablePanelView.dontHandleNextScroll();
             tablePanelView.scrollToCurrentCell();
             yield* flushCurrentRowData(ctx)();
+            getGridFocusManager(ctx).focusEditor();
           }
           break;
         }

@@ -280,9 +280,7 @@ export function FilterBuildDropdownEditor(props: {
             value={value}
             isReadOnly={false}
             isInvalid={false}
-            isFocused={false}
             autoFocus={props.autoFocus}
-            refocuser={undefined}
             onClick={undefined}
           />
         }

@@ -25,7 +25,7 @@ import S from "./ColorEditor.module.scss";
 import { ColorResult, SketchPicker } from "react-color";
 import { createMachine, interpret } from "xstate";
 
-import { IFocusAble } from "model/entities/FormFocusManager";
+import { IFocusable } from "model/entities/FormFocusManager";
 
 @observer
 export default class ColorEditor extends React.Component<{
@@ -35,7 +35,7 @@ export default class ColorEditor extends React.Component<{
   onFocus?: () => void;
   onBlur?: () => void;
   onKeyDown?(event: any): void;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   refContainer = (elm: any) => (this.elmContainer = elm);
   elmContainer: any;

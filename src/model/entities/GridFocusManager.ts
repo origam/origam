@@ -1,5 +1,6 @@
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {getDataView} from "../selectors/DataView/getDataView";
+import {IFocusable} from "./FormFocusManager";
 
 export class GridFocusManager {
 
@@ -14,6 +15,12 @@ export class GridFocusManager {
     } else {
       this.focusTableOnReload = true;
     }
+  }
+
+  activeEditor: IFocusable | undefined;
+
+  focusEditor() {
+    this.activeEditor?.focus();
   }
 }
 

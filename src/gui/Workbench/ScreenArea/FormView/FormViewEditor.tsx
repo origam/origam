@@ -112,13 +112,11 @@ export class FormViewEditor extends React.Component<{
             isPassword={this.props.property!.isPassword}
             invalidMessage={invalidMessage}
             property={this.props.property}
-            isFocused={false}
             maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
             customStyle={this.props.property?.style}
-            reFocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
             onClick={undefined}
@@ -143,10 +141,8 @@ export class FormViewEditor extends React.Component<{
             customStyle={this.props.property?.style}
             maxLength={this.props.property?.maxLength}
             invalidMessage={invalidMessage}
-            isFocused={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
             onClick={undefined}
@@ -172,10 +168,8 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={readOnly}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
-            isFocused={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
@@ -254,11 +248,9 @@ export class FormViewEditor extends React.Component<{
                 isReadOnly={readOnly}
                 isInvalid={isInvalid}
                 invalidMessage={invalidMessage}
-                isFocused={false}
                 backgroundColor={backgroundColor}
                 foregroundColor={foregroundColor}
                 customStyle={this.props.property?.style}
-                refocuser={undefined}
                 onChange={this.props.onChange}
                 onKeyDown={this.makeOnKeyDownCallBack()}
                 onClick={undefined}

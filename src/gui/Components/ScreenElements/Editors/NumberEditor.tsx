@@ -26,7 +26,7 @@ import {
   formatNumber,
   getCurrentDecimalSeparator,
 } from "../../../../model/entities/NumberFormating";
-import { IFocusAble } from "../../../../model/entities/FormFocusManager";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
 @observer
 export class NumberEditor extends React.Component<{
@@ -35,20 +35,18 @@ export class NumberEditor extends React.Component<{
   isPassword?: boolean;
   isInvalid: boolean;
   invalidMessage?: string;
-  isFocused: boolean;
   property?: IProperty;
   backgroundColor?: string;
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
   maxLength?: number;
   customStyle?: any;
-  reFocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   disposers: any[] = [];
 
@@ -76,8 +74,6 @@ export class NumberEditor extends React.Component<{
   }
 
   componentDidMount() {
-    this.props.reFocuser && this.disposers.push(this.props.reFocuser(this.makeFocusedIfNeeded));
-    this.makeFocusedIfNeeded();
     if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
     }
@@ -87,20 +83,9 @@ export class NumberEditor extends React.Component<{
     this.disposers.forEach((d) => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean; value: any }) {
-    if (!prevProps.isFocused && this.props.isFocused) {
-      this.makeFocusedIfNeeded();
-    }
+  componentDidUpdate(prevProps: { value: any }) {
     if (this.props.value !== prevProps.value && !this.wasChanged) {
       this.editingValue = this.numeralFormattedValue;
-    }
-  }
-
-  @action.bound
-  makeFocusedIfNeeded() {
-    if (this.props.isFocused && this.elmInput) {
-      this.elmInput.select();
-      this.elmInput.scrollLeft = 0;
     }
   }
 

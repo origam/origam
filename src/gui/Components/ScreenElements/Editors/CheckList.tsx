@@ -28,7 +28,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
-import { IFocusAble } from "../../../../model/entities/FormFocusManager";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import cx from "classnames";
 
@@ -49,7 +49,7 @@ export interface IRawCheckListProps {
   isInvalid: boolean;
   isReadonly?: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 
   onChange?(newValue: string[]): void;
   onKeyDown(event: any): void;
@@ -111,7 +111,7 @@ export const CheckList: React.FC<{
   isInvalid: boolean;
   isReadonly?: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown(event: any): void;
   onClick: () => void;
 }> = observer((props) => {
@@ -235,7 +235,7 @@ export const CheckListItem: React.FC<{
   focusUp: (x: number, y: number) => void;
   focusDown: (x: number, y: number) => void;
   label: string;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }> = (props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);

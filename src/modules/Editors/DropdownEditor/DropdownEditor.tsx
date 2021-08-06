@@ -36,7 +36,7 @@ import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
-import { IFocusAble } from "../../../model/entities/FormFocusManager";
+import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
 import {getMomentFormat} from "../../../xmlInterpreters/getMomentFormat";
 
@@ -119,7 +119,7 @@ export function XmlBuildDropdownEditor(props: {
   autoSort?: boolean;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);

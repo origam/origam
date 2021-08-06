@@ -20,43 +20,43 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { action, computed, observable, reaction } from "mobx";
 import { getParentRow } from "model/selectors/DataView/getParentRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
-import { getDataTable } from "../selectors/DataView/getDataTable";
-import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
-import { getIsDialog } from "../selectors/getIsDialog";
-import { IDataViewLifecycle } from "./DataViewLifecycle/types/IDataViewLifecycle";
-import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
-import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
-import { IAction, IActionPlacement, IActionType } from "./types/IAction";
-import { IDataTable } from "./types/IDataTable";
-import { IDataView, IDataViewData } from "./types/IDataView";
-import { IPanelViewType } from "./types/IPanelViewType";
-import { IProperty } from "./types/IProperty";
+import { getDataSourceByEntity } from "model/selectors/DataSources/getDataSourceByEntity";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { getIsDialog } from "model/selectors/getIsDialog";
+import { IDataViewLifecycle } from "model/entities/DataViewLifecycle/types/IDataViewLifecycle";
+import { IFormPanelView } from "model/entities/FormPanelView/types/IFormPanelView";
+import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
+import { IAction, IActionPlacement, IActionType } from "model/entities/types/IAction";
+import { IDataTable } from "model/entities/types/IDataTable";
+import { IDataView, IDataViewData } from "model/entities/types/IDataView";
+import { IPanelViewType } from "model/entities/types/IPanelViewType";
+import { IProperty } from "model/entities/types/IProperty";
 import { getBindingToParent } from "model/selectors/DataView/getBindingToParent";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
-import { ILookupLoader } from "./types/ILookupLoader";
+import { ILookupLoader } from "model/entities/types/ILookupLoader";
 import bind from "bind-decorator";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { ServerSideGrouper } from "./ServerSideGrouper";
-import { ClientSideGrouper } from "./ClientSideGrouper";
-import { getFormScreenLifecycle } from "../selectors/FormScreen/getFormScreenLifecycle";
-import { getTableViewProperties } from "../selectors/TablePanelView/getTableViewProperties";
-import { getIsSelectionCheckboxesShown } from "../selectors/DataView/getIsSelectionCheckboxesShown";
-import { getGroupingConfiguration } from "../selectors/TablePanelView/getGroupingConfiguration";
-import { flattenToTableRows } from "../../gui/Components/ScreenElements/Table/TableRendering/tableRows";
-import { GridDimensions } from "../../gui/Workbench/ScreenArea/TableView/GridDimensions";
-import { SimpleScrollState } from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
+import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
+import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { flattenToTableRows } from "gui/Components/ScreenElements/Table/TableRendering/tableRows";
+import { GridDimensions } from "gui/Workbench/ScreenArea/TableView/GridDimensions";
+import { SimpleScrollState } from "gui/Components/ScreenElements/Table/SimpleScrollState";
 import { BoundingRect } from "react-measure";
-import { IGridDimensions } from "../../gui/Components/ScreenElements/Table/types";
-import { FormFocusManager } from "./FormFocusManager";
+import { IGridDimensions } from "gui/Components/ScreenElements/Table/types";
+import { FormFocusManager } from "model/entities/FormFocusManager";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
-import { DataViewData } from "../../modules/DataView/DataViewData";
-import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
-import { RowCursor } from "../../modules/DataView/TableCursor";
+import { DataViewData } from "modules/DataView/DataViewData";
+import { DataViewAPI } from "modules/DataView/DataViewAPI";
+import { RowCursor } from "modules/DataView/TableCursor";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import {
   IInfiniteScrollLoader,
@@ -77,7 +77,7 @@ import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToL
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getPropertyOrdering } from "model/selectors/DataView/getPropertyOrdering";
-import { IOrderByDirection } from "./types/IOrderingConfiguration";
+import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 
 import selectors from "model/selectors-tree";
 import produce from "immer";
@@ -86,10 +86,10 @@ import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemCli
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
 import {
   runInFlowWithHandler,
-} from "../../utils/runInFlowWithHandler";
-import { IAggregation } from "./types/IAggregation";
-import { getConfigurationManager } from "../selectors/TablePanelView/getConfigurationManager";
-import {getGridFocusManager, GridFocusManager} from "./GridFocusManager";
+} from "utils/runInFlowWithHandler";
+import { IAggregation } from 'model/entities/types/IAggregation';
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { GridFocusManager } from "model/entities/GridFocusManager";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -715,11 +715,6 @@ export class DataView implements IDataView {
     const self = this;
     if (!this.selectedRowId) {
       return;
-    }
-    if(!isLazyLoading(this)){
-      setTimeout(()=>{
-        getGridFocusManager(this).focusTableIfNeeded();
-      });
     }
 
     if (getFormScreenLifecycle(this).focusedDataViewId === this.id) {

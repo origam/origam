@@ -345,8 +345,6 @@ export function FilterBuildDropdownEditor(props: {
             value={value}
             isReadOnly={false}
             isInvalid={false}
-            isFocused={false}
-            refocuser={undefined}
             onChange={onItemRemoved}
             onClick={undefined}
             autoFocus={props.autoFocus}

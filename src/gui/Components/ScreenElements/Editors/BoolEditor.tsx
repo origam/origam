@@ -21,7 +21,7 @@ import * as React from "react";
 import { observer } from "mobx-react";
 import S from "./BoolEditor.module.scss";
 import cx from "classnames";
-import { IFocusAble } from "../../../../model/entities/FormFocusManager";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 
 @observer
@@ -38,7 +38,7 @@ export class BoolEditor extends React.Component<{
   invalidMessage?: string;
   id?: string;
   forceTakeFocus?: boolean;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {

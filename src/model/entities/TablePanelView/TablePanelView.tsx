@@ -25,27 +25,29 @@ import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedC
 import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { getDataTable } from "../../selectors/DataView/getDataTable";
-import { getDataView } from "../../selectors/DataView/getDataView";
-import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
-import { IFilterConfiguration } from "../types/IFilterConfiguration";
-import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
-import { IProperty } from "../types/IProperty";
-import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
-import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
-import { IAggregationInfo } from "../types/IAggregationInfo";
-import { AggregationType } from "../types/AggregationType";
-import { ICellRectangle } from "./types/ICellRectangle";
-import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
-import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
-import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurrentRowData";
-import { isReadOnly } from "../../selectors/RowState/isReadOnly";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
+import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
+import { IProperty } from "model/entities/types/IProperty";
+import { IColumnConfigurationDialog } from "model/entities/TablePanelView/types/IColumnConfigurationDialog";
+import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "model/entities/TablePanelView/types/ITablePanelView";
+import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
+import { IAggregationInfo } from "model/entities/types/IAggregationInfo";
+import { AggregationType } from "model/entities/types/AggregationType";
+import { ICellRectangle } from "model/entities/TablePanelView/types/ICellRectangle";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
+import {getGridFocusManager} from "model/entities/GridFocusManager";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -212,6 +214,11 @@ export class TablePanelView implements ITablePanelView {
     }
     if (!getGroupingConfiguration(this).isGrouping) {
       this.scrollToCurrentCell();
+    }
+    if(!isLazyLoading(this)){
+      setTimeout(()=>{
+        getGridFocusManager(this).focusTableIfNeeded();
+      });
     }
   }
 

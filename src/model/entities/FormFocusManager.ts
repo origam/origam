@@ -25,19 +25,19 @@ export class FormFocusManager {
   stopAutoFocus() {
     this.autoFocusDisabled = true;
   }
-  objectMap: Map<string, IFocusAble> = new Map<string, IFocusAble>();
+  objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusAbleContainers: IFocusAbleObjectContainer[] = [];
-
+  private lastFocused: IFocusable | undefined;
   constructor(public parent: any) {}
 
-  subscribe(focusAbleObject: IFocusAble, name: string | undefined, tabIndex: string | undefined) {
+  subscribe(focusAbleObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
     if(!focusAbleObject){
       return;
     }
     const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex);
     const existingContainer = this.focusAbleContainers
       .find(container => container.name && container.name === name ||
-            container.focusAble === focusAbleObject);
+            container.focusable === focusAbleObject);
     if(existingContainer){
       this.focusAbleContainers.remove(existingContainer);
     }
@@ -46,18 +46,31 @@ export class FormFocusManager {
   }
 
   focus(name: string) {
-    this.focusAbleContainers.find((container) => container.name === name)?.focusAble.focus();
+    let focusable = this.focusAbleContainers.find((container) => container.name === name)?.focusable;
+    this.focusAndRemember(focusable);
+  }
+
+  private focusAndRemember(focusable: IFocusable | undefined){
+    if(!focusable){
+      return;
+    }
+    this.lastFocused = focusable;
+    focusable.focus();
+  }
+
+  refocusLast(){
+    this.lastFocused?.focus();
   }
 
   forceAutoFocus() {
-    const focusAble = this.focusAbleContainers[0].focusAble;
-    if (focusAble.disabled) {
-      //  (focusAble as any).readOnly returns always false => readonly fields cannot be skipped
-      this.focusNext(focusAble);
+    const focusable = this.focusAbleContainers[0].focusable;
+    if (focusable.disabled) {
+      //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
+      this.focusNext(focusable);
       return;
     }
     setTimeout(() => {
-      focusAble.focus();
+      this.focusAndRemember(focusable);
     }, 0);
   }
 
@@ -77,32 +90,32 @@ export class FormFocusManager {
       return;
     }
     const currentContainerIndex = this.focusAbleContainers.findIndex(
-      (container) => container.focusAble === activeElement
+      (container) => container.focusable === activeElement
     );
     const nextIndex =
       this.focusAbleContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
-    const focusAble = this.focusAbleContainers[nextIndex].focusAble;
-    if (focusAble !== activeElement && focusAble.disabled) {
-      this.focusNextInternal(focusAble, callNumber + 1);
+    const focusable = this.focusAbleContainers[nextIndex].focusable;
+    if (focusable !== activeElement && focusable.disabled) {
+      this.focusNextInternal(focusable, callNumber + 1);
     } else {
       setTimeout(() => {
-        focusAble.focus();
+        this.focusAndRemember(focusable);
       });
     }
   }
 
   focusPrevious(activeElement: any) {
     const currentContainerIndex = this.focusAbleContainers.findIndex(
-      (container) => container.focusAble === activeElement
+      (container) => container.focusable === activeElement
     );
     const previousIndex =
       currentContainerIndex === 0 ? this.focusAbleContainers.length - 1 : currentContainerIndex - 1;
-    const focusAble = this.focusAbleContainers[previousIndex].focusAble;
-    if (focusAble.disabled) {
-      this.focusPrevious(focusAble);
+    const focusable = this.focusAbleContainers[previousIndex].focusable;
+    if (focusable.disabled) {
+      this.focusPrevious(focusable);
     } else {
       setTimeout(() => {
-        focusAble.focus();
+        this.focusAndRemember(focusable);
       });
     }
   }
@@ -111,7 +124,7 @@ export class FormFocusManager {
 export interface IFocusAbleObjectContainer {
   name: string | undefined;
   tabIndexFractions: number[];
-  focusAble: IFocusAble;
+  focusable: IFocusable;
   has(fractionIndex: number): boolean;
 }
 
@@ -127,7 +140,7 @@ export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
   }
 
   constructor(
-    public focusAble: IFocusAble,
+    public focusable: IFocusable,
     public name: string | undefined,
     private tabIndexNullable: string | undefined
   ) {}
@@ -167,7 +180,7 @@ export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
   }
 }
 
-export interface IFocusAble {
+export interface IFocusable {
   focus(): void;
   disabled: boolean;
 }

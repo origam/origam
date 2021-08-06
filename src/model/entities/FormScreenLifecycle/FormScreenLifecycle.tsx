@@ -794,6 +794,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this._processedUpdateObjectResults.add(updateObjectResult);
       yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
     }
+    dataView.formFocusManager.refocusLast();
 
     return true;
   }

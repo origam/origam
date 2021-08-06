@@ -47,11 +47,9 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       isReadOnly: boolean;
       isInvalid: boolean;
       invalidMessage?: string;
-      isFocused: boolean;
       backgroundColor?: string;
       foregroundColor?: string;
       customStyle?: any;
-      refocuser?: (cb: () => void) => () => void;
       onChange?(event: any, value: string[]): void;
       onKeyDown?(event: any): void;
       onClick?(event: any): void;
