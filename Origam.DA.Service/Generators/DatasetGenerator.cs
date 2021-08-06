@@ -371,19 +371,33 @@ namespace Origam.DA.Service
 
 						tableColumn.ExtendedProperties.Add(Const.OrigamDataType, finalDataType);
 						tableColumn.ExtendedProperties.Add(Const.FieldId, finalColumn.Id);
-
-						DetachedField detachedField = column.Field as DetachedField;
-						if(detachedField != null && detachedField.DataType == OrigamDataType.Array)
+						switch(column.Field)
 						{
-							DataStructureEntity relatedEntity = LookupRelation(entity, detachedField.ArrayRelation);
-							if(relatedEntity == null)
+							case FieldMappingItem _:
+								tableColumn.ExtendedProperties.Add(
+									Const.IsDatabaseField, true);
+								break;
+							case DetachedField detachedField 
+								when detachedField.DataType == OrigamDataType.Array:
 							{
-								throw new Exception("Data Structure does not contain entity " + detachedField.ArrayRelation.Name + " that is required for creating an Array field " + detachedField.Path);
+								var relatedEntity = LookupRelation(
+									entity, detachedField.ArrayRelation);
+								if(relatedEntity == null)
+								{
+									throw new Exception(
+										"Data Structure does not contain entity " + 
+										detachedField.ArrayRelation.Name + 
+										" that is required for creating an Array field " 
+										+ detachedField.Path);
+								}
+								tableColumn.ExtendedProperties.Add(
+									Const.ArrayRelation, relatedEntity.Name);
+								tableColumn.ExtendedProperties.Add(
+										Const.ArrayRelationField, 
+										LookupColumnName(relatedEntity, detachedField.ArrayValueField));
+								aggregatedColumns.Add(column);
+								break;
 							}
-							tableColumn.ExtendedProperties.Add(Const.ArrayRelation, relatedEntity.Name);
-							tableColumn.ExtendedProperties.Add(Const.ArrayRelationField, LookupColumnName(relatedEntity, detachedField.ArrayValueField));
-
-							aggregatedColumns.Add(column);
 						}
 
 						// Set caption
