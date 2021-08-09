@@ -256,7 +256,7 @@
     <value></value>
   </data>
   <data name="ToLogin1" xml:space="preserve">
-    <value>Pro opětovné přihlášení klikněte</value>
+    <value>Pro opětovné přihlášení klikněte </value>
   </data>
   <data name="ToLogin2" xml:space="preserve">
     <value>sem</value>
@@ -265,7 +265,7 @@
     <value>.</value>
   </data>
   <data name="ToResetPassword1" xml:space="preserve">
-    <value>Pro reset hesla klikněte</value>
+    <value>Pro reset hesla klikněte </value>
   </data>
   <data name="ToResetPassword2" xml:space="preserve">
     <value>sem</value>
@@ -295,7 +295,7 @@
     <value>Externí přihlášení</value>
   </data>
   <data name="ResetPasswordConfirmation1" xml:space="preserve">
-    <value>Vaše heslo bylo resetováno. Pro přihlášení klikněte</value>
+    <value>Vaše heslo bylo resetováno. Pro přihlášení klikněte </value>
   </data>
   <data name="ResetPasswordConfirmation2" xml:space="preserve">
     <value>sem</value>
@@ -304,7 +304,7 @@
     <value>.</value>
   </data>
   <data name="EmailConfirmation1" xml:space="preserve">
-    <value>Váš e-mail byl potvrzen. Pro přihlášení klikněte</value>
+    <value>Váš e-mail byl potvrzen. Pro přihlášení klikněte </value>
   </data>
   <data name="EmailConfirmation2" xml:space="preserve">
     <value>sem</value>
