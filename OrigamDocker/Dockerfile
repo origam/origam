@@ -15,7 +15,7 @@ RUN apt-get update \
 && ./autogen.sh --with-pango --prefix=/usr \
 && make \
 && make install \
-&& apt-get -y purge libgif-dev autoconf automake build-essential libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev \
+&& apt-get -y purge autoconf automake build-essential \
 && apt-get -y autoremove \
 && cd .. \
 && rm -r libgdiplus \
