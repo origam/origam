@@ -51,7 +51,7 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="nunit" Version="3.13.2" />
+        <PackageReference Include="NUnit" Version="3.13.2" />
     </ItemGroup>
 
 </Project>

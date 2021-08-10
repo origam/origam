@@ -387,6 +387,9 @@
     <Compile Include="SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SplashScreenPopUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="strings.cs-CZ.Designer.cs">
       <DependentUpon>strings.cs-CZ.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -437,6 +440,7 @@
     <EmbeddedResource Include="SplashScreen.resx">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SplashScreenPopUp.resx" />
     <EmbeddedResource Include="strings.cs-CZ.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.cs-CZ.Designer.cs</LastGenOutput>
