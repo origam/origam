@@ -37,7 +37,6 @@ namespace Origam.DA.Service
             = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ItemTracker itemTracker;
-        private bool itemTrackerWasJustLoadedFromBin;
         private readonly ReaderWriterLockSlim readWriteLock =
             new ReaderWriterLockSlim();
 
@@ -82,12 +81,7 @@ namespace Origam.DA.Service
         {
             return readWriteLock.RunWriter(() =>
             {
-                if (!itemTrackerWasJustLoadedFromBin)
-                {
-                    itemTracker.Clear();
-                }
-
-                itemTrackerWasJustLoadedFromBin = false;
+                itemTracker.Clear();
                 return trackerLoaderFactory.XmlLoader.LoadInto(
                     itemTracker: itemTracker,
                     mode: MetaModelUpgradeMode.Ignore);
@@ -224,11 +218,6 @@ namespace Origam.DA.Service
                         throw new Exception(error.Value.Message);
                     }
                     trackerLoaderFactory.BinLoader.Persist(itemTracker);
-                    itemTrackerWasJustLoadedFromBin = false;
-                }
-                else
-                {
-                    itemTrackerWasJustLoadedFromBin = true;
                 }
 #else
                 Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
@@ -238,7 +227,6 @@ namespace Origam.DA.Service
                 {
                     throw new Exception(error.Value.Message);
                 }
-                itemTrackerWasJustLoadedFromBin = false;
 #endif
             });
         }

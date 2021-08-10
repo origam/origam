@@ -53,6 +53,7 @@ namespace Origam.Workbench.ServicesTests
             Thread.Sleep(3000);
             
             Assert.IsTrue(reloadNeededEventCalled);
+            File.Delete(pathToTestFile);
         }
 
         private static FilePersistenceService InitializeFilePersistenceService(
