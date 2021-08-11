@@ -1575,11 +1575,14 @@ namespace OrigamArchitect
 	        }
 	        catch (AggregateException ae)
 	        {
-	            if (!(ae.InnerException is OperationCanceledException))
+		        bool actualExceptionsExist = ae.Flatten()
+			        .InnerExceptions
+			        .Any(x => !(x is OperationCanceledException));
+		        if (actualExceptionsExist)
 	            {
-	                log.Error(ae.InnerException);
+	                log.Error(ae);
 	                this.RunWithInvoke(() => AsMessageBox.ShowError(
-		                this, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
+		                this, ae.Message, strings.GenericError_Title, ae));
 	            }
 	        }
 	    }
