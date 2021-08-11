@@ -1461,11 +1461,6 @@ namespace OrigamArchitect
 
 			try
 			{
-				if(this.WindowState != FormWindowState.Normal)
-				{
-					this.WindowState = FormWindowState.Normal;
-				}
-
 				_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
 
 				// Login to the repository

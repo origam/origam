@@ -124,6 +124,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
         }
         
+        private DateTime lastProgressCalled = DateTime.Now;
+        private readonly TimeSpan minProgressCallInterval =
+            new TimeSpan(0,0,0,0,25);
+        
         private XmlFileData Upgrade(XmlFileData fileData, int totalFileCount)
         {
             var xFileData = new XFileData(fileData);
@@ -139,10 +143,14 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
 
             filesProcessed += 1;
-            UpgradeProgress?.Invoke(
-                null,
-                new UpgradeProgressInfo(totalFileCount,
+            if (DateTime.Now - lastProgressCalled > minProgressCallInterval)
+            {
+                UpgradeProgress?.Invoke(
+                    null,
+                    new UpgradeProgressInfo(totalFileCount,
                     filesProcessed));
+                lastProgressCalled = DateTime.Now;
+            }
             return wasUpgraded
                 ? new XmlFileData(xFileData) 
                 : fileData;
