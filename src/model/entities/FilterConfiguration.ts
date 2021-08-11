@@ -25,7 +25,10 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
-import {prepareAnyForFilter, prepareForFilter} from "../selectors/PortalSettings/getStringFilterConfig";
+import {
+  prepareAnyForFilter,
+  prepareForFilter
+} from "../selectors/PortalSettings/getStringFilterConfig";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
@@ -117,7 +120,7 @@ export class FilterConfiguration implements IFilterConfiguration {
     switch (prop.column) {
       case "Text": {
         const filterVal1 = prepareAnyForFilter(this,term.setting.val1);
-        const cellText = prepareForFilter(this, dataTable.getOriginalCellText(row, prop))!;
+        const cellText = prepareAnyForFilter(this, dataTable.getOriginalCellText(row, prop))!;
         if (cellValue === undefined) return true;
 
         switch (term.setting.type) {

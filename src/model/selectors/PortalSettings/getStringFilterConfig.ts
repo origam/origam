@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {IFilterConfig} from "../../entities/types/IFilterConfig";
 import {getWorkbenchLifecycle} from "../getWorkbenchLifecycle";
-import {latinize} from "../../../utils/string";
+import {latinize} from "utils/string";
 
 function getStringFilterConfig(ctx: any): IFilterConfig {
   return getWorkbenchLifecycle(ctx).portalSettings?.filterConfig ?? {
@@ -34,7 +34,7 @@ export function prepareForFilter(ctx: any, text: string | undefined | null){
   }
   const filterConfig = getStringFilterConfig(ctx);
   if (!filterConfig.caseSensitive) {
-    text = text.toLowerCase();
+     text = text.toLowerCase();
   }
   if (!filterConfig.accentSensitive) {
     text = latinize(text);

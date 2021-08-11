@@ -36,7 +36,7 @@ import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsLis
 import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
 import { getIconUrl } from "gui/getIconUrl";
 import {IMenuItemIcon} from "gui/Workbench/MainMenu/IMenuItemIcon";
-import {prepareForFilter} from "../selectors/PortalSettings/getStringFilterConfig";
+import {prepareForFilter} from "model/selectors/PortalSettings/getStringFilterConfig";
 
 
 export class Searcher implements ISearcher {
@@ -196,7 +196,7 @@ export class Searcher implements ISearcher {
   doSearchTerm = _.throttle(this.doSearchTermImm, 100);
 
   @action.bound doSearchTermImm(term: string) {
-    const searchTerm = prepareForFilter(this,term.trim())!;
+    const searchTerm = prepareForFilter(this, term.trim())!;
     this.searchInMenu(searchTerm);
     this.searchInWorkQueues(searchTerm);
     this.searchInChat(searchTerm);
