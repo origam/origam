@@ -60,7 +60,6 @@ namespace OrigamArchitect
             this.currentFileLabel.Name = "currentFileLabel";
             this.currentFileLabel.Size = new System.Drawing.Size(427, 20);
             this.currentFileLabel.TabIndex = 2;
-            this.currentFileLabel.Text = "label1";
             // 
             // infoLabel
             // 
@@ -86,7 +85,6 @@ namespace OrigamArchitect
             this.Name = "ModelUpgradeForm";
             this.Text = "Meta Model Validation";
             this.ResumeLayout(false);
-
         }
 
         #endregion
