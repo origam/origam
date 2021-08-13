@@ -49,7 +49,7 @@ namespace Origam.Mail
             string server, int port, string pickupDirectoryLocation,
             string username = null, string password = null, bool useSsl = true)
         {
-            if( !string.IsNullOrWhiteSpace(pickupDirectoryLocation)
+            if(!string.IsNullOrWhiteSpace(pickupDirectoryLocation)
             && !string.IsNullOrWhiteSpace(server))
             {
                 throw new ArgumentException(
@@ -163,7 +163,7 @@ namespace Origam.Mail
                     string toName = "";
                     string toAddress = "";
                     OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref toName, ref toAddress);
-                    if (string.IsNullOrEmpty(recipient))
+                    if (!string.IsNullOrEmpty(recipient))
                     {
                         m.To.Add(new MailAddress(toAddress, toName));
                     }
@@ -241,7 +241,7 @@ namespace Origam.Mail
         private SmtpClient BuildSmtpClient(string server, int port)
         {
             var smtpClient = new SmtpClient();
-            if (server != null)
+            if (!string.IsNullOrEmpty(server))
             {
                 smtpClient.Host = server;
                 smtpClient.Port = port;
