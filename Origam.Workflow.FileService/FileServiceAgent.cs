@@ -22,15 +22,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using Origam.DA;
 using FileHelpers;
-using FileHelpers.Dynamic;
-
 using System.Data;
-
 using log4net;
 using System.Text;
+using Extender;
 
 namespace Origam.Workflow.FileService
 {
@@ -44,13 +43,14 @@ namespace Origam.Workflow.FileService
             DataSet data = CreateEmptyOutputData();
             DataTable dt = data.Tables[entity];
             TextReaderOptions options = TextReaderOptions.Deserialize(optionsXml.Xml);
-            DelimitedClassBuilder cb = new DelimitedClassBuilder(entity);
-            cb.IgnoreFirstLines = options.IgnoreFirst;
-            cb.IgnoreLastLines = options.IgnoreLast;
-            cb.Delimiter = options.Separator;
-
+            var typeExtender = new TypeExtender(entity);
+            typeExtender.AddAttribute<IgnoreFirstAttribute>(new object[]{options.IgnoreFirst});
+            typeExtender.AddAttribute<IgnoreLastAttribute>(new object[]{options.IgnoreLast});
+            typeExtender.AddAttribute<DelimitedRecordAttribute>(new object[]{options.Separator, ""});
+            
             foreach (TextReaderOptionsField trof in options.FieldOptions)
             {
+                var attributeParameters = new Dictionary<Type, List<object>>();
                 DataColumn col = null;
                 Type dataType = typeof(string);
                 if (!trof.IsIgnored)
@@ -73,24 +73,26 @@ namespace Origam.Workflow.FileService
                         }
                     }
                 }
-                cb.AddField(trof.Name, dataType);
+                
                 if (dataType == typeof(DateTime))
                 {
-                    cb.LastField.Converter.Arg1 = trof.Format;
+                    attributeParameters.Add(typeof(FieldConverterAttribute), new List<object>());
                     if (trof.AlternativeFormats == null)
                     {
-                        cb.LastField.Converter.Kind = ConverterKind.Date;
+                        attributeParameters[typeof(FieldConverterAttribute)].Add(ConverterKind.Date);
+                        attributeParameters[typeof(FieldConverterAttribute)].Add(trof.Format);
                     }
                     else
                     {
-                        cb.LastField.Converter.Kind = ConverterKind.DateMultiFormat;
+                        attributeParameters[typeof(FieldConverterAttribute)].Add(ConverterKind.DateMultiFormat);
+                        attributeParameters[typeof(FieldConverterAttribute)].Add(trof.Format);
                         if (trof.AlternativeFormats.Length > 0)
                         {
-                            cb.LastField.Converter.Arg2 = trof.AlternativeFormats[0];
+                            attributeParameters[typeof(FieldConverterAttribute)].Add(trof.AlternativeFormats[0]);
                         }
                         if (trof.AlternativeFormats.Length > 1)
                         {
-                            cb.LastField.Converter.Arg3 = trof.AlternativeFormats[1];
+                            attributeParameters[typeof(FieldConverterAttribute)].Add(trof.AlternativeFormats[1]);
                         }
                         if (trof.AlternativeFormats.Length > 2)
                         {
@@ -98,27 +100,55 @@ namespace Origam.Workflow.FileService
                         }
                     }
                 }
-                if (dataType == typeof(decimal))
+                else if (dataType == typeof(decimal))
                 {
-                    cb.LastField.Converter.Kind = ConverterKind.Decimal;
-                    cb.LastField.Converter.Arg1 = trof.DecimalSeparator;
+                    attributeParameters.Add(
+                        typeof(FieldConverterAttribute),
+                        new List<object>
+                        {
+                            ConverterKind.Decimal, trof.DecimalSeparator
+                        });
                 }
-                cb.LastField.FieldOptional = trof.IsOptional;
-                cb.LastField.QuoteMode = QuoteMode.OptionalForRead;
-                cb.LastField.FieldQuoted = trof.IsQuoted;
-                cb.LastField.QuoteMultiline = MultilineMode.AllowForRead;
-                if (trof.QuoteChar != null && trof.QuoteChar.Length > 0)
+                if (trof.IsOptional)
                 {
-                    cb.LastField.QuoteChar = trof.QuoteChar.ToCharArray()[0];
+                    attributeParameters.Add(
+                        typeof(FieldOptionalAttribute),
+                        new List<object>());    
                 }
+                if (trof.IsQuoted)
+                {
+                    if (!string.IsNullOrEmpty(trof.QuoteChar))
+                    {
+                        attributeParameters.Add(
+                            typeof(FieldQuotedAttribute),
+                            new List<object>
+                            {
+                                trof.QuoteChar, QuoteMode.OptionalForRead, MultilineMode.AllowForRead
+                            });
+                    }
+                    else
+                    {
+                        attributeParameters.Add(
+                            typeof(FieldQuotedAttribute),
+                            new List<object>
+                            {
+                                QuoteMode.OptionalForRead, MultilineMode.AllowForRead
+                            });
+                    }
+                }
+
+
                 if (trof.NullValue != null && col != null)
                 {
-                    cb.LastField.FieldNullValue = Convert.ChangeType(trof.NullValue, col.DataType);
+                    var nullValue = Convert.ChangeType(trof.NullValue, col.DataType);
+                    attributeParameters.Add(
+                        typeof(FieldNullValueAttribute),
+                        new List<object>{nullValue});                   
                 }
+                typeExtender.AddField(trof.Name, dataType, attributeParameters);
             }
-
             UserProfile profile = SecurityManager.CurrentUserProfile();
-            FileHelperEngine engine = new FileHelperEngine(cb.CreateRecordClass());
+            FileHelperEngine engine = new FileHelperEngine(typeExtender.FetchType());
             DataTable newDt = engine.ReadStreamAsDT(reader);
 
             if (log.IsInfoEnabled)
