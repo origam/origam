@@ -122,13 +122,7 @@ namespace Origam.Security
 
 		protected Hashtable GetCacheByName()
 		{
-			string cacheName = "ProfileCacheByName";
-			Hashtable context = OrigamUserContext.Context;
-			if(! context.Contains(cacheName))
-			{
-				context.Add(cacheName, new Hashtable());
-			}
-			return (Hashtable)OrigamUserContext.Context[cacheName];
+			return OrigamUserContext.GetContextItem("ProfileCacheByName");
 		}
 	}
 }

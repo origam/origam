@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Origam
@@ -34,13 +35,7 @@ namespace Origam
             = new Dictionary<string, Hashtable>();
         private static object _lock = new object();
 
-		public static Hashtable Context
-		{
-			get
-			{
-                return GetContext(UserKey());
-			}
-		}
+		public static Hashtable Context => GetContext(UserKey());
 
         public static void Reset()
         {
@@ -97,5 +92,18 @@ namespace Origam
             }            
             return SecurityManager.CurrentPrincipal.Identity.Name;
         }
-	}
+
+        public static Hashtable GetContextItem(string cacheName)
+        {
+            lock (_lock)
+            {
+                if (!Context.Contains(cacheName))
+                {
+                    Context.Add(cacheName, new Hashtable());
+                }
+
+                return (Hashtable)Context[cacheName];
+            }
+        }
+    }
 }
