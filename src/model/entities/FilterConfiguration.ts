@@ -253,7 +253,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (cellValue === null) return false;
             const t0 = parseFloat(term.setting.val1);
             const t2 = parseFloat(term.setting.val2);
-            return t0 < t1 && t1 < t2;
+            return t0 <= t1 && t1 <= t2;
           }
           case "eq":
             if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
@@ -287,7 +287,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (cellValue === null) return false;
             const t0 = parseFloat(term.setting.val1);
             const t2 = parseFloat(term.setting.val2);
-            return !(t0 < t1 && t1 < t2);
+            return t1 < t0 || t1 > t2;
           }
           case "neq":
             if (cellValue === null) return false;
