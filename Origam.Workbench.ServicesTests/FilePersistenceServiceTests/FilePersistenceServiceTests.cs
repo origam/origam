@@ -17,6 +17,12 @@ namespace Origam.Workbench.ServicesTests
     [TestFixture]
     public class FilePersistenceServiceTests: AbstractFileTestClass
     {
+        private string PathToRuntimeModelConfig => 
+            Path.Combine(PathToTestDirectory, "RuntimeModelConfiguration.json");
+
+        private string PathToTestDirectory => Path.Combine(TestContext.WorkDirectory, 
+            "FilePersistenceServiceTests", "TestFiles");
+
         protected override TestContext TestContext =>
             TestContext.CurrentContext;
         
@@ -55,8 +61,38 @@ namespace Origam.Workbench.ServicesTests
             Assert.IsTrue(reloadNeededEventCalled);
             File.Delete(pathToTestFile);
         }
+        
+        [Test]
+        public void ShouldReadNewValueAfterRuntimeConfigChanged()
+        {
+            Guid testItemId = new Guid("5c42ad31-e3f6-4bb4-bc03-fd5f6d930b1d");
+            
+            SetTraceLevelInConfigFile(oldValue: "No",newValue: "Yes");
+            var sut = InitializeFilePersistenceService(PathToTestDirectory);
+            
+            var itemBeforeChange = sut.SchemaProvider
+                .RetrieveInstance<Schema.WorkflowModel.Workflow>(testItemId);
+            Assert.That(itemBeforeChange.TraceLevel, Is.EqualTo(Trace.Yes));
 
-        private static FilePersistenceService InitializeFilePersistenceService(
+            SetTraceLevelInConfigFile(oldValue: "Yes",newValue: "No");
+
+            Thread.Sleep(500);
+            
+            var itemAfterChange = sut.SchemaProvider
+                .RetrieveInstance<Schema.WorkflowModel.Workflow>(testItemId);
+            Assert.That(itemAfterChange.TraceLevel, Is.EqualTo(Trace.No));
+        }
+
+        private void SetTraceLevelInConfigFile(string oldValue, string newValue)
+        {
+            string configText = File.ReadAllText(PathToRuntimeModelConfig);
+            configText = configText.Replace(
+                $"\"PropertyValue\": \"{oldValue}\"",
+                $"\"PropertyValue\": \"{newValue}\"");
+            File.WriteAllText(PathToRuntimeModelConfig, configText);
+        }
+
+        private FilePersistenceService InitializeFilePersistenceService(
             string pathToTestDirectory)
         {
             List<string> defaultFolders = new List<string>
@@ -66,7 +102,7 @@ namespace Origam.Workbench.ServicesTests
             };
 
             ConfigurationManager.SetActiveConfiguration(new OrigamSettings());
-
+            
             var sut = new FilePersistenceService(
                 metaModelUpgradeService: new NullMetaModelUpgradeService(),
                 defaultFolders: defaultFolders,
@@ -75,7 +111,7 @@ namespace Origam.Workbench.ServicesTests
                 checkRules: false,
                 useBinFile: false,
                 mode: MetaModelUpgradeMode.Ignore,
-                pathToRuntimeModelConfig: null);
+                pathToRuntimeModelConfig: PathToRuntimeModelConfig);
             return sut;
         }
     }

@@ -258,6 +258,12 @@ namespace Origam.DA.Service
                 configItems.Add(configItem);
             }
         }
+
+        public void Dispose()
+        {
+            watcher.Changed -= OnConfigFileChanged;
+            watcher?.Dispose();
+        }
     }
     
     class ConfigItem

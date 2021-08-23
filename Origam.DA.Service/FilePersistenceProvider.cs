@@ -375,6 +375,7 @@ namespace Origam.DA.Service
             index?.Dispose();
             origamFileManager.Dispose();
             runtimeModelConfig.ConfigurationReloaded -= OnRuntimeModelConfigReloaded;
+            runtimeModelConfig.Dispose();
         }
 
         public override T[] FullTextSearch<T>(string text)

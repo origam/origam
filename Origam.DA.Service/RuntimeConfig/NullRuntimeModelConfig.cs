@@ -36,5 +36,9 @@ namespace Origam.DA.Service
         }
 
         public event EventHandler<List<Guid>> ConfigurationReloaded;
+
+        public void Dispose()
+        {
+        }
     }
 }
