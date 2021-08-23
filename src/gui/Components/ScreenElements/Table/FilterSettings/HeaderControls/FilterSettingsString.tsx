@@ -141,6 +141,12 @@ export class FilterSettingsString extends React.Component<{
     this.handleChange();
   }
 
+  componentDidUpdate(prevProps:any){
+    if(prevProps.setting.val1 !== this.props.setting.val1){
+      this.currentValue = this.props.setting.val1;
+    }
+  }
+
   @observable
   currentValue = this.props.setting.val1;
 

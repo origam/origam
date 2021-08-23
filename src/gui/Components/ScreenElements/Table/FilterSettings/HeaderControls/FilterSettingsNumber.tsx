@@ -161,6 +161,15 @@ export class FilterSettingsNumber extends React.Component<{
     this.handleSettingChange();
   }
 
+  componentDidUpdate(prevProps:any){
+    if(prevProps.setting.val1 !== this.props.setting.val1){
+      this.currentValue1 = this.props.setting.val1;
+    }
+    if(prevProps.setting.val2 !== this.props.setting.val2){
+      this.currentValue2 = this.props.setting.val2;
+    }
+  }
+
   @action.bound
   private handleSettingChange() {
     switch (this.props.setting.type) {
