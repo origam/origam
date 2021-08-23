@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using CSharpFunctionalExtensions;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -47,9 +45,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Origam.DA.Service;
 using Origam.ServerCore.Middleware;
-using Origam.Workbench.Services;
+using SoapCore;
 
 namespace Origam.ServerCore
 {
@@ -144,7 +141,11 @@ namespace Origam.ServerCore
                     identityServerConfig.PasswordForJwtCertificate))
                 .AddInMemoryApiScopes(Settings.GetApiScopes());
             
-            services.AddScoped<IProfileService, ProfileService>();
+           services.AddSoapCore();
+           services.AddSingleton<DataServiceSoap>();
+           services.AddSingleton<WorkflowServiceSoap>();
+
+           services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization(options => {
@@ -154,7 +155,7 @@ namespace Origam.ServerCore
             var authenticationBuilder = services
                 .AddLocalApiAuthentication()
                 .AddAuthentication();
-
+            
             if (identityServerConfig.UseGoogleLogin)
             {
                 authenticationBuilder.AddGoogle(options =>
@@ -181,7 +182,7 @@ namespace Origam.ServerCore
             ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLog4Net();
-
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -203,31 +204,13 @@ namespace Origam.ServerCore
             app.UseRequestLocalization(localizationOptions);
             app.UseIdentityServer();
             app.UseMiddleware<FatalErrorMiddleware>();
-            app.MapWhen(
-                IsPublicUserApiRoute,
-                apiBranch => {
-                apiBranch.UseResponseBuffering();
-                apiBranch.UseMiddleware<UserApiMiddleWare>();
-            });
-            app.MapWhen(IsRestrictedUserApiRoute, apiBranch =>
-            {
-                apiBranch.UseAuthentication();
-                apiBranch.Use(async (context, next) =>
-                {
-                    // Authentication middleware doesn't short-circuit the request itself
-                    // we must do that here.
-                    if (!context.User.Identity.IsAuthenticated)
-                    {
-                        context.Response.StatusCode = 401;
-                        return;
-                    }
-                    await next.Invoke();
-                    });
-                    apiBranch.UseResponseBuffering();
-                    apiBranch.UseMiddleware<UserApiMiddleWare>();
-                });
+            app.UseUserApi(startUpConfiguration);
             app.UseAuthentication();
             app.UseHttpsRedirection();
+            if (startUpConfiguration.EnableSoapInterface)
+            {
+                app.UseSoapApi(startUpConfiguration.SoapInterfaceRequiresAuthentication);
+            }
             app.UseStaticFiles(new StaticFileOptions() {
                 FileProvider =  new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets")),
                 RequestPath = new PathString("/assets")
@@ -240,7 +223,7 @@ namespace Origam.ServerCore
                     RequestPath = new PathString(startUpConfiguration.RouteToCustomAssetsFolder)
                 });                
             }
-
+            
             if(!string.IsNullOrEmpty(startUpConfiguration.PathToChatApp))
             {
                 app.UseStaticFiles(new StaticFileOptions
@@ -274,18 +257,6 @@ namespace Origam.ServerCore
             
             SecurityManager.SetDIServiceProvider(app.ApplicationServices);
             OrigamUtils.ConnectOrigamRuntime(loggerFactory, startUpConfiguration.ReloadModelWhenFilesChangesDetected);
-        }
-        private bool IsRestrictedUserApiRoute(HttpContext context)
-        {
-            return startUpConfiguration
-                .UserApiRestrictedRoutes
-                .Any(route => context.Request.Path.ToString().StartsWith(route));
-        }
-        private bool IsPublicUserApiRoute(HttpContext context)
-        {
-            return startUpConfiguration
-                .UserApiPublicRoutes
-                .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
     }
 }

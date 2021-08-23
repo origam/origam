@@ -50,6 +50,14 @@ namespace Origam.ServerCore.Configuration
                 .GetChildren()
                 .Select(c => c.Value);
 
+        public bool EnableSoapInterface => configuration
+            .GetSection("SoapAPI")
+            .GetValue<bool>("Enabled");       
+        
+        public bool SoapInterfaceRequiresAuthentication => configuration
+            .GetSection("SoapAPI")
+            .GetValue("RequiresAuthentication", true);
+
         public string PathToCustomAssetsFolder => 
             configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];    
         public string RouteToCustomAssetsFolder => 
