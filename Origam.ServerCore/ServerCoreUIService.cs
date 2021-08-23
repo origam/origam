@@ -960,31 +960,7 @@ namespace Origam.ServerCore
                 {
                     continue;
                 }
-                if(entity.Column(filterDetail.Property).DataType 
-                == OrigamDataType.UniqueIdentifier)
-                {
-                    var filterOperator = (FilterOperator)filterDetail.Operator;
-                    if(filterDetail.Value1 is string value1)
-                    {
-                        if(Guid.TryParse(value1, out var parsedValue))
-                        {
-                            filterDetail.Value1 = parsedValue;
-                        }
-                    }
-                    if((filterDetail.Value2 != null) 
-                    && (filterDetail.Value1 is string) 
-                    && (filterOperator != FilterOperator.Equals)
-                    && (filterOperator != FilterOperator.NotEquals))
-                    {
-                        if(filterDetail.Value2 is string value2)
-                        {
-                            if(Guid.TryParse(value2, out var parsedValue))
-                            {
-                                filterDetail.Value2 = parsedValue;
-                            }
-                        }
-                    }
-                }
+                ConvertValues(entity, filterDetail);
                 OrigamPanelFilterDA.AddPanelFilterDetailRow(
                     storedFilter, profileId, filterRow.Id, 
                     filterDetail.Property, filterDetail.Operator, 
@@ -993,6 +969,104 @@ namespace Origam.ServerCore
             OrigamPanelFilterDA.PersistFilter(storedFilter);
             return Result.Ok<Guid, IActionResult>(filterRow.Id);
         }
+
+        private static void ConvertValues(DataStructureEntity entity,
+            UIGridFilterFieldConfiguration filterDetail)
+        {
+            OrigamDataType dataType = entity.Column(filterDetail.Property).DataType;
+            switch (dataType)
+            {
+                case OrigamDataType.UniqueIdentifier:
+                {
+                    var filterOperator = (FilterOperator)filterDetail.Operator;
+                    if (filterDetail.Value1 is string value1)
+                    {
+                        if (Guid.TryParse(value1, out var parsedValue))
+                        {
+                            filterDetail.Value1 = parsedValue;
+                        }
+                    }
+
+                    if ((filterDetail.Value2 != null)
+                        && (filterDetail.Value1 is string)
+                        && (filterOperator != FilterOperator.Equals)
+                        && (filterOperator != FilterOperator.NotEquals))
+                    {
+                        if (filterDetail.Value2 is string value2)
+                        {
+                            if (Guid.TryParse(value2, out var parsedValue))
+                            {
+                                filterDetail.Value2 = parsedValue;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case OrigamDataType.Float:
+                {
+                    if (float.TryParse(filterDetail.Value1 as string,
+                        NumberStyles.Number | NumberStyles.Float,
+                        CultureInfo.InvariantCulture, out var value1Parsed ))
+                    {
+                        filterDetail.Value1 = value1Parsed;
+                    }
+                    if (float.TryParse(filterDetail.Value2 as string,
+                        NumberStyles.Number | NumberStyles.Float,
+                        CultureInfo.InvariantCulture, out var value2Parsed ))
+                    {
+                        filterDetail.Value2 = value2Parsed;
+                    }
+                    break;
+                }
+                case OrigamDataType.Integer:
+                {
+                    if (int.TryParse(filterDetail.Value1 as string,
+                        out var value1Parsed))
+                    {
+                        filterDetail.Value1 = value1Parsed;
+                    }
+                    if (int.TryParse(filterDetail.Value2 as string,
+                        out var value2Parsed))
+                    {
+                        filterDetail.Value2 = value2Parsed;
+                    }
+                    break;
+                }
+                case OrigamDataType.Long:
+                {
+                    if (long.TryParse(filterDetail.Value1 as string,
+                        out var value1Parsed))
+                    {
+                        filterDetail.Value1 = value1Parsed;
+                    }
+                    if (long.TryParse(filterDetail.Value2 as string,
+                        out var value2Parsed))
+                    {
+                        filterDetail.Value2 = value2Parsed;
+                    }
+                    break;
+                }
+                case OrigamDataType.Currency:
+                {
+                    if (decimal.TryParse(filterDetail.Value1 as string,
+                        NumberStyles.Number | NumberStyles.Float,
+                        CultureInfo.InvariantCulture,
+                        out var value1Parsed))
+                    {
+                        filterDetail.Value1 = value1Parsed;
+                    }
+                    if (decimal.TryParse(filterDetail.Value2 as string,
+                        NumberStyles.Number | NumberStyles.Float,
+                        CultureInfo.InvariantCulture,
+                        out var value2Parsed))
+                    {
+                        filterDetail.Value2 = value2Parsed;
+                    }
+                    break;
+                }
+            }
+        }
+
         public static void DeleteFilter(Guid filterId)
         {
             var filter = OrigamPanelFilterDA.LoadFilter(filterId);
