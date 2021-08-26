@@ -476,6 +476,7 @@ namespace Origam.DA.Service
             return 
                 new IFileSystemModelChecker[]
                     {
+                        new ModelStructureChecker(TopDirectory),
                         new FileNameChecker(this, index),
                         new DuplicateIdChecker(this, modelDirectoryFiles),
                         new ReferenceFileChecker(this, modelDirectoryFiles),
