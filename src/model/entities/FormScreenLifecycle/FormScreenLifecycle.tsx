@@ -834,7 +834,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const orderValues = targetDataView.tableRows
       .filter((row) => Array.isArray)
       .map((row) => (row as any[])[dataSourceField!.index] as number);
-    const nextOrderValue = orderValues.length > 0 ? Math.max(...orderValues) + 1 : 0;
+    const nextOrderValue = orderValues.length > 0 ? Math.max(...orderValues) + 1 : 1;
     const values = {} as any;
     values[orderMember] = nextOrderValue;
     return values;
