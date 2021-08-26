@@ -55,7 +55,7 @@ namespace Origam.DA.Service
                 .SelectMany(dir => dir.GetDirectories())
                 .Where(dir => !ignoreDirectoryNames.Contains(dir.Name));
 
-            List<string> errors = new List<string>();
+            List<ErrorMessage> errors = new List<ErrorMessage>();
             errors.AddRange(FindErrorsInPackageDirectories(packageDirectories));
             errors.AddRange(FindErrorsInPackageSubDirectories(packageSubDirectories));
             errors.AddRange(FindErrorsInGroupDirectories(groupDirectories));
@@ -67,7 +67,7 @@ namespace Origam.DA.Service
             );
         }
 
-        private IEnumerable<string> FindErrorsInGroupDirectories(IEnumerable<DirectoryInfo> groupDirectories)
+        private IEnumerable<ErrorMessage> FindErrorsInGroupDirectories(IEnumerable<DirectoryInfo> groupDirectories)
         {
             return groupDirectories
                 .Where(dir =>
@@ -75,34 +75,46 @@ namespace Origam.DA.Service
                     && dir.DoesNotContain(OrigamFile.ReferenceFileName)
                     && dir.DoesNotContain(OrigamFile.GroupFileName)
                     && ContainsOrigamFilesWithMissingExplicitParent(dir))
-                .Select(dir => "\"file://" + dir.FullName + "\" is a group directory and therefore must contain either " +
-                               OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName);
+                .Select(dir => new ErrorMessage(
+                    text: dir.FullName + "is a group directory and therefore must contain either " +
+                          OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName,
+                    link: dir.FullName)
+                );
         }
 
-        private IEnumerable<string> FindErrorsInPackageDirectories(DirectoryInfo[] packageDirectories)
+        private IEnumerable<ErrorMessage> FindErrorsInPackageDirectories(DirectoryInfo[] packageDirectories)
         {
             var packageFilesMissing = packageDirectories
                 .Where(dir => dir.DoesNotContain(OrigamFile.PackageFileName))
-                .Select(dir => "\"file://" + dir.FullName + "\" is a package directory but the package file " + OrigamFile.PackageFileName + " is not in it");
+                .Select(dir => new ErrorMessage(
+                    text: dir.FullName + " is a package directory but the package file " + OrigamFile.PackageFileName + " is not in it",
+                    link: dir.FullName)
+                );
 
             var wrongFilesPresent = packageDirectories
                 .Where(dir => 
                     dir.Contains(OrigamFile.GroupFileName)
                     || dir.Contains(OrigamFile.ReferenceFileName)
                     || dir.Contains(file => OrigamFile.IsOrigamFile(file)))
-                .Select(dir => "\"file://" + dir.FullName + "\" is a package directory and therefore cannot contain any persistence files other than " + OrigamFile.PackageFileName);
+                .Select(dir => new ErrorMessage( 
+                    text: dir.FullName + " is a package directory and therefore cannot contain any persistence files other than " + OrigamFile.PackageFileName,
+                    link: dir.FullName)
+                );
 
             return packageFilesMissing.Concat(wrongFilesPresent);
         }
 
-        private IEnumerable<string> FindErrorsInPackageSubDirectories(IEnumerable<DirectoryInfo> packageSubDirectories)
+        private IEnumerable<ErrorMessage> FindErrorsInPackageSubDirectories(IEnumerable<DirectoryInfo> packageSubDirectories)
         {
             return packageSubDirectories
                     .Where(dir => dir.Contains(OrigamFile.GroupFileName)
                                || dir.Contains(OrigamFile.ReferenceFileName)
                                || dir.Contains(OrigamFile.PackageFileName))
-                    .Select(dir => "\"file://" + dir.FullName + "\" is a package sub directory and therefore cannot contain any of the following files: " +
-                            OrigamFile.PackageFileName + ", " + OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName);
+                    .Select(dir => new ErrorMessage(
+                        text: dir.FullName + "is a package sub directory and therefore cannot contain any of the following files: " +
+                              OrigamFile.PackageFileName + ", " + OrigamFile.ReferenceFileName + ", or " + OrigamFile.GroupFileName,
+                        link: dir.FullName)
+                    );
         }
 
         private static bool ContainsOrigamFilesWithMissingExplicitParent(DirectoryInfo directory)

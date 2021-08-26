@@ -49,11 +49,11 @@ namespace Origam.DA.Service
 
         public IEnumerable<ModelErrorSection> GetErrors()
         {
-            List<string> errors = modelDirectoryFiles
+            List<ErrorMessage> errors = modelDirectoryFiles
                 .Where(file => file.Name == OrigamFile.ReferenceFileName)
                 .Select(ReadToFileData)
                 .Select(CheckAndReturnErrors)
-                .Where(errMessage => !string.IsNullOrEmpty(errMessage))
+                .Where(errMessage => errMessage != null)
                 .ToList();
 
             yield return new ModelErrorSection
@@ -63,19 +63,25 @@ namespace Origam.DA.Service
             );
         }
 
-        private string CheckAndReturnErrors(ReferenceFileData fileData)
+        private ErrorMessage CheckAndReturnErrors(ReferenceFileData fileData)
         {
             Guid groupId = fileData.ParentFolderIds.GroupId;
             Guid packageId = fileData.ParentFolderIds.PackageId;
 
             if (filePersistenceProvider.RetrieveInstance<SchemaItemGroup>(groupId) == null)
             {
-                return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
+                return new ErrorMessage(
+                    text: "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.",
+                    link: fileData.XmlFileData.FileInfo.FullName
+                );
             }
 
             if (filePersistenceProvider.RetrieveInstance<Package>(packageId) == null)
             {
-                return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
+                return new ErrorMessage( 
+                    text: "Group \"" + groupId + "\" referenced in " + fileData.XmlFileData.FileInfo.FullName + " cannot be found.",
+                    link: fileData.XmlFileData.FileInfo.FullName
+                );
             }
 
             return null;

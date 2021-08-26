@@ -1620,10 +1620,9 @@ namespace OrigamArchitect
 	            {
 		            this.RunWithInvoke(() =>
 		            {
-			            FlexibleMessageBox.Show(
-				            "The following errors were found in the loaded model:\n\n" +
-				            string.Join("\n\n", errorSections), "Model Errors");
-		            });
+			            var modelCheckResultWindow = new ModelCheckResultWindow(errorSections);
+			            modelCheckResultWindow.Show(this);
+			          });
 	            }
 	        }
 	    }

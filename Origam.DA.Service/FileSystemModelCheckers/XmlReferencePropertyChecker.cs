@@ -51,7 +51,7 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                 .ToArray();
 
 
-            List<string> errors = allTypes
+            List<ErrorMessage> errors = allTypes
                 .Select(GetTypeData)
                 .SelectMany(typeData =>
                 {
@@ -69,7 +69,7 @@ namespace Origam.DA.Service.FileSystemModeCheckers
             );
         }
 
-        private IEnumerable<string> CheckReferencedObjectsExistAndReturnErrors(
+        private IEnumerable<ErrorMessage> CheckReferencedObjectsExistAndReturnErrors(
             IFilePersistent instance, TypeData typeData)
         {
             return typeData
@@ -82,10 +82,12 @@ namespace Origam.DA.Service.FileSystemModeCheckers
                     var referencedObject = filePersistenceProvider.RetrieveInstance<IFilePersistent>(refId);
                     if (referencedObject == null)
                     {
-                        return "Instance with id: " + instance.Id + " persisted in " +
-                               "\"file://" + GetFullPath(instance) + "\""+
+                        return new ErrorMessage(
+                            text:"Instance with id: " + instance.Id + " persisted in " +
+                                GetFullPath(instance) + 
                                " references " + info.Name + " with id: " + refId +
-                               ". The referenced object cannot be found.";
+                               ". The referenced object cannot be found.",
+                            link: GetFullPath(instance) );
                     }
 
                     return null;
