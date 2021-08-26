@@ -37,15 +37,19 @@ namespace Origam.DA.Service
 
         public IEnumerable<ModelErrorSection> GetErrors()
         {
-            List<string> errors = topDirectory
+            List<ErrorMessage> errors = topDirectory
                 .GetFiles(".origamPackage", SearchOption.AllDirectories)
                 .Where(packageFile => !IsOneLevelBelowTopDirectory(packageFile))
-                .Select(packageFile => $"file://{packageFile.FullName}")
+                .Select(packageFile => 
+                    new ErrorMessage(
+                        text: packageFile.FullName, 
+                        link:packageFile.FullName)
+                )
                 .ToList();
             
             yield return new ModelErrorSection(
                 "The following package files are not one level below the model directory. " +
-                       "This indicates the model directory is wrong. Please adjust it to avoid damage to the model structure!",
+                "This indicates the model directory is wrong. Please adjust it to avoid damage to the model structure!",
                 errors);
         }
 
