@@ -2423,15 +2423,20 @@ namespace Origam.DA.Service
 
             // any lookups with same entity name as any of the entities in this datastructure must be renamed
             bool lookupRenamed = false;
-            foreach (DataStructureEntity e in ds.Entities)
+            if (ds.Entities.Cast<DataStructureEntity>().Any(
+                dataStructureEntity 
+                    => dataStructureEntity.Name == lookupEntity.Name))
             {
-                if (e.Name == lookupEntity.Name)
+                lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
+                lookupEntity.Name = "lookup" + lookupEntity.Name;
+                foreach (var dataStructureEntity 
+                    in lookupEntity.ChildrenRecursive
+                    .OfType<DataStructureEntity>())
                 {
-                    lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
-                    lookupEntity.Name = "lookup" + lookupEntity.Name;
-                    lookupRenamed = true;
-                    break;
+                    dataStructureEntity.Name 
+                        = "lookup" + dataStructureEntity.Name;
                 }
+                lookupRenamed = true;
             }
 
             Hashtable replaceTexts = new Hashtable(1);

@@ -73,8 +73,19 @@ namespace Origam.Schema
 		}
 
         [Browsable(false)]
-		public IEnumerable<AbstractSchemaItem> ChildrenRecursive =>
-			GetChildrenRecursive(this);
+		public IEnumerable<AbstractSchemaItem> ChildrenRecursive 
+		{
+			get
+			{
+				foreach (var child1 in ChildItems)
+				{
+					foreach (var child2 in GetChildrenRecursive(child1))
+					{
+						yield return child2;
+					}
+				}
+			}
+		}
 
 
 		private ModelElementKey _oldPrimarykey = null;
@@ -1756,6 +1767,7 @@ namespace Origam.Schema
 			newItem.ChildItems.DeleteItemsOnClear = false;
 			newItem.ChildItems.Clear();
 			newItem.ChildItems.DeleteItemsOnClear = true;
+			newItem.ClearCache();
 			
 			newItem.ParentItem = this.ParentItem;
 			newItem.RootProvider = this.RootProvider;
@@ -1784,7 +1796,6 @@ namespace Origam.Schema
 					newItem.ChildItems.Add(newChild);
 				}
 			}
-
 			return newItem;
 		}
 
