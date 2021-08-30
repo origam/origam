@@ -54,6 +54,7 @@ export class TextEditor extends React.Component<{
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
   onAutoUpdate?(value: string): void;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
   disposers: any[] = [];
   currentValue = this.props.value;
@@ -64,6 +65,19 @@ export class TextEditor extends React.Component<{
     if (this.props.isMultiline) {
       this.disposers.push(this.startAutoUpdate());
     }
+    this.updateTextOverflowState();
+  }
+
+  componentDidUpdate() {
+    this.updateTextOverflowState();
+  }
+
+  private updateTextOverflowState() {
+    if (this.props.isMultiline) {
+      return;
+    }
+    const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
+    this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
   }
 
   private startAutoUpdate() {
@@ -174,8 +188,10 @@ export class TextEditor extends React.Component<{
           readOnly={this.props.isReadOnly}
           maxLength={maxLength}
           ref={this.refInput}
-          onChange={(event: any) =>
-            this.props.onChange && this.props.onChange(event, event.target.value)
+          onChange={(event: any) => {
+              this.props.onChange && this.props.onChange(event, event.target.value)
+              this.updateTextOverflowState();
+            }
           }
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}

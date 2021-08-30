@@ -19,25 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { inject, observer, Observer, Provider } from "mobx-react";
 import React from "react";
-import { IDataView } from "../../../../model/entities/types/IDataView";
-import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
-import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
-import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
-import { findStrings } from "../../../../xmlInterpreters/screenXml";
+import { IDataView } from "model/entities/types/IDataView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { findStrings } from "xmlInterpreters/screenXml";
 
 import { FormRoot } from "./FormRoot";
-import { FormViewEditor } from "./FormViewEditor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import { FormField } from "gui/Components/Form/FormField";
 import { FormSection } from "gui/Components/Form/FormSection";
 import { FormLabel } from "gui/Components/Form/FormLabel";
 import { RadioButton } from "gui/Components/Form/RadioButton";
-import { getDataSourceFieldByName } from "../../../../model/selectors/DataSources/getDataSourceFieldByName";
-import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { flow } from "mobx";
-import { CheckBox } from "../../../Components/Form/CheckBox";
-import { isReadOnly } from "../../../../model/selectors/RowState/isReadOnly";
+import { CheckBox } from "gui/Components/Form/CheckBox";
+import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { DomEvent } from "leaflet";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
@@ -213,15 +212,11 @@ export class FormBuilder extends React.Component<{
                       left={property.x}
                       top={property.y}
                       toolTip={property.toolTip}
-                      editor={
-                        <FormViewEditor
-                          value={value}
-                          isRichText={property.isRichText}
-                          textualValue={textualValue}
-                          xmlNode={property.xmlNode}
-                          backgroundColor={backgroundColor}
-                        />
-                      }
+                      value={value}
+                      isRichText={property.isRichText}
+                      textualValue={textualValue}
+                      xmlNode={property.xmlNode}
+                      backgroundColor={backgroundColor}
                     />
                   </Provider>
                 );

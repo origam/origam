@@ -42,6 +42,7 @@ export class DropdownEditorBehavior {
     public subscribeToFocusManager?: (obj: IFocusable) => void,
     private onKeyDown?: (event: any) => void,
     private autoSort?: boolean,
+    private onTextOverflowChanged?: (toolTip: string | null | undefined) => void
   ) {}
 
   @observable isDropped = false;
@@ -247,6 +248,7 @@ export class DropdownEditorBehavior {
     } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
     }
+    this.updateTextOverflowState();
   }
 
   @action.bound handleInputChangeImm() {
@@ -353,6 +355,14 @@ export class DropdownEditorBehavior {
     ) {
       this.cursorRowId = this.chosenRowId;
     }
+  }
+
+  updateTextOverflowState() {
+    if(! this.elmInputElement){
+      return;
+    }
+    const textOverflow = this.elmInputElement.offsetWidth < this.elmInputElement.scrollWidth
+    this.onTextOverflowChanged?.(textOverflow ? this.inputValue : undefined);
   }
 
   @action.bound runGetLookupList(searchTerm: string) {

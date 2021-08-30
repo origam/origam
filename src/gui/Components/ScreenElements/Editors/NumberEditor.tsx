@@ -47,6 +47,7 @@ export class NumberEditor extends React.Component<{
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
   disposers: any[] = [];
 
@@ -77,6 +78,7 @@ export class NumberEditor extends React.Component<{
     if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
     }
+    this.updateTextOverflowState();
   }
 
   componentWillUnmount() {
@@ -87,8 +89,8 @@ export class NumberEditor extends React.Component<{
     if (this.props.value !== prevProps.value && !this.wasChanged) {
       this.editingValue = this.numeralFormattedValue;
     }
+    this.updateTextOverflowState();
   }
-
   @action.bound
   handleFocus(event: any) {
     this.hasFocus = true;
@@ -98,6 +100,14 @@ export class NumberEditor extends React.Component<{
       this.elmInput.select();
       this.elmInput.scrollLeft = 0;
     }
+  }
+
+  private updateTextOverflowState() {
+    if(!this.elmInput){
+      return;
+    }
+    const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
+    this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
   }
 
   @action.bound
@@ -132,6 +142,7 @@ export class NumberEditor extends React.Component<{
     const invalidChars = new RegExp("[^\\d\\-" + getCurrentDecimalSeparator() + "]", "g");
     this.editingValue = (event.target.value || "").replace(invalidChars, "");
     this.props.onChange && this.props.onChange(null, this.numericValue);
+    this.updateTextOverflowState();
   }
 
   @action.bound handleKeyDown(event: any) {

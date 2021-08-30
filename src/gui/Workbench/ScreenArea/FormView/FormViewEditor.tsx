@@ -74,6 +74,7 @@ export class FormViewEditor extends React.Component<{
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => Promise<any>;
   backgroundColor?: string;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
   focusManager: FormFocusManager;
 
@@ -121,6 +122,7 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={this.makeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
@@ -150,6 +152,7 @@ export class FormViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
             onAutoUpdate={value => onTextFieldAutoUpdate(this.props.property!, value)}
             isRichText={this.props.isRichText}
+            onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
@@ -206,6 +209,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor
             key={this.props.xmlNode.$iid}
+            onTextOverflowChanged={this.props.onTextOverflowChanged}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(textEditor) =>
