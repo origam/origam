@@ -63,6 +63,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const data = useContext(CtxDropdownEditor).editorData;
 
       const value = Array.isArray(props.value) ? [...props.value] : props.value;
+      data.value = value;
 
       function getStyle() {
         if (props.customStyle) {
