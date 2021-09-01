@@ -358,7 +358,7 @@ export function FilterBuildDropdownEditor(props: {
 export class FilterEditorData implements IDropdownEditorData {
   constructor(private onChange: (selectedItems: Array<any>) => void){ }
 
-  set value(value: string | string[] | null){
+  setValue(value: string | string[] | null){
     if(value){
       this._value = Array.isArray(value) ? value : [value];
     }
