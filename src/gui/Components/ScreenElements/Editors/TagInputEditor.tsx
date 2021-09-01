@@ -160,6 +160,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
               onDoubleClick={props.onDoubleClick}
+              autoComplete={"off"}
               style={getStyle()}
               size={1}
             />
