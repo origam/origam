@@ -866,16 +866,16 @@ namespace OrigamArchitect.Commands
 				{
 					outputPath = Path.Combine(settings.LocalizationFolder, fileName);
 				}
-				LocalizationCache currentTransaltions = null;
+				LocalizationCache currentTranslations = null;
 				if(File.Exists(outputPath))
 				{
-					currentTransaltions = new LocalizationCache(outputPath);
+					currentTranslations = new LocalizationCache(outputPath);
 				}
 				MemoryStream ms = new MemoryStream();
                 FileStream fs = null;
 				try
 				{
-					TranslationBuilder.Build(ms, currentTransaltions, language, ss.ActiveSchemaExtensionId);
+					TranslationBuilder.Build(ms, currentTranslations, language, ss.ActiveSchemaExtensionId);
 					fs = new FileStream(outputPath, FileMode.Create);
 					ms.Seek(0, SeekOrigin.Begin);
 					ms.WriteTo(fs);
