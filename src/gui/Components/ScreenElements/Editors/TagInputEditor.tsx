@@ -45,6 +45,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const data = useContext(CtxDropdownEditor).editorData;
 
       const value = Array.isArray(props.value) ? [...props.value] : props.value;
+      data.setValue(value);
 
       function getStyle() {
         if (props.customStyle) {
@@ -130,6 +131,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
               onDoubleClick={props.onDoubleClick}
+              autoComplete={"off"}
               style={getStyle()}
               size={1}
             />

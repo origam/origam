@@ -268,6 +268,8 @@ export class FilterEditorData implements IDropdownEditorData {
   constructor( public setting: IFilterSetting) {
     }
 
+  setValue(value: string[]){}
+
   @computed get value(): string | string[] | null {
     return this.setting.val1;
   }
