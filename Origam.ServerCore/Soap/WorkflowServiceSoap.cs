@@ -28,7 +28,9 @@ namespace Origam.ServerCore
             }
 
             Guid guid = new Guid(workflowId);
-            return Task.FromResult(ConvertData(core.WorkflowService.ExecuteWorkflow(guid)));
+            object result = core.WorkflowService.ExecuteWorkflow(guid);
+            object diffGram = ToDiffGram(result, "ExecuteWorkflow0Result");
+            return Task.FromResult(diffGram);
         }
 
         public Task<object> ExecuteWorkflowAsync(string workflowId, Parameter[] parameters)
@@ -40,7 +42,9 @@ namespace Origam.ServerCore
 
             Guid guid = new Guid(workflowId);
             var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-            return Task.FromResult(ConvertData(core.WorkflowService.ExecuteWorkflow(guid, parameterCollection, null)));
+            object result = core.WorkflowService.ExecuteWorkflow(guid, parameterCollection, null);
+            object diffGram = ToDiffGram(result, "ExecuteWorkflowResult");
+            return Task.FromResult(diffGram);
         }
 
         public Task<object> ExecuteWorkflow1Async(string workflowId, string paramName, string paramValue)
@@ -53,16 +57,23 @@ namespace Origam.ServerCore
             Guid guid = new Guid(workflowId);
             QueryParameterCollection parameters = new QueryParameterCollection();
             parameters.Add(new QueryParameter(paramName, paramValue));
-            return Task.FromResult(ConvertData(core.WorkflowService.ExecuteWorkflow(guid, parameters, null)));
+            object result = core.WorkflowService.ExecuteWorkflow(guid, parameters, null);
+            object diffGram = ToDiffGram(result, "ExecuteWorkflow1Result");
+            return Task.FromResult(diffGram);
         }
         
-        private static object ConvertData(object result)
+
+        private static object ToDiffGram(object result, string rootElementName)
         {
+            string defaultNamespace = "http://asapenginewebapi.advantages.cz/";
             if (result is IDataDocument document)
             {
                 StringBuilder sb = new StringBuilder();
                 XmlTextWriter writer = new XmlTextWriter(new StringWriter(sb));
+                writer.WriteStartElement( rootElementName,defaultNamespace);
+                document.DataSet.WriteXmlSchema(writer);
                 document.DataSet.WriteXml(writer, XmlWriteMode.DiffGram);
+                writer.WriteEndElement();
                 return sb.ToString();
             }
             return result;
