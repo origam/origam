@@ -1,3 +1,22 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
 import { action, computed, decorate, flow, observable, reaction } from "mobx";
@@ -21,7 +40,8 @@ export class DropdownEditorBehavior {
     public onClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusAble) => void,
     private onKeyDown?: (event: any) => void,
-    private autoSort?: boolean
+    private autoSort?: boolean,
+    private onTextOverflowChanged?: (toolTip: string | null | undefined) => void
   ) {}
 
   @observable isDropped = false;
@@ -224,6 +244,7 @@ export class DropdownEditorBehavior {
     } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
     }
+    this.updateTextOverflowState();
   }
 
   @action.bound handleInputChangeImm() {
@@ -325,6 +346,14 @@ export class DropdownEditorBehavior {
     ) {
       this.cursorRowId = this.chosenRowId;
     }
+  }
+
+  updateTextOverflowState() {
+    if(! this.elmInputElement){
+      return;
+    }
+    const textOverflow = this.elmInputElement.offsetWidth < this.elmInputElement.scrollWidth
+    this.onTextOverflowChanged?.(textOverflow ? this.inputValue : undefined);
   }
 
   @action.bound runGetLookupList(searchTerm: string) {

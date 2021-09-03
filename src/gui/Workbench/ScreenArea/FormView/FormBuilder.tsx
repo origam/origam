@@ -7,7 +7,6 @@ import { getSelectedRow } from "../../../../model/selectors/DataView/getSelected
 import { findStrings } from "../../../../xmlInterpreters/screenXml";
 
 import { FormRoot } from "./FormRoot";
-import { FormViewEditor } from "./FormViewEditor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import { FormField } from "gui/Components/Form/FormField";
@@ -194,15 +193,11 @@ export class FormBuilder extends React.Component<{
                       left={property.x}
                       top={property.y}
                       toolTip={property.toolTip}
-                      editor={
-                        <FormViewEditor
-                          value={value}
-                          isRichText={property.isRichText}
-                          textualValue={textualValue}
-                          xmlNode={property.xmlNode}
-                          backgroundColor={backgroundColor}
-                        />
-                      }
+                      value={value}
+                      isRichText={property.isRichText}
+                      textualValue={textualValue}
+                      xmlNode={property.xmlNode}
+                      backgroundColor={backgroundColor}
                     />
                   </Provider>
                 );

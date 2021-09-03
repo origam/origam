@@ -1,3 +1,22 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -37,6 +56,7 @@ export class TextEditor extends React.Component<{
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
   onAutoUpdate?(value: string): void;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
   disposers: any[] = [];
   currentValue = this.props.value;
@@ -48,7 +68,15 @@ export class TextEditor extends React.Component<{
     if (this.props.isMultiline) {
       this.disposers.push(this.startAutoUpdate());
     }
-    this.makeFocusedIfNeeded();
+    this.updateTextOverflowState();
+  }
+
+  private updateTextOverflowState() {
+    if (this.props.isMultiline) {
+      return;
+    }
+    const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
+    this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
   }
 
   private startAutoUpdate() {
@@ -69,6 +97,7 @@ export class TextEditor extends React.Component<{
     if (!prevProps.isFocused && this.props.isFocused) {
       this.makeFocusedIfNeeded();
     }
+    this.updateTextOverflowState();
   }
 
   @action.bound
@@ -173,8 +202,10 @@ export class TextEditor extends React.Component<{
           readOnly={this.props.isReadOnly}
           maxLength={maxLength}
           ref={this.refInput}
-          onChange={(event: any) =>
-            this.props.onChange && this.props.onChange(event, event.target.value)
+          onChange={(event: any) => {
+              this.props.onChange && this.props.onChange(event, event.target.value)
+              this.updateTextOverflowState();
+            }
           }
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}

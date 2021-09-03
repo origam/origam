@@ -4,7 +4,9 @@ import { IDockType } from "model/entities/types/IProperty";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import { formatTooltipText, formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
+import {formatTooltipText, formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
+import {FormViewEditor} from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
+import {observable} from "mobx";
 export enum ICaptionPosition {
   Left = "Left",
   Right = "Right",
@@ -27,7 +29,6 @@ export class FormField extends React.Component<{
   captionPosition?: ICaptionPosition;
   captionLength: number;
   dock?: IDockType;
-  editor: React.ReactNode;
   left: number;
   top: number;
   width: number;
@@ -37,7 +38,16 @@ export class FormField extends React.Component<{
   hideCaption?: boolean;
   captionColor?: string;
   toolTip?: string;
+  xmlNode?: any;
+  value?: any;
+  textualValue?: any;
+  isRichText: boolean;
+  backgroundColor?: string;
 }> {
+
+  @observable
+  toolTip: string | undefined | null;
+
   get captionStyle() {
     if (this.props.isHidden) {
       return {
@@ -92,9 +102,14 @@ export class FormField extends React.Component<{
   }
 
   getToolTip() {
-    return this.props.toolTip
-      ? formatTooltipPlaintext(this.props.toolTip)
-      : undefined;
+    if (this.props.toolTip) {
+      return formatTooltipPlaintext(this.props.toolTip);
+    } else {
+      if(this.toolTip){
+        return formatTooltipPlaintext(this.toolTip)
+      }
+      return undefined;
+    }
   }
 
   render() {
@@ -114,7 +129,14 @@ export class FormField extends React.Component<{
           style={this.formFieldStyle}
           title={this.getToolTip()}
         >
-            {this.props.editor}
+          <FormViewEditor
+            value={this.props.value}
+            isRichText={this.props.isRichText}
+            textualValue={this.props.textualValue}
+            xmlNode={this.props.xmlNode}
+            backgroundColor={this.props.backgroundColor}
+            onTextOverflowChanged={toolTip => this.toolTip = toolTip}
+          />
         </div>
       </>
     );
