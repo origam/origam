@@ -139,6 +139,7 @@ export interface IDataView extends IDataViewData {
   moveSelectedRowDown(): void;
   setRowCount(rowCount: number | undefined): void;
 
+  isTableViewActive: () => boolean;
   isFormViewActive: () => boolean;
   activateFormView: ((args: {saveNewState: boolean})=> Promise<any>) | undefined;
   activateTableView: (()=> Promise<any>) | undefined;
