@@ -56,7 +56,10 @@ namespace Origam.ServerCore.Configuration
         
         public bool SoapInterfaceRequiresAuthentication => configuration
             .GetSection("SoapAPI")
-            .GetValue("RequiresAuthentication", true);
+            .GetValue("RequiresAuthentication", true);       
+        public bool ExpectAndReturnOldDotNetAssemblyReferences => configuration
+            .GetSection("SoapAPI")
+            .GetValue("ExpectAndReturnOldDotNetAssemblyReferences", true);
 
         public string PathToCustomAssetsFolder => 
             configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];    

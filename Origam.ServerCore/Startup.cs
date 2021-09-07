@@ -209,7 +209,9 @@ namespace Origam.ServerCore
             app.UseHttpsRedirection();
             if (startUpConfiguration.EnableSoapInterface)
             {
-                app.UseSoapApi(startUpConfiguration.SoapInterfaceRequiresAuthentication);
+                app.UseSoapApi(
+                    startUpConfiguration.SoapInterfaceRequiresAuthentication,
+                    startUpConfiguration.ExpectAndReturnOldDotNetAssemblyReferences);
             }
             app.UseStaticFiles(new StaticFileOptions() {
                 FileProvider =  new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets")),

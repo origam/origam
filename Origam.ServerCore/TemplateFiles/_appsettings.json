@@ -79,7 +79,8 @@
   },
   "SoapAPI": {
     "Enabled": "false",
-    "RequiresAuthentication": "true"
+    "RequiresAuthentication": "true",
+    "ExpectAndReturnOldDotNetAssemblyReferences": "true"
   },
   "BehindProxy": "false",
   "ClientFilteringConfig": {

@@ -77,7 +77,8 @@ namespace Origam.ServerCore
         }
         
         public static void UseSoapApi(this IApplicationBuilder app,
-            bool authenticationRequired)
+            bool authenticationRequired,
+            bool expectAndReturnOldDotNetAssemblyReferences)
         {
             app.MapWhen(IsSoapApiRoute, apiBranch =>
             {
@@ -92,7 +93,10 @@ namespace Origam.ServerCore
                     }
                     await next.Invoke();
                 });
-                apiBranch.UseMiddleware<SoapNamespaceReplacerMiddleware>();
+                if (expectAndReturnOldDotNetAssemblyReferences)
+                {
+                    apiBranch.UseMiddleware<ReturnOldDotNetAssemblyReferencesInSoapMiddleware>();
+                }
                 apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new BasicHttpBinding());
                 apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new BasicHttpBinding());
             });

@@ -25,7 +25,7 @@ namespace Origam.ServerCore
             this.log = log;
         }
 
-        public Task<XElement> LoadDataAsync(string dataStructureId, string filterId, string defaultSetId,
+        public Task<DataSet> LoadDataAsync(string dataStructureId, string filterId, string defaultSetId,
             string sortSetId, Parameter[] parameters)
         {
             if (log.IsEnabled(LogLevel.Information))
@@ -45,13 +45,12 @@ namespace Origam.ServerCore
                 : new Guid(sortSetId);
 
             var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-            var elements = core.DataService.LoadData(dsId, fId, dId, sId, null,
+            var dataSet = core.DataService.LoadData(dsId, fId, dId, sId, null,
                 parameterCollection);
-            var element = ToXElement(elements, "LoadDataResult");
-            return Task.FromResult(element);
+            return Task.FromResult(dataSet);
         }
 
-        public Task<XElement> LoadData0Async(string dataStructureId, string filterId, string sortSetId, string defaultSetId)
+        public Task<DataSet> LoadData0Async(string dataStructureId, string filterId, string sortSetId, string defaultSetId)
         {
             if (log.IsEnabled(LogLevel.Information))
             {
@@ -69,12 +68,11 @@ namespace Origam.ServerCore
                 ? Guid.Empty 
                 : new Guid(sortSetId);
 
-            var elements = core.DataService.LoadData(dsId, fId, dId, sId, null);
-            var element = ToXElement(elements, "LoadData0Result");
-            return Task.FromResult(element);
+            var dataSet = core.DataService.LoadData(dsId, fId, dId, sId, null);
+            return Task.FromResult(dataSet);
         }
 
-        public Task<XElement> LoadData1Async(string dataStructureId, string filterId, string defaultSetId, string sortSetId, string paramName1, string paramValue1)
+        public Task<DataSet> LoadData1Async(string dataStructureId, string filterId, string defaultSetId, string sortSetId, string paramName1, string paramValue1)
         {
             if (log.IsEnabled(LogLevel.Information))
             {
@@ -92,13 +90,12 @@ namespace Origam.ServerCore
                 ? Guid.Empty 
                 : new Guid(sortSetId);
 
-            var elements = core.DataService.LoadData(dsId, fId, dId,
+            var dataSet = core.DataService.LoadData(dsId, fId, dId,
                 sId, null, paramName1, paramValue1);
-            var element = ToXElement(elements, "LoadData1Result");
-            return Task.FromResult(element);
+            return Task.FromResult(dataSet);
         }
 
-        public Task<XElement> LoadData2Async(string dataStructureId, string filterId, 
+        public Task<DataSet> LoadData2Async(string dataStructureId, string filterId, 
             string defaultSetId, string sortSetId, string paramName1, string paramValue1,
             string paramName2, string paramValue2)
         {
@@ -118,25 +115,23 @@ namespace Origam.ServerCore
                 ? Guid.Empty 
                 : new Guid(sortSetId);
 
-            var elements = core.DataService.LoadData(
+            var dataSet = core.DataService.LoadData(
                 dsId, fId, dId, sId, null,
                 paramName1, paramValue1, paramName2, paramValue2);
-            var element = ToXElement(elements, "LoadData2Result");
-            return Task.FromResult(element);
+            return Task.FromResult(dataSet);
         }
 
-        public Task<XElement> ExecuteProcedureAsync(string procedureName, Parameter[] parameters)
+        public Task<DataSet> ExecuteProcedureAsync(string procedureName, Parameter[] parameters)
         {
             log.Log(LogLevel.Information,"ExecuteProcedure");
             
             var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-            var elements = core.DataService.ExecuteProcedure(procedureName,
+            var dataSet = core.DataService.ExecuteProcedure(procedureName,
                 parameterCollection, null);
-            var element = ToXElement(elements, "ExecuteProcedureResult");
-            return Task.FromResult(element);
+            return Task.FromResult(dataSet);
         }
 
-        public Task<XElement> StoreDataAsync(string dataStructureId, DataSet data,
+        public Task<DataSet> StoreDataAsync(string dataStructureId, DataSet data,
             bool loadActualValuesAfterUpdate)
         {
             if (log.IsEnabled(LogLevel.Information))
@@ -174,12 +169,11 @@ namespace Origam.ServerCore
                 }
             }
 
-            DataSet returnDatSet = core.DataService.StoreData(guid, data, loadActualValuesAfterUpdate, null);
-            var element = ToXElement(returnDatSet, "StoreDataResult");
-            return Task.FromResult(element);
+            DataSet returnDataSet = core.DataService.StoreData(guid, data, loadActualValuesAfterUpdate, null);
+            return Task.FromResult(returnDataSet);
         }
 
-        public Task<XElement> StoreXmlAsync(string dataStructureId, XmlNode xml,
+        public Task<DataSet> StoreXmlAsync(string dataStructureId, XmlNode xml,
             bool loadActualValuesAfterUpdate)
         {
             if (log.IsEnabled(LogLevel.Information))
@@ -214,23 +208,7 @@ namespace Origam.ServerCore
             }
 
             DataSet dataSet = core.DataService.StoreData(guid, set2, loadActualValuesAfterUpdate, null);
-            var element = ToXElement(dataSet, "StoreXmlResult");
-            return Task.FromResult(element);
-        }
-        
-        private static XElement ToXElement(DataSet dataSet, string rootElementName)
-        {
-            string defaultNamespace = "http://asapenginewebapi.advantages.cz/";
-            var document = new XDocument();
-            using (var xmlWriter = document.CreateWriter())
-            {
-                xmlWriter.WriteStartElement( rootElementName,defaultNamespace);
-                dataSet.WriteXmlSchema(xmlWriter);
-                dataSet.WriteXml(xmlWriter, XmlWriteMode.DiffGram);
-                xmlWriter.WriteEndElement();
-                xmlWriter.Close();
-                return document.Root;
-            }
+            return Task.FromResult(dataSet);
         }
     }
 }
