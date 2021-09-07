@@ -92,8 +92,9 @@ namespace Origam.ServerCore
                     }
                     await next.Invoke();
                 });
-                apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new BasicHttpBinding(), SoapSerializer.XmlSerializer);
-                apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new BasicHttpBinding(), SoapSerializer.XmlSerializer);
+                apiBranch.UseMiddleware<SoapNamespaceReplacerMiddleware>();
+                apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new BasicHttpBinding());
+                apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new BasicHttpBinding());
             });
         }
         

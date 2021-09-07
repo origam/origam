@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System.Data;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Origam.ServerCore
 {
@@ -35,7 +37,7 @@ namespace Origam.ServerCore
         [System.ServiceModel.OperationContractAttribute(Action="http://asapenginewebapi.advantages.cz/StoreData", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Parameter[]))]
-        System.Threading.Tasks.Task<XElement> StoreDataAsync(string dataStructureId, XElement data, bool loadActualValuesAfterUpdate);
+        System.Threading.Tasks.Task<XElement> StoreDataAsync(string dataStructureId, [XmlElement(ElementName = "data")]DataSet data, bool loadActualValuesAfterUpdate);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://asapenginewebapi.advantages.cz/StoreXml", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]

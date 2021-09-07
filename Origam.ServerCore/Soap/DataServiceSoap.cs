@@ -136,22 +136,20 @@ namespace Origam.ServerCore
             return Task.FromResult(element);
         }
 
-        public Task<XElement> StoreDataAsync(string dataStructureId, XElement data,
+        public Task<XElement> StoreDataAsync(string dataStructureId, DataSet data,
             bool loadActualValuesAfterUpdate)
         {
-
-            DataSet dataSet = ToDataSet(data);
             if (log.IsEnabled(LogLevel.Information))
             {
                 log.Log(LogLevel.Information, "StoreData");
-                log.Log(LogLevel.Information, dataSet.GetXml());
+                log.Log(LogLevel.Information, data.GetXml());
             }
             
             Guid guid = new Guid(dataStructureId);
             IPersistenceService service = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             DataStructure structure = service.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(guid)) as DataStructure;
             DataSet set = new DatasetGenerator(true).CreateDataSet(structure);
-            foreach (DataTable table in dataSet.Tables)
+            foreach (DataTable table in data.Tables)
             {
                 if (set.Tables.Contains(table.TableName))
                 {
@@ -161,7 +159,7 @@ namespace Origam.ServerCore
                     {
                         table.ExtendedProperties.Add(entry.Key, entry.Value);
                     }
-            
+
                     foreach (DataColumn col in table.Columns)
                     {
                         if (setTable.Columns.Contains(col.ColumnName))
@@ -176,7 +174,7 @@ namespace Origam.ServerCore
                 }
             }
 
-            DataSet returnDatSet = core.DataService.StoreData(guid, dataSet, loadActualValuesAfterUpdate, null);
+            DataSet returnDatSet = core.DataService.StoreData(guid, data, loadActualValuesAfterUpdate, null);
             var element = ToXElement(returnDatSet, "StoreDataResult");
             return Task.FromResult(element);
         }
@@ -233,16 +231,6 @@ namespace Origam.ServerCore
                 xmlWriter.Close();
                 return document.Root;
             }
-        }       
-        private static DataSet ToDataSet(XElement element)
-        {
-            DataSet dataSet = new DataSet();
-            using (var writer = element.CreateWriter())
-            {
-                dataSet.WriteXml(writer, XmlWriteMode.DiffGram);
-            }
-
-            return dataSet;
         }
     }
 }
