@@ -995,11 +995,27 @@ namespace Origam.DA.Service
             var columnsInfo = selectParameters.ColumnsInfo;
             var dynamicParameters = selectParameters.Parameters;
             var customOrdering = selectParameters.CustomOrderings;
+            var customGrouping = selectParameters.CustomGrouping;
             var filter = selectParameters.Filter;
             var rowLimit = selectParameters.RowLimit;
             var rowOffset = selectParameters.RowOffset;
             bool rowOffsetSpecified = rowOffset.HasValue && rowOffset != 0;
-            
+            bool hasLookupField = selectParameters.Entity.EntityDefinition
+                .EntityColumns
+                .Cast<ISchemaItem>()
+                .OfType<LookupField>()
+                .Any(field =>
+                    selectParameters.ColumnsInfo.ColumnNames.Contains(field.Name));
+            bool wrapInGroupingSelect = hasLookupField &&
+                                        customGrouping != null;
+            if (wrapInGroupingSelect)
+            {
+                ColumnData groupColumn = selectParameters.ColumnsInfo.Columns
+                    .FirstOrDefault(column => column.Name == ColumnData.GroupByCountColumn.Name);
+                selectParameters.ColumnsInfo.Columns.Remove(groupColumn);
+                selectParameters.CustomGrouping = null;
+            }
+
             if (!(entity.EntityDefinition is TableMappingItem))
             {
                 throw new Exception("Only database mapped entities can be processed by the Data Service!");
@@ -1246,6 +1262,17 @@ namespace Origam.DA.Service
             else if (rowOffsetSpecified && orderBySpecified)
             {
                 finalString += $" OFFSET {rowOffset} ROWS FETCH NEXT {rowLimit} ROWS ONLY;";
+            }
+
+            if (wrapInGroupingSelect)
+            {
+                string columnNames = string.Join(", ", 
+                    selectParameters.ColumnsInfo.ColumnNames.Select(
+                        col => sqlRenderer.NameLeftBracket + col + sqlRenderer.NameRightBracket));
+                finalString = $"SELECT {columnNames}, {sqlRenderer.CountAggregate()}(*) AS {ColumnData.GroupByCountColumn} FROM (\n"+
+                              finalString + "\n" +
+                              ") as Query\n"+
+                              $"GROUP BY {columnNames}";
             }
 
             return finalString;
