@@ -49,7 +49,7 @@ export function getRowIndex(grouper: IGrouper, rowId: string): number | undefine
 
 export function getRowCount(grouper: IGrouper, rowId: string){
   return grouper.allGroups
-    .find(group => group.getRowById(rowId))
+    .find(group => group.childGroups.length === 0 && group.getRowById(rowId))
     ?.rowCount
 }
 
