@@ -36,6 +36,8 @@ export class TagInputEditorData implements IDropdownEditorData {
     this.dropdownEditorData = new DropdownEditorData(dataTable, rowCursor, setup);
   }
 
+  setValue(value: string[]){}
+
   @computed get value(): string | string[] | null {
     return this.dropdownEditorData.value;
   }
