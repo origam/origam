@@ -185,8 +185,6 @@ export class DropdownEditorBehavior {
         }
         break;
       case "Delete":
-        event.preventDefault();
-        event.stopPropagation();
         this.userEnteredValue = undefined;
         this.cursorRowId = "";
         this.data.chooseNewValue(null);
