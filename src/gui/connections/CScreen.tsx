@@ -29,6 +29,7 @@ import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDial
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
+import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const { openedScreen } = props;
@@ -81,6 +82,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
       const contentDocument = frameWindow?.contentDocument;
 
       if (contentDocument) {
+        contentDocument.closeOrigamTab = ( ()=> {onScreenTabCloseClick(openedScreen)(undefined);});
         contentDocument.addEventListener(
           "click",
           (event: any) => {
