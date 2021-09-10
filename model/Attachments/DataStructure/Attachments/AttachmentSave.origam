@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="26bb3909-09fd-4058-ad05-2c2e3efa814a"
+    ds:localized="false"
+    asi:name="AttachmentSave">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/Attachment.origam#Attachment/71f94167-a1b0-4054-a003-faa9b3c84aef"
+      x:id="8ed33e28-7403-4763-a8cd-70decede1ef7"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="Attachment"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/Note/6a148bad-09df-4266-b0aa-0ae2ff14441f"
+        x:id="134d7425-7fe5-4080-a9fc-56d370e32a9c"
+        asi:name="Note"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/FileName/51854e16-2ad2-4ad3-bab4-1f54ac8517e6"
+        x:id="4dc81f23-23e5-4322-a581-1c0eeb284b78"
+        asi:name="FileName"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamAttachmentFields.origam#IOrigamAttachmentFields/Data/de01feaf-6f60-4a6c-9003-b6f61198ef8a"
+        x:id="f62453b0-72ff-48d0-9f51-a7947a832a0f"
+        asi:name="Data"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="true"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/refParentRecordEntityId/37560615-b9bc-4b55-8004-6cb68877ef70"
+        x:id="9d30cb10-e5cb-42d4-bbc5-89b547416d4e"
+        asi:name="refParentRecordEntityId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
+        x:id="3c2f6de5-f6c2-4f44-9d2a-fba272cf3e31"
+        asi:name="refParentRecordId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdated/bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
+        x:id="32471861-6ffa-4022-a34e-8f7c77ebf115"
+        asi:name="RecordUpdated"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordCreatedServer/da9c4ff5-2e67-4744-935a-60a39b886828"
+        x:id="95ef07e7-1f9c-4cc0-b337-54a77766a4a9"
+        asi:name="RecordCreatedServer"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="135bb30c-51c3-4cdc-90b2-485e0136eb12"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdatedServer/9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
+        x:id="9d171317-15d6-40ea-964f-9265e1f510bd"
+        asi:name="RecordUpdatedServer"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordCreatedBy/253ce61e-509c-4d08-864f-c0e03d3eed4b"
+        x:id="d90d73e2-4356-42d4-b2f3-2782624cbc4c"
+        asi:name="RecordCreatedBy"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
+        x:id="7ac8ba7e-0afc-468b-8952-215a09993b44"
+        asi:name="RecordCreated"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/RecordUpdatedBy/efb83735-bedb-4eee-b9eb-f111dd46980e"
+        x:id="38ab2487-2477-4bbe-8114-c2eed478a6b2"
+        asi:name="RecordUpdatedBy"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+  </ds:DataStructure>
+</x:file>
