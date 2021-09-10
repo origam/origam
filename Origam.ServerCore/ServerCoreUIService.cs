@@ -797,27 +797,32 @@ namespace Origam.ServerCore
                 screenSectionId, Guid.Empty, profileId);
             if(userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
             {
-                OrigamPanelConfigDA.CreatePanelConfigRow(
-                    userConfig.Tables["OrigamFormPanelConfig"], 
-                    screenSectionId, Guid.Empty, profileId, 
-                    OrigamPanelViewMode.Grid);
+                return;
             }
             object data = userConfig.Tables["OrigamFormPanelConfig"].Rows[0]["SettingsData"];
             if (!(data is string strData))
             {
+                OrigamPanelConfigDA.DeleteUserConfig(screenSectionId, Guid.Empty, profileId);
                 return;
             }
 
             var xDocument = new XmlDocument();
             xDocument.LoadXml(strData);
-            var configurationNodes= xDocument
-                .GetAllNodes()
+            var allNodes = xDocument
+                .GetAllNodes();
+            if (allNodes.Where(node =>
+                    node.Name == "tableConfigurations").Count() < 2)
+            {
+                OrigamPanelConfigDA.DeleteUserConfig(screenSectionId, Guid.Empty, profileId);
+                return;
+            }
+            var configurationNodes = allNodes
                 .FirstOrDefault(node =>
                     node.Name == "tableConfigurations");
 
             configurationNodes?.ChildNodes
                 .Cast<XmlNode>()
-                .Where(configNode => 
+                .Where(configNode =>
                     configNode?.Attributes?["isActive"]?.Value == "true" ||
                     configNode?.Attributes?["name"]?.Value == ""
                 )
@@ -826,7 +831,7 @@ namespace Origam.ServerCore
 
             userConfig.Tables["OrigamFormPanelConfig"].Rows[0][
                 "SettingsData"] = xDocument.OuterXml;
-                    
+
             OrigamPanelConfigDA.SaveUserConfig(
                 userConfig, screenSectionId, Guid.Empty, profileId);
         }

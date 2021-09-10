@@ -50,7 +50,7 @@ namespace Origam.Gui
 			row["RecordCreated"] = DateTime.Now;
 			row["RecordCreatedBy"] = profileId;
 			row["FormPanelId"] = panelInstanceId;
-			if(workflowId != Guid.Empty) row["WorkflowId"] = workflowId;
+			if (workflowId != Guid.Empty) row["WorkflowId"] = workflowId;
 			row["ProfileId"] = profileId;
 			row["DefaultView"] = defaultView;
 
@@ -68,7 +68,7 @@ namespace Origam.Gui
 
 			DataStructureQuery query;
 
-			if(workflowId == Guid.Empty)
+			if (workflowId == Guid.Empty)
 			{
 				// we are in a form view
 				query = new DataStructureQuery(
@@ -103,20 +103,38 @@ namespace Origam.Gui
 		{
 			try
 			{
-				if(userConfig == null) return;
+				if (userConfig == null) return;
 
 				DataSet configCopy = userConfig.Copy();
 				DataSet actualConfig = LoadConfigData(panelInstanceId, workflowId, profileId);
 
-				if(actualConfig.Tables[0].Rows.Count > 0)
+				if (actualConfig.Tables[0].Rows.Count > 0)
 				{
 					configCopy.AcceptChanges();
 				}
 				DatasetTools.MergeDataSet(userConfig, configCopy, null, new MergeParams(profileId));
+				SaveConfigData(userConfig);
+			}
+			catch { }
+		}
+
+		public static void DeleteUserConfig(Guid screenSectionId, Guid workflowId, Guid profileId)
+		{
+			DataSet actualConfig = LoadConfigData(screenSectionId, workflowId, profileId);
+			if (actualConfig.Tables["OrigamFormPanelConfig"].Rows.Count > 0)
+			{
+				actualConfig.Tables["OrigamFormPanelConfig"].Rows[0].Delete();
+			}
+			SaveConfigData(actualConfig);
+		}
+
+		private static void SaveConfigData(DataSet userConfig)
+		{
+			try
+			{
 				DataStructureQuery query = new DataStructureQuery(
 					new Guid("218890ad-cd12-43a9-9166-4a02028d6125"));
-
-				IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
+				IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService<IBusinessServicesService>()).GetAgent("DataService", null, null);
 
 				dataServiceAgent.MethodName = "StoreDataByQuery";
 				dataServiceAgent.Parameters.Clear();
@@ -125,7 +143,7 @@ namespace Origam.Gui
 
 				dataServiceAgent.Run();
 			}
-			catch{}
+			catch { }
 		}
 	}
 }
