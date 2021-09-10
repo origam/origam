@@ -3858,10 +3858,16 @@ namespace Origam.DA.Service
                 if ((column.DataType == OrigamDataType.Array)
                 && input.Contains(column.Name))
                 {
+                    var stringBuilder = new StringBuilder();
                     var regex = new Regex($"\0.*{column.Name}.*\0");
                     var placeholder = regex.Match(input, 0).Value;
+                    if (placeholder.Contains("NOT"))
+                    {
+                        placeholder = placeholder.Replace("NOT", "");
+                        stringBuilder.Append("NOT ");
+                    }
                     var arrayRelation = (column.Field as DetachedField).ArrayRelation;
-                    var stringBuilder = new StringBuilder("EXISTS(SELECT * FROM ");
+                    stringBuilder.Append("EXISTS(SELECT * FROM ");
                     stringBuilder.Append(
                         RenderExpression(arrayRelation as EntityRelationItem));
                     stringBuilder.Append(" WHERE");
