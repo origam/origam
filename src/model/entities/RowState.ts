@@ -1,12 +1,12 @@
 import _ from "lodash";
-import {action, computed, createAtom, flow, observable} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getApi} from "model/selectors/getApi";
-import {getSessionId} from "model/selectors/getSessionId";
-import {flashColor2htmlColor} from "utils/flashColorFormat";
-import {IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem} from "./types/IRowState";
-import {FlowBusyMonitor} from "../../utils/flow";
+import { action, computed, createAtom, flow, observable } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getApi } from "model/selectors/getApi";
+import { getSessionId } from "model/selectors/getSessionId";
+import { flashColor2htmlColor } from "utils/flashColorFormat";
+import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
+import { FlowBusyMonitor } from "../../utils/flow";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -32,6 +32,7 @@ export class RowState implements IRowState {
   }
 
   @observable resolvedValues: Map<string, IRowStateItem> = new Map();
+  @observable temporaryResolvedValues?: Map<string, IRowStateItem>;
   @observable idStates = new Map();
   @observable observedIds = new Map();
 
@@ -43,45 +44,50 @@ export class RowState implements IRowState {
       if (this.isSomethingLoading) {
         return;
       }
-      while (true) {
-        const idsToLoad: Set<string> = new Set();
-        try {
-          this.monitor.inFlow++;
-          for (let key of this.observedIds.keys()) {
-            if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
-              idsToLoad.add(key);
-              this.idStates.set(key, IIdState.LOADING);
+      try {
+        while (true) {
+          const idsToLoad: Set<string> = new Set();
+          try {
+            this.monitor.inFlow++;
+            for (let key of this.observedIds.keys()) {
+              if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
+                idsToLoad.add(key);
+                this.idStates.set(key, IIdState.LOADING);
+              }
             }
+            if (idsToLoad.size === 0) {
+              break;
+            }
+            this.isSomethingLoading = true;
+            const api = getApi(this);
+            const states = yield api.getRowStates({
+              SessionFormIdentifier: getSessionId(this),
+              Entity: getEntity(this),
+              Ids: Array.from(idsToLoad)
+            });
+            this.isSomethingLoading = false;
+            this.firstLoadingPerformed = true;
+            for (let state of states) {
+              this.putValue(state);
+              this.idStates.delete(state.id);
+              idsToLoad.delete(state.id);
+            }
+          } catch (error) {
+            this.isSomethingLoading = false;
+            this.firstLoadingPerformed = true;
+            for (let key of idsToLoad) {
+              this.idStates.set(key, IIdState.ERROR);
+            }
+            console.error(error);
+            // TODO: Better error handling.
+            yield* handleError(this)(error);
+          } finally {
+            this.monitor.inFlow--
           }
-          if (idsToLoad.size === 0) {
-            break;
-          }
-          this.isSomethingLoading = true;
-          const api = getApi(this);
-          const states = yield api.getRowStates({
-            SessionFormIdentifier: getSessionId(this),
-            Entity: getEntity(this),
-            Ids: Array.from(idsToLoad)
-          });
-          this.isSomethingLoading = false;
-          this.firstLoadingPerformed = true;
-          for (let state of states) {
-            this.putValue(state);
-            this.idStates.delete(state.id);
-            idsToLoad.delete(state.id);
-          }
-        } catch (error) {
-          this.isSomethingLoading = false;
-          this.firstLoadingPerformed = true;
-          for (let key of idsToLoad) {
-            this.idStates.set(key, IIdState.ERROR);
-          }
-          console.error(error);
-          // TODO: Better error handling.
-          yield* handleError(this)(error);
-        } finally {
-          this.monitor.inFlow--
         }
+      } finally {
+        // After everything got loaded, here we swith back to provide the values just loaded.
+        this.temporaryResolvedValues = undefined;
       }
     }.bind(this)
   );
@@ -106,7 +112,14 @@ export class RowState implements IRowState {
       });
     }
     this.observedIds.get(key)?.atom?.reportObserved?.();
-    return this.resolvedValues.get(key);
+    // Get from temporary value storage when the values are just being refreshed.
+    if (this.temporaryResolvedValues && this.temporaryResolvedValues.has(key)) {
+      // To keep the values observed while taken from temporary storage.
+      this.resolvedValues.get(key);
+      return this.temporaryResolvedValues.get(key);
+    } else {
+      return this.resolvedValues.get(key);
+    }
   }
 
   async loadValues(keys: string[]) {
@@ -152,8 +165,34 @@ export class RowState implements IRowState {
     this.firstLoadingPerformed = true;
   }
 
+  @action.bound reload() {
+    // Deletes old resolved values, which are invisible.
+    const keysToDelete: any[] = [];
+    for (let [resKey, resVal] of this.resolvedValues.entries()) {
+      if (!this.observedIds.has(resKey)) {
+        keysToDelete.push(resKey);
+      }
+    }
+    for (let key of keysToDelete) {
+      this.resolvedValues.delete(key);
+    }
+    // Store the rest of values to suppress flickering while reloading.
+    this.temporaryResolvedValues = new Map(this.resolvedValues.entries());
+    // This actually causes reloading of the values (by views calling getValue(...) )
+    this.resolvedValues.clear();
+    this.idStates.clear();
+    for (let obsvIdVal of this.observedIds.values()) {
+      if(obsvIdVal?.atom){
+        obsvIdVal.atom.onBecomeUnobservedListeners.clear();
+        obsvIdVal.atom.onBecomeObservedListeners.clear();
+      }
+    }
+    this.observedIds.clear();
+  }
+
   @action.bound clearAll() {
     this.resolvedValues.clear();
+    this.temporaryResolvedValues = undefined;
     this.idStates.clear();
     for (let obsvIdVal of this.observedIds.values()) {
       if(obsvIdVal?.atom){

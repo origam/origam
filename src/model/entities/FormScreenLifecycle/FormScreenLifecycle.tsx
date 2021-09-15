@@ -5,7 +5,6 @@ import { new_ProcessActionResult } from "model/actions/Actions/processActionResu
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { handleError } from "model/actions/handleError";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { IAction } from "model/entities/types/IAction";
 import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
@@ -63,9 +62,10 @@ import { groupingUnitToString } from "../types/GroupingUnit";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
-import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
-import {getRowStates} from "../../selectors/RowState/getRowStates";
-import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisible";
+import { onFieldBlur } from "../../actions-ui/DataView/TableView/onFieldBlur";
+import { getRowStates } from "../../selectors/RowState/getRowStates";
+import { getIsAddButtonVisible } from "../../selectors/DataView/getIsAddButtonVisible";
+import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -865,8 +865,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } else {
         if (targetDataView.isTableViewActive()) {
           yield* startEditingFirstCell(targetDataView)();
-        }
-        else if(targetDataView.isFormViewActive()) {
+        } else if (targetDataView.isFormViewActive()) {
           getFocusManager(targetDataView).forceAutoFocus();
         }
       }
@@ -880,9 +879,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
       const childEntities = getAllBindingChildren(targetDataView)
-          .filter(dataView => getIsAddButtonVisible(dataView))
-          .map((dataView) => getEntity(dataView)
-      );
+        .filter((dataView) => getIsAddButtonVisible(dataView))
+        .map((dataView) => getEntity(dataView));
 
       const api = getApi(this);
       const formScreen = getFormScreen(this);
@@ -1047,7 +1045,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         await when(() => this.allDataViewsSteady);
       }, 10);
     }
-    yield* clearRowStates(this)();
+    yield* refreshRowStates(this)();
     yield* refreshWorkQueues(this)();
   }
 
