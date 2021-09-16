@@ -811,7 +811,7 @@ namespace Origam.ServerCore
             var allNodes = xDocument
                 .GetAllNodes();
             if (allNodes.Where(node =>
-                    node.Name == "tableConfigurations").Count() < 2)
+                    node.Name == "TableConfiguration").Count() < 2)
             {
                 OrigamPanelConfigDA.DeleteUserConfig(screenSectionId, Guid.Empty, profileId);
                 return;
