@@ -191,9 +191,6 @@ namespace Origam.ServerCore.Controller
                         new GenericIdentity(blobUploadRequest.UserName),
                         new string[] { });
                 var profile = SecurityTools.CurrentUserProfile();
-                DatasetTools.UpdateOrigamSystemColumns(
-                    blobUploadRequest.Row, false, profile.Id);
-                blobUploadRequest.Row[blobUploadRequest.Property] = filename;
                 if(CheckMember(blobUploadRequest.OriginalPathMember, false))
                 {
                     blobUploadRequest.Row[blobUploadRequest.OriginalPathMember] 
@@ -271,6 +268,9 @@ namespace Origam.ServerCore.Controller
                         }
                     }
                 }
+                DatasetTools.UpdateOrigamSystemColumns(
+                  blobUploadRequest.Row, false, profile.Id);
+                blobUploadRequest.Row[blobUploadRequest.Property] = filename;
                 return Ok();
             }
             catch(Exception ex)
