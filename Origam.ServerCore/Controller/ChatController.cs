@@ -67,6 +67,10 @@ namespace Origam.ServerCore.Controller
             = new Guid("5e3d904a-6ad9-4040-ac50-6fee9ee2debb");
         private readonly Guid GetByBusinessPartnerId_IsInvited 
             = new Guid("36fd5fb8-5aba-4e87-85c2-e412516888ad");
+        private readonly Guid GetByOrigamChatRoomId
+            = new Guid("c69ed9ec-df67-4c6e-b99a-726e40316b5e");
+        private readonly Guid GetByOrigamChatRoomIdSearch
+            = new Guid("fda05fef-8069-41a2-a8fb-d67395e9cea8");
 
         private readonly Guid LookupBusinessPartner 
             = new Guid("d7921e0c-b763-4d07-a019-7e948b4c49a6");
@@ -134,8 +138,7 @@ namespace Origam.ServerCore.Controller
             [FromQuery]string searchPhrase)
         {
             return RunWithErrorHandler(() => 
-                GetRoomUsers(requestChatRoomId, limit, offset, searchPhrase, 
-                    false));
+                GetOutviteRoomUsers(requestChatRoomId, limit, offset, searchPhrase));
         }
         //List user invite to chatroom (New Room)
         [HttpGet("users/listToInvite")]
@@ -357,6 +360,44 @@ namespace Origam.ServerCore.Controller
             return Ok(OrigamChatBusinessPartner.CreateJson(
                 datasetUsersForInvite, null));
         }
+
+        private IActionResult GetOutviteRoomUsers(
+            Guid requestChatRoomId,
+            int limit,
+            int offset,
+            string searchPhrase)
+        {
+            var participants
+                = GetChatRoomParticipants(requestChatRoomId);
+            var methodId = GetByOrigamChatRoomId;
+            var parameters = new QueryParameterCollection
+            {
+                new QueryParameter("OrigamChatRoomBusinessPartner_parOrigamChatRoomId",
+                    requestChatRoomId)
+            };
+            if(!string.IsNullOrEmpty(searchPhrase))
+            {
+                parameters.Add(
+                    new QueryParameter("BusinessPartnerLookup_parSearchText",
+                        searchPhrase));
+                methodId = GetByOrigamChatRoomIdSearch;
+            }
+            if(limit > 0)
+            {
+                parameters.Add(
+                    new QueryParameter("BusinessPartner__pageNumber",
+                        offset));
+                parameters.Add(
+                    new QueryParameter("BusinessPartner__pageSize",
+                        limit));
+            }
+            var datasetUsersForInvite = LoadData(
+                OrigamChatRoomBusinessPartnerId, methodId, Guid.Empty,
+                Guid.Empty, null, parameters);
+            return Ok(OrigamChatBusinessPartner.CreateJson(
+                datasetUsersForInvite, participants, false));
+        }
+
         private IActionResult GetRoomUsers(
             Guid requestChatRoomId, 
             int limit, 
