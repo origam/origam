@@ -354,6 +354,12 @@
   <data name="ErrorNoSearchPattern" xml:space="preserve">
     <value>Search pattern not specified.</value>
   </data>
+  <data name="ErrorSplitByNegativeValue" xml:space="preserve">
+    <value>splitFileByRows has negative value.</value>
+  </data>
+  <data name="SplitBinaryFilesNotSupported" xml:space="preserve">
+    <value>Splitting binary files is not supported.</value>
+  </data>
   <data name="ErrorNoServer" xml:space="preserve">
     <value>Server not specified.</value>
   </data>
