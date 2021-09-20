@@ -135,9 +135,11 @@ export class FilterSettingsString extends React.Component<{
 
   @action.bound
   handleFilterTypeChange() {
-    this.currentValue = "";
-    this.props.setting.val1 = undefined;
-    this.props.setting.val2 = undefined;
+    if(this.props.setting.type === "null" || this.props.setting.type === "nnull"){
+      this.currentValue = "";
+      this.props.setting.val1 = undefined;
+      this.props.setting.val2 = undefined;
+    }
     this.handleChange();
   }
 

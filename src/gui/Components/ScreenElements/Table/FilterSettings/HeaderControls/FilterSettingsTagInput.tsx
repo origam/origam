@@ -69,8 +69,10 @@ const OpCombo: React.FC<{
           onClick={() => {
             props.setting.type = op.type;
             props.setting.isComplete = op.type === "null" || op.type === "nnull";
-            props.setting.val1 = undefined;
-            props.setting.val2 = undefined;
+            if(op.type === "null" || op.type === "nnull"){
+              props.setting.val1 = undefined;
+              props.setting.val2 = undefined;
+            }
           }}
         >
           {op.caption}
