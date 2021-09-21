@@ -45,7 +45,9 @@ async function getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
     SessionFormIdentifier: getSessionId(property),
     DataStructureEntityId: getDataStructureEntityId(property),
     Property: property.id,
-    Filter: getUserFilters({ctx: property, excludePropertyId: property.id}),
+    Filter: property.column === "TagInput"
+      ? ""
+      : getUserFilters({ctx: property, excludePropertyId: property.id}),
     FilterLookups: getUserFilterLookups(property),
   });
   return new Set(
