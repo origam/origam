@@ -94,9 +94,7 @@ export class TextEditor extends React.Component<{
   }
 
   componentDidUpdate(prevProps: { isFocused: boolean }) {
-    if (!prevProps.isFocused && this.props.isFocused) {
-      this.makeFocusedIfNeeded();
-    }
+    this.makeFocusedIfNeeded();
     this.updateTextOverflowState();
   }
 
