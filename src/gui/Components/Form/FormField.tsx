@@ -121,14 +121,11 @@ export class FormField extends React.Component<{
   }
 
   getToolTip() {
-    if (this.props.toolTip) {
-      return formatTooltipPlaintext(this.props.toolTip);
-    } else {
-      if(this.toolTip){
-        return formatTooltipPlaintext(this.toolTip)
-      }
-      return undefined;
+    let finalToolTip =  this.props.toolTip ?? "";
+    if(this.toolTip){
+      finalToolTip += "\n" +this.toolTip;
     }
+    return formatTooltipPlaintext(finalToolTip);
   }
 
   render() {
