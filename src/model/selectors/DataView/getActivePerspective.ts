@@ -17,21 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getRowStateById } from "../RowState/getRowStateById";
-import {getDataView} from "./getDataView";
-import {getActivePerspective} from "model/selectors/DataView/getActivePerspective";
-import {IPanelViewType} from "model/entities/types/IPanelViewType";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {scopeFor} from "dic/Container";
+import {IViewConfiguration} from "modules/DataView/ViewConfiguration";
 
-export function getIsDelButtonVisible(ctx: any) {
+export function getActivePerspective(ctx: any) {
   const dataView = getDataView(ctx);
-  if(getActivePerspective(ctx) === IPanelViewType.Map){
-    return false;
-  }
-  if(dataView.selectedRowId){
-    const rowState = getRowStateById(ctx, dataView.selectedRowId);
-    if(rowState?.allowDelete !== undefined){
-      return dataView.showDeleteButton && rowState.allowDelete;
-    }
-  }
-  return dataView.showDeleteButton
+  const $cont = scopeFor(dataView);
+  const viewConfiguration = $cont && $cont.resolve(IViewConfiguration);
+  return viewConfiguration?.activePerspective
 }
