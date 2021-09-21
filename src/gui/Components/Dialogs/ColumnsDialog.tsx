@@ -292,7 +292,7 @@ export class ColumnsDialog extends React.Component<{
                       setDropped(false);
                       this.setAggregation(rowIndex, undefined);
                     }}
-                  ></DropdownItem>
+                  />
                   <DropdownItem
                     onClick={(event: any) => {
                       setDropped(false);
