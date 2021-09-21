@@ -46,8 +46,6 @@ import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSav
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
-import {getGridFocusManager} from "model/entities/GridFocusManager";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -214,11 +212,6 @@ export class TablePanelView implements ITablePanelView {
     }
     if (!getGroupingConfiguration(this).isGrouping) {
       this.scrollToCurrentCell();
-    }
-    if(!isLazyLoading(this)){
-      setTimeout(()=>{
-        getGridFocusManager(this).focusTableIfNeeded();
-      });
     }
   }
 
