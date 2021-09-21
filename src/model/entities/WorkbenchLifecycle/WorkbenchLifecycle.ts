@@ -34,7 +34,6 @@ import selectors from "model/selectors-tree";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
-import {IPerspective} from "modules/DataView/Perspective/Perspective";
 import { IDataView } from "../types/IDataView";
 import {FormScreenEnvelope} from "model/entities/FormScreen";
 
