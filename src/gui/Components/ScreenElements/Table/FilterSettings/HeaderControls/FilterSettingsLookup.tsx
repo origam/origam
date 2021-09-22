@@ -238,9 +238,7 @@ export class LookupFilterSetting implements IFilterSetting {
   }
 
   get val2ServerForm(){
-    return this.type === "between" || this.type === "nbetween" 
-      ? this.val2 
-      : undefined;
+    return this.val2;
   }
 
   constructor(type: string, isComplete=false, val1?:string, val2?: any) {
