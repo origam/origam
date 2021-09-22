@@ -107,7 +107,7 @@ export class NumberEditor extends React.Component<{
       return;
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
-    this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
+    this.props.onTextOverflowChanged?.(textOverflow ? this.numeralFormattedValue : undefined);
   }
 
   @action.bound
