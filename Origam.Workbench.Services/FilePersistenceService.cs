@@ -132,7 +132,7 @@ namespace Origam.Workbench.Services
             }
             return new FileChangesWatchDog(
                 topDir: topDir,
-                fileExtensionsToIgnore: new HashSet<string>{"bak", "debug"},
+                fileExtensionsToIgnore: new HashSet<string>{"bak", "debug", "origamDoc"},
                 filesToIgnore: new List<FileInfo> {pathToIndexBin},
                 directoryNamesToIgnore: new List<string>{".git"});
         }
