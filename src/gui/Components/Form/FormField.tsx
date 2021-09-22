@@ -104,7 +104,7 @@ export class FormField extends React.Component<{
   getToolTip() {
     let finalToolTip =  this.props.toolTip ?? "";
     if(this.toolTip){
-      finalToolTip += "\n" +this.toolTip;
+      finalToolTip = this.toolTip + "\n\n" + finalToolTip;
     }
     return formatTooltipPlaintext(finalToolTip);
   }
