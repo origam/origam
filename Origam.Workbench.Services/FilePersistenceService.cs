@@ -67,7 +67,7 @@ namespace Origam.Workbench.Services
             var index = new FilePersistenceIndex(pathFactory);
 
             var ignoredFileFilter = new FileFilter(
-                fileExtensionsToIgnore: new HashSet<string> {"bak", "debug"},
+                fileExtensionsToIgnore: new HashSet<string> {"bak", "debug", "origamDoc"},
                 filesToIgnore: new List<FileInfo>
                 {
                     pathToIndexBin, 
