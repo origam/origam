@@ -69,6 +69,7 @@ export class TextEditor extends React.Component<{
       this.disposers.push(this.startAutoUpdate());
     }
     this.updateTextOverflowState();
+    this.makeFocusedIfNeeded();
   }
 
   private updateTextOverflowState() {
@@ -93,8 +94,10 @@ export class TextEditor extends React.Component<{
     this.disposers.forEach((d) => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean }) {
-    this.makeFocusedIfNeeded();
+  componentDidUpdate(prevProps: any) {
+    if (!prevProps.isFocused && this.props.isFocused) {
+      this.makeFocusedIfNeeded();
+    }
     this.updateTextOverflowState();
   }
 
