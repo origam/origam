@@ -371,7 +371,7 @@ export class DropdownEditorBehavior {
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
         if (self.autoSort) {
-          items.sort((i1: string[], i2: string[]) => compareStrings(i1[1], i2[1]));
+          items.sort((i1: any[], i2: any[]) => compareLookUpItems(i1[1], i2[1]))
         }
         if (setup.dropdownType === EagerlyLoadedGrid) {
           self.dataTable.setData(items);
@@ -421,6 +421,14 @@ export class DropdownEditorBehavior {
   elmDropdownBody: any;
 }
 
+function compareLookUpItems(item1: any, item2: any){
+  if( typeof item1 === 'number' && typeof item2 === 'number' ){
+    if(item1 > item2) return 1;
+    if(item1 < item2) return -1;
+    return 0;
+  }
+  return compareStrings(item1, item2)
+}
 
 decorate(DropdownEditorBehavior, {
   isReadOnly: observable,
