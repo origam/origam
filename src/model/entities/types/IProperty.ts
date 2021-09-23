@@ -68,6 +68,7 @@ export interface IPropertyData {
   lookup?: ILookup;
   lookupId?: string;
   xmlNode: any;
+  fieldType: string;
 }
 
 export interface IProperty extends IPropertyData {

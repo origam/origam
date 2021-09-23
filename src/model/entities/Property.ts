@@ -81,7 +81,7 @@ export class Property implements IProperty {
 
   linkToMenuId?: string = undefined;
   linkDependsOnValue: boolean = false;
-
+  fieldType: string = null as any;
   isFormField: boolean = false;
 
   get isLookup() {

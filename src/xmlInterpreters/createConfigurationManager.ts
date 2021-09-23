@@ -25,7 +25,7 @@ import {fixColumnWidth} from "xmlInterpreters/screenXml";
 import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 
-function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any) {
+function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any, isLazyLoading: boolean) {
   const columnConfigurations: TableColumnConfiguration[] = tableConfigNode.elements
     .map((element: any) => {
       if(!element.attributes?.propertyId){
@@ -35,7 +35,7 @@ function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any)
       if(!property){
         return undefined;
       }
-      return parseColumnConfigurationNode(element, property)
+      return parseColumnConfigurationNode(element, property, isLazyLoading)
     })
     .filter((columnConfig: any) => columnConfig);
   const parsedColumnConfigurationIds = columnConfigurations.map(columnConfig => columnConfig.propertyId);
@@ -46,7 +46,7 @@ function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any)
   return columnConfigurations.concat(newColumnConfigurations);
 }
 
-export function createConfigurationManager(configurationNodes: any, properties: IProperty[]) {
+export function createConfigurationManager(configurationNodes: any, properties: IProperty[], isLazyLoading: boolean) {
   const defaultConfiguration = TableConfiguration.createDefault(properties);
   if (configurationNodes.length === 0) {
     return new ConfigurationManager(
@@ -67,7 +67,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
         id: tableConfigNode.attributes.id,
         isActive: tableConfigNode.attributes.isActive === "true",
         fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
-        columnConfigurations: makeColumnConfigurations(properties, tableConfigNode),
+        columnConfigurations: makeColumnConfigurations(properties, tableConfigNode, isLazyLoading),
       }
       )
     }
@@ -88,7 +88,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   );
 }
 
-function parseColumnConfigurationNode(columnConfigNode: any, property: IProperty) {
+function parseColumnConfigurationNode(columnConfigNode: any, property: IProperty, isLazyLoading: boolean) {
   const tableConfiguration = new TableColumnConfiguration(property.id);
   tableConfiguration.width = fixColumnWidth(parseInt(columnConfigNode.attributes.width));
 
@@ -97,7 +97,9 @@ function parseColumnConfigurationNode(columnConfigNode: any, property: IProperty
   }
   tableConfiguration.aggregationType = tryParseAggregationType(columnConfigNode.attributes.aggregationType);
 
-  if (!property?.isLookupColumn) {
+  // It is possible that the configuration will contain grouping by detached field if the same screen is referenced by two
+  // menu items. One opens it as lazy loaded the other as eager loaded.
+  if (!isLazyLoading || property.fieldType !== "DetachedField") {
     tableConfiguration.groupingIndex = parseIntOrZero(columnConfigNode.attributes.groupingIndex);
     tableConfiguration.timeGroupingUnit = isNaN(parseInt(columnConfigNode.attributes.groupingUnit))
       ? undefined

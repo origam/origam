@@ -218,7 +218,8 @@ function parseProperty(property: any, idx: number): IProperty {
     isLookupColumn: property.attributes.IsLookupColumn || false,
     style: cssString2Object(property.attributes.Style),
     toolTip: property.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
-    supportsServerSideSorting: property.attributes.SupportsServerSideSorting === "true"
+    supportsServerSideSorting: property.attributes.SupportsServerSideSorting === "true",
+    fieldType: property.attributes.FieldType
   });
   if (property.elements && property.elements.length > 0) {
     property.elements
@@ -499,7 +500,8 @@ export function* interpretScreenXml(
       }
       const configurationManager = createConfigurationManager(
         gridConfigurationNodes,
-        dataViewInstance.tablePanelView.tableProperties
+        dataViewInstance.tablePanelView.tableProperties,
+        isLazyLoading
       );
       configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;

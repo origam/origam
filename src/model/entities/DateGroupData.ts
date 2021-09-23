@@ -30,12 +30,16 @@ export interface IGroupData{
 }
 
 export class GenericGroupData implements IGroupData{
-  constructor(
-    public value: string,
-    public label: any
-    ){
-    }
-    
+  private readonly _label: any;
+
+  constructor(public value: string, label: any)
+  {
+    this._label = Array.isArray(label) ? label.join(", "): label;
+  }
+
+  public get label(){
+    return this._label;
+  }
   public rows: any[][] = [];
 
   compare(other: IGroupData): number{

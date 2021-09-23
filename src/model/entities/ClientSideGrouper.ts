@@ -28,7 +28,7 @@ import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
-import { DateGroupData, GenericGroupData } from "./DateGroupData";
+import {DateGroupData, GenericGroupData, IGroupData} from "./DateGroupData";
 import moment from "moment";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
 import { IOrderByDirection } from "./types/IOrderingConfiguration";
@@ -136,7 +136,7 @@ export class ClientSideGrouper implements IGrouper {
     }
 
     const index = this.findDataIndex(groupingSettings.columnId);
-    const groupMap = new Map<string, GenericGroupData>();
+    const groupMap = new Map<string, IGroupData>();
     for (let row of rows) {    
       const groupData = groupingSettings.groupingUnit === undefined 
         ? new GenericGroupData(row[index], row[index])
