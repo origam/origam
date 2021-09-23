@@ -47,5 +47,5 @@ export function compareStrings(a: string | undefined | null, b: string | undefin
     return -1;
   }
   const locale = getLocaleFromCookie();
-  return a.localeCompare(b, locale);
+  return a.toString().localeCompare(b.toString(), locale);
 }
