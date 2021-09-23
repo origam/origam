@@ -185,7 +185,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   elmMeasure: Measure | null = null;
 
-  @action.bound handleWindowClick(event: any) {
+  @action.bound handleWindowMouseDown(event: any) {
     const domNode = ReactDOM.findDOMNode(this.elmScroller);
     if (domNode && !domNode.contains(event.target)) {
       this.props.onOutsideTableClick && this.props.onOutsideTableClick(event);
@@ -218,9 +218,9 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     this.elmScroller = elm;
     if (elm) {
       this.props.scrollState.scrollToFunction = elm.scrollTo;
-      window.addEventListener("click", this.handleWindowClick);
+      window.addEventListener("mousedown", this.handleWindowMouseDown);
     } else {
-      window.removeEventListener("click", this.handleWindowClick);
+      window.removeEventListener("mousedown", this.handleWindowMouseDown);
     }
   }
 
