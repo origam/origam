@@ -60,14 +60,12 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             idPropertyElement.SetAttribute("Entity", "String");
             idPropertyElement.SetAttribute("Column", "Text");
 
-            bool hasMemo = false;
-            string memoName = null;
-            Guid memoId = Guid.Empty;
+            DataStructureColumn memoColumn = null;
             int lastPos = 5;
             
             foreach(var column in entity.Columns)
             {
-                FormXmlBuilder.AddColumn(entity, column.Name, ref hasMemo, ref memoName, ref memoId, 
+                FormXmlBuilder.AddColumn(entity, column.Name, ref memoColumn, 
                     ref lastPos, propertiesElement,	propertyNamesElement, table, null);
             }
         }

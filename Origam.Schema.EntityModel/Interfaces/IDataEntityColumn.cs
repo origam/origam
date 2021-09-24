@@ -81,5 +81,7 @@ namespace Origam.Schema.EntityModel
 		ArrayList DynamicLabels{get;}
 
         DataEntityConstraint ForeignKeyConstraint { get;  }
+        
+        string FieldType { get; }
 	}
 }

@@ -257,7 +257,10 @@ namespace Origam.Schema.EntityModel
 
         [Browsable(false)]
         public DataEntityConstraint ForeignKeyConstraint => null;
-		#endregion
+
+        public string FieldType { get; } = "LookupField";
+
+        #endregion
 
         #region Overriden AbstractSchemaItem Methods
         [Browsable(false)]

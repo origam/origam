@@ -53,6 +53,8 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
+		public override string FieldType { get; } = "FunctionCall";
+
 		public override bool ReadOnly
 		{
 			get

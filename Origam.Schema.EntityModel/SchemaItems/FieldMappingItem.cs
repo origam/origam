@@ -123,7 +123,9 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[Browsable(false)]
+        public override string FieldType { get; } = "FieldMappingItem";
+
+        [Browsable(false)]
 		public override bool ReadOnly
 		{
 			get

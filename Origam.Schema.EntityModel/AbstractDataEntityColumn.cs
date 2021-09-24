@@ -484,7 +484,9 @@ namespace Origam.Schema.EntityModel
                 }
             }
         }
-		#endregion
+        public abstract string FieldType { get; }
+
+        #endregion
 
 		#region Overriden AbstractSchemaItem Methods
 		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
