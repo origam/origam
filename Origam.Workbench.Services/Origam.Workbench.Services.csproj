@@ -53,7 +53,7 @@
 
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.3" />
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
       <PackageReference Include="morelinq" Version="3.3.2" />
     </ItemGroup>
     <ItemGroup>
