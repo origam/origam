@@ -120,7 +120,6 @@ export class FormViewEditor extends React.Component<{
             customStyle={this.props.property?.style}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
-            onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
@@ -147,7 +146,6 @@ export class FormViewEditor extends React.Component<{
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
-            onClick={undefined}
             wrapText={true}
             onEditorBlur={this.props.onEditorBlur}
             onAutoUpdate={value => onTextFieldAutoUpdate(this.props.property!, value)}
@@ -174,7 +172,6 @@ export class FormViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
-            onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
@@ -192,7 +189,7 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isReadOnly={readOnly}
             onChange={this.props.onChange}
-            onClick={() => getDataView(this.props.property).formFocusManager.stopAutoFocus()}
+            onClick={event => this.focusManager.stopAutoFocus()}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
@@ -257,7 +254,6 @@ export class FormViewEditor extends React.Component<{
                 customStyle={this.props.property?.style}
                 onChange={this.props.onChange}
                 onKeyDown={this.makeOnKeyDownCallBack()}
-                onClick={undefined}
                 onEditorBlur={this.props.onEditorBlur}
               />
             }
@@ -279,7 +275,7 @@ export class FormViewEditor extends React.Component<{
               )
             }
             onKeyDown={this.makeOnKeyDownCallBack()}
-            onClick={() => getDataView(this.props.property).formFocusManager.stopAutoFocus()}
+            onClick={() => this.focusManager.stopAutoFocus()}
           />
         );
       case "Color":
