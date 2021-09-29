@@ -110,7 +110,7 @@ export class RowState implements IRowState {
           }
         }
       } finally {
-        // After everything got loaded, here we swith back to provide the values just loaded.
+        // After everything got loaded, here we switch back to provide the values just loaded.
         this.temporaryContainersValues = undefined;
       }
     }.bind(this)
@@ -135,11 +135,7 @@ export class RowState implements IRowState {
       )
     }
     container.atom.reportObserved?.();
-    //return this.containers.get(rowId)?.rowStateItem;
-    // Get from temporary value storage when the values are just being refreshed.
     if (this.temporaryContainersValues && this.temporaryContainersValues.has(rowId)) {
-      // To keep the values observed while taken from temporary storage.
-      //this.containers.get(rowId);
       return this.temporaryContainersValues.get(rowId)?.rowStateItem;
     } else {
       return this.containers.get(rowId)?.rowStateItem;
