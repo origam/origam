@@ -23,6 +23,7 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { handleError } from "model/actions/handleError";
 import { closingScreens } from "model/entities/FormScreenLifecycle/FormScreenLifecycle";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 
 export function onScreenTabCloseMouseDown(ctx: any) {
   return function (event: any) {
@@ -38,6 +39,10 @@ export function onScreenTabCloseMouseDown(ctx: any) {
 export function onScreenTabCloseClick(ctx: any) {
   return flow(function* onFormTabCloseClick(event: any, isDueToError?: boolean) {
     const openedScreen = getOpenedScreen(ctx);
+    let dataViews = openedScreen.content?.formScreen?.dataViews ?? [];
+    for (const dataView of dataViews) {
+      getTablePanelView(dataView)?.setEditing(false);
+    }
     try {
       event?.stopPropagation?.();
       // TODO: Wait for other async operation to finish?
