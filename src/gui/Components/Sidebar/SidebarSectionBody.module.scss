@@ -23,7 +23,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 0;
   &:global(.isActive) {
     flex-grow: 1;
-    overflow: auto;
     height: auto;
   }
 }

@@ -47,30 +47,23 @@ export class SimpleDropdown<T> extends React.Component<{
 
   set isDropped(value: boolean){
     if(value){
-      document.addEventListener("mousedown", event => this.documentClickListener(event))
-      document.addEventListener("wheel", event => this.documentWheelListener(event))
+      document.addEventListener("mousedown", event => this.documentClickAndWheelListener(event))
+      document.addEventListener("wheel", event => this.documentClickAndWheelListener(event))
     }else{
-      document.removeEventListener("mousedown", event => this.documentClickListener(event));
-      document.removeEventListener("wheel", event => this.documentWheelListener(event));
+      document.removeEventListener("mousedown", event => this.documentClickAndWheelListener(event));
+      document.removeEventListener("wheel", event => this.documentClickAndWheelListener(event));
     }
     this._isDropped = value;
   }
 
-  documentWheelListener(event: any) {
+  documentClickAndWheelListener(event: any) {
     const simpleDropdown = document.getElementById(this.id);
     const dropdownPortal = document.getElementById("dropdown-portal");
-    let targetElement = event.target;
-    if(!targetElement){
+    if (!dropdownPortal || !simpleDropdown){
+      document.removeEventListener("mousedown", event => this.documentClickAndWheelListener(event));
+      document.removeEventListener("wheel", event => this.documentClickAndWheelListener(event));
       return;
     }
-    if(!dropdownPortal!.contains(targetElement) && !simpleDropdown!.contains(targetElement)){
-      this.isDropped = false;
-    }
-  }
-
-  documentClickListener(event: any) {
-    const dropdownPortal = document.getElementById("dropdown-portal");
-    const simpleDropdown = document.getElementById(this.id);
     let targetElement = event.target;
     if(!targetElement){
       return;

@@ -100,6 +100,19 @@ export class Favorites {
     await this.saveFavorites();
   }
 
+  public async moveItemInFolder(itemIds: string[],  fromIndex: number, toIndex: number) {
+    const itemId = itemIds[fromIndex];
+    itemIds.splice(fromIndex, 1);
+    itemIds.splice(toIndex, 0, itemId);
+    await this.saveFavorites();
+  }
+
+  async moveItemBetweenFolders(itemId: string, sourceFolder: FavoriteFolder, destinationFolder: FavoriteFolder) {
+    sourceFolder.itemIds.remove(itemId);
+    destinationFolder.itemIds.push(itemId);
+    await this.saveFavorites();
+  }
+
   parent: any;
 }
 
@@ -137,7 +150,7 @@ class XmlToFavoritesConverter {
   private folderToXml(folder: FavoriteFolder) {
     return (
       `  <folder label="${folder.name}" id="${folder.id}" isPinned="${folder.isPinned}">\n` +
-      folder.items.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
+      folder.itemIds.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
       "  </folder>"
     );
   }
@@ -153,11 +166,11 @@ export class FavoriteFolder {
   ) {
     this.name = name;
     this.isPinned = isPinned;
-    this.items = items;
+    this.itemIds = items;
   }
 
   @observable
-  items: string[];
+  itemIds: string[];
 
   @observable
   isPinned: boolean;
@@ -166,14 +179,14 @@ export class FavoriteFolder {
   name: string;
 
   public has(menuId: string) {
-    return this.items.includes(menuId);
+    return this.itemIds.includes(menuId);
   }
 
   public add(menuId: string) {
-    return this.items.push(menuId);
+    return this.itemIds.push(menuId);
   }
 
   public remove(menuId: string) {
-    return this.items.remove(menuId);
+    return this.itemIds.remove(menuId);
   }
 }
