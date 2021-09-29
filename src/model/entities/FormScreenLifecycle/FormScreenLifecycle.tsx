@@ -24,7 +24,6 @@ import { new_ProcessActionResult } from "model/actions/Actions/processActionResu
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { handleError } from "model/actions/handleError";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { IAction } from "model/entities/types/IAction";
 import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
