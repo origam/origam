@@ -47,6 +47,7 @@ export class RowState implements IRowState {
   }
 
   @observable firstLoadingPerformed = false;
+  @observable temporaryContainersValues?: Map<string, RowStateContainer>;
   @computed get mayCauseFlicker() {
     return  !this.firstLoadingPerformed;
   }
@@ -62,50 +63,55 @@ export class RowState implements IRowState {
       }
       let containersToLoad: Map<string, RowStateContainer> = new Map();
       let reportBusyStatus = true;
-      while (true) {
-        try {
-          for (let container of this.containers.values()) {
-            if(container.rowId && !container.isValid && !container.processingSate){
-              containersToLoad.set(container.rowId, container);
+      try {
+        while (true) {
+          try {
+            for (let container of this.containers.values()) {
+              if(container.rowId && !container.isValid && !container.processingSate){
+                containersToLoad.set(container.rowId, container);
+              }
             }
+            reportBusyStatus = Array.from(containersToLoad.values()).every(container => !container.suppressWorkingStatus);
+            if(reportBusyStatus){
+              this.monitor.inFlow++;
+            }
+            if (containersToLoad.size === 0) {
+              break;
+            }
+            for (let container of containersToLoad.values()) {
+              container.processingSate = IIdState.LOADING;
+            }
+            this.isSomethingLoading = true;
+            const api = getApi(this);
+            const states = yield api.getRowStates({
+              SessionFormIdentifier: getSessionId(this),
+              Entity: getEntity(this),
+              Ids: Array.from(containersToLoad.values()).map(container => container.rowId)
+            });
+            this.isSomethingLoading = false;
+            this.firstLoadingPerformed = true;
+            for (let state of states) {
+              this.putValue(state);
+              this.containers.get(state.id)!.processingSate = undefined;
+            }
+          } catch (error) {
+            this.isSomethingLoading = false;
+            this.firstLoadingPerformed = true;
+            for (let container of containersToLoad.values()) {
+              container.processingSate = IIdState.ERROR;
+            }
+            yield* handleError(this)(error);
+          } finally {
+            if(reportBusyStatus){
+              this.monitor.inFlow--;
+            }
+            containersToLoad.forEach(container => container.suppressWorkingStatus = false);
+            containersToLoad.clear();
           }
-          reportBusyStatus = Array.from(containersToLoad.values()).every(container => !container.suppressWorkingStatus);
-          if(reportBusyStatus){
-            this.monitor.inFlow++;
-          }
-          if (containersToLoad.size === 0) {
-            break;
-          }
-          for (let container of containersToLoad.values()) {
-            container.processingSate = IIdState.LOADING;
-          }
-          this.isSomethingLoading = true;
-          const api = getApi(this);
-          const states = yield api.getRowStates({
-            SessionFormIdentifier: getSessionId(this),
-            Entity: getEntity(this),
-            Ids: Array.from(containersToLoad.values()).map(container => container.rowId)
-          });
-          this.isSomethingLoading = false;
-          this.firstLoadingPerformed = true;
-          for (let state of states) {
-            this.putValue(state);
-            this.containers.get(state.id)!.processingSate = undefined;
-          }
-        } catch (error) {
-          this.isSomethingLoading = false;
-          this.firstLoadingPerformed = true;
-          for (let container of containersToLoad.values()) {
-            container.processingSate = IIdState.ERROR;
-          }
-          yield* handleError(this)(error);
-        } finally {
-          if(reportBusyStatus){
-            this.monitor.inFlow--;
-          }
-          containersToLoad.forEach(container => container.suppressWorkingStatus = false);
-          containersToLoad.clear();
         }
+      } finally {
+        // After everything got loaded, here we swith back to provide the values just loaded.
+        this.temporaryContainersValues = undefined;
       }
     }.bind(this)
   );
@@ -129,7 +135,15 @@ export class RowState implements IRowState {
       )
     }
     container.atom.reportObserved?.();
-    return this.containers.get(rowId)?.rowStateItem;
+    //return this.containers.get(rowId)?.rowStateItem;
+    // Get from temporary value storage when the values are just being refreshed.
+    if (this.temporaryContainersValues && this.temporaryContainersValues.has(rowId)) {
+      // To keep the values observed while taken from temporary storage.
+      //this.containers.get(rowId);
+      return this.temporaryContainersValues.get(rowId)?.rowStateItem;
+    } else {
+      return this.containers.get(rowId)?.rowStateItem;
+    }
   }
 
   async loadValues(rowIds: string[]) {
@@ -178,6 +192,13 @@ export class RowState implements IRowState {
     this.firstLoadingPerformed = true;
   }
 
+  @action.bound reload() {
+   // Store the rest of values to suppress flickering while reloading.
+    this.temporaryContainersValues = new Map(this.containers.entries());
+    // This actually causes reloading of the values (by views calling getValue(...) )
+    this.containers.clear();
+  }
+
   @action.bound clearAll() {
 
     for (let rowStateContainer of this.containers.values()) {
@@ -187,6 +208,7 @@ export class RowState implements IRowState {
       rowStateContainer.isValid = false;
       rowStateContainer.processingSate = undefined;
     }
+    this.temporaryContainersValues = undefined;
     // TODO: Wait when something is currently loading.
   }
 

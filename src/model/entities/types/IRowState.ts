@@ -32,6 +32,7 @@ export interface IRowState extends IRowStateData {
   hasValue(key: string): boolean;
   suppressWorkingStatus: boolean;
   clearAll(): void;
+  reload(): void;
 
   parent?: any;
 }

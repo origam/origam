@@ -38,7 +38,6 @@ import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreen
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
-import React from "react";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
 import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
@@ -88,6 +87,7 @@ import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisi
 import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
 import {isIFormPlugin} from "../../../plugins/types/IFormPlugin";
 import {isISectionPlugin} from "../../../plugins/types/ISectionPlugin";
+import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -1119,7 +1119,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         await when(() => this.allDataViewsSteady);
       }, 10);
     }
-    yield* clearRowStates(this)();
+    yield* refreshRowStates(this)();
     yield* refreshWorkQueues(this)();
   }
 
