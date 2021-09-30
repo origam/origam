@@ -52,6 +52,7 @@ using Origam.Extensions;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
 using Origam.ServerCore.Configuration;
+using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model.Search;
 using Origam.ServerCore.Resources;
 
@@ -477,7 +478,23 @@ namespace Origam.ServerCore.Controller
         {
             return AmbiguousInputToRowData(input, dataService)
                 .Map(RowDataToRecordTooltip)
-                .Finally(UnwrapReturnValue);
+                .Finally(result =>
+                {
+                    if (result.IsSuccess)
+                    {
+                        return result.Value;
+                    }
+                    if (result.Error is NotFoundObjectResult notFoundResult)
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml("<tooltip title=\"'Error'\">"+
+                                        $"<cell type=\"text\" x=\"0\" y=\"1\" height=\"1\" width=\"1\">Error</cell>"+
+                                        $"<cell type=\"text\" x=\"0\" y=\"2\" height=\"1\" width=\"1\">{notFoundResult.Value}</cell>"+
+                                    "</tooltip>");
+                        return Ok(doc);
+                    }
+                    return result.Error;
+                });
         }
         [HttpGet("[action]")]
         public IActionResult GetNotificationBoxContent()
