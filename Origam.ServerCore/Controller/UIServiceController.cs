@@ -102,6 +102,7 @@ namespace Origam.ServerCore.Controller
                 return Ok(result);
             });
         }
+        [AllowAnonymous]
         [HttpGet("[action]")]
         public IActionResult DefaultCulture()
         {
