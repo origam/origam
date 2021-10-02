@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import React, { useContext, useState } from "react";
@@ -47,12 +47,14 @@ const OpCombo: React.FC<{
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
-            props.setting.type = op.type;
-            props.setting.isComplete = op.type === "null" || op.type === "nnull";
-            if(op.type === "null" || op.type === "nnull"){
-              props.setting.val1 = undefined;
-              props.setting.val2 = undefined;
-            }
+            runInAction(() => {
+              props.setting.type = op.type;
+              props.setting.isComplete = op.type === "null" || op.type === "nnull" || props.setting.val1 !== undefined;
+              if(op.type === "null" || op.type === "nnull"){
+                props.setting.val1 = undefined;
+                props.setting.val2 = undefined;
+              }
+            });
           }}
         >
           {op.caption}
