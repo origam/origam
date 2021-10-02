@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable} from "mobx";
+import {action, computed, observable, runInAction} from "mobx";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import React, { useContext, useState } from "react";
@@ -88,12 +88,15 @@ const OpCombo: React.FC<{
           <FilterSettingsComboBoxItem
             key={op.type}
             onClick={() => {
-              if(operatorGroupChanges(props.setting.type, op.type)){
-                props.setting.val1 = undefined;
-                props.setting.val2 = undefined;
-              }
-              props.setting.type = op.type;
-              props.setting.isComplete = op.type === "null" || op.type === "nnull";
+              runInAction(() => {
+                if(operatorGroupChanges(props.setting.type, op.type)){
+                  props.setting.val1 = undefined;
+                  props.setting.val2 = undefined;
+                }
+                props.setting.type = op.type;
+                props.setting.isComplete = op.type === "null" || op.type === "nnull" ||
+                  props.setting.val1 !== undefined || props.setting.val2 !== undefined;
+              });
             }}
           >
             {op.caption}
