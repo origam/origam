@@ -22,6 +22,8 @@
   "filtering": "FILTERING",
   "refreshing": "REFRESHING DATA",
   "login_failed": "Session timeout due to the inactivity. Please, sign in again.",
+  "login_error_due_to_time": "Login is not possible due to discrepancy between time on the server and on your machine. Please make sure that time on your machine is correct.",
+  "switch_time_help": "Help",
   "no_credentials": "Your security credentials do not allow you to access any menu items. Please contact your administrator.",
   "uploaded_file_too_large": "File {0} is too large. Maximum allowed size is {1} MB.",
   "processing": "Processing...",

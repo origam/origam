@@ -22,6 +22,8 @@
   "filtering": "filtrant",
   "refreshing": "recharchant les données",
   "login_failed": "Session timeout cause d'inactivité. Veuillez reconnecter.",
+  "login_error_due_to_time": "La connexion n'est pas possible en raison d'un décalage entre l'heure sur le serveur et sur votre machine. Veuillez vous assurer que l'heure sur votre machine est correcte.",
+  "switch_time_help": "Aide",
   "no_credentials": "Vous n'avez pas accès . Veuillez contacter l'administrateur.",
   "uploaded_file_too_large": "File {0} is too large. Maximum allowed size is {1} MB.",
   "processing": "actualise les données ......",
