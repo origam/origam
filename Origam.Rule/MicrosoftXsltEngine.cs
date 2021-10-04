@@ -124,6 +124,10 @@ namespace Origam.Rule
                             XPathNodeIterator iterator = nav.Select("/");
                             val = iterator;
                         }
+                        else if (param.Value is bool)
+                        {
+                            val = param.Value;
+                        }
                         else
                         {
                             val = XmlTools.ConvertToString(param.Value);
