@@ -22,6 +22,8 @@
   "filtering": "FILTER",
   "refreshing": "AKTUALISIERE DATEN",
   "login_failed": "Session-Timeout in Folge von Inaktivität. Bitte erneut anmelden.",
+  "login_error_due_to_time": "Die Anmeldung ist aufgrund der Diskrepanz zwischen der Uhrzeit auf dem Server und auf Ihrem Computer nicht möglich. Bitte versichern Sie sich, dass die Uhrzeit auf Ihrem Gerät korrekt ist.",
+  "switch_time_help": "Hilfe",
   "no_credentials": "Die Sicherheitseinstellungen erlauben Ihnen keinen Zugriff auf einen Menüeintrag. Bitte kontaktieren Sie den Administrator.",
   "uploaded_file_too_large": "Die Datei {0} ist zu gross. Die max. erlaubte Grösse ist {1} MB.",
   "processing": "wird aktualisiert...",
