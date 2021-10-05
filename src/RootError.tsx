@@ -42,12 +42,19 @@ export class RootError extends React.Component<{
       const helpUrl = this.getHelpUrl();
 
       return(
-        <div className={cx(S.alert, S.alertDanger)}>
-          <p>{errorMessage}</p>
-          {helpUrl && <a href={helpUrl} target="_blank" rel="noopener noreferrer">{T("Help", "switch_time_help")}</a>}
-        </div>);
+        <div className={S.root}>
+          <div className={cx(S.alert, S.alertDanger)}>
+            <p>{errorMessage}</p>
+            {helpUrl && <a href={helpUrl} target="_blank" rel="noopener noreferrer">{T("Help", "switch_time_help")}</a>}
+          </div>
+        </div>
+      );
     }else{
-      return <div className={cx(S.alert, S.alertDanger)}>{this.props.error.message}</div>
+      return(
+        <div className={S.root}>
+          <div className={cx(S.alert, S.alertDanger)}>{this.props.error.message}</div>
+        </div>
+      );
     }
   }
 }
