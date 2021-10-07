@@ -96,7 +96,7 @@ namespace Origam.Workflow.WorkQueue
 				log.Info("Connecting " + connection);
 			}
             _transactionId = transactionId;
-            if (_transactionId == null)
+            if(_transactionId == null)
             {
                 _transactionId = Guid.NewGuid().ToString();
                 _isLocalTransaction = true;
@@ -107,7 +107,7 @@ namespace Origam.Workflow.WorkQueue
 			foreach(var part in connectionParts)
 			{
 				var pair = part.Split("=".ToCharArray());
-				if (pair.Length == 2)
+				if(pair.Length == 2)
 				{
 					switch(pair[0])
 					{
@@ -226,10 +226,13 @@ namespace Origam.Workflow.WorkQueue
 		            return null;
 	            }
                 // retrieve all files as multiple records
-                while (RetrieveNextFile(dataTable))
+                while(RetrieveNextFile(dataTable))
                 {
                 }
-                if (dataTable.Rows.Count == 0) return null;
+                if(dataTable.Rows.Count == 0)
+                {
+					return null;
+                }
                 // create an aggregated record with files as Data field
                 var aggregatedDataTable 
 	                = CreateFileDataset(_mode).Tables["File"];
@@ -247,7 +250,7 @@ namespace Origam.Workflow.WorkQueue
         private WorkQueueAdapterResult RetrieveNext(DataTable dataTable)
         {
             bool result;
-            if ((_splitFileByRows == 0) || (_mode == MODE_BINARY))
+            if((_splitFileByRows == 0) || (_mode == MODE_BINARY))
             {
                 result = RetrieveNextFile(dataTable);
             }
@@ -297,7 +300,7 @@ namespace Origam.Workflow.WorkQueue
                 finalStream = fileStream;
                 _currentPosition++;
             }
-            if (log.IsInfoEnabled)
+            if(log.IsInfoEnabled)
             {
                 log.Info("Reading file " + title);
             }
@@ -306,7 +309,7 @@ namespace Origam.Workflow.WorkQueue
         
         private bool RetrieveNextSegment(DataTable dataTable)
         {
-            if ((_splitFileStreamReader == null)
+            if((_splitFileStreamReader == null)
 			|| _splitFileStreamReader.EndOfStream)
             {
 				var (stream, filename, title) = GetNextFileStream();
@@ -321,7 +324,7 @@ namespace Origam.Workflow.WorkQueue
 						title,
 						stream,
 						Encoding.GetEncoding(_encoding));
-				if (_splitFileAndKeepHeader)
+				if(_splitFileAndKeepHeader)
 				{
 					_splitFileStreamReader.ProcessHeader();
 				}
