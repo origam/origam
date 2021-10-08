@@ -23,12 +23,12 @@ using System.Xml;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders
 {
-    public class FormLevelPluginBuilder
+    public class ScreenLevelPluginBuilder
     {
         public static void Build(XmlElement parentNode, string text)
         {
             parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
-            parentNode.SetAttribute("Type", "FormLevelPlugin");
+            parentNode.SetAttribute("Type", "ScreenLevelPlugin");
             parentNode.SetAttribute("Name", text);
         }
     }

@@ -1191,8 +1191,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                         TreeControlBuilder.Build2(parentNode, renderData.FormParameterName,
                             renderData.TreeId);
                         break;
-                    case "FormLevelPlugin":
-	                    FormLevelPluginBuilder.Build(parentNode, renderData.Text);
+                    case "ScreenLevelPlugin":
+	                    ScreenLevelPluginBuilder.Build(parentNode, renderData.Text);
 	                    break;                    
                     case "SectionLevelPlugin":
 	                    SectionLevelPluginBuilder.Build(
