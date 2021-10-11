@@ -25,7 +25,7 @@ using Origam.Schema;
 
 namespace Origam.Gui.Win
 {
-    public class FormLevelPlugin : Label,
+    public class ScreenLevelPlugin : Label,
         IOrigamMetadataConsumer, ISupportInitialize
     {
         public AbstractSchemaItem OrigamMetadata { get; set; }
