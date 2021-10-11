@@ -26,8 +26,8 @@ import moment from "moment";
 import {Moment} from "moment/moment";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
-import {IOption, SimpleDropdown} from "../../../gui/Components/PublicComponenets/SimpleDropdown";
-import {Button} from "../../../gui/Components/PublicComponenets/Button";
+import {IOption, SimpleDropdown} from "../../../gui/Components/PublicComponents/SimpleDropdown";
+import {Button} from "../../../gui/Components/PublicComponents/Button";
 import {Localizer} from "../../tools/Localizer";
 import {localizations} from "./FilterPluginLocalization";
 
