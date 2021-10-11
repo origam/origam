@@ -86,7 +86,7 @@ import {onFieldBlur} from "../../actions-ui/DataView/TableView/onFieldBlur";
 import {getRowStates} from "../../selectors/RowState/getRowStates";
 import {getIsAddButtonVisible} from "../../selectors/DataView/getIsAddButtonVisible";
 import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
-import {isIFormPlugin} from "../../../plugins/types/IFormPlugin";
+import {isIScreenPlugin} from "plugins/types/IScreenPlugin";
 import {isISectionPlugin} from "../../../plugins/types/ISectionPlugin";
 
 enum IQuestionSaveDataAnswer {
@@ -490,9 +490,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   private initializePlugins(initUIResult: any) {
-    let formLevelPlugins = find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "FormLevelPlugin");
+    let screenLevelPlugins = find(initUIResult.formDefinition, (node: any) => node.attributes?.Type === "ScreenLevelPlugin");
     let sessionId = getSessionId(this);
-    formLevelPlugins
+    screenLevelPlugins
       .forEach(node => {
         const plugin = pluginLibrary.get(
           {
@@ -500,13 +500,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             modelInstanceId: node.attributes.ModelInstanceId,
             sessionId: sessionId
           });
-        if (!isIFormPlugin(plugin)) {
-          throw new Error(`Plugin ${node.attributes.Name} is not FormLevelPlugin`)
+        if (!isIScreenPlugin(plugin)) {
+          throw new Error(`Plugin ${node.attributes.Name} is not ScreenLevelPlugin`)
         }
         plugin.requestSessionRefresh = () => runGeneratorInFlowWithHandler(
           {ctx: this, generator: this.refreshSession()}
         );
-        plugin.setFormParameters = (parameters: { [key: string]: string }) =>
+        plugin.setScreenParameters = (parameters: { [key: string]: string }) =>
           Object.keys(parameters)
             .forEach(key => this.parameters[key] = parameters[key]);
         plugin.initialize(node.attributes);
@@ -525,7 +525,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         }
         const dataView = getDataViewByGridId(this, node.attributes.ModelInstanceId);
         dataView!.clear();
-        plugin.getFormParameters = () => _.cloneDeep(this.parameters);
+        plugin.getScreenParameters = () => _.cloneDeep(this.parameters);
         plugin.initialize(node.attributes)
       });
   }
