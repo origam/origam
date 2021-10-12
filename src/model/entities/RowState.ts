@@ -192,7 +192,13 @@ export class RowState implements IRowState {
    // Store the rest of values to suppress flickering while reloading.
     this.temporaryContainersValues = new Map(this.containers.entries());
     // This actually causes reloading of the values (by views calling getValue(...) )
-    this.containers.clear();
+    for (let rowStateContainer of this.containers.values()) {
+      rowStateContainer.atom?.onBecomeUnobservedListeners?.clear();
+      rowStateContainer.atom?.onBecomeObservedListeners?.clear();
+      rowStateContainer.atom = undefined;
+      rowStateContainer.isValid = false;
+      rowStateContainer.processingSate = undefined;
+    }
     this.firstLoadingPerformed = false;
   }
 
