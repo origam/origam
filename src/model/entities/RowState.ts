@@ -193,10 +193,10 @@ export class RowState implements IRowState {
     this.temporaryContainersValues = new Map(this.containers.entries());
     // This actually causes reloading of the values (by views calling getValue(...) )
     this.containers.clear();
+    this.firstLoadingPerformed = false;
   }
 
   @action.bound clearAll() {
-
     for (let rowStateContainer of this.containers.values()) {
       rowStateContainer.atom?.onBecomeUnobservedListeners?.clear();
       rowStateContainer.atom?.onBecomeObservedListeners?.clear();
@@ -204,6 +204,7 @@ export class RowState implements IRowState {
       rowStateContainer.isValid = false;
       rowStateContainer.processingSate = undefined;
     }
+    this.firstLoadingPerformed = false;
     this.temporaryContainersValues = undefined;
     // TODO: Wait when something is currently loading.
   }
