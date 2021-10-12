@@ -28,6 +28,11 @@ export class FormFocusManager {
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusAbleContainers: IFocusAbleObjectContainer[] = [];
   private lastFocused: IFocusable | undefined;
+
+  setLastFocused(focusable: IFocusable){
+    this.lastFocused = focusable;
+  }
+
   constructor(public parent: any) {}
 
   subscribe(focusAbleObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {

@@ -77,7 +77,10 @@ export class SidebarState {
 
 
 export class MainMenuState implements IMainMenuState {
-  
+
+  @observable
+  editing = false;
+
   @observable
   folderStateMap: Map<string, boolean> = new Map();
 

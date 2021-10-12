@@ -61,7 +61,7 @@ export class FormScreenBuilder extends React.Component<{
 
 
     function recursive(xso: any) {
-      if (xso.attributes.Type === "FormLevelPlugin" ||
+      if (xso.attributes.Type === "ScreenLevelPlugin" ||
           xso.attributes.Type === "SectionLevelPlugin")
       {
         let dataView = getDataView(xso);

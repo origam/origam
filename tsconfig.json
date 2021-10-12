@@ -21,7 +21,8 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "baseUrl": "src",
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": false
   },
   "include": [
     "src"

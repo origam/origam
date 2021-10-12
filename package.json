@@ -6,7 +6,7 @@
     "@decorize/bind": "^1.0.3",
     "@messageformat/core": "^3.0.0",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.1.0",
+    "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.2.1",
     "@types/classnames": "^2.3.1",
     "@types/jest": "^27.0.2",
@@ -14,10 +14,10 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/leaflet": "^1.7.5",
     "@types/leaflet-draw": "^1.0.5",
-    "@types/lodash": "^4.14.173",
-    "@types/node": "^16.9.6",
+    "@types/lodash": "^4.14.175",
+    "@types/node": "^16.10.2",
     "@types/numeral": "^2.0.2",
-    "@types/react": "^17.0.24",
+    "@types/react": "^17.0.27",
     "@types/react-color": "^3.0.5",
     "@types/react-dom": "^17.0.9",
     "@types/react-draft-wysiwyg": "^1.13.3",
@@ -49,6 +49,7 @@
     "numeral": "^2.0.6",
     "oidc-client": "^1.11.5",
     "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
     "react-draft-wysiwyg": "^1.14.7",
@@ -58,7 +59,7 @@
     "react-scripts": "4.0.3",
     "react-virtualized": "^9.22.3",
     "string-strip-html": "^8.3.0",
-    "typescript": "^4.3.5",
+    "typescript": "^4.4.3",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.0",
     "wkt": "^0.1.1",
@@ -91,6 +92,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.2",
     "@types/uuid": "^8.3.1"
   }
 }

@@ -19,20 +19,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from './FilterPlugin.module.scss';
-import {IFormPlugin} from "../../types/IFormPlugin";
+import {IScreenPlugin} from "plugins/types/IScreenPlugin";
 import {IPluginData} from "../../types/IPluginData";
 import {toOrigamServerString} from "../../../utils/moment";
 import moment from "moment";
 import {Moment} from "moment/moment";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
-import {IOption, SimpleDropdown} from "../../../gui/Components/PublicComponenets/SimpleDropdown";
-import {Button} from "../../../gui/Components/PublicComponenets/Button";
+import {IOption, SimpleDropdown} from "../../../gui/Components/PublicComponents/SimpleDropdown";
+import {Button} from "../../../gui/Components/PublicComponents/Button";
 import {Localizer} from "../../tools/Localizer";
 import {localizations} from "./FilterPluginLocalization";
 
-export default class FilterPlugin implements IFormPlugin {
-  $type_IFormPlugin: 1 = 1;
+export default class FilterPlugin implements IScreenPlugin {
+  $type_IScreenPlugin: 1 = 1;
   id: string = "";
 
   timeUnits = [{value: "month", label: "Month"}, {value: "day", label: "Day"}, {value: "hour", label: "Hour"}]
@@ -51,7 +51,7 @@ export default class FilterPlugin implements IFormPlugin {
   dateTo: Moment = moment();
 
   requestSessionRefresh:  (() => Promise<any>) | undefined;
-  setFormParameters:  ((parameters: { [key: string]: string }) => void) | undefined;
+  setScreenParameters:  ((parameters: { [key: string]: string }) => void) | undefined;
   fromParameterName: string | undefined;
   toParameterName: string | undefined;
 
@@ -72,7 +72,7 @@ export default class FilterPlugin implements IFormPlugin {
     const parameters: { [key: string]: string } = {};
     parameters[this.fromParameterName!] = toOrigamServerString(this.dateFrom);
     parameters[this.toParameterName!] = toOrigamServerString(this.dateTo);
-    this.setFormParameters?.(parameters);
+    this.setScreenParameters?.(parameters);
   }
 
   getComponent(data: IPluginData): JSX.Element {

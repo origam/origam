@@ -54,6 +54,18 @@ export class FormBuilder extends React.Component<{
 }> {
   static contextType = CtxPanelVisibility
 
+  componentDidMount() {
+    document.addEventListener("click", event => this.notifyClick(event))
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", event => this.notifyClick(event));
+  }
+
+  notifyClick(event: any){
+    this.props.dataView!.formFocusManager.setLastFocused(event.target);
+  }
+
   onKeyDown(event: any) {
     if (event.key === "Tab") {
       DomEvent.preventDefault(event);

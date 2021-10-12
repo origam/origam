@@ -41,18 +41,18 @@ export default class AuditPlugin implements ISectionPlugin{
   getComponent(data: IPluginData): JSX.Element {
     return <AuditComponent
       pluginData={data}
-      getFormParameters={this.getFormParameters}
+      getScreenParameters={this.getScreenParameters}
       localizer={new Localizer(localizations, "en-US")}/>;
   }
 
   @observable
-  getFormParameters: (() => { [parameter: string]: string }) | undefined;
+  getScreenParameters: (() => { [parameter: string]: string }) | undefined;
 }
 
 @observer
 class AuditComponent extends React.Component<{
   pluginData: IPluginData,
-  getFormParameters: (() => { [parameter: string]: string }) | undefined;
+  getScreenParameters: (() => { [parameter: string]: string }) | undefined;
   localizer: Localizer
 }> {
 
@@ -83,7 +83,7 @@ class AuditComponent extends React.Component<{
   }
 
   getGroupContainer(){
-    const parameters = this.props.getFormParameters?.();
+    const parameters = this.props.getScreenParameters?.();
     if(!parameters){
       return undefined;
     }

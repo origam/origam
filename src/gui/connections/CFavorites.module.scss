@@ -36,3 +36,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow: hidden;
   padding-bottom: 12px;
 }
+
+.favoritesFolderHeader{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}

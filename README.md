@@ -10,7 +10,7 @@ To build the app you need:
 ### How to build
 
 ```
-git clone https://bitbucket.org/origam/origam-html.git
+git clone https://github.com/origam/origam-html.git
 cd origam-html
 yarn
 yarn build
@@ -27,7 +27,7 @@ chrome://flags/#allow-insecure-localhost
 Then in the command line
 
 ```
-git clone https://bitbucket.org/origam/origam-html.git
+git clone https://github.com/origam/origam-html.git
 cd origam-html
 set HTTPS=true
 yarn start

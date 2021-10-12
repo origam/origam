@@ -23,6 +23,6 @@ import {IPluginProperty} from "./IPluginProperty";
 export interface IPluginDataView {
   tableRows: IPluginTableRow[];
   properties: IPluginProperty[];
-  getCellText(value: any, propertyId: string): any;
+  getCellText(row: any, propertyId: string): any;
   getRowId(row: IPluginTableRow): string;
 }
