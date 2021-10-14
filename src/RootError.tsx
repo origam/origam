@@ -37,7 +37,8 @@ export class RootError extends React.Component<{
   }
 
   render(){
-    if(this.props.error.message.includes("iat is in the future")){
+    if(this.props.error.message.includes("iat is in the future") ||
+       this.props.error.message.includes("exp is in the past")){
       const errorMessage = T("Login is not possible due to discrepancy between time on the server and on your machine. Please make sure that time on your machine is correct.", "login_error_due_to_time");
       const helpUrl = this.getHelpUrl();
 
