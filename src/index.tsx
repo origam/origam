@@ -73,11 +73,11 @@ async function main() {
     await initLocaleCookie(application);
     await translationsInit(application);
     ReactDOM.render(<RootError error={e}/>, document.getElementById("root"));
+    return;
   }
   if (user) {
     if (window.sessionStorage.getItem("teleportAfterLogin")) {
       window.sessionStorage.removeItem("teleportAfterLogin");
-      //window.location.assign(newUrl);
       return;
     }
     const application = createApplication();
