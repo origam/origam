@@ -3279,51 +3279,73 @@ namespace Origam.DA.Service
             return RenderExpression(item.RelatedEntity as ISchemaItem, null, null, null, null);
         }
 
-        internal string RenderExpression(FieldMappingItem item, DataStructureEntity dsEntity)
+        internal string RenderExpression(
+            FieldMappingItem fieldMappingItem, 
+            DataStructureEntity dataStructureEntity)
         {
-            bool localize = dsEntity != null && dsEntity.RootItem is DataStructure
-                && (dsEntity.RootItem as DataStructure).IsLocalized;
-
-            TableMappingItem tmi = null;
+            bool localize 
+                = dataStructureEntity?.RootItem is DataStructure dataStructure 
+                  && dataStructure.IsLocalized;
+            TableMappingItem tableMappingItem = null;
             FieldMappingItem localizedItem = null;
             if (localize)
             {
-                if (dsEntity != null)
+                tableMappingItem 
+                    = dataStructureEntity.Entity as TableMappingItem;
+                if (tableMappingItem == null)
                 {
-                    tmi = dsEntity.Entity as TableMappingItem;
-                    if (tmi == null)
+                    // it could be a relation
+                    if (dataStructureEntity.Entity is EntityRelationItem entityRelationItem)
                     {
-                        // it could be a relation
-                        EntityRelationItem eri = dsEntity.Entity as EntityRelationItem;
-                        if (eri != null)
-                        {
-                            tmi = eri.RelatedEntity as TableMappingItem;
-                        }
+                        tableMappingItem = entityRelationItem.RelatedEntity as TableMappingItem;
                     }
                 }
-                localizedItem = ((localize) ? (item.GetLocalizationField(tmi)) : null);
+                localizedItem = fieldMappingItem.GetLocalizationField(tableMappingItem);
             }
-
-
-
-            string nonLocalizedResult = sqlRenderer.NameLeftBracket + item.MappedColumnName + sqlRenderer.NameRightBracket;
-
-            if (dsEntity != null)
-                nonLocalizedResult = sqlRenderer.NameLeftBracket + dsEntity.Name + sqlRenderer.NameRightBracket + "." + nonLocalizedResult;
-
-
-            if (localize && localizedItem != null)
+            string nonLocalizedResult 
+                = sqlRenderer.NameLeftBracket 
+                  + fieldMappingItem.MappedColumnName 
+                  + sqlRenderer.NameRightBracket;
+            if (dataStructureEntity != null)
             {
-                string result = sqlRenderer.NameLeftBracket + item.GetLocalizationField(tmi).MappedColumnName + sqlRenderer.NameRightBracket;
-                result = sqlRenderer.NameLeftBracket + FieldMappingItem.GetLocalizationTable(tmi).Name
-                    + sqlRenderer.NameRightBracket + "." + result;
-                result = String.Format(sqlRenderer.IsNull()+"({0},{1})", result, nonLocalizedResult);
-                return result;
+                nonLocalizedResult 
+                    = sqlRenderer.NameLeftBracket 
+                      + dataStructureEntity.Name 
+                      + sqlRenderer.NameRightBracket 
+                      + "." 
+                      + nonLocalizedResult;
             }
-            else
+            if (!localize || localizedItem == null)
             {
                 return nonLocalizedResult;
             }
+            var localizationTable 
+                = FieldMappingItem.GetLocalizationTable(tableMappingItem);
+            var localizationEntity = dataStructureEntity.ChildItemsByType(
+                    DataStructureEntity.CategoryConst)
+                .Cast<DataStructureEntity>()
+                .FirstOrDefault(
+                    entity => localizationTable.Id == entity.EntityDefinition.Id);
+            if (localizationEntity == null)
+            {
+                throw new Exception(
+                    $@"Localization entity for {localizationTable.Name} 
+                        not found among child entities of {dataStructureEntity.Name}");
+            }
+            return 
+                sqlRenderer.IsNull() 
+                + "(" 
+                + sqlRenderer.NameLeftBracket 
+                + localizationEntity.Name 
+                + sqlRenderer.NameRightBracket 
+                + "." 
+                + sqlRenderer.NameLeftBracket 
+                + fieldMappingItem.GetLocalizationField(tableMappingItem)
+                    .MappedColumnName 
+                + sqlRenderer.NameRightBracket 
+                + ", " 
+                + nonLocalizedResult 
+                + ")";
         }
 
         internal string RenderExpression(ParameterReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, string parameterName, Hashtable parameterReferences)
