@@ -20,42 +20,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "RootError.module.scss";
 import cx from "classnames";
-import {T} from "utils/translation";
+import { T } from "utils/translation";
+import { logoff } from "oauth";
 
 export class RootError extends React.Component<{
   error: any
 }> {
 
-  getHelpUrl(){
-    if(window.navigator?.platform?.toLowerCase()?.includes("win")){ // platform is deprecated but there seems to be no alternative
+  getHelpUrl() {
+    if (window.navigator?.platform?.toLowerCase()?.includes("win")) { // platform is deprecated but there seems to be no alternative
       return "https://support.microsoft.com/en-us/windows/how-to-set-your-time-and-time-zone-dfaa7122-479f-5b98-2a7b-fa0b6e01b261"
     }
-    if(window.navigator?.platform?.toLowerCase()?.includes("mac")){
+    if (window.navigator?.platform?.toLowerCase()?.includes("mac")) {
       return "https://support.apple.com/en-gb/guide/mac-help/mchlp2996/mac"
     }
     return ""
   }
 
-  render(){
-    if(this.props.error.message.includes("iat is in the future") ||
-       this.props.error.message.includes("exp is in the past")){
+  renderMessage() {
+    if (this.props.error.message.includes("iat is in the future") ||
+      this.props.error.message.includes("exp is in the past")) {
       const errorMessage = T("Login is not possible due to discrepancy between time on the server and on your machine. Please make sure that time on your machine is correct.", "login_error_due_to_time");
       const helpUrl = this.getHelpUrl();
 
-      return(
-        <div className={S.root}>
-          <div className={cx(S.alert, S.alertDanger)}>
-            <p>{errorMessage}</p>
-            {helpUrl && <a href={helpUrl} target="_blank" rel="noopener noreferrer">{T("Help", "switch_time_help")}</a>}
-          </div>
+      return (
+        <div className={cx(S.alert, S.alertDanger)}>
+          <p>{errorMessage}</p>
+          {helpUrl && <a href={helpUrl} target="_blank" rel="noopener noreferrer">{T("Help", "switch_time_help")}</a>}
         </div>
       );
-    }else{
-      return(
-        <div className={S.root}>
-          <div className={cx(S.alert, S.alertDanger)}>{this.props.error.message}</div>
-        </div>
+    } else {
+      return (
+        <div className={cx(S.alert, S.alertDanger)}>{this.props.error.message}</div>
       );
     }
+  }
+
+  render() {
+    return (
+      <div className={S.root}>
+        {this.renderMessage()}
+        <div className={S.returnLink}>
+          {T("Click ", "sign_out_click_1")}
+          <a className={S.inPageLink} onClick={async ()=> await logoff()}>
+            {T("here", "sign_out_click_2")}
+          </a>
+          {T(" to sign out.", "sign_out_click_3")}
+        </div>
+      </div>
+    );
   }
 }

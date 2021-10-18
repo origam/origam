@@ -25,7 +25,6 @@ import {IApplication} from 'model/entities/types/IApplication';
 
 export const Root: React.FC<{application: IApplication}> = (props) => (
   <Provider application={props.application}>
-    {/*<Main />*/}
     <CMain />
   </Provider>
 );
