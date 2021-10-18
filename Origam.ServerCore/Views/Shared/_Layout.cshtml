@@ -35,25 +35,6 @@
 </head>
 <body>
 
-    <div class="navigation-bar">
-
-        @if (!string.IsNullOrWhiteSpace(name))
-        {
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="/assets/identity/icons/user.svg" class="svg"/>
-                        @name
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a asp-action="Logout" asp-controller="Account">@SharedLocalizer["Logout"]</a></li>
-                    </ul>
-                </li>
-            </ul>
-        }
-    </div>
-
 <div id="page-container" class="page-content">
         <div class="logo-container centered">
             <img src=@logoUrl />
