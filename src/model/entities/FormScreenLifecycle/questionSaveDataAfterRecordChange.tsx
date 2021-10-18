@@ -29,7 +29,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
 import selectors from "model/selectors-tree";
-import {processCRUDResult} from "../../actions/DataLoading/processCRUDResult";
+import { processCRUDResult } from "../../actions/DataLoading/processCRUDResult";
 
 export function questionSaveDataAfterRecordChange(ctx: any) {
   return new Promise(
@@ -89,8 +89,8 @@ export async function handleUserInputOnChangingRow(dataView: IDataView) {
       .concat(dataView)
       .flatMap((dataView) => getSelectedRowErrorMessages(dataView));
     if (errorMessages.length > 0) {
-      await flow(function* bla() {
-        yield* selectors.error
+      await flow(function*bla() {
+        yield*selectors.error
           .getDialogController(dataView)
           .pushError(errorMessages.join("\n"));
       })();

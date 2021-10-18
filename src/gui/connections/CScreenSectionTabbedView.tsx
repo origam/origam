@@ -43,21 +43,21 @@ export class CScreenSectionTabbedView extends React.Component<{
     this.activePanelId = tabId;
     const activeBox = this.props.boxes.find(box => box.attributes["Id"] === tabId);
     const firstGridId = this.getFirstGridId(activeBox)
-    if(firstGridId) {
+    if (firstGridId) {
       const dataView = this.props.dataViewMap.get(firstGridId);
       const tablePanelView = getTablePanelView(dataView);
       tablePanelView.triggerOnFocusTable();
     }
   }
 
-  getFirstGridId(box: any){
+  getFirstGridId(box: any) {
     return findStopping(box, (node) => node?.attributes?.Type === "Grid")
       .map(element => element.attributes["Id"])
       .find(element => element)
   }
 
   render() {
-    const { boxes } = this.props;
+    const {boxes} = this.props;
     return (
       <TabbedView>
         <TabbedViewHandleRow>

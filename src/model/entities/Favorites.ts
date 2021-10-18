@@ -64,7 +64,7 @@ export class Favorites {
   private async saveFavorites() {
     const api = getApi(this);
     const xmlFavorites = this.xmlConverter.favoriteIdsToXml(this.favoriteFolders);
-    await api.saveFavorites({ ConfigXml: xmlFavorites });
+    await api.saveFavorites({ConfigXml: xmlFavorites});
   }
 
   public async createFolder(name: string, isPinned: boolean) {
@@ -100,7 +100,7 @@ export class Favorites {
     await this.saveFavorites();
   }
 
-  public async moveItemInFolder(itemIds: string[],  fromIndex: number, toIndex: number) {
+  public async moveItemInFolder(itemIds: string[], fromIndex: number, toIndex: number) {
     const itemId = itemIds[fromIndex];
     itemIds.splice(fromIndex, 1);
     itemIds.splice(toIndex, 0, itemId);

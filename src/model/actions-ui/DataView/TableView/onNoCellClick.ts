@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {handleError} from "model/actions/handleError";
+import { flow } from "mobx";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { handleError } from "model/actions/handleError";
 
 export function onNoCellClick(ctx: any) {
-  return flow(function* onNoCellClick(event: any) {
+  return flow(function*onNoCellClick(event: any) {
     try {
-      yield* getTablePanelView(ctx).onNoCellClick();
+      yield*getTablePanelView(ctx).onNoCellClick();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

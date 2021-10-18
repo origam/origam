@@ -19,17 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/Search/SearchResults.module.scss";
-import {ISearchResult, isIMenuSearchResult} from "model/entities/types/ISearchResult";
+import { ISearchResult, isIMenuSearchResult } from "model/entities/types/ISearchResult";
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
-import {Icon} from "../Icon/Icon";
-import {Dropdown} from "../Dropdown/Dropdown";
-import {DropdownItem} from "../Dropdown/DropdownItem";
-import {T} from "../../../utils/translation";
-import {Dropdowner} from "../Dropdowner/Dropdowner";
-import {getFavorites} from "../../../model/selectors/MainMenu/getFavorites";
-import {onAddToFavoritesClicked} from "../../connections/CMainMenu";
+import { Icon } from "../Icon/Icon";
+import { Dropdown } from "../Dropdown/Dropdown";
+import { DropdownItem } from "../Dropdown/DropdownItem";
+import { T } from "../../../utils/translation";
+import { Dropdowner } from "../Dropdowner/Dropdowner";
+import { getFavorites } from "../../../model/selectors/MainMenu/getFavorites";
+import { onAddToFavoritesClicked } from "../../connections/CMainMenu";
 
 export class SearchResults extends React.Component<{
   groups: ISearchResultGroup[];
@@ -39,12 +39,12 @@ export class SearchResults extends React.Component<{
   render() {
     return (
       <div className={S.root}>
-        {this.props.groups.map(group => 
-        <ResultGroup
-          ctx={this.props.ctx}
-          key={group.name} 
-          name={group.name} 
-          results={group.results} />)}
+        {this.props.groups.map(group =>
+          <ResultGroup
+            ctx={this.props.ctx}
+            key={group.name}
+            name={group.name}
+            results={group.results}/>)}
       </div>
     );
   }
@@ -58,7 +58,7 @@ export class ResultGroup extends React.Component<{
 }> {
   @observable
   isExpanded = true;
-  
+
   onGroupClick() {
     this.isExpanded = !this.isExpanded;
   }
@@ -72,9 +72,9 @@ export class ResultGroup extends React.Component<{
       <div>
         <div className={S.resultGroupRow} onClick={() => this.onGroupClick()}>
           {this.isExpanded ? (
-            <i className={"fas fa-angle-up " + S.arrow} />
+            <i className={"fas fa-angle-up " + S.arrow}/>
           ) : (
-            <i className={"fas fa-angle-down " + S.arrow} />
+            <i className={"fas fa-angle-down " + S.arrow}/>
           )}
           <div className={S.groupName}>
             {this.props.name}
@@ -83,7 +83,7 @@ export class ResultGroup extends React.Component<{
         <div>
           {this.isExpanded && this.props.results.map(result =>
             <Dropdowner
-              trigger={({ refTrigger, setDropped }) => (
+              trigger={({refTrigger, setDropped}) => (
                 <SearchResultItem
                   refDom={refTrigger}
                   result={result}
@@ -94,7 +94,7 @@ export class ResultGroup extends React.Component<{
                   }}
                 />
               )}
-              content={({ setDropped }) => (
+              content={({setDropped}) => (
                 <Dropdown>
                   {isIMenuSearchResult(result) && !this.favorites.isInAnyFavoriteFolder(result.id) && (
                     <DropdownItem
@@ -110,7 +110,7 @@ export class ResultGroup extends React.Component<{
 
               )}
             />
-            )}
+          )}
         </div>
       </div>
     );
@@ -126,12 +126,12 @@ function SearchResultItem(props: {
     <div className={S.resultItem}
          onContextMenu={props.onContextMenu}
          ref={props.refDom}
-         onClick={()=> props.result.onClick()}>
+         onClick={() => props.result.onClick()}>
       <Icon className={S.icon} src={props.result.iconUrl}/>
       <div className={S.textContainer}>
         <div className={S.resultItemName}>{props.result.label}</div>
         {props.result.description &&
-          <div className={S.resultItemDescription}>{props.result.description}</div>
+        <div className={S.resultItemDescription}>{props.result.description}</div>
         }
       </div>
     </div>

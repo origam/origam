@@ -37,10 +37,11 @@ export class TreeDataTable implements IDataTable {
     return this.rows;
   }
 
-  start(){
+  start() {
 
   }
-  stop(){
+
+  stop() {
 
   }
 
@@ -63,15 +64,15 @@ export class TreeDataTable implements IDataTable {
   }
 
   getTrueIndexById(id: string): number | undefined {
-      const idx = this.rows.findIndex((row) => this.getRowId(row) === id);
-      return idx > -1 ? idx : undefined;
-    }
-  
+    const idx = this.rows.findIndex((row) => this.getRowId(row) === id);
+    return idx > -1 ? idx : undefined;
+  }
+
   deleteAdditionalCellData(row: any[], propertyId: string): void {
     throw new Error("Method not implemented.");
   }
 
-  rowRemovedListeners: (()=>void)[]=[];
+  rowRemovedListeners: (() => void)[] = [];
 
   getRowId(row: any[]): string {
     return row[this.dataSource.getFieldByName(this.idProperty)!.index];
@@ -157,17 +158,17 @@ export class TreeDataTable implements IDataTable {
     this.rows = [...this.sortTreeRows(rows, null)];
   }
 
-  appendRecords(rows: any[][]): void{
+  appendRecords(rows: any[][]): void {
     this.rows = [...this.rows, ...this.sortTreeRows(rows, null)];
   }
 
-  private *sortTreeRows(rows: any[], parent: any[] | null): Generator {
+  private*sortTreeRows(rows: any[], parent: any[] | null): Generator {
     const children = this.getChildren(rows, parent);
     if (parent) {
       yield parent;
     }
     for (let child of children) {
-      yield* this.sortTreeRows(rows, child);
+      yield*this.sortTreeRows(rows, child);
     }
   }
 
@@ -244,9 +245,10 @@ export class TreeDataTable implements IDataTable {
     return false;
   }
 
-  unlockAddedRowPosition(): void {}
+  unlockAddedRowPosition(): void {
+  }
 
-  async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {
+  async updateSortAndFilter(data?: { retainPreviousSelection?: true }) {
   }
 
   addedRowPositionLocked: boolean = false;

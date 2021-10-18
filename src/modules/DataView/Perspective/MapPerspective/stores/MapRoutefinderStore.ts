@@ -21,7 +21,8 @@ import { action, computed, observable } from "mobx";
 import { MapRootStore } from "./MapRootStore";
 
 export class MapRoutefinderStore {
-  constructor(private root: MapRootStore) {}
+  constructor(private root: MapRootStore) {
+  }
 
   get navigation() {
     return this.root.mapNavigationStore;
@@ -38,7 +39,7 @@ export class MapRoutefinderStore {
   @observable.shallow driveThruPoints: any[] = [];
 
   @computed get mapObjectsRoute() {
-    return [{ type: "LineString", coordinates: this.routeLatLngs.map((latLng) => latLng) }];
+    return [{type: "LineString", coordinates: this.routeLatLngs.map((latLng) => latLng)}];
   }
 
   @computed get mapObjectsEditable() {
@@ -67,14 +68,14 @@ export class MapRoutefinderStore {
 
   @action.bound handleEditingFinished() {
     this.driveThruPoints = this.driveThruPointsEditing;
-    if(this.routeLatLngs.length > 0) {
+    if (this.routeLatLngs.length > 0) {
       this.objects.handleGeometryChange(this.mapObjectsRoute[0]);
     }
   }
 
   @action.bound handleEditingCancelled() {
     this.driveThruPointsEditing = [];
-    if(this.driveThruPoints.length > 1) {
+    if (this.driveThruPoints.length > 1) {
       this.calculateRoute(this.driveThruPoints);
     } else {
       this.routeLatLngs = [];

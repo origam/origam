@@ -32,6 +32,7 @@ export class Chatrooms {
   loader = new PeriodicLoader(onRefreshChatrooms(this), () => getApi(this).onApiResponse);
 
   @observable items: any[] = [];
+
   @computed get totalItemCount() {
     return this.items.map((item) => item.unreadMessageCount).reduce((a, b) => a + b, 0);
   }
@@ -45,7 +46,7 @@ export class Chatrooms {
     if (localStorage.getItem("debugPollingMs_chatrooms")) {
       refreshIntervalMs = parseInt(localStorage.getItem("debugPollingMs_chatrooms") || "30000");
     }
-    yield* this.loader.start(refreshIntervalMs);
+    yield*this.loader.start(refreshIntervalMs);
   }
 
   parent?: any;

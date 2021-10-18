@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/Form/RadioButton.module.scss";
-import {IFocusable} from "model/entities/FormFocusManager";
+import { IFocusable } from "model/entities/FormFocusManager";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -35,7 +35,7 @@ export class RadioButton extends React.Component<{
   checked: boolean;
   onKeyDown: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
-  onClick: ()=>void;
+  onClick: () => void;
   labelColor?: string;
 }> {
   inputId = uuidv4();
@@ -45,13 +45,13 @@ export class RadioButton extends React.Component<{
   };
 
   componentDidMount() {
-    if(this.elmInput && this.props.subscribeToFocusManager){
+    if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
     }
   }
 
-  onChange(event: any){
-    if(event.target.value === this.props.value){
+  onChange(event: any) {
+    if (event.target.value === this.props.value) {
       this.props.onSelected(this.props.value);
     }
   }

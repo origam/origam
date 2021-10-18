@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getWorkbench} from "../getWorkbench";
+import { getWorkbench } from "../getWorkbench";
 
 export function getRecordInfo(ctx: any) {
   return getWorkbench(ctx).recordInfo;

@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IOpenedScreens} from "./types/IOpenedScreens";
-import {IOpenedScreen} from "./types/IOpenedScreen";
-import {action, computed, observable} from "mobx";
-import {IAction} from "./types/IAction";
+import { IOpenedScreens } from "./types/IOpenedScreens";
+import { IOpenedScreen } from "./types/IOpenedScreen";
+import { action, computed, observable } from "mobx";
+import { IAction } from "./types/IAction";
 
 export class OpenedScreens implements IOpenedScreens {
   $type_IOpenedScreens: 1 = 1;
@@ -28,8 +28,8 @@ export class OpenedScreens implements IOpenedScreens {
   parent?: any;
   @observable items: Array<IOpenedScreen> = [];
 
-  isShown(openedScreen: IOpenedScreen): boolean{
-    return this.items.indexOf(openedScreen) > - 1;
+  isShown(openedScreen: IOpenedScreen): boolean {
+    return this.items.indexOf(openedScreen) > -1;
   }
 
   @action.bound
@@ -84,8 +84,8 @@ export class OpenedScreens implements IOpenedScreens {
 
   findTopmostItemExcept(menuItemId: string, order: number): IOpenedScreen | undefined {
     const itemsSortedByStackPosition = [...this.items].sort((a, b) => b.stackPosition - a.stackPosition);
-    let idx = itemsSortedByStackPosition.findIndex(item => item.menuItemId === menuItemId && item.order === order );
-    if(idx > -1) {
+    let idx = itemsSortedByStackPosition.findIndex(item => item.menuItemId === menuItemId && item.order === order);
+    if (idx > -1) {
       itemsSortedByStackPosition.splice(idx, 1);
     }
     return itemsSortedByStackPosition[0];

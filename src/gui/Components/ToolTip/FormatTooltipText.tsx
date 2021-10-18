@@ -31,10 +31,10 @@ export function formatTooltipText(content: string | string[] | undefined) {
 }
 
 function splitToLines(value: string) {
-  if(!value){
+  if (!value) {
     return [];
   }
-  if(typeof value.split !== 'function'){
+  if (typeof value.split !== 'function') {
     return [value.toString()];
   }
   return value.split(/\\r\\n|\\n|<br\/>|<BR\/>/);

@@ -30,6 +30,7 @@ export class Lookup implements ILookup {
     Object.assign(this, data);
     this.dropDownColumns.forEach((o) => (o.parent = this));
   }
+
   $type_ILookup: 1 = 1;
 
   lookupId: string = "";

@@ -23,13 +23,13 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { handleError } from "model/actions/handleError";
 import { closingScreens } from "model/entities/FormScreenLifecycle/FormScreenLifecycle";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 export function onScreenTabCloseMouseDown(ctx: any) {
   return function (event: any) {
     // OMG, how ugly is this...
     const openedScreen = getOpenedScreen(ctx);
-    if(openedScreen) {
+    if (openedScreen) {
       openedScreen.isBeingClosed = true;
     }
   };
@@ -37,7 +37,7 @@ export function onScreenTabCloseMouseDown(ctx: any) {
 
 
 export function onScreenTabCloseClick(ctx: any) {
-  return flow(function* onFormTabCloseClick(event: any, isDueToError?: boolean) {
+  return flow(function*onFormTabCloseClick(event: any, isDueToError?: boolean) {
     const openedScreen = getOpenedScreen(ctx);
     let dataViews = openedScreen.content?.formScreen?.dataViews ?? [];
     for (const dataView of dataViews) {
@@ -51,12 +51,12 @@ export function onScreenTabCloseClick(ctx: any) {
       // TODO: Better lifecycle handling
       if (openedScreen.content && !openedScreen.content.isLoading) {
         const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
-        yield* lifecycle.onRequestScreenClose(isDueToError);
+        yield*lifecycle.onRequestScreenClose(isDueToError);
       } else {
-        yield* closeForm(ctx)();
+        yield*closeForm(ctx)();
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     } finally {
       closingScreens.delete(openedScreen);

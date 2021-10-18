@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "./getDataView";
+import { getDataView } from "./getDataView";
 
 export function getBindingChildren(ctx: any) {
   return getDataView(ctx).childBindings.map(cb => cb.childDataView)

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, observable, createAtom } from "mobx";
+import { action, createAtom, observable } from "mobx";
 import { PubSub } from "./common";
 import { LookupApi } from "./LookupApi";
 import { Clock } from "./Clock";
@@ -37,8 +37,10 @@ export class LookupLoaderMulti {
   loading = new Map<string, Map<any, any>>();
   loadingAtom = createAtom(
     "LookupLoading",
-    () => {},
-    () => {}
+    () => {
+    },
+    () => {
+    }
   );
 
   resultListeners = new PubSub<ILookupMultiResultListenerArgs>();
@@ -81,14 +83,15 @@ export class LookupLoaderMulti {
         }
         this.loadingAtom.reportChanged();
 
-        this.resultListeners.trigger({ labels: result });
+        this.resultListeners.trigger({labels: result});
       } while (this.interrests.size > 0);
     } finally {
       this.isLoading = false;
     }
   }
 
-  triggerLoadDeb = () => {};
+  triggerLoadDeb = () => {
+  };
 
   setInterrest(lookupId: string, key: any) {
     // Maybe it is loading right now.
@@ -127,4 +130,5 @@ export class LookupLoaderMulti {
     return this.loading.get(lookupId)?.has(key) || false;
   }
 }
+
 export const ILookupLoaderMulti = TypeSymbol<LookupLoaderMulti>("ILookupLoaderMulti");

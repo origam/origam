@@ -26,7 +26,9 @@ export class DataViewData {
   constructor(
     private dataTable: () => IDataTable,
     private propertyById: (id: string) => IProperty | undefined
-  ) {}
+  ) {
+  }
+
   getCellValue(rowId: string, propertyId: string) {
     const dataTable = this.dataTable();
     const property = this.propertyById(propertyId);
@@ -57,12 +59,13 @@ export class DataViewData {
     const property = this.propertyById(propertyId);
     if (property && row) {
       onFieldChange(property)({
-        event: undefined, 
-        row: row, 
-        property: property, 
-        value: value, 
+        event: undefined,
+        row: row,
+        property: property,
+        value: value,
       });
     }
   }
 }
+
 export const IDataViewData = TypeSymbol<DataViewData>("IDataViewData");

@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observer, observer } from "mobx-react";
-import React, { useContext, useEffect, useMemo, useState, createRef } from "react";
+import React, { createRef, useContext, useEffect, useMemo, useState } from "react";
 import { CellMeasurer, CellMeasurerCache, GridCellProps, MultiGrid } from "react-virtualized";
 import { CtxCell } from "./Cells/CellsCommon";
 import S from "./Dropdown/Dropdown.module.scss";
@@ -48,7 +48,7 @@ export function DropdownEditorBody() {
     <Observer>
       {() => (
         <div ref={ref} className={S.body} onMouseDown={beh.handleBodyMouseDown}>
-          <DropdownEditorTable />
+          <DropdownEditorTable/>
         </div>
       )}
     </Observer>
@@ -72,7 +72,8 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
       })
   );
 
-  const [scrollbarSize, setScrollbarSize] = useState({ horiz: 0, vert: 0 });
+  const [scrollbarSize, setScrollbarSize] = useState({horiz: 0, vert: 0});
+
   function handleScrollbarPresenceChange(args: {
     horizontal: boolean;
     size: number;
@@ -86,12 +87,12 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
 
   const [hoveredRowIndex, setHoveredRowIndex] = useState(-1);
 
-  function renderTableCell({ columnIndex, key, parent, rowIndex, style }: GridCellProps) {
+  function renderTableCell({columnIndex, key, parent, rowIndex, style}: GridCellProps) {
     const Prov = CtxCell.Provider as any;
     return (
       <Prov
         key={key}
-        value={{ visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex }}
+        value={{visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex}}
         style={style}
       >
         <CellMeasurer
@@ -104,7 +105,7 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
           {(hasHeader && rowIndex > 0) || !hasHeader ? (
             <div
               style={style}
-              className={cx({ isHoveredRow: rowIndex === hoveredRowIndex })}
+              className={cx({isHoveredRow: rowIndex === hoveredRowIndex})}
               onMouseOver={(evt) => {
                 setHoveredRowIndex(rowIndex);
               }}
@@ -142,9 +143,9 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
   let columnWidthSum = 0;
   let widths: number[] = [];
   for (let i = 0; i < columnCount; i++) {
-    width = width + cache.columnWidth({ index: i });
-    widths.push(cache.columnWidth({ index: i }));
-    columnWidthSum = columnWidthSum + cache.columnWidth({ index: i });
+    width = width + cache.columnWidth({index: i});
+    widths.push(cache.columnWidth({index: i}));
+    columnWidthSum = columnWidthSum + cache.columnWidth({index: i});
     if (width >= window.innerWidth - 100) {
       width = window.innerWidth - 100;
       break;
@@ -160,7 +161,7 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
 
   let height = 0;
   for (let i = 0; i < rowCount; i++) {
-    height = height + cache.rowHeight({ index: i });
+    height = height + cache.rowHeight({index: i});
   }
   height = Math.min(height, 300) + scrollbarSize.horiz;
 
@@ -178,8 +179,8 @@ export const DropdownEditorTable = observer(function DropdownEditorTable() {
       classNameBottomRightGrid={SE.table}
       columnCount={columnCount}
       rowCount={rowCount}
-      columnWidth={({ index }) => {
-        const cellWidth = columnGrowFactor !== 1 ? widths[index] : cache.columnWidth({ index });
+      columnWidth={({index}) => {
+        const cellWidth = columnGrowFactor !== 1 ? widths[index] : cache.columnWidth({index});
         return cellWidth;
       }}
       rowHeight={rowHeight}

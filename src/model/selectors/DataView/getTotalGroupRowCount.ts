@@ -25,14 +25,12 @@ import { getGrouper } from "./getGrouper";
 
 export function getTotalRowCount(ctx: any) {
   if (!getGroupingConfiguration(ctx).isGrouping) {
-    if(isInfiniteScrollingActive(ctx)){
+    if (isInfiniteScrollingActive(ctx)) {
       return getDataView(ctx).totalRowCount;
-    }else{
+    } else {
       return getDataView(ctx).dataTable.rows.length;
     }
-  }
-  else
-  {
+  } else {
     return getGrouper(ctx).topLevelGroups
       .reduce((count, group) => count + group.rowCount, 0);
   }

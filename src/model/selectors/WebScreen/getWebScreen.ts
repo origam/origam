@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isIWebScreen} from "model/entities/types/IWebScreen";
+import { isIWebScreen } from "model/entities/types/IWebScreen";
 
 export function getWebScreen(ctx: any) {
   let cn = ctx;

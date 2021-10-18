@@ -35,20 +35,20 @@ export class FilterSetting implements IFilterSetting {
   }
 
   get filterValue2() {
-    return this.type === "between" || this.type === "nbetween" 
-      ? this.val2 
+    return this.type === "between" || this.type === "nbetween"
+      ? this.val2
       : undefined;
   }
 
-  get val1ServerForm(){
+  get val1ServerForm() {
     return this.val1;
   }
 
-  get val2ServerForm(){
+  get val2ServerForm() {
     return this.val2;
   }
 
-  constructor(type: string, isComplete:boolean=false, val1?: any, val2?: any) {
+  constructor(type: string, isComplete: boolean = false, val1?: any, val2?: any) {
     this.type = type;
     this.isComplete = isComplete;
     this.val1 = val1 ?? undefined;

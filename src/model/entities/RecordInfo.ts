@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IRecordInfo} from "./types/IRecordInfo";
-import {getApi} from "model/selectors/getApi";
-import {action, observable} from "mobx";
+import { IRecordInfo } from "./types/IRecordInfo";
+import { getApi } from "model/selectors/getApi";
+import { action, observable } from "mobx";
 
 export class RecordInfo implements IRecordInfo {
   $type_IRecordInfo: 1 = 1;
@@ -39,6 +39,7 @@ export class RecordInfo implements IRecordInfo {
   idgen = 0;
 
   infoSectionExpandHandlers = new Map<number, () => void>();
+
   addInfoSectionExpandHandler(fn: () => void) {
     const myid = this.idgen++;
     this.infoSectionExpandHandlers.set(myid, fn);
@@ -51,6 +52,7 @@ export class RecordInfo implements IRecordInfo {
   }
 
   auditSectionExpandHandlers = new Map<number, () => void>();
+
   addAuditSectionExpandHandler(fn: () => void) {
     const myid = this.idgen++;
     this.auditSectionExpandHandlers.set(myid, fn);
@@ -98,7 +100,7 @@ export class RecordInfo implements IRecordInfo {
     this.recordInfoExpanded = true;
     this.recordAuditExpanded = false;
     this.triggerInfoSectionExpand();
-    yield* this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
+    yield*this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
   }
 
   *onSelectedRowMaybeChanged(
@@ -108,7 +110,7 @@ export class RecordInfo implements IRecordInfo {
   ) {
     if (this.willLoadNewInfo(menuId, dataStructureEntityId, rowId)) {
       if (this.recordInfoExpanded) {
-        yield* this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
+        yield*this.loadRecordInfo(menuId, dataStructureEntityId, rowId);
       }
     }
     this.displayedFor = {
@@ -133,7 +135,7 @@ export class RecordInfo implements IRecordInfo {
     this.recordInfoExpanded = true;
     this.recordAuditExpanded = false;
     if (this.hasValidLoadedFor()) {
-      yield* this.loadRecordInfo(
+      yield*this.loadRecordInfo(
         this.displayedFor.menuId!,
         this.displayedFor.dataStructureEntityId!,
         this.displayedFor.rowId!

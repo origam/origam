@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-
 export interface IFormPanelViewData {
 
 }
@@ -26,5 +25,5 @@ export interface IFormPanelViewData {
 export interface IFormPanelView extends IFormPanelViewData {
   $type_IFormPanelView: 1;
 
-  parent?:any;
+  parent?: any;
 }

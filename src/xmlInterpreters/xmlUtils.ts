@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getIdent} from "utils/common";
+import { getIdent } from "utils/common";
 
 export function find(xmlObj: any, pred: (node: any) => boolean) {
   function recursive(n: any) {
@@ -59,5 +59,6 @@ export function assignIIds(xmlTree: any) {
       for (let e of node.elements) recursive(e);
     }
   }
+
   recursive(xmlTree);
 }

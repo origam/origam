@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "./FormRoot.module.scss";
 import React from "react";
-import {observer} from "mobx-react";
-import {action} from "mobx";
+import { observer } from "mobx-react";
+import { action } from "mobx";
 
 @observer
-export class FormRoot extends React.Component<{style?:any}> {
+export class FormRoot extends React.Component<{ style?: any }> {
   componentDidMount() {
     window.addEventListener("click", this.handleWindowClick);
   }

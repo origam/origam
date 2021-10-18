@@ -34,7 +34,9 @@ export interface IMainMenuData {
 
 export interface IMainMenuContent extends IMainMenuData {
   $type_IMainMenuContent: 1;
+
   getItemById(id: string): any;
+
   parent?: any;
 }
 
@@ -45,6 +47,7 @@ export interface IMainMenuEnvelope {
   isLoading: boolean;
 
   setMainMenu(mainMenu: IMainMenuContent | undefined): void;
+
   setLoading(state: boolean): void;
 
   parent?: any;
@@ -54,12 +57,19 @@ export interface IMainMenuEnvelope {
 export interface IMainMenuState {
   editing: boolean;
   highLightedItemId: string | undefined;
+
   highlightItem(itemId: string): void;
+
   closeAll(): void;
+
   isOpen(menuId: string): boolean;
+
   setIsOpen(menuId: string, state: boolean): void;
+
   flipIsOpen(menuId: string): void;
+
   setReference(id: string, ref: RefObject<HTMLElement>): void;
+
   scrollToItem(id: string): void
 }
 

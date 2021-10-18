@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IDataView} from "../../entities/types/IDataView";
-import {getOpenedScreen} from "../getOpenedScreen";
+import { IDataView } from "../../entities/types/IDataView";
+import { getOpenedScreen } from "../getOpenedScreen";
 
 export function getDataViewByModelInstanceId(ctx: any, modelInstanceId: string): IDataView | undefined {
   return getOpenedScreen(ctx).content.formScreen!.dataViews.find(

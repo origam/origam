@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import _ from "lodash";
-import { action, flow, observable, when, computed } from "mobx";
+import { action, computed, flow, observable, when } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getApi } from "model/selectors/getApi";
 import { ILookupLoader } from "./types/ILookupLoader";
@@ -40,6 +40,7 @@ export class LookupLoader implements ILookupLoader {
   waitingRequesters = 0;
 
   @observable inFlow = 0;
+
   @computed get isWorking() {
     return this.inFlow > 0;
   }
@@ -79,7 +80,7 @@ export class LookupLoader implements ILookupLoader {
 
   async triggerLoadImm() {
     const self = this;
-    flow(function* () {
+    flow(function*() {
       if (self.isLoading) {
         return;
       }
@@ -102,7 +103,7 @@ export class LookupLoader implements ILookupLoader {
       } catch (error) {
         // TODO: Better error handling.
         // TODO: Refactor to use generators
-        yield* handleError(self)(error);
+        yield*handleError(self)(error);
       } finally {
         self.inFlow--;
         self.isLoading = false;

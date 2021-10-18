@@ -21,7 +21,8 @@ import { action } from "mobx";
 import { MapRootStore } from "./MapRootStore";
 
 export class MapNavigationStore {
-  constructor(private root: MapRootStore) {}
+  constructor(private root: MapRootStore) {
+  }
 
   refMapComponent = (elm: any) => (this.elmMapComponent = elm);
   elmMapComponent: {

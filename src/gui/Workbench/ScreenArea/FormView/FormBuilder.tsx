@@ -44,8 +44,8 @@ import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 
 
-@inject(({ dataView }) => {
-  return { dataView, xmlFormRootObject: dataView.formViewUI };
+@inject(({dataView}) => {
+  return {dataView, xmlFormRootObject: dataView.formViewUI};
 })
 @observer
 export class FormBuilder extends React.Component<{
@@ -62,7 +62,7 @@ export class FormBuilder extends React.Component<{
     document.removeEventListener("click", event => this.notifyClick(event));
   }
 
-  notifyClick(event: any){
+  notifyClick(event: any) {
     this.props.dataView!.formFocusManager.setLastFocused(event.target);
   }
 
@@ -97,7 +97,7 @@ export class FormBuilder extends React.Component<{
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
-          <FormRoot key={xfo.$iid} style={{ backgroundColor }}>
+          <FormRoot key={xfo.$iid} style={{backgroundColor}}>
             {xfo.elements.map((child: any) => recursive(child))}
           </FormRoot>
         );
@@ -134,7 +134,7 @@ export class FormBuilder extends React.Component<{
         const checked = row
           ? String(dataTable.getCellValueByDataSourceField(row, sourceField!)) === xfo.attributes.Value
           : false;
-          
+
         return (
           <RadioButton
             key={xfo.$iid}
@@ -154,8 +154,8 @@ export class FormBuilder extends React.Component<{
             onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
-              flow(function* () {
-                yield* formScreenLifecycle.updateRadioButtonValue(
+              flow(function*() {
+                yield*formScreenLifecycle.updateRadioButtonValue(
                   self.props.dataView!,
                   row,
                   xfo.attributes.Id,
@@ -189,7 +189,7 @@ export class FormBuilder extends React.Component<{
 
                 const isHidden =
                   (!getRowStateAllowRead(property, rowId || "", property.id) ||
-                  getRowStateMayCauseFlicker(property)) && !!row;
+                    getRowStateMayCauseFlicker(property)) && !!row;
 
                 if (property.column === "CheckBox") {
                   return (
@@ -240,6 +240,7 @@ export class FormBuilder extends React.Component<{
         return xfo.elements.map((child: any) => recursive(child));
       }
     }
+
     const form = recursive(this.props.xmlFormRootObject);
     if (this.props.dataView?.isFirst && this.context.isVisible) {
       focusManager.autoFocus();

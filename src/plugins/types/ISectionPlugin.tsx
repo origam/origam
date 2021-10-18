@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IPlugin} from "./IPlugin";
+import { IPlugin } from "./IPlugin";
 
 export interface ISectionPlugin extends IPlugin {
   getScreenParameters: (() => { [key: string]: string }) | undefined;

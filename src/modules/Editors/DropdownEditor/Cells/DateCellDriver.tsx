@@ -17,15 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  DropdownDataTable,
-  IBodyCellDriver,
-} from "modules/Editors/DropdownEditor/DropdownTableModel";
+import { DropdownDataTable, IBodyCellDriver, } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { bodyCellClass } from "modules/Editors/DropdownEditor/Cells/CellsCommon";
 import React from "react";
-import {TypeSymbol} from "dic/Container";
-import {TextCellDriver} from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
+import { TypeSymbol } from "dic/Container";
+import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
 import moment from "moment";
 
 export class DateCellDriver implements IBodyCellDriver {
@@ -34,7 +31,8 @@ export class DateCellDriver implements IBodyCellDriver {
     private dataTable: DropdownDataTable,
     private behavior: DropdownEditorBehavior,
     private formatterPattern: string
-  ) {}
+  ) {
+  }
 
   render(rowIndex: number) {
     const value = this.dataTable.getValue(rowIndex, this.dataIndex);

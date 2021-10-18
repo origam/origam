@@ -27,8 +27,8 @@ export const DropdownItem: React.FC<{
   isDisabled?: boolean;
   isSelected?: boolean;
 }> = props => {
-  function getStyle(){
-    if(props.isDisabled){
+  function getStyle() {
+    if (props.isDisabled) {
       return "isDisabled"
     }
     return props.isSelected ? S.isSelected : ""

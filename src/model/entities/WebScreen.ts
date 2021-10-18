@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IReloader, IWebScreen} from "./types/IWebScreen";
-import {IOpenedScreen} from "./types/IOpenedScreen";
-import {action, observable} from "mobx";
-import {IFormScreenEnvelope} from "./types/IFormScreen";
-import {IMainMenuItemType} from "./types/IMainMenu";
+import { IReloader, IWebScreen } from "./types/IWebScreen";
+import { IOpenedScreen } from "./types/IOpenedScreen";
+import { action, observable } from "mobx";
+import { IFormScreenEnvelope } from "./types/IFormScreen";
+import { IMainMenuItemType } from "./types/IMainMenu";
 
 export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
@@ -53,7 +53,8 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
     this.isActive = state;
   }
 
-  setContent(screen: IFormScreenEnvelope): void {}
+  setContent(screen: IFormScreenEnvelope): void {
+  }
 
   setTitle(title: string): void {
     this.tabTitle = title;

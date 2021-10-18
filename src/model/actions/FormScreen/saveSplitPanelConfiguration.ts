@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getApi} from "model/selectors/getApi";
+import { getApi } from "model/selectors/getApi";
 
 export function saveSplitPanelConfiguration(ctx: any) {
-  return function* saveSplitPanelConfiguration(
+  return function*saveSplitPanelConfiguration(
     modelInstanceId: string,
     position: number
   ) {

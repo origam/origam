@@ -17,11 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  clickSubscriptions,
-  mouseOverSubscriptions,
-  mouseMoveSubscriptions,
-} from "./renderingValues";
+import { clickSubscriptions, mouseMoveSubscriptions, mouseOverSubscriptions, } from "./renderingValues";
 import { IClickSubsItem, IMouseOverSubsItem } from "./types";
 
 export function onClick(item: IClickSubsItem) {
@@ -44,7 +40,7 @@ export function handleTableClick(
       break;
     }
   }
-  return { handled };
+  return {handled};
 }
 
 export function onMouseMove(item: IClickSubsItem) {
@@ -67,7 +63,7 @@ export function handleTableMouseMove(
       break;
     }
   }
-  return { handled };
+  return {handled};
 }
 
 export function onMouseOver(item: IMouseOverSubsItem) {

@@ -17,16 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
-import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export function onColumnWidthChanged(ctx: any, id: string, width: number) {
   runGeneratorInFlowWithHandler({
     ctx: ctx,
-    generator: function*(){
+    generator: function*() {
       const prop = getDataViewPropertyById(ctx, id);
-      if(prop) {
+      if (prop) {
         prop.setColumnWidth(width);
       }
-    }()})
+    }()
+  })
 }

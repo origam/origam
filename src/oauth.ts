@@ -39,7 +39,7 @@ export async function ensureLogin() {
   const authOvr = sessionStorage.getItem("origamAuthTokenOverride");
   if (authOvr) {
     sessionStorage.setItem("origamAuthTokenOverride", authOvr);
-    return { access_token: authOvr };
+    return {access_token: authOvr};
   }
   if (window.location.hash.startsWith("#origamClientCallback/")) {
     const user = await userManager.signinRedirectCallback(

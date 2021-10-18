@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataSourceFieldByName} from "./getDataSourceFieldByName";
+import { getDataSourceFieldByName } from "./getDataSourceFieldByName";
 
 export function getDataSourceFieldIndexByName(ctx: any, name: string) {
   return getDataSourceFieldByName(ctx, name)?.index;

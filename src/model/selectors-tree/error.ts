@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IErrorDialogController} from "model/entities/types/IErrorDialog";
-import {getApplication} from "model/selectors/getApplication";
+import { IErrorDialogController } from "model/entities/types/IErrorDialog";
+import { getApplication } from "model/selectors/getApplication";
 
 export default {
   getDialogController(ctx: any): IErrorDialogController {

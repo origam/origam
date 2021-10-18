@@ -30,10 +30,7 @@ import { IMapPerspective, MapPerspective } from "./MapPerspective";
 import { Observer } from "mobx-react";
 import { IPerspective } from "../Perspective";
 import { MapPerspectiveCom } from "./MapPerspectiveUI";
-import {
-  CtxDataViewHeaderExtension,
-  IDataViewHeaderExtensionItem,
-} from "gui/Components/ScreenElements/DataView";
+import { CtxDataViewHeaderExtension, IDataViewHeaderExtensionItem, } from "gui/Components/ScreenElements/DataView";
 import { MapPerspectiveSearch } from "./MapPerspectiveSearch";
 import { CtxMapRootStore, MapRootStore } from "./stores/MapRootStore";
 import S from "./MapPerspectiveUI.module.scss";
@@ -46,7 +43,8 @@ export class MapPerspectiveDirector implements IIId {
     public dataViewBodyUI = IDataViewBodyUI(),
     public mapPerspective = IMapPerspective(),
     public perspective = IPerspective()
-  ) {}
+  ) {
+  }
 
   rootStore: MapRootStore = null!;
 
@@ -76,7 +74,7 @@ export class MapPerspectiveDirector implements IIId {
               onMouseDown={flow(this.mapPerspective.handleToolbarBtnClick)}
               isActive={this.mapPerspective.isActive}
             >
-              <Icon src="./icons/geo-coordinates.svg" />
+              <Icon src="./icons/geo-coordinates.svg"/>
             </DataViewHeaderAction>
           )}
         </Observer>
@@ -114,7 +112,8 @@ export function MapPerspectiveComContainer(
 }
 
 class ToolbarActionsExtension implements IDataViewHeaderExtensionItem {
-  constructor(public mapPerspective: MapPerspective, public getRootStore: () => MapRootStore) {}
+  constructor(public mapPerspective: MapPerspective, public getRootStore: () => MapRootStore) {
+  }
 
   get rootStore() {
     return this.getRootStore();
@@ -126,8 +125,8 @@ class ToolbarActionsExtension implements IDataViewHeaderExtensionItem {
   render(): React.ReactNode {
     return this.mapPerspective.isActive ? (
       <CtxMapRootStore.Provider value={this.rootStore} key={this.$iid}>
-        <MapPerspectiveNavigation />
-        <MapPerspectiveSearch />
+        <MapPerspectiveNavigation/>
+        <MapPerspectiveSearch/>
         {/*<MapPerspectiveRoutefind />*/}
       </CtxMapRootStore.Provider>
     ) : null;
@@ -176,7 +175,7 @@ function MapContentUI(props: {
 }
 
 function MapPerspectiveNavigation() {
-  const { mapObjectsStore, mapNavigationStore } = useContext(CtxMapRootStore);
+  const {mapObjectsStore, mapNavigationStore} = useContext(CtxMapRootStore);
   useEffect(() => mapObjectsStore.handleMapMounted(), []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <Observer>
@@ -186,13 +185,13 @@ function MapPerspectiveNavigation() {
             className={cx(S.mapToolbarButton)}
             onClick={mapNavigationStore.handleCenterMapClick}
           >
-            <i className="fas fa-crosshairs fa-lg" />
+            <i className="fas fa-crosshairs fa-lg"/>
           </button>
           <button
             className={cx(S.mapToolbarButton)}
             onClick={mapNavigationStore.handleLookupObjectClick}
           >
-            <i className="fas fa-search-location fa-lg" />
+            <i className="fas fa-search-location fa-lg"/>
           </button>
         </>
       )}

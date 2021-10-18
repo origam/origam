@@ -41,7 +41,8 @@ export class TablePerspectiveDirector implements IIId {
     public dataViewBodyUI = IDataViewBodyUI(),
     public tablePerspective = ITablePerspective(),
     public perspective = IPerspective()
-  ) {}
+  ) {
+  }
 
   @action.bound
   setup() {
@@ -50,8 +51,8 @@ export class TablePerspectiveDirector implements IIId {
       render: () => (
         <Observer key={this.$iid}>
           {() => (
-            <div className={cx(S.root, { isActive: this.tablePerspective.isActive })}>
-              <TableView />
+            <div className={cx(S.root, {isActive: this.tablePerspective.isActive})}>
+              <TableView/>
             </div>
           )}
         </Observer>
@@ -68,7 +69,7 @@ export class TablePerspectiveDirector implements IIId {
               onMouseDown={flow(this.tablePerspective.handleToolbarBtnClick)}
               isActive={this.tablePerspective.isActive}
             >
-              <Icon src="./icons/table-view.svg" tooltip={T("Grid", "grid_tool_tip")} />
+              <Icon src="./icons/table-view.svg" tooltip={T("Grid", "grid_tool_tip")}/>
             </DataViewHeaderAction>
           )}
         </Observer>

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IFormScreen, isIFormScreen} from "model/entities/types/IFormScreen";
+import { IFormScreen, isIFormScreen } from "model/entities/types/IFormScreen";
 
 export function getFormScreen(ctx: any): IFormScreen {
   let cn = ctx;

@@ -28,16 +28,10 @@ import { Dropdowner } from "../Dropdowner/Dropdowner";
 import { DataViewHeaderAction } from "../DataViewHeader/DataViewHeaderAction";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { DropdownItem } from "../Dropdown/DropdownItem";
-import {
-  AggregationType,
-  tryParseAggregationType,
-} from "../../../model/entities/types/AggregationType";
+import { AggregationType, tryParseAggregationType, } from "../../../model/entities/types/AggregationType";
 import { T } from "../../../utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import {
-  GroupingUnit,
-  GroupingUnitToLabel as groupingUnitToLabel,
-} from "model/entities/types/GroupingUnit";
+import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel, } from "model/entities/types/GroupingUnit";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
 
@@ -109,7 +103,7 @@ export class ColumnsDialog extends React.Component<{
     return (
       <ModalWindow
         title={T("Columns", "column_config_title")}
-        titleButtons={<CloseButton onClick={this.props.onCloseClick} />}
+        titleButtons={<CloseButton onClick={this.props.onCloseClick}/>}
         buttonsCenter={
           <>
             <button
@@ -133,7 +127,7 @@ export class ColumnsDialog extends React.Component<{
       >
         <div className={S.columnTable}>
           <AutoSizer>
-            {({ width, height }) => (
+            {({width, height}) => (
               <Observer>
                 {() => (
                   <MultiGrid
@@ -142,7 +136,7 @@ export class ColumnsDialog extends React.Component<{
                     cellRenderer={this.renderCell}
                     columnCount={5}
                     rowCount={1 + this.configuration.columnConfigurations.length}
-                    columnWidth={({ index }: { index: number }) => {
+                    columnWidth={({index}: { index: number }) => {
                       return this.columnWidths[index];
                     }}
                     rowHeight={rowHeight}
@@ -177,7 +171,7 @@ export class ColumnsDialog extends React.Component<{
       timeGroupingUnit,
     } = this.configuration.columnConfigurations[rowIndex];
 
-    const { name, entity, canGroup, canAggregate } = this.props.columnOptions.get(propertyId)!;
+    const {name, entity, canGroup, canAggregate} = this.props.columnOptions.get(propertyId)!;
 
     switch (columnIndex) {
       case 0:
@@ -208,7 +202,7 @@ export class ColumnsDialog extends React.Component<{
         if (groupingIndex > 0 && entity === "Date") {
           return (
             <Dropdowner
-              trigger={({ refTrigger, setDropped }) => (
+              trigger={({refTrigger, setDropped}) => (
                 <DataViewHeaderAction
                   refDom={refTrigger}
                   onMouseDown={() => setDropped(true)}
@@ -217,7 +211,7 @@ export class ColumnsDialog extends React.Component<{
                   {groupingUnitToLabel(timeGroupingUnit)}
                 </DataViewHeaderAction>
               )}
-              content={({ setDropped }) => (
+              content={({setDropped}) => (
                 <Dropdown>
                   <DropdownItem
                     onClick={(event: any) => {
@@ -276,7 +270,7 @@ export class ColumnsDialog extends React.Component<{
         ) {
           return (
             <Dropdowner
-              trigger={({ refTrigger, setDropped }) => (
+              trigger={({refTrigger, setDropped}) => (
                 <DataViewHeaderAction
                   refDom={refTrigger}
                   onMouseDown={() => setDropped(true)}
@@ -285,7 +279,7 @@ export class ColumnsDialog extends React.Component<{
                   {aggregationType}
                 </DataViewHeaderAction>
               )}
-              content={({ setDropped }) => (
+              content={({setDropped}) => (
                 <Dropdown>
                   <DropdownItem
                     onClick={(event: any) => {
@@ -420,7 +414,7 @@ export class TableHeader extends React.Component<{
     const vec = event.screenX - this.mouseX0;
     const newWidth = this.width0 + vec;
     this.props.onColumnWidthChange &&
-      this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
+    this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
   }
 
   @action.bound handleWindowMouseUp(event: any) {
@@ -432,7 +426,7 @@ export class TableHeader extends React.Component<{
     return (
       <div style={this.props.style} className={S.columnTableCell + " header"}>
         {this.getHeader(this.props.columnIndex)}
-        <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown} />
+        <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown}/>
       </div>
     );
   }

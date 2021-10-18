@@ -18,14 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Measure, { BoundingRect, ContentRect } from "react-measure";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import {
-  CtxDropdownRefBody,
-  CtxDropdownRefCtrl,
-  CtxDropdownBodyRect,
-  CtxDropdownCtrlRect,
-} from "./DropdownCommon";
+import { CtxDropdownBodyRect, CtxDropdownCtrlRect, CtxDropdownRefBody, CtxDropdownRefCtrl, } from "./DropdownCommon";
 import _ from "lodash";
 
 export function DropdownLayout(props: {
@@ -35,7 +30,7 @@ export function DropdownLayout(props: {
   onDropupRequest?: () => void;
 }) {
   function handleCtrlBlockResize(contentRect: ContentRect) {
-    const { top, left, width, height, bottom, right } = contentRect.bounds!;
+    const {top, left, width, height, bottom, right} = contentRect.bounds!;
     setRectCtrl({
       top,
       left,
@@ -47,7 +42,7 @@ export function DropdownLayout(props: {
   }
 
   function handleBodyBlockResize(contentRect: ContentRect) {
-    const { top, left, width, height, bottom, right } = contentRect.bounds!;
+    const {top, left, width, height, bottom, right} = contentRect.bounds!;
     setRectBody({
       top,
       left,
@@ -124,23 +119,23 @@ export function DropdownLayout(props: {
       <CtxDropdownBodyRect.Provider value={rectBody}>
         <CtxDropdownCtrlRect.Provider value={rectCtrl}>
           <Measure ref={refMeasureCtrl} bounds={true} onResize={handleCtrlBlockResize}>
-            {({ measureRef }) => (
+            {({measureRef}) => (
               <CtxDropdownRefCtrl.Provider value={measureRef}>
                 {props.renderCtrl()}
               </CtxDropdownRefCtrl.Provider>
             )}
           </Measure>
           {props.isDropped &&
-            ReactDOM.createPortal(
-              <Measure ref={refMeasureBody} bounds={true} onResize={handleBodyBlockResize}>
-                {({ measureRef }) => (
-                  <CtxDropdownRefBody.Provider value={measureRef}>
-                    {props.renderDropdown()}
-                  </CtxDropdownRefBody.Provider>
-                )}
-              </Measure>,
-              elmDropdownPortal
-            )}
+          ReactDOM.createPortal(
+            <Measure ref={refMeasureBody} bounds={true} onResize={handleBodyBlockResize}>
+              {({measureRef}) => (
+                <CtxDropdownRefBody.Provider value={measureRef}>
+                  {props.renderDropdown()}
+                </CtxDropdownRefBody.Provider>
+              )}
+            </Measure>,
+            elmDropdownPortal
+          )}
         </CtxDropdownCtrlRect.Provider>
       </CtxDropdownBodyRect.Provider>
     </>

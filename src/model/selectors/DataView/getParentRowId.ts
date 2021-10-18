@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getSelectedRowId} from "../TablePanelView/getSelectedRowId";
-import {getBindingParent} from "./getBindingParent";
+import { getSelectedRowId } from "../TablePanelView/getSelectedRowId";
+import { getBindingParent } from "./getBindingParent";
 
 export function getParentRowId(ctx: any) {
   const bp = getBindingParent(ctx);

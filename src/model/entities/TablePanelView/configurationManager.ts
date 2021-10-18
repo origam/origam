@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IConfigurationManager, ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
-import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
-import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
-import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
+import { IConfigurationManager, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { observable } from "mobx";
 import { v4 as uuidv4 } from 'uuid';
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export class ConfigurationManager implements IConfigurationManager {
   parent: any;
@@ -43,13 +43,13 @@ export class ConfigurationManager implements IConfigurationManager {
     this.customTableConfigurations = customTableConfigurations;
   }
 
-  get allTableConfigurations(){
+  get allTableConfigurations() {
     return this.defaultTableConfiguration
       ? [this.defaultTableConfiguration, ...this.customTableConfigurations]
       : this.customTableConfigurations;
   }
 
-  get activeTableConfiguration(){
+  get activeTableConfiguration() {
     const activeTableConfiguration = this.allTableConfigurations.find(config => config.isActive)
     if (activeTableConfiguration) {
       return activeTableConfiguration;
@@ -69,7 +69,7 @@ export class ConfigurationManager implements IConfigurationManager {
     configToActivate.isActive = true;
     const tablePanelView = getTablePanelView(this);
     configToActivate.apply(tablePanelView);
-    if(groupingWasActine !== configToActivate.isGrouping){
+    if (groupingWasActine !== configToActivate.isGrouping) {
       getFormScreenLifecycle(this).loadInitialData();
     }
   }
@@ -97,7 +97,7 @@ export class ConfigurationManager implements IConfigurationManager {
   }
 
   async deleteActiveTableConfiguration(): Promise<any> {
-    if(this.defaultTableConfiguration.isActive){
+    if (this.defaultTableConfiguration.isActive) {
       return;
     }
     this.customTableConfigurations.remove(this.activeTableConfiguration);
@@ -109,26 +109,26 @@ export class ConfigurationManager implements IConfigurationManager {
     const self = this;
     await runGeneratorInFlowWithHandler({
       ctx: this,
-      generator: function* (){
-        yield* saveColumnConfigurations(self)();
+      generator: function*() {
+        yield*saveColumnConfigurations(self)();
       }()
     })
   }
 
   *onColumnWidthChanged(propertyId: string, width: number): Generator {
-    if(!this.defaultTableConfiguration.isActive){
+    if (!this.defaultTableConfiguration.isActive) {
       return;
     }
     this.activeTableConfiguration.updateColumnWidth(propertyId, width);
-    yield* saveColumnConfigurations(this)();
+    yield*saveColumnConfigurations(this)();
   }
 
   *onColumnOrderChanged(): Generator {
-    if(!this.defaultTableConfiguration.isActive){
+    if (!this.defaultTableConfiguration.isActive) {
       return;
     }
     const tablePanelView = getTablePanelView(this);
     this.activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
-    yield* saveColumnConfigurations(this)();
+    yield*saveColumnConfigurations(this)();
   }
 }

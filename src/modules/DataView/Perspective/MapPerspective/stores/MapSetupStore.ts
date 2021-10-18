@@ -50,7 +50,8 @@ export class MapLayer {
 }
 
 export class MapSetupStore {
-  constructor(private rootStore: MapRootStore) {}
+  constructor(private rootStore: MapRootStore) {
+  }
 
   mapLocationMember: string = "";
   mapAzimuthMember: string = "";
@@ -68,7 +69,7 @@ export class MapSetupStore {
 
   get mapZoom() {
     let zoom = this.mapResolutionRaw ? parseInt(this.mapResolutionRaw) : 0;
-    if(zoom < 0 || zoom > 15){
+    if (zoom < 0 || zoom > 15) {
       throw new Error("Map zoom must be between 0 and 15. The value is: " + zoom);
     }
     return zoom;

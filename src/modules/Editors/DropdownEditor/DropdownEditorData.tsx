@@ -28,7 +28,9 @@ export interface IDropdownEditorData {
   value: string | string[] | null;
   text: string;
   isResolving: boolean;
+
   chooseNewValue(value: any): void;
+
   remove(value: any): void;
 
   setValue(value: string[]): void;
@@ -40,9 +42,11 @@ export class DropdownEditorData implements IDropdownEditorData {
     private dataTable: DataViewData,
     private rowCursor: RowCursor,
     private setup: () => DropdownEditorSetup
-  ) {}
+  ) {
+  }
 
-  setValue(value: string[]){}
+  setValue(value: string[]) {
+  }
 
   @computed get value(): string | string[] | null {
     if (this.rowCursor.selectedId) {

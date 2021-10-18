@@ -35,7 +35,8 @@ export const SCOPE_Lookup = "Lookup";
 
 export const ILookupId = TypeSymbol<string>("ILookupId");
 
-export function register($cont: Container) {}
+export function register($cont: Container) {
+}
 
 export function createMultiLookupEngine(origamApi: () => IApi): IMultiLookupEngine {
   const lookupCleanerReloaderById = new Map<string, LookupLabelsCleanerReloader>();
@@ -71,7 +72,9 @@ export interface IMultiLookupEngine {
   lookupCleanerReloaderById: Map<string, LookupLabelsCleanerReloader>;
   lookupEngineById: Map<string, ILookupIndividualEngine>;
   cacheDependencies: LookupCacheDependencies;
+
   startup(): void;
+
   teardown(): void;
 }
 
@@ -79,7 +82,7 @@ export function createIndividualLookupEngine(
   lookupId: string,
   multiLookupEngine: IMultiLookupEngine
 ) {
-  const { lookupCacheMulti, lookupLoaderMulti, lookupCleanerReloaderById } = multiLookupEngine;
+  const {lookupCacheMulti, lookupLoaderMulti, lookupCleanerReloaderById} = multiLookupEngine;
   const lookupCacheIndividual = new LookupCacheIndividual(lookupId, lookupCacheMulti);
   const lookupLoaderIndividual = new LookupLoaderIndividual(lookupId, lookupLoaderMulti);
   const lookupResolver = new LookupResolver(lookupCacheIndividual, lookupLoaderIndividual);

@@ -23,27 +23,24 @@ import {
   currentRow,
   gridLeadCellDimensions,
   groupingColumnCount,
-  groupingColumnIds, isCheckBoxedTable, recordId, tablePanelView,
+  groupingColumnIds,
+  isCheckBoxedTable,
+  recordId,
+  tablePanelView,
   worldWidth,
 } from "../renderingValues";
-import {currentColumnLeft, currentColumnWidth, currentRowHeight, currentRowTop,} from "../currentCell";
-import {IGroupRow, IGroupTreeNode} from "../types";
-import {
-  applyScrollTranslation,
-  cellPaddingLeft,
-  fontSize,
-  selectRowBorderWidth,
-  topTextOffset
-} from "./cellsCommon";
-import {isGroupRow} from "../rowCells/groupRowCells";
-import {onClick} from "../onClick";
-import {CPR} from "utils/canvas";
-import {onGroupHeaderToggleClick} from "model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
-import {flow} from "mobx";
-import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
+import { currentColumnLeft, currentColumnWidth, currentRowHeight, currentRowTop, } from "../currentCell";
+import { IGroupRow, IGroupTreeNode } from "../types";
+import { applyScrollTranslation, cellPaddingLeft, fontSize, selectRowBorderWidth, topTextOffset } from "./cellsCommon";
+import { isGroupRow } from "../rowCells/groupRowCells";
+import { onClick } from "../onClick";
+import { CPR } from "utils/canvas";
+import { onGroupHeaderToggleClick } from "model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
+import { flow } from "mobx";
+import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import {getSelectedRowId} from "../../../../../../model/selectors/TablePanelView/getSelectedRowId";
+import { getSelectedRowId } from "../../../../../../model/selectors/TablePanelView/getSelectedRowId";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -126,12 +123,12 @@ export function drawGroupCell() {
       w: groupCellWidth,
       h: 20,
       handler(event: any) {
-        flow(function* () {
+        flow(function*() {
           if (!row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0) {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
           const allGroups = getGrouper(ctx).allGroups;
-          if (shouldCloseOtherGroups(row.sourceGroup, allGroups, ctx)){
+          if (shouldCloseOtherGroups(row.sourceGroup, allGroups, ctx)) {
             const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
             allGroups
               .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
@@ -156,23 +153,23 @@ function unselectRowIfInClosedGroup(ctx: any, row: IGroupRow) {
   }
 }
 
-function shouldCloseOtherGroups(sourceGroup: IGroupTreeNode, allGroups: IGroupTreeNode[], ctx: any){
+function shouldCloseOtherGroups(sourceGroup: IGroupTreeNode, allGroups: IGroupTreeNode[], ctx: any) {
   const otherGroups = Array.from(allGroups).remove(sourceGroup);
   return isInfiniteScrollingActive(ctx, undefined)
     && otherGroups.some(group => group.isInfinitelyScrolled);
 }
 
-function formatColumnValue(value: string){
-  if(value === undefined || value === null){
+function formatColumnValue(value: string) {
+  if (value === undefined || value === null) {
     return "<empty>";
-  }else{
+  } else {
     return value
   }
 }
 
 export function drawGroupCellBackground() {
   const ctx2d = context2d();
-  ctx2d.fillStyle =  getComputedStyle(document.documentElement).getPropertyValue('--grey25');
+  ctx2d.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--grey25');
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
     CPR() * currentRowTop(),
@@ -193,7 +190,7 @@ export function drawEmptyGroupCellBackground() {
   const selectedRowId = getSelectedRowId(tablePanelView());
   const isSelected = recordId() === selectedRowId;
 
-  if(isSelected && isCheckBoxedTable()){
+  if (isSelected && isCheckBoxedTable()) {
     drawSelectedRowBorder();
   }
 }
@@ -205,13 +202,13 @@ function drawSelectedRowBorder() {
   ctx2d.lineWidth = selectRowBorderWidth * CPR();
   ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
   ctx2d.lineTo(
-      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
-      CPR() * (currentRowTop() + 1.5)
+    CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+    CPR() * (currentRowTop() + 1.5)
   );
   ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
   ctx2d.lineTo(
-      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
-      CPR() * (currentRowTop() + currentRowHeight() - 1.5)
+    CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+    CPR() * (currentRowTop() + currentRowHeight() - 1.5)
   );
   ctx2d.stroke();
 }

@@ -75,7 +75,7 @@ export class ErrorDialogController implements IErrorDialogController {
             message += exMessage;
             message += "\n";
           }
-          exception = exception.innerException || exception.InnerException ;
+          exception = exception.innerException || exception.InnerException;
         } while (exception);
         return message;
       };
@@ -108,11 +108,12 @@ export class ErrorDialogController implements IErrorDialogController {
   }
 
   idGen = 0;
+
   @bind
   *pushError(error: any) {
     const myId = this.idGen++;
     const promise = NewExternalPromise();
-    this.errorStack.push({ id: myId, error, promise, timestamp: moment() });
+    this.errorStack.push({id: myId, error, promise, timestamp: moment()});
     this.displayDialog();
     yield promise;
   }

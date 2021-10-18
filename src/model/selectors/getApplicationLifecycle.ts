@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IApplicationLifecycle} from "../entities/types/IApplicationLifecycle";
-import {getApplication} from "./getApplication";
+import { IApplicationLifecycle } from "../entities/types/IApplicationLifecycle";
+import { getApplication } from "./getApplication";
 
 export function getApplicationLifecycle(ctx: any): IApplicationLifecycle {
   return getApplication(ctx).applicationLifecycle;

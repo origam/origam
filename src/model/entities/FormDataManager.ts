@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IFormDataManager} from "./types/IFormDataManager";
+import { IFormDataManager } from "./types/IFormDataManager";
 
 export class FormDataManager implements IFormDataManager {
   $type_IFormDataManager: 1 = 1;

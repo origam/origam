@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {observable} from "mobx";
+import { observable } from "mobx";
 
 export const busyDelayMillis = 500;
 
@@ -29,7 +29,7 @@ export class FlowBusyMonitor {
   private flowLeft = false;
 
   set inFlow(value: number) {
-    if(value < 0){
+    if (value < 0) {
       value = 0;
     }
     if (this._inFlow === 0 && value === 1) {
@@ -41,8 +41,7 @@ export class FlowBusyMonitor {
           this.isWorkingDelayed = true
         }
       }, busyDelayMillis);
-    }
-    else if (this._inFlow === 1 && value === 0) {
+    } else if (this._inFlow === 1 && value === 0) {
       this.isWorkingDelayed = false;
       this.isWorking = false;
       this.flowLeft = true;

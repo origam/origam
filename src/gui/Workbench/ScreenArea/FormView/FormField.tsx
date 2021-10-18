@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "./FormField.module.css";
 import React from "react";
-import {inject, observer} from "mobx-react";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
+import { inject, observer } from "mobx-react";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -30,7 +30,7 @@ export enum ICaptionPosition {
   None = "None"
 }
 
-@inject(({ property }) => {
+@inject(({property}) => {
   const rowId = getSelectedRowId(property);
   const isHidden = !getRowStateAllowRead(property, rowId || "", property.id);
   return {
@@ -91,7 +91,7 @@ export class FormField extends React.Component<{
         {this.props.CaptionPosition !== ICaptionPosition.None && (
           <div
             className={S.formFieldName}
-            style={{ ...this.fieldNameStyle(), display }}
+            style={{...this.fieldNameStyle(), display}}
           >
             {this.props.Name}
           </div>

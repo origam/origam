@@ -17,12 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IPluginTableRow} from "./IPluginRow";
-import {IPluginProperty} from "./IPluginProperty";
+import { IPluginTableRow } from "./IPluginRow";
+import { IPluginProperty } from "./IPluginProperty";
 
 export interface IPluginDataView {
   tableRows: IPluginTableRow[];
   properties: IPluginProperty[];
+
   getCellText(row: any, propertyId: string): any;
+
   getRowId(row: IPluginTableRow): string;
 }

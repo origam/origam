@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getOrderingConfiguration} from "model/selectors/DataView/getOrderingConfiguration";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
+import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 import { getProperties } from "model/selectors/DataView/getProperties";
 
 export function onColumnHeaderClick(ctx: any) {
-  return flow(function* onColumnHeaderClick(event: any, column: string) {
+  return flow(function*onColumnHeaderClick(event: any, column: string) {
     try {
       const property = getProperties(ctx).find(prop => prop.id === column);
-      if(property?.column === "Blob" || property?.column === "TagInput"){
+      if (property?.column === "Blob" || property?.column === "TagInput") {
         return;
       }
       if (event.ctrlKey || event.metaKey) {
@@ -35,7 +35,7 @@ export function onColumnHeaderClick(ctx: any) {
         getOrderingConfiguration(ctx).setOrdering(column);
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { SearchDialog, SEARCH_DIALOG_KEY } from "gui/Components/Dialogs/SearchDialog";
+import { SEARCH_DIALOG_KEY, SearchDialog } from "gui/Components/Dialogs/SearchDialog";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getSearcher } from "model/selectors/getSearcher";
 import React from "react";
@@ -27,8 +27,8 @@ export function openSearchWindow(ctx: any) {
 
   const closeDialog = getDialogStack(ctx).pushDialog(
     SEARCH_DIALOG_KEY,
-    <SearchDialog 
-      ctx={ctx} 
+    <SearchDialog
+      ctx={ctx}
       onCloseClick={() => closeDialog()}
     />,
     undefined,
@@ -36,6 +36,6 @@ export function openSearchWindow(ctx: any) {
   );
 }
 
-export function isGlobalAutoFocusDisabled(ctx: any){
+export function isGlobalAutoFocusDisabled(ctx: any) {
   return getDialogStack(ctx).isOpen(SEARCH_DIALOG_KEY);
 }

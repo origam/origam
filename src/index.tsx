@@ -84,7 +84,7 @@ async function main() {
   let user;
   try {
     user = await ensureLogin();
-  } catch(e) {
+  } catch (e) {
     const application = createApplication();
     await initLocaleCookie(application);
     await translationsInit(application);
@@ -112,7 +112,7 @@ async function main() {
 
     await translationsInit(application);
 
-    ReactDOM.render(<Root application={application} />, document.getElementById("root"));
+    ReactDOM.render(<Root application={application}/>, document.getElementById("root"));
   }
 }
 

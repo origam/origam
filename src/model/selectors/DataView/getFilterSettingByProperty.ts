@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getFilterConfiguration} from "./getFilterConfiguration";
+import { getFilterConfiguration } from "./getFilterConfiguration";
 
 export function getFilterSettingByProperty(ctx: any, prop: string) {
   const filter = getFilterConfiguration(ctx).getSettingByPropertyId(prop);

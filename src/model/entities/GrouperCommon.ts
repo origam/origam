@@ -37,55 +37,56 @@ export function getAllLoadedValuesOfProp(property: IProperty, grouper: IGrouper)
 
 export function getRowById(grouper: IGrouper, id: string): any[] | undefined {
   return grouper.allGroups
-      .map(group => group.getRowById(id))
-      .find(row => row)
+    .map(group => group.getRowById(id))
+    .find(row => row)
 }
 
 export function getRowIndex(grouper: IGrouper, rowId: string): number | undefined {
   return grouper.allGroups
-  .map(group => group.getRowIndex(rowId))
-  .find(index => index !== -1);
+    .map(group => group.getRowIndex(rowId))
+    .find(index => index !== -1);
 }
 
-export function getRowCount(grouper: IGrouper, rowId: string){
+export function getRowCount(grouper: IGrouper, rowId: string) {
   return grouper.allGroups
     .find(group => group.childGroups.length === 0 && group.getRowById(rowId))
     ?.rowCount
 }
 
 export function getCellOffset(grouper: IGrouper, rowId: string): ICellOffset {
-  const containingGroup =  grouper.allGroups
-  .filter(group => group.getRowById(rowId) && group.isExpanded)
-  .sort((g1, g2) => g2.level - g1.level)[0]
-  
+  const containingGroup = grouper.allGroups
+    .filter(group => group.getRowById(rowId) && group.isExpanded)
+    .sort((g1, g2) => g2.level - g1.level)[0]
+
   let rowOffset = 0;
   for (const group of grouper.allGroups) {
     rowOffset++;
-    if(group === containingGroup){
+    if (group === containingGroup) {
       return {
         row: rowOffset,
-        column: group.level + 1}
+        column: group.level + 1
+      }
     }
-    if(group.isExpanded && !group.childGroups.some(child => child.isExpanded)){
+    if (group.isExpanded && !group.childGroups.some(child => child.isExpanded)) {
       rowOffset += group.childRows.length;
     }
   }
   return {
     row: 0,
-    column:0
+    column: 0
   }
 }
 
-export function getPreviousRowId(grouper: IGrouper,rowId: string): string {
+export function getPreviousRowId(grouper: IGrouper, rowId: string): string {
   const group = grouper.allGroups
     .find(group => group.getRowById(rowId))!;
   const indexInGroup = group.getRowIndex(rowId);
-  if(indexInGroup !== undefined && indexInGroup !== 0){
-    const previousRow =  group.childRows[indexInGroup - 1]
+  if (indexInGroup !== undefined && indexInGroup !== 0) {
+    const previousRow = group.childRows[indexInGroup - 1]
     return getDataTable(grouper).getRowId(previousRow);
-  }else{
+  } else {
     const previousGroup = getPreviousNonEmptyGroup(grouper, group);
-    if(previousGroup === undefined){
+    if (previousGroup === undefined) {
       return rowId;
     }
     const previousRow = previousGroup.childRows[previousGroup.childRows.length - 1];
@@ -93,16 +94,16 @@ export function getPreviousRowId(grouper: IGrouper,rowId: string): string {
   }
 }
 
-export function getNextRowId(grouper: IGrouper,rowId: string): string {
+export function getNextRowId(grouper: IGrouper, rowId: string): string {
   const group = grouper.allGroups
     .find(group => group.getRowById(rowId))!;
   const indexInGroup = group.getRowIndex(rowId);
-  if(indexInGroup !== undefined && indexInGroup !== (group.rowCount - 1)){
-    const nextRow =  group.childRows[indexInGroup + 1]
+  if (indexInGroup !== undefined && indexInGroup !== (group.rowCount - 1)) {
+    const nextRow = group.childRows[indexInGroup + 1]
     return getDataTable(grouper).getRowId(nextRow);
-  }else{
+  } else {
     const nextGroup = getNextNonEmptyGroup(grouper, group);
-    if(nextGroup === undefined){
+    if (nextGroup === undefined) {
       return rowId;
     }
     const nextRow = nextGroup.childRows[0];
@@ -110,7 +111,7 @@ export function getNextRowId(grouper: IGrouper,rowId: string): string {
   }
 }
 
-function getPreviousNonEmptyGroup(grouper: IGrouper, currentGroup: IGroupTreeNode){
+function getPreviousNonEmptyGroup(grouper: IGrouper, currentGroup: IGroupTreeNode) {
   const sameLevelGroups = grouper.allGroups
     .filter(group => currentGroup.level === group.level && group.rowCount > 0 && group.isExpanded)
   const currentGroupIndex = sameLevelGroups.indexOf(currentGroup);
@@ -119,7 +120,7 @@ function getPreviousNonEmptyGroup(grouper: IGrouper, currentGroup: IGroupTreeNod
     : sameLevelGroups[currentGroupIndex - 1];
 }
 
-function getNextNonEmptyGroup(grouper: IGrouper, currentGroup: IGroupTreeNode){
+function getNextNonEmptyGroup(grouper: IGrouper, currentGroup: IGroupTreeNode) {
   const sameLevelGroups = grouper.allGroups
     .filter(group => currentGroup.level === group.level && group.rowCount > 0 && group.isExpanded)
   const currentGroupIndex = sameLevelGroups.indexOf(currentGroup);

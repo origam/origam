@@ -37,7 +37,7 @@ export interface IProcessActionQueryInfoResult {
 }
 
 export function processActionQueryInfo(ctx: any) {
-  return function* processActionQueryInfo(
+  return function*processActionQueryInfo(
     queryInfo: any[],
     title: string
   ): Generator<any, IProcessActionQueryInfoResult> {
@@ -132,6 +132,6 @@ export function processActionQueryInfo(ctx: any) {
         })
       );
     }
-    return { canContinue };
+    return {canContinue};
   };
 }

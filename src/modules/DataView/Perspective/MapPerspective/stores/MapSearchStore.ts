@@ -22,7 +22,8 @@ import { IMapObject } from "./MapObjectsStore";
 import { MapRootStore } from "./MapRootStore";
 
 export class SearchStore {
-  constructor(private root: MapRootStore) {}
+  constructor(private root: MapRootStore) {
+  }
 
   get navigationStore() {
     return this.root.mapNavigationStore;
@@ -51,7 +52,7 @@ export class SearchStore {
 
   @observable searchPhrase = "";
 
-  @observable rect: any = { top: 0, left: 0, right: 0, bottom: 0, height: 0, width: 0 };
+  @observable rect: any = {top: 0, left: 0, right: 0, bottom: 0, height: 0, width: 0};
 
   @action.bound
   measureSearchField() {
@@ -136,7 +137,8 @@ export class SearchStore {
   }
 
   @action.bound
-  handleClearMouseDown(event: any) {}
+  handleClearMouseDown(event: any) {
+  }
 
   @action.bound
   selectSearchResultById(resultId: string) {

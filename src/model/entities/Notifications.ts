@@ -34,7 +34,7 @@ export class Notifications {
 
   *startTimer(refreshIntervalMs: number) {
     if (localStorage.getItem("debugNoPolling_notificationBox")) return;
-    yield* this.loader.start(refreshIntervalMs);
+    yield*this.loader.start(refreshIntervalMs);
   }
 
   parent?: any;

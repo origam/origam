@@ -29,9 +29,10 @@ export class Clock {
     return new Date().getTime();
   }
 
-  setInterval(fn: () => void, ms:number) {
+  setInterval(fn: () => void, ms: number) {
     const handle = setInterval(fn, ms);
     return () => clearInterval(handle);
   }
 }
+
 export const IClock = TypeSymbol<Clock>("IClock");

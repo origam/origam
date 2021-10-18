@@ -22,7 +22,8 @@ import { LookupListCacheMulti } from "modules/Lookup/LookupListCacheMulti";
 import { DropdownEditorSetup } from "./DropdownEditor";
 
 export class DropdownEditorLookupListCache {
-  constructor(private setup: () => DropdownEditorSetup, private cache: LookupListCacheMulti) {}
+  constructor(private setup: () => DropdownEditorSetup, private cache: LookupListCacheMulti) {
+  }
 
   get lookupId() {
     return this.setup().lookupId;
@@ -44,6 +45,7 @@ export class DropdownEditorLookupListCache {
     return this.cache.deleteLookup(this.lookupId);
   }
 }
+
 export const IDropdownEditorLookupListCache = TypeSymbol<DropdownEditorLookupListCache>(
   "IDropdownEditorLookupListCache"
 );

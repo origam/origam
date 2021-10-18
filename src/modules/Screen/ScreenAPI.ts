@@ -25,7 +25,8 @@ export class ScreenAPI {
     private getSessionId: () => string | undefined,
     private getMenuItemId: () => string,
     private api: () => IApi
-  ) {}
+  ) {
+  }
 
   *getLookupList(args: {
     DataStructureEntityId?: string;
@@ -47,6 +48,7 @@ export class ScreenAPI {
     });
   }
 }
+
 export const IScreenAPI = TypeSymbol<ScreenAPI>("IScreenAPI");
 
 /*

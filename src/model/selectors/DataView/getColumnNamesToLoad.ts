@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataSourceFields} from "../DataSources/getDataSourceFields";
+import { getDataSourceFields } from "../DataSources/getDataSourceFields";
 
 export function getColumnNamesToLoad(ctx: any): string[] {
   return getDataSourceFields(ctx)

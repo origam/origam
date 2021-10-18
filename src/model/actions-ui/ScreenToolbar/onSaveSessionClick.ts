@@ -17,17 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 
 // TODO: Move to ui actions
 export function onSaveSessionClick(ctx: any) {
-  return flow(function* onSaveSessionClick() {
+  return flow(function*onSaveSessionClick() {
     try {
-      yield* getFormScreenLifecycle(ctx).onSaveSession();
+      yield*getFormScreenLifecycle(ctx).onSaveSession();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

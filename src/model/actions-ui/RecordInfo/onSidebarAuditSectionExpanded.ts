@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {getRecordInfo} from "model/selectors/RecordInfo/getRecordInfo";
+import { flow } from "mobx";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 
 export function onSidebarAuditSectionExpanded(ctx: any) {
-  return flow(function* onSidebarAuditSectionExpanded() {
-    yield* getRecordInfo(ctx).onSidebarAuditSectionExpanded();
+  return flow(function*onSidebarAuditSectionExpanded() {
+    yield*getRecordInfo(ctx).onSidebarAuditSectionExpanded();
   });
 }

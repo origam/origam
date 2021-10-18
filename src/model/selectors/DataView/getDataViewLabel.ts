@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "./getDataView";
-import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
+import { getDataView } from "./getDataView";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 
 export function getDataViewLabel(ctx: any) {
-  const activeConfigName = getConfigurationManager(ctx).activeTableConfiguration.name ;
+  const activeConfigName = getConfigurationManager(ctx).activeTableConfiguration.name;
   return activeConfigName
     ? `${getDataView(ctx).name} [${activeConfigName}]`
     : getDataView(ctx).name

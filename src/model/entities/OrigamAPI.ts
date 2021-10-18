@@ -21,14 +21,20 @@ import xmlJs from "xml-js";
 import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import {IApi, IUpdateData, IUIGridFilterCoreConfiguration, IEntityExportField, ILazyLoadedEntityInput} from "./types/IApi";
+import {
+  IApi,
+  IEntityExportField,
+  ILazyLoadedEntityInput,
+  IUIGridFilterCoreConfiguration,
+  IUpdateData
+} from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { TypeSymbol } from "dic/Container";
 import { IAboutInfo } from "./types/IAboutInfo";
 import { T } from "utils/translation";
 import fileDownload from "js-file-download";
-import {ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { PubSub } from "utils/events";
 
 
@@ -62,7 +68,7 @@ export class OrigamAPI implements IApi {
         return response;
       },
       async (error) => {
-        if(error.response?.data?.constructor?.name === 'Blob'){
+        if (error.response?.data?.constructor?.name === 'Blob') {
           error.response.data = await error.response.data.text();
         }
         if (!axios.isCancel(error)) {
@@ -123,11 +129,11 @@ export class OrigamAPI implements IApi {
     return xmlJs.xml2js(
       (
         await this.axiosInstance.get("/UI/GetUI", {
-          params: { id },
+          params: {id},
           headers: this.httpAuthHeader,
         })
       ).data,
-      { addParent: true, alwaysChildren: true }
+      {addParent: true, alwaysChildren: true}
     );
   }
 
@@ -190,8 +196,8 @@ export class OrigamAPI implements IApi {
       LabelIds: string[];
     }[]
   ) {
-    if(query.length === 1 && query[0].LabelIds.length === 0){
-      return {LookupId:{}}
+    if (query.length === 1 && query[0].LabelIds.length === 0) {
+      return {LookupId: {}}
     }
     return (await this.axiosInstance.post("/UIService/GetLookupLabelsEx", query)).data;
   }
@@ -244,7 +250,8 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post("/Session/CreateSession", data)).data;
   }
 
-  async deleteSession() {}
+  async deleteSession() {
+  }
 
   async saveSession(sessionFormIdentifier: string) {
     return (await this.axiosInstance.get(`/UIService/SaveData/${sessionFormIdentifier}`)).data;
@@ -258,7 +265,7 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.get(`/UIService/RefreshData/${sessionFormIdentifier}`)).data;
   }
 
-  async revertChanges(data: {sessionFormIdentifier: string}) {
+  async revertChanges(data: { sessionFormIdentifier: string }) {
     await this.axiosInstance.post("/UIService/RevertChanges", data);
   }
 
@@ -348,7 +355,7 @@ export class OrigamAPI implements IApi {
 
     return {
       ...data,
-      menu: xmlJs.xml2js(data.menu, { addParent: true, alwaysChildren: true }),
+      menu: xmlJs.xml2js(data.menu, {addParent: true, alwaysChildren: true}),
     };
   }
 
@@ -472,7 +479,7 @@ export class OrigamAPI implements IApi {
     AggregatedColumns: IAggregationInfo[] | undefined;
   }): Promise<any[]> {
     const resultData = (await this.axiosInstance.post(`/UIService/GetGroups`, data)).data;
-    if(resultData.length > 50_000){
+    if (resultData.length > 50_000) {
       throw new Error(T("There are too many groups, choose different grouping options please.", "too_many_groups"));
     }
     return resultData;
@@ -540,7 +547,7 @@ export class OrigamAPI implements IApi {
   }
 
   async getChatroomList(): Promise<any> {
-    return (await axios.get(`${this.chatroomsUrlPrefix}/Chat`, { headers: this.httpAuthHeader }))
+    return (await axios.get(`${this.chatroomsUrlPrefix}/Chat`, {headers: this.httpAuthHeader}))
       .data;
   }
 
@@ -550,25 +557,25 @@ export class OrigamAPI implements IApi {
     tableConfigurations: ITableConfiguration[];
     defaultView: string;
   }): Promise<any> {
-    const tableConfigurationsXml = data.tableConfigurations.map(tableConfig =>{
+    const tableConfigurationsXml = data.tableConfigurations.map(tableConfig => {
       return "<TableConfiguration" +
-        ` name="${tableConfig.name ?? ""}"`+
-        ` fixedColumnCount="${tableConfig.fixedColumnCount}"`+
-        ` isActive="${tableConfig.isActive}"`+
-        ` id="${tableConfig.id}"`+
-        ">"+
-          tableConfig.columnConfigurations
-            .map(columnConfig =>
-              "<ColumnConfiguration" +
-              ` propertyId="${columnConfig.propertyId}"`+
-              ` width="${columnConfig.width}"`+
-              (columnConfig.timeGroupingUnit !== undefined ? ` groupingUnit="${columnConfig.timeGroupingUnit}"` : "")+
-              (columnConfig.groupingIndex > 0 ? ` groupingIndex="${columnConfig.groupingIndex}"` : "")+
-              ` isVisible="${columnConfig.isVisible}"`+
-              (columnConfig.aggregationType ? ` aggregationType="${columnConfig.aggregationType}"` : "")+
-              "/>")
-            .join("\n")
-        +"</TableConfiguration>"
+        ` name="${tableConfig.name ?? ""}"` +
+        ` fixedColumnCount="${tableConfig.fixedColumnCount}"` +
+        ` isActive="${tableConfig.isActive}"` +
+        ` id="${tableConfig.id}"` +
+        ">" +
+        tableConfig.columnConfigurations
+          .map(columnConfig =>
+            "<ColumnConfiguration" +
+            ` propertyId="${columnConfig.propertyId}"` +
+            ` width="${columnConfig.width}"` +
+            (columnConfig.timeGroupingUnit !== undefined ? ` groupingUnit="${columnConfig.timeGroupingUnit}"` : "") +
+            (columnConfig.groupingIndex > 0 ? ` groupingIndex="${columnConfig.groupingIndex}"` : "") +
+            ` isVisible="${columnConfig.isVisible}"` +
+            (columnConfig.aggregationType ? ` aggregationType="${columnConfig.aggregationType}"` : "") +
+            "/>")
+          .join("\n")
+        + "</TableConfiguration>"
     })
     await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
       ObjectInstanceId: data.instanceId,
@@ -581,7 +588,7 @@ export class OrigamAPI implements IApi {
 
   async resetScreenColumnConfiguration(data: {
     instanceId: string;
-  }): Promise<any>{
+  }): Promise<any> {
     await this.axiosInstance.post(`/UIService/ResetScreenColumnConfiguration`, {
       ObjectInstanceId: data.instanceId,
     });
@@ -734,7 +741,7 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   ): Promise<any> {
     return (
       await this.axiosInstance.post(`/Blob/${data.uploadToken}/${data.fileName}`, data.file, {
-        headers: { ...this.httpAuthHeader, "content-type": "application/octet-stream" },
+        headers: {...this.httpAuthHeader, "content-type": "application/octet-stream"},
         onUploadProgress,
       })
     ).data;
@@ -808,8 +815,7 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     SessionFormIdentifier: string;
     RowIds: any[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
-  }): Promise<any>
-  {
+  }): Promise<any> {
     const response = await this.axiosInstance({
       url: `/ExcelExport/GetFile`,
       method: 'POST',
@@ -820,15 +826,16 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     const fieNameRegex = /filename=([^\s;]*)/g
 
     let fileName = "export.xls";
-    if(response.headers["content-disposition"]){
+    if (response.headers["content-disposition"]) {
       const headerFileName = fieNameRegex.exec(response.headers["content-disposition"])?.[1]
-      if(headerFileName){
+      if (headerFileName) {
         fileName = headerFileName;
       }
     }
 
     fileDownload(response.data, fileName);
   }
+
   async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {
     return (await this.axiosInstance.post(`/DeepLink/GetMenuId`, data)).data;
   }

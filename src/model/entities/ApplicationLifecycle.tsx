@@ -37,6 +37,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   @observable loginPageMessage?: string | undefined;
 
   @observable inFlow = 0;
+
   @computed get isWorking() {
     return this.inFlow > 0;
   }
@@ -45,14 +46,14 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     try {
       this.inFlow++;
       args.event.preventDefault();
-      yield* this.performLogin(args);
+      yield*this.performLogin(args);
     } finally {
       this.inFlow--;
     }
   }
 
   *onSignOutClick(args: { event: any }) {
-    yield* this.requestSignout();
+    yield*this.requestSignout();
   }
 
   *requestSignout(): any {
@@ -82,21 +83,21 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       if (!isReallySignOut) return;
     }
 
-    yield* this.performLogout();
+    yield*this.performLogout();
   }
 
   *run() {
-    yield* this.reuseAuthToken();
+    yield*this.reuseAuthToken();
   }
 
-  *performLogin(args: { userName: string; password: string }):any {
+  *performLogin(args: { userName: string; password: string }): any {
     try {
       const api = getApi(this);
       const token = yield api.login({
         UserName: args.userName,
         Password: args.password,
       });
-      yield* this.anounceAuthToken(token);
+      yield*this.anounceAuthToken(token);
     } catch (error) {
       // TODO: Distinguish between connection error and bad credentials etc.
       this.setLoginPageMessage("Login failed.");
@@ -116,8 +117,8 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
         return;
       }
     }
-    yield* stopAllFormsAutorefresh(application.workbench!)();
-    yield* stopWorkQueues(application.workbench!)();
+    yield*stopAllFormsAutorefresh(application.workbench!)();
+    yield*stopWorkQueues(application.workbench!)();
     application.resetWorkbench();
     try {
       yield api.logout();
@@ -130,7 +131,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   *reuseAuthToken() {
     const token = window.sessionStorage.getItem("origamAuthToken");
     if (token) {
-      yield* this.anounceAuthToken(token);
+      yield*this.anounceAuthToken(token);
     }
   }
 
@@ -141,7 +142,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     api.setAccessToken(token);
     const workbench = createWorkbench();
     application.setWorkbench(workbench);
-    yield* workbench.run();
+    yield*workbench.run();
   }
 
   @action.bound

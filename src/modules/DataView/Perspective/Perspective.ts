@@ -17,12 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {TypeSymbol} from "dic/Container";
-import {ContribArray} from "utils/common";
+import { TypeSymbol } from "dic/Container";
+import { ContribArray } from "utils/common";
 import bind from "bind-decorator";
 
 export interface IPerspectiveContrib {
   deactivate(): Generator;
+
   activateDefault(): Generator;
 }
 
@@ -31,18 +32,18 @@ export class Perspective {
 
   @bind
   *deactivate() {
-    for(let c of this.contrib) {
-      yield* c.deactivate();
+    for (let c of this.contrib) {
+      yield*c.deactivate();
     }
   }
 
   @bind
   *activateDefault() {
-    for(let c of this.contrib) {
-      yield* c.activateDefault();
+    for (let c of this.contrib) {
+      yield*c.activateDefault();
     }
   }
 
 }
 
-export const IPerspective  = TypeSymbol<Perspective>("IPerspective");
+export const IPerspective = TypeSymbol<Perspective>("IPerspective");

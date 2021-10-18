@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, PropsWithChildren } from "react";
+import React, { PropsWithChildren, useContext } from "react";
 import S from "gui/Components/DataViewHeader/DataViewHeaderAction.module.scss";
 import cx from "classnames";
 import { action } from "mobx";
@@ -25,18 +25,20 @@ import { CtxDataView, DataViewContext } from "../ScreenElements/DataView";
 
 interface IDataViewHeaderActionProps {
   onMouseDown?(event: any): void;
+
   onClick?(event: any): void;
+
   className?: string;
   isActive?: boolean;
   isDisabled?: boolean;
   refDom?: any;
+
   onShortcut?(event: any): void;
+
   shortcutPredicate?(event: any): boolean;
 }
 
-export class DataViewHeaderActionInner extends React.Component<
-  IDataViewHeaderActionProps & { dataViewContext?: DataViewContext }
-> {
+export class DataViewHeaderActionInner extends React.Component<IDataViewHeaderActionProps & { dataViewContext?: DataViewContext }> {
   @action.bound
   handleMouseDown(event: any) {
     if (!this.props.isDisabled && this.props.onMouseDown) {
@@ -60,6 +62,7 @@ export class DataViewHeaderActionInner extends React.Component<
   }
 
   _disposer: any;
+
   kbdHandlerUp() {
     this._disposer?.();
     if (this.props.dataViewContext) {
@@ -105,7 +108,7 @@ export class DataViewHeaderActionInner extends React.Component<
         className={cx(
           S.root,
           this.props.className,
-          { isActive: this.props.isActive },
+          {isActive: this.props.isActive},
           this.props.isDisabled ? S.isDisabled : ""
         )}
         onMouseDown={this.handleMouseDown}
@@ -120,5 +123,5 @@ export class DataViewHeaderActionInner extends React.Component<
 
 export function DataViewHeaderAction(props: PropsWithChildren<IDataViewHeaderActionProps>) {
   const dataViewContext = useContext(CtxDataView);
-  return <DataViewHeaderActionInner {...props} dataViewContext={dataViewContext} />;
+  return <DataViewHeaderActionInner {...props} dataViewContext={dataViewContext}/>;
 }

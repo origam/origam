@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getTablePanelView} from "./TablePanelView/getTablePanelView";
+import { getTablePanelView } from "./TablePanelView/getTablePanelView";
 
 export function getColumnConfigurationDialog(ctx: any) {
   return getTablePanelView(ctx).columnConfigurationDialog;

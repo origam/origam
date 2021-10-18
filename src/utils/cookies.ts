@@ -31,39 +31,43 @@ function getCookie(name: string): string {
 }
 
 let _locale: any;
+
 export function getLocaleFromCookie(): string {
   if (!_locale) {
     const cookieValue = unescape(getCookie("origamCurrentLocale"));
     const pattern = /c=([a-zA-Z-]+)\|/i;
     const results = cookieValue.match(pattern);
-    if(results){
+    if (results) {
       _locale = results[1];
-    }else{
+    } else {
       throw new Error("Locale cookie was not found. Was the function \"initLocaleCookie\" called?");
     }
   }
   return _locale;
 }
 
-export interface IDefaultDateFormats{
+export interface IDefaultDateFormats {
   defaultDateSeparator: string;
   defaultTimeSeparator: string;
-  defaultDateTimeSeparator:string;
+  defaultDateTimeSeparator: string;
   defaultDateSequence: DateSequence;
   defaultLongDateFormat: string;
   defaultShortDateFormat: string;
   defaultTimeFormat: string;
 }
 
-export enum DateSequence{
+export enum DateSequence {
   DayMonthYear = 0, MonthDayYear = 1
 }
 
-export function parseDateSequence(candidate: string){
-  switch (candidate){
-    case "DayMonthYear": return DateSequence.DayMonthYear;
-    case "MonthDayYear": return DateSequence.MonthDayYear;
-    default: throw new Error("Cannot parse \""+candidate+"\" to DateSequence")
+export function parseDateSequence(candidate: string) {
+  switch (candidate) {
+    case "DayMonthYear":
+      return DateSequence.DayMonthYear;
+    case "MonthDayYear":
+      return DateSequence.MonthDayYear;
+    default:
+      throw new Error("Cannot parse \"" + candidate + "\" to DateSequence")
   }
 }
 
@@ -84,15 +88,14 @@ export function getDefaultCsDateFormatDataFromCookie(): IDefaultDateFormats {
         defaultShortDateFormat: getParameter("defaultShortDateFormat", parameters),
         defaultTimeFormat: getParameter("defaultTimeFormat", parameters),
       }
-    }
-    catch(error){
-      throw new Error("Could not parse locale cookie value \""+cookieValue+"\". " + error);
+    } catch (error) {
+      throw new Error("Could not parse locale cookie value \"" + cookieValue + "\". " + error);
     }
   }
   return _defaultDateFormats;
 }
 
-function getCookieParameters(cookieValue: string){
+function getCookieParameters(cookieValue: string) {
   return cookieValue
     .split("|")
     .map(pair => pair.split("="))
@@ -102,24 +105,23 @@ function getCookieParameters(cookieValue: string){
     }, {});
 }
 
-function isValidLocalizationCookie(cookieValue: string){
-  if(!cookieValue){
+function isValidLocalizationCookie(cookieValue: string) {
+  if (!cookieValue) {
     return false;
   }
   try {
     getDefaultCsDateFormatDataFromCookie();
     return true;
-  }
-  catch(e){
+  } catch (e) {
     console.warn("Error when parsing localization cookie:" + e); // eslint-disable-line no-console
     return false;
   }
 }
 
-function getParameter(name: string, parameters: { [key: string]: string }){
+function getParameter(name: string, parameters: { [key: string]: string }) {
   let value = parameters[name];
-  if(value === undefined || value === null){
-    throw new Error("Parameter named \""+name+"\" was not found");
+  if (value === undefined || value === null) {
+    throw new Error("Parameter named \"" + name + "\" was not found");
   }
   return value;
 }

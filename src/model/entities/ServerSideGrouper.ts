@@ -21,13 +21,13 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IGrouper } from "./types/IGrouper";
-import { IReactionDisposer, observable, reaction, comparer, flow} from "mobx";
+import { comparer, flow, IReactionDisposer, observable, reaction } from "mobx";
 import { ICellOffset, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
-import { joinWithAND} from "./OrigamApiHelpers";
+import { joinWithAND } from "./OrigamApiHelpers";
 import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
@@ -43,9 +43,9 @@ export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
   parent?: any = null;
   disposers: IReactionDisposer[] = [];
-  groupDisposers: Map<IGroupTreeNode, IReactionDisposer> =  new Map<IGroupTreeNode, IReactionDisposer>()
+  groupDisposers: Map<IGroupTreeNode, IReactionDisposer> = new Map<IGroupTreeNode, IReactionDisposer>()
   @observable refreshTrigger = 0;
-  
+
   start() {
     this.disposers.push(
       reaction(
@@ -53,54 +53,54 @@ export class ServerSideGrouper implements IGrouper {
           Array.from(getGroupingConfiguration(this).groupingSettings.values()),
           Array.from(getGroupingConfiguration(this).groupingSettings.keys()),
           this.refreshTrigger],
-          () => this.loadGroupsDebounced(),
-          {fireImmediately: true, equals: comparer.structural,delay: 50})
-          );
-        }
-        
-  get allGroups(){
+        () => this.loadGroupsDebounced(),
+        {fireImmediately: true, equals: comparer.structural, delay: 50})
+    );
+  }
+
+  get allGroups() {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
-  } 
+  }
 
-  loadGroupsDebounced =  _.debounce(this.loadGroupsImm, 10);
+  loadGroupsDebounced = _.debounce(this.loadGroupsImm, 10);
 
-  loadGroupsImm(){
+  loadGroupsImm() {
     const self = this;
     runGeneratorInFlowWithHandler({ctx: this, generator: self.loadGroups()});
   }
-        
-  private *loadGroups(): any {
+
+  private*loadGroups(): any {
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (!firstGroupingColumn) {
       this.topLevelGroups.length = 0;
       return;
     }
     const expandedGroupDisplayValues = this.allGroups
-    .filter(group => group.isExpanded)
-    .map(group => group.columnDisplayValue)
+      .filter(group => group.isExpanded)
+      .map(group => group.columnDisplayValue)
     const dataView = getDataView(this);
     const property = getDataTable(this).getPropertyById(firstGroupingColumn.columnId);
     const lookupId = property && property.lookup && property.lookup.lookupId;
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
     const groupData = yield getFormScreenLifecycle(this).loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
     this.topLevelGroups = this.group(groupData, firstGroupingColumn.columnId, undefined);
-    yield* this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
+    yield*this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
   }
-      
-  private *loadAndExpandChildren(childGroups: IGroupTreeNode[], expandedGroupDisplayValues: string[]): Generator {
+
+  private*loadAndExpandChildren(childGroups: IGroupTreeNode[], expandedGroupDisplayValues: string[]): Generator {
     for (const group of childGroups) {
-      if( expandedGroupDisplayValues.includes(group.columnDisplayValue)){
+      if (expandedGroupDisplayValues.includes(group.columnDisplayValue)) {
         group.isExpanded = true;
-        yield* this.loadChildren(group);
-        yield* this.loadAndExpandChildren(group.childGroups, expandedGroupDisplayValues)
+        yield*this.loadChildren(group);
+        yield*this.loadAndExpandChildren(group.childGroups, expandedGroupDisplayValues)
       }
     }
   }
 
-  substituteRecord(row: any[]): void{
+  substituteRecord(row: any[]): void {
     this.allGroups.map(group => group.substituteRecord(row))
   }
-  
+
   refresh() {
     this.refreshTrigger++;
   }
@@ -108,19 +108,19 @@ export class ServerSideGrouper implements IGrouper {
   getRowIndex(rowId: string): number | undefined {
     return getRowIndex(this, rowId);
   }
-  
+
   getRowById(id: string): any[] | undefined {
     return getRowById(this, id);
   }
 
-  getTotalRowCount(rowId: string): number | undefined{
+  getTotalRowCount(rowId: string): number | undefined {
     return this.allGroups
       .find(group => group.getRowById(rowId))?.rowCount;
   }
 
   getCellOffset(rowId: string): ICellOffset {
     return getCellOffset(this, rowId);
-   }
+  }
 
   getNextRowId(rowId: string): string {
     return getNextRowId(this, rowId);
@@ -130,40 +130,40 @@ export class ServerSideGrouper implements IGrouper {
     return getPreviousRowId(this, rowId);
   }
 
-  notifyGroupClosed(group: IGroupTreeNode){
-    if(this.groupDisposers.has(group)){
+  notifyGroupClosed(group: IGroupTreeNode) {
+    if (this.groupDisposers.has(group)) {
       this.groupDisposers.get(group)!();
       this.groupDisposers.delete(group);
     }
   }
-  
+
   *loadChildren(groupHeader: IGroupTreeNode) {
-    if(this.groupDisposers.has(groupHeader)){
+    if (this.groupDisposers.has(groupHeader)) {
       this.groupDisposers.get(groupHeader)!();
     }
     this.groupDisposers.set(
       groupHeader,
       reaction(
-        ()=> [
+        () => [
           getGroupingConfiguration(this).nextColumnToGroupBy(groupHeader.columnId),
           this.composeFinalFilter(groupHeader),
-          [ ...getFilterConfiguration(this).activeFilters],
-          [ ...getTablePanelView(this).aggregations.aggregationList],
+          [...getFilterConfiguration(this).activeFilters],
+          [...getTablePanelView(this).aggregations.aggregationList],
           getOrderingConfiguration(this).groupChildrenOrdering
-        ], 
-        ()=> this.loadChildrenReactionDebounced(groupHeader),
+        ],
+        () => this.loadChildrenReactionDebounced(groupHeader),
       )
     );
-    yield* this.reload(groupHeader);
+    yield*this.reload(groupHeader);
   }
-  
+
   loadChildrenReactionDebounced = _.debounce(this.loadChildrenReaction, 10);
 
-  private loadChildrenReaction(group: IGroupTreeNode){
+  private loadChildrenReaction(group: IGroupTreeNode) {
     flow(() => this.reload(group))();
   }
-  
-  private *reload(group: IGroupTreeNode): any {
+
+  private*reload(group: IGroupTreeNode): any {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnSettings = groupingConfiguration.nextColumnToGroupBy(group.columnId);
     const dataView = getDataView(this);
@@ -182,11 +182,11 @@ export class ServerSideGrouper implements IGrouper {
     }
   }
 
-  composeFinalFilter(rowGroup: IGroupTreeNode){
+  composeFinalFilter(rowGroup: IGroupTreeNode) {
     const groupingFilter = rowGroup.composeGroupingFilter();
-    const userFilters = getUserFilters( {ctx: this, excludePropertyId: rowGroup.columnId});
+    const userFilters = getUserFilters({ctx: this, excludePropertyId: rowGroup.columnId});
 
-    return userFilters 
+    return userFilters
       ? joinWithAND([groupingFilter, userFilters])
       : groupingFilter;
   }
@@ -223,27 +223,26 @@ export class ServerSideGrouper implements IGrouper {
   }
 
   getGroupData(groupDataItem: any, groupingSettings: IGroupingSettings): IGroupData {
-    if(!groupDataItem){
+    if (!groupDataItem) {
       new DateGroupData(undefined, "");
     }
-    if(groupingSettings.groupingUnit !== undefined){
+    if (groupingSettings.groupingUnit !== undefined) {
 
       const yearValue = groupDataItem[groupingSettings.columnId + "_year"];
-      const monthValue = groupDataItem[groupingSettings.columnId + "_month"] 
-        ? groupDataItem[groupingSettings.columnId + "_month"] -1 
+      const monthValue = groupDataItem[groupingSettings.columnId + "_month"]
+        ? groupDataItem[groupingSettings.columnId + "_month"] - 1
         : 0;
-      const dayValue = groupDataItem[groupingSettings.columnId + "_day"]  ?? 1
+      const dayValue = groupDataItem[groupingSettings.columnId + "_day"] ?? 1
       const hourValue = groupDataItem[groupingSettings.columnId + "_hour"] ?? 0;
       const minuteValue = groupDataItem[groupingSettings.columnId + "_minute"] ?? 0;
 
-      const value = moment({ y: yearValue, M: monthValue, d: dayValue, h: hourValue , m: minuteValue, s: 0})
+      const value = moment({y: yearValue, M: monthValue, d: dayValue, h: hourValue, m: minuteValue, s: 0})
       return DateGroupData.create(value, groupingSettings.groupingUnit)
-    }
-    else{
+    } else {
       return new GenericGroupData(
         groupDataItem[groupingSettings.columnId],
         groupDataItem["groupCaption"] ?? groupDataItem[groupingSettings.columnId]
-      ); 
+      );
     }
   }
 

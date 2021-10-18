@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getGroupingConfiguration} from "./getGroupingConfiguration";
-import {getIsSelectionCheckboxesShown} from "../DataView/getIsSelectionCheckboxesShown";
+import { getGroupingConfiguration } from "./getGroupingConfiguration";
+import { getIsSelectionCheckboxesShown } from "../DataView/getIsSelectionCheckboxesShown";
 
-export function getLeadingColumnCount(ctx: any){
+export function getLeadingColumnCount(ctx: any) {
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
   const groupedColumnIds = getGroupingConfiguration(ctx).orderedGroupingColumnSettings;
   return groupedColumnIds.length + (isCheckBoxedTable ? 1 : 0);

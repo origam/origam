@@ -17,13 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  IColumnConfiguration,
-  ITableConfiguration
-} from "model/entities/TablePanelView/types/IConfigurationManager";
-import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
-import {getProperties} from "model/selectors/DataView/getProperties";
-import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
+import { IColumnConfiguration, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
+import { getProperties } from "model/selectors/DataView/getProperties";
+import { TableColumnConfiguration } from "model/entities/TablePanelView/tableColumnConfiguration";
 import { IProperty } from "../types/IProperty";
 import { observable } from "mobx";
 
@@ -42,14 +39,14 @@ export class TableConfiguration implements ITableConfiguration {
   }
 
   static create(
-    args:{
+    args: {
       name: string | undefined,
       isActive: boolean,
       id: string,
       fixedColumnCount: number,
       columnConfigurations: IColumnConfiguration[]
     }
-  ){
+  ) {
     const newInstance = new TableConfiguration();
     newInstance.name = args.name;
     newInstance.id = args.id;
@@ -60,7 +57,7 @@ export class TableConfiguration implements ITableConfiguration {
   }
 
 
-  static createDefault(properties: IProperty[]){
+  static createDefault(properties: IProperty[]) {
     const newInstance = new TableConfiguration();
     newInstance.id = this.DefaultConfigId
     newInstance.columnConfigurations = properties
@@ -68,12 +65,12 @@ export class TableConfiguration implements ITableConfiguration {
     return newInstance;
   }
 
-  public get isGrouping(){
+  public get isGrouping() {
     return this.columnConfigurations.some(columnConfig => columnConfig.groupingIndex > 0);
   }
 
-  deepClone(){
-    const newinstance =  new TableConfiguration();
+  deepClone() {
+    const newinstance = new TableConfiguration();
     newinstance.name = this.name;
     newinstance.id = this.id;
     newinstance.fixedColumnCount = this.fixedColumnCount;
@@ -120,7 +117,7 @@ export class TableConfiguration implements ITableConfiguration {
     }
   }
 
-  sortColumnConfiguartions(propertyIds: string[]){
+  sortColumnConfiguartions(propertyIds: string[]) {
     this.columnConfigurations
       .sort((congigA, configB) => {
         const columnIdxA = propertyIds.findIndex(id => id === congigA.propertyId);

@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataTable} from "../DataView/getDataTable";
-import {getTablePanelView} from "./getTablePanelView";
-import {IProperty} from "../../entities/types/IProperty";
+import { getDataTable } from "../DataView/getDataTable";
+import { getTablePanelView } from "./getTablePanelView";
+import { IProperty } from "../../entities/types/IProperty";
 
 export function getCellValueByIdx(ctx: any) {
   const tablePanelView = getTablePanelView(ctx);

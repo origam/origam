@@ -58,10 +58,10 @@ export class WorkQueuesItem extends React.Component<{
             isActiveScreen: this.props.isActiveScreen,
             isOpenedScreen: this.props.isOpenedScreen,
           },
-          { isHidden: this.props.isHidden },
-          { isEmphasized: this.props.isEmphasized }
+          {isHidden: this.props.isHidden},
+          {isEmphasized: this.props.isEmphasized}
         )}
-        style={{ paddingLeft: `${(this.props.level || 1) * 1.6667}em` }}
+        style={{paddingLeft: `${(this.props.level || 1) * 1.6667}em`}}
         onClick={this.props.onClick}
         title={this.props.tooltip}
       >

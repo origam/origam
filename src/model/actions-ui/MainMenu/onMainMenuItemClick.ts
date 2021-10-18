@@ -22,7 +22,7 @@ import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { handleError } from "model/actions/handleError";
 
 export function onMainMenuItemClick(ctx: any) {
-  return flow(function* onMainMenuItemClick(args: {
+  return flow(function*onMainMenuItemClick(args: {
     event: any;
     item: any;
     idParameter: string | undefined;
@@ -30,9 +30,9 @@ export function onMainMenuItemClick(ctx: any) {
     forceOpenNew?: boolean;
   }) {
     try {
-      yield* getWorkbenchLifecycle(ctx).onMainMenuItemClick(args);
+      yield*getWorkbenchLifecycle(ctx).onMainMenuItemClick(args);
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

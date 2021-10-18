@@ -27,7 +27,7 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { IDataSourceField } from "./types/IDataSourceField";
 import { LookupResolver } from "modules/Lookup/LookupResolver";
 import { LookupLabelsCleanerReloader } from "modules/Lookup/LookupCleanerLoader";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -110,7 +110,7 @@ export class Property implements IProperty {
 
   @action.bound
   stop() {
-    
+
   }
 
   parent: any;
@@ -121,7 +121,7 @@ export class Property implements IProperty {
     const controlPropertyValue = getDataTable(this)
       .getCellValueByDataSourceField(row, dataSourceField);
     return this.childProperties
-      .find(prop => prop.controlPropertyValue === controlPropertyValue)
+        .find(prop => prop.controlPropertyValue === controlPropertyValue)
       ?? this;
   }
 }
@@ -130,7 +130,10 @@ export class Property implements IProperty {
 export interface ILookupIndividualEngine {
   lookupResolver: LookupResolver;
   lookupCleanerReloader: LookupLabelsCleanerReloader;
+
   startup(): void;
+
   teardown(): void;
+
   cleanAndReload(): void;
 };

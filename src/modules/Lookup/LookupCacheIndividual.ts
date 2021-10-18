@@ -22,7 +22,8 @@ import { LookupCacheMulti } from "./LookupCacheMulti";
 import { TypeSymbol } from "dic/Container";
 
 export class LookupCacheIndividual {
-  constructor(private lookupId: string, private cache: LookupCacheMulti) {}
+  constructor(private lookupId: string, private cache: LookupCacheMulti) {
+  }
 
   getLookupLabels() {
     return this.cache.getLookupLabels(this.lookupId) || new Map();
@@ -37,4 +38,5 @@ export class LookupCacheIndividual {
     this.cache.clean(this.lookupId);
   }
 }
+
 export const ILookupCacheIndividual = TypeSymbol<LookupCacheIndividual>("ILookupCacheIndividual");

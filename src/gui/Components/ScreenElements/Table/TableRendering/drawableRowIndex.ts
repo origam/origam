@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {rowHeight, viewportBottom, viewportTop} from "./renderingValues";
+import { rowHeight, viewportBottom, viewportTop } from "./renderingValues";
 
 
 export function firstDrawableRowIndex() {

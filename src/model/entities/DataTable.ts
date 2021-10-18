@@ -113,7 +113,7 @@ export class DataTable implements IDataTable {
     return row[property.dataIndex];
   }
 
-  async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {
+  async updateSortAndFilter(data?: { retainPreviousSelection?: true }) {
     return this.rowsContainer.updateSortAndFilter(data);
   }
 
@@ -135,7 +135,7 @@ export class DataTable implements IDataTable {
     const values = this.rowsContainer
       .getFilteredRows({propertyFilterIdToExclude: property.id})
       .map((row) => this.getCellValue(row, property)).filter((row) => row)
-    if(values.some(value => isArray(value))){
+    if (values.some(value => isArray(value))) {
       return new Set(values.flatMap(array => array));
     }
     return new Set(values);
@@ -155,7 +155,7 @@ export class DataTable implements IDataTable {
     if (value === null || value === undefined || (Array.isArray(value) && value.length === 0))
       return "";
     if (property.isLookup && property.lookupEngine) {
-      const { lookupEngine } = property;
+      const {lookupEngine} = property;
       if (property.column === "TagInput") {
         if (!Array.isArray(value)) value = [value];
         const textArray = value.map((valueItem: any) =>
@@ -185,7 +185,7 @@ export class DataTable implements IDataTable {
     return this.rowsContainer.rows.find((row) => this.getRowId(row) === id);
   }
 
-  getTrueIndexById(id: string){
+  getTrueIndexById(id: string) {
     return this.rowsContainer.getTrueIndexById(id);
   }
 
@@ -197,7 +197,7 @@ export class DataTable implements IDataTable {
   isCellTextResolving(property: IProperty, value: any): boolean {
     if (value === null || value === undefined) return false;
     if (property.isLookup && property.lookupEngine) {
-      const { lookupEngine } = property;
+      const {lookupEngine} = property;
       if (property.column === "TagInput") {
         return value.some((valueItem: any) =>
           lookupEngine.lookupResolver.isEmptyAndLoading(`${valueItem}`)
@@ -282,7 +282,7 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
-  appendRecords(rows: any[][]): void{
+  appendRecords(rows: any[][]): void {
     this.rowsContainer.appendRecords(rows);
   }
 

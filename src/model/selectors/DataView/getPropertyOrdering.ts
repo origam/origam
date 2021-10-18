@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getOrderingConfiguration} from "./getOrderingConfiguration";
+import { getOrderingConfiguration } from "./getOrderingConfiguration";
 
 export function getPropertyOrdering(ctx: any, column: string) {
   return getOrderingConfiguration(ctx).getOrdering(column);

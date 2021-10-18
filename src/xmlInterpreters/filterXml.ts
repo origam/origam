@@ -28,21 +28,21 @@ import { IFilterGroup } from "model/entities/types/IFilterGroup";
 function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
   const filters: IFilter[] = filterJson.details.map((detail: any) => {
     const property = properties.find((prop) => prop.id === detail.property);
-    if(!property){
+    if (!property) {
       return undefined;
     }
     const setting = property.column === "ComboBox"
       ? new LookupFilterSetting(
-          filterTypeFromNumber(detail.operator, property.column),
-          true,
-          detail.value1,
-          detail.value2)
-        :new FilterSetting(
-          filterTypeFromNumber(detail.operator, property.column),
-          true,
-          detail.value1,
-          detail.value2)
-    
+        filterTypeFromNumber(detail.operator, property.column),
+        true,
+        detail.value1,
+        detail.value2)
+      : new FilterSetting(
+        filterTypeFromNumber(detail.operator, property.column),
+        true,
+        detail.value1,
+        detail.value2)
+
     return {
       propertyId: detail.property,
       dataType: property.column,
@@ -57,12 +57,11 @@ function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
   };
 }
 
-export function cloneFilterGroup(group: IFilterGroup | undefined){
-  if(!group){
+export function cloneFilterGroup(group: IFilterGroup | undefined) {
+  if (!group) {
     return undefined;
   }
-  const filters = group.filters.map(filter => 
-    {
+  const filters = group.filters.map(filter => {
       return {
         propertyId: filter.propertyId,
         dataType: filter.dataType,
@@ -72,7 +71,7 @@ export function cloneFilterGroup(group: IFilterGroup | undefined){
             filter.setting.isComplete,
             filter.setting.val1,
             filter.setting.val2)
-          :new FilterSetting(
+          : new FilterSetting(
             filter.setting.type,
             filter.setting.isComplete,
             filter.setting.val1,

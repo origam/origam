@@ -84,15 +84,14 @@ import produce from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
-import {
-  runInFlowWithHandler,
-} from "utils/runInFlowWithHandler";
+import { runInFlowWithHandler, } from "utils/runInFlowWithHandler";
 import { IAggregation } from 'model/entities/types/IAggregation';
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { GridFocusManager } from "model/entities/GridFocusManager";
 
 class SavedViewState {
-  constructor(public selectedRowId: string | undefined) {}
+  constructor(public selectedRowId: string | undefined) {
+  }
 }
 
 export class DataView implements IDataView {
@@ -540,7 +539,7 @@ export class DataView implements IDataView {
     nextRow[positionIndex] -= 1;
     this.dataTable.substituteRecord(selectedRow);
     this.dataTable.substituteRecord(nextRow);
-    this.dataTable.updateSortAndFilter({ retainPreviousSelection: true });
+    this.dataTable.updateSortAndFilter({retainPreviousSelection: true});
     this.dataTable.setDirtyValue(
       selectedRow,
       this.orderMember,
@@ -574,7 +573,7 @@ export class DataView implements IDataView {
     previous[positionIndex] += 1;
     this.dataTable.substituteRecord(selectedRow);
     this.dataTable.substituteRecord(previous);
-    this.dataTable.updateSortAndFilter({ retainPreviousSelection: true });
+    this.dataTable.updateSortAndFilter({retainPreviousSelection: true});
     this.dataTable.setDirtyValue(
       selectedRow,
       this.orderMember,
@@ -623,7 +622,7 @@ export class DataView implements IDataView {
     const menuId = yield selectors.column.getLinkMenuId(property, value);
     let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
     if (menuItem) {
-      menuItem = { ...menuItem, parent: undefined, elements: [] };
+      menuItem = {...menuItem, parent: undefined, elements: []};
       menuItem = produce(menuItem, (draft: any) => {
         if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
           draft.attributes.type = "FormReferenceMenuItem";
@@ -655,12 +654,14 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound *loadFirstPage(): any {
-    if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadFirstPage();
+  @action.bound
+  *loadFirstPage(): any {
+    if (this.infiniteScrollLoader) yield*this.infiniteScrollLoader!.loadFirstPage();
   }
 
-  @action.bound *loadLastPage(): any {
-    if (this.infiniteScrollLoader) yield* this.infiniteScrollLoader!.loadLastPage();
+  @action.bound
+  *loadLastPage(): any {
+    if (this.infiniteScrollLoader) yield*this.infiniteScrollLoader!.loadLastPage();
   }
 
   @action.bound selectFirstRow() {
@@ -879,9 +880,9 @@ export class DataView implements IDataView {
           Format: property.formatterPattern,
           PolymorphRules: property.controlPropertyId
             ? {
-                ControlField: property.controlPropertyId,
-                Rules: this.getPolymorphicRules(property),
-              }
+              ControlField: property.controlPropertyId,
+              Rules: this.getPolymorphicRules(property),
+            }
             : undefined,
         };
       });
@@ -895,7 +896,7 @@ export class DataView implements IDataView {
         RowIds: [],
         LazyLoadedEntityInput: {
           SessionFormIdentifier: getSessionId(this),
-          Filter: getUserFilters({ ctx: this }),
+          Filter: getUserFilters({ctx: this}),
           MenuId: getMenuItemId(this),
           DataStructureEntityId: getDataStructureEntityId(this),
           Ordering: getUserOrdering(this),

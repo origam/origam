@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import S from "gui/Components/EmbeddedWebpage/EmbeddedWebpage.module.scss";
 import cx from "classnames";
 
@@ -57,8 +57,8 @@ export const EmbeddedWebpage: React.FC<{
   useEffect(() => effMouseEventBlocking(setBlocked), []);
   return (
     <div className={S.root} style={getRootStyle(props)}>
-      <iframe className={S.iframe} src="http://origam.com" />
-      <div className={cx(S.blockerOverlay, { isDisplayed: isBlocked })} />
+      <iframe className={S.iframe} src="http://origam.com"/>
+      <div className={cx(S.blockerOverlay, {isDisplayed: isBlocked})}/>
     </div>
   );
 };

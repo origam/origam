@@ -31,19 +31,25 @@ export interface IWorkbenchLifecycle {
     idParameter: string | undefined;
     isSingleRecordEdit?: boolean;
   }): Generator;
+
   onMainMenuItemIdClick(args: {
     event: any;
     itemId: any;
     idParameter: string | undefined;
     isSingleRecordEdit?: boolean;
   }): Generator;
+
   onWorkQueueListItemClick(event: any, item: any): Generator;
+
   onChatroomsListItemClick(event: any, item: any): Generator;
+
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
+
   userInfo: IUserInfo | undefined;
   logoUrl: string | undefined;
   customAssetsRoute: string | undefined;
   portalSettings: IPortalSettings | undefined;
+
   openNewForm(
     id: string,
     type: IMainMenuItemType,
@@ -60,6 +66,7 @@ export interface IWorkbenchLifecycle {
   closeForm(openedScreen: IOpenedScreen): Generator;
 
   run(): Generator;
+
   parent?: any;
 }
 

@@ -18,9 +18,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as React from "react";
-import {IHeaderRowProps} from "./types";
-import {observer} from "mobx-react";
-import S from "./HeaderRow.module.css";
+import { IHeaderRowProps } from "./types";
+import { observer } from "mobx-react";
+import S from "./HeaderRow.module.scss";
 
 @observer
 export class HeaderRow extends React.Component<IHeaderRowProps> {

@@ -25,22 +25,22 @@ export function map2obj(map: Map<string, any>) {
   return result;
 }
 
-function splitPropertyPair(pair: string){
+function splitPropertyPair(pair: string) {
   return pair.split(":").map(x => x.trim())
 }
 
-export function cssString2Object(cssString: string | undefined){
-  if(!cssString){
+export function cssString2Object(cssString: string | undefined) {
+  if (!cssString) {
     return undefined;
   }
   return cssString
     .split(";")
-    .filter(pair=>pair !== "")
+    .filter(pair => pair !== "")
     .map(pair => splitPropertyPair(pair))
-    .reduce((obj: any, pair)=> {
+    .reduce((obj: any, pair) => {
         obj[pair[0]] = pair[1];
         return obj;
       }
-      ,{})
+      , {})
 }
 

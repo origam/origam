@@ -32,10 +32,10 @@ export function getFieldErrorMessage(ctx: any) {
 
       const errMap: Map<number, string> | undefined = errors
         ? new Map(
-            Object.entries<string>(
-              errors.fieldErrors
-            ).map(([dsIndexStr, errMsg]: [string, string]) => [parseInt(dsIndexStr, 10), errMsg])
-          )
+          Object.entries<string>(
+            errors.fieldErrors
+          ).map(([dsIndexStr, errMsg]: [string, string]) => [parseInt(dsIndexStr, 10), errMsg])
+        )
         : undefined;
 
       const errMsg = dsFieldErrors && errMap ? errMap.get(property.dataSourceIndex) : undefined;

@@ -17,23 +17,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IGroupRow, ITableRow} from "../types";
-import {selectionCheckboxEmptyCellsDraws, selectionCheckboxEmptyCellsWidths,} from "../cells/selectionCheckboxCell";
-import {groupRowContentCellsDraws, groupRowContentCellsWidths, groupRowEmptyCellsWidths} from "../cells/groupCell";
-import {currentRow} from "../renderingValues";
-import {aggregationCellDraws, aggregationColumnsWidths} from "../cells/aggregationCell";
+import { IGroupRow, ITableRow } from "../types";
+import { selectionCheckboxEmptyCellsDraws, selectionCheckboxEmptyCellsWidths, } from "../cells/selectionCheckboxCell";
+import { groupRowContentCellsDraws, groupRowContentCellsWidths, groupRowEmptyCellsWidths } from "../cells/groupCell";
+import { currentRow } from "../renderingValues";
+import { aggregationCellDraws, aggregationColumnsWidths } from "../cells/aggregationCell";
 
 export function groupRowCellsWidths() {
   return [
-      [...selectionCheckboxEmptyCellsWidths(), ...groupRowContentCellsWidths()],
-      [...selectionCheckboxEmptyCellsWidths(), ...groupRowEmptyCellsWidths(), ...aggregationColumnsWidths()]
+    [...selectionCheckboxEmptyCellsWidths(), ...groupRowContentCellsWidths()],
+    [...selectionCheckboxEmptyCellsWidths(), ...groupRowEmptyCellsWidths(), ...aggregationColumnsWidths()]
   ];
 }
 
 export function groupRowCellsDraws() {
   return [
-      [...selectionCheckboxEmptyCellsDraws(), ...groupRowContentCellsDraws()],
-      [...selectionCheckboxEmptyCellsDraws().map(x => ()=>{}), ...aggregationCellDraws()]
+    [...selectionCheckboxEmptyCellsDraws(), ...groupRowContentCellsDraws()],
+    [...selectionCheckboxEmptyCellsDraws().map(x => () => {
+    }), ...aggregationCellDraws()]
   ];
 }
 

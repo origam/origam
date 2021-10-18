@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getTablePanelView} from "./getTablePanelView";
+import { getTablePanelView } from "./getTablePanelView";
 
 export function getTableViewPropertyById(ctx: any, id: string) {
   const property = getTablePanelView(ctx).propertyMap.get(id);
-  if(!property){
-    throw new Error("No property with id: \" "+id+" \" found ")
+  if (!property) {
+    throw new Error("No property with id: \" " + id + " \" found ")
   }
   return property
 }

@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isLazyLoading} from "./isLazyLoading";
-import {getDataView} from "./DataView/getDataView";
+import { isLazyLoading } from "./isLazyLoading";
+import { getDataView } from "./DataView/getDataView";
 
 export function isInfiniteScrollingActive(ctx: any, dataViewAttributes?: any) {
 
@@ -26,5 +26,5 @@ export function isInfiniteScrollingActive(ctx: any, dataViewAttributes?: any) {
     ? dataViewAttributes.IsRootGrid === "true"
     : getDataView(ctx).isRootGrid
 
-    return isLazyLoading(ctx) && isRootGrid;
+  return isLazyLoading(ctx) && isRootGrid;
 }

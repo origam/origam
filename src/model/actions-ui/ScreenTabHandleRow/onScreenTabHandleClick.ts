@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
-import {getOpenedScreen} from "model/selectors/getOpenedScreen";
-import {handleError} from "model/actions/handleError";
+import { flow } from "mobx";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { handleError } from "model/actions/handleError";
 
 export function onScreenTabHandleClick(ctx: any) {
-  return flow(function* onScreenTabHandleClick(event: any) {
+  return flow(function*onScreenTabHandleClick(event: any) {
     try {
       const screen = getOpenedScreen(ctx);
-      yield* getWorkbenchLifecycle(ctx).onScreenTabHandleClick(event, screen);
+      yield*getWorkbenchLifecycle(ctx).onScreenTabHandleClick(event, screen);
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

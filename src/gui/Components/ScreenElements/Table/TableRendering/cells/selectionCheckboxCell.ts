@@ -38,20 +38,19 @@ import {
 import {
   applyScrollTranslation,
   checkBoxCellPaddingLeft,
-  topTextOffset,
-  drawSelectedRowBorder, frontStripWidth, checkBoxCharacterFontSize
+  checkBoxCharacterFontSize,
+  drawSelectedRowBorder,
+  frontStripWidth,
+  topTextOffset
 } from "./cellsCommon";
-import {CPR} from "utils/canvas";
-import {onClick} from "../onClick";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {getSelectionMember} from "model/selectors/DataView/getSelectionMember";
-import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {flow} from "mobx";
-import {
-  hasSelectedRowId,
-  setSelectedStateRowId,
-} from "model/actions-tree/selectionCheckboxes";
+import { CPR } from "utils/canvas";
+import { onClick } from "../onClick";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { flow } from "mobx";
+import { hasSelectedRowId, setSelectedStateRowId, } from "model/actions-tree/selectionCheckboxes";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export const selectionCheckBoxColumnWidth = 20;
@@ -90,9 +89,9 @@ function registerClickHandler() {
     w: currentColumnWidthVisible(),
     h: currentRowHeight(),
     handler(event: any) {
-      flow(function* () {
+      flow(function*() {
         // TODO: Move to tablePanelView
-        let newSelectionState=false;
+        let newSelectionState = false;
         const dataTable = getDataTable(ctx);
         const rowId = dataTable.getRowId(row);
         const selectionMember = getSelectionMember(ctx);
@@ -101,14 +100,14 @@ function registerClickHandler() {
           if (dataSourceField) {
             newSelectionState = !dataTable.getCellValueByDataSourceField(row, dataSourceField);
             dataTable.setDirtyValue(row, selectionMember, newSelectionState);
-            yield* getFormScreenLifecycle(ctx).onFlushData();
+            yield*getFormScreenLifecycle(ctx).onFlushData();
             const updatedRow = dataTable.getRowById(rowId)!;
             newSelectionState = dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
-            yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
+            yield*setSelectedStateRowId(ctx)(rowId, newSelectionState);
           }
-        }else{
-          newSelectionState = !hasSelectedRowId(ctx,  rowId);
-          yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
+        } else {
+          newSelectionState = !hasSelectedRowId(ctx, rowId);
+          yield*setSelectedStateRowId(ctx)(rowId, newSelectionState);
         }
       })();
     },
