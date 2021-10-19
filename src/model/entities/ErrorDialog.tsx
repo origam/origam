@@ -71,6 +71,9 @@ export class ErrorDialogController implements IErrorDialogController {
         let message = "";
         do {
           const exMessage = _.get(exception, "message") || _.get(exception, "Message");
+            if (errItem.error?.request?.status === 420) {
+              return exMessage;
+            }
           if (exMessage) {
             message += exMessage;
             message += "\n";
