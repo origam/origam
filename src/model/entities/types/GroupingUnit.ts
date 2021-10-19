@@ -23,8 +23,8 @@ export enum GroupingUnit {
   Year, Month, Day, Hour, Minute
 }
 
-export function GroupingUnitToLabel(groupingUnit: GroupingUnit | undefined) {
-  switch (groupingUnit) {
+export function groupingUnitToLabel(groupingUnit: GroupingUnit | undefined){
+  switch(groupingUnit){
     case GroupingUnit.Year:
       return T("Year", "group_by_year");
     case GroupingUnit.Month:

@@ -17,8 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+@import "src/styles/definitions.scss";
+
 .columnTable {
-  width: 470px;
+  width: 640px;
   height: 400px;
   margin-bottom: 20px;
 }
@@ -27,6 +29,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   justify-content: center;
   align-items: baseline;
+  padding-bottom: 5px;
 }
 
 .lockedColumnsInput {
@@ -34,7 +37,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-left: 10px;
 }
 
+.checkBoxCell{
+  justify-content: center;
+}
+
 .columnTableCell {
+  height: 25px;
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -48,7 +56,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .columnTableCell:global(.header) {
   font-weight: bold;
-  /*border-right: 1px solid var(--grey1);*/
 }
 
 .columnTableCell:global(.odd) {
@@ -63,11 +70,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: absolute;
   width: 3px;
   height: 100%;
-  cursor: w-resize;
   right: 0;
-  background-color: var(--grey1);
+  background: var(--grey2);
+  border-color: var(--white);
+  border-style: solid;
+  border-width: 0 1px;
 }
 
-.columnWidthHandle:hover {
-  background-color: var(--blue6);
+.checkBox {
+  display: flex;
+  align-items: center;
+}
+.checkBox div {
+  padding-top: 1px;
+  min-width: 8px;
 }

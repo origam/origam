@@ -17,23 +17,21 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from "./ColumnsDialog.module.css";
+import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
 import { CloseButton, ModalWindow } from "../Dialog/Dialog";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { action, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
-import { Dropdowner } from "../Dropdowner/Dropdowner";
-import { DataViewHeaderAction } from "../DataViewHeader/DataViewHeaderAction";
-import { Dropdown } from "../Dropdown/Dropdown";
-import { DropdownItem } from "../Dropdown/DropdownItem";
-import { AggregationType, tryParseAggregationType, } from "../../../model/entities/types/AggregationType";
-import { T } from "../../../utils/translation";
+import { AggregationType, tryParseAggregationType, } from "model/entities/types/AggregationType";
+import { T } from "utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel, } from "model/entities/types/GroupingUnit";
-import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { GroupingUnit, groupingUnitToLabel } from "model/entities/types/GroupingUnit";
+import { IColumnConfiguration, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
+import { IOption, SimpleDropdown } from "gui/Components/PublicComponents/SimpleDropdown";
+import { compareStrings } from "utils/string";
 
 @observer
 export class ColumnsDialog extends React.Component<{
@@ -47,16 +45,24 @@ export class ColumnsDialog extends React.Component<{
   constructor(props: any) {
     super(props);
     this.configuration = this.props.configuration;
+    this.sortedColumnConfigs = [...this.configuration.columnConfigurations].sort(
+      (a, b) => {
+        const optionA = this.props.columnOptions.get(a.propertyId)!;
+        const optionB = this.props.columnOptions.get(b.propertyId)!;
+        return compareStrings(optionA.name, optionB.name)
+      }
+    );
   }
 
   configuration: ITableConfiguration;
+  sortedColumnConfigs: IColumnConfiguration[];
 
-  @observable columnWidths = [70, 160, 70, 70, 90];
+  @observable columnWidths = [70, 220, 110, 150, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
   @action.bound setVisible(rowIndex: number, state: boolean) {
-    this.configuration.columnConfigurations[rowIndex].isVisible = state;
+    this.sortedColumnConfigs[rowIndex].isVisible = state;
   }
 
   @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
@@ -68,13 +74,13 @@ export class ColumnsDialog extends React.Component<{
       }
     }
 
-    const columnConfCopy = [...this.configuration.columnConfigurations];
+    const columnConfCopy = [...this.sortedColumnConfigs];
     columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
-    if (this.configuration.columnConfigurations[rowIndex].groupingIndex === 0) {
-      this.configuration.columnConfigurations[rowIndex].groupingIndex =
+    if (this.sortedColumnConfigs[rowIndex].groupingIndex === 0) {
+      this.sortedColumnConfigs[rowIndex].groupingIndex =
         columnConfCopy[0].groupingIndex + 1;
     } else {
-      this.configuration.columnConfigurations[rowIndex].groupingIndex = 0;
+      this.sortedColumnConfigs[rowIndex].groupingIndex = 0;
       let groupingIndex = 1;
       columnConfCopy.reverse();
       for (let columnConfItem of columnConfCopy) {
@@ -86,11 +92,11 @@ export class ColumnsDialog extends React.Component<{
   }
 
   @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
-    this.configuration.columnConfigurations[rowIndex].timeGroupingUnit = groupingUnit;
+    this.sortedColumnConfigs[rowIndex].timeGroupingUnit = groupingUnit;
   }
 
   @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
-    this.configuration.columnConfigurations[rowIndex].aggregationType = tryParseAggregationType(
+    this.sortedColumnConfigs[rowIndex].aggregationType = tryParseAggregationType(
       selectedAggregation
     );
   }
@@ -135,8 +141,8 @@ export class ColumnsDialog extends React.Component<{
                     fixedRowCount={1}
                     cellRenderer={this.renderCell}
                     columnCount={5}
-                    rowCount={1 + this.configuration.columnConfigurations.length}
-                    columnWidth={({index}: { index: number }) => {
+                    rowCount={1 + this.sortedColumnConfigs.length}
+                    columnWidth={({ index }: { index: number }) => {
                       return this.columnWidths[index];
                     }}
                     rowHeight={rowHeight}
@@ -169,9 +175,27 @@ export class ColumnsDialog extends React.Component<{
       aggregationType,
       groupingIndex,
       timeGroupingUnit,
-    } = this.configuration.columnConfigurations[rowIndex];
+    } = this.sortedColumnConfigs[rowIndex];
 
     const {name, entity, canGroup, canAggregate} = this.props.columnOptions.get(propertyId)!;
+
+    const aggregationOptions =  [
+      new AggregationOption("", undefined),
+      new AggregationOption(T("SUM", "aggregation_sum"), AggregationType.SUM),
+      new AggregationOption(T("AVG", "aggregation_avg"), AggregationType.AVG),
+      new AggregationOption(T("MIN", "aggregation_min"), AggregationType.MIN),
+      new AggregationOption(T("MAX", "aggregation_max"), AggregationType.MAX),
+    ];
+    const selectedAggregationOption = aggregationOptions.find(option => option.value === aggregationType)!;
+
+    const timeunitOptions =  [
+      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Year), GroupingUnit.Year),
+      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Month), GroupingUnit.Month),
+      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Day), GroupingUnit.Day),
+      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Hour), GroupingUnit.Hour),
+      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Minute), GroupingUnit.Minute),
+    ];
+    const selectedTimeUnitOption = timeunitOptions.find(option => option.value === timeGroupingUnit)!;
 
     switch (columnIndex) {
       case 0:
@@ -187,75 +211,28 @@ export class ColumnsDialog extends React.Component<{
         return name;
       case 2:
         return (
-          <span>
+          <label className={S.checkBox}>
             <input
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
               onChange={(event: any) => this.setGrouping(rowIndex, event.target.checked, entity)}
               disabled={!canGroup}
-            />{" "}
-            {groupingIndex > 0 ? groupingIndex : ""}
-          </span>
+            />
+            <div>
+              {groupingIndex > 0 ? groupingIndex : ""}
+            </div>
+          </label>
         );
       case 3:
         if (groupingIndex > 0 && entity === "Date") {
           return (
-            <Dropdowner
-              trigger={({refTrigger, setDropped}) => (
-                <DataViewHeaderAction
-                  refDom={refTrigger}
-                  onMouseDown={() => setDropped(true)}
-                  isActive={false}
-                >
-                  {groupingUnitToLabel(timeGroupingUnit)}
-                </DataViewHeaderAction>
-              )}
-              content={({setDropped}) => (
-                <Dropdown>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Year);
-                    }}
-                  >
-                    {groupingUnitToLabel(GroupingUnit.Year)}
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Month);
-                    }}
-                  >
-                    {groupingUnitToLabel(GroupingUnit.Month)}
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
-                    }}
-                  >
-                    {groupingUnitToLabel(GroupingUnit.Day)}
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Hour);
-                    }}
-                  >
-                    {groupingUnitToLabel(GroupingUnit.Hour)}
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Minute);
-                    }}
-                  >
-                    {groupingUnitToLabel(GroupingUnit.Minute)}
-                  </DropdownItem>
-                </Dropdown>
-              )}
-            />
+              <SimpleDropdown
+                width={"72.5px"}
+                options={timeunitOptions}
+                selectedOption={selectedTimeUnitOption}
+                onOptionClick={option =>  this.setTimeGroupingUnit(rowIndex, option.value)}
+              />
           );
         } else {
           return "";
@@ -269,58 +246,11 @@ export class ColumnsDialog extends React.Component<{
           canAggregate
         ) {
           return (
-            <Dropdowner
-              trigger={({refTrigger, setDropped}) => (
-                <DataViewHeaderAction
-                  refDom={refTrigger}
-                  onMouseDown={() => setDropped(true)}
-                  isActive={false}
-                >
-                  {aggregationType}
-                </DataViewHeaderAction>
-              )}
-              content={({setDropped}) => (
-                <Dropdown>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setAggregation(rowIndex, undefined);
-                    }}
-                  />
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setAggregation(rowIndex, AggregationType.SUM);
-                    }}
-                  >
-                    {T("SUM", "aggregation_sum")}
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setAggregation(rowIndex, AggregationType.AVG);
-                    }}
-                  >
-                    {T("AVG", "aggregation_avg")}
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setAggregation(rowIndex, AggregationType.MIN);
-                    }}
-                  >
-                    {T("MIN", "aggregation_min")}
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      this.setAggregation(rowIndex, AggregationType.MAX);
-                    }}
-                  >
-                    {T("MAX", "aggregation_max")}
-                  </DropdownItem>
-                </Dropdown>
-              )}
+            <SimpleDropdown
+              width={"72.5px"}
+              options={aggregationOptions}
+              selectedOption={selectedAggregationOption}
+              onOptionClick={option => this.setAggregation(rowIndex, option.value)}
             />
           );
         } else {
@@ -329,6 +259,14 @@ export class ColumnsDialog extends React.Component<{
       default:
         return "";
     }
+  }
+
+  getCellClass(columnIndex: number){
+    let cellClass = S.columnTableCell
+    if(columnIndex === 0 || columnIndex === 2){
+      cellClass += " " + S.checkBoxCell
+    }
+    return cellClass;
   }
 
   @bind renderCell(args: {
@@ -343,7 +281,7 @@ export class ColumnsDialog extends React.Component<{
       return (
         <Obsv style={args.style} key={args.key}>
           {() => (
-            <div style={args.style} className={S.columnTableCell + " " + rowClassName}>
+            <div style={args.style} className={this.getCellClass(args.columnIndex) + " " + rowClassName}>
               {this.getCell(args.rowIndex - 1, args.columnIndex)}
             </div>
           )}
@@ -357,18 +295,10 @@ export class ColumnsDialog extends React.Component<{
               columnIndex={args.columnIndex}
               style={args.style}
               columnWidth={this.columnWidths[args.columnIndex]}
-              onColumnWidthChange={this.handleColumnWidthChange}
             />
           )}
         </Obsv>
       );
-    }
-  }
-
-  @action.bound handleColumnWidthChange(columnIndex: number, newWidth: number) {
-    if (newWidth >= 30) {
-      this.columnWidths[columnIndex] = newWidth;
-      this.refGrid.current!.recomputeGridSize();
     }
   }
 }
@@ -378,9 +308,6 @@ export class TableHeader extends React.Component<{
   columnIndex: number;
   columnWidth: number;
   style: any;
-  onColumnResizeStart?: (columnIndex: number) => void;
-  onColumnWidthChange?: (columnIndex: number, newWidth: number) => void;
-  onColumnResizeEnd?: (columnIndex: number) => void;
 }> {
   getHeader(columnIndex: number) {
     switch (columnIndex) {
@@ -391,7 +318,7 @@ export class TableHeader extends React.Component<{
       case 2:
         return T("GroupBy", "column_config_group_by");
       case 3:
-        return T("Grouping unit", "column_config_time_grouping_unit");
+        return T("Grouping Unit", "column_config_time_grouping_unit");
       case 4:
         return T("Aggregation", "column_config_aggregation");
       default:
@@ -399,35 +326,29 @@ export class TableHeader extends React.Component<{
     }
   }
 
-  width0 = 0;
-  mouseX0 = 0;
-
-  @action.bound handleColumnWidthHandleMouseDown(event: any) {
-    event.preventDefault();
-    this.width0 = this.props.columnWidth;
-    this.mouseX0 = event.screenX;
-    window.addEventListener("mousemove", this.handleWindowMouseMove);
-    window.addEventListener("mouseup", this.handleWindowMouseUp);
-  }
-
-  @action.bound handleWindowMouseMove(event: any) {
-    const vec = event.screenX - this.mouseX0;
-    const newWidth = this.width0 + vec;
-    this.props.onColumnWidthChange &&
-    this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
-  }
-
-  @action.bound handleWindowMouseUp(event: any) {
-    window.removeEventListener("mousemove", this.handleWindowMouseMove);
-    window.removeEventListener("mouseup", this.handleWindowMouseUp);
-  }
-
   render() {
     return (
       <div style={this.props.style} className={S.columnTableCell + " header"}>
         {this.getHeader(this.props.columnIndex)}
-        <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown}/>
+        {this.props.columnIndex !== 4 && <div className={S.columnWidthHandle}/>}
       </div>
     );
   }
 }
+
+class AggregationOption implements IOption<AggregationType | undefined>{
+  constructor (
+   public label: string,
+   public value: AggregationType | undefined,
+  ){
+  }
+}
+
+class TimeUnitOption implements IOption<GroupingUnit>{
+  constructor (
+   public label: string,
+   public value: GroupingUnit,
+  ){
+  }
+}
+
