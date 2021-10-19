@@ -565,7 +565,7 @@ namespace Origam.Server
 
         private object HandleRefresh()
         {
-            if (! this.IsFirstSaveDone) throw new Exception(Resources.ErrorCannotRefreshFormNotSaved);
+            if (! this.IsFirstSaveDone) throw new UserOrigamException(Resources.ErrorCannotRefreshFormNotSaved);
 
             DataSet data = LoadData();
 

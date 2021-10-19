@@ -25,6 +25,10 @@ namespace Origam
 {
     public class UserOrigamException : OrigamException, IUserException
     {
+        public UserOrigamException(string message) : base(message)
+        {
+        }
+
         public UserOrigamException(string message, string exMessage, Exception exception)
             : base(message, exMessage, exception)
         {

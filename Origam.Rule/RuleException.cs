@@ -26,7 +26,7 @@ namespace Origam.Rule
 	/// <summary>
 	/// Summary description for RuleException.
 	/// </summary>
-	public class RuleException : Exception
+	public class RuleException : Exception, IUserException
 	{
 		public RuleException() : base()	{}
 
