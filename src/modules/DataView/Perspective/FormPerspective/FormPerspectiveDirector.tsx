@@ -43,7 +43,8 @@ export class FormPerspectiveDirector implements IIId {
     public dataViewBodyUI = IDataViewBodyUI(),
     public formPerspective = IFormPerspective(),
     public perspective = IPerspective()
-  ) {}
+  ) {
+  }
 
   @action.bound
   setup() {
@@ -55,9 +56,9 @@ export class FormPerspectiveDirector implements IIId {
             !this.formPerspective.isActive ? (
               <></>
             ) : (
-              <div className={cx(S.root, { isActive: this.formPerspective.isActive })}>
+              <div className={cx(S.root, {isActive: this.formPerspective.isActive})}>
                 <FormView>
-                  <FormBuilder />
+                  <FormBuilder/>
                 </FormView>
               </div>
             )
@@ -73,10 +74,10 @@ export class FormPerspectiveDirector implements IIId {
         <Observer key={this.$iid}>
           {() => (
             <DataViewHeaderAction
-              onMouseDown={()=> this.formPerspective.handleClick({saveNewState: true})}
+              onMouseDown={() => this.formPerspective.handleClick({saveNewState: true})}
               isActive={this.formPerspective.isActive}
             >
-              <Icon src="./icons/detail-view.svg" tooltip={T("Grid", "form_tool_tip")} />
+              <Icon src="./icons/detail-view.svg" tooltip={T("Grid", "form_tool_tip")}/>
             </DataViewHeaderAction>
           )}
         </Observer>

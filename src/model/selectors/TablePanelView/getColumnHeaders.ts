@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getTableViewProperties} from "./getTableViewProperties";
-import {IColumnHeader} from './types';
-import {getPropertyOrdering} from "../DataView/getPropertyOrdering";
+import { getTableViewProperties } from "./getTableViewProperties";
+import { IColumnHeader } from './types';
+import { getPropertyOrdering } from "../DataView/getPropertyOrdering";
 
 
 export function getColumnHeaders(ctx: any): IColumnHeader[] {

@@ -49,12 +49,12 @@ export class CChatSection extends React.Component {
           isEmphasized={false}
           isOpenedScreen={false}
           isActiveScreen={false}
-          icon={<Icon src="./icons/add.svg" tooltip={T("New Chat", "new_chat")} />}
+          icon={<Icon src="./icons/add.svg" tooltip={T("New Chat", "new_chat")}/>}
           label={<>{T("New Chat", "new_chat")}</>}
           onClick={(event) => {
             const self = this;
-            flow(function* () {
-              yield* openNewUrl(self.workbench)(
+            flow(function*() {
+              yield*openNewUrl(self.workbench)(
                 `chatrooms/index.html#/chatroom`,
                 IUrlUpenMethod.OrigamTab,
                 "New Chat"
@@ -70,7 +70,7 @@ export class CChatSection extends React.Component {
               isEmphasized={item.unreadMessageCount > 0}
               isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}
-              icon={<Icon src="./icons/chat.svg" tooltip={item.topic} />}
+              icon={<Icon src="./icons/chat.svg" tooltip={item.topic}/>}
               label={
                 <>
                   {item.topic}

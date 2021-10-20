@@ -31,9 +31,9 @@ import { crs_fieldBlur_ActionClick } from "model/actions/actionSync";
 
 export default {
   onActionClick(ctx: any) {
-    return flow(function* onActionClick(event: any, action: IAction) {
+    return flow(function*onActionClick(event: any, action: IAction) {
       try {
-        yield* crs_fieldBlur_ActionClick.runGenerator(function* () {
+        yield*crs_fieldBlur_ActionClick.runGenerator(function*() {
           if (!action.isEnabled) {
             return;
           }
@@ -44,21 +44,21 @@ export default {
           const rowId = getSelectedRowId(ctx);
           switch (action.mode) {
             case IActionMode.Always:
-              yield* lifecycle.onExecuteAction(gridId, entity, action, []);
+              yield*lifecycle.onExecuteAction(gridId, entity, action, []);
               break;
             case IActionMode.ActiveRecord:
               if (rowId) {
-                yield* lifecycle.onExecuteAction(gridId, entity, action, [rowId]);
+                yield*lifecycle.onExecuteAction(gridId, entity, action, [rowId]);
               }
               break;
             case IActionMode.MultipleCheckboxes:
               const selectedRowIds = selectors.selectionCheckboxes.getSelectedRowIds(ctx);
-              yield* lifecycle.onExecuteAction(gridId, entity, action, Array.from(selectedRowIds));
+              yield*lifecycle.onExecuteAction(gridId, entity, action, Array.from(selectedRowIds));
               break;
           }
         });
       } catch (e) {
-        yield* handleError(ctx)(e);
+        yield*handleError(ctx)(e);
         throw e;
       }
     });

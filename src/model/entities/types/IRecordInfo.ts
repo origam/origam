@@ -17,7 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface IRecordInfoData {}
+export interface IRecordInfoData {
+}
 
 export enum IAuditLogActionType {
   New = 4,
@@ -33,6 +34,7 @@ export interface IRecordInfo extends IRecordInfoData {
   audit: any;
 
   addInfoSectionExpandHandler(fn: () => void): void;
+
   addAuditSectionExpandHandler(fn: () => void): void;
 
   onOpenRecordInfoClick(
@@ -56,7 +58,9 @@ export interface IRecordInfo extends IRecordInfoData {
   ): Generator;
 
   onSidebarInfoSectionCollapsed(): Generator;
+
   onSidebarInfoSectionExpanded(): Generator;
+
   onSidebarAuditSectionExpanded(): Generator;
 
   parent?: any;

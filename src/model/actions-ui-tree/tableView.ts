@@ -17,22 +17,26 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
+import { flow } from "mobx";
 
 export default {
   onApplyFilterSetting(ctx: any) {
-    return flow(function* onApplyFilterSetting(setting: any) {});
+    return flow(function*onApplyFilterSetting(setting: any) {
+    });
   },
 
   onColumnHeaderClick(ctx: any) {
-    return flow(function* onColumnHeaderClick(event: any) {});
+    return flow(function*onColumnHeaderClick(event: any) {
+    });
   },
 
   onColumnOrderChangeFinished(ctx: any) {
-    return flow(function* onColumnOrderChangeFinished(event: any) {});
+    return flow(function*onColumnOrderChangeFinished(event: any) {
+    });
   },
 
   onColumnWidthChangeFinished(ctx: any) {
-    return flow(function* onColumnWidthChangeFinished() {});
+    return flow(function*onColumnWidthChangeFinished() {
+    });
   }
 };

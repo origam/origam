@@ -37,13 +37,10 @@ import Scroller from "./Scroller";
 import S from "./Table.module.scss";
 import { getTooltip, handleTableClick, handleTableMouseMove } from "./TableRendering/onClick";
 import { renderTable } from "./TableRendering/renderTable";
-import {
-  IClickSubsItem,
-  IMouseOverSubsItem,
-  ITableRow,
-  IToolTipData
-} from "./TableRendering/types";
+import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./TableRendering/types";
 import { IGridDimensions, ITableProps } from "./types";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -66,6 +63,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const mouseMoveSubscriptions: IClickSubsItem[] = [];
 
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
+
   function drawTable(
     ctx2d: CanvasRenderingContext2D,
     fixedColumnCount: number,
@@ -141,16 +139,14 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     );
   }
 
-  return { drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getToolTipContent };
+  return {drawTable, setScroll, handleClick, handleMouseMove, setViewportSize, getToolTipContent};
 }
 
-export const Table: React.FC<
-  ITableProps & {
-    refTable(elm: RawTable | null): void;
-  }
-> = (props) => {
+export const Table: React.FC<ITableProps & {
+  refTable(elm: RawTable | null): void;
+}> = (props) => {
   const ctxPanelVisibility = React.useContext(CtxPanelVisibility);
-  return <RawTable {...props} isVisible={ctxPanelVisibility.isVisible} ref={props.refTable} />;
+  return <RawTable {...props} isVisible={ctxPanelVisibility.isVisible} ref={props.refTable}/>;
 };
 
 @observer
@@ -167,7 +163,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     width: 0,
     height: 0,
   };
-  @computed({ equals: comparer.structural }) get contentBounds() {
+  @computed({equals: comparer.structural}) get contentBounds() {
     return this._contentBounds;
   }
 
@@ -246,11 +242,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
       )
     );
     this.props.listenForScrollToCell &&
-      this.disposers.push(
-        this.props.listenForScrollToCell((rowIdx, colIdx) => {
-          this.scrollToCellShortest(rowIdx, colIdx);
-        })
-      );
+    this.disposers.push(
+      this.props.listenForScrollToCell((rowIdx, colIdx) => {
+        this.scrollToCellShortest(rowIdx, colIdx);
+      })
+    );
   }
 
   componentDidUpdate(prevProps: ITableProps & { isVisible: boolean }) {
@@ -276,7 +272,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   @action.bound scrollToCellShortest(rowIdx: number, dataColumnIndex: number) {
     // TODO: Refactor to take real scrollbar sizes
     //const freeColIndex = columnIdx + this.fixedColumnCount;
-    const { gridDimensions } = this.props;
+    const {gridDimensions} = this.props;
     const SCROLLBAR_SIZE = 20;
     if (this.elmScroller) {
       const top = gridDimensions.getRowTop(rowIdx);
@@ -295,7 +291,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
         });
       }
       if (top - this.elmScroller.scrollTop < 0) {
-        this.elmScroller.scrollTo({ scrollTop: top });
+        this.elmScroller.scrollTo({scrollTop: top});
       }
       if (bottom - this.elmScroller.scrollTop > this.contentBounds.height - SCROLLBAR_SIZE) {
         this.elmScroller.scrollTo({
@@ -367,7 +363,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @action.bound handleScrollerClick(event: any) {
-    const { handled } = this.tableRenderer.handleClick(event);
+    const {handled} = this.tableRenderer.handleClick(event);
     if (!handled) this.props.onOutsideTableClick?.(event);
   }
 
@@ -383,13 +379,25 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     this.tableRenderer.setScroll(scrollLeft, scrollTop);
   }
 
+  onColumnDragEnd(result: any) {
+    if (!result.destination) {
+      return;
+    }
+    let destinationHeaderIndex = Math.floor(result.destination.index); // separators must also have indices (1.5, 2.5, 3.5...)
+    onColumnOrderChangeFinished(
+      this.context.tablePanelView,
+      this.context.tablePanelView.tablePropertyIds[result.source.index],
+      this.context.tablePanelView.tablePropertyIds[destinationHeaderIndex]
+    );
+  }
+
   render() {
     const editorCellRectangle =
       this.props.editingRowIndex !== undefined && this.props.editingColumnIndex !== undefined
         ? this.tablePanelView.getCellRectangle(
-            this.props.editingRowIndex,
-            this.props.editingColumnIndex
-          )
+          this.props.editingRowIndex,
+          this.props.editingColumnIndex
+        )
         : undefined;
 
     return (
@@ -397,40 +405,47 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
         {this.props.isLoading && (
           <div className={S.loadingOverlay}>
             <div className={S.loadingIcon}>
-              <i className="far fa-clock fa-7x blink" />
+              <i className="far fa-clock fa-7x blink"/>
             </div>
           </div>
         )}
         <Measure ref={this.refMeasure} bounds={true} onResize={this.handleResize}>
-          {({ measureRef, contentRect }) => (
+          {({measureRef, contentRect}) => (
             <Observer>
               {() => (
                 <>
                   {this.props.headerContainers &&
-                    (contentRect.bounds!.width ? (
-                      <div className={S.headers}>
-                        {this.hasFixedColumns ? (
-                          <Scrollee
-                            scrollOffsetSource={this.props.scrollState}
-                            fixedHoriz={true}
-                            fixedVert={true}
-                            width={this.fixedColumnsWidth - 3}
-                            zIndex={100}
-                            offsetLeft={0}
-                          >
-                            <HeaderRow headerElements={this.fixedHeaders} zIndex={100} />
-                          </Scrollee>
-                        ) : null}
+                  (contentRect.bounds!.width ? (
+                    <div className={S.headers}>
+                      {this.hasFixedColumns ? (
                         <Scrollee
                           scrollOffsetSource={this.props.scrollState}
+                          fixedHoriz={true}
                           fixedVert={true}
-                          width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
-                          offsetLeft={3}
+                          width={this.fixedColumnsWidth}
+                          zIndex={100}
                         >
-                          <HeaderRow headerElements={this.freeHeaders} />
+                          <HeaderRow headerElements={this.fixedHeaders} zIndex={100}/>
                         </Scrollee>
-                      </div>
-                    ) : null)}
+                      ) : null}
+                      <Scrollee
+                        scrollOffsetSource={this.props.scrollState}
+                        fixedVert={true}
+                        zIndex={101}
+                        width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
+                      >
+                        <DragDropContext onDragEnd={(result) => this.onColumnDragEnd(result)}>
+                          <Droppable droppableId="headers" direction="horizontal">
+                            {(provided) => (
+                              <div  {...provided.droppableProps} ref={provided.innerRef}>
+                                <HeaderRow headerElements={[...this.freeHeaders, provided.placeholder as any]}/>
+                              </div>
+                            )}
+                          </Droppable>
+                        </DragDropContext>
+                      </Scrollee>
+                    </div>
+                  ) : null)}
 
                   <div
                     ref={measureRef}

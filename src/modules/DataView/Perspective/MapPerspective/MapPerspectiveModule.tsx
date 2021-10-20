@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Container} from "dic/Container";
-import {IMapPerspectiveDirector, MapPerspectiveDirector} from "./MapPerspectiveDirector";
-import {IMapPerspective, MapPerspective} from "./MapPerspective";
+import { Container } from "dic/Container";
+import { IMapPerspectiveDirector, MapPerspectiveDirector } from "./MapPerspectiveDirector";
+import { IMapPerspective, MapPerspective } from "./MapPerspective";
 
 export const SCOPE_MapPerspective = "MapPerspective";
 

@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {when} from "mobx";
+import { when } from "mobx";
 
 export const delay = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
 
-export function* gWhen(pred: () => boolean) {
-  if(!pred()) {
+export function*gWhen(pred: () => boolean) {
+  if (!pred()) {
     yield when(pred)
   }
 }

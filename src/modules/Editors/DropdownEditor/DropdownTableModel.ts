@@ -27,7 +27,8 @@ export class DropdownDataTable {
   constructor(
     private setup: () => DropdownEditorSetup,
     private dropdownEditorData: IDropdownEditorData
-  ) {}
+  ) {
+  }
 
   @observable.shallow allRows: any[][] = [];
   @observable filterPhrase: string = "";
@@ -192,6 +193,7 @@ class Index {
       this.items = rows.map((row) => new IndexItem(row));
     }
   }
+
   search(phrase: string) {
     const phraseLower = phrase.toLowerCase();
     return this.items.filter((item) => item.matches(phraseLower)).map((item) => item.row);
@@ -201,6 +203,7 @@ class Index {
 class IndexItem {
   private textInLower: string;
   public row: any[];
+
   constructor(row: any[]) {
     this.row = row;
     this.textInLower = row.slice(1).join("").toLowerCase();

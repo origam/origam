@@ -19,10 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/Splitter/Splitter.module.scss";
-import {action, computed, observable, runInAction} from "mobx";
-import {observer, Observer} from "mobx-react";
+import { action, computed, observable, runInAction } from "mobx";
+import { observer, Observer } from "mobx-react";
 
-import Measure, {ContentRect} from "react-measure";
+import Measure, { ContentRect } from "react-measure";
 import _ from "lodash";
 import cx from "classnames";
 
@@ -35,14 +35,15 @@ class SplitterPanel extends React.Component<{
   refPanel = (elm: any) => (this.elmPanel = elm);
   elmPanel: HTMLDivElement | null = null;
 
-  componentDidMount() {}
+  componentDidMount() {
+  }
 
   @computed get style() {
     switch (this.props.type) {
       case "isHoriz":
-        return { width: this.props.size };
+        return {width: this.props.size};
       case "isVert":
-        return { height: this.props.size };
+        return {height: this.props.size};
     }
     return undefined;
   }
@@ -73,9 +74,9 @@ class SplitterDivider extends React.Component<{
     if (!this.props.isDragging) return {};
     switch (this.props.type) {
       case "isVert":
-        return { top: this.props.relativeLoc };
+        return {top: this.props.relativeLoc};
       case "isHoriz":
-        return { left: this.props.relativeLoc };
+        return {left: this.props.relativeLoc};
     }
     return undefined;
   }
@@ -94,7 +95,7 @@ class SplitterDivider extends React.Component<{
         )}
         style={this.style}
       >
-        <div className="dividerLine" />
+        <div className="dividerLine"/>
       </div>
     );
   }
@@ -139,7 +140,7 @@ export class Splitter extends React.Component<{
 
   @action.bound
   handleResize(contentRect: ContentRect) {
-    const { bounds } = contentRect;
+    const {bounds} = contentRect;
     if (bounds) {
       this.announceContainerSize(bounds.width, bounds.height);
     }
@@ -155,9 +156,9 @@ export class Splitter extends React.Component<{
     }
   }
 
-  differentSizeRequested(newWidth: number, newHeight: number){
+  differentSizeRequested(newWidth: number, newHeight: number) {
     return Math.abs(newHeight - this.containerHeight) > 0.001 ||
-           Math.abs(newWidth - this.containerWidth) > 0.001
+      Math.abs(newWidth - this.containerWidth) > 0.001
   }
 
   @action.bound initSizesImm() {
@@ -225,10 +226,10 @@ export class Splitter extends React.Component<{
   get draggingIds() {
     const id1 = this.draggingDividerId;
     const id2 = this.props.panels[
-      this.props.panels.findIndex(
-        panel => panel[0] === this.draggingDividerId
-      )! + 1
-    ][0];
+    this.props.panels.findIndex(
+      panel => panel[0] === this.draggingDividerId
+    )! + 1
+      ][0];
     return [id1, id2];
   }
 
@@ -253,7 +254,7 @@ export class Splitter extends React.Component<{
     this.sizeMap.set(id1, size1);
     this.sizeMap.set(id2, size2);
     if (this.props.onSizeChangeFinished) {
-      if(this.props.type === "isHoriz") {
+      if (this.props.type === "isHoriz") {
         this.props.onSizeChangeFinished(id1, id2, size1 / this.containerWidth, size2);
       } else {
         this.props.onSizeChangeFinished(id1, id2, size1 / this.containerHeight, size2);
@@ -265,10 +266,10 @@ export class Splitter extends React.Component<{
     //console.log("Divider resize", contentRect.bounds, dividerId);
     if (contentRect.bounds) {
       const value = this.props.type === "isVert"
-            ? contentRect.bounds.height
-            : contentRect.bounds.width
-      if(this.dividerSizeMap.get(dividerId) !== value){
-        this.dividerSizeMap.set(dividerId,value);
+        ? contentRect.bounds.height
+        : contentRect.bounds.width
+      if (this.dividerSizeMap.get(dividerId) !== value) {
+        this.dividerSizeMap.set(dividerId, value);
         this.initSizes();
       }
     }
@@ -297,7 +298,7 @@ export class Splitter extends React.Component<{
               this.handleDividerResize(contentRect, panel[0])
             }
           >
-            {({ measureRef }) => (
+            {({measureRef}) => (
               <Observer>
                 {() => (
                   <SplitterDivider
@@ -322,7 +323,7 @@ export class Splitter extends React.Component<{
     }
     return (
       <Measure bounds={true} onResize={this.handleResize}>
-        {({ measureRef }) => (
+        {({measureRef}) => (
           <Observer>
             {() => (
               <div

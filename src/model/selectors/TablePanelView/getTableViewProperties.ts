@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getTablePanelView} from './getTablePanelView';
+import { getTablePanelView } from './getTablePanelView';
 
 export function getTableViewProperties(ctx: any) {
   return getTablePanelView(ctx).tableProperties;

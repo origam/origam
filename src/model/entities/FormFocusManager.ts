@@ -25,25 +25,27 @@ export class FormFocusManager {
   stopAutoFocus() {
     this.autoFocusDisabled = true;
   }
+
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusAbleContainers: IFocusAbleObjectContainer[] = [];
   private lastFocused: IFocusable | undefined;
 
-  setLastFocused(focusable: IFocusable){
+  setLastFocused(focusable: IFocusable) {
     this.lastFocused = focusable;
   }
 
-  constructor(public parent: any) {}
+  constructor(public parent: any) {
+  }
 
   subscribe(focusAbleObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
-    if(!focusAbleObject){
+    if (!focusAbleObject) {
       return;
     }
     const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex);
     const existingContainer = this.focusAbleContainers
       .find(container => container.name && container.name === name ||
-            container.focusable === focusAbleObject);
-    if(existingContainer){
+        container.focusable === focusAbleObject);
+    if (existingContainer) {
       this.focusAbleContainers.remove(existingContainer);
     }
     this.focusAbleContainers.push(focusAbleContainer);
@@ -55,15 +57,15 @@ export class FormFocusManager {
     this.focusAndRemember(focusable);
   }
 
-  private focusAndRemember(focusable: IFocusable | undefined){
-    if(!focusable){
+  private focusAndRemember(focusable: IFocusable | undefined) {
+    if (!focusable) {
       return;
     }
     this.lastFocused = focusable;
     focusable.focus();
   }
 
-  refocusLast(){
+  refocusLast() {
     this.lastFocused?.focus();
   }
 
@@ -87,11 +89,11 @@ export class FormFocusManager {
   }
 
   focusNext(activeElement: any) {
-      this.focusNextInternal(activeElement, 0);
+    this.focusNextInternal(activeElement, 0);
   }
 
   focusNextInternal(activeElement: any, callNumber: number) {
-    if(callNumber > 20){
+    if (callNumber > 20) {
       return;
     }
     const currentContainerIndex = this.focusAbleContainers.findIndex(
@@ -130,6 +132,7 @@ export interface IFocusAbleObjectContainer {
   name: string | undefined;
   tabIndexFractions: number[];
   focusable: IFocusable;
+
   has(fractionIndex: number): boolean;
 }
 
@@ -148,7 +151,8 @@ export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
     public focusable: IFocusable,
     public name: string | undefined,
     private tabIndexNullable: string | undefined
-  ) {}
+  ) {
+  }
 
   // TabIndex is a string separated by decimal points for example: 13, 14.0, 14.2, 14.15
   // The "fractions" have to be compared separately because 14.15 is greater than 14.2
@@ -187,5 +191,6 @@ export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
 
 export interface IFocusable {
   focus(): void;
+
   disabled: boolean;
 }

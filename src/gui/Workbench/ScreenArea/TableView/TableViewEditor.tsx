@@ -47,9 +47,9 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
-import {getGridFocusManager} from "model/entities/GridFocusManager";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
-@inject(({ tablePanelView }) => {
+@inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
   const property = getSelectedProperty(tablePanelView)!;
   const actualProperty =
@@ -80,7 +80,7 @@ export class TableViewEditor extends React.Component<{
   onEditorKeyDown?: (event: any) => void;
 }> {
 
-  componentDidMount(){
+  componentDidMount() {
     const focusManager = getGridFocusManager(this.props.property);
     focusManager.focusEditor();
   }
@@ -118,7 +118,7 @@ export class TableViewEditor extends React.Component<{
             onClick={undefined}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
-            customStyle={isFirsColumn ? { paddingRight: cellPaddingRightFirstCell - 1 + "px" } : {}}
+            customStyle={isFirsColumn ? {paddingRight: cellPaddingRightFirstCell - 1 + "px"} : {}}
             subscribeToFocusManager={(editor) =>
               focusManager.activeEditor = editor
             }
@@ -218,7 +218,7 @@ export class TableViewEditor extends React.Component<{
         );
       case "TagInput":
         return (
-          <div style={{ height: rowHeight * 5 + "px", backgroundColor: "white" }}>
+          <div style={{height: rowHeight * 5 + "px", backgroundColor: "white"}}>
             <XmlBuildDropdownEditor
               key={this.props.property!.xmlNode.$iid}
               xmlNode={this.props.property!.xmlNode}

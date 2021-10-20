@@ -17,11 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {PubSub} from "../../../../utils/events";
-import {IHeaderContainer} from "gui/Workbench/ScreenArea/TableView/TableView";
-import {ITableRow} from "./TableRendering/types";
-import {BoundingRect} from "react-measure";
-import {ITablePanelView} from "../../../../model/entities/TablePanelView/types/ITablePanelView";
+import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
+import { ITableRow } from "./TableRendering/types";
+import { BoundingRect } from "react-measure";
 import { ICellRectangle } from "model/entities/TablePanelView/types/ICellRectangle";
 
 export type ICellType =
@@ -39,7 +37,7 @@ export interface ITableProps {
   gridDimensions: IGridDimensions;
   scrollState: IScrollState;
 
-  tableRows:  ITableRow[]
+  tableRows: ITableRow[]
   editingRowIndex?: number;
   editingColumnIndex?: number;
   isEditorMounted: boolean;
@@ -51,12 +49,18 @@ export interface ITableProps {
   renderEditor?: IRenderEditor;
 
   listenForScrollToCell?: IListenForScrollToCell;
+
   onOutsideTableClick?(event: any): void;
+
   onNoCellClick?(event: any): void;
+
   onKeyDown?(event: any): void;
+
   refCanvasMovingComponent?(elm: IGridCanvas | null): void;
+
   onContentBoundsChanged(bounds: BoundingRect): void;
-  onFocus: ()=>void;
+
+  onFocus: () => void;
 }
 
 export type IRenderHeader = (args: { columnIndex: number; columnWidth: number }) => React.ReactNode;
@@ -70,19 +74,26 @@ export interface IGridDimensions {
   columnCount: number;
   contentWidth: number;
   contentHeight: number;
+
   getColumnLeft(dataColumnIndex: number): number;
+
   getColumnRight(dataColumnIndex: number): number;
+
   getRowTop(rowIndex: number): number;
+
   getRowHeight(rowIndex: number): number;
+
   getRowBottom(rowIndex: number): number;
+
   columnWidths: Map<string, number>;
-  displayedColumnDimensionsCom: {left: number, width: number, right: number}[]
+  displayedColumnDimensionsCom: { left: number, width: number, right: number }[]
 }
 
 export type IListenForScrollToCell = (cb: (rowIdx: number, colIdx: number) => void) => () => void;
 
 export interface IScrollState extends IScrollOffsetSource, IScrollOffsetTarget {
   scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
+
   scrollTo(coords: { scrollLeft?: number; scrollTop?: number }): void;
 }
 
@@ -122,13 +133,16 @@ export interface IGridCanvasProps {
 
 
   onBeforeRender?(): void;
+
   onAfterRender?(): void;
+
   onVisibleDataChanged?(
     firstVisibleColumnIndex: number,
     lastVisibleColumnIndex: number,
     firstVisibleRowIndex: number,
     lastVisibleRowIndex: number
   ): void;
+
   onNoCellClick?(event: any): void;
 }
 
@@ -165,7 +179,7 @@ export interface IScrollerProps {
   onMouseMove?: (event: any, contentLeft: number, contentTop: number) => void;
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
-  onFocus: ()=>void;
+  onFocus: () => void;
 }
 
 export interface IScrolleeProps {

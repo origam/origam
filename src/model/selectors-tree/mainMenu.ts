@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getMainMenu} from "model/selectors/MainMenu/getMainMenu"
+import { getMainMenu } from "model/selectors/MainMenu/getMainMenu"
 
 export default {
   getItemById(ctx: any, id: string) {

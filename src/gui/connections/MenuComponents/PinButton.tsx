@@ -1,7 +1,7 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
 import CS from "gui/connections/MenuComponents/HeaderButton.module.scss";
-import {T} from "utils/translation";
+import { T } from "utils/translation";
 
 @observer
 export class PinButton extends React.Component<{

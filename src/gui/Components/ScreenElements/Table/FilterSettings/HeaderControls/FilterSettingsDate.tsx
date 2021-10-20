@@ -27,21 +27,21 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import {getDefaultCsDateFormatDataFromCookie} from "utils/cookies";
-import {csToMomentFormat} from "../../../../../../utils/dateFormatConversion";
+import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
+import { csToMomentFormat } from "../../../../../../utils/dateFormatConversion";
 
 const OPERATORS = [
-    Operator.equals,
-    Operator.notEquals,
-    Operator.lessThanOrEquals,
-    Operator.greaterThanOrEquals,
-    Operator.lessThan,
-    Operator.greaterThan,
-    Operator.between,
-    Operator.notBetween,
-    Operator.isNull,
-    Operator.isNotNull
-  ];
+  Operator.equals,
+  Operator.notEquals,
+  Operator.lessThanOrEquals,
+  Operator.greaterThanOrEquals,
+  Operator.lessThan,
+  Operator.greaterThan,
+  Operator.between,
+  Operator.notBetween,
+  Operator.isNull,
+  Operator.isNotNull
+];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -56,7 +56,8 @@ const OpCombo: React.FC<{
           key={op.type}
           onClick={() => {
             props.setting.type = op.type;
-            props.onChange(props.setting);}
+            props.onChange(props.setting);
+          }
           }
         >
           {op.caption}
@@ -73,9 +74,9 @@ const OpEditors: React.FC<{
   onKeyDown?: (event: any) => void;
   autoFocus: boolean;
 }> = observer((props) => {
-  const { setting } = props;
+  const {setting} = props;
   const dateFormatCs = getDefaultCsDateFormatDataFromCookie().defaultLongDateFormat;
-  const dateFormatMoment= csToMomentFormat(dateFormatCs)!;
+  const dateFormatMoment = csToMomentFormat(dateFormatCs)!;
   switch (setting.type) {
     case "eq":
     case "neq":
@@ -89,7 +90,7 @@ const OpEditors: React.FC<{
           outputFormat={dateFormatMoment}
           outputFormatToShow={dateFormatCs}
           onChange={(event, isoDay) => {
-            runInAction(()=> {
+            runInAction(() => {
               setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
               props.onChange && props.onChange(setting)
             })
@@ -109,7 +110,7 @@ const OpEditors: React.FC<{
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
             onChange={(event, isoDay) => {
-              runInAction(()=> {
+              runInAction(() => {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
                 props.onChange &&
                 props.onChange(setting)
@@ -123,7 +124,7 @@ const OpEditors: React.FC<{
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
             onChange={(event, isoDay) => {
-              runInAction(()=> {
+              runInAction(() => {
                 setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
                 props.onChange &&
                 props.onChange(setting)
@@ -147,7 +148,7 @@ export class FilterSettingsDate extends React.Component<{
   autoFocus: boolean
 }> {
 
-  static get defaultSettings(){
+  static get defaultSettings() {
     return new FilterSetting(OPERATORS[0].type)
   }
 
@@ -182,8 +183,8 @@ export class FilterSettingsDate extends React.Component<{
   render() {
     return (
       <>
-        <OpCombo setting={this.props.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.props.setting} onChange={this.handleChange} autoFocus={this.props.autoFocus} />
+        <OpCombo setting={this.props.setting} onChange={this.handleChange}/>
+        <OpEditors setting={this.props.setting} onChange={this.handleChange} autoFocus={this.props.autoFocus}/>
       </>
     );
   }

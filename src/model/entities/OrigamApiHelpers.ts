@@ -86,7 +86,7 @@ export function toFilterItem(
       month: "2-digit",
       day: "2-digit",
     });
-    const [{ value: month }, , { value: day }, , { value: year }] = dateTimeFormat.formatToParts(
+    const [{value: month}, , {value: day}, , {value: year}] = dateTimeFormat.formatToParts(
       upperLimit
     );
     const upperLimitString = year.concat("-", month, "-", day, "T00:00:00.000");
@@ -96,7 +96,7 @@ export function toFilterItem(
       upperLimitString
     )}]`;
   }
-  const val1Formatted = moment.isMoment(val1) 
+  const val1Formatted = moment.isMoment(val1)
     ? toOrigamServerString(val1 as Moment)
     : val1;
   return `["${columnId}", "${operator}", ${valuesToRightHandSide(val1Formatted, val2)}]`;

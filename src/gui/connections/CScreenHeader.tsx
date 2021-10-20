@@ -54,7 +54,7 @@ export class CScreenHeader extends React.Component {
     }
     return (
       <ErrorBoundaryEncapsulated ctx={activeScreen}>
-        <CScreenHeaderInner activeScreen={activeScreen} />
+        <CScreenHeaderInner activeScreen={activeScreen}/>
       </ErrorBoundaryEncapsulated>
     );
   }
@@ -63,8 +63,8 @@ export class CScreenHeader extends React.Component {
 @observer
 class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }> {
   render() {
-    const { activeScreen } = this.props;
-    const { content } = activeScreen;
+    const {activeScreen} = this.props;
+    const {content} = activeScreen;
     const isFullscreen = getIsCurrentScreenFull(activeScreen);
     if (!content) return null;
     const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
@@ -74,7 +74,7 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
         isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
       >
         <h1>{activeScreen.formTitle}</h1>
-        {(isCancelButton || isNextButton) && <ScreenheaderDivider />}
+        {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
         {isCancelButton && (
           <button
             className={S.workflowActionBtn}
@@ -91,7 +91,7 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
             {T("Next", "button_next")}
           </button>
         )}
-        <ScreenHeaderPusher />
+        <ScreenHeaderPusher/>
         <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
           <Icon
             src="./icons/fullscreen.svg"

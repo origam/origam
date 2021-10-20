@@ -31,7 +31,8 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export class MapObjectsStore {
-  constructor(private root: MapRootStore) {}
+  constructor(private root: MapRootStore) {
+  }
 
   get dataView() {
     return this.root.dataView;
@@ -137,18 +138,18 @@ export class MapObjectsStore {
   @action.bound
   handleGeometryChange(geoJson: any) {
     const self = this;
-    return flow(function* () {
+    return flow(function*() {
       const property = getDataViewPropertyById(self.dataView, self.setup.mapLocationMember);
       const selectedRow = getSelectedRow(self.dataView);
       if (property && selectedRow) {
-        yield* onFieldChangeG(self.dataView)({
+        yield*onFieldChangeG(self.dataView)({
           event: undefined,
           row: selectedRow,
           property: property,
           value: geoJson ? wtkStringify(geoJson) : null,
         });
         getDataTable(self.dataView).flushFormToTable(selectedRow);
-        yield* getFormScreenLifecycle(self.dataView).onFlushData();
+        yield*getFormScreenLifecycle(self.dataView).onFlushData();
       }
     })();
   }
@@ -172,7 +173,7 @@ export class MapObjectsStore {
           this.navigationStore.highlightSelectedSearchResult();
         }
       },
-      { fireImmediately: true }
+      {fireImmediately: true}
     );
   }
 }

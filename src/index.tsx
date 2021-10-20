@@ -84,16 +84,16 @@ async function main() {
   let user;
   try {
     user = await ensureLogin();
-  } catch(e) {
+  } catch (e) {
     const application = createApplication();
     await initLocaleCookie(application);
     await translationsInit(application);
     ReactDOM.render(<RootError error={e}/>, document.getElementById("root"));
+    return;
   }
   if (user) {
     if (window.sessionStorage.getItem("teleportAfterLogin")) {
       window.sessionStorage.removeItem("teleportAfterLogin");
-      //window.location.assign(newUrl);
       return;
     }
     const application = createApplication();
@@ -112,7 +112,7 @@ async function main() {
 
     await translationsInit(application);
 
-    ReactDOM.render(<Root application={application} />, document.getElementById("root"));
+    ReactDOM.render(<Root application={application}/>, document.getElementById("root"));
   }
 }
 

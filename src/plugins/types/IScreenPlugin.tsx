@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IPlugin} from "./IPlugin";
+import { IPlugin } from "./IPlugin";
 
 
-export interface IScreenPlugin extends IPlugin{
-  requestSessionRefresh:  (() => Promise<any>) | undefined;
-  setScreenParameters:  ((parameters: { [key: string]: string }) => void) | undefined;
+export interface IScreenPlugin extends IPlugin {
+  requestSessionRefresh: (() => Promise<any>) | undefined;
+  setScreenParameters: ((parameters: { [key: string]: string }) => void) | undefined;
 }
 
 export const isIScreenPlugin = (o: any): o is IScreenPlugin => o?.$type_IScreenPlugin;

@@ -17,17 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {TypeSymbol} from "dic/Container";
-import {IPanelViewType} from "model/entities/types/IPanelViewType";
+import { TypeSymbol } from "dic/Container";
+import { IPanelViewType } from "model/entities/types/IPanelViewType";
 
 export class ViewConfiguration {
   constructor(
     public saveConfiguration: (activePerspectiveTag: string) => Generator,
     public getActivePerspectiveTag: () => IPanelViewType
-  ) {}
+  ) {
+  }
 
   *anounceActivePerspective(tag: string) {
-    yield* this.saveConfiguration(tag);
+    yield*this.saveConfiguration(tag);
   }
 
   get activePerspective(): IPanelViewType {

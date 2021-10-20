@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getLocaleFromCookie} from "../../utils/cookies";
+import { getLocaleFromCookie } from "../../utils/cookies";
 import MessageFormat from '@messageformat/core';
 
 export class Localizer {
@@ -38,23 +38,23 @@ export class Localizer {
       : new MessageFormat(this.locale);
   }
 
-  private getLocalization(locale: string){
-    const localeLower= locale.toLowerCase();
+  private getLocalization(locale: string) {
+    const localeLower = locale.toLowerCase();
     let localization = this.localizations.find(localization => localization.locale.toLowerCase() === localeLower);
-    if(!localization){
+    if (!localization) {
       localization = this.localizations.find(localization => localization.locale.toLowerCase() === localeLower.split("-")[0]);
     }
-    if(!localization){
+    if (!localization) {
       throw new Error(`Plugin localization for locale: "${locale}" was not found`)
     }
     return localization
   }
 
-  public translate(key: string, parameters?: {[key: string]: any}) {
+  public translate(key: string, parameters?: { [key: string]: any }) {
     let translation = this.activeLocalization.translations[key]
       ?? this.defaultLocalization.translations[key];
-    if(!translation){
-        throw new Error(`No translation was found for: "${key}" `)
+    if (!translation) {
+      throw new Error(`No translation was found for: "${key}" `)
     }
 
     const message = this.messageFormat.compile(translation);
@@ -64,7 +64,7 @@ export class Localizer {
   }
 }
 
-export interface ILocalization{
+export interface ILocalization {
   locale: string;
-  translations: {[key:string]: string};
+  translations: { [key: string]: string };
 }

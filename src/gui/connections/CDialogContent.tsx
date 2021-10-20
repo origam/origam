@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {DialogScreen} from "gui/Workbench/ScreenArea/ScreenArea";
-import {MobXProviderContext, observer} from "mobx-react";
-import {getOpenedDialogScreenItems} from "model/selectors/getOpenedDialogScreenItems";
+import { DialogScreen } from "gui/Workbench/ScreenArea/ScreenArea";
+import { MobXProviderContext, observer } from "mobx-react";
+import { getOpenedDialogScreenItems } from "model/selectors/getOpenedDialogScreenItems";
 import React from "react";
 
 @observer
@@ -35,7 +35,7 @@ export class CDialogContent extends React.Component {
     return (
       <>
         {openedDialogItems.map(item => (
-          <DialogScreen openedScreen={item} key={`${item.menuItemId}@${item.order}`} />
+          <DialogScreen openedScreen={item} key={`${item.menuItemId}@${item.order}`}/>
         ))}
       </>
     );

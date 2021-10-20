@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IApi} from "./IApi";
-import {IApplicationLifecycle} from "./IApplicationLifecycle";
-import {IDialogStack} from "./IDialogStack";
-import {IWorkbench} from "./IWorkbench";
-import {IErrorDialogController} from "./IErrorDialog";
+import { IApi } from "./IApi";
+import { IApplicationLifecycle } from "./IApplicationLifecycle";
+import { IDialogStack } from "./IDialogStack";
+import { IWorkbench } from "./IWorkbench";
+import { IErrorDialogController } from "./IErrorDialog";
 
 export interface IApplicationData {
   api: IApi;
@@ -38,7 +38,9 @@ export interface IApplication extends IApplicationData {
   parent?: any;
 
   resetWorkbench(): void;
+
   setWorkbench(workbench: IWorkbench): void;
+
   run(): Generator;
 }
 

@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function reloadScreen(ctx: any) {
-  return function* reloadScreen() {
-    yield* getFormScreenLifecycle(ctx).refreshSession();
+  return function*reloadScreen() {
+    yield*getFormScreenLifecycle(ctx).refreshSession();
   };
 }

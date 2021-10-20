@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IRenderable } from "modules/CommonTypes";
 import { TypeSymbol } from "dic/Container";
-import {DataView} from 'model/entities/DataView';
+import { DataView } from 'model/entities/DataView';
 
 export const SectionViewSwitchers = "SectionViewSwitchers";
 

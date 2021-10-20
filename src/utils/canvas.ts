@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d") as any;
+
 export function getCanvasPixelRatio() {
   const devicePixelRatio = window.devicePixelRatio || 1;
   const backingStoreRatio =
@@ -35,4 +36,4 @@ export function getCanvasPixelRatio() {
 }
 
 
-export const CPR = () =>  getCanvasPixelRatio();
+export const CPR = () => getCanvasPixelRatio();

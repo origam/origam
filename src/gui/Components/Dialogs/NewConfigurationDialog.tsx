@@ -95,7 +95,7 @@ export class NewConfigurationDialog extends React.Component<{
                     className={S.notification}
                     title={T("Name cannot be empty", "column_config_name_empty")}
                   >
-                    <i className="fas fa-exclamation-circle red" />
+                    <i className="fas fa-exclamation-circle red"/>
                   </div>
                 </div>
               )}

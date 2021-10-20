@@ -72,9 +72,9 @@ export class ModalWindow extends React.Component<{
     if (!(!this.isInitialized && contentRect.bounds!.height && contentRect.bounds!.width)) {
       return;
     }
-    if(this.props.topPosiotionProc){
+    if (this.props.topPosiotionProc) {
       this.top = window.innerHeight * this.props.topPosiotionProc / 100;
-    }else{
+    } else {
       this.top = window.innerHeight / 2 - contentRect.bounds!.height / 2;
     }
     this.left = window.innerWidth / 2 - contentRect.bounds!.width / 2;
@@ -142,7 +142,8 @@ export class ModalWindow extends React.Component<{
     this.footerFocusHookEnsureOn();
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+  }
 
   refFooter = (elm: any) => {
     this.elmFooter = elm;
@@ -157,7 +158,7 @@ export class ModalWindow extends React.Component<{
       return (
         <div ref={this.refFooter} className={S.footer}>
           {this.props.buttonsLeft}
-          {this.props.buttonsCenter ? this.props.buttonsCenter : <div className={S.pusher} />}
+          {this.props.buttonsCenter ? this.props.buttonsCenter : <div className={S.pusher}/>}
           {this.props.buttonsRight}
         </div>
       );
@@ -169,7 +170,7 @@ export class ModalWindow extends React.Component<{
   render() {
     return (
       <Measure bounds={true} onResize={this.handleResize}>
-        {({ measureRef }) => (
+        {({measureRef}) => (
           <Observer>
             {() => (
               <div
@@ -190,7 +191,7 @@ export class ModalWindow extends React.Component<{
                       <div className={S.labelText}>{this.props.title}</div>
                       {this.props.titleIsWorking && (
                         <div className={S.progressIndicator}>
-                          <div className={S.indefinite} />
+                          <div className={S.indefinite}/>
                         </div>
                       )}
                     </div>
@@ -212,7 +213,7 @@ export class ModalWindow extends React.Component<{
 export const CloseButton = (props: { onClick?: (event: any) => void }) => (
   <button className={S.btnClose} onClick={props.onClick}>
     <div className={S.btnIconContainer}>
-      <Icon src="./icons/close.svg" tooltip={""} />
+      <Icon src="./icons/close.svg" tooltip={""}/>
     </div>
   </button>
 );

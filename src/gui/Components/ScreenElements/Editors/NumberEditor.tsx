@@ -22,12 +22,10 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
-import {
-  formatNumber,
-  getCurrentDecimalSeparator,
-} from "../../../../model/entities/NumberFormating";
+import { formatNumber, getCurrentDecimalSeparator, } from "../../../../model/entities/NumberFormating";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
+
 @observer
 export class NumberEditor extends React.Component<{
   value: string | null;
@@ -91,6 +89,7 @@ export class NumberEditor extends React.Component<{
     }
     this.updateTextOverflowState();
   }
+
   @action.bound
   handleFocus(event: any) {
     this.hasFocus = true;
@@ -103,7 +102,7 @@ export class NumberEditor extends React.Component<{
   }
 
   private updateTextOverflowState() {
-    if(!this.elmInput){
+    if (!this.elmInput) {
       return;
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
@@ -197,7 +196,7 @@ export class NumberEditor extends React.Component<{
         />
         {this.props.isInvalid && (
           <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red" />
+            <i className="fas fa-exclamation-circle red"/>
           </div>
         )}
       </div>

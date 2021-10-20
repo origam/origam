@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getRecordInfo} from "model/selectors/RecordInfo/getRecordInfo";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 
 export function addRecordAuditExpandRequestHandler(ctx: any) {
   return function addRecordAuditExpandRequestHandler(handler: () => void) {

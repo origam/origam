@@ -25,7 +25,7 @@ import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 import { FavoriteFolder } from "model/entities/Favorites";
-import { SimpleDropdown, IOption } from "gui/Components/PublicComponents/SimpleDropdown";
+import { IOption, SimpleDropdown } from "gui/Components/PublicComponents/SimpleDropdown";
 
 @observer
 export class ChooseFavoriteFolderDialog extends React.Component<{
@@ -41,7 +41,7 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
   constructor(props: any) {
     super(props);
     this.options = this.props.favorites.map((favorite) => {
-      return { value: favorite, label: favorite.name };
+      return {value: favorite, label: favorite.name};
     });
     this.selectedOption = this.options[0];
   }

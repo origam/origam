@@ -42,7 +42,8 @@ class Registration<TInstance> {
 }
 
 class Registrator<TInstance> implements IRegistrator<TInstance> {
-  constructor(private registration: Registration<TInstance>) {}
+  constructor(private registration: Registration<TInstance>) {
+  }
 
   transientInstance(): IRegistrator<TInstance> {
     this.registration.instancePerDependency = true;
@@ -97,7 +98,8 @@ class Registrator<TInstance> implements IRegistrator<TInstance> {
 }
 
 export class Container implements IContainer {
-  constructor(private options: { defaultLifetime: ILifetime }) {}
+  constructor(private options: { defaultLifetime: ILifetime }) {
+  }
 
   private registrations: Map<ITypeSymbol<any>, Array<Registration<any>>> = new Map();
   public instances: Map<ITypeSymbol<any>, any> = new Map();
@@ -202,7 +204,7 @@ export class Container implements IContainer {
 
   resolveByRegistration<TInstance>(registration: Registration<TInstance>, creatorArgs: any[]) {
     //console.log('Resolve:', registration.typeSymbol)
-    for (let h of registration.onPreparing) h({ container: this });
+    for (let h of registration.onPreparing) h({container: this});
     if (registration.instancePerDependency) {
       return this.providePerDependency(registration, creatorArgs);
     } else if (registration.singleInstance) {
@@ -275,7 +277,7 @@ export class Container implements IContainer {
         },
       });
     for (let h of registration.onActivated) {
-      getBottomContainer().scheduledOnActivated.push(() => h({ container: this, instance })); // eslint-disable-line no-loop-func
+      getBottomContainer().scheduledOnActivated.push(() => h({container: this, instance})); // eslint-disable-line no-loop-func
     }
     this.transientInstances.push(instance);
 
@@ -334,7 +336,7 @@ export class Container implements IContainer {
         });
       container.instances.set(registration.typeSymbol!, instance);
       for (let h of registration.onActivated) {
-        getBottomContainer().scheduledOnActivated.push(() => h({ container: this, instance })); // eslint-disable-line no-loop-func
+        getBottomContainer().scheduledOnActivated.push(() => h({container: this, instance})); // eslint-disable-line no-loop-func
       }
       return instance;
     }
@@ -361,7 +363,7 @@ export class Container implements IContainer {
       for (let instance of this.instances.values()) {
         const disposeEvent = this.disposeEvents.get(instance);
         if (disposeEvent) {
-          for (let h of disposeEvent) h({ instance, container: this });
+          for (let h of disposeEvent) h({instance, container: this});
         }
         // console.log("Disposing cached", instance);
         if (instance.dispose) instance.dispose();
@@ -370,7 +372,7 @@ export class Container implements IContainer {
       for (let instance of this.transientInstances) {
         const disposeEvent = this.disposeEvents.get(instance);
         if (disposeEvent) {
-          for (let h of disposeEvent) h({ instance, container: this });
+          for (let h of disposeEvent) h({instance, container: this});
         }
         // console.log("Disposing transient", instance);
         if (instance.dispose) instance.dispose();
@@ -469,24 +471,35 @@ export interface IContainer {
   ): IRegistrator<TInstance>;
 
   resolve<TInstance>(sym: ITypeSymbol<TInstance>): TInstance;
+
   resolveAll<TInstance>(sym: ITypeSymbol<TInstance>): TInstance[];
+
   resolveOptional<TInstance>(sym: ITypeSymbol<TInstance>): TInstance | undefined;
+
   resolveFromCreator<TInstance>(creator: (...args: any[]) => TInstance): TInstance;
 
   beginLifetimeScope(scopeName?: string): IContainer;
+
   dispose(): void;
 }
 
 export interface IRegistrator<TInstance> {
   transientInstance(): IRegistrator<TInstance>;
+
   singleInstance(): IRegistrator<TInstance>;
+
   scopedInstance(
     name?: string | (($cont: Container) => Container | undefined)
   ): IRegistrator<TInstance>;
+
   onActivated(handler: (args: IOnActivatedArgs<TInstance>) => void): IRegistrator<TInstance>;
+
   onActivating(handler: (args: IOnActivatingArgs<TInstance>) => void): IRegistrator<TInstance>;
+
   onPreparing(handler: (args: IOnPreparingArgs) => void): IRegistrator<TInstance>;
+
   onRelease(handler: (args: IOnReleaseArgs<TInstance>) => void): IRegistrator<TInstance>;
+
   forward(
     fn: (registrator: IRegistrator<TInstance>) => IRegistrator<TInstance>
   ): IRegistrator<TInstance>;
@@ -504,6 +517,7 @@ export interface IOnReleaseArgs<TInstance> {
 export interface IOnActivatingArgs<TInstance> {
   container: IContainer;
   instance: TInstance;
+
   replaceInstance(newInstance: TInstance): void;
 }
 
@@ -514,6 +528,7 @@ export interface IOnActivatedArgs<TInstance> {
 
 export interface ITypeSymbol<TInstance> {
   (): TInstance;
+
   symName: string;
   injectAsGetter?: boolean;
   injectAsCreator?: boolean;

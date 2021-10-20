@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IActionParameter, IActionParameterData} from "./types/IActionParameter";
+import { IActionParameter, IActionParameterData } from "./types/IActionParameter";
 
 export class ActionParameter implements IActionParameter {
   $type_IActionParameter: 1 = 1;

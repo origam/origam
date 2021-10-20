@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {getGrouper} from "model/selectors/DataView/getGrouper";
-import {IGroupRow} from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { flow } from "mobx";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
+import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export function onGroupHeaderToggleClick(ctx: any) {
-  return flow(function* onGroupHeaderToggleClick(
+  return flow(function*onGroupHeaderToggleClick(
     event: any,
     groupHeader: IGroupRow
   ) {
-      yield* getGrouper(ctx).loadChildren(groupHeader.sourceGroup);
+    yield*getGrouper(ctx).loadChildren(groupHeader.sourceGroup);
   });
 }

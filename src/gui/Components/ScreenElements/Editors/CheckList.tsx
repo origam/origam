@@ -52,6 +52,7 @@ export interface IRawCheckListProps {
   subscribeToFocusManager?: (obj: IFocusable) => void;
 
   onChange?(newValue: string[]): void;
+
   onKeyDown(event: any): void;
 }
 
@@ -68,7 +69,7 @@ export class CheckListControler {
   @action.bound
   loadLookupList() {
     const self = this;
-    flow(function* () {
+    flow(function*() {
       const lookupList = yield self.props.api.getLookupList({
         Entity: self.props.Entity,
         SessionFormIdentifier: self.props.SessionFormIdentifier,
@@ -115,7 +116,7 @@ export const CheckList: React.FC<{
   onKeyDown(event: any): void;
   onClick: () => void;
 }> = observer((props) => {
-  const { property } = useContext(MobXProviderContext);
+  const {property} = useContext(MobXProviderContext);
 
   return (
     <CheckListRaw
@@ -193,7 +194,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
 
   return (
     <div className={S.editorContainer}>
-      <div className={cx(S.root, { isReadonly: props.isReadonly })}>
+      <div className={cx(S.root, {isReadonly: props.isReadonly})}>
         {controller.items.map((item, i) => (
           <CheckListItem
             key={item.value}
@@ -218,7 +219,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
       </div>
       {props.isInvalid && (
         <div className={CS.notification} title={props.invalidMessage}>
-          <i className="fas fa-exclamation-circle red" />
+          <i className="fas fa-exclamation-circle red"/>
         </div>
       )}
     </div>
@@ -288,7 +289,6 @@ export const CheckListItem: React.FC<{
   }
 
 
-
   return (
     <div className={S.item} onClick={onClick}>
       <input
@@ -309,7 +309,8 @@ export const CheckListItem: React.FC<{
 };
 
 class InputReference {
-  constructor(private inputRef: RefObject<HTMLInputElement>) {}
+  constructor(private inputRef: RefObject<HTMLInputElement>) {
+  }
 
   get x() {
     return this.inputRef.current?.getBoundingClientRect()!.x || 0;

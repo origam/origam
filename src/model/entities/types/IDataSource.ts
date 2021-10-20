@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IDataSourceField} from "./IDataSourceField";
-import {IRowState} from "./IRowState";
+import { IDataSourceField } from "./IDataSourceField";
+import { IRowState } from "./IRowState";
 
 export interface IDataSourceData {
   entity: string;
@@ -33,6 +33,7 @@ export interface IDataSource extends IDataSourceData {
   $type_IDataSource: 1;
 
   getFieldByName(name: string): IDataSourceField | undefined;
+
   getFieldByIndex(idex: number): IDataSourceField | undefined;
 
   parent?: any;

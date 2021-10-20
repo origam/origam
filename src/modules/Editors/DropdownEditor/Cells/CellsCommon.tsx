@@ -21,7 +21,7 @@ import React from "react";
 import cx from "classnames";
 
 export function bodyCellClass(rowIndex: number, selected: boolean, withCursor: boolean) {
-  return cx("cell", rowIndex % 2 ? "ord2" : "ord1", { withCursor, selected });
+  return cx("cell", rowIndex % 2 ? "ord2" : "ord1", {withCursor, selected});
 }
 
-export const CtxCell = React.createContext({ visibleRowIndex: 0, visibleColumnIndex: 0 });
+export const CtxCell = React.createContext({visibleRowIndex: 0, visibleColumnIndex: 0});

@@ -19,23 +19,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {IPositionedFieldProps} from "./types";
-import {observer} from "mobx-react";
+import { IPositionedFieldProps } from "./types";
+import { observer } from "mobx-react";
 import S from "./PositionedField.module.css";
 import cx from "classnames";
 
 @observer
 export class PositionedField extends React.Component<IPositionedFieldProps> {
   render() {
-    const { columnIndex, worldBounds, cellRectangle } = this.props;
+    const {columnIndex, worldBounds, cellRectangle} = this.props;
     const columnLeft = cellRectangle.columnLeft;
     const columnWidth = cellRectangle.columnWidth;
     const rowTop = cellRectangle.rowTop;
     const rowHeight = 25; //cellRectangle.rowHeight;
-    const { scrollTop, scrollLeft } = this.props.scrollOffsetSource;
+    const {scrollTop, scrollLeft} = this.props.scrollOffsetSource;
     return ReactDOM.createPortal(
       <div
-        className={cx(S.positionedField, { isFirstColumn: columnIndex === 0 })}
+        className={cx(S.positionedField, {isFirstColumn: columnIndex === 0})}
         onClick={(event: any) => event.stopPropagation()}
         onMouseEnter={this.props.onMouseEnter}
         style={{

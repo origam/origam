@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { flow } from "mobx";
-import { interpret, createMachine } from "xstate";
+import { createMachine, interpret } from "xstate";
 import { PubSub } from "./events";
 
 export class PeriodicLoader {
@@ -87,7 +87,7 @@ export class PeriodicLoader {
         },
       }
     ),
-    { devTools: true }
+    {devTools: true}
   );
 
   t0 = 0;

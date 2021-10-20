@@ -29,7 +29,7 @@ import { LookupListCacheMulti } from "../../modules/Lookup/LookupListCacheMulti"
 import { Clock } from "../../modules/Lookup/Clock";
 import $root from "../../rootContainer";
 import { SCOPE_Workbench } from "../../modules/Workbench/WorkbenchModule";
-import {registerScope} from "../../dic/Container";
+import { registerScope } from "../../dic/Container";
 import { createMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { getApi } from "model/selectors/getApi";
 import { Chatrooms } from "model/entities/Chatrooms";

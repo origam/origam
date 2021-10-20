@@ -8,7 +8,7 @@ export class Button extends React.Component<{
 }> {
   render() {
     return <button
-      className={S.button + " " + (this.props.changeColorOnFocus ? S.focusedButton : "") }
+      className={S.button + " " + (this.props.changeColorOnFocus ? S.focusedButton : "")}
       onClick={() => this.props.onClick()}>{this.props.label}</button>
   }
 }

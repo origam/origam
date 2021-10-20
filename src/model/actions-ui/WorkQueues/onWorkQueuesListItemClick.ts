@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 export function onWorkQueuesListItemClick(ctx: any) {
-  return flow(function* onWorkQueuesListItemClick(event: any, item: any) {
+  return flow(function*onWorkQueuesListItemClick(event: any, item: any) {
     try {
-      yield* getWorkbenchLifecycle(ctx).onWorkQueueListItemClick(event, item);
+      yield*getWorkbenchLifecycle(ctx).onWorkQueueListItemClick(event, item);
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

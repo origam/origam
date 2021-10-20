@@ -30,7 +30,8 @@ export class BooleanCellDriver implements IBodyCellDriver {
     private dataIndex: number,
     private dataTable: DropdownDataTable,
     private behavior: DropdownEditorBehavior
-  ) {}
+  ) {
+  }
 
   render(rowIndex: number) {
     const value = this.dataTable.getValue(rowIndex, this.dataIndex);
@@ -48,4 +49,5 @@ export class BooleanCellDriver implements IBodyCellDriver {
     );
   }
 }
+
 export const IBooleanCellDriver = TypeSymbol<BooleanCellDriver>("IBooleanCellDriver");

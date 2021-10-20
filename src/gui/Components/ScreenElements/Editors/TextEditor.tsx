@@ -20,14 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
+import { useCallback, useEffect, useState } from "react";
 import S from "./TextEditor.module.scss";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
-import { useCallback, useEffect, useState } from "react";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -130,7 +130,7 @@ export class TextEditor extends React.Component<{
         {this.renderValueTag()}
         {this.props.isInvalid && (
           <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red" />
+            <i className="fas fa-exclamation-circle red"/>
           </div>
         )}
       </div>
@@ -138,7 +138,7 @@ export class TextEditor extends React.Component<{
   }
 
   getMultilineDivClass() {
-    if(this.props.wrapText){
+    if (this.props.wrapText) {
       return S.input + " " + S.wrapText;
     }
     return S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
@@ -153,7 +153,7 @@ export class TextEditor extends React.Component<{
             <div
               style={this.getStyle()}
               className={S.input}
-              dangerouslySetInnerHTML={{ __html: this.props.value ?? "" }}
+              dangerouslySetInnerHTML={{__html: this.props.value ?? ""}}
               onKeyDown={this.props.onKeyDown}
               onClick={this.props.onClick}
               onDoubleClick={this.props.onDoubleClick}
@@ -189,9 +189,9 @@ export class TextEditor extends React.Component<{
           maxLength={maxLength}
           ref={this.refInput}
           onChange={(event: any) => {
-              this.props.onChange && this.props.onChange(event, event.target.value)
-              this.updateTextOverflowState();
-            }
+            this.props.onChange && this.props.onChange(event, event.target.value)
+            this.updateTextOverflowState();
+          }
           }
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
@@ -239,11 +239,11 @@ export class TextEditor extends React.Component<{
   }
 }
 
-function isMultiLine(text: string | null){
-  if(text === null || text === undefined){
+function isMultiLine(text: string | null) {
+  if (text === null || text === undefined) {
     return false;
   }
-   return text.includes("\n")  || text.includes("\r");
+  return text.includes("\n") || text.includes("\r");
 }
 
 function RichTextEditor(props: {
@@ -256,7 +256,7 @@ function RichTextEditor(props: {
   const [internalEditorState, setInternalEditorState] = useState(() => EditorState.createEmpty());
   const [internalEditorStateHtml, setInternalEditorStateHtml] = useState("");
 
-  
+
   const onEditorStateChange = useCallback(
     (newEditorState: any) => {
       setInternalEditorState(newEditorState);
@@ -269,7 +269,7 @@ function RichTextEditor(props: {
   );
 
   useEffect(() => {
-    if(props.refInput){
+    if (props.refInput) {
       props.refInput(document.querySelector("[role='textbox']"));
     }
   });
@@ -277,7 +277,7 @@ function RichTextEditor(props: {
   useEffect(() => {
     if (props.value !== internalEditorStateHtml) {
       const blocksFromHtml = htmlToDraft(props.value);
-      const { contentBlocks, entityMap } = blocksFromHtml;
+      const {contentBlocks, entityMap} = blocksFromHtml;
       const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
       const editorState = EditorState.createWithContent(contentState);
       setInternalEditorStateHtml(props.value);
@@ -286,8 +286,8 @@ function RichTextEditor(props: {
   }, [props.value, internalEditorStateHtml]);
 
   return (
-    <div style={{ overflow: "auto", width: "100%", height: "100%" }}>
-      <div style={{ minWidth: 800, minHeight: 600 }}>
+    <div style={{overflow: "auto", width: "100%", height: "100%"}}>
+      <div style={{minWidth: 800, minHeight: 600}}>
         <Editor
           editorState={internalEditorState}
           wrapperClassName="demo-wrapper"

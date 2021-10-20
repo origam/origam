@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import S from "gui/Components/WebScreen/WebScreen.module.scss";
 import cx from "classnames";
 
@@ -52,7 +52,7 @@ export const WebScreen: React.FC<{
     <div className={S.root}>
       {props.isLoading && (
         <div className={S.progressIndicator}>
-          <div className={S.indefinite} />
+          <div className={S.indefinite}/>
         </div>
       )}
       <iframe
@@ -62,7 +62,7 @@ export const WebScreen: React.FC<{
         className={S.webContent}
         src={props.url}
       />
-      <div className={cx(S.transparentOverlay, { isVisible: mouseDowned })} />
+      <div className={cx(S.transparentOverlay, {isVisible: mouseDowned})}/>
     </div>
   );
 };

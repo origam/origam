@@ -129,17 +129,17 @@ export class GridDimensions implements IGridDimensions {
     const columnWidths = this.columnWidths;
 
     const widths = Array.from(
-      (function* () {
+      (function*() {
         if (isCheckBoxedTable) yield 20;
-        yield* groupedColumnIds.map((id) => 20);
-        yield* tableColumnIds
+        yield*groupedColumnIds.map((id) => 20);
+        yield*tableColumnIds
           .map((id) => columnWidths.get(id))
           .filter((width) => width !== undefined) as number[];
       })()
     );
     let acc = 0;
     return Array.from(
-      (function* () {
+      (function*() {
         for (let w of widths) {
           yield {
             left: acc,

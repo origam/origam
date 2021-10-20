@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getRowStates} from "./getRowStates";
-import {getDataView} from "../DataView/getDataView";
+import { getRowStates } from "./getRowStates";
+import { getDataView } from "../DataView/getDataView";
 
 export function getRowStateMayCauseFlicker(ctx: any) {
   const dataView = getDataView(ctx);

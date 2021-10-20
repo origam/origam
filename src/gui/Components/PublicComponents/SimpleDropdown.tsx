@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {observer} from "mobx-react";
-import React, {useContext} from "react";
-import {observable} from "mobx";
-import {DropdownLayout} from "modules/Editors/DropdownEditor/Dropdown/DropdownLayout";
-import {DropdownLayoutBody} from "modules/Editors/DropdownEditor/Dropdown/DropdownLayoutBody";
+import { observer } from "mobx-react";
+import React, { useContext, useState } from "react";
+import { observable } from "mobx";
+import { DropdownLayout } from "modules/Editors/DropdownEditor/Dropdown/DropdownLayout";
+import { DropdownLayoutBody } from "modules/Editors/DropdownEditor/Dropdown/DropdownLayoutBody";
 import {
   CtxDropdownRefBody,
   CtxDropdownRefCtrl
@@ -29,6 +29,10 @@ import {
 import S from "./SimpleDropdown.module.scss";
 import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
 import { v4 as uuidv4 } from 'uuid';
+import SE from "modules/Editors/DropdownEditor/DropdownEditor.module.scss";
+import SD from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
+import cx from "classnames";
+
 @observer
 export class SimpleDropdown<T> extends React.Component<{
   width: string,
@@ -36,20 +40,20 @@ export class SimpleDropdown<T> extends React.Component<{
   selectedOption: IOption<T>,
   onOptionClick: (option: IOption<T>) => void
 }> {
-  id = "SimpleDropdown_"+uuidv4()
+  id = "SimpleDropdown_" + uuidv4()
 
   @observable
   _isDropped = false;
 
-  get isDropped(){
+  get isDropped() {
     return this._isDropped;
   }
 
-  set isDropped(value: boolean){
-    if(value){
+  set isDropped(value: boolean) {
+    if (value) {
       document.addEventListener("mousedown", event => this.documentClickAndWheelListener(event))
       document.addEventListener("wheel", event => this.documentClickAndWheelListener(event))
-    }else{
+    } else {
       document.removeEventListener("mousedown", event => this.documentClickAndWheelListener(event));
       document.removeEventListener("wheel", event => this.documentClickAndWheelListener(event));
     }
@@ -59,21 +63,21 @@ export class SimpleDropdown<T> extends React.Component<{
   documentClickAndWheelListener(event: any) {
     const simpleDropdown = document.getElementById(this.id);
     const dropdownPortal = document.getElementById("dropdown-portal");
-    if (!dropdownPortal || !simpleDropdown){
+    if (!dropdownPortal || !simpleDropdown) {
       document.removeEventListener("mousedown", event => this.documentClickAndWheelListener(event));
       document.removeEventListener("wheel", event => this.documentClickAndWheelListener(event));
       return;
     }
     let targetElement = event.target;
-    if(!targetElement){
+    if (!targetElement) {
       return;
     }
-    if(!dropdownPortal!.contains(targetElement) && !simpleDropdown!.contains(targetElement)){
+    if (!dropdownPortal!.contains(targetElement) && !simpleDropdown!.contains(targetElement)) {
       this.isDropped = false;
     }
   }
 
-  onOptionClick(option: IOption<T>){
+  onOptionClick(option: IOption<T>) {
     this.isDropped = false;
     this.props.onOptionClick(option);
   }
@@ -112,7 +116,7 @@ export class SimpleDropdown<T> extends React.Component<{
 
 
 export function DropDownControl(props: {
-  onMouseDown: ()=> void;
+  onMouseDown: () => void;
   value: string;
   width: string
 }) {
@@ -121,17 +125,17 @@ export function DropDownControl(props: {
   return (
     <div
       style={{width: props.width, height: "19px"}}
-      onMouseDown={()=>props.onMouseDown()}
+      onMouseDown={() => props.onMouseDown()}
       ref={ref}
       className={CS.control}>
       <input
-        className="input"
+        className={cx(S.input)}
         value={props.value}
         disabled={true}
       />
       <div
         className="inputBtn lastOne">
-        <i className="fas fa-caret-down"></i>
+        <i className="fas fa-caret-down"/>
       </div>
     </div>
   )
@@ -145,22 +149,38 @@ export function DropDownBody<T>(props: {
   onOptionClick: (option: IOption<T>) => void
 }) {
   const ref = useContext(CtxDropdownRefBody);
+  const [hoveredRowIndex, setHoveredRowIndex] = useState(-1);
 
   return (
     <div
       ref={ref}
-      className={S.body}
+      className={cx(SD.body, SE.table)}
       style={{width: props.width}}>
       {props.options.map((option, i) =>
         <div
-          className={S.cell + " " + (i%2 ? S.ord2 : S.ord1) + " " + (option.value === props.selected.value ? S.selected : "")}
-          onClick={() => props.onOptionClick(option)}>{option.label}</div>)
+          key={option.label + option.value}
+          className={cx({ isHoveredRow: i === hoveredRowIndex }, S.cell)}
+          onMouseOver={(evt) => {
+            setHoveredRowIndex(i);
+          }}
+          onMouseOut={(evt) => {
+            setHoveredRowIndex(-1);
+          }}
+        >
+          <div
+            className={"cell " + (i%2 ? "ord2" : "ord1") + " " + (option.value === props.selected.value ? "withCursor" : "")}
+            onClick={() => props.onOptionClick(option)}
+          >
+            {option.label}
+          </div>
+        </div>
+        )
       }
     </div>
   )
 }
 
-export interface IOption<T>{
+export interface IOption<T> {
   value: T
   label: string
 }

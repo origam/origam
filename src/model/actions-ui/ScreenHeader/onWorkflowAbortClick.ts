@@ -17,17 +17,17 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function onWorkflowAbortClick(ctx: any) {
-  return flow(function* onWorkflowAbortClick(event: any) {
+  return flow(function*onWorkflowAbortClick(event: any) {
     try {
       const lifecycle = getFormScreenLifecycle(ctx);
-      yield* lifecycle.onWorkflowAbortClick(event);
+      yield*lifecycle.onWorkflowAbortClick(event);
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

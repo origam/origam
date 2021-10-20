@@ -23,7 +23,7 @@ import { handleUserInputOnChangingRow } from "model/entities/FormScreenLifecycle
 
 export async function shouldProceedToChangeRow(dataView: IDataView) {
   const isDirty = getFormScreen(dataView).isDirty;
-  if(!isDirty){
+  if (!isDirty) {
     return true
   }
   return await handleUserInputOnChangingRow(dataView);

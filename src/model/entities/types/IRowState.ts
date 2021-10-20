@@ -17,7 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface IRowStateData {}
+export interface IRowStateData {
+}
 
 export interface IRowState extends IRowStateData {
   $type_IRowState: 1;
@@ -27,10 +28,15 @@ export interface IRowState extends IRowStateData {
   isWorking: boolean;
 
   getValue(key: string): IRowStateItem | undefined;
+
   loadValues(keys: string[]): Promise<any>;
+
   putValue(state: any): void;
+
   hasValue(key: string): boolean;
+
   suppressWorkingStatus: boolean;
+
   clearAll(): void;
   reload(): void;
 
@@ -57,4 +63,5 @@ export interface IRowStateColumnItem {
   allowUpdate: boolean;
 }
 
-export interface IIdState {}
+export interface IIdState {
+}

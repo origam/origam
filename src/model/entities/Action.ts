@@ -56,8 +56,8 @@ export class Action implements IAction {
         const selectedIds = getDataView(this).selectedRowIds;
         return selectedIds.size > 0
           ? !Array.from(selectedIds)
-              .map((rowId) => getRowStateIsDisableAction(this, rowId, this.id))
-              .some((item) => item)
+            .map((rowId) => getRowStateIsDisableAction(this, rowId, this.id))
+            .some((item) => item)
           : this.placement === IActionPlacement.Toolbar;
       }
     }

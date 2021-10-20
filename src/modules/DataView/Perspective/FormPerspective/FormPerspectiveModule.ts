@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Container} from "dic/Container";
-import {FormPerspectiveDirector, IFormPerspectiveDirector} from "./FormPerspectiveDirector";
-import {FormPerspective, IFormPerspective} from "./FormPerspective";
+import { Container } from "dic/Container";
+import { FormPerspectiveDirector, IFormPerspectiveDirector } from "./FormPerspectiveDirector";
+import { FormPerspective, IFormPerspective } from "./FormPerspective";
 
 export const SCOPE_FormPerspective = "FormPerspective";
 

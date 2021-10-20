@@ -17,30 +17,30 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export default {
   onCloseClick(ctx: any) {
-    return flow(function* onCancelClick(event: any) {
+    return flow(function*onCancelClick(event: any) {
       try {
         const lifecycle = getFormScreenLifecycle(ctx);
-        yield* lifecycle.onWorkflowCloseClick(event);
+        yield*lifecycle.onWorkflowCloseClick(event);
       } catch (e) {
-        yield* handleError(ctx)(e);
+        yield*handleError(ctx)(e);
         throw e;
       }
     });
   },
 
   onRepeatClick(ctx: any) {
-    return flow(function* onRepeatClick(event: any) {
+    return flow(function*onRepeatClick(event: any) {
       try {
         const lifecycle = getFormScreenLifecycle(ctx);
-        yield* lifecycle.onWorkflowRepeatClick(event);
+        yield*lifecycle.onWorkflowRepeatClick(event);
       } catch (e) {
-        yield* handleError(ctx)(e);
+        yield*handleError(ctx)(e);
         throw e;
       }
     });

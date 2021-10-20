@@ -27,7 +27,7 @@ export class ScreenToolbarActionGroup extends React.Component<{
 }> {
   render() {
     return (
-      <div ref={this.props.domRef} className={cx(S.root, { grovable: this.props.grovable })}>
+      <div ref={this.props.domRef} className={cx(S.root, {grovable: this.props.grovable})}>
         {this.props.children}
       </div>
     );

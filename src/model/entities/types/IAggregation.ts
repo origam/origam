@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {AggregationType, parseAggregationType} from "./AggregationType";
-import {IAggregationInfo} from "model/entities/types/IAggregationInfo";
+import { AggregationType } from "./AggregationType";
 
 export interface IAggregation {
   columnId: string;

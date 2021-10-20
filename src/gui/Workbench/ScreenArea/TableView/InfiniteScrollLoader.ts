@@ -17,23 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IGridDimensions} from "gui/Components/ScreenElements/Table/types";
-import {SimpleScrollState} from "gui/Components/ScreenElements/Table/SimpleScrollState";
-import {action, autorun, computed, flow, IReactionDisposer, reaction} from "mobx";
-import {getApi} from "model/selectors/getApi";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {getMenuItemId} from "model/selectors/getMenuItemId";
-import {getSessionId} from "model/selectors/getSessionId";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {getColumnNamesToLoad} from "model/selectors/DataView/getColumnNamesToLoad";
-import {joinWithAND} from "model/entities/OrigamApiHelpers";
-import {getUserFilters} from "model/selectors/DataView/getUserFilters";
-import {getUserOrdering} from "model/selectors/DataView/getUserOrdering";
-import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
-import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
-import {CancellablePromise} from "mobx/lib/api/flow";
+import { IGridDimensions } from "gui/Components/ScreenElements/Table/types";
+import { SimpleScrollState } from "gui/Components/ScreenElements/Table/SimpleScrollState";
+import { action, autorun, computed, flow, IReactionDisposer, reaction } from "mobx";
+import { getApi } from "model/selectors/getApi";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
+import { joinWithAND } from "model/entities/OrigamApiHelpers";
+import { getUserFilters } from "model/selectors/DataView/getUserFilters";
+import { getUserOrdering } from "model/selectors/DataView/getUserOrdering";
+import { IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor } from "./VisibleRowsMonitor";
+import { ScrollRowContainer } from "model/entities/ScrollRowContainer";
+import { CancellablePromise } from "mobx/lib/api/flow";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
-import {getDataView} from "../../../../model/selectors/DataView/getDataView";
+import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 
 export interface IInfiniteScrollLoaderData {
   gridDimensions: IGridDimensions;
@@ -46,8 +46,11 @@ export interface IInfiniteScrollLoaderData {
 
 export interface IInfiniteScrollLoader extends IInfiniteScrollLoaderData {
   start(): () => void;
+
   dispose(): void;
+
   loadLastPage(): Generator;
+
   loadFirstPage(): Generator;
 }
 
@@ -91,19 +94,19 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.requestProcessor.start();
   }
 
-  *loadLastPage(): any{
+  *loadLastPage(): any {
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
     let dataView = getDataView(this.ctx);
     yield formScreenLifecycle.updateTotalRowCount(dataView);
-    if(dataView.totalRowCount === undefined){
+    if (dataView.totalRowCount === undefined) {
       return;
     }
     let lastStartOffset
-    if(dataView.totalRowCount > SCROLL_ROW_CHUNK){
+    if (dataView.totalRowCount > SCROLL_ROW_CHUNK) {
       const rowsInLastChunk = (dataView.totalRowCount! % SCROLL_ROW_CHUNK) + SCROLL_ROW_CHUNK;
-      lastStartOffset =  dataView.totalRowCount! - rowsInLastChunk;
-    }else{
+      lastStartOffset = dataView.totalRowCount! - rowsInLastChunk;
+    } else {
       lastStartOffset = 0;
     }
 
@@ -123,7 +126,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.rowsContainer.set(data, lastStartOffset, true)
 
     this.reactionDisposer?.();
-    setTimeout(()=>{
+    setTimeout(() => {
       const newDistanceToStart = this.distanceToStart + SCROLL_ROW_CHUNK
       const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
       this.scrollState.scrollTo({scrollTop: newTop});
@@ -131,8 +134,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     });
   }
 
-  *loadFirstPage(): any{
-    if(this.rowsContainer.isFirstRowLoaded){
+  *loadFirstPage(): any {
+    if (this.rowsContainer.isFirstRowLoaded) {
       return
     }
     const api = getApi(this.ctx);
@@ -144,7 +147,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Filter: this.getFilters(),
       FilterLookups: getUserFilterLookups(this.ctx),
       Ordering: getUserOrdering(this.ctx),
-      RowLimit: SCROLL_ROW_CHUNK ,
+      RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: 0,
       Parameters: {},
       MasterRowId: undefined,
@@ -153,7 +156,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.rowsContainer.set(data)
 
     this.reactionDisposer?.();
-    setTimeout(()=>{
+    setTimeout(() => {
       const newTop = this.gridDimensions.getRowTop(0);
       this.scrollState.scrollTo({scrollTop: newTop});
       this.start();
@@ -225,13 +228,13 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   prependListeners: ((data: any[][]) => void)[] = [];
 
-  registerPrependListener(listener: (data: any[][])=> void): void{
+  registerPrependListener(listener: (data: any[][]) => void): void {
     this.prependListeners.push(listener);
   }
 
   appendListeners: ((data: any[][]) => void)[] = [];
 
-  registerAppendListener(listener: (data: any[][])=> void): void{
+  registerAppendListener(listener: (data: any[][]) => void): void {
     this.appendListeners.push(listener);
   }
 
@@ -252,7 +255,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     return joinWithAND(filters);
   }
 
-  private appendLines = flow(function* (
+  private appendLines = flow(function*(
     this: InfiniteScrollLoader
   ) {
     if (!this.tailLoadingNeeded) {
@@ -291,7 +294,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   });
 
 
-  private prependLines = flow(function* (
+  private prependLines = flow(function*(
     this: InfiniteScrollLoader
   ) {
     if (!this.headLoadingNeeded) {

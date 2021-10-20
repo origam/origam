@@ -18,17 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { action } from "mobx";
-import { TypeSymbol} from "dic/Container";
+import { TypeSymbol } from "dic/Container";
 import { Clock } from "./Clock";
-import {
-  LookupLabelsCleanerReloader,
-} from "./LookupCleanerLoader";
+import { LookupLabelsCleanerReloader, } from "./LookupCleanerLoader";
 
 export class LookupCacheMulti {
   constructor(
     private clock: Clock,
     private cleanerReloader: (lookupId: string) => LookupLabelsCleanerReloader
-  ) {}
+  ) {
+  }
 
   labels = new Map<string, Map<any, any>>();
   recordBirthdate = new Map<string, number>();
@@ -78,4 +77,5 @@ export class LookupCacheMulti {
     this.recordBirthdate.delete(lookupId);
   }
 }
+
 export const ILookupCacheMulti = TypeSymbol<LookupCacheMulti>("ILookupCacheMulti");

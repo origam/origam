@@ -18,14 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import _ from "lodash";
-import {action, computed, createAtom, flow, IAtom, observable} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getApi} from "model/selectors/getApi";
-import {getSessionId} from "model/selectors/getSessionId";
-import {flashColor2htmlColor} from "utils/flashColorFormat";
-import {IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem} from "./types/IRowState";
-import {FlowBusyMonitor} from "../../utils/flow";
+import { action, computed, createAtom, flow, IAtom, observable } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getApi } from "model/selectors/getApi";
+import { getSessionId } from "model/selectors/getSessionId";
+import { flashColor2htmlColor } from "utils/flashColorFormat";
+import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
+import { FlowBusyMonitor } from "../../utils/flow";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -40,7 +40,7 @@ export class RowState implements IRowState {
     Object.assign(this, data);
   }
 
-  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
+  monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
   get isWorking() {
     return this.monitor.isWorkingDelayed;
@@ -49,8 +49,9 @@ export class RowState implements IRowState {
   @observable firstLoadingPerformed = false;
   @observable temporaryContainersValues?: Map<string, RowStateContainer>;
   @computed get mayCauseFlicker() {
-    return  !this.firstLoadingPerformed;
+    return !this.firstLoadingPerformed;
   }
+
   containers: Map<string, RowStateContainer> = new Map<string, RowStateContainer>();
 
   @observable
@@ -119,19 +120,20 @@ export class RowState implements IRowState {
   triggerLoad = _.debounce(this.triggerLoadImm, 666);
 
   getValue(rowId: string) {
-    if(!this.containers.has(rowId)){
-      this.containers.set(rowId, new RowStateContainer(rowId) );
+    if (!this.containers.has(rowId)) {
+      this.containers.set(rowId, new RowStateContainer(rowId));
     }
     let container = this.containers.get(rowId)!;
-    if(!container.atom){
+    if (!container.atom) {
       container.suppressWorkingStatus = this.suppressWorkingStatus;
       container.atom = createAtom(
-          `RowState atom [${rowId}]`,
-          () =>
-              requestAnimationFrame(() => {
-                this.triggerLoad();
-              }),
-          () => {}
+        `RowState atom [${rowId}]`,
+        () =>
+          requestAnimationFrame(() => {
+            this.triggerLoad();
+          }),
+        () => {
+        }
       )
     }
     container.atom.reportObserved?.();
@@ -158,29 +160,29 @@ export class RowState implements IRowState {
   @action.bound
   putValue(state: any) {
     let rowStateItem = new RowStateItem(
-        state.id,
-        state.allowCreate,
-        state.allowDelete,
-        flashColor2htmlColor(state.foregroundColor),
-        flashColor2htmlColor(state.backgroundColor),
-        new Map(
-            state.columns.map((column: any) => {
-              const rs = new RowStateColumnItem(
-                  column.name,
-                  column.dynamicLabel,
-                  flashColor2htmlColor(column.foregroundColor),
-                  flashColor2htmlColor(column.backgroundColor),
-                  column.allowRead,
-                  column.allowUpdate
-              );
-              return [column.name, rs];
-            })
-        ),
-        new Set(state.disabledActions),
-        state.relations
+      state.id,
+      state.allowCreate,
+      state.allowDelete,
+      flashColor2htmlColor(state.foregroundColor),
+      flashColor2htmlColor(state.backgroundColor),
+      new Map(
+        state.columns.map((column: any) => {
+          const rs = new RowStateColumnItem(
+            column.name,
+            column.dynamicLabel,
+            flashColor2htmlColor(column.foregroundColor),
+            flashColor2htmlColor(column.backgroundColor),
+            column.allowRead,
+            column.allowUpdate
+          );
+          return [column.name, rs];
+        })
+      ),
+      new Set(state.disabledActions),
+      state.relations
     );
-    if(!this.containers.has(state.id)){
-      this.containers.set(state.id, new RowStateContainer(state.id) );
+    if (!this.containers.has(state.id)) {
+      this.containers.set(state.id, new RowStateContainer(state.id));
     }
     const container = this.containers.get(state.id);
     container!.rowStateItem = rowStateItem;
@@ -228,7 +230,8 @@ export class RowStateItem implements IRowStateItem {
     public columns: Map<string, IRowStateColumnItem>,
     public disabledActions: Set<string>,
     public relations: any[]
-  ) {}
+  ) {
+  }
 }
 
 export class RowStateColumnItem implements IRowStateColumnItem {
@@ -239,7 +242,8 @@ export class RowStateColumnItem implements IRowStateColumnItem {
     public backgroundColor: string | undefined,
     public allowRead: boolean,
     public allowUpdate: boolean
-  ) {}
+  ) {
+  }
 }
 
 class RowStateContainer {
@@ -253,9 +257,10 @@ class RowStateContainer {
 
   public processingSate: IIdState | undefined;
   public suppressWorkingStatus: boolean = false;
+
   constructor(
-      rowId: string,
-      public atom? : IAtom
+    rowId: string,
+    public atom?: IAtom
   ) {
     this.rowId = rowId;
   }

@@ -81,7 +81,7 @@ export class ScreenToolbarAction extends React.Component<{
         ref={this.props.rootRef}
         className={cx(
           S.root,
-          { isLabelless: !this.props.label, isHidden: this.props.isHidden },
+          {isLabelless: !this.props.label, isHidden: this.props.isHidden},
           this.props.className
         )}
         onMouseDown={this.props.onMouseDown}

@@ -24,17 +24,17 @@ import { FilterSettingsString } from "./HeaderControls/FilterSettingsString";
 import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
 import { observer } from "mobx-react-lite";
 import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
-import { FilterSettingsLookup} from "./HeaderControls/FilterSettingsLookup";
+import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
 import { flow } from "mobx";
 import { MobXProviderContext } from "mobx-react";
 import { onApplyFilterSetting } from "model/actions-ui/DataView/TableView/onApplyFilterSetting";
 import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { getAllLookupIds } from "model/entities/getAllLookupIds";
-import {FilterSettingsTagInput} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsTagInput";
-import {getGridFocusManager} from "../../../../../model/entities/GridFocusManager";
+import { FilterSettingsTagInput } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsTagInput";
+import { getGridFocusManager } from "../../../../../model/entities/GridFocusManager";
 
-export const FilterSettings: React.FC<{autoFocus: boolean, ctx: any}> = observer((props) => {
+export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
 
   function getSettings(defaultValue: IFilterSetting) {
@@ -46,7 +46,7 @@ export const FilterSettings: React.FC<{autoFocus: boolean, ctx: any}> = observer
     return setting;
   }
 
-  function onFilterValueChange(){
+  function onFilterValueChange() {
     getGridFocusManager(props.ctx).focusTableOnReload = false;
   }
 
@@ -57,9 +57,10 @@ export const FilterSettings: React.FC<{autoFocus: boolean, ctx: any}> = observer
         onChange={onFilterValueChange}
         autoFocus={props.autoFocus}/>;
     case "CheckBox":
-      return <FilterSettingsBoolean setting={getSettings(FilterSettingsBoolean.defaultSettings)} />;
+      return <FilterSettingsBoolean setting={getSettings(FilterSettingsBoolean.defaultSettings)}/>;
     case "Date":
-      return <FilterSettingsDate setting={getSettings(FilterSettingsDate.defaultSettings)} autoFocus={props.autoFocus} />;
+      return <FilterSettingsDate setting={getSettings(FilterSettingsDate.defaultSettings)}
+                                 autoFocus={props.autoFocus}/>;
     case "Number":
       return <FilterSettingsNumber
         setting={getSettings(FilterSettingsNumber.defaultSettings)}
@@ -74,8 +75,8 @@ export const FilterSettings: React.FC<{autoFocus: boolean, ctx: any}> = observer
           property={property}
           lookup={property.lookup!}
           autoFocus={props.autoFocus}
-          getOptions={flow(function* (searchTerm: string) {
-            let allLookupIds = yield* getAllLookupIds(property);
+          getOptions={flow(function*(searchTerm: string) {
+            let allLookupIds = yield*getAllLookupIds(property);
             const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allLookupIds);
 
             return Array.from(allLookupIds.values())
@@ -96,8 +97,8 @@ export const FilterSettings: React.FC<{autoFocus: boolean, ctx: any}> = observer
           property={property}
           lookup={property.lookup!}
           autoFocus={props.autoFocus}
-          getOptions={flow(function* (searchTerm: string) {
-            let allLookupIds = yield* getAllLookupIds(property);
+          getOptions={flow(function*(searchTerm: string) {
+            let allLookupIds = yield*getAllLookupIds(property);
             const lookupMap: Map<any, any> =
               yield property.lookupEngine?.lookupResolver.resolveList(allLookupIds);
             return Array.from(lookupMap.entries())
@@ -107,7 +108,7 @@ export const FilterSettings: React.FC<{autoFocus: boolean, ctx: any}> = observer
                   array[1] &&
                   array[1].toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
               )
-              .sort((x,y) => x[1] > y[1] ? 1 : -1);
+              .sort((x, y) => x[1] > y[1] ? 1 : -1);
           })}
         />
       );

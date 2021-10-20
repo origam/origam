@@ -24,6 +24,7 @@ const clearCacheLater = _.debounce(() => {
   formatCache.clear();
 }, 10000);
 const formatCache: any = new Map<any, any>();
+
 function getOrSetCached(fnGetResult: () => any, ...simpleKeys: any[]) {
   let item = formatCache;
   let keyIndex = 0;
@@ -102,6 +103,7 @@ export function formatNumber(
 class CustomNumericFormat {
   private format: string;
   private fractionFormat: string | undefined;
+
   constructor(format: string) {
     const containsAllowedChar = RegExp("^[# 0.]+$").test(format);
     if (!containsAllowedChar) {

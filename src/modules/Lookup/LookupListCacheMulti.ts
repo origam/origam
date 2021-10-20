@@ -22,7 +22,8 @@ import { action } from "mobx";
 import { IClock } from "./Clock";
 
 export class LookupListCacheMulti {
-  constructor(private clock = IClock()) {}
+  constructor(private clock = IClock()) {
+  }
 
   lists = new Map<string, any[][]>();
   recordBirthdate = new Map<string, number>();
@@ -70,4 +71,5 @@ export class LookupListCacheMulti {
     this.recordBirthdate.set(lookupId, this.clock.getTimeMs());
   }
 }
+
 export const ILookupListCacheMulti = TypeSymbol<LookupListCacheMulti>("ILookupListCacheMulti");

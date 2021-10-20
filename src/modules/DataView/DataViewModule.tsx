@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Container} from "dic/Container";
-import {DataViewBodyUI, DataViewToolbarUI, IDataViewBodyUI, IDataViewToolbarUI,} from "./DataViewUI";
+import { Container } from "dic/Container";
+import { DataViewBodyUI, DataViewToolbarUI, IDataViewBodyUI, IDataViewToolbarUI, } from "./DataViewUI";
 import * as PerspectiveModule from "./Perspective/PerspectiveModule";
 
 export const SCOPE_DataView = "DataView";

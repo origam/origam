@@ -39,7 +39,7 @@ export async function ensureLogin() {
   const authOvr = sessionStorage.getItem("origamAuthTokenOverride");
   if (authOvr) {
     sessionStorage.setItem("origamAuthTokenOverride", authOvr);
-    return { access_token: authOvr };
+    return {access_token: authOvr};
   }
   if (window.location.hash.startsWith("#origamClientCallback/")) {
     const user = await userManager.signinRedirectCallback(
@@ -53,7 +53,11 @@ export async function ensureLogin() {
     if (user) {
       return user;
     } else {
-      userManager.signinRedirect();
+      await userManager.signinRedirect();
     }
   }
+}
+
+export async function logoff() {
+  await userManager.signoutRedirect();
 }

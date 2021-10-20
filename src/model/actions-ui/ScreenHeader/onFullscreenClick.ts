@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getWorkbench} from "model/selectors/getWorkbench";
-import {getIsCurrentScreenFull} from "model/selectors/Workbench/getIsCurrentScreenFull";
+import { getWorkbench } from "model/selectors/getWorkbench";
+import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
 
 export function onFullscreenClick(ctx: any) {
   return function onFullscreenClick(event: any) {

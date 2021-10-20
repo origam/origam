@@ -19,14 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
-import {getDataView} from "model/selectors/DataView/getDataView";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export function onExportToExcelClick(ctx: any) {
-  return flow(function* onExportToExcelClick(event: any) {
+  return flow(function*onExportToExcelClick(event: any) {
     try {
       getDataView(ctx).exportToExcel();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

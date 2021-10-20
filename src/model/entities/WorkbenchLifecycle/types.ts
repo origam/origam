@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {onChoiceTaken, onInitPortalDone, onInitUIDone, onOpenScreen, onOpenScreenWithSelection} from "./constants";
+import { onChoiceTaken, onInitPortalDone, onInitUIDone, onOpenScreen, onOpenScreenWithSelection } from "./constants";
 
 export interface IOnOpenScreen {
   type: typeof onOpenScreen;
@@ -37,13 +37,13 @@ export interface IOnOpenScreenWithSelection {
 
 export type IEvent =
   | {
-      type: typeof onInitPortalDone;
-    }
+  type: typeof onInitPortalDone;
+}
   | {
-      type: typeof onInitUIDone;
-    }
+  type: typeof onInitUIDone;
+}
   | {
-      type: typeof onChoiceTaken;
-    }
+  type: typeof onChoiceTaken;
+}
   | IOnOpenScreen
   | IOnOpenScreenWithSelection;

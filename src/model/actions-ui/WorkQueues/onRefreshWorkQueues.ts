@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {refreshWorkQueues} from "model/actions/WorkQueues/refreshWorkQueues";
-import {handleError} from "model/actions/handleError";
+import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
+import { handleError } from "model/actions/handleError";
 
 export function onRefreshWorkQueues(ctx: any) {
-  return function* onRefreshWorkQueues() {
+  return function*onRefreshWorkQueues() {
     try {
-      yield* refreshWorkQueues(ctx)();
+      yield*refreshWorkQueues(ctx)();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   };

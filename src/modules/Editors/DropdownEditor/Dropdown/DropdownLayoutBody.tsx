@@ -30,7 +30,7 @@ export function DropdownLayoutBody(
   const rectCtrl = useContext(CtxDropdownCtrlRect);
 
   function rectBodyComputed(): Rect {
-    const rect = { top: undefined, left: undefined, width: undefined, height: undefined } as any;
+    const rect = {top: undefined, left: undefined, width: undefined, height: undefined} as any;
     if (rectCtrl.bottom! + rectBody.height! > window.innerHeight - 50) {
       rect.top = rectCtrl.top! - rectBody.height!;
     } else {
@@ -69,6 +69,6 @@ export function DropdownLayoutBody(
 }
 
 DropdownLayoutBody.defaultProps = {
-  render: ()=> null,
+  render: () => null,
   minSideMargin: 50
 };

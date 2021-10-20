@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IAdditionalRowData,} from "./types/IAdditionalRecordData";
-import {observable} from "mobx";
+import { IAdditionalRowData, } from "./types/IAdditionalRecordData";
+import { observable } from "mobx";
 
 export class AdditionalRowData implements IAdditionalRowData {
   $type_IAdditionalRowData: 1 = 1;

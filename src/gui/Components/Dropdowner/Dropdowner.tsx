@@ -89,7 +89,7 @@ class DroppedBox extends React.Component<{
 
   render() {
     const style: any = this.props.openEvent
-      ? { left: this.props.openEvent.clientX, top: this.props.openEvent.clientY }
+      ? {left: this.props.openEvent.clientX, top: this.props.openEvent.clientY}
       : this.calcPosition();
 
     return ReactDOM.createPortal(
@@ -169,13 +169,13 @@ export class Dropdowner extends React.Component<{
     (() => this.isDropped)();
     return (
       <Measure bounds={true} ref={this.refMeasTrigger}>
-        {({ measureRef: mRefTrigger, contentRect: cRectTrigger, measure: measureTrigger }) => (
+        {({measureRef: mRefTrigger, contentRect: cRectTrigger, measure: measureTrigger}) => (
           <Measure bounds={true} ref={this.refMeasDropdown}>
             {({
-              measureRef: mRefDropdown,
-              contentRect: cRectDropdown,
-              measure: measureDropdown,
-            }) => (
+                measureRef: mRefDropdown,
+                contentRect: cRectDropdown,
+                measure: measureDropdown,
+              }) => (
               <Observer>
                 {() => (
                   <div
@@ -204,7 +204,7 @@ export class Dropdowner extends React.Component<{
                         }}
                         onOutsideInteraction={this.props.onOutsideInteraction}
                       >
-                        {this.props.content({ setDropped: this.setDropped })}
+                        {this.props.content({setDropped: this.setDropped})}
                       </DroppedBox>
                     )}
                   </div>

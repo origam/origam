@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { createAtom, observable, action } from "mobx";
+import { action, createAtom, observable } from "mobx";
 import { processedImageURL } from "utils/image";
 
 export class ScreenPictureCache {

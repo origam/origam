@@ -17,18 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IFilterGroup} from "model/entities/types/IFilterGroup";
-import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
-import {action, observable} from "mobx";
-import {IFilter} from "model/entities/types/IFilter";
-import {
-  IUIGridFilterFieldConfiguration,
-} from "model/entities/types/IApi";
-import {filterTypeToNumber} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import {getApi} from "model/selectors/getApi";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {getSessionId} from "model/selectors/getSessionId";
+import { IFilterGroup } from "model/entities/types/IFilterGroup";
+import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
+import { action, observable } from "mobx";
+import { IFilter } from "model/entities/types/IFilter";
+import { IUIGridFilterFieldConfiguration, } from "model/entities/types/IApi";
+import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import { getApi } from "model/selectors/getApi";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getSessionId } from "model/selectors/getSessionId";
 import { cloneFilterGroup } from "xmlInterpreters/filterXml";
 
 export class FilterGroupManager {
@@ -48,13 +46,13 @@ export class FilterGroupManager {
   constructor(private filterConfiguration: IFilterConfiguration) {
     this.ctx = filterConfiguration;
     filterConfiguration.registerFilteringOnOffHandler(filteringOn => {
-      if(!filteringOn){
+      if (!filteringOn) {
         this.selectedFilterGroup = undefined;
       }
     });
   }
 
-  get filtersHidden(){
+  get filtersHidden() {
     return !this.filterConfiguration.isFilterControlsDisplayed;
   }
 
@@ -71,7 +69,7 @@ export class FilterGroupManager {
     return this.filterConfiguration.activeFilters;
   }
 
-  get noFilterActive(){
+  get noFilterActive() {
     return this.activeFilters.length === 0 ||
       this.activeFilters.every(filter => !filter.setting.isComplete)
   }
@@ -94,10 +92,10 @@ export class FilterGroupManager {
     };
   }
 
-  getFilterGroupServerVersion(name: string, isGlobal: boolean){
+  getFilterGroupServerVersion(name: string, isGlobal: boolean) {
     return {
       details: this.activeFilters
-        .filter(filter=> filter.setting.isComplete)
+        .filter(filter => filter.setting.isComplete)
         .map((filter) => this.filterToServerVersion(filter)),
       id: undefined,
       isGlobal: isGlobal,
@@ -146,7 +144,7 @@ export class FilterGroupManager {
 
   @action.bound
   async resetDefaultFilterGroup() {
-    if(!this._defaultFilter){
+    if (!this._defaultFilter) {
       return;
     }
     const api = getApi(this.ctx);
@@ -169,7 +167,7 @@ export class FilterGroupManager {
     await api.setDefaultFilter({
       SessionFormIdentifier: getSessionId(this.ctx),
       PanelInstanceId: getDataView(this.ctx).modelInstanceId,
-      DataStructureEntityId:  getDataStructureEntityId(this.ctx),
+      DataStructureEntityId: getDataStructureEntityId(this.ctx),
       PanelId: getDataView(this.ctx).modelId,
       Filter: this.getFilterGroupServerVersion("DEFAULT", false),
       IsDefault: true

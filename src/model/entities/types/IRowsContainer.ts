@@ -17,8 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IProperty} from "model/entities/types/IProperty";
-
 export interface IRowsContainer {
   clear(): void;
 
@@ -42,13 +40,13 @@ export interface IRowsContainer {
 
   allRows: any[];
 
-  getFilteredRows(args:{propertyFilterIdToExclude: string}): any[];
+  getFilteredRows(args: { propertyFilterIdToExclude: string }): any[];
 
-  updateSortAndFilter(data?: {retainPreviousSelection?: true}): Promise<any>;
+  updateSortAndFilter(data?: { retainPreviousSelection?: true }): Promise<any>;
 
   start(): void;
 
-  stop():void;
+  stop(): void;
 
   getFirstRow(): any[] | undefined;
 

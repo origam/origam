@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import moment from "moment";
-import {DateSequence} from "../../../../utils/cookies";
+import { DateSequence } from "../../../../utils/cookies";
 
 export default class DateCompleter {
   dateSequence: DateSequence;

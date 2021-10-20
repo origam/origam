@@ -24,7 +24,7 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
-import {action, observable, runInAction} from "mobx";
+import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "./Operator";
@@ -56,7 +56,8 @@ const OpCombo: React.FC<{
           key={op.type}
           onClick={() => {
             props.setting.type = op.type;
-            props.onChange();}
+            props.onChange();
+          }
           }
         >
           {op.caption}
@@ -81,14 +82,14 @@ class OpEditors extends React.Component<{
   inputTag: any;
 
   componentDidMount() {
-    if(this.props.autoFocus){
-      setTimeout(()=>{
+    if (this.props.autoFocus) {
+      setTimeout(() => {
         this.inputTag?.focus();
       });
     }
   }
 
-  render(){
+  render() {
     switch (this.props.setting.type) {
       case "eq":
       case "neq":
@@ -106,7 +107,7 @@ class OpEditors extends React.Component<{
             ref={this.inputRef}
           />
         );
-  
+
       case "between":
       case "nbetween":
         return (
@@ -140,10 +141,10 @@ class OpEditors extends React.Component<{
 export class FilterSettingsNumber extends React.Component<{
   setting?: any;
   autoFocus: boolean;
-  onChange: ()=>void;
+  onChange: () => void;
 }> {
 
-  static get defaultSettings(){
+  static get defaultSettings() {
     return new FilterSetting(OPERATORS[0].type)
   }
 
@@ -154,7 +155,7 @@ export class FilterSettingsNumber extends React.Component<{
 
   @action.bound
   handleFilterTypeChange() {
-    if(this.props.setting.type === "null" || this.props.setting.type === "nnull") {
+    if (this.props.setting.type === "null" || this.props.setting.type === "nnull") {
       this.currentValue1 = "";
       this.currentValue2 = "";
       this.props.setting.val1 = undefined;
@@ -163,11 +164,11 @@ export class FilterSettingsNumber extends React.Component<{
     this.handleSettingChange();
   }
 
-  componentDidUpdate(prevProps:any){
-    if(prevProps.setting.val1 !== this.props.setting.val1){
+  componentDidUpdate(prevProps: any) {
+    if (prevProps.setting.val1 !== this.props.setting.val1) {
       this.currentValue1 = this.props.setting.val1;
     }
-    if(prevProps.setting.val2 !== this.props.setting.val2){
+    if (prevProps.setting.val2 !== this.props.setting.val2) {
       this.currentValue2 = this.props.setting.val2;
     }
   }
@@ -202,7 +203,7 @@ export class FilterSettingsNumber extends React.Component<{
   @observable
   currentValue2 = this.props.setting.val2;
 
-  onCurrentValue1Changed(newValue: string){
+  onCurrentValue1Changed(newValue: string) {
     this.currentValue1 = newValue;
 
     const timeOutId = setTimeout(() => {
@@ -217,7 +218,7 @@ export class FilterSettingsNumber extends React.Component<{
     }
   }
 
-  onCurrentValue2Changed(newValue: string){
+  onCurrentValue2Changed(newValue: string) {
     this.currentValue2 = newValue;
 
     const timeOutId = setTimeout(() => {
@@ -238,15 +239,15 @@ export class FilterSettingsNumber extends React.Component<{
           setting={this.props.setting}
           onChange={this.handleFilterTypeChange}
         />
-        <OpEditors 
-          setting={this.props.setting} 
+        <OpEditors
+          setting={this.props.setting}
           onBlur={this.handleBlur}
           currentValue1={this.currentValue1}
           currentValue2={this.currentValue2}
-          onCurrentValue1Changed={val1 => this.onCurrentValue1Changed(val1)} 
+          onCurrentValue1Changed={val1 => this.onCurrentValue1Changed(val1)}
           onCurrentValue2Changed={val2 => this.onCurrentValue2Changed(val2)}
           autoFocus={this.props.autoFocus}
-          />
+        />
       </>
     );
   }

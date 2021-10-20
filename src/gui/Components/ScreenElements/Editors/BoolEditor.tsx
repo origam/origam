@@ -66,8 +66,8 @@ export class BoolEditor extends React.Component<{
           disabled={!this.props.readOnlyNoGrey && this.props.isReadOnly}
           onChange={(event: any) => {
             this.props.onChange &&
-              !this.props.isReadOnly &&
-              this.props.onChange(event, event.target.checked);
+            !this.props.isReadOnly &&
+            this.props.onChange(event, event.target.checked);
           }}
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
@@ -78,7 +78,7 @@ export class BoolEditor extends React.Component<{
         />
         {this.props.isInvalid && (
           <div className={CS.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red" />
+            <i className="fas fa-exclamation-circle red"/>
           </div>
         )}
       </div>

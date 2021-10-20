@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {observer, Provider} from "mobx-react";
+import { observer, Provider } from "mobx-react";
 import React from "react";
-import {IOpenedScreen} from "../../../model/entities/types/IOpenedScreen";
-import {FormScreenBuilder} from "./FormScreenBuilder";
+import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
+import { FormScreenBuilder } from "./FormScreenBuilder";
 
 
 @observer
@@ -28,8 +28,8 @@ export class DialogScreenBuilder extends React.Component<{
   openedScreen: IOpenedScreen;
 }> {
   render() {
-    const { openedScreen } = this.props;
-    const { content } = openedScreen;
+    const {openedScreen} = this.props;
+    const {content} = openedScreen;
     if (!content.isLoading) {
       return (
         <Provider formScreen={content}>

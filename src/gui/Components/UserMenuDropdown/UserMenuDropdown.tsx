@@ -18,11 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import {Dropdown} from "gui/Components/Dropdown/Dropdown";
-import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import {UserMenuBlock} from "gui/Components/UserMenuDropdown/UserMenuBlock";
-import {DropdownItem} from "gui/Components/Dropdown/DropdownItem";
-import {T} from "utils/translation";
+import { Dropdown } from "gui/Components/Dropdown/Dropdown";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { UserMenuBlock } from "gui/Components/UserMenuDropdown/UserMenuBlock";
+import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
+import { T } from "utils/translation";
 import S from "gui/Components/UserMenuDropdown/UserMenuDropdown.module.scss";
 import cx from "classnames";
 import { getDialogStack } from "model/selectors/getDialogStack";
@@ -49,6 +49,7 @@ export const UserMenuDropdown: React.FC<{
       />
     );
   }
+
   function onHelpClick() {
     window.open(props.helpUrl);
   }
@@ -60,17 +61,17 @@ export const UserMenuDropdown: React.FC<{
         <div
           ref={refTrigger}
           onMouseDown={() => setDropped(true)}>
-           <div className={S.avatarSection}>
+          <div className={S.avatarSection}>
             <div className={S.pictureSection}>
               <div className={S.avatarContainer}>
-                <img className={cx(S.avatar, S.clickableAvatar)} src={props.avatarLink}  alt=""/>
+                <img className={cx(S.avatar, S.clickableAvatar)} src={props.avatarLink} alt=""/>
               </div>
             </div>
             <div className={S.userNameLabel}>{props.userName}</div>
           </div>
         </div>
       )}
-      content={({ setDropped }) => (
+      content={({setDropped}) => (
         <Dropdown>
           <UserMenuBlock
             userName={props.userName || "Logged user"}
@@ -81,18 +82,18 @@ export const UserMenuDropdown: React.FC<{
                   {T("My profile", "my_profile")}
                 </DropdownItem> */}
                 {props.helpUrl && props.helpUrl.trim() !== "" &&
-                  <DropdownItem
+                <DropdownItem
                   onClick={() => {
                     setDropped(false);
                     onHelpClick();
-                    }}>
+                  }}>
                   {T("Help", "help_button")}
                 </DropdownItem>}
                 <DropdownItem
                   onClick={() => {
                     setDropped(false);
                     onAboutClick();
-                    }}>
+                  }}>
                   {T("About", "about_application")}
                 </DropdownItem>
                 <DropdownItem onClick={props.handleLogoutClick} className="redItem">

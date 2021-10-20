@@ -29,7 +29,7 @@ import { getApi } from "model/selectors/getApi";
 import S from "./ImageEditor.module.scss";
 import { processedImageURL } from "utils/image";
 
-@inject(({ property }: { property: IProperty }, { value }) => {
+@inject(({property}: { property: IProperty }, {value}) => {
   return {
     api: getApi(property),
     DataStructureEntityId: getDataStructureEntityId(property),
@@ -47,6 +47,6 @@ export class ImageEditor extends React.Component<{
 }> {
   render() {
     const preparedUrl = processedImageURL(this.props.value).value;
-    return preparedUrl ? <img className={S.image} src={preparedUrl}  alt=""/> : null;
+    return preparedUrl ? <img className={S.image} src={preparedUrl} alt=""/> : null;
   }
 }

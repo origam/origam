@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IFormScreenEnvelope} from "./IFormScreen";
-import {IMainMenuItemType} from "./IMainMenu";
+import { IFormScreenEnvelope } from "./IFormScreen";
+import { IMainMenuItemType } from "./IMainMenu";
 
 export interface IDialogInfo {
   width: number;
@@ -51,7 +51,9 @@ export interface IOpenedScreen extends IOpenedScreenData {
   formTitle: string;
 
   setActive(state: boolean): void;
+
   setContent(screen: IFormScreenEnvelope): void;
+
   screenUrl?: string;
   parent?: any;
   hasDynamicTitle: boolean;

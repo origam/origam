@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getOpenedNonDialogScreenItems} from "./getOpenedNonDialogScreenItems";
-import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
+import { getOpenedNonDialogScreenItems } from "./getOpenedNonDialogScreenItems";
+import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 
 export function getTopmostOpenedNonDialogScreenItem(ctx: any): IOpenedScreen | undefined {
   const screens = [...getOpenedNonDialogScreenItems(ctx)];

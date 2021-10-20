@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {getRecordInfo} from "model/selectors/RecordInfo/getRecordInfo";
+import { flow } from "mobx";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
 
 export function onSelectedRowChange(ctx: any) {
-  return flow(function* onPossibleSelectedRowChange(
+  return flow(function*onPossibleSelectedRowChange(
     menuId: string,
     dataStructureEntityId: string,
     rowId: string | undefined
   ) {
-    yield* getRecordInfo(ctx).onSelectedRowMaybeChanged(
+    yield*getRecordInfo(ctx).onSelectedRowMaybeChanged(
       menuId,
       dataStructureEntityId,
       rowId

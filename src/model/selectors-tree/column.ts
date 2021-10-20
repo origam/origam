@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getProperty} from "model/selectors/DataView/getProperty";
+import { getProperty } from "model/selectors/DataView/getProperty";
 import { getApi } from "model/selectors/getApi";
 
 export default {
@@ -27,7 +27,7 @@ export default {
 
   async getLinkMenuId(ctx: any, value: any) {
     const property = getProperty(ctx);
-    if(property.linkDependsOnValue){
+    if (property.linkDependsOnValue) {
       const api = getApi(ctx);
       return await api.getMenuId({
         LookupId: property.lookupId!,

@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 
 export function onDeleteRowClick(ctx: any) {
-  return flow(function* onDeleteRowClick(event: any) {
+  return flow(function*onDeleteRowClick(event: any) {
     try {
       const dataView = getDataView(ctx);
       const selectedRow = getSelectedRow(ctx);
@@ -34,7 +34,7 @@ export function onDeleteRowClick(ctx: any) {
         const dataTable = getDataTable(ctx);
         const entity = dataView.entity;
         const formScreenLifecycle = getFormScreenLifecycle(ctx);
-        yield* formScreenLifecycle.onDeleteRow(
+        yield*formScreenLifecycle.onDeleteRow(
           entity,
           dataTable.getRowId(selectedRow),
           dataView
@@ -42,7 +42,7 @@ export function onDeleteRowClick(ctx: any) {
         getTablePanelView(ctx)?.triggerOnFocusTable();
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

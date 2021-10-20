@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Container} from "dic/Container";
-import {ITablePerspectiveDirector, TablePerspectiveDirector} from "./TablePerspectiveDirector";
-import {ITablePerspective, TablePerspective} from "./TablePerspective";
+import { Container } from "dic/Container";
+import { ITablePerspectiveDirector, TablePerspectiveDirector } from "./TablePerspectiveDirector";
+import { ITablePerspective, TablePerspective } from "./TablePerspective";
 
 export const SCOPE_TablePerspective = "TablePerspective";
 

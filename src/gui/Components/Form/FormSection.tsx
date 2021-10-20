@@ -34,7 +34,7 @@ export const FormSection: React.FC<{
   const hasTitle = !!props.title;
   return (
     <div
-      className={cx(S.root, { hasTitle })}
+      className={cx(S.root, {hasTitle})}
       style={{
         top: props.top,
         left: props.left,

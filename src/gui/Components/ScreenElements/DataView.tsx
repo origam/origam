@@ -35,6 +35,7 @@ import { PubSub } from "utils/events";
 export interface IDataViewHeaderExtensionItem {
   $iid: number;
   group: string;
+
   render(): ReactNode;
 }
 
@@ -78,7 +79,7 @@ interface IDataViewProps {
   dataView?: IDataView;
 }
 
-@inject(({ formScreen }, { id }) => {
+@inject(({formScreen}, {id}) => {
   const dataView = getDataViewById(formScreen, id);
   return {
     dataView,
@@ -113,8 +114,8 @@ export class DataViewInner extends React.Component<IDataViewProps> {
       <>
         {/* <div style={{position:"relative"}}> */}
         <div className={S.overlayContainer}>
-          <CDataViewHeader isVisible={!this.props.isHeadless} />
-          {isWorking && <DataViewLoading />}
+          <CDataViewHeader isVisible={!this.props.isHeadless}/>
+          {isWorking && <DataViewLoading/>}
         </div>
         <div className={S.dataViewContentContainer}>{uiBody && uiBody.render()}</div>
       </>
@@ -130,12 +131,12 @@ export class DataViewInner extends React.Component<IDataViewProps> {
         <Provider dataView={this.props.dataView}>
           <div className={S.dataView} style={this.getDataViewStyle()}>
             {this.props.dataView?.type === "TreePanel" ? (
-              <TreeView dataView={this.props.dataView} />
+              <TreeView dataView={this.props.dataView}/>
             ) : (
               this.renderUiBodyWithHeader()
             )}
 
-            {isWorkingDelayed && <DataViewLoading />}
+            {isWorkingDelayed && <DataViewLoading/>}
           </div>
         </Provider>
       </CtxDataViewHeaderExtension.Provider>

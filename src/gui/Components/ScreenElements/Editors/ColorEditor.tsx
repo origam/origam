@@ -240,10 +240,10 @@ export default class ColorEditor extends React.Component<{
       <Dropdowner
         ref={this.refDropdowner}
         onContainerMouseDown={undefined /*this.handleContainerMouseDown*/}
-        onDroppedUp={() => this.send({ type: "PICKER_DROPPED_UP" })}
-        onDroppedDown={() => this.send({ type: "PICKER_DROPPED_DOWN" })}
-        onOutsideInteraction={() => this.send({ type: "PICKER_OUTSIDE_INTERACTION" })}
-        trigger={({ refTrigger, setDropped }) => (
+        onDroppedUp={() => this.send({type: "PICKER_DROPPED_UP"})}
+        onDroppedDown={() => this.send({type: "PICKER_DROPPED_DOWN"})}
+        onOutsideInteraction={() => this.send({type: "PICKER_OUTSIDE_INTERACTION"})}
+        trigger={({refTrigger, setDropped}) => (
           <div
             className={S.editorContainer}
             ref={this.refContainer}
@@ -258,9 +258,9 @@ export default class ColorEditor extends React.Component<{
                 refTrigger(elm);
                 this.refInput(elm);
               }}
-              onMouseDown={() => this.send({ type: "DROPDOWN_SYMBOL_MOUSE_DOWN" })}
-              onFocus={() => this.send({ type: "INPUT_FIELD_FOCUS" })}
-              onBlur={() => this.send({ type: "INPUT_FIELD_BLUR" })}
+              onMouseDown={() => this.send({type: "DROPDOWN_SYMBOL_MOUSE_DOWN"})}
+              onFocus={() => this.send({type: "INPUT_FIELD_FOCUS"})}
+              onBlur={() => this.send({type: "INPUT_FIELD_BLUR"})}
               onKeyDown={(event) => this.props.onKeyDown?.(event)}
             >
               <div
@@ -285,13 +285,13 @@ export default class ColorEditor extends React.Component<{
             />*/}
           </div>
         )}
-        content={({ setDropped }) => (
+        content={({setDropped}) => (
           <div
             tabIndex={0}
             ref={this.refDroppedPanelContainer}
             className={S.droppedPanelContainer}
             onKeyDown={(event: any) => {
-              this.send({ type: "PICKER_KEY_DOWN", payload: { event } });
+              this.send({type: "PICKER_KEY_DOWN", payload: {event}});
             }}
           >
             <SketchPicker

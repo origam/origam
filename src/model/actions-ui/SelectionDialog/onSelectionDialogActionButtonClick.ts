@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {IAction, IActionMode} from "model/entities/types/IAction";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getGridId} from "model/selectors/DataView/getGridId";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {getSelectedRowId} from "../../selectors/TablePanelView/getSelectedRowId";
-import {handleError} from "model/actions/handleError";
+import { flow } from "mobx";
+import { IAction, IActionMode } from "model/entities/types/IAction";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getGridId } from "model/selectors/DataView/getGridId";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
+import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 
 let isRunning = false;
@@ -44,11 +44,11 @@ export function onSelectionDialogActionButtonClick(ctx: any) {
         const rowId = getSelectedRowId(ctx);
         const dataView = getDataView(ctx);
         if (rowId) {
-          yield* lifecycle.onFlushData();
-          const selectedItems: string[] = action.mode === IActionMode.MultipleCheckboxes 
-            ? Array.from(dataView.selectedRowIds) 
+          yield*lifecycle.onFlushData();
+          const selectedItems: string[] = action.mode === IActionMode.MultipleCheckboxes
+            ? Array.from(dataView.selectedRowIds)
             : [rowId];
-          yield* lifecycle.onExecuteAction(
+          yield*lifecycle.onExecuteAction(
             gridId,
             entity,
             action,
@@ -59,7 +59,7 @@ export function onSelectionDialogActionButtonClick(ctx: any) {
         isRunning = false;
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

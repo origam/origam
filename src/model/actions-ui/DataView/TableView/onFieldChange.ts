@@ -17,20 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getFormScreenLifecycle} from "../../../selectors/FormScreen/getFormScreenLifecycle";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {IProperty} from "model/entities/types/IProperty";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
+import { getFormScreenLifecycle } from "../../../selectors/FormScreen/getFormScreenLifecycle";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { IProperty } from "model/entities/types/IProperty";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 
 export function onFieldChange(ctx: any) {
   return flow(onFieldChangeG(ctx));
 }
 
 export function onFieldChangeG(ctx: any) {
-  return function* onFieldChange(args:{event: any, row: any[], property: IProperty, value: any}) {
+  return function*onFieldChange(args: { event: any, row: any[], property: IProperty, value: any }) {
     const {property, row, event} = args;
     let value = args.value;
     try {
@@ -47,21 +47,21 @@ export function onFieldChangeG(ctx: any) {
       ) {
         // Flush data to session when combo value changed.
         getDataTable(ctx).flushFormToTable(row);
-        yield* getFormScreenLifecycle(ctx).onFlushData();
+        yield*getFormScreenLifecycle(ctx).onFlushData();
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   };
 }
 
 export function changeManyFields(ctx: any) {
-  return function* changeManyFields(values: Array<{ fieldId: string; value: any }>) {
+  return function*changeManyFields(values: Array<{ fieldId: string; value: any }>) {
     const dataTable = getDataTable(ctx);
     const row = getSelectedRow(ctx);
     if (row) {
-      for (let { fieldId, value } of values) {
+      for (let {fieldId, value} of values) {
         dataTable.setDirtyValue(row, fieldId, value);
       }
     }

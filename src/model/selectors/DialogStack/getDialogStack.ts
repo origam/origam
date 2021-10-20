@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getApplication} from "../getApplication";
+import { getApplication } from "../getApplication";
 
-export function getDialogStack(ctx?:any) {
+export function getDialogStack(ctx?: any) {
   return getApplication(ctx).dialogStack;
 }

@@ -81,7 +81,7 @@ export class FilterSettingsComboBox extends React.Component<{
   render() {
     return (
       <Measure ref={this.refMeasure} bounds={true}>
-        {({ measureRef: refTriggerMeasure, contentRect: triggerContentRect }) => (
+        {({measureRef: refTriggerMeasure, contentRect: triggerContentRect}) => (
           <Observer>
             {() => (
               <div className={S.container} ref={this.refDropdown}>
@@ -92,25 +92,25 @@ export class FilterSettingsComboBox extends React.Component<{
                 >
                   {this.props.trigger}
                   <div className={S.dropdownSymbol}>
-                    <i className="fas fa-caret-down" />
+                    <i className="fas fa-caret-down"/>
                   </div>
                 </div>
                 {this.isDroppedDown &&
-                  createPortal(
-                    <div
-                      className={S.dropdown}
-                      onClick={this.handleDropdownClick}
-                      style={{
-                        position: "absolute",
-                        top: triggerContentRect.bounds?.bottom,
-                        left: triggerContentRect.bounds?.left,
-                        minWidth: triggerContentRect.bounds?.width,
-                      }}
-                    >
-                      {this.props.children}
-                    </div>,
-                    document.getElementById("dropdown-portal")!
-                  )}
+                createPortal(
+                  <div
+                    className={S.dropdown}
+                    onClick={this.handleDropdownClick}
+                    style={{
+                      position: "absolute",
+                      top: triggerContentRect.bounds?.bottom,
+                      left: triggerContentRect.bounds?.left,
+                      minWidth: triggerContentRect.bounds?.width,
+                    }}
+                  >
+                    {this.props.children}
+                  </div>,
+                  document.getElementById("dropdown-portal")!
+                )}
               </div>
             )}
           </Observer>

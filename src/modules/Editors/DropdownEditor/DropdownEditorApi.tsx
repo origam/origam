@@ -24,23 +24,24 @@ import { DropdownEditorSetup } from "./DropdownEditor";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { EagerlyLoadedGrid } from "./DropdownEditorCommon";
 
-export interface IDropdownEditorApi{
+export interface IDropdownEditorApi {
   getLookupList(searchTerm: string): Generator;
 }
 
 @bind
-export class DropdownEditorApi implements IDropdownEditorApi{
+export class DropdownEditorApi implements IDropdownEditorApi {
   constructor(
     private setup: () => DropdownEditorSetup,
     private rowCursor: RowCursor,
     private api: DataViewAPI,
-    private behavior:() => DropdownEditorBehavior,
-  ) {}
+    private behavior: () => DropdownEditorBehavior,
+  ) {
+  }
 
   *getLookupList(searchTerm: string): Generator {
     const setup = this.setup();
     if (setup.dropdownType === EagerlyLoadedGrid) {
-      return yield* this.api.getLookupList({
+      return yield*this.api.getLookupList({
         ColumnNames: setup.columnNames,
         Property: setup.propertyId,
         Id: this.rowCursor.selectedId!,
@@ -52,7 +53,7 @@ export class DropdownEditorApi implements IDropdownEditorApi{
         PageNumber: 1,
       });
     } else {
-      return yield* this.api.getLookupList({
+      return yield*this.api.getLookupList({
         ColumnNames: setup.columnNames,
         Property: setup.propertyId,
         Id: this.rowCursor.selectedId!,

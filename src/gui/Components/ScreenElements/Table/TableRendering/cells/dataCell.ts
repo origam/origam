@@ -64,8 +64,8 @@ import {
 import {
   currentDataCellRenderer,
   getPaddingLeft,
-  xCenter,
   getPaddingRight,
+  xCenter,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
 
 export function dataColumnsWidths() {
@@ -138,7 +138,7 @@ function registerClickHandler(columnId: string) {
       w: checkboxClickableArea.width,
       h: checkboxClickableArea.height,
       handler(event: any) {
-        flow(function* () {
+        flow(function*() {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
             const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
@@ -146,7 +146,7 @@ function registerClickHandler(columnId: string) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
-            yield* getTablePanelView(ctx).onCellClick(event, row, columnId, true);
+            yield*getTablePanelView(ctx).onCellClick(event, row, columnId, true);
           }
         })();
       },
@@ -157,7 +157,7 @@ function registerClickHandler(columnId: string) {
       w: cellClickableArea.width,
       h: cellClickableArea.height,
       handler(event: any) {
-        flow(function* () {
+        flow(function*() {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
             const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
@@ -165,7 +165,7 @@ function registerClickHandler(columnId: string) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
-            yield* getTablePanelView(ctx).onCellClick(event, row, columnId, false);
+            yield*getTablePanelView(ctx).onCellClick(event, row, columnId, false);
           }
         })();
       },
@@ -177,7 +177,7 @@ function registerClickHandler(columnId: string) {
       w: cellClickableArea.width,
       h: cellClickableArea.height,
       handler(event: any) {
-        flow(function* () {
+        flow(function*() {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
             const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
@@ -185,7 +185,7 @@ function registerClickHandler(columnId: string) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
-            yield* getTablePanelView(ctx).onCellClick(event, row, columnId, false);
+            yield*getTablePanelView(ctx).onCellClick(event, row, columnId, false);
           }
         })();
       },
@@ -228,7 +228,6 @@ export function drawDataCellBackground() {
   if (drawingColumnIndex() === 0) {
     getTablePanelView(ctx).firstColumn = currentProperty();
   }
-
   ctx2d.fillStyle = getBackGroundColor();
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
@@ -313,7 +312,7 @@ function getBackGroundColor() {
   const backgroundColor = getRowStateRowBgColor(tablePanelView(), recordId());
 
   if (isColumnOrderChangeSource) {
-    return  getComputedStyle(document.documentElement).getPropertyValue('--grey2');
+    return getComputedStyle(document.documentElement).getPropertyValue('--grey2');
   } else if (isRowCursor) {
     return backgroundColor
       ? shadeHexColor(backgroundColor, -0.1)!

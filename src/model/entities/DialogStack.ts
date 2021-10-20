@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {action, computed, observable} from "mobx";
-import {IDialogStack} from "./types/IDialogStack";
+import { action, computed, observable } from "mobx";
+import { IDialogStack } from "./types/IDialogStack";
 import { IDialogInfo } from "./types/IDialogInfo";
-import {IDialogDimensions} from "../../gui/Components/Dialog/types";
+import { IDialogDimensions } from "../../gui/Components/Dialog/types";
 
 let nextId = 0;
 
@@ -32,7 +32,7 @@ export class DialogStack implements IDialogStack {
     return this.stackedDialogs.length > 0;
   }
 
-  @action.bound pushDialog(    
+  @action.bound pushDialog(
     key: string,
     component: React.ReactElement,
     dialogDimensions?: IDialogDimensions,
@@ -42,7 +42,8 @@ export class DialogStack implements IDialogStack {
       key: useKey,
       closeOnClickOutside: closeOnClickOutside,
       component: component,
-      dimensions: dialogDimensions });
+      dimensions: dialogDimensions
+    });
     return () => {
       this.closeDialog(useKey);
     };

@@ -26,7 +26,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 
 export function onCreateRowClick(ctx: any) {
-  return flow(function* onCreateRowClick(event: any) {
+  return flow(function*onCreateRowClick(event: any) {
     try {
       const gridId = getGridId(ctx);
       const entity = getEntity(ctx);
@@ -35,9 +35,9 @@ export function onCreateRowClick(ctx: any) {
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
       }
-      yield* formScreenLifecycle.onCreateRow(entity, gridId);
+      yield*formScreenLifecycle.onCreateRow(entity, gridId);
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

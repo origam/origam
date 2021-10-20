@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ScrollRowContainer} from "../model/entities/ScrollRowContainer";
+import { ScrollRowContainer } from "../model/entities/ScrollRowContainer";
 
-function idGetter(row: any[]){
+function idGetter(row: any[]) {
   return row[0];
 }
 
-function getTestValue(row: any[]){
+function getTestValue(row: any[]) {
   return row[1];
 }
 

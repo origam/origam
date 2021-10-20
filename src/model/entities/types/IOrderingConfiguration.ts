@@ -33,11 +33,17 @@ export interface IOrderByColumnSetting {
 export interface IOrderingConfiguration {
   userOrderings: IOrdering[];
   orderings: IOrdering[];
+
   getOrdering(column: string): IOrderByColumnSetting;
+
   setOrdering(column: string): void;
+
   addOrdering(column: string): void;
+
   groupChildrenOrdering: IOrdering | undefined;
+
   getDefaultOrderings(): IOrdering[];
+
   parent?: any;
   orderingFunction: () => (row1: any[], row2: any[]) => number;
 }
@@ -48,16 +54,21 @@ export interface IOrdering {
   lookupId: string | undefined;
 }
 
-export function parseToIOrderByDirection(candidate: string | undefined): IOrderByDirection{
-  switch(candidate){
-    case "Descending": return IOrderByDirection.DESC;
-    case "Ascending": return IOrderByDirection.ASC;
-    case undefined: return IOrderByDirection.NONE;
-    default: throw new Error("Option not implemented: " + candidate)
+export function parseToIOrderByDirection(candidate: string | undefined): IOrderByDirection {
+  switch (candidate) {
+    case "Descending":
+      return IOrderByDirection.DESC;
+    case "Ascending":
+      return IOrderByDirection.ASC;
+    case undefined:
+      return IOrderByDirection.NONE;
+    default:
+      throw new Error("Option not implemented: " + candidate)
   }
 }
-export function parseToOrdering(candidateArray: any[]): IOrdering[] | undefined{
-  if(!candidateArray || candidateArray.length === 0) return undefined;
+
+export function parseToOrdering(candidateArray: any[]): IOrdering[] | undefined {
+  if (!candidateArray || candidateArray.length === 0) return undefined;
 
   return candidateArray.filter(candidate => candidate.field || candidate.direction)
     .map(candidate => {
@@ -66,5 +77,5 @@ export function parseToOrdering(candidateArray: any[]): IOrdering[] | undefined{
         direction: parseToIOrderByDirection(candidate.direction),
         lookupId: undefined
       };
-  })
+    })
 }

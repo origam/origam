@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {TypeSymbol} from "dic/Container";
-import {observable} from "mobx";
-import {getIdent, IIId} from "utils/common";
-import {IPerspective, IPerspectiveContrib} from "../Perspective";
+import { TypeSymbol } from "dic/Container";
+import { observable } from "mobx";
+import { getIdent, IIId } from "utils/common";
+import { IPerspective, IPerspectiveContrib } from "../Perspective";
 import bind from "bind-decorator";
-import {IPanelViewType} from "model/entities/types/IPanelViewType";
-import {IViewConfiguration} from "modules/DataView/ViewConfiguration";
+import { IPanelViewType } from "model/entities/types/IPanelViewType";
+import { IViewConfiguration } from "modules/DataView/ViewConfiguration";
 
 export class TablePerspective implements IIId, IPerspectiveContrib {
   $iid = getIdent();
@@ -31,16 +31,17 @@ export class TablePerspective implements IIId, IPerspectiveContrib {
   constructor(
     public perspective = IPerspective(),
     public viewConfiguration = IViewConfiguration()
-  ) {}
+  ) {
+  }
 
   @observable isActive = false;
 
   @bind
   *handleToolbarBtnClick() {
     if (this.isActive) return;
-    yield* this.perspective.deactivate();
+    yield*this.perspective.deactivate();
     this.isActive = true;
-    yield* this.viewConfiguration.anounceActivePerspective(IPanelViewType.Table);
+    yield*this.viewConfiguration.anounceActivePerspective(IPanelViewType.Table);
     this.onTablePerspectiveShown?.();
   }
 

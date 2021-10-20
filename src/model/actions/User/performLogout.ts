@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getApplicationLifecycle} from "model/selectors/getApplicationLifecycle"
+import { getApplicationLifecycle } from "model/selectors/getApplicationLifecycle"
 
 export function performLogout(ctx: any) {
-  return function* performLogout() {
-    yield* getApplicationLifecycle(ctx).performLogout();
+  return function*performLogout() {
+    yield*getApplicationLifecycle(ctx).performLogout();
   }
 }

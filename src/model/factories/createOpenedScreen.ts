@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IDialogInfo} from "../entities/types/IOpenedScreen";
-import {OpenedScreen} from "../entities/OpenedScreen";
-import {IFormScreenEnvelope} from "../entities/types/IFormScreen";
-import {IMainMenuItemType} from "../entities/types/IMainMenu";
+import { IDialogInfo } from "../entities/types/IOpenedScreen";
+import { OpenedScreen } from "../entities/OpenedScreen";
+import { IFormScreenEnvelope } from "../entities/types/IFormScreen";
+import { IMainMenuItemType } from "../entities/types/IMainMenu";
 
-export function *createOpenedScreen(
+export function*createOpenedScreen(
   ctx: any,
   menuItemId: string,
   menuItemType: IMainMenuItemType,

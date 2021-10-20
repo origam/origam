@@ -27,7 +27,7 @@ import { LookupListCacheMulti } from "../../../modules/Lookup/LookupListCacheMul
 import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { Chatrooms } from "../Chatrooms";
 import { Notifications } from "../Notifications";
-import {Favorites} from "model/entities/Favorites";
+import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "../SidebarState";
 
 export interface IWorkbenchData {
@@ -53,7 +53,9 @@ export interface IWorkbench extends IWorkbenchData {
 
   // loggedUserName: any
   mainMenuEnvelope: IMainMenuEnvelope;
+
   run(): Generator;
+
   setFullscreen(state: boolean): void;
 
   openedScreenIdSet: Set<string>;

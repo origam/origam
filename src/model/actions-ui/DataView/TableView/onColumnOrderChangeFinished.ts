@@ -18,16 +18,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
-import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export function onColumnOrderChangeFinished(ctx: any, id1: string, id2: string) {
   runGeneratorInFlowWithHandler({
     ctx: ctx,
-    generator: function* (){
+    generator: function*() {
       const tablePanelView = getTablePanelView(ctx);
-      tablePanelView.moveColumnBehind(id1, id2);
-      yield* getConfigurationManager(ctx).onColumnOrderChanged();
+      tablePanelView?.swapColumns(id1, id2);
+      yield*getConfigurationManager(ctx).onColumnOrderChanged();
     }()
   })
 }

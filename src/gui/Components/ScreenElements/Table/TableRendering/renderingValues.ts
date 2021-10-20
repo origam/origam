@@ -42,11 +42,11 @@ scRenderRow.push(() => rowIndex.clear());
 
 let currentRowRightBorderDrawn = false;
 
-export function setCurrentRowRightBorderDrawn(value: boolean){
+export function setCurrentRowRightBorderDrawn(value: boolean) {
   currentRowRightBorderDrawn = value;
 }
 
-export function getCurrentRowRightBorderDrawn(){
+export function getCurrentRowRightBorderDrawn() {
   return currentRowRightBorderDrawn;
 }
 
@@ -54,9 +54,9 @@ export const rowId = () => dataTable().getRowId(currentDataRow());
 
 export const selectionColumnShown = () => getIsSelectionCheckboxesShown(context());
 
-export const  dataCellOffset = ()=>{
+export const dataCellOffset = () => {
   let offset = groupingColumnCount();
-  if(selectionColumnShown()){
+  if (selectionColumnShown()) {
     offset++;
   }
   return offset;

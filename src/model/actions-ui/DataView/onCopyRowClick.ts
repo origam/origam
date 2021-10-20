@@ -26,7 +26,7 @@ import { handleError } from "../../actions/handleError";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 
 export function onCopyRowClick(ctx: any) {
-  return flow(function* onCopyRowClick(event: any) {
+  return flow(function*onCopyRowClick(event: any) {
     try {
       const selectedRowId = getDataView(ctx).selectedRowId;
       if (!selectedRowId) {
@@ -39,9 +39,9 @@ export function onCopyRowClick(ctx: any) {
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
       }
-      yield* formScreenLifecycle.onCopyRow(entity, gridId, selectedRowId);
+      yield*formScreenLifecycle.onCopyRow(entity, gridId, selectedRowId);
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

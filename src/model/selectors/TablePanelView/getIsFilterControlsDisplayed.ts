@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getFilterConfiguration} from "../DataView/getFilterConfiguration";
+import { getFilterConfiguration } from "../DataView/getFilterConfiguration";
 
 export function getIsFilterControlsDisplayed(ctx: any) {
   return getFilterConfiguration(ctx).isFilterControlsDisplayed;

@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getWebScreen} from "model/selectors/WebScreen/getWebScreen";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getWebScreen } from "model/selectors/WebScreen/getWebScreen";
 
 // TODO: Move to ui actions
 export function onReloadWebScreenClick(ctx: any) {
-  return flow(function* onReloadWebScreenClick() {
+  return flow(function*onReloadWebScreenClick() {
     try {
       getWebScreen(ctx).reload();
       //yield* getFormScreenLifecycle(ctx).onRequestScreenReload();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

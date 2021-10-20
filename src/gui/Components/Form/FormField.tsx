@@ -24,8 +24,9 @@ import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNam
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
 import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
-import {FormViewEditor} from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
-import {observable} from "mobx";
+import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
+import { observable } from "mobx";
+
 export enum ICaptionPosition {
   Left = "Left",
   Right = "Right",
@@ -33,7 +34,7 @@ export enum ICaptionPosition {
   None = "None",
 }
 
-@inject(({ property }, { caption }) => {
+@inject(({property}, {caption}) => {
   const rowId = getSelectedRowId(property);
 
   const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
@@ -121,8 +122,8 @@ export class FormField extends React.Component<{
   }
 
   getToolTip() {
-    let finalToolTip =  this.props.toolTip ?? "";
-    if(this.toolTip){
+    let finalToolTip = this.props.toolTip ?? "";
+    if (this.toolTip) {
       finalToolTip = this.toolTip + "\n\n" + finalToolTip;
     }
     return formatTooltipPlaintext(finalToolTip);

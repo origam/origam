@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IFormPanelView} from "./types/IFormPanelView";
+import { IFormPanelView } from "./types/IFormPanelView";
 
 export class FormPanelView implements IFormPanelView {
   $type_IFormPanelView: 1 = 1;

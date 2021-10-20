@@ -18,11 +18,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import {IPluginData} from "./IPluginData";
+import { IPluginData } from "./IPluginData";
 
 export interface IPlugin {
-  initialize(xmlAttributes: {[key: string]: string}): void;
+  initialize(xmlAttributes: { [key: string]: string }): void;
+
   getComponent(data: IPluginData): JSX.Element;
+
   id: string;
 }
 

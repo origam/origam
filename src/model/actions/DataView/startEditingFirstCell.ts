@@ -22,14 +22,14 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 
 export function startEditingFirstCell(ctx: any) {
-  return function* startEditingFirstCell() {
+  return function*startEditingFirstCell() {
     const orderingPropertyId = getDataView(ctx)?.orderProperty?.id;
-    const firstProperty = getTableViewProperties(ctx) 
-          .filter(prop =>  prop.id !== "Id" && prop.id !== orderingPropertyId)?.[0];
+    const firstProperty = getTableViewProperties(ctx)
+      .filter(prop => prop.id !== "Id" && prop.id !== orderingPropertyId)?.[0];
     getTablePanelView(ctx).selectedColumnId = firstProperty?.id;
-    if(getTablePanelView(ctx).selectedColumnId){
+    if (getTablePanelView(ctx).selectedColumnId) {
       getTablePanelView(ctx).scrollToCurrentRow();
-      setTimeout(()=> getTablePanelView(ctx).setEditing(true));
+      setTimeout(() => getTablePanelView(ctx).setEditing(true));
     }
   };
 }

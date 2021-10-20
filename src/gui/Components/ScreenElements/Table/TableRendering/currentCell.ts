@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import { Memoized } from "./common/Memoized";
 import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
-import {stripHtml} from "string-strip-html";
+import { stripHtml } from "string-strip-html";
 import {
   currentDataRow,
   currentRow,
@@ -94,11 +94,11 @@ export function currentColumnId() {
   return dataRowColumnIds()[drawingColumnIndex()];
 }
 
-export const currentProperty = () =>{
+export const currentProperty = () => {
   const property = propertyById().get(currentColumnId() as any)!;
-  if(property.column === "Polymorph"){
+  if (property.column === "Polymorph") {
     return property.getPolymophicProperty(currentRow() as any[]);
-  }else{
+  } else {
     return property;
   }
 };
@@ -106,10 +106,10 @@ export const currentProperty = () =>{
 export const currentCellText = Memoized(() => {
   const value = currentCellValue();
   let text = dataTable().resolveCellText(currentProperty(), value);
-  if(text && currentProperty().multiline) {
+  if (text && currentProperty().multiline) {
     text = stripHtml(text).result;
   }
-  if(Array.isArray(text)){
+  if (Array.isArray(text)) {
     text = text.join(", ");
   }
   return text;
@@ -119,7 +119,7 @@ scRenderCell.push(() => currentCellText.clear());
 export const currentCellTextMultiline = Memoized(() => {
   const value = currentCellValue();
   let text = dataTable().resolveCellText(currentProperty(), value);
-  if(text && currentProperty().multiline) {
+  if (text && currentProperty().multiline) {
     text = text.split("\n");
   }
   return text;
@@ -128,10 +128,10 @@ scRenderCell.push(() => currentCellTextMultiline.clear());
 
 export const currentCellValue = Memoized(() => {
   const property = propertyById().get(currentColumnId() as any)!
-  if(property.column === "Polymorph"){
+  if (property.column === "Polymorph") {
     const polymorphicProperty = currentProperty();
     return dataTable().getCellValue(currentDataRow(), polymorphicProperty);
-  }else{
+  } else {
     return dataTable().getCellValue(currentDataRow(), property);
   }
 });

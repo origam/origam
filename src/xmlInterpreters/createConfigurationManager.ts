@@ -17,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IProperty} from "model/entities/types/IProperty";
-import {ConfigurationManager} from "model/entities/TablePanelView/configurationManager";
-import {findStopping} from "xmlInterpreters/xmlUtils";
-import {tryParseAggregationType} from "model/entities/types/AggregationType";
-import {fixColumnWidth} from "xmlInterpreters/screenXml";
-import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
-import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
+import { IProperty } from "model/entities/types/IProperty";
+import { ConfigurationManager } from "model/entities/TablePanelView/configurationManager";
+import { findStopping } from "xmlInterpreters/xmlUtils";
+import { tryParseAggregationType } from "model/entities/types/AggregationType";
+import { fixColumnWidth } from "xmlInterpreters/screenXml";
+import { TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
+import { TableColumnConfiguration } from "model/entities/TablePanelView/tableColumnConfiguration";
 
 function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any, isLazyLoading: boolean) {
   const columnConfigurations: TableColumnConfiguration[] = tableConfigNode.elements
     .map((element: any) => {
-      if(!element.attributes?.propertyId){
+      if (!element.attributes?.propertyId) {
         return undefined;
       }
       const property = properties.find(prop => prop.id === element.attributes?.propertyId);
-      if(!property){
+      if (!property) {
         return undefined;
       }
       return parseColumnConfigurationNode(element, property, isLazyLoading)
@@ -56,35 +56,35 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   }
 
   const tableConfigurationNodes = findStopping(configurationNodes[0], (n) => n.name === "tableConfigurations")?.[0]?.elements;
-  if(!tableConfigurationNodes){
+  if (!tableConfigurationNodes) {
     return new ConfigurationManager(
       [], defaultConfiguration);
   }
   const tableConfigurations: TableConfiguration[] = tableConfigurationNodes.map((tableConfigNode: any) => {
-    return TableConfiguration.create(
-      {
-        name: tableConfigNode.attributes.name,
-        id: tableConfigNode.attributes.id,
-        isActive: tableConfigNode.attributes.isActive === "true",
-        fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
-        columnConfigurations: makeColumnConfigurations(properties, tableConfigNode, isLazyLoading),
-      }
+      return TableConfiguration.create(
+        {
+          name: tableConfigNode.attributes.name,
+          id: tableConfigNode.attributes.id,
+          isActive: tableConfigNode.attributes.isActive === "true",
+          fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
+          columnConfigurations: makeColumnConfigurations(properties, tableConfigNode, isLazyLoading),
+        }
       )
     }
   );
 
   const defaultTableConfiguration = tableConfigurations.find(tableConfig => tableConfig.name === "")
-          ?? defaultConfiguration;
+    ?? defaultConfiguration;
 
-   const noConfigIsActive = tableConfigurations.every(tableConfig => !tableConfig.isActive);
-   if(noConfigIsActive){
-     defaultTableConfiguration.isActive = true;
-   }
+  const noConfigIsActive = tableConfigurations.every(tableConfig => !tableConfig.isActive);
+  if (noConfigIsActive) {
+    defaultTableConfiguration.isActive = true;
+  }
 
   return new ConfigurationManager(
     tableConfigurations
       .filter((tableConfig: TableConfiguration) => tableConfig !== defaultTableConfiguration),
-      defaultTableConfiguration
+    defaultTableConfiguration
   );
 }
 

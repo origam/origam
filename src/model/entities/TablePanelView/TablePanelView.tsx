@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable, flow } from "mobx";
+import { action, computed, flow, observable } from "mobx";
 import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
@@ -32,7 +32,11 @@ import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration"
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
 import { IColumnConfigurationDialog } from "model/entities/TablePanelView/types/IColumnConfigurationDialog";
-import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "model/entities/TablePanelView/types/ITablePanelView";
+import {
+  ITableCanvas,
+  ITablePanelView,
+  ITablePanelViewData
+} from "model/entities/TablePanelView/types/ITablePanelView";
 import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
 import { IAggregationInfo } from "model/entities/types/IAggregationInfo";
 import { AggregationType } from "model/entities/types/AggregationType";
@@ -69,10 +73,8 @@ export class TablePanelView implements ITablePanelView {
   firstColumn: IProperty | undefined;
   handleScrolling = true;
 
-  @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
-    number,
-    Map<number, ICellRectangle>
-  >();
+  @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number,
+    Map<number, ICellRectangle>>();
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
@@ -85,6 +87,7 @@ export class TablePanelView implements ITablePanelView {
   @computed get currentTooltipText() {
     return this._currentTooltipText;
   }
+
   set currentTooltipText(value: string | undefined) {
     this._currentTooltipText = value;
   }
@@ -165,7 +168,7 @@ export class TablePanelView implements ITablePanelView {
     const rowId = this.dataTable.getRowId(row);
 
     getTablePanelView(this).setEditing(false);
-    yield* flushCurrentRowData(this)();
+    yield*flushCurrentRowData(this)();
     const isDirty = getFormScreen(dataView).isDirty;
 
     if (isDirty && dataView.selectedRowId !== rowId) {
@@ -174,20 +177,20 @@ export class TablePanelView implements ITablePanelView {
         return;
       }
     }
-    yield* this.onCellClickInternal(event, row, columnId, isControlInteraction);
+    yield*this.onCellClickInternal(event, row, columnId, isControlInteraction);
   }
 
   *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox" || !isControlInteraction) {
       if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
-        yield* getDataView(this).navigateLookupLink(property, row);
+        yield*getDataView(this).navigateLookupLink(property, row);
       } else {
         if (this.dataTable.getRowId(row) === this.selectedRowId) {
           this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
         } else {
-          const { isEditing } = this;
+          const {isEditing} = this;
           if (isEditing) {
             this.setEditing(false);
           }
@@ -199,10 +202,10 @@ export class TablePanelView implements ITablePanelView {
       }
     } else {
       const rowId = this.dataTable.getRowId(row);
-      yield* this.selectCellAsync(columnId, rowId);
+      yield*this.selectCellAsync(columnId, rowId);
 
       if (!isReadOnly(property!, rowId)) {
-        yield* onFieldChangeG(this)({
+        yield*onFieldChangeG(this)({
           event: undefined,
           row: row,
           property: property,
@@ -215,13 +218,13 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  private *selectCellAsync(columnId: string, rowId: string) {
+  private*selectCellAsync(columnId: string, rowId: string) {
     this.selectedColumnId = columnId;
     const dataView = getDataView(this);
     if (dataView.selectedRowId === rowId) {
       return;
     }
-    yield dataView.lifecycle.runRecordChangedReaction(function* () {
+    yield dataView.lifecycle.runRecordChangedReaction(function*() {
       yield dataView.setSelectedRowId(rowId);
     });
   }
@@ -229,7 +232,7 @@ export class TablePanelView implements ITablePanelView {
   *onNoCellClick() {
     if (this.isEditing) {
       this.setEditing(false);
-      yield* flushCurrentRowData(this)();
+      yield*flushCurrentRowData(this)();
     }
   }
 
@@ -241,10 +244,10 @@ export class TablePanelView implements ITablePanelView {
     }
 
     const _this = this;
-    flow(function* () {
+    flow(function*() {
       if (_this.isEditing) {
         _this.setEditing(false);
-        yield* flushCurrentRowData(_this)();
+        yield*flushCurrentRowData(_this)();
       }
     })();
   }
@@ -256,7 +259,7 @@ export class TablePanelView implements ITablePanelView {
   *onOutsideTableClick() {
     if (this.isEditing) {
       this.setEditing(false);
-      yield* flushCurrentRowData(this)();
+      yield*flushCurrentRowData(this)();
     }
   }
 
@@ -355,25 +358,14 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  moveColumnBehind(id1: string, id2: string): void {
-    const idx1 = this.tablePropertyIds.findIndex((id) => id === id1);
-    const tmp = this.tablePropertyIds[idx1];
-    this.tablePropertyIds.splice(idx1, 1);
-    const idx2 = this.tablePropertyIds.findIndex((id) => id === id2);
-    this.tablePropertyIds.splice(idx2 + 1, 0, tmp);
-  }
-
-  @action.bound
   setColumnOrderChangeAttendants(idSource: string | undefined, idTarget: string | undefined): void {
     this.columnOrderChangingTargetId = idTarget;
     this.columnOrderChangingSourceId = idSource;
   }
 
   subId = 0;
-  onScrollToCurrentCellHandlers: Map<
-    number,
-    (rowIdx: number, columnIdx: number) => void
-  > = new Map();
+  onScrollToCurrentCellHandlers: Map<number,
+    (rowIdx: number, columnIdx: number) => void> = new Map();
 
   subOnScrollToCellShortest(fn: (rowIdx: number, columnIdx: number) => void): () => void {
     const myId = this.subId++;
@@ -427,7 +419,7 @@ export class TablePanelView implements ITablePanelView {
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
     const groupingConfig = getGroupingConfiguration(this);
-    let cellOffset = { row: 0, column: 0 };
+    let cellOffset = {row: 0, column: 0};
     if (groupingConfig.isGrouping) {
       const rowId = getDataView(this).selectedRowId;
       cellOffset = getGrouper(this).getCellOffset(rowId!);
@@ -452,17 +444,15 @@ export class TablePanelView implements ITablePanelView {
 }
 
 export class AggregationContainer {
-  @observable aggregationTypes: Map<string, AggregationType | undefined> = new Map<
-    string,
-    AggregationType | undefined
-  >();
+  @observable aggregationTypes: Map<string, AggregationType | undefined> = new Map<string,
+    AggregationType | undefined>();
 
   getType(columnId: string) {
     return this.aggregationTypes.get(columnId);
   }
 
   setType(columnId: string, aggregationType: AggregationType | undefined) {
-    if(!aggregationType && this.aggregationTypes.has(columnId)){
+    if (!aggregationType && this.aggregationTypes.has(columnId)) {
       this.aggregationTypes.delete(columnId);
       return;
     }

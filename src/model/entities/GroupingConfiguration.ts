@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {action, computed, observable} from "mobx";
-import {IGroupingConfiguration, IGroupingSettings} from "./types/IGroupingConfiguration";
+import { action, computed, observable } from "mobx";
+import { IGroupingConfiguration, IGroupingSettings } from "./types/IGroupingConfiguration";
 import { GroupingUnit } from "./types/GroupingUnit";
 
 export class GroupingConfiguration implements IGroupingConfiguration {
   @observable groupingSettings: Map<string, IGroupingSettings> = new Map();
-  onOffHandlers: (()=>void)[] = [];
+  onOffHandlers: (() => void)[] = [];
 
   @computed get isGrouping() {
     return this.groupingSettings.size > 0;
@@ -43,16 +43,16 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     return this.orderedGroupingColumnSettings[0];
   }
 
-  nextColumnToGroupBy(columnId: string){
+  nextColumnToGroupBy(columnId: string) {
     const currentIndex = this.groupingSettings.get(columnId)?.groupIndex;
-    if(!currentIndex){
+    if (!currentIndex) {
       return undefined
     }
     const nextIndex = currentIndex + 1;
     const nextEntry = Array.from(this.groupingSettings.entries())
       .find(entry => entry[1].groupIndex === nextIndex);
-    return nextEntry ? nextEntry[1] : undefined 
-  }  
+    return nextEntry ? nextEntry[1] : undefined
+  }
 
   @action.bound
   setGrouping(columnId: string, groupingUnit: GroupingUnit | undefined, groupingIndex: number): void {
@@ -60,12 +60,12 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     this.groupingSettings.set(
       columnId,
       {
-        columnId: columnId, 
+        columnId: columnId,
         groupingUnit: groupingUnit,
         groupIndex: groupingIndex
       }
     );
-    if(wasEmpty){
+    if (wasEmpty) {
       this.notifyOnOffHandlers();
     }
   }
@@ -78,7 +78,7 @@ export class GroupingConfiguration implements IGroupingConfiguration {
 
   parent?: any;
 
-  notifyOnOffHandlers(){
+  notifyOnOffHandlers() {
     for (let handler of this.onOffHandlers) {
       handler();
     }

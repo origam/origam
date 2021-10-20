@@ -30,9 +30,7 @@ export function getExpandedGroupRowCount(ctx: any) {
   if (getGrouper(ctx).allGroups.some((group) => group.isExpanded)) {
     const dataView = getDataView(ctx);
     return getGrouper(ctx).getTotalRowCount(dataView.selectedRowId!);
-  }
-
-  else {
+  } else {
     return undefined;
   }
 }

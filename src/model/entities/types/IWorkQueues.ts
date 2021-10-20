@@ -17,7 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface IWorkQueuesData {}
+export interface IWorkQueuesData {
+}
 
 export interface IWorkQueues extends IWorkQueuesData {
   $type_IWorkQueues: 1;
@@ -28,7 +29,9 @@ export interface IWorkQueues extends IWorkQueuesData {
   totalItemCount: number;
 
   getWorkQueueList(): Generator<any>;
+
   startTimer(refreshIntervalMs: number): Generator<any>;
+
   stopTimer(): Generator<any>;
 }
 

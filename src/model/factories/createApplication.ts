@@ -17,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ErrorDialogController} from "model/entities/ErrorDialog";
-import {Application} from "../entities/Application";
-import {ApplicationLifecycle} from "../entities/ApplicationLifecycle";
-import {DialogStack} from "../entities/DialogStack";
-import {OrigamAPI} from "../entities/OrigamAPI";
-import {IApplication} from "../entities/types/IApplication";
-import {handleError} from "../actions/handleError";
-import {flow} from "mobx";
+import { ErrorDialogController } from "model/entities/ErrorDialog";
+import { Application } from "../entities/Application";
+import { ApplicationLifecycle } from "../entities/ApplicationLifecycle";
+import { DialogStack } from "../entities/DialogStack";
+import { OrigamAPI } from "../entities/OrigamAPI";
+import { IApplication } from "../entities/types/IApplication";
+import { handleError } from "../actions/handleError";
+import { flow } from "mobx";
 
 
 export function createApplication(): IApplication {
   const applicationLifecycle = new ApplicationLifecycle();
 
   const apiErrorHandler = (error: any) => {
-    flow(function* apiErrorHandler() {
-      yield* handleError(applicationLifecycle)(error);
+    flow(function*apiErrorHandler() {
+      yield*handleError(applicationLifecycle)(error);
     })();
   };
 

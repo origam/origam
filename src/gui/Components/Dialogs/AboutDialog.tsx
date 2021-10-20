@@ -47,15 +47,15 @@ export class AboutDialog extends React.Component<{
         buttonsLeft={null}
         buttonsRight={null}
       >
-        <div className={CS.dialogContent+" "+S.contentArea}>
-          <div>Server version: </div>
+        <div className={CS.dialogContent + " " + S.contentArea}>
+          <div>Server version:</div>
           <div className={S.version}>{this.props.aboutInfo.serverVersion}</div>
           <br/>
-          <div>Client version: </div>
+          <div>Client version:</div>
           <div className={S.version}>
-            <div>{"Commit ID: "} 
-              <a href={"https://github.com/origam/origam-html/commit/"+commitId}>{commitId}</a>
-              </div>
+            <div>{"Commit ID: "}
+              <a href={"https://github.com/origam/origam-html/commit/" + commitId}>{commitId}</a>
+            </div>
             <div>Commit Date: {commitDate}</div>
           </div>
           <br/>
