@@ -23,7 +23,7 @@ export class Action implements IAction {
   isDefault: boolean = false;
   parameters: IActionParameter[] = [];
 
-  @computed get isEnabled() {
+  get isEnabled() {
     if (this.mode === IActionMode.Always) {
       return true;
     }
