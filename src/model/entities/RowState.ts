@@ -19,13 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import _ from "lodash";
 import { action, computed, createAtom, flow, IAtom, observable } from "mobx";
-import { handleError } from "model/actions/handleError";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
 import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
 import { FlowBusyMonitor } from "../../utils/flow";
+import { handleError } from "model/actions/handleError";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -201,7 +201,6 @@ export class RowState implements IRowState {
       rowStateContainer.isValid = false;
       rowStateContainer.processingSate = undefined;
     }
-    this.firstLoadingPerformed = false;
   }
 
   @action.bound clearAll() {
