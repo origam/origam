@@ -4,11 +4,11 @@
     asi:abstract="true"
     x:id="dc4e66c4-895b-4ba8-9e11-3faa37508816"
     ci:isComplex="false"
-    asi:name="FormLevelPlugin"
+    asi:name="ScreenLevelPlugin"
     ci:namespace="Origam.Gui.Win"
     ci:requestSaveAfterChangeAllowed="false"
     ci:toolboxVisibility="FormDesigner"
-    ci:typeName="Origam.Gui.Win.FormLevelPlugin">
+    ci:typeName="Origam.Gui.Win.ScreenLevelPlugin">
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
