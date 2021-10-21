@@ -117,7 +117,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: ew-resize;
   margin: 0;
   padding: 0;
-  height: 25px;
+  height: 100%;
   @extend %transition;
   &:hover, &:focus {
     background: var(--blue1);
