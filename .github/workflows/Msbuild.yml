@@ -32,10 +32,10 @@ jobs:
         uses: NuGet/setup-nuget@v1.0.5
         
       - name: Restore Nuget
-        run: nuget restrore Origam.sln
+        run: nuget restore Origam.sln
         
       - name: Build Architect
-        run: msbuild Origam.sln
+        run: msbuild Origam.sln /p:Configutation=Release Server
         
 
       # Runs a single command using the runners shell
