@@ -17,22 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getDataView } from "../../model/selectors/DataView/getDataView";
+import { getDataView } from "model/selectors/DataView/getDataView";
 import { createPluginData } from "./PluginData";
 import { IPlugin } from "../types/IPlugin";
 import React, { Fragment } from "react";
+import { registerPlugins } from "plugins/tools/PluginRegistration";
 
 const pluginFactoryFunctions: Map<string, () => IPlugin> = new Map<string, () => IPlugin>();
 
-var req = (require as any).context("../implementations", true, /.*\.tsx$/);
-req.keys().forEach((key: any) => {
-    const pluginClass = req(key).default;
-    if (pluginClass) {
-      pluginFactoryFunctions.set(pluginClass.name, () => Reflect.construct(pluginClass, []))
-    }
-  }
-);
+export function registerPlugin(pluginName: string, factoryFunction:  () => IPlugin){
+  pluginFactoryFunctions.set(pluginName, factoryFunction)
+}
 
+registerPlugins();
 
 export class PluginLibrary {
   pluginInstances: Map<string, IPlugin> = new Map<string, IPlugin>();

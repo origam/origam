@@ -21,13 +21,13 @@ import React from "react";
 import S from './FilterPlugin.module.scss';
 import { IScreenPlugin } from "plugins/types/IScreenPlugin";
 import { IPluginData } from "../../types/IPluginData";
-import { toOrigamServerString } from "../../../utils/moment";
+import { toOrigamServerString } from "utils/moment";
 import moment from "moment";
 import { Moment } from "moment/moment";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
-import { IOption, SimpleDropdown } from "../../../gui/Components/PublicComponents/SimpleDropdown";
-import { Button } from "../../../gui/Components/PublicComponents/Button";
+import { IOption, SimpleDropdown } from "gui/Components/PublicComponents/SimpleDropdown";
+import { Button } from "gui/Components/PublicComponents/Button";
 import { Localizer } from "../../tools/Localizer";
 import { localizations } from "./FilterPluginLocalization";
 
