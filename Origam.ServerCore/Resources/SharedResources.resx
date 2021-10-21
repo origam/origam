@@ -217,16 +217,16 @@
     <value>You are now logged out.</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Login</value>
+    <value>Log In</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+    <value>Log Out</value>
   </data>
   <data name="NoAccessToResource" xml:space="preserve">
     <value>You do not have access to that resource.</value>
   </data>
   <data name="NoLoginSchemes" xml:space="preserve">
-    <value>There are no login schemes configured for this client.</value>
+    <value>There are no log in schemes configured for this client.</value>
   </data>
   <data name="RememberLogin" xml:space="preserve">
     <value>Remember my Login</value>
@@ -262,7 +262,7 @@
     <value>here</value>
   </data>
   <data name="ToLogin3" xml:space="preserve">
-    <value> to login again.</value>
+    <value> to log in again.</value>
   </data>
   <data name="ToResetPassword1" xml:space="preserve">
     <value>Click </value>
