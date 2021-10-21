@@ -32,9 +32,7 @@ jobs:
         uses: NuGet/setup-nuget@v1.0.5
         
       - name: Restore Nuget
-        run: |
-              cd monorepo,
-              nuget restore monorepo/backend/Origam.sln
+        run: nuget restore monorepo/backend/Origam.sln
         
       - name: Build Architect
         run: msbuild Origam.sln /p:Configutation=Release Server
