@@ -188,7 +188,6 @@ export class RowState implements IRowState {
       }
     }
     this.observedIds.clear();
-    this.firstLoadingPerformed = false;
   }
 
   @action.bound clearAll() {
