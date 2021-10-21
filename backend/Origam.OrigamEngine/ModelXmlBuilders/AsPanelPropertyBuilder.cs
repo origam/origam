@@ -37,15 +37,15 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 	{
 		public static XmlElement CreateProperty(XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
 			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition, 
-			string gridColumnWidth, UIStyle style, string tabIndex)
+			string gridColumnWidth, UIStyle style, string tabIndex, string fieldType)
 		{
 			return CreateProperty("Property", propertiesElement, propertyNamesElement, modelId, bindingMember, caption, gridCaption, table, readOnly, 
-				left, top, width, height, captionLength, captionPosition, gridColumnWidth, style, tabIndex);
+				left, top, width, height, captionLength, captionPosition, gridColumnWidth, style, tabIndex, fieldType);
 		}
 
 			public static XmlElement CreateProperty(string category, XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
 			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition,
-            string gridColumnWidth, UIStyle style, string tabIndex)
+            string gridColumnWidth, UIStyle style, string tabIndex, string fieldType)
 		{
 			IPersistenceProvider persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>()
@@ -113,6 +113,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			{
 				propertyElement.SetAttribute("IsLookupColumn", "true");
 			}
+			propertyElement.SetAttribute("FieldType", fieldType);
 
 			return propertyElement;
 		}

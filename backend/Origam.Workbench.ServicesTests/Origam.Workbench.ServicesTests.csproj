@@ -67,7 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeploymentSorterTests.cs" />
-    <Compile Include="FileStorageDocumentationServiceTests.cs" />
+    <Compile Include="FilePersistenceServiceTests\FilePersistenceServiceTests.cs" />
+    <Compile Include="FileStorageDocumentationServiceTests\FileStorageDocumentationServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +88,21 @@
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
       <Name>Origam.DA.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
+      <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
+      <Name>Origam.ReflectorCache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj">
       <Project>{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}</Project>
       <Name>Origam.Schema.DeploymentModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj">
+      <Project>{50186a07-6ed9-4751-b0e2-52feba2a4518}</Project>
+      <Name>Origam.Schema.EntityModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj">
+      <Project>{5b6e4021-152c-4276-a1ae-e3b9ba223024}</Project>
+      <Name>Origam.Schema.WorkflowModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
       <Project>{976F3ABA-938D-4242-A93B-7D7A1861A66E}</Project>
@@ -99,19 +112,35 @@
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
       <Name>Origam.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.TestCommon\Origam.TestCommon.csproj">
+      <Project>{c6bb0572-3720-4841-8dd6-6992644b7b5f}</Project>
+      <Name>Origam.TestCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
       <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
       <Name>Origam.Workbench.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReadingTestFiles\.origamDoc" />
-    <Content Include="ReadingTestFiles\WrongCategoryName\.origamDoc" />
-    <Content Include="ReadingTestFiles\WrongGuid\.origamDoc" />
-    <Content Include="ReadingTestFiles\WrongNodeName\.origamDoc" />
-    <Content Include="WritingTestFiles\.origamDoc" />
-    <Content Include="WritingTestFiles\inputDataSet_1UpdatedItem.xml" />
-    <Content Include="WritingTestFiles\inputDataSet_2Items.xml" />
+    <Content Include="FilePersistenceServiceTests\TestFiles\.origamPackage">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FilePersistenceServiceTests\TestFiles\RuntimeModelConfiguration.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FilePersistenceServiceTests\TestFiles\TestEntity.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FilePersistenceServiceTests\TestFiles\TestWorkflow.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\.origamDoc" />
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongCategoryName\.origamDoc" />
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongGuid\.origamDoc" />
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongNodeName\.origamDoc" />
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\.origamDoc" />
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_1UpdatedItem.xml" />
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_2Items.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

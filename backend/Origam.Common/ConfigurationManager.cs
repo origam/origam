@@ -56,7 +56,7 @@ namespace Origam
 				}
 				else
 				{
-					throw new Exception(ResourceUtils.GetString("CantSaveConfig"));
+					throw new Exception(ResourceUtils.GetString("CantSaveConfigDuplicateName"));
 				}
 			}
 

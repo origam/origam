@@ -301,7 +301,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 		public static XmlDocument GetXml(WorkQueueClass wqc, DataSet dataset, string name, Guid queueId)
 		{
 			Hashtable dataSources = new Hashtable();
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
+			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 			DataTable table = dataset.Tables["WorkQueueEntry"];
 
 			QueryParameterCollection pms = new QueryParameterCollection();
@@ -359,9 +359,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			XmlElement propertyNamesElement = doc.CreateElement("PropertyNames");
 			formRootElement.AppendChild(propertyNamesElement);
 
-			bool hasMemo = false;
-			string memoName = null;
-			Guid memoId = Guid.Empty;
+			DataStructureColumn memoColumn = null;
 
 			// Panel controls
 			int lastPos = 5;
@@ -372,20 +370,20 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			foreach(WorkQueueClassEntityMapping mapping in mappedColumns)
 			{
-				AddColumn(entity, mapping.Name, ref hasMemo, ref memoName, ref memoId, 
+				AddColumn(entity, mapping.Name, ref memoColumn, 
 					ref lastPos, propertiesElement,	propertyNamesElement, table, mapping.FormatPattern);
 			}
 
-			AddColumn(entity, "IsLocked", ref hasMemo, ref memoName, ref memoId, 
+			AddColumn(entity, "IsLocked", ref memoColumn, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-			AddColumn(entity, "refLockedByBusinessPartnerId", ref hasMemo, ref memoName, ref memoId, 
+			AddColumn(entity, "refLockedByBusinessPartnerId", ref memoColumn, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
-			AddColumn(entity, "ErrorText", ref hasMemo, ref memoName, ref memoId, 
+			AddColumn(entity, "ErrorText", ref memoColumn, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
 
 			SetUserConfig(doc, listElement, wqc.DefaultPanelConfiguration, queueId, Guid.Empty);
 
-			if(hasMemo)
+			if(memoColumn != null)
 			{
 				XmlElement memoElement = doc.CreateElement("UIElement");
 				children.AppendChild(memoElement);
@@ -423,8 +421,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
 					propertiesElement: memoPropertiesElement,
 					propertyNamesElement: memoPropertyNamesElement, 
-					modelId: memoId, 
-					bindingMember: memoName, 
+					modelId: memoColumn.Id, 
+					bindingMember: memoColumn.Name, 
 					caption: "", 
 					gridCaption: null, 
 					table: table,
@@ -437,7 +435,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					captionPosition: "None", 
 					gridColumnWidth: "500", 
 					style: null, 
-					tabIndex: null);
+					tabIndex: null,
+					fieldType: memoColumn.Field.FieldType
+					);
 				TextBoxBuildDefinition buildDefinition = new TextBoxBuildDefinition(OrigamDataType.Memo);
 				buildDefinition.Dock = "Fill";
 				buildDefinition.Multiline = true;
@@ -493,18 +493,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			return doc;
 		}
 
-        internal static void AddColumn(DataStructureEntity entity, string columnName,
-            ref bool hasMemo, ref string memoName, ref Guid memoId, ref int lastPos,
+		internal static void AddColumn(DataStructureEntity entity, string columnName,
+           ref DataStructureColumn memoColumn, ref int lastPos,
             XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
             string formatPattern)
         {
-            AddColumn(entity, columnName, ref hasMemo, ref memoName, ref memoId,
+            AddColumn(entity, columnName, ref memoColumn,
                 ref lastPos, propertiesElement, propertyNamesElement, table, formatPattern, 
                 "", true, null, null);
         }
 
         private static void AddColumn(DataStructureEntity entity, string columnName,
-		    ref bool hasMemo, ref string memoName, ref Guid memoId, ref int lastPos,
+	        ref DataStructureColumn memoColumn, ref int lastPos,
 			XmlElement propertiesElement, XmlElement propertyNamesElement, DataTable table,
 			string formatPattern, string label, bool readOnly, string lookupParameterName,
             string lookupParameterValue)
@@ -515,15 +515,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             StylesSchemaItemProvider styles = schema.GetProvider(
                 typeof(StylesSchemaItemProvider)) as StylesSchemaItemProvider;
 			int height = 0;
-            DataStructureColumn col = null;
-            foreach (DataStructureColumn item in entity.Columns)
-            {
-                if (item.Name == columnName)
-                {
-                    col = item;
-                    break;
-                }
-            }
+			DataStructureColumn col = entity.Column(columnName);
 			if(col == null) 
 			{
 				throw new ArgumentOutOfRangeException("columnName", columnName, "Column not found in the work queue data structure.");
@@ -537,9 +529,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				}
 				if(col.Field.Name == "m1")
 				{
-					hasMemo = true;
-					memoName = col.Name;
-					memoId = col.Id;
+					memoColumn = col;
 				}
 				else if(! (col.Field.DataType == OrigamDataType.UniqueIdentifier && col.FinalLookup == null))
 				{
@@ -563,7 +553,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						captionPosition: "Left",
 						gridColumnWidth: "100", 
 						style: style,
-						tabIndex: null);
+						tabIndex: null,
+						fieldType: col.Field.FieldType);
 
 					switch(col.Field.DataType)
 					{
@@ -688,9 +679,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             XmlElement propertyNamesElement = doc.CreateElement("PropertyNames");
             formRootElement.AppendChild(propertyNamesElement);
 
-            bool hasMemo = false;
-            string memoName = null;
-            Guid memoId = Guid.Empty;
+            DataStructureColumn memoColumn = null;
 
             // Panel controls
             IPersistenceService persistence = ServiceManager.Services.GetService(
@@ -702,18 +691,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             int lastPos = 5;
             if (entityRow.WorkflowCount > 0)
             {
-                AddColumn(entity, "refOrigamWorkflowId", ref hasMemo, ref memoName, ref memoId,
+                AddColumn(entity, "refOrigamWorkflowId", ref memoColumn,
                     ref lastPos, propertiesElement, propertyNamesElement, table, null, 
                     dataset.Tables["OrigamRecord"].Columns["refOrigamWorkflowId"].Caption,
                     false, "OrigamWorkflow_parOrigamEntityId", "'" + entityRow.Id.ToString() + "'");
-                AddColumn(entity, "refOrigamStateId", ref hasMemo, ref memoName, ref memoId,
+                AddColumn(entity, "refOrigamStateId", ref memoColumn,
                     ref lastPos, propertiesElement, propertyNamesElement, table, null,
                     dataset.Tables["OrigamRecord"].Columns["refOrigamStateId"].Caption, false, 
                     "OrigamState_parOrigamWorkflowId", "refOrigamWorkflowId");
             }
             foreach (var column in entityRow.GetOrigamFieldRows())
             {
-                AddColumn(entity, column.MappedColumn, ref hasMemo, ref memoName, ref memoId,
+                AddColumn(entity, column.MappedColumn, ref memoColumn,
                     ref lastPos, propertiesElement, propertyNamesElement, table, null, column.Label, 
                     false, "OrigamRecord_parOrigamEntityId", 
                     column.IsrefLookupOrigamEntityIdNull() ? null : "'" + column.refLookupOrigamEntityId.ToString() + "'");
@@ -1202,8 +1191,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                         TreeControlBuilder.Build2(parentNode, renderData.FormParameterName,
                             renderData.TreeId);
                         break;
-                    case "FormLevelPlugin":
-	                    FormLevelPluginBuilder.Build(parentNode, renderData.Text);
+                    case "ScreenLevelPlugin":
+	                    ScreenLevelPluginBuilder.Build(parentNode, renderData.Text);
 	                    break;                    
                     case "SectionLevelPlugin":
 	                    SectionLevelPluginBuilder.Build(
@@ -1577,6 +1566,12 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					{
 						bindingMember = bindItem.Value;
 					}
+					var fieldType = csi.FirstParentOfType<PanelControlSet>()
+						.DataEntity
+						.ChildItems.ToGeneric()
+						.OfType<IDataEntityColumn>()
+						.FirstOrDefault(child => child.Name == bindingMember)
+						?.FieldType ?? "";
 					
 					if (int.Parse(tabIndex) >= 0)
 					{
@@ -1609,7 +1604,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 							captionPosition: captionPosition, 
 							gridColumnWidth: gridColumnWidth == "0" ? "" : gridColumnWidth, 
 							style: style,
-							tabIndex: tabIndex);
+							tabIndex: tabIndex,
+							fieldType: fieldType);
 
 						IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 						string value = (string)parameterService.GetParameterValue(dataConstantId, OrigamDataType.String);
@@ -1665,7 +1661,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 							captionPosition: captionPosition, 
 							gridColumnWidth: gridColumnWidth == "0" ? "" : gridColumnWidth,
 							style: style, 
-							tabIndex: tabIndex);
+							tabIndex: tabIndex,
+							fieldType: fieldType);
 
 						switch(csi.ControlItem.Name)
 						{

@@ -1,27 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{27826CC4-81AD-4C2A-88EA-6102F119FFA6}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Origam.Workflow.FileService</RootNamespace>
-    <AssemblyName>Origam.Workflow.FileService</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile />
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
+   <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+      <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+      <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -49,7 +38,7 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
@@ -62,95 +51,33 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
+
+
+ 
+
   <ItemGroup>
-    <Reference Include="System">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml">
-    </Reference>
+    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
+    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj" />
+    <ProjectReference Include="..\Origam.Excel\Origam.Excel.csproj" />
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj" />
+    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ExcelServiceAgent.cs">
-    </Compile>
-    <Compile Include="FileServiceAgent.cs">
-    </Compile>
-    <Compile Include="OrigamSpreadsheet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OrigamSpreadsheet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="build.xml">
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">
-      <Project>{84251d2b-43a4-4228-8d2a-8729722c25e4}</Project>
-      <Name>Origam.Common.NetFX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
-      <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
-      <Name>Origam.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
-      <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
-      <Name>Origam.DA.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj">
-      <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
-      <Name>Origam.DA.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Excel\Origam.Excel.csproj">
-      <Project>{EAB7C8D5-A75D-4940-9DDE-D6788FC9CD93}</Project>
-      <Name>Origam.Excel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
-      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
-      <Name>Origam.Schema</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
-      <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
-      <Name>Origam.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
-      <Project>{ef5de64e-88b2-4b0a-bb7f-4a537b56f3d1}</Project>
-      <Name>Origam.UI.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj">
-      <Project>{df2a8dad-6c59-4653-b3bb-da50b14e3de9}</Project>
-      <Name>Origam.Workflow</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="OrigamSpreadsheet.xsc">
-      <DependentUpon>OrigamSpreadsheet.xsd</DependentUpon>
-    </None>
-    <None Include="OrigamSpreadsheet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>OrigamSpreadsheet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="OrigamSpreadsheet.xss">
-      <DependentUpon>OrigamSpreadsheet.xsd</DependentUpon>
-    </None>
-  </ItemGroup>
+
+
+ 
+
   <ItemGroup>
     <PackageReference Include="FileHelpers">
       <Version>3.5.0</Version>
     </PackageReference>
-    <PackageReference Include="log4net">
-      <Version>2.0.12</Version>
-    </PackageReference>
     <PackageReference Include="NPOI">
       <Version>2.5.2</Version>
     </PackageReference>
+    <PackageReference Include="TypeExtender">
+      <Version>1.0.2</Version>
+    </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">
-  </Import>
+
 </Project>

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -84,6 +85,7 @@ namespace OrigamArchitect
 		}
 
 		#region Windows Form Designer generated code
+
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
@@ -96,6 +98,7 @@ namespace OrigamArchitect
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.origamLink = new System.Windows.Forms.LinkLabel();
             this.btnSystemInformation = new System.Windows.Forms.Button();
+            this.btnAttributions = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -164,6 +167,20 @@ namespace OrigamArchitect
             this.btnSystemInformation.Visible = false;
             this.btnSystemInformation.Click += new System.EventHandler(this.btnSystemInformation_Click);
             // 
+            // btnAttributions
+            // 
+            this.btnAttributions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
+            this.btnAttributions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAttributions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.btnAttributions.Location = new System.Drawing.Point(438, 511);
+            this.btnAttributions.Name = "btnAttributions";
+            this.btnAttributions.Size = new System.Drawing.Size(125, 24);
+            this.btnAttributions.TabIndex = 8;
+            this.btnAttributions.Text = "Attributions";
+            this.btnAttributions.UseVisualStyleBackColor = false;
+            this.btnAttributions.Visible = false;
+            this.btnAttributions.Click += new System.EventHandler(this.btnAttributions_Click);
+            // 
             // SplashScreen
             // 
             this.AcceptButton = this.btnOK;
@@ -171,6 +188,7 @@ namespace OrigamArchitect
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
             this.CancelButton = this.btnOK;
             this.ClientSize = new System.Drawing.Size(736, 576);
+            this.Controls.Add(this.btnAttributions);
             this.Controls.Add(this.btnSystemInformation);
             this.Controls.Add(this.origamLink);
             this.Controls.Add(this.lblVersion);
@@ -187,6 +205,9 @@ namespace OrigamArchitect
             this.PerformLayout();
 
 		}
+
+		private System.Windows.Forms.Button btnAttributions;
+		
 		#endregion
 
 		private void btnOK_Click(object sender, System.EventArgs e)
@@ -202,6 +223,12 @@ namespace OrigamArchitect
 		private void btnSystemInformation_Click(object sender, System.EventArgs e)
 		{
 			SystemInformation sysInfo = new SystemInformation();
+			sysInfo.ShowDialog();			
+		}
+		
+		private void btnAttributions_Click(object sender, EventArgs e)
+		{
+			Attributions sysInfo = new Attributions();
 			sysInfo.ShowDialog();
 		}
 	
@@ -215,7 +242,8 @@ namespace OrigamArchitect
 			{
 				btnOK.Visible = value;
 				btnSystemInformation.Visible = value;
-			}
+                btnAttributions.Visible = value;
+            }
 		}
 	}
 }

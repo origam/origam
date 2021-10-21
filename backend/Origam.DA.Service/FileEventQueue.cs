@@ -110,6 +110,7 @@ namespace Origam.DA.Service
         {
             lock (lockObj)
             {
+                fileChangeQueue.Clear();
                 processEvents = true;
             }
         }

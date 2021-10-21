@@ -54,7 +54,10 @@ namespace Origam.Mail
             builder.Append($"\tDeliveryFormat: {client.DeliveryFormat}\n");
             builder.Append($"\tDeliveryMethod: {client.DeliveryMethod}\n");
             builder.Append($"\tEnableSsl: {client.EnableSsl}\n");
-            builder.Append($"\tServicePoint.Address: {client.ServicePoint.Address}\n");
+            if (!string.IsNullOrEmpty(client.Host))
+            {
+                builder.Append($"\tServicePoint.Address: {client.ServicePoint.Address}\n");
+            }
             builder.Append($"\tTargetName: {client.TargetName}\n");
             builder.Append($"\tPickupDirectoryLocation: {client.PickupDirectoryLocation}\n");
             builder.Append($"\tUseDefaultCredentials: {client.UseDefaultCredentials}\n");

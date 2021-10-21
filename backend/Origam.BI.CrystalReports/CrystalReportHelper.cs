@@ -115,7 +115,8 @@ namespace Origam.BI.CrystalReports
             if (parameters == null) throw new NullReferenceException(
                 ResourceUtils.GetString("CreateReport: Parameters cannot be null."));
             var settings = ConfigurationManager.GetActiveConfiguration();
-            string baseUrl = settings.ReportConnectionString;
+            string baseUrl = ParseConnectionString(
+                settings.ReportConnectionString, out int? timeout);
             var request = new ReportRequest
             {
                 Dataset = data
@@ -147,7 +148,7 @@ namespace Origam.BI.CrystalReports
                     ""),
                 "application/xml",
                 new Hashtable(),
-                null);
+                timeout);
             if (log.IsInfoEnabled)
             {
                 WriteInfoLog(reportElement, "Generating report finished");
@@ -167,5 +168,58 @@ namespace Origam.BI.CrystalReports
             loggingEvent.Properties["Caption"] = reportElement.Caption;
             log.Logger.Log(loggingEvent);
         }
-	}
+
+        private static string ParseConnectionString(string connectionString, 
+            out int? timeout)
+        {
+            string url = null;
+            timeout = null;
+            string[] parts = connectionString.Split(";".ToCharArray(),
+                StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 0)
+            {
+                throw new Exception(
+                    "Crystal Reports connection string is empty.");
+            }
+            foreach (var item in parts)
+            {
+                string[] pair = item.Split("=".ToCharArray());
+                if (pair.Length == 1)
+                {
+                    throw new Exception("Error while parsing Crystal Reports " +
+                        "connection string. '=' expected in '" + pair[0] + "'");
+                }
+                string identifier = pair[0].ToLower().Trim();
+                switch (identifier)
+                {
+                    case "url":
+                        url = pair[1];
+                        break;
+                    case "timeout":
+                        int timeoutInternal;
+                        if (int.TryParse(pair[1], out timeoutInternal))
+                        {
+                            timeout = timeoutInternal;
+                        }
+                        else
+                        {
+                            throw new Exception("Error occured while trying to " +
+                                "parse Crystal Reports connection string timeout" +
+                                " value '" + pair[1] + "'.");
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException("Unknown Crystal" +
+                            " Reports connection string identifier '" 
+                            + identifier + "'");
+                }
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw new Exception("Crystal Reports connection string " +
+                        "does not contain 'url' setting.");
+                }
+            }
+            return url;
+        }
+    }
 }

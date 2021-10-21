@@ -45,9 +45,7 @@ namespace Origam.Workflow.Tasks
 		public event WorkflowEngineTaskFinished Finished;
 		protected virtual void OnFinished(WorkflowEngineTaskEventArgs e)
 		{
-            // in case this step has already finished and subsequent steps failed
-            // we just rethrow the exception
-            if (this.Step == null)
+			if (this.Step == null)
             {
                 throw e.Exception;
             }

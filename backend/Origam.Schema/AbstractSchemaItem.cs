@@ -73,8 +73,19 @@ namespace Origam.Schema
 		}
 
         [Browsable(false)]
-		public IEnumerable<AbstractSchemaItem> ChildrenRecursive =>
-			GetChildrenRecursive(this);
+		public IEnumerable<AbstractSchemaItem> ChildrenRecursive 
+		{
+			get
+			{
+				foreach (var child1 in ChildItems)
+				{
+					foreach (var child2 in GetChildrenRecursive(child1))
+					{
+						yield return child2;
+					}
+				}
+			}
+		}
 
 
 		private ModelElementKey _oldPrimarykey = null;
@@ -189,6 +200,14 @@ namespace Origam.Schema
 			{
 				_throwEventOnPersist = value;
 			}
+		}
+
+		private bool _neverRetrieveChildren = false;
+		[Browsable(false)]
+		public bool NeverRetrieveChildren
+		{
+			get => _neverRetrieveChildren;
+			set => _neverRetrieveChildren = value;
 		}
 		#endregion
 
@@ -1345,23 +1364,23 @@ namespace Origam.Schema
 		private SchemaItemCollection GetChildItems(AbstractSchemaItem parentItem)
 		{
 			SchemaItemCollection col = new SchemaItemCollection(this.PersistenceProvider, this.RootProvider, parentItem);
+            // Get children if we're allowed to do so
+            if(!NeverRetrieveChildren)
+            {
+				// If this object does not use cache, all child items won't use it as well.
+				// This is because when we edit an object and then we cancel editing, we don't want to keep any
+				// updated-not-cancelled items in the cache.
+				bool useCache = parentItem.UseObjectCache;
+				List<AbstractSchemaItem> list = 
+					this.PersistenceProvider
+						.RetrieveListByParent<AbstractSchemaItem>(
+							parentItem.PrimaryKey, "SchemaItem", "ChildSchemaItem", useCache);
 
-            // Get children
-
-            // If this object does not use cache, all child items won't use it as well.
-            // This is because when we edit an object and then we cancel editing, we don't want to keep any
-            // updated-not-cancelled items in the cache.
-            bool useCache = parentItem.UseObjectCache;
-			List<AbstractSchemaItem> list = 
-				this.PersistenceProvider
-					.RetrieveListByParent<AbstractSchemaItem>(
-						parentItem.PrimaryKey, "SchemaItem", "ChildSchemaItem", useCache);
-
-			foreach(AbstractSchemaItem si in list)
-			{
-				col.Add(si);
-			}
-				
+				foreach(AbstractSchemaItem si in list)
+				{
+					col.Add(si);
+				}
+            }
 			return col;
 		}
 
@@ -1735,27 +1754,32 @@ namespace Origam.Schema
 
 		public object Clone(bool keepKeys)
 		{
-			if(! this.IsPersisted)
+			if(!this.IsPersisted)
 			{
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorCloneNotPersisted"));
 			}
 
 			AbstractSchemaItem newItem = this.PersistenceProvider.RetrieveInstance(this.GetType(), this.PrimaryKey, false) as AbstractSchemaItem;
-            //AbstractSchemaItem newItem = (AbstractSchemaItem)diskItem.MemberwiseClone();
 			// we preserve current primary key, so references can be updated later
 			newItem.OldPrimaryKey = new ModelElementKey((Guid)this.PrimaryKey["Id"]);
-
-			if(! keepKeys)
+			// if we're keeping keys (deep clone),
+			// flag that we don't want to load children,
+			// because we're going to inject them
+			if(keepKeys)
 			{
-				// and we create a new unique primary key
+				newItem.NeverRetrieveChildren = true;
+			}
+			// we create a new unique primary key
+			else
+			{
 				newItem.PrimaryKey = new ModelElementKey(Guid.NewGuid());
 			}
-
             // in case that for any reason child items were populated already 
             // in the item's construction, we clear them
 			newItem.ChildItems.DeleteItemsOnClear = false;
 			newItem.ChildItems.Clear();
 			newItem.ChildItems.DeleteItemsOnClear = true;
+			newItem.ClearCache();
 			
 			newItem.ParentItem = this.ParentItem;
 			newItem.RootProvider = this.RootProvider;
@@ -1784,10 +1808,8 @@ namespace Origam.Schema
 					newItem.ChildItems.Add(newChild);
 				}
 			}
-
 			return newItem;
 		}
-
 		#endregion
 
 		#region IComparable Members

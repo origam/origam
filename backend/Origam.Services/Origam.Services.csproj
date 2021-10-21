@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <AssemblyName></AssemblyName>
+        <AssemblyName>Origam.Services</AssemblyName>
     </PropertyGroup>
     
   <PropertyGroup>
@@ -52,7 +52,7 @@
 
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.18.0" />
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />

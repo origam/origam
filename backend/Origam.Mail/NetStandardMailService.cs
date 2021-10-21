@@ -34,7 +34,7 @@ namespace Origam.Mail
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
-        private readonly string userName;
+        private readonly string username;
         private readonly string password;
         private readonly bool useSsl;
         private readonly string defaultServer;
@@ -45,17 +45,31 @@ namespace Origam.Mail
         {
         }
 
-        public NetStandardMailService(string server, int port, string pickupDirectoryLocation,
-           string userName = null, string password = null, bool useSsl = true)
+        public NetStandardMailService(
+            string server, int port, string pickupDirectoryLocation,
+            string username = null, string password = null, bool useSsl = true)
         {
-            if (string.IsNullOrWhiteSpace(password) &&
-                !string.IsNullOrWhiteSpace(userName))
+            if(!string.IsNullOrWhiteSpace(pickupDirectoryLocation)
+            && !string.IsNullOrWhiteSpace(server))
             {
-                throw new ArgumentException(nameof(password)+" cannot be empty if fromAddress is not empty");
+                throw new ArgumentException(
+                    "It is not possible to specify both server and pickup directory.");
             }
-            if(string.IsNullOrWhiteSpace(server)) throw new ArgumentException(nameof(server)+" cannot be empty");
-
-            this.userName = userName;
+            if (string.IsNullOrWhiteSpace(pickupDirectoryLocation))
+            {
+                if (string.IsNullOrWhiteSpace(password) 
+                    && !string.IsNullOrWhiteSpace(username))
+                {
+                    throw new ArgumentException(nameof(password) 
+                        + " cannot be empty if fromAddress is not empty");
+                }
+                if (string.IsNullOrWhiteSpace(server))
+                {
+                    throw new ArgumentException(nameof(server)
+                        + " cannot be empty");
+                }
+            }
+            this.username = username;
             this.password = password;
             this.useSsl = useSsl;
             defaultServer = server;
@@ -117,12 +131,6 @@ namespace Origam.Mail
                     log.Error(ex);
                     throw;
                 }
-
-                /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
-                /// podle ktereho bude proveden update logu se statusem a casem odeslaneho mailu
-                /// .
-                /// Temito vysledky bude naplnen dataset, na nej dan data adapter a bude
-                /// proveden update.
             }
             return retVal;
         }
@@ -155,37 +163,39 @@ namespace Origam.Mail
                     string toName = "";
                     string toAddress = "";
                     OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref toName, ref toAddress);
-
-                    if (recipient != null & recipient != String.Empty) m.To.Add(new MailAddress(toAddress, toName));
+                    if (!string.IsNullOrEmpty(recipient))
+                    {
+                        m.To.Add(new MailAddress(toAddress, toName));
+                    }
                 }
 
-                string[] cc = null;
                 if (!mailrow.IsCCNull())
                 {
-                    cc = mailrow.CC.Split(";".ToCharArray());
-
+                    var cc = mailrow.CC.Split(";".ToCharArray());
                     foreach (string recipient in cc)
                     {
                         string ccName = "";
                         string ccAddress = "";
                         OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref ccName, ref ccAddress);
-
-                        if (recipient != null & recipient != String.Empty) m.CC.Add(new MailAddress(ccAddress, ccName));
+                        if (!string.IsNullOrEmpty(recipient))
+                        {
+                            m.CC.Add(new MailAddress(ccAddress, ccName));
+                        }
                     }
                 }
 
-                string[] bcc = null;
                 if (!mailrow.IsBCCNull())
                 {
-                    bcc = mailrow.BCC.Split(";".ToCharArray());
-
+                    var bcc = mailrow.BCC.Split(";".ToCharArray());
                     foreach (string recipient in bcc)
                     {
                         string bccName = "";
                         string bccAddress = "";
                         OpenPOP.MIMEParser.Utility.ParseEmailAddress(recipient, ref bccName, ref bccAddress);
-
-                        if (recipient != null & recipient != String.Empty) m.Bcc.Add(new MailAddress(bccAddress, bccName));
+                        if (!string.IsNullOrEmpty(recipient))
+                        {
+                            m.Bcc.Add(new MailAddress(bccAddress, bccName));
+                        }
                     }
                 }
 
@@ -224,39 +234,29 @@ namespace Origam.Mail
                     log.Error(ex);
                     throw;
                 }
-
-                /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
-                /// podle ktereho bude proveden update logu se statusem a casem odeslaneho mailu
-                /// .
-                /// Temito vysledky bude naplnen dataset, na nej dan data adapter a bude
-                /// proveden update.
             }
             return retVal;
         }
 
         private SmtpClient BuildSmtpClient(string server, int port)
         {
-            //local variables
-            SmtpClient smtpClient = new SmtpClient();
-            
-            if (server != null)
+            var smtpClient = new SmtpClient();
+            if (!string.IsNullOrEmpty(server))
             {
                 smtpClient.Host = server;
                 smtpClient.Port = port;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             }
-            else
-            {
-                SetConfigValues(smtpClient);
-            }
-            
-            if (!string.IsNullOrWhiteSpace(pickupDirectoryLocation))
+            else if (!string.IsNullOrWhiteSpace(pickupDirectoryLocation))
             {
                 smtpClient.PickupDirectoryLocation = pickupDirectoryLocation;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
                 smtpClient.EnableSsl = false;
             }
-
+            else
+            {
+                SetConfigValues(smtpClient);
+            }
             return smtpClient;
         }
 
@@ -267,7 +267,7 @@ namespace Origam.Mail
             smtpClient.EnableSsl = useSsl;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(userName, password);
+            smtpClient.Credentials = new NetworkCredential(username, password);
         }
     }
 }

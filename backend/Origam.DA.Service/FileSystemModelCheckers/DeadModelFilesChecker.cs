@@ -82,7 +82,11 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                     caption : "These files are not referenced by any model element. Please remove them.",
                     errorMessages : unexpectedFiles
                         .Where(file => file.Extension != ".origam")
-                        .Select(file => $"\"file://{file.FullName}\"")
+                        .Select(file => 
+                            new ErrorMessage(
+                                text: file.FullName, 
+                                link:file.Directory?.FullName)
+                        )
                         .ToList()
                 ),                
                 new ModelErrorSection
@@ -90,7 +94,11 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                     caption : "These files are empty or contain incomplete data so they add nothing to the model. Please remove them.",
                     errorMessages :  unexpectedFiles
                         .Where(file => file.Extension == ".origam")
-                        .Select(file => $"\"file://{file.FullName}\"")
+                        .Select(file => 
+                            new ErrorMessage(
+                                text: file.FullName, 
+                                link:file.Directory?.FullName)
+                        )
                         .ToList()
                 )
             };

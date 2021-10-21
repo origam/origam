@@ -90,10 +90,6 @@ namespace Origam.ServerCore.Controller
             {
                 return NotFound(ex);
             }
-            catch (RuleException ex)
-            {
-                return StatusCode(420, ex);
-            }
             catch (DBConcurrencyException ex)
             {
                 log.LogError(ex, ex.Message);

@@ -272,7 +272,7 @@ namespace Origam.Schema
         {
             get
             {
-                return SchemaItem.RelativeFilePath;
+                return SchemaItem?.RelativeFilePath ?? "";
             }
         }
 

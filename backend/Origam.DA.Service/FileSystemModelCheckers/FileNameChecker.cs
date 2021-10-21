@@ -55,24 +55,27 @@ namespace Origam.DA.Service
                 .SelectMany(GetChildrenIds)
                 .ToHashSet();
 
-            List<string> errors = allPersistedObjects
+            List<ErrorMessage> errors = allPersistedObjects
                 .Where(instance => !(instance is SchemaItemAncestor))
                 .Where(instance => !allChildrenIds.Contains(instance.Id))
                 .Where(IsPersistedInWrongFile)
-                .Select(instance =>
-                {
-                    string actualFilePath = index.GetById(instance.Id).OrigamFile.Path.Absolute;
-                    string expectedFilePath = Path.Combine(topDirectory,instance.RelativeFilePath);
-                    string expectedFilePathFormatted = File.Exists(expectedFilePath)
-                        ? $"file://{expectedFilePath}"
-                        : expectedFilePath;
-                    return $"Object with id: \"{instance.Id}\"\n" +
-                           $"should be in: \"{expectedFilePathFormatted}\"\n" +
-                           $"but is in:         \"file://{actualFilePath}\"";
-                })
+                .SelectMany(ToErrorMessages)
                 .ToList();
 
             yield return new ModelErrorSection("Objects persisted in wrong files (object name is different from file name)", errors);
+        }
+
+        private IEnumerable<ErrorMessage> ToErrorMessages(IFilePersistent instance)
+        {
+            string actualFilePath = index.GetById(instance.Id).OrigamFile.Path.Absolute;
+            string expectedFilePath = Path.Combine(topDirectory,instance.RelativeFilePath);
+            yield return new ErrorMessage($"Object with id: \"{instance.Id}\"");
+            yield return new ErrorMessage(
+                text: $"should be in: {expectedFilePath}",
+                link: expectedFilePath);
+            yield return new ErrorMessage(
+                text: $"but is in:    {actualFilePath}",
+                link: actualFilePath);
         }
 
         private IEnumerable<Guid> GetChildrenIds(AbstractSchemaItem item)

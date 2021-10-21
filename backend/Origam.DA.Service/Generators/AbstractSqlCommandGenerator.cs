@@ -995,11 +995,27 @@ namespace Origam.DA.Service
             var columnsInfo = selectParameters.ColumnsInfo;
             var dynamicParameters = selectParameters.Parameters;
             var customOrdering = selectParameters.CustomOrderings;
+            var customGrouping = selectParameters.CustomGrouping;
             var filter = selectParameters.Filter;
             var rowLimit = selectParameters.RowLimit;
             var rowOffset = selectParameters.RowOffset;
             bool rowOffsetSpecified = rowOffset.HasValue && rowOffset != 0;
-            
+            bool hasLookupField = selectParameters.Entity.EntityDefinition
+                .EntityColumns
+                .Cast<ISchemaItem>()
+                .OfType<LookupField>()
+                .Any(field =>
+                    selectParameters.ColumnsInfo.ColumnNames.Contains(field.Name));
+            bool wrapInGroupingSelect = hasLookupField &&
+                                        customGrouping != null;
+            if (wrapInGroupingSelect)
+            {
+                ColumnData groupColumn = selectParameters.ColumnsInfo.Columns
+                    .FirstOrDefault(column => column.Name == ColumnData.GroupByCountColumn.Name);
+                selectParameters.ColumnsInfo.Columns.Remove(groupColumn);
+                selectParameters.CustomGrouping = null;
+            }
+
             if (!(entity.EntityDefinition is TableMappingItem))
             {
                 throw new Exception("Only database mapped entities can be processed by the Data Service!");
@@ -1246,6 +1262,17 @@ namespace Origam.DA.Service
             else if (rowOffsetSpecified && orderBySpecified)
             {
                 finalString += $" OFFSET {rowOffset} ROWS FETCH NEXT {rowLimit} ROWS ONLY;";
+            }
+
+            if (wrapInGroupingSelect)
+            {
+                string columnNames = string.Join(", ", 
+                    selectParameters.ColumnsInfo.ColumnNames.Select(
+                        col => sqlRenderer.NameLeftBracket + col + sqlRenderer.NameRightBracket));
+                finalString = $"SELECT {columnNames}, {sqlRenderer.CountAggregate()}(*) AS {ColumnData.GroupByCountColumn} FROM (\n"+
+                              finalString + "\n" +
+                              ") as Query\n"+
+                              $"GROUP BY {columnNames}";
             }
 
             return finalString;
@@ -2423,15 +2450,20 @@ namespace Origam.DA.Service
 
             // any lookups with same entity name as any of the entities in this datastructure must be renamed
             bool lookupRenamed = false;
-            foreach (DataStructureEntity e in ds.Entities)
+            if (ds.Entities.Cast<DataStructureEntity>().Any(
+                dataStructureEntity 
+                    => dataStructureEntity.Name == lookupEntity.Name))
             {
-                if (e.Name == lookupEntity.Name)
+                lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
+                lookupEntity.Name = "lookup" + lookupEntity.Name;
+                foreach (var dataStructureEntity 
+                    in lookupEntity.ChildrenRecursive
+                    .OfType<DataStructureEntity>())
                 {
-                    lookupEntity = lookupEntity.Clone(true) as DataStructureEntity;
-                    lookupEntity.Name = "lookup" + lookupEntity.Name;
-                    lookupRenamed = true;
-                    break;
+                    dataStructureEntity.Name 
+                        = "lookup" + dataStructureEntity.Name;
                 }
+                lookupRenamed = true;
             }
 
             Hashtable replaceTexts = new Hashtable(1);
@@ -3247,51 +3279,73 @@ namespace Origam.DA.Service
             return RenderExpression(item.RelatedEntity as ISchemaItem, null, null, null, null);
         }
 
-        internal string RenderExpression(FieldMappingItem item, DataStructureEntity dsEntity)
+        internal string RenderExpression(
+            FieldMappingItem fieldMappingItem, 
+            DataStructureEntity dataStructureEntity)
         {
-            bool localize = dsEntity != null && dsEntity.RootItem is DataStructure
-                && (dsEntity.RootItem as DataStructure).IsLocalized;
-
-            TableMappingItem tmi = null;
+            bool localize 
+                = dataStructureEntity?.RootItem is DataStructure dataStructure 
+                  && dataStructure.IsLocalized;
+            TableMappingItem tableMappingItem = null;
             FieldMappingItem localizedItem = null;
             if (localize)
             {
-                if (dsEntity != null)
+                tableMappingItem 
+                    = dataStructureEntity.Entity as TableMappingItem;
+                if (tableMappingItem == null)
                 {
-                    tmi = dsEntity.Entity as TableMappingItem;
-                    if (tmi == null)
+                    // it could be a relation
+                    if (dataStructureEntity.Entity is EntityRelationItem entityRelationItem)
                     {
-                        // it could be a relation
-                        EntityRelationItem eri = dsEntity.Entity as EntityRelationItem;
-                        if (eri != null)
-                        {
-                            tmi = eri.RelatedEntity as TableMappingItem;
-                        }
+                        tableMappingItem = entityRelationItem.RelatedEntity as TableMappingItem;
                     }
                 }
-                localizedItem = ((localize) ? (item.GetLocalizationField(tmi)) : null);
+                localizedItem = fieldMappingItem.GetLocalizationField(tableMappingItem);
             }
-
-
-
-            string nonLocalizedResult = sqlRenderer.NameLeftBracket + item.MappedColumnName + sqlRenderer.NameRightBracket;
-
-            if (dsEntity != null)
-                nonLocalizedResult = sqlRenderer.NameLeftBracket + dsEntity.Name + sqlRenderer.NameRightBracket + "." + nonLocalizedResult;
-
-
-            if (localize && localizedItem != null)
+            string nonLocalizedResult 
+                = sqlRenderer.NameLeftBracket 
+                  + fieldMappingItem.MappedColumnName 
+                  + sqlRenderer.NameRightBracket;
+            if (dataStructureEntity != null)
             {
-                string result = sqlRenderer.NameLeftBracket + item.GetLocalizationField(tmi).MappedColumnName + sqlRenderer.NameRightBracket;
-                result = sqlRenderer.NameLeftBracket + FieldMappingItem.GetLocalizationTable(tmi).Name
-                    + sqlRenderer.NameRightBracket + "." + result;
-                result = String.Format(sqlRenderer.IsNull()+"({0},{1})", result, nonLocalizedResult);
-                return result;
+                nonLocalizedResult 
+                    = sqlRenderer.NameLeftBracket 
+                      + dataStructureEntity.Name 
+                      + sqlRenderer.NameRightBracket 
+                      + "." 
+                      + nonLocalizedResult;
             }
-            else
+            if (!localize || localizedItem == null)
             {
                 return nonLocalizedResult;
             }
+            var localizationTable 
+                = FieldMappingItem.GetLocalizationTable(tableMappingItem);
+            var localizationEntity = dataStructureEntity.ChildItemsByType(
+                    DataStructureEntity.CategoryConst)
+                .Cast<DataStructureEntity>()
+                .FirstOrDefault(
+                    entity => localizationTable.Id == entity.EntityDefinition.Id);
+            if (localizationEntity == null)
+            {
+                throw new Exception(
+                    $@"Localization entity for {localizationTable.Name} 
+                        not found among child entities of {dataStructureEntity.Name}");
+            }
+            return 
+                sqlRenderer.IsNull() 
+                + "(" 
+                + sqlRenderer.NameLeftBracket 
+                + localizationEntity.Name 
+                + sqlRenderer.NameRightBracket 
+                + "." 
+                + sqlRenderer.NameLeftBracket 
+                + fieldMappingItem.GetLocalizationField(tableMappingItem)
+                    .MappedColumnName 
+                + sqlRenderer.NameRightBracket 
+                + ", " 
+                + nonLocalizedResult 
+                + ")";
         }
 
         internal string RenderExpression(ParameterReference item, DataStructureEntity entity, Hashtable replaceParameterTexts, string parameterName, Hashtable parameterReferences)
@@ -3853,10 +3907,16 @@ namespace Origam.DA.Service
                 if ((column.DataType == OrigamDataType.Array)
                 && input.Contains(column.Name))
                 {
+                    var stringBuilder = new StringBuilder();
                     var regex = new Regex($"\0.*{column.Name}.*\0");
                     var placeholder = regex.Match(input, 0).Value;
+                    if (placeholder.Contains("NOT"))
+                    {
+                        placeholder = placeholder.Replace("NOT", "");
+                        stringBuilder.Append("NOT ");
+                    }
                     var arrayRelation = (column.Field as DetachedField).ArrayRelation;
-                    var stringBuilder = new StringBuilder("EXISTS(SELECT * FROM ");
+                    stringBuilder.Append("EXISTS(SELECT * FROM ");
                     stringBuilder.Append(
                         RenderExpression(arrayRelation as EntityRelationItem));
                     stringBuilder.Append(" WHERE");

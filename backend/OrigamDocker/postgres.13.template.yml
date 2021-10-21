@@ -1,0 +1,116 @@
+---
+params:
+  db_synchronous_commit: "off"
+  db_shared_buffers: "256MB"
+  db_work_mem: "10MB"
+  db_default_text_search_config: "pg_catalog.english"
+  db_checkpoint_segments: 6
+  db_logging_collector: off
+  db_log_min_duration_statement: 100
+  db_port: 5433
+
+run:
+  # listen on all interfaces
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?listen_addresses *=.*/
+      to: "listen_addresses = '*'"
+
+# replace port
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?port = 5432.*/
+      to: "port = $db_port"
+
+  # sync commit off is faster and less spiky, also marginally less safe
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?synchronous_commit *=.*/
+      to: "synchronous_commit = $db_synchronous_commit"
+
+  # default is 128MB which is way too small
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?shared_buffers *=.*/
+      to: "shared_buffers = $db_shared_buffers"
+
+  # default is 1MB which is too small
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?work_mem *=.*/
+      to: "work_mem = $db_work_mem"
+
+  # allow for other
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?default_text_search_config *=.*/
+      to: "default_text_search_config = '$db_default_text_search_config'"
+
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?checkpoint_segments *=.*/
+      to: "checkpoint_segments = $db_checkpoint_segments"
+
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?logging_collector *=.*/
+      to: "logging_collector = $db_logging_collector"
+
+  - replace:
+      filename: "/etc/postgresql/13/main/postgresql.conf"
+      from: /#?log_min_duration_statement *=.*/
+      to: "log_min_duration_statement = $db_log_min_duration_statement"
+
+  - replace:
+      filename: "/etc/postgresql/13/main/pg_hba.conf"
+      from: /^#local +replication +postgres +peer$/
+      to: "local replication postgres  peer"
+
+  # allow all to connect in with md5 auth
+  - replace:
+      filename: "/etc/postgresql/13/main/pg_hba.conf"
+      from: /^host.*all.*all.*32.*$/
+      to: "host		all	all		0.0.0.0/0	md5"
+
+  - exec:
+      background: true
+      # restart pg
+      cmd: /etc/init.d/postgresql restart
+
+  # give db a few secs to start up
+  - exec: "sleep 10"
+
+  - exec: su postgres -c 'mkdir ~/backup' || true
+
+  - file:
+     path: /var/lib/postgresql/database-backup
+     chown: postgres:postgres
+     chmod: "+x"
+     contents: |
+        #!/bin/bash
+        ID=db-$(date +%F_%T)
+        FILENAME=/var/lib/postgresql/backup/$ID.tar.gz
+        pg_basebackup --format=tar --xlog --gzip --label=$ID > $FILENAME
+        echo $FILENAME
+
+  - file:
+     path: /home/origam/pgUser.sh
+     chown: origam:origam
+     chmod: "+x"
+     contents: |
+        #!/bin/bash
+        cd /home/origam
+        su postgres -c "psql -U postgres -d postgres -f postgres_password.sql"
+
+  - exec: /home/origam/pgUser.sh
+
+  - file:
+     path: /var/spool/cron/crontabs/postgres
+     contents: |
+        # m h  dom mon dow   command
+        #MAILTO=?
+        0 23 * * 0 /var/lib/postgresql/database-backup
+
+  - exec:
+      hook: postgres
+      cmd: "echo postgres installed!"

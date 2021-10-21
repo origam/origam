@@ -3401,16 +3401,34 @@ namespace Origam.Rule
 						object oldValue = rowChanged[col];
 						string newLookupValue = null;
 						string oldLookupValue = null;
-					
+
 						if(col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute))
 						{
-							if(result != DBNull.Value && ! (result is XmlDocument))
+							if(result != DBNull.Value && !(result is XmlDocument))
 							{
-								newLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), result.ToString());
+								try
+								{
+									newLookupValue = LookupValue(
+										col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+										.ToString(), result.ToString());
+								}
+								catch(Exception ex)
+								{
+									newLookupValue = ex.Message;
+								}
 							}
 							if(oldValue != DBNull.Value)
 							{
-								oldLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), oldValue.ToString());
+								try
+								{
+									oldLookupValue = LookupValue(
+									col.ExtendedProperties[Const.DefaultLookupIdAttribute]
+									.ToString(), oldValue.ToString());
+								}
+								catch (Exception ex)
+								{
+									oldLookupValue = ex.Message;
+								}
 							}
 						}
 

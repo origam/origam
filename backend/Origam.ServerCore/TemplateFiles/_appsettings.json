@@ -4,6 +4,7 @@
     "PathToChatApp": "",
     "ChatRefreshInterval": 1000
   },
+  "ReloadModelWhenFilesChangesDetected": "false",
   "UserConfig": {
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",
@@ -75,6 +76,11 @@
     "PublicRoutes": [
       "/api/attachment"
     ]
+  },
+  "SoapAPI": {
+    "Enabled": "false",
+    "RequiresAuthentication": "true",
+    "ExpectAndReturnOldDotNetAssemblyReferences": "true"
   },
   "BehindProxy": "false",
   "ClientFilteringConfig": {

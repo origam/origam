@@ -54,8 +54,7 @@ namespace Origam.Schema.GuiModel
 		private string _url = "";
 		[Category("Page")]
 		[EntityColumn("SS01"), StringNotEmptyModelElementRule()]
-		[Localizable(true)]
-        [XmlAttribute("url")]
+		[XmlAttribute("url")]
 		public string Url
 		{
 			get

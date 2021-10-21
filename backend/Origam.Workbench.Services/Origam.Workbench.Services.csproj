@@ -4,7 +4,7 @@
     </PropertyGroup>
     <PropertyGroup>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <AssemblyName></AssemblyName>
+        <AssemblyName>Origam.Workbench.Services</AssemblyName>
     </PropertyGroup>
   
   <PropertyGroup>
@@ -53,7 +53,7 @@
 
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.18.0" />
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
       <PackageReference Include="morelinq" Version="3.3.2" />
     </ItemGroup>
     <ItemGroup>

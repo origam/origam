@@ -119,7 +119,9 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractDataEntityColumn Members
-		
+
+		public override string FieldType { get; } = "DetachedField";
+
 		public override bool ReadOnly
 		{
 			get

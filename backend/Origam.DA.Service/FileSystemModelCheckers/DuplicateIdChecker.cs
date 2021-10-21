@@ -47,17 +47,21 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                .Where(OrigamFile.IsPersistenceFile)
                .ForEach(PuIdsToDuplicateTracker);
 
-           List<string> errorMessages = duplicateTracker    
+           List<ErrorMessage> errorMessages = duplicateTracker    
                .GetDuplicates()
-               .Select(duplicate =>
-               {
-                   string filePaths = string.Join(
-                       "\n", duplicate.Files.Select(file => $"\"file://{file.FullName}\""));
-                   return $"Object with Id: {duplicate.ObjectId} is defined in more than one file:\n{filePaths}";
-               })
+               .SelectMany(ToErrorMessages)
                .ToList();
 
            yield return new ModelErrorSection("Duplicate Ids", errorMessages);
+        }
+
+        private IEnumerable<ErrorMessage> ToErrorMessages(DuplicateInfo duplicate)
+        {
+            yield return new ErrorMessage($"Object with Id: {duplicate.ObjectId} is defined in more than one file:");
+            foreach (var file in duplicate.Files)
+            {
+                yield return new ErrorMessage(text: file.FullName, link: file.FullName);
+            }
         }
 
         private void PuIdsToDuplicateTracker(FileInfo file)

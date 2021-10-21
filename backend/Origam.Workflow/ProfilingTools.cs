@@ -77,7 +77,6 @@ namespace Origam.Workflow
             string logEntryType, IWorkflowStep task,
             Func<bool> logOnlyIf = null)
         {
-            if (task == null) return;
             (string id, string path) = GetIdAndPath(task, logEntryType);
             ExecuteAndLogDuration(action, logEntryType, path, id, logOnlyIf);
         }
@@ -133,8 +132,8 @@ namespace Origam.Workflow
         private static (string id, string path) GetIdAndPath(IWorkflowStep task,
             string logEntryType)
         {
-            string taskPath = task is AbstractSchemaItem schemItem
-                ? schemItem.Path
+            string taskPath = task is AbstractSchemaItem schemaItem
+                ? schemaItem.Path
                 : "";
             string id = task == null ? "" : task.NodeId;
             string path = taskPath + "/" + logEntryType;

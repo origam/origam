@@ -55,7 +55,9 @@ namespace Origam.Schema.EntityModel
 		public AggregatedColumn(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractDataEntityColumn Members
-		
+
+		public override string FieldType { get; } = "AggregatedColumn";
+
 		public override bool ReadOnly
 		{
 			get

@@ -19,13 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.DA.Service
 {
-    public interface IRuntimeModelConfig
+    public interface IRuntimeModelConfig: IDisposable
     {
         void SetConfigurationValues(IFilePersistent instance);
         void UpdateConfig(IPersistent persistent);
+        event EventHandler<List<Guid>> ConfigurationReloaded;
     }
 }

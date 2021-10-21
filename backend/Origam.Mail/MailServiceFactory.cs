@@ -43,7 +43,7 @@ namespace Origam.Mail
         {
 #if NETSTANDARD
             var mailConfig = configuration.GetSection("MailConfig");
-            string userName = mailConfig["UserName"];
+            string username = mailConfig["UserName"];
             bool useSsl = mailConfig.GetBoolOrThrow("UseSsl");
             string password = mailConfig["Password"];
             string server = mailConfig["Server"];
@@ -53,7 +53,7 @@ namespace Origam.Mail
             return new NetStandardMailService(
                 server: server, 
                 port: port, 
-                userName: userName, 
+                username: username, 
                 pickupDirectoryLocation: pickupDirectoryLocation,
                 password: password, 
                 useSsl: useSsl

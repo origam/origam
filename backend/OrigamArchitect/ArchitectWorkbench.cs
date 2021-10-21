@@ -1461,11 +1461,6 @@ namespace OrigamArchitect
 
 			try
 			{
-				if(this.WindowState != FormWindowState.Normal)
-				{
-					this.WindowState = FormWindowState.Normal;
-				}
-
 				_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
 
 				// Login to the repository
@@ -1575,11 +1570,14 @@ namespace OrigamArchitect
 	        }
 	        catch (AggregateException ae)
 	        {
-	            if (!(ae.InnerException is OperationCanceledException))
+		        bool actualExceptionsExist = ae.Flatten()
+			        .InnerExceptions
+			        .Any(x => !(x is OperationCanceledException));
+		        if (actualExceptionsExist)
 	            {
-	                log.Error(ae.InnerException);
+	                log.Error(ae);
 	                this.RunWithInvoke(() => AsMessageBox.ShowError(
-		                this, ae.InnerException.Message, strings.GenericError_Title, ae.InnerException));
+		                this, ae.Message, strings.GenericError_Title, ae));
 	            }
 	        }
 	    }
@@ -1622,10 +1620,9 @@ namespace OrigamArchitect
 	            {
 		            this.RunWithInvoke(() =>
 		            {
-			            FlexibleMessageBox.Show(
-				            "The following errors were found in the loaded model:\n\n" +
-				            string.Join("\n\n", errorSections), "Model Errors");
-		            });
+			            var modelCheckResultWindow = new ModelCheckResultWindow(errorSections);
+			            modelCheckResultWindow.Show(this);
+			          });
 	            }
 	        }
 	    }

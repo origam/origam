@@ -17,14 +17,14 @@
 @if (Model.PostLogoutRedirectUri != null)
 {
     <div class="login-link">
-        @SharedLocalizer["ReturnToApplication1"] <a class="in-page-link" href="@Model.PostLogoutRedirectUri">@SharedLocalizer["ReturnToApplication2"]</a> @SharedLocalizer["ReturnToApplication3"]
-        <span>@Model.ClientName@(string.IsNullOrEmpty(Model.ClientName) ? "" :  " ")</span> @SharedLocalizer["ReturnToApplication4"]
+        @SharedLocalizer["ReturnToApplication1"]<a class="in-page-link" href="@Model.PostLogoutRedirectUri">@SharedLocalizer["ReturnToApplication2"]</a>@SharedLocalizer["ReturnToApplication3"]
+        <span>@Model.ClientName@(string.IsNullOrEmpty(Model.ClientName) ? "" :  " ")</span>@SharedLocalizer["ReturnToApplication4"]
     </div>
 }
 else
 {
     <div class="login-link">
-        @SharedLocalizer["ToLogin1"] <a class="in-page-link" href="/account/login">@SharedLocalizer["ToLogin2"]</a> @SharedLocalizer["ToLogin3"]
+        @SharedLocalizer["ToLogin1"]<a class="in-page-link" href="/account/login">@SharedLocalizer["ToLogin2"]</a>@SharedLocalizer["ToLogin3"]
     </div> 
 }
 

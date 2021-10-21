@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.DA.Service
@@ -30,6 +32,12 @@ namespace Origam.DA.Service
         }
 
         public void UpdateConfig(IPersistent persistent)
+        {
+        }
+
+        public event EventHandler<List<Guid>> ConfigurationReloaded;
+
+        public void Dispose()
         {
         }
     }

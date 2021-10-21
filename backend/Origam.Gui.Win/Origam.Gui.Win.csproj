@@ -342,7 +342,7 @@
     <Compile Include="DropDown\ILookupDropDownPart.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FormLevelPlugin.cs" />
+    <Compile Include="ScreenLevelPlugin.cs" />
     <Compile Include="Grid\IAsGridEditor.cs" />
     <Compile Include="DesktopEntityUIActionRunnerClient.cs" />
     <Compile Include="Commands\SqlConsoleParameters.cs" />

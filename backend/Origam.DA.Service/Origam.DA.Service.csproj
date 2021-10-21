@@ -4,7 +4,7 @@
     </PropertyGroup>
     <PropertyGroup>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <AssemblyName></AssemblyName>
+        <AssemblyName>Origam.DA.Service</AssemblyName>
     </PropertyGroup>
     
   <PropertyGroup>
@@ -59,7 +59,7 @@
 
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.18.0" />
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
       <PackageReference Include="morelinq" Version="3.3.2" />
       <PackageReference Include="Npgsql" Version="4.1.9" />
     </ItemGroup>

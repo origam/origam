@@ -43,7 +43,7 @@ namespace Origam.Security.Identity
             // we can get scoped RequestServices collection from HttpContext
             userManager = SecurityManager.DIServiceProvider
                 .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
-                .HttpContext.RequestServices.GetService<IManager>();
+                .HttpContext?.RequestServices?.GetService<IManager>();
         }
 
         private object result;

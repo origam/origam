@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Extensions;
 using Origam.ProjectAutomation.Builders;
 using System;
 using System.Collections.Generic;
@@ -115,7 +116,7 @@ namespace Origam.ProjectAutomation
                 if (_project.Deployment == DeploymentType.DockerPostgres)
                 {
                     tasks.Add(new DockerBuilder());
-                    tasks.Add(new DockerCreator());
+                    tasks.Add(new DockerCreator("master-latest".GetAssemblyVersion(),_project.DockerApiAddress));
                 }
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);

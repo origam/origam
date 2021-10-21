@@ -218,9 +218,9 @@ namespace Origam.DA.Service
             origamFileManager.WriteReferenceFileToDisc(fullPath, contents, parentFolderIds);
         }
 
-        public void RemoveFromCache(IPersistent instance)
+        public void RemoveFromCache(Guid instanceId)
         {
-            origamXmlManager.RemoveFromCache(instance);
+            origamXmlManager.RemoveFromCache(instanceId);
         }
     }
 }

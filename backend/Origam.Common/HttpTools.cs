@@ -65,7 +65,7 @@ namespace Origam
 			List<Cookie> cookies = new List<Cookie>();
 			foreach (string singleCookie in singleCookies)
 			{
-				Match match = Regex.Match(singleCookie, "(.+?)=(.+?);");
+				Match match = Regex.Match(singleCookie, @"(\S+?)=(.+?);");
 				if (match.Captures.Count == 0)
 					continue;
 				cookies.Add(

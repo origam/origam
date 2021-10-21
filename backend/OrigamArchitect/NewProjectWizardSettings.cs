@@ -80,6 +80,31 @@ namespace OrigamArchitect
                 this["DatabaseTypeText"] = value;
             }
         }
-
+        [UserScopedSetting()]
+        [DefaultSettingValue("http://localhost:2375")]
+        public string DockerApiAdress
+        {
+            get
+            {
+                return (string)this["DockerApiAdress"];
+            }
+            set
+            {
+                this["DockerApiAdress"] = value;
+            }
+        }
+        [UserScopedSetting()]
+        [DefaultSettingValue("")]
+        public string DockerSourceFolder
+        {
+            get
+            {
+                return (string)this["DockerSourceFolder"];
+            }
+            set
+            {
+                this["DockerSourceFolder"] = value;
+            }
+        }
     }
 }
