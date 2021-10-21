@@ -34,7 +34,7 @@ jobs:
       - name: Restore Nuget
         run: |
               cd monorepo,
-              nuget restore Origam.sln
+              nuget restore monorepo/backend/Origam.sln
         
       - name: Build Architect
         run: msbuild Origam.sln /p:Configutation=Release Server
