@@ -153,12 +153,13 @@ export class CScreenToolbar extends React.Component<{}> {
       return (
         <Dropdowner
           style={{width: "auto"}}
-          trigger={({refTrigger, setDropped}) => (
+          trigger={({refTrigger, setDropped, isDropped}) => (
             <Observer key={action.id}>
               {() => (
                 <ScreenToolbarAction
                   rootRef={refTrigger}
                   onMouseDown={() => setDropped(true)}
+                  className={isDropped ? "isActiveDropDownAction" : ""}
                   icon={
                     action.iconUrl ? (
                       <Icon src={customAssetsRoute + "/" + action.iconUrl}/>

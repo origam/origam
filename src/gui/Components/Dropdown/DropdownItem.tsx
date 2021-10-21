@@ -36,7 +36,7 @@ export const DropdownItem: React.FC<{
 
   return <div
     onClick={props.onClick}
-    className={cx(S.root, getStyle(), props.className)}
+    className={cx(S.root, getStyle(), props.className, "dropdownItem")}
   >
     {props.children}
   </div>
