@@ -25,19 +25,19 @@ import { onFieldKeyDown } from "model/actions-ui/DataView/TableView/onFieldKeyDo
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import { onFieldBlur } from "../../../../model/actions-ui/DataView/TableView/onFieldBlur";
-import { IProperty } from "../../../../model/entities/types/IProperty";
-import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
-import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
-import { getSelectedProperty } from "../../../../model/selectors/TablePanelView/getSelectedProperty";
-import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
-import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
+import { IProperty } from "model/entities/types/IProperty";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
+import { getSelectedProperty } from "model/selectors/TablePanelView/getSelectedProperty";
+import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
 import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
 import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
-import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
-import { getDataView } from "../../../../model/selectors/DataView/getDataView";
+import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
+import { getDataView } from "model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
-import { isReadOnly } from "../../../../model/selectors/RowState/isReadOnly";
+import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import {
   cellPaddingRightFirstCell,
@@ -47,8 +47,9 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
-@inject(({ tablePanelView }) => {
+@inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
   const property = getSelectedProperty(tablePanelView)!;
   const actualProperty =
@@ -78,6 +79,12 @@ export class TableViewEditor extends React.Component<{
   onEditorBlur?: (event: any) => void;
   onEditorKeyDown?: (event: any) => void;
 }> {
+
+  componentDidMount() {
+    const focusManager = getGridFocusManager(this.props.property);
+    focusManager.focusEditor();
+  }
+
   getEditor() {
     const rowId = getSelectedRowId(this.props.property);
     const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
@@ -93,7 +100,7 @@ export class TableViewEditor extends React.Component<{
       : customBackgroundColor;
 
     const isFirsColumn = getTablePanelView(dataView).firstColumn === this.props.property;
-
+    const focusManager = getGridFocusManager(this.props.property);
     switch (this.props.property!.column) {
       case "Number":
         return (
@@ -101,19 +108,20 @@ export class TableViewEditor extends React.Component<{
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
             isInvalid={false}
-            isFocused={true}
             isPassword={this.props.property!.isPassword}
             maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
-            reFocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
-            customStyle={isFirsColumn ? { paddingRight: cellPaddingRightFirstCell - 1 + "px" } : {}}
+            customStyle={isFirsColumn ? {paddingRight: cellPaddingRightFirstCell - 1 + "px"} : {}}
+            subscribeToFocusManager={(editor) =>
+              focusManager.activeEditor = editor
+            }
           />
         );
       case "Text":
@@ -122,12 +130,10 @@ export class TableViewEditor extends React.Component<{
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
             isInvalid={false}
-            isFocused={true}
             isPassword={this.props.property!.isPassword}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             maxLength={this.props.property?.maxLength}
-            refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
@@ -136,6 +142,9 @@ export class TableViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
             isRichText={false}
             isMultiline={this.props.property!.multiline}
+            subscribeToFocusManager={(editor) =>
+              focusManager.activeEditor = editor
+            }
           />
         );
       case "Date":
@@ -146,15 +155,16 @@ export class TableViewEditor extends React.Component<{
             outputFormatToShow={this.props.property!.modelFormatterPattern}
             isReadOnly={readOnly}
             isInvalid={false}
-            isFocused={true}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             onKeyDown={this.props.onEditorKeyDown}
+            subscribeToFocusManager={(editor) =>
+              focusManager.activeEditor = editor
+            }
           />
         );
       case "CheckBox":
@@ -167,7 +177,10 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={this.props.onEditorKeyDown}
-            forceTakeFocus={true}
+            forceTakeFocus={false}
+            subscribeToFocusManager={(editor) =>
+              focusManager.activeEditor = editor
+            }
           />
         );
       case "ComboBox":
@@ -181,7 +194,10 @@ export class TableViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
-            subscribeToFocusManager={(input) => input.focus()} // will cause the editor to take focus after opening
+            // subscribeToFocusManager={(input) => input.focus()} // will cause the editor to take focus after opening
+            subscribeToFocusManager={(editor) =>
+              focusManager.activeEditor = editor
+            }
           />
         );
       case "Checklist":
@@ -194,26 +210,30 @@ export class TableViewEditor extends React.Component<{
             onBlur={() => this.props.onEditorBlur?.(undefined)}
             onKeyDown={this.props.onEditorKeyDown}
             isReadOnly={readOnly}
-            subscribeToFocusManager={(input) => input.focus()}
+            // subscribeToFocusManager={(input) => input.focus()}
+            subscribeToFocusManager={(editor) =>
+              focusManager.activeEditor = editor
+            }
           />
         );
       case "TagInput":
         return (
-          <div style={{ height: rowHeight * 5 + "px", backgroundColor: "white" }}>
+          <div style={{height: rowHeight * 5 + "px", backgroundColor: "white"}}>
             <XmlBuildDropdownEditor
               key={this.props.property!.xmlNode.$iid}
               xmlNode={this.props.property!.xmlNode}
               isReadOnly={readOnly}
               autoSort={this.props.property!.autoSort}
+              subscribeToFocusManager={(editor) =>
+                focusManager.activeEditor = editor
+              }
               tagEditor={
                 <TagInputEditor
                   value={this.props.getCellValue!()}
                   isReadOnly={readOnly}
                   isInvalid={false}
-                  isFocused={false}
                   backgroundColor={backgroundColor}
                   foregroundColor={foregroundColor}
-                  refocuser={undefined}
                   onChange={this.props.onChange}
                   onKeyDown={undefined}
                   onClick={undefined}
@@ -233,6 +253,9 @@ export class TableViewEditor extends React.Component<{
             canUpload={true}
             onChange={this.props.onChange}
             onEditorBlur={this.props.onEditorBlur}
+            subscribeToFocusManager={(editor) =>
+              focusManager.activeEditor = editor
+            }
           />
         );
       case "Polymorph":

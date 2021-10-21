@@ -32,12 +32,13 @@ import { ClientSideGrouper } from "../ClientSideGrouper";
 import { IGridDimensions, IScrollState } from "../../../gui/Components/ScreenElements/Table/types";
 import { ITableRow } from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
 import { BoundingRect } from "react-measure";
-import { FocusManager } from "../FocusManager";
+import { FormFocusManager } from "../FormFocusManager";
 import { DataViewData } from "../../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../../modules/DataView/TableCursor";
-import {IInfiniteScrollLoader} from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {IAggregation} from "./IAggregation";
+import { IInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { IAggregation } from "./IAggregation";
+import { GridFocusManager } from "../GridFocusManager";
 
 export interface IDataViewData {
   id: string;
@@ -86,7 +87,7 @@ export interface IDataViewData {
 
 export interface IDataView extends IDataViewData {
   $type_IDataView: 1;
-  
+
   orderProperty: IProperty | undefined;
   isBindingRoot: boolean;
   isBindingParent: boolean;
@@ -109,49 +110,68 @@ export interface IDataView extends IDataViewData {
   panelMenuActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
-  focusManager: FocusManager;
+  formFocusManager: FormFocusManager;
+  gridFocusManager: GridFocusManager;
   firstEnabledDefaultAction: IAction | undefined;
   defaultActions: IAction[];
   aggregationData: IAggregation[];
 
   isSelected(id: string): boolean;
+
   hasSelectedRowId(id: string): boolean;
+
   selectedRowIds: Set<string>;
+
   addSelectedRowId(id: string): void;
+
   removeSelectedRowId(id: string): void;
+
   setSelectedState(rowId: string, newState: boolean): void;
 
   selectNextRow(): void;
+
   selectPrevRow(): void;
 
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
+
   loadFirstPage(): Generator;
+
   loadLastPage(): Generator;
+
   selectFirstRow(): void;
+
   selectLastRow(): void;
+
   reselectOrSelectFirst(): void;
-  selectRowById(id: string | undefined): void;
+
   selectRow(row: any[]): void;
+
   setSelectedRowId(id: string | undefined): void;
+
   setRecords(rows: any[][]): Promise<any>;
+
   appendRecords(rows: any[][]): void;
+
   substituteRecord(row: any[]): void;
+
   deleteRowAndSelectNext(row: any[]): void;
+
   clear(): void;
 
   navigateLookupLink(property: IProperty, row: any[]): Generator<any>;
 
   saveViewState(): void;
+
   restoreViewState(): void;
 
   start(): void;
+
   stop(): void;
 
   scrollState: IScrollState;
   tableRows: ITableRow[];
-  onReload(): void;
 
-  onPanelKeyDown(event: any): void;
+  onReload(): void;
 
   gridDimensions: IGridDimensions;
   contentBounds: BoundingRect | undefined;
@@ -160,15 +180,18 @@ export interface IDataView extends IDataViewData {
   parent?: any;
 
   moveSelectedRowUp(): void;
+
   moveSelectedRowDown(): void;
+
   setRowCount(rowCount: number | undefined): void;
 
   isTableViewActive: () => boolean;
   isFormViewActive: () => boolean;
-  activateFormView: ((args: {saveNewState: boolean})=> Promise<any>) | undefined;
-  activateTableView: (()=> Promise<any>) | undefined;
+  activateFormView: ((args: { saveNewState: boolean }) => Promise<any>) | undefined;
+  activateTableView: (() => Promise<any>) | undefined;
 
   initializeNewScrollLoader(): void;
+
   exportToExcel(): void;
 
   isLazyLoading: Boolean;

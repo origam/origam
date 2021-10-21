@@ -38,9 +38,9 @@ export class ErrorBoundary extends React.Component<{
 export class ErrorBoundaryEncapsulated extends React.Component<PropsWithChildren<{ ctx: any }>> {
   handleScreenError(error: any) {
     const self = this;
-    flow(function* () {
+    flow(function*() {
       try {
-        yield* handleError(self.props.ctx)(error);
+        yield*handleError(self.props.ctx)(error);
       } catch (e) {
       } finally {
         yield onScreenTabCloseClick(self.props.ctx)(undefined, true);

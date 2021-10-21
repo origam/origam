@@ -23,10 +23,10 @@ import { handleError } from "../handleError";
 import { executeWeblink } from "./executeWeblink";
 
 export function onRootElementClick(ctx: any) {
-  return flow(function* onRootElementClick(event: any): Generator {
+  return flow(function*onRootElementClick(event: any): Generator {
     try {
-      const { target } = event;
-      const { nodeName } = target;
+      const {target} = event;
+      const {nodeName} = target;
 
       if (`${nodeName}`.toLowerCase() === "a") {
         const href = target.getAttribute("href");
@@ -36,11 +36,11 @@ export function onRootElementClick(ctx: any) {
           const urlParts = actionUrl.split("?");
           const urlPath = urlParts[0];
           const urlQuery = qs.parse(urlParts[1] || "");
-          yield* executeWeblink(ctx)(urlPath, urlQuery);
+          yield*executeWeblink(ctx)(urlPath, urlQuery);
         }
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

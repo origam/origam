@@ -17,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IDataView} from "./types/IDataView";
-import {IDataSource} from "./types/IDataSource";
-import {IComponentBinding} from "./types/IComponentBinding";
-import {IFormScreenLifecycle02} from "./types/IFormScreenLifecycle";
-import {action, computed, observable} from "mobx";
-import {IAction} from "./types/IAction";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
-import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData,} from "./types/IFormScreen";
-import {IPanelConfiguration} from "./types/IPanelConfiguration";
-import {CriticalSection} from "utils/sync";
-import {getRowStates} from "model/selectors/RowState/getRowStates";
-import {ScreenPictureCache} from "./ScreenPictureCache";
-import {DataViewCache} from "./DataViewCache";
+import { IDataView } from "./types/IDataView";
+import { IDataSource } from "./types/IDataSource";
+import { IComponentBinding } from "./types/IComponentBinding";
+import { IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
+import { action, computed, observable } from "mobx";
+import { IAction } from "./types/IAction";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData, } from "./types/IFormScreen";
+import { IPanelConfiguration } from "./types/IPanelConfiguration";
+import { CriticalSection } from "utils/sync";
+import { getRowStates } from "model/selectors/RowState/getRowStates";
+import { ScreenPictureCache } from "./ScreenPictureCache";
+import { DataViewCache } from "./DataViewCache";
 
 export class FormScreen implements IFormScreen {
-  
+
   $type_IFormScreen: 1 = 1;
 
   constructor(data: IFormScreenData) {
@@ -77,20 +77,21 @@ export class FormScreen implements IFormScreen {
   componentBindings: IComponentBinding[] = [];
 
   setPanelSize(id: string, size: number) {
-    if(!this.panelConfigurations.has(id)){
+    if (!this.panelConfigurations.has(id)) {
       this.panelConfigurations.set(
-          id,
-          {
-            position:undefined,
-            defaultOrdering: undefined}
-          )
+        id,
+        {
+          position: undefined,
+          defaultOrdering: undefined
+        }
+      )
     }
     this.panelConfigurations.get(id)!.position = size;
   }
 
   getData(childEntity: string, modelInstanceId: string, parentRecordId: string, rootRecordId: string) {
     this.dataSources.filter(dataSource => dataSource.entity === childEntity)
-    .forEach(dataSource => getRowStates(dataSource).clearAll());
+      .forEach(dataSource => getRowStates(dataSource).clearAll());
     return this.dataViewCache.getData({
       childEntity: childEntity,
       modelInstanceId: modelInstanceId,
@@ -99,7 +100,7 @@ export class FormScreen implements IFormScreen {
     });
   }
 
-  clearDataCache(){
+  clearDataCache() {
     this.dataViewCache.clear();
   }
 
@@ -231,6 +232,7 @@ export class FormScreen implements IFormScreen {
     console.log("End of View bindings");
     console.log("");
   }
+
   /* eslint-enable no-console */
 }
 
@@ -244,6 +246,7 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
 
   @observable formScreen?: IFormScreen | undefined;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
+
   @computed get isLoading() {
     return !this.formScreen;
   }
@@ -257,7 +260,7 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
   }
 
   *start(initUIResult: any, preloadIsDirty?: boolean): Generator {
-    yield* this.formScreenLifecycle.start(initUIResult);
+    yield*this.formScreenLifecycle.start(initUIResult);
     if (this.formScreen) {
       this.formScreen.setDirty(!!preloadIsDirty);
     }

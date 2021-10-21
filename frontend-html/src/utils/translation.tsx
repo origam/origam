@@ -27,17 +27,18 @@ let translations = {} as { [k: string]: string };
 
 export async function translationsInit(ctx: any) {
   const locale = getLocaleFromCookie();
-  axios.get(`locale/localization_${locale}.json`, {})
-    .then(result => translations = result.data)
-    .catch(error => {
-      if(error.response.status === 404){
-        const localeParent = locale.split("-")[0]
-        axios.get(`locale/localization_${localeParent}.json`, {})
-          .then(result => translations = result.data)
-          .catch(error2 => console.error(error2)) /* eslint-disable-line no-console */
-      }
-      console.error(error) /* eslint-disable-line no-console */
-    })
+  try {
+    const result = await axios.get(`locale/localization_${locale}.json`, {});
+    translations = result.data
+  } catch (error) {
+    if (error.response.status === 404) {
+      const localeParent = locale.split("-")[0]
+      axios.get(`locale/localization_${localeParent}.json`, {})
+        .then(result => translations = result.data)
+        .catch(error2 => console.error(error2)) /* eslint-disable-line no-console */
+    }
+    console.error(error) /* eslint-disable-line no-console */
+  }
 }
 
 export function T(defaultContent: any, translKey: string, ...p: any[]) {
@@ -56,13 +57,13 @@ export function T(defaultContent: any, translKey: string, ...p: any[]) {
     if (showingDefault) {
       console.error(`Could not find translation for: "${translKey}", showing default: "${result}"`); // eslint-disable-line no-console
       return (
-        <span title={translKey} style={{ backgroundColor: "red" }}>
+        <span title={translKey} style={{backgroundColor: "red"}}>
           {result}
         </span>
       );
     } else {
       return (
-        <span title={translKey} style={{ backgroundColor: "green" }}>
+        <span title={translKey} style={{backgroundColor: "green"}}>
           {result}
         </span>
       );

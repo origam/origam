@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getOpenedScreen} from "../getOpenedScreen";
-import {getGridId} from "./getGridId";
+import { getOpenedScreen } from "../getOpenedScreen";
+import { getGridId } from "./getGridId";
 
 export function getDataViewByGridId(ctx: any, gridId: string) {
   return getOpenedScreen(ctx).content.formScreen!.dataViews.find(

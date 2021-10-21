@@ -110,9 +110,9 @@ export class CScreenToolbar extends React.Component<{}> {
 
     function getIcon(action: IAction) {
       if (action.iconUrl) {
-        return <Icon src={customAssetsRoute + "/" + action.iconUrl} />;
+        return <Icon src={customAssetsRoute + "/" + action.iconUrl}/>;
       }
-      return iconsWillBeShown ? <div /> : null;
+      return iconsWillBeShown ? <div/> : null;
     }
 
     return toolbarActions
@@ -152,16 +152,17 @@ export class CScreenToolbar extends React.Component<{}> {
       );
       return (
         <Dropdowner
-          style={{ width: "auto" }}
-          trigger={({ refTrigger, setDropped }) => (
+          style={{width: "auto"}}
+          trigger={({refTrigger, setDropped, isDropped}) => (
             <Observer key={action.id}>
               {() => (
                 <ScreenToolbarAction
                   rootRef={refTrigger}
                   onMouseDown={() => setDropped(true)}
+                  className={isDropped ? "isActiveDropDownAction" : ""}
                   icon={
                     action.iconUrl ? (
-                      <Icon src={customAssetsRoute + "/" + action.iconUrl} />
+                      <Icon src={customAssetsRoute + "/" + action.iconUrl}/>
                     ) : undefined
                   }
                   label={action.caption}
@@ -172,7 +173,7 @@ export class CScreenToolbar extends React.Component<{}> {
           content={() => (
             <Dropdown>
               {this.getOverfullActionsDropdownContent(
-                [{ section: "", actions: childActions }],
+                [{section: "", actions: childActions}],
                 undefined
               )}
             </Dropdown>
@@ -185,7 +186,7 @@ export class CScreenToolbar extends React.Component<{}> {
         {() => (
           <ScreenToolbarAction
             icon={
-              action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined
+              action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl}/> : undefined
             }
             label={action.caption}
             onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
@@ -231,7 +232,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   onShortcut={onRefreshSessionClick(formScreen)}
                   shortcutPredicate={isRefreshShortcut}
                   icon={
-                    <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />
+                    <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")}/>
                   }
                   label={T("Refresh", "refresh_tool_tip")}
                 />
@@ -254,12 +255,12 @@ export class CScreenToolbar extends React.Component<{}> {
         ) : null}
         {this.state.hiddenActionIds.size > 0 && (
           <Dropdowner
-            style={{ width: "auto" }}
-            trigger={({ refTrigger, setDropped }) => (
+            style={{width: "auto"}}
+            trigger={({refTrigger, setDropped}) => (
               <ScreenToolbarAction
                 rootRef={refTrigger}
                 onMouseDown={() => setDropped(true)}
-                icon={<Icon src="./icons/dot-menu.svg" tooltip={""} />}
+                icon={<Icon src="./icons/dot-menu.svg" tooltip={""}/>}
               />
             )}
             content={() => (
@@ -273,7 +274,7 @@ export class CScreenToolbar extends React.Component<{}> {
         )}
         <ScreenToolbarAction
           onClick={() => openSearchWindow(this.application)}
-          icon={<Icon src="./icons/search.svg" />}
+          icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
           avatarLink={avatarLink}
@@ -297,15 +298,15 @@ export class CScreenToolbar extends React.Component<{}> {
           <ScreenToolbarActionGroup>
             <ScreenToolbarAction
               onMouseDown={onReloadWebScreenClick(activeScreen)}
-              icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
+              icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")}/>}
               label={T("Refresh", "refresh_tool_tip")}
             />
           </ScreenToolbarActionGroup>
         </>
-        <ScreenToolbarPusher />
+        <ScreenToolbarPusher/>
         <ScreenToolbarAction
           onClick={() => openSearchWindow(this.application)}
-          icon={<Icon src="./icons/search.svg" />}
+          icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
           avatarLink={avatarLink}
@@ -324,14 +325,14 @@ export class CScreenToolbar extends React.Component<{}> {
     const avatarLink = getUserAvatarLink(this.application);
     return (
       <ScreenToolbar>
-        <ScreenToolbarPusher />
+        <ScreenToolbarPusher/>
         {/*<ScreenToolbarAction
           icon={<Icon src="./icons/search.svg" />}
           label="Search"
         />*/}
         <ScreenToolbarAction
           onClick={() => openSearchWindow(this.application)}
-          icon={<Icon src="./icons/search.svg" />}
+          icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
           avatarLink={avatarLink}

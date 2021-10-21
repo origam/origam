@@ -28,7 +28,7 @@ import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
-import { DateGroupData, GenericGroupData } from "./DateGroupData";
+import { DateGroupData, GenericGroupData, IGroupData } from "./DateGroupData";
 import moment from "moment";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
 import { IOrderByDirection } from "./types/IOrderingConfiguration";
@@ -38,7 +38,7 @@ export class ClientSideGrouper implements IGrouper {
   expandedGroupDisplayValues: Set<string> = new Set();
 
   @computed
-  get topLevelGroups(){
+  get topLevelGroups() {
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (firstGroupingColumn === undefined) {
       return [];
@@ -48,17 +48,18 @@ export class ClientSideGrouper implements IGrouper {
     this.loadRecursively(groups);
     return groups;
   }
-  
-  get allGroups(){
+
+  get allGroups() {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
 
-  substituteRecord(row: any[]): void{}
+  substituteRecord(row: any[]): void {
+  }
 
   getCellOffset(rowId: string): ICellOffset {
-   return getCellOffset(this, rowId);
+    return getCellOffset(this, rowId);
   }
-  
+
   getRowIndex(rowId: string): number | undefined {
     return getRowIndex(this, rowId);
   }
@@ -81,7 +82,7 @@ export class ClientSideGrouper implements IGrouper {
 
   loadRecursively(groups: IGroupTreeNode[]) {
     for (let group of groups) {
-      if(this.expandedGroupDisplayValues.has(group.columnDisplayValue)){
+      if (this.expandedGroupDisplayValues.has(group.columnDisplayValue)) {
         group.isExpanded = true;
         this.loadChildrenInternal(group);
         this.loadRecursively(group.childGroups);
@@ -89,12 +90,10 @@ export class ClientSideGrouper implements IGrouper {
     }
   }
 
-  expansionListener(item: ClientSideGroupItem){
-    if(item.isExpanded){
+  expansionListener(item: ClientSideGroupItem) {
+    if (item.isExpanded) {
       this.expandedGroupDisplayValues.add(item.columnDisplayValue);
-    }
-    else
-    {
+    } else {
       this.expandedGroupDisplayValues.delete(item.columnDisplayValue);
     }
   }
@@ -104,14 +103,14 @@ export class ClientSideGrouper implements IGrouper {
     const property = dataTable.getPropertyById(groupingColumnSettings.columnId);
     const orderingConfig = getOrderingConfiguration(this);
     const orderingDirection = orderingConfig.orderings
-      .find(ordering => ordering.columnId === groupingColumnSettings.columnId)
-      ?.direction 
+        .find(ordering => ordering.columnId === groupingColumnSettings.columnId)
+        ?.direction
       ?? IOrderByDirection.ASC;
 
     return this.groupToGroupDataList(groupingColumnSettings, rows)
       .sort((a, b) =>
-        orderingDirection === IOrderByDirection.ASC 
-          ? a.compare(b) 
+        orderingDirection === IOrderByDirection.ASC
+          ? a.compare(b)
           : -a.compare(b))
       .map((groupData) => {
         return new ClientSideGroupItem({
@@ -136,9 +135,9 @@ export class ClientSideGrouper implements IGrouper {
     }
 
     const index = this.findDataIndex(groupingSettings.columnId);
-    const groupMap = new Map<string, GenericGroupData>();
-    for (let row of rows) {    
-      const groupData = groupingSettings.groupingUnit === undefined 
+    const groupMap = new Map<string, IGroupData>();
+    for (let row of rows) {
+      const groupData = groupingSettings.groupingUnit === undefined
         ? new GenericGroupData(row[index], row[index])
         : DateGroupData.create(moment(row[index]), groupingSettings.groupingUnit)
       if (!groupMap.has(groupData.label)) {
@@ -188,10 +187,10 @@ export class ClientSideGrouper implements IGrouper {
   }
 
   *loadChildren(group: IGroupTreeNode) {
-   this.loadChildrenInternal(group);
+    this.loadChildrenInternal(group);
   }
 
-  loadChildrenInternal(group: IGroupTreeNode){
+  loadChildrenInternal(group: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
 
@@ -201,10 +200,11 @@ export class ClientSideGrouper implements IGrouper {
   }
 
 
-  notifyGroupClosed(group: IGroupTreeNode){
+  notifyGroupClosed(group: IGroupTreeNode) {
   }
 
-  start(): void {}
+  start(): void {
+  }
 }
 
 

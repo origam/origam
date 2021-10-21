@@ -22,7 +22,7 @@ import { IApplication } from "model/entities/types/IApplication";
 import React from "react";
 import { CWorkbenchPage } from "gui/connections/pages/CWorkbenchPage";
 import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
-import {IWorkbench} from "model/entities/types/IWorkbench";
+import { IWorkbench } from "model/entities/types/IWorkbench";
 
 @observer
 export class CMain extends React.Component {
@@ -38,10 +38,10 @@ export class CMain extends React.Component {
 
   render() {
     return (
-      <div className={"toplevelContainer"} >
+      <div className={"toplevelContainer"}>
         <Provider workbench={this.workbench}>
-          <ApplicationDialogStack />
-          <CWorkbenchPage />
+          <ApplicationDialogStack/>
+          <CWorkbenchPage/>
         </Provider>
       </div>
     );

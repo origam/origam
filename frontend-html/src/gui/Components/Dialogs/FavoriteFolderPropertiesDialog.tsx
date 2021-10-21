@@ -105,7 +105,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
                     className={S.notification}
                     title={T("Name cannot be empty", "group_name_empty")}
                   >
-                    <i className="fas fa-exclamation-circle red" />
+                    <i className="fas fa-exclamation-circle red"/>
                   </div>
                 </div>
               )}

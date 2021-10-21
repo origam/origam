@@ -18,11 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from 'react';
-import {TypeSymbol} from "dic/Container";
-import {Observer} from "mobx-react";
-import {IRenderable} from "modules/CommonTypes";
-import {ContribArray} from "utils/common";
-import {IDataViewToolbarContribItem} from "./DataViewTypes";
+import { TypeSymbol } from "dic/Container";
+import { Observer } from "mobx-react";
+import { IRenderable } from "modules/CommonTypes";
+import { ContribArray } from "utils/common";
+import { IDataViewToolbarContribItem } from "./DataViewTypes";
 
 export class DataViewBodyUI {
   contrib = new ContribArray<IRenderable>();
@@ -33,7 +33,6 @@ export class DataViewBodyUI {
 }
 
 export const IDataViewBodyUI = TypeSymbol<DataViewBodyUI>("DataViewBodyUI");
-
 
 
 export class DataViewToolbarUI {

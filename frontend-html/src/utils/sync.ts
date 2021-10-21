@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 interface ITriggerablePromise<T> extends Promise<T> {
   resolve(arg?: T): void;
+
   reject(arg?: any): void;
 }
 
@@ -92,10 +93,14 @@ export class CriticalSection {
 
   *runGenerator<R>(fn: () => Generator<any, R>) {
     try {
-      yield* this.enterGenerator();
-      return yield* fn();
+      yield*this.enterGenerator();
+      return yield*fn();
     } finally {
       this.leave();
     }
   }
+}
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

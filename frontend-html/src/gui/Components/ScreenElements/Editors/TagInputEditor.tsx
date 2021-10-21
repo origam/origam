@@ -17,24 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import CS from "./CommonStyle.module.css";
 import S from "./TagInputEditor.module.css";
 
-import {
-  TagInput,
-  TagInputAdd,
-  TagInputItem,
-  TagInputItemDelete,
-} from "gui/Components/TagInput/TagInput";
+import { TagInput, TagInputAdd, TagInputItem, TagInputItemDelete, } from "gui/Components/TagInput/TagInput";
 import { inject, observer } from "mobx-react";
 import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
 
-export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
+export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
   const dataTable = getDataTable(property);
   return {
     textualValues: value?.map((valueItem: any) => dataTable.resolveCellText(property, valueItem)),
@@ -47,11 +42,9 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       isReadOnly: boolean;
       isInvalid: boolean;
       invalidMessage?: string;
-      isFocused: boolean;
       backgroundColor?: string;
       foregroundColor?: string;
       customStyle?: any;
-      refocuser?: (cb: () => void) => () => void;
       onChange?(event: any, value: string[]): void;
       onKeyDown?(event: any): void;
       onClick?(event: any): void;
@@ -65,6 +58,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const data = useContext(CtxDropdownEditor).editorData;
 
       const value = Array.isArray(props.value) ? [...props.value] : props.value;
+      data.setValue(value);
 
       function getStyle() {
         if (props.customStyle) {
@@ -93,6 +87,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
           data.remove(removedItem);
         }
       }
+
       const [inputElement, setInputElement] = useState<any | undefined>(undefined);
 
       const refInput = useMemo(() => {
@@ -106,8 +101,8 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         if (beh.subscribeToFocusManager && beh.elmInputElement) {
           beh.subscribeToFocusManager(beh.elmInputElement);
         }
-        if(props.autoFocus){
-          setTimeout(()=> inputElement?.focus());
+        if (props.autoFocus) {
+          setTimeout(() => inputElement?.focus());
         }
       }, [beh, inputElement, props.autoFocus]);
 
@@ -138,18 +133,18 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
           <TagInput className={S.tagInput}>
             {value
               ? value.map((valueItem, idx) => (
-                  <TagInputItem key={valueItem}>
-                    <TagInputItemDelete
-                      onClick={(event) => {
-                        removeItem(event, valueItem);
-                      }}
-                    />
-                    {props.textualValues![idx] || ""}
-                  </TagInputItem>
-                ))
+                <TagInputItem key={valueItem}>
+                  <TagInputItemDelete
+                    onClick={(event) => {
+                      removeItem(event, valueItem);
+                    }}
+                  />
+                  {props.textualValues![idx] || ""}
+                </TagInputItem>
+              ))
               : null}
             {props.isReadOnly ? null : (
-              <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />
+              <TagInputAdd onClick={(event) => beh.elmInputElement.focus()}/>
             )}
             <input
               disabled={props.isReadOnly}
@@ -161,13 +156,14 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
               onDoubleClick={props.onDoubleClick}
+              autoComplete={"off"}
               style={getStyle()}
               size={1}
             />
           </TagInput>
           {props.isInvalid && (
             <div className={CS.notification} title={props.invalidMessage}>
-              <i className="fas fa-exclamation-circle red" />
+              <i className="fas fa-exclamation-circle red"/>
             </div>
           )}
         </div>

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {action, computed, flow, observable} from "mobx";
+import { action, computed, flow, observable } from "mobx";
 import {
   IOrderByColumnSetting,
   IOrderByDirection,
@@ -25,11 +25,11 @@ import {
   IOrderingConfiguration,
 } from "./types/IOrderingConfiguration";
 import _ from "lodash";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
-import {getProperties} from "../selectors/DataView/getProperties";
-import {compareStrings} from "../../utils/string";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getProperties } from "../selectors/DataView/getProperties";
+import { compareStrings } from "../../utils/string";
 
 function cycleOrdering(direction: IOrderByDirection) {
   switch (direction) {
@@ -62,7 +62,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     return this.defaultOrderings;
   }
 
-  @computed get orderings(){
+  @computed get orderings() {
     return this.userOrderings.length !== 0 ? this.userOrderings : this.defaultOrderings;
   }
 
@@ -127,7 +127,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   }
 
   maybeApplyOrdering = flow(
-    function* (this: OrderingConfiguration) {
+    function*(this: OrderingConfiguration) {
       const dataView = getDataView(this);
       const dataTable = getDataTable(dataView);
       if (!dataView.isLazyLoading) {
@@ -163,7 +163,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             cmpSign = compareStrings(txt1, txt2);
             break;
           case "CheckBox": {
-            const val1 =  dataTable.getOriginalCellValue(row1, prop);
+            const val1 = dataTable.getOriginalCellValue(row1, prop);
             const val2 = dataTable.getOriginalCellValue(row2, prop);
             cmpSign = compareStrings(`${val1}`, `${val2}`);
             break;

@@ -17,22 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IScrollState} from "./types";
-import {action, observable} from "mobx";
+import { IScrollState } from "./types";
+import { action, observable } from "mobx";
 
 export class SimpleScrollState implements IScrollState {
   scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
+
   constructor(scrollTop: number, scrollLeft: number) {
     this.scrollTop = scrollTop;
     this.scrollLeft = scrollLeft;
   }
 
-  scrollTo(coords: { scrollLeft?: number; scrollTop?: number }){
-    if(this.scrollToFunction){
+  scrollTo(coords: { scrollLeft?: number; scrollTop?: number }) {
+    if (this.scrollToFunction) {
       this.scrollToFunction(coords);
     }
   }
-  
+
   @observable scrollTop = 0;
   @observable scrollLeft = 0;
 

@@ -17,14 +17,15 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IDialogInfo, IOpenedScreen, IOpenedScreenData} from "./types/IOpenedScreen";
-import {action, computed, observable} from "mobx";
-import {IFormScreenEnvelope} from "./types/IFormScreen";
-import {IMainMenuItemType} from "./types/IMainMenu";
+import { IDialogInfo, IOpenedScreen, IOpenedScreenData } from "./types/IOpenedScreen";
+import { action, computed, observable } from "mobx";
+import { IFormScreenEnvelope } from "./types/IFormScreen";
+import { IMainMenuItemType } from "./types/IMainMenu";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 export class DialogInfo implements IDialogInfo {
-  constructor(public width: number, public height: number) {}
+  constructor(public width: number, public height: number) {
+  }
 }
 
 export class OpenedScreen implements IOpenedScreen {
@@ -53,19 +54,19 @@ export class OpenedScreen implements IOpenedScreen {
   @observable content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
 
-  get tabTitle(){
+  get tabTitle() {
     return this.content.formScreen?.dynamicTitle ?? this._title;
   }
 
-  get formTitle(){
+  get formTitle() {
     return this.content.formScreen?.dynamicTitle ?? this.content.formScreen?.title ?? "";
   }
 
-  get hasDynamicTitle(){
+  get hasDynamicTitle() {
     return !!this.content.formScreen?.dynamicTitle
   }
 
-  set tabTitle(value: string){
+  set tabTitle(value: string) {
     this._title = value;
   }
 
@@ -76,11 +77,11 @@ export class OpenedScreen implements IOpenedScreen {
   @action.bound
   setActive(state: boolean): void {
     this.isActive = state;
-    if(state && this.content.formScreen){
-      const dataView = this.content.formScreen.dataViews.length > 0 
+    if (state && this.content.formScreen) {
+      const dataView = this.content.formScreen.dataViews.length > 0
         ? this.content.formScreen.dataViews[0]
         : undefined;
-      if(dataView && !dataView.isFormViewActive()){
+      if (dataView && !dataView.isFormViewActive()) {
         const tablePanelView = getTablePanelView(dataView);
         tablePanelView.triggerOnFocusTable();
       }

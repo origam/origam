@@ -29,7 +29,7 @@ import { LookupListCacheMulti } from "../../modules/Lookup/LookupListCacheMulti"
 import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { Chatrooms } from "./Chatrooms";
 import { Notifications } from "./Notifications";
-import {Favorites} from "model/entities/Favorites";
+import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "./SidebarState";
 
 export class Workbench implements IWorkbench {
@@ -74,7 +74,7 @@ export class Workbench implements IWorkbench {
   }
 
   *run(): Generator {
-    yield* this.workbenchLifecycle.run();
+    yield*this.workbenchLifecycle.run();
   }
 
   parent?: any;

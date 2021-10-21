@@ -25,13 +25,14 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
-import {prepareAnyForFilter, prepareForFilter} from "../selectors/PortalSettings/getStringFilterConfig";
+import { prepareAnyForFilter, prepareForFilter } from "../selectors/PortalSettings/getStringFilterConfig";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
     this.implicitFilters = implicitFilters;
     this.start();
   }
+
   filteringOnOffHandlers: ((filteringOn: boolean) => void)[] = [];
   $type_IFilterConfigurationData: 1 = 1;
 
@@ -94,15 +95,13 @@ export class FilterConfiguration implements IFilterConfiguration {
       }
       for (let term of this.implicitFilters) {
         if ((!ignorePropertyId || ignorePropertyId !== term.propertyId) &&
-          !this.implicitFilterPredicate(row, term))
-        {
+          !this.implicitFilterPredicate(row, term)) {
           return false;
         }
       }
       for (let term of this.activeFilters) {
         if ((!ignorePropertyId || ignorePropertyId !== term.propertyId) &&
-          !this.userFilterPredicate(row, term))
-        {
+          !this.userFilterPredicate(row, term)) {
           return false;
         }
       }
@@ -113,11 +112,11 @@ export class FilterConfiguration implements IFilterConfiguration {
   userFilterPredicate(row: any[], term: IFilter) {
     const dataTable = getDataTable(this);
     const prop = dataTable.getPropertyById(term.propertyId)!;
-    const cellValue = prepareAnyForFilter(this,dataTable.getOriginalCellValue(row, prop));
+    const cellValue = prepareAnyForFilter(this, dataTable.getOriginalCellValue(row, prop));
     switch (prop.column) {
       case "Text": {
-        const filterVal1 = prepareAnyForFilter(this,term.setting.val1);
-        const cellText = prepareForFilter(this, dataTable.getOriginalCellText(row, prop))!;
+        const filterVal1 = prepareAnyForFilter(this, term.setting.val1);
+        const cellText = prepareAnyForFilter(this, dataTable.getOriginalCellText(row, prop))!;
         if (cellValue === undefined) return true;
 
         switch (term.setting.type) {
@@ -196,7 +195,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (cellValue === null) return false;
             const t0 = term.setting.val1;
             let t2 = term.setting.val2;
-            if(t2.endsWith("T00:00:00")){
+            if (t2.endsWith("T00:00:00")) {
               t2 = t2.substr(0, 10).concat("T23:59:59")
             }
             return t0 <= t1 && t1 <= t2;
@@ -226,7 +225,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (cellValue === null) return false;
             const t0 = term.setting.val1;
             const t2 = term.setting.val2;
-            return !(t0 < t1 && t1 < t2);
+            return t1 < t0 || t1 > t2;
           }
           case "neq":
             if (cellValue === null) return false;
@@ -250,7 +249,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (cellValue === null) return false;
             const t0 = parseFloat(term.setting.val1);
             const t2 = parseFloat(term.setting.val2);
-            return t0 < t1 && t1 < t2;
+            return t0 <= t1 && t1 <= t2;
           }
           case "eq":
             if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
@@ -284,7 +283,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (cellValue === null) return false;
             const t0 = parseFloat(term.setting.val1);
             const t2 = parseFloat(term.setting.val2);
-            return !(t0 < t1 && t1 < t2);
+            return t1 < t0 || t1 > t2;
           }
           case "neq":
             if (cellValue === null) return false;
@@ -298,8 +297,8 @@ export class FilterConfiguration implements IFilterConfiguration {
         break;
       }
       case "ComboBox": {
-        const filterVal1 = prepareAnyForFilter(this,term.setting.val1) || [];
-        const filterVal2 = prepareAnyForFilter(this,term.setting.val2) || "";
+        const filterVal1 = prepareAnyForFilter(this, term.setting.val1) || [];
+        const filterVal2 = prepareAnyForFilter(this, term.setting.val2) || "";
         const cellText = prepareForFilter(this, dataTable.getOriginalCellText(row, prop))!;
         switch (term.setting.type) {
           case "starts": {
@@ -316,7 +315,7 @@ export class FilterConfiguration implements IFilterConfiguration {
           case "eq": {
             if (filterVal1.length === 0) return true;
             if (cellValue === null) return false;
-            if (filterVal1.findIndex((item: any) => item === cellText) > -1) {
+            if (filterVal1.findIndex((item: any) => item === cellValue) > -1) {
               return true;
             }
             return false;
@@ -357,19 +356,19 @@ export class FilterConfiguration implements IFilterConfiguration {
           case "eq": {
             if (filterValues1 === undefined || filterValues1.length === 0) return true;
             if (!cellValues || cellValues.length === 0) return false;
-            return cellValues.some( (val: any) =>
-                filterValues1.some(
+            return cellValues.some((val: any) =>
+              filterValues1.some(
                 (filterVal: any) => filterVal === val)
-              );
+            );
           }
           case "nin":
           case "neq": {
             if (filterValues1 === undefined || filterValues1.length === 0) return true;
             if (!cellValues || cellValues.length === 0) return true;
-            return cellValues.every( (val: any) =>
-                filterValues1.every(
+            return cellValues.every((val: any) =>
+              filterValues1.every(
                 (filterVal: any) => filterVal !== val)
-              );
+            );
           }
           case "null": {
             return !cellValues || cellValues.length === 0;
@@ -472,12 +471,12 @@ export class FilterConfiguration implements IFilterConfiguration {
           this.applyNewFiltering();
         },
 
-        { equals: comparer.structural }
+        {equals: comparer.structural}
       )
     );
   }
 
-  @action.bound applyNewFilteringImm = flow(function* (this: FilterConfiguration) {
+  @action.bound applyNewFilteringImm = flow(function*(this: FilterConfiguration) {
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (!dataView.isLazyLoading) {

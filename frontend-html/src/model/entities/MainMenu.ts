@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope} from "./types/IMainMenu";
-import {action, observable} from "mobx";
-import {proxyEnrich} from "utils/esproxy";
+import { IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope } from "./types/IMainMenu";
+import { action, observable } from "mobx";
+import { proxyEnrich } from "utils/esproxy";
 
 export class MainMenuContent implements IMainMenuContent {
   $type_IMainMenuContent: 1 = 1;
@@ -38,6 +38,7 @@ export class MainMenuContent implements IMainMenuContent {
         if (result) return result;
       }
     }
+
     return recursive(this.menuUI);
   }
 

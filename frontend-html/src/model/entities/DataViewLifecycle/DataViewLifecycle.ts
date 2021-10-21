@@ -18,39 +18,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Axios from "axios";
-import {action, comparer, flow, reaction} from "mobx";
-import {navigateAsChild} from "model/actions/DataView/navigateAsChild";
-import {handleError} from "model/actions/handleError";
-import {getBindingChildren} from "model/selectors/DataView/getBindingChildren";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getIsBindingParent} from "model/selectors/DataView/getIsBindingParent";
-import {getIsBindingRoot} from "model/selectors/DataView/getIsBindingRoot";
-import {getMasterRowId} from "model/selectors/DataView/getMasterRowId";
-import {getParentRowId} from "model/selectors/DataView/getParentRowId";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
-import {getSessionId} from "model/selectors/getSessionId";
-import {getApi} from "../../selectors/getApi";
-import {getSelectedRowId} from "../../selectors/TablePanelView/getSelectedRowId";
-import {IDataViewLifecycle} from "./types/IDataViewLifecycle";
-import {processCRUDResult} from "model/actions/DataLoading/processCRUDResult";
-import {IDataView} from "../types/IDataView";
-import {getMenuItemId} from "../../selectors/getMenuItemId";
-import {getDataStructureEntityId} from "../../selectors/DataView/getDataStructureEntityId";
-import {SCROLL_ROW_CHUNK} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {getColumnNamesToLoad} from "../../selectors/DataView/getColumnNamesToLoad";
-import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
-import {FlowBusyMonitor} from "../../../utils/flow";
-import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
+import { action, comparer, flow, reaction } from "mobx";
+import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
+import { handleError } from "model/actions/handleError";
+import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getIsBindingParent } from "model/selectors/DataView/getIsBindingParent";
+import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
+import { getMasterRowId } from "model/selectors/DataView/getMasterRowId";
+import { getParentRowId } from "model/selectors/DataView/getParentRowId";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getApi } from "../../selectors/getApi";
+import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
+import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
+import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { IDataView } from "../types/IDataView";
+import { getMenuItemId } from "../../selectors/getMenuItemId";
+import { getDataStructureEntityId } from "../../selectors/DataView/getDataStructureEntityId";
+import { SCROLL_ROW_CHUNK } from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { getColumnNamesToLoad } from "../../selectors/DataView/getColumnNamesToLoad";
+import { joinWithAND, toFilterItem } from "../OrigamApiHelpers";
+import { FlowBusyMonitor } from "../../../utils/flow";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
-  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
+  monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
-  get isWorking(){
+  get isWorking() {
     return this.monitor.isWorkingDelayed;
   }
 
@@ -68,18 +67,17 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const dataView = getDataView(this);
       try {
         this.monitor.inFlow++;
-          if (getIsBindingRoot(this)) {
-            if(!getFormScreenLifecycle(this).rowSelectedReactionsDisabled(dataView)){
-              yield* this.changeMasterRow();
-            }
-            yield* this.navigateChildren();
-          } else if (getIsBindingParent(this)) {
-            yield* this.navigateChildren();
+        if (getIsBindingRoot(this)) {
+          if (!getFormScreenLifecycle(this).rowSelectedReactionsDisabled(dataView)) {
+            yield*this.changeMasterRow();
           }
-        getTablePanelView(this)?.triggerOnFocusTable();
+          yield*this.navigateChildren();
+        } else if (getIsBindingParent(this)) {
+          yield*this.navigateChildren();
+        }
       } catch (e) {
         // TODO: Move this method to action handler file?
-        yield* handleError(this)(e);
+        yield*handleError(this)(e);
         throw e;
       } finally {
         this.monitor.inFlow--;
@@ -88,9 +86,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   );
 
   _selectedRowReactionDisposer: any;
+
   @action.bound
   async startSelectedRowReaction(fireImmediately?: boolean) {
-    if(fireImmediately){
+    if (fireImmediately) {
       await this.onSelectedRowIdChangeImm();
     }
 
@@ -100,19 +99,19 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         return getSelectedRowId(this);
       },
       () => self.onSelectedRowIdChangeImm(),
-      { equals: comparer.structural }
+      {equals: comparer.structural}
     ));
   }
 
-  async runRecordChangedReaction(action?: ()=>Generator){
+  async runRecordChangedReaction(action?: () => Generator) {
     let wasRunning = false;
     try {
       wasRunning = this.stopSelectedRowReaction();
-      if(action){
+      if (action) {
         await flow(action)();
       }
     } finally {
-      if(wasRunning){
+      if (wasRunning) {
         await this.startSelectedRowReaction(true);
       }
     }
@@ -128,12 +127,12 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
   *navigateAsChild(rows?: any[]) {
-    if(rows !== undefined && rows !== null){
+    if (rows !== undefined && rows !== null) {
       const dataView = getDataView(this);
       yield dataView.setRecords(rows);
       dataView.selectFirstRow();
-    }else{
-      yield* this.loadGetData();
+    } else {
+      yield*this.loadGetData();
     }
   }
 
@@ -153,7 +152,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         },
         this.changeMasterRowCanceller
       );
-      yield* processCRUDResult(this, crudResult);
+      yield*processCRUDResult(this, crudResult);
       getFormScreen(this).clearDataCache();
     } catch (error) {
       if (Axios.isCancel(error)) {
@@ -167,8 +166,8 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }
   }
 
-  buildDetailFilter(dataView: IDataView){
-    const filterItems =[];
+  buildDetailFilter(dataView: IDataView) {
+    const filterItems = [];
     for (let binding of dataView.parentBindings) {
       const selectedRow = binding.parentDataView.selectedRow;
       if (!selectedRow) {
@@ -204,10 +203,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const dataView = getDataView(this);
       const api = getApi(this);
       let data;
-      if(dataView.isRootEntity && !dataView.isRootGrid && isLazyLoading(this)){
-        if(dataView.parentBindings.length === 1){
+      if (dataView.isRootEntity && !dataView.isRootGrid && isLazyLoading(this)) {
+        if (dataView.parentBindings.length === 1) {
           data = [dataView.parentBindings[0].parentDataView.selectedRow];
-        }else{
+        } else {
           data = yield api.getRows({
             MenuId: getMenuItemId(dataView),
             SessionFormIdentifier: getSessionId(this),
@@ -222,7 +221,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
             ColumnNames: getColumnNamesToLoad(dataView),
           });
         }
-      }else{
+      } else {
         const parentRowId = getParentRowId(this);
         const masterRowId = getMasterRowId(this);
         data = !parentRowId || !masterRowId
@@ -246,13 +245,13 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           flow(function*() {
             try {
               const childEntity = getEntity(childDataView);
-              if(childEntity === entity && childDataView.isPreloaded){
-                yield* navigateAsChild(childDataView, dataView.dataTable.allRows)();
-              }else{
-                yield* navigateAsChild(childDataView)();
+              if (childEntity === entity && childDataView.isPreloaded) {
+                yield*navigateAsChild(childDataView, dataView.dataTable.allRows)();
+              } else {
+                yield*navigateAsChild(childDataView)();
               }
             } catch (e) {
-              yield* handleError(childDataView)(e);
+              yield*handleError(childDataView)(e);
             }
           })()
         )

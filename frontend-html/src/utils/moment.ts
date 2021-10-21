@@ -19,13 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { Moment } from "moment";
 
-export function toOrigamServerString(date: Moment){
-    if(!date){
-        return date;
-    }
-    if(!date.isValid()){
-        throw new Error("Cannot convert an invalid date to server format")
-    }
-    return date.toISOString(true).split(".")[0]
+export function toOrigamServerString(date: Moment) {
+  if (!date) {
+    return date;
+  }
+  if (!date.isValid()) {
+    throw new Error("Cannot convert an invalid date to server format")
+  }
+  return date.toISOString(true).split(".")[0]
 }
   

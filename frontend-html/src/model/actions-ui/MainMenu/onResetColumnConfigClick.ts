@@ -17,23 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {handleError} from "../../actions/handleError";
-import {getApi} from "../../selectors/getApi";
+import { flow } from "mobx";
+import { handleError } from "../../actions/handleError";
+import { getApi } from "../../selectors/getApi";
 
 export function onResetColumnConfigClick(ctx: any) {
-    return flow(function* onMainMenuItemClick(args: {
-        item: any;
-    }) {
-        try {
-            if(!args?.item?.attributes?.id){
-                return;
-            }
-            const api = getApi(ctx);
-            yield api.resetScreenColumnConfiguration({instanceId : args.item.attributes.id});
-        } catch (e) {
-            yield* handleError(ctx)(e);
-            throw e;
-        }
-    });
+  return flow(function*onMainMenuItemClick(args: {
+    item: any;
+  }) {
+    try {
+      if (!args?.item?.attributes?.id) {
+        return;
+      }
+      const api = getApi(ctx);
+      yield api.resetScreenColumnConfiguration({instanceId: args.item.attributes.id});
+    } catch (e) {
+      yield*handleError(ctx)(e);
+      throw e;
+    }
+  });
 }

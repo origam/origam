@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getRowStateById} from "./getRowStateById";
+import { getRowStateById } from "./getRowStateById";
 
 export function getRowStateAllowRead(
   ctx: any,

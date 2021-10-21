@@ -30,7 +30,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: pointer;
 
   &:global(.isHidden) {
-    // display: none;
     position: fixed;
     top: 110%;
     left: 110%;
@@ -93,4 +92,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 :global(.isHoverGreen):hover .label {
   color: var(--green);
+}
+
+:global(.dropdownItem) .root {
+  &:hover {
+    .label {
+      color:var(--white);
+    }
+  }
+  .label {
+    color: var(--blue1);
+  }
+}
+
+:global(.dropdownItem):hover .root {
+  .label {
+    color:var(--white);
+  }
+}
+
+:global(.isActiveDropDownAction) {
+  color: var(--blue1);
+  &:hover {
+    color: var(--blue1);
+  }
 }

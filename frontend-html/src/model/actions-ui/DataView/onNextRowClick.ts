@@ -17,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {selectNextRow} from "model/actions/DataView/selectNextRow";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
+import { selectNextRow } from "model/actions/DataView/selectNextRow";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 
 export function onNextRowClick(ctx: any) {
-  return flow(function* onNextRowClick(event: any) {
+  return flow(function*onNextRowClick(event: any) {
     try {
       const dataView = getDataView(ctx);
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
       }
-      yield* selectNextRow(ctx)();
+      yield*selectNextRow(ctx)();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

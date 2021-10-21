@@ -22,7 +22,7 @@ import L from "leaflet";
 import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
-import { action, computed, reaction, runInAction, observable, autorun } from "mobx";
+import { action, autorun, computed, observable, reaction, runInAction } from "mobx";
 import qs from "querystring";
 import React from "react";
 import S from "./MapPerspectiveUI.module.scss";
@@ -49,11 +49,17 @@ interface IMapPerspectiveComProps {
   mapLayers: MapLayer[];
   isReadOnly: boolean;
   isActive: boolean;
+
   onChange?(geoJson: any): void;
+
   onLayerClick?(id: string): void;
+
   onRoutefinderGeometryChange?(obj: any): void;
+
   onRoutefinderGeometryEditStart?(): void;
+
   onRoutefinderGeometryEditSave?(): void;
+
   onRoutefinderGeometryEditCancel?(): void;
 }
 
@@ -87,15 +93,15 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     if (this.props.mapCenter) {
       this.leafletMap?.panTo(
         [this.props.mapCenter.coordinates[1], this.props.mapCenter.coordinates[0]],
-        { ...MAP_ANIMATE_SETTING }
+        {...MAP_ANIMATE_SETTING}
       );
     } else {
-      this.leafletMap?.panTo([0, 0], { ...MAP_ANIMATE_SETTING });
+      this.leafletMap?.panTo([0, 0], {...MAP_ANIMATE_SETTING});
     }
   }
 
   panToLoc(loc: [number, number]) {
-    this.leafletMap?.panTo(loc, { ...MAP_ANIMATE_SETTING });
+    this.leafletMap?.panTo(loc, {...MAP_ANIMATE_SETTING});
   }
 
   panToSelectedObject() {
@@ -110,10 +116,10 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   panToLayer(lLayer: L.Layer) {
     if ((lLayer as any).getBounds) {
       const bounds = (lLayer as any).getBounds() as L.LatLngBounds;
-      this.leafletMap?.fitBounds(bounds.pad(0.1), { ...MAP_ANIMATE_SETTING });
+      this.leafletMap?.fitBounds(bounds.pad(0.1), {...MAP_ANIMATE_SETTING});
     } else if ((lLayer as any).getLatLng) {
       const latLng = (lLayer as any).getLatLng();
-      this.leafletMap?.panTo(latLng, { ...MAP_ANIMATE_SETTING });
+      this.leafletMap?.panTo(latLng, {...MAP_ANIMATE_SETTING});
     }
   }
 
@@ -163,7 +169,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   highlightLayer(obj: IMapObject, lLayer: L.Layer) {
     if ((lLayer as any).setStyle) {
-      (lLayer as any).setStyle({ color: "yellow" });
+      (lLayer as any).setStyle({color: "yellow"});
     }
     if ((lLayer as any).setIcon) {
       (lLayer as any).setIcon(
@@ -210,7 +216,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         if (rawLayer.type === "OSM") {
           return [
             rawLayer,
-            L.tileLayer(rawLayer.getUrl(), { ...rawLayer.getOptions(), zIndex: index }),
+            L.tileLayer(rawLayer.getUrl(), {...rawLayer.getOptions(), zIndex: index}),
           ];
         } else if (rawLayer.type === "WMS") {
           return [
@@ -241,29 +247,28 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       .map((obj) => {
         let result: [IMapObject, L.Layer];
         switch (obj.type) {
-          case IMapObjectType.POINT:
-            {
-              const iconUrl = obj.icon || "img/map/marker-icon.png#anchor=[12,41]";
-              const pq = iconUrl ? qs.parse(iconUrl.split("#")[1] || "") : null;
-              const anchor = pq?.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
-              const iconAnchor: [number, number] = anchor;
-              const iconRotation = obj.azimuth || 0;
-              const myIcon = L.divIcon({
-                html: `<img src="${iconUrl}" style="
+          case IMapObjectType.POINT: {
+            const iconUrl = obj.icon || "img/map/marker-icon.png#anchor=[12,41]";
+            const pq = iconUrl ? qs.parse(iconUrl.split("#")[1] || "") : null;
+            const anchor = pq?.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
+            const iconAnchor: [number, number] = anchor;
+            const iconRotation = obj.azimuth || 0;
+            const myIcon = L.divIcon({
+              html: `<img src="${iconUrl}" style="
                 transform: rotate3d(0,0,1,${iconRotation}deg);
                 transform-origin: ${iconAnchor[0]}px ${iconAnchor[1]}px;" />`,
-                // iconSize: [38, 95],
-                iconAnchor,
-                className: "",
-                //popupAnchor: [-3, -76],
-              });
-              result = [
-                obj,
-                L.marker([obj.coordinates[1], obj.coordinates[0]], {
-                  icon: myIcon,
-                }).bindTooltip(obj.name),
-              ];
-            }
+              // iconSize: [38, 95],
+              iconAnchor,
+              className: "",
+              //popupAnchor: [-3, -76],
+            });
+            result = [
+              obj,
+              L.marker([obj.coordinates[1], obj.coordinates[0]], {
+                icon: myIcon,
+              }).bindTooltip(obj.name),
+            ];
+          }
             break;
           case IMapObjectType.POLYGON:
             result = [
@@ -307,7 +312,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           case "LineString":
             return L.polyline(
               obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
-              { color: "blue" }
+              {color: "blue"}
             );
         }
         return undefined;
@@ -323,7 +328,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           case "LineString":
             return L.polyline(
               obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
-              { color: "green", dashArray: "10 5 3 5", opacity: 1.0, weight: 1.5 }
+              {color: "green", dashArray: "10 5 3 5", opacity: 1.0, weight: 1.5}
             );
         }
         return undefined;
@@ -546,7 +551,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     lmap.setZoom(this.props.initialZoom || 0);
     this.panToCenter();
     L.control
-      .layers({}, this.leafletlayersDescriptor, { position: "topleft", collapsed: true })
+      .layers({}, this.leafletlayersDescriptor, {position: "topleft", collapsed: true})
       .addTo(lmap);
     L.control.scale().addTo(lmap);
 
@@ -626,7 +631,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           this.mountLeaflet();
         }
       },
-      { delay: 500 }
+      {delay: 500}
     );
   }
 
@@ -644,10 +649,10 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   render() {
     return (
       <Measure bounds={true} onResize={this.handleResize}>
-        {({ measureRef }) => (
-          <div ref={measureRef} style={{ width: "100%", height: "100%" }}>
+        {({measureRef}) => (
+          <div ref={measureRef} style={{width: "100%", height: "100%"}}>
             <div
-              className={cx(S.mapDiv, { isHidden: !this.props.isActive })}
+              className={cx(S.mapDiv, {isHidden: !this.props.isActive})}
               ref={(elm) => {
                 this.refMapDiv(elm);
               }}

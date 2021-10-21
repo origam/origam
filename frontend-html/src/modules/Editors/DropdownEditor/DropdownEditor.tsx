@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { findStopping } from "xmlInterpreters/xmlUtils";
 import { BooleanCellDriver } from "./Cells/BooleanCellDriver";
 import { DefaultHeaderCellDriver } from "./Cells/HeaderCell";
@@ -36,9 +36,9 @@ import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
-import { IFocusAble } from "../../../model/entities/FocusManager";
+import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
-import {getMomentFormat} from "../../../xmlInterpreters/getMomentFormat";
+import { getMomentFormat } from "../../../xmlInterpreters/getMomentFormat";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -65,8 +65,10 @@ export class DropdownEditorSetup {
     public cached: boolean,
     public searchByFirstColumnOnly: boolean,
     public isLink?: boolean
-  ) {}
+  ) {
+  }
 }
+
 export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
   "IGetDropdownEditorSetup"
 );
@@ -99,7 +101,7 @@ export function DropdownEditor(props: {
               />
             )
           }
-          renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} minSideMargin={50} />}
+          renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody/>} minSideMargin={50}/>}
         />
       )}
     </Observer>
@@ -117,16 +119,17 @@ export function XmlBuildDropdownEditor(props: {
   tagEditor?: JSX.Element;
   isLink?: boolean;
   autoSort?: boolean;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
-  const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
+  const {dataViewRowCursor, dataViewApi, dataViewData} = dataView;
   const workbench = mobxContext.workbench;
-  const { lookupListCache } = workbench;
+  const {lookupListCache} = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
@@ -159,6 +162,7 @@ export function XmlBuildDropdownEditor(props: {
       props.subscribeToFocusManager,
       props.onKeyDown,
       props.autoSort,
+      props.onTextOverflowChanged
     );
 
     const rat = props.xmlNode.attributes;
@@ -269,9 +273,9 @@ export function XmlBuildDropdownEditor(props: {
   });
 
   useEffect(() => {
-    dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
-    
-    }, 
+      dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
+
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.isReadOnly, dropdownEditorInfrastructure.behavior.isReadOnly]
   );

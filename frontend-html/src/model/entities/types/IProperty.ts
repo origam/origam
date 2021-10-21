@@ -68,6 +68,7 @@ export interface IPropertyData {
   lookup?: ILookup;
   lookupId?: string;
   xmlNode: any;
+  fieldType: string;
 }
 
 export interface IProperty extends IPropertyData {
@@ -84,7 +85,7 @@ export interface IProperty extends IPropertyData {
   isLink: boolean;
   nameOverride: string | null | undefined;
   isFormField: boolean;
-  
+
 
   getPolymophicProperty(row: any[]): IProperty;
 

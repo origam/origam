@@ -35,7 +35,7 @@ export class TabbedViewHandle extends React.Component<{
     return (
       <div
         onClick={this.props.onClick}
-        className={cx(S.root, { isActive: this.props.isActive, isDirty: this.props.isDirty })}
+        className={cx(S.root, {isActive: this.props.isActive, isDirty: this.props.isDirty})}
         title={this.props.title}
       >
         <div className={S.label}>{this.props.children}</div>
@@ -45,7 +45,7 @@ export class TabbedViewHandle extends React.Component<{
             onClick={this.props.onCloseClick}
             onMouseDown={this.props.onCloseMouseDown}
           >
-            <Icon src="./icons/close.svg" tooltip={""} />
+            <Icon src="./icons/close.svg" tooltip={""}/>
           </a>
         )}
       </div>

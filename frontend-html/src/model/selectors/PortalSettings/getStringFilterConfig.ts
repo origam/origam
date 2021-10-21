@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IFilterConfig} from "../../entities/types/IFilterConfig";
-import {getWorkbenchLifecycle} from "../getWorkbenchLifecycle";
-import {latinize} from "../../../utils/string";
+import { IFilterConfig } from "../../entities/types/IFilterConfig";
+import { getWorkbenchLifecycle } from "../getWorkbenchLifecycle";
+import { latinize } from "utils/string";
 
 function getStringFilterConfig(ctx: any): IFilterConfig {
   return getWorkbenchLifecycle(ctx).portalSettings?.filterConfig ?? {
@@ -28,8 +28,8 @@ function getStringFilterConfig(ctx: any): IFilterConfig {
   };
 }
 
-export function prepareForFilter(ctx: any, text: string | undefined | null){
-  if(text === undefined || text === null){
+export function prepareForFilter(ctx: any, text: string | undefined | null) {
+  if (text === undefined || text === null) {
     return text;
   }
   const filterConfig = getStringFilterConfig(ctx);
@@ -44,11 +44,11 @@ export function prepareForFilter(ctx: any, text: string | undefined | null){
 
 export function prepareAnyForFilter(ctx: any, value: any): any {
 
-  if (typeof value === 'string' || value instanceof String){
+  if (typeof value === 'string' || value instanceof String) {
     return prepareForFilter(ctx, value as string);
   }
-  if(Array.isArray(value)){
-    return value.map(val =>  prepareAnyForFilter(ctx, val))
+  if (Array.isArray(value)) {
+    return value.map(val => prepareAnyForFilter(ctx, val))
   }
   return value;
 }

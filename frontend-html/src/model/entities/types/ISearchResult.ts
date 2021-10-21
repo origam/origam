@@ -18,24 +18,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-export interface ISearchResult
-{
+export interface ISearchResult {
   id: string;
   label: string,
   description: string,
   iconUrl: string;
-  onClick: ()=> void;
+  onClick: () => void;
 }
 
-export interface IServerSearchResult extends ISearchResult
-{
+export interface IServerSearchResult extends ISearchResult {
   group: string,
   dataSourceId: string,
   dataSourceLookupId: string,
   referenceId: string
 }
 
-export interface IMenuSearchResult  extends ISearchResult {
+export interface IMenuSearchResult extends ISearchResult {
   type: string;
 }
 

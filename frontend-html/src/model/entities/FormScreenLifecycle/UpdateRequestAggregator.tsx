@@ -29,6 +29,7 @@ interface IUpdateObjectData {
 
 interface IExtPromise<T> extends Promise<T> {
   resolve(result?: T): void;
+
   reject(error?: any): void;
 }
 
@@ -51,9 +52,7 @@ export class UpdateRequestAggregator {
     this.interpreter.start();
   }
 
-  registeredRequests: Array<
-    IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean }
-  > = [];
+  registeredRequests: Array<IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean }> = [];
 
   itemJustEnqueued?: IUpdateObjectData & { promise: IExtPromise<any>; isRunning: boolean };
 
@@ -113,8 +112,8 @@ export class UpdateRequestAggregator {
               },
             },
             onDone: [
-              { cond: "hasMoreItems", target: "#updateObject.DEQUEUE" },
-              { target: "#updateObject.IDLE" },
+              {cond: "hasMoreItems", target: "#updateObject.DEQUEUE"},
+              {target: "#updateObject.IDLE"},
             ],
             exit: ["resetCurrentRequest"],
           },
@@ -152,7 +151,7 @@ export class UpdateRequestAggregator {
         },
       }
     ),
-    { devTools: true }
+    {devTools: true}
   );
 
   enqueue(data: IUpdateObjectData): Promise<any> {
@@ -185,10 +184,10 @@ export class UpdateRequestAggregator {
         (item) => item.RowId === inputRow.RowId
       );
       if (!existingRow) {
-        existingRow = { RowId: inputRow.RowId, Values: {} };
+        existingRow = {RowId: inputRow.RowId, Values: {}};
         updateObjectItem.UpdateData.push(existingRow);
       }
-      existingRow.Values = { ...existingRow.Values, ...inputRow.Values };
+      existingRow.Values = {...existingRow.Values, ...inputRow.Values};
     }
     return updateObjectItem;
   }

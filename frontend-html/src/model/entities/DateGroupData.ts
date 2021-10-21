@@ -22,27 +22,32 @@ import { GroupingUnit } from "./types/GroupingUnit";
 import { getLocaleFromCookie } from "utils/cookies";
 
 
-export interface IGroupData{
+export interface IGroupData {
   value: any;
   label: string;
   rows: any[][];
+
   compare(other: IGroupData): number;
 }
 
-export class GenericGroupData implements IGroupData{
-  constructor(
-    public value: string,
-    public label: any
-    ){
-    }
-    
+export class GenericGroupData implements IGroupData {
+  private readonly _label: any;
+
+  constructor(public value: string, label: any) {
+    this._label = Array.isArray(label) ? label.join(", ") : label;
+  }
+
+  public get label() {
+    return this._label;
+  }
+
   public rows: any[][] = [];
 
-  compare(other: IGroupData): number{
+  compare(other: IGroupData): number {
     if (this.label && other.label) {
-      if(typeof this.label === "string"){
+      if (typeof this.label === "string") {
         return this.label.localeCompare(other.label, getLocaleFromCookie());
-      }else{
+      } else {
         return this.label > other.label ? 1 : -1;
       }
     } else if (!this.label) {
@@ -70,23 +75,23 @@ export class DateGroupData implements IGroupData {
     let groupLabel = "";
     switch (groupingUnit) {
       case GroupingUnit.Year:
-        value.set({ 'month': 0, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0 });
+        value.set({'month': 0, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
         groupLabel = value.format("YYYY");
         break;
       case GroupingUnit.Month:
-        value.set({ 'date': 1, 'hour': 0, 'minute': 0, 'second': 0 });
+        value.set({'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
         groupLabel = value.format("YYYY-MM");
         break;
       case GroupingUnit.Day:
-        value.set({ 'hour': 0, 'minute': 0, 'second': 0 });
+        value.set({'hour': 0, 'minute': 0, 'second': 0});
         groupLabel = value.format("YYYY-MM-DD");
         break;
       case GroupingUnit.Hour:
-        value.set({ 'minute': 0, 'second': 0 });
+        value.set({'minute': 0, 'second': 0});
         groupLabel = value.format("YYYY-MM-DD h:00");
         break;
       case GroupingUnit.Minute:
-        value.set({ 'second': 0 });
+        value.set({'second': 0});
         groupLabel = value.format("YYYY-MM-DD h:mm");
         break;
     }
@@ -100,11 +105,9 @@ export class DateGroupData implements IGroupData {
     if (this.value!.isValid() && other.value.isValid()) {
       if (this.value! > other.value) {
         return 1;
-      }
-      else if (this.value! < other.value) {
+      } else if (this.value! < other.value) {
         return -1;
-      }
-      else {
+      } else {
         return 0;
       }
     } else if (!this.value) {

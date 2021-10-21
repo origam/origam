@@ -17,10 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IOpenedScreen} from "./IOpenedScreen";
-import {IAction} from "./IAction";
+import { IOpenedScreen } from "./IOpenedScreen";
+import { IAction } from "./IAction";
 
-export interface IOpenedScreensData {}
+export interface IOpenedScreensData {
+}
 
 export interface IOpenedScreens extends IOpenedScreensData {
   $type_IOpenedScreens: 1;
@@ -34,10 +35,15 @@ export interface IOpenedScreens extends IOpenedScreensData {
   }>;
 
   isShown(openedScreen: IOpenedScreen): boolean;
+
   pushItem(item: IOpenedScreen): void;
+
   deleteItem(menuItemId: string, order: number): void;
+
   activateItem(menuItemId: string, order: number): void;
+
   findLastExistingTabItem(menuItemId: string): IOpenedScreen | undefined;
+
   findTopmostItemExcept(menuItemId: string, order: number): IOpenedScreen | undefined;
 
   parent?: any;

@@ -91,8 +91,8 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspective";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
-import {getMomentFormat, replaceDefaultDateFormats} from "./getMomentFormat";
-import {getTablePanelView} from "../model/selectors/TablePanelView/getTablePanelView";
+import { getMomentFormat, replaceDefaultDateFormats } from "./getMomentFormat";
+import { getTablePanelView } from "../model/selectors/TablePanelView/getTablePanelView";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -183,34 +183,34 @@ function parseProperty(property: any, idx: number): IProperty {
     lookup: !property.attributes.LookupId
       ? undefined
       : new Lookup({
-          dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
-          lookupId: property.attributes.LookupId,
-          identifier: property.attributes.Identifier,
-          identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
-          dropDownType: property.attributes.DropDownType,
-          cached: property.attributes.Cached === "true",
-          searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
-          dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
-            (ddProperty) => {
-              return new DropDownColumn({
-                id: ddProperty.attributes.Id,
-                name: ddProperty.attributes.Name,
-                column: ddProperty.attributes.Column,
-                entity: ddProperty.attributes.Entity,
-                index: parseInt(ddProperty.attributes.Index, 10),
-              });
-            }
-          ),
-          dropDownParameters: findStopping(
-            property,
-            (n) => n.name === "ComboBoxParameterMapping"
-          ).map((ddParam) => {
-            return {
-              parameterName: ddParam.attributes.ParameterName,
-              fieldName: ddParam.attributes.FieldName,
-            };
-          }),
+        dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
+        lookupId: property.attributes.LookupId,
+        identifier: property.attributes.Identifier,
+        identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
+        dropDownType: property.attributes.DropDownType,
+        cached: property.attributes.Cached === "true",
+        searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
+        dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
+          (ddProperty) => {
+            return new DropDownColumn({
+              id: ddProperty.attributes.Id,
+              name: ddProperty.attributes.Name,
+              column: ddProperty.attributes.Column,
+              entity: ddProperty.attributes.Entity,
+              index: parseInt(ddProperty.attributes.Index, 10),
+            });
+          }
+        ),
+        dropDownParameters: findStopping(
+          property,
+          (n) => n.name === "ComboBoxParameterMapping"
+        ).map((ddParam) => {
+          return {
+            parameterName: ddParam.attributes.ParameterName,
+            fieldName: ddParam.attributes.FieldName,
+          };
         }),
+      }),
 
     allowReturnToForm: property.attributes.AllowReturnToForm === "true",
     isTree: property.attributes.IsTree === "true",
@@ -218,7 +218,8 @@ function parseProperty(property: any, idx: number): IProperty {
     isLookupColumn: property.attributes.IsLookupColumn || false,
     style: cssString2Object(property.attributes.Style),
     toolTip: property.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
-    supportsServerSideSorting: property.attributes.SupportsServerSideSorting === "true"
+    supportsServerSideSorting: property.attributes.SupportsServerSideSorting === "true",
+    fieldType: property.attributes.FieldType
   });
   if (property.elements && property.elements.length > 0) {
     property.elements
@@ -234,7 +235,7 @@ function parseProperty(property: any, idx: number): IProperty {
   return propertyObject;
 }
 
-export function* interpretScreenXml(
+export function*interpretScreenXml(
   screenDoc: any,
   formScreenLifecycle: IFormScreenLifecycle02,
   panelConfigurationsRaw: any,
@@ -263,8 +264,8 @@ export function* interpretScreenXml(
     (n) =>
       (n.name === "UIElement" || n.name === "UIRoot") &&
       (n.attributes.Type === "Grid" ||
-       n.attributes.Type === "TreePanel" ||
-       n.attributes.Type === "SectionLevelPlugin")
+        n.attributes.Type === "TreePanel" ||
+        n.attributes.Type === "SectionLevelPlugin")
   );
 
   checkInfiniteScrollWillWork(dataViews, formScreenLifecycle, panelConfigurations);
@@ -442,15 +443,15 @@ export function* interpretScreenXml(
         dataTable:
           dataView.attributes.Type === "TreePanel"
             ? new TreeDataTable(
-                dataView.attributes.IdProperty,
-                dataView.attributes.ParentIdProperty
-              )
+              dataView.attributes.IdProperty,
+              dataView.attributes.ParentIdProperty
+            )
             : new DataTable({
-                formScreenLifecycle: formScreenLifecycle,
-                dataViewAttributes: dataView.attributes,
-                orderingConfiguration: orderingConfiguration,
-                filterConfiguration: filterConfiguration,
-              }),
+              formScreenLifecycle: formScreenLifecycle,
+              dataViewAttributes: dataView.attributes,
+              orderingConfiguration: orderingConfiguration,
+              filterConfiguration: filterConfiguration,
+            }),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
@@ -499,7 +500,8 @@ export function* interpretScreenXml(
       }
       const configurationManager = createConfigurationManager(
         gridConfigurationNodes,
-        dataViewInstance.tablePanelView.tableProperties
+        dataViewInstance.tablePanelView.tableProperties,
+        isLazyLoading
       );
       configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
@@ -583,9 +585,9 @@ export function* interpretScreenXml(
         IViewConfiguration,
         () =>
           new ViewConfiguration(
-            function* (perspectiveTag) {
+            function*(perspectiveTag) {
               dataView.activePanelView = perspectiveTag as any;
-              yield* saveColumnConfigurations(dataView)();
+              yield*saveColumnConfigurations(dataView)();
             },
             () => {
               if (
@@ -606,7 +608,7 @@ export function* interpretScreenXml(
     const $tablePerspective = $dataView.beginLifetimeScope(SCOPE_TablePerspective);
     $tablePerspective.resolve(ITablePerspectiveDirector).setup();
     const tablePerspective = $tablePerspective.resolve(ITablePerspective);
-    tablePerspective.onTablePerspectiveShown = () =>  getTablePanelView(dataView)?.triggerOnFocusTable();
+    tablePerspective.onTablePerspectiveShown = () => getTablePanelView(dataView)?.triggerOnFocusTable();
 
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
@@ -637,13 +639,13 @@ export function* interpretScreenXml(
 
     //***************** */
 
-    const { lookupMultiEngine } = workbench;
+    const {lookupMultiEngine} = workbench;
 
     dataView.properties
       .flatMap((property) => [property, ...property.childProperties])
       .filter((property) => property.isLookup && property.lookupId)
       .forEach((property) => {
-        const { lookupId } = property;
+        const {lookupId} = property;
         foundLookupIds.add(lookupId!);
         if (!lookupMultiEngine.lookupEngineById.has(lookupId!)) {
           const lookupIndividualEngine = createIndividualLookupEngine(lookupId!, lookupMultiEngine);
@@ -663,7 +665,7 @@ export function* interpretScreenXml(
 
   $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
 
-  return { formScreen: scr, foundLookupIds };
+  return {formScreen: scr, foundLookupIds};
 }
 
 function getImplicitFilters(dataViewXml: any) {

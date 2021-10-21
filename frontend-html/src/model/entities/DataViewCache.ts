@@ -1,8 +1,8 @@
-import {IDataView} from "./types/IDataView";
-import {getApi} from "../selectors/getApi";
-import {getSessionId} from "../selectors/getSessionId";
-import {getParentRowId} from "../selectors/DataView/getParentRowId";
-import {getMasterRowId} from "../selectors/DataView/getMasterRowId";
+import { IDataView } from "./types/IDataView";
+import { getApi } from "../selectors/getApi";
+import { getSessionId } from "../selectors/getSessionId";
+import { getParentRowId } from "../selectors/DataView/getParentRowId";
+import { getMasterRowId } from "../selectors/DataView/getMasterRowId";
 
 export class DataViewCache {
   constructor(private ctx: any) {
@@ -13,7 +13,7 @@ export class DataViewCache {
   public UpdateData(dataView: IDataView) {
     const parentRowId = getParentRowId(dataView);
     const masterRowId = getMasterRowId(dataView);
-    if(!parentRowId || !masterRowId){
+    if (!parentRowId || !masterRowId) {
       return;
     }
     const cacheKey = this.makeCacheKey(dataView.modelInstanceId, parentRowId, masterRowId);

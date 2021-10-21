@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 // https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
 // https://momentjs.com/docs/#/displaying/format/
-export function csToMomentFormat(csDateFormat: string){
-  if(!isValidCsFormat(csDateFormat)){
+export function csToMomentFormat(csDateFormat: string) {
+  if (!isValidCsFormat(csDateFormat)) {
     return null;
   }
   return csDateFormat                       // Meaning of the replaced character in c#:
@@ -34,7 +34,7 @@ export function csToMomentFormat(csDateFormat: string){
     .replace(/g/g, "N"); // The period or era. A.D. / B.C.
 }
 
-function isValidCsFormat(candidate: string){
+function isValidCsFormat(candidate: string) {
   return candidate.match(/^[\s.\-:/yMdHmsfFghKst]*$/g) !== null;
   //there is no direct equivalent to "z" in moment
 }

@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { computed } from "mobx";
 import { getRowStateIsDisableAction } from "model/selectors/RowState/getRowStateIsDisabledAction";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { IAction, IActionData, IActionMode, IActionPlacement, IActionType } from "./types/IAction";
@@ -42,7 +41,7 @@ export class Action implements IAction {
   isDefault: boolean = false;
   parameters: IActionParameter[] = [];
 
-  @computed get isEnabled() {
+  get isEnabled() {
     if (this.mode === IActionMode.Always) {
       return true;
     }
@@ -56,8 +55,8 @@ export class Action implements IAction {
         const selectedIds = getDataView(this).selectedRowIds;
         return selectedIds.size > 0
           ? !Array.from(selectedIds)
-              .map((rowId) => getRowStateIsDisableAction(this, rowId, this.id))
-              .some((item) => item)
+            .map((rowId) => getRowStateIsDisableAction(this, rowId, this.id))
+            .some((item) => item)
           : this.placement === IActionPlacement.Toolbar;
       }
     }

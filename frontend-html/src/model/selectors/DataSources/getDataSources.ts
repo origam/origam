@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getFormScreen} from "../FormScreen/getFormScreen";
+import { getFormScreen } from "../FormScreen/getFormScreen";
 
 export function getDataSources(ctx: any) {
   return getFormScreen(ctx).dataSources

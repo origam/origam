@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IFilterConfig} from "./IFilterConfig";
+import { IFilterConfig } from "./IFilterConfig";
 
 export interface IPortalSettings {
   showChat: boolean;

@@ -18,7 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-export interface IApplicationLifecycleData {}
+export interface IApplicationLifecycleData {
+}
 
 export interface IApplicationLifecycle extends IApplicationLifecycleData {
   $type_IApplicationLifecycle: 1;
@@ -33,6 +34,7 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
     userName: string;
     password: string;
   }): Generator;
+
   onSignOutClick(args: { event: any }): Generator;
 
   performLogout(): Generator;
@@ -46,6 +48,7 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
   run(): Generator;
 
   setLoginPageMessage(msg: string): void;
+
   resetLoginPageMessage(): void;
 }
 

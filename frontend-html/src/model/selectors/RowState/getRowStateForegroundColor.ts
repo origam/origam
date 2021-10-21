@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getRowStateById} from "./getRowStateById";
+import { getRowStateById } from "./getRowStateById";
 
 export function getRowStateForegroundColor(ctx: any, rowId: string) {
   const rowState = getRowStateById(ctx, rowId);
   const rowStateForegroundColor = rowState ? rowState.foregroundColor : undefined;
-  if(rowStateForegroundColor) {
+  if (rowStateForegroundColor) {
     return rowStateForegroundColor;
   }
   return rowState ? rowState.foregroundColor : undefined;

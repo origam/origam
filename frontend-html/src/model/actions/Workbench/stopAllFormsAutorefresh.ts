@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getOpenedScreens} from "model/selectors/getOpenedScreens";
-import {stopAutoreload} from "../FormScreen/stopAutoreload";
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
+import { stopAutoreload } from "../FormScreen/stopAutoreload";
 
 export function stopAllFormsAutorefresh(ctx: any) {
   return function*() {
@@ -28,7 +28,7 @@ export function stopAllFormsAutorefresh(ctx: any) {
         !openedScreen.content.isLoading &&
         openedScreen.content.formScreen
       ) {
-        yield* stopAutoreload(openedScreen.content.formScreen)();
+        yield*stopAutoreload(openedScreen.content.formScreen)();
       }
     }
   };

@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {handleError} from "model/actions/handleError";
-import {IApi} from "./types/IApi";
-import {IApplication, IApplicationData} from "./types/IApplication";
-import {IApplicationLifecycle} from "./types/IApplicationLifecycle";
-import {IDialogStack} from "./types/IDialogStack";
-import {IErrorDialogController} from "./types/IErrorDialog";
-import {IWorkbench} from "./types/IWorkbench";
+import { handleError } from "model/actions/handleError";
+import { IApi } from "./types/IApi";
+import { IApplication, IApplicationData } from "./types/IApplication";
+import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
+import { IDialogStack } from "./types/IDialogStack";
+import { IErrorDialogController } from "./types/IErrorDialog";
+import { IWorkbench } from "./types/IWorkbench";
 
 export class Application implements IApplication {
-  
+
   $type_IApplication: 1 = 1;
 
   constructor(data: IApplicationData) {
@@ -54,9 +54,9 @@ export class Application implements IApplication {
 
   *run() {
     try {
-      yield* this.applicationLifecycle.run();
+      yield*this.applicationLifecycle.run();
     } catch (e) {
-      yield* handleError(this)(e);
+      yield*handleError(this)(e);
       throw e;
     }
   }

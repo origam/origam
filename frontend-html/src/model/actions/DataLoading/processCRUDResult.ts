@@ -27,7 +27,7 @@ import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import { IDataView } from "model/entities/types/IDataView";
-import {getDataViewCache} from "../../selectors/FormScreen/getDataViewCache";
+import { getDataViewCache } from "../../selectors/FormScreen/getDataViewCache";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -49,12 +49,12 @@ export interface ICRUDResult {
   wrappedObject: any[];
 }
 
-export function* processCRUDResult(ctx: any, result: ICRUDResult,
-   resortTables?: boolean | undefined,
-   sourceDataView?: IDataView): Generator {
+export function*processCRUDResult(ctx: any, result: ICRUDResult,
+                                  resortTables?: boolean | undefined,
+                                  sourceDataView?: IDataView): Generator {
   if (_.isArray(result)) {
     for (let resultItem of result) {
-      yield* processCRUDResult(ctx, resultItem, resortTables, sourceDataView);
+      yield*processCRUDResult(ctx, resultItem, resortTables, sourceDataView);
     }
     return;
   }
@@ -72,13 +72,14 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
         dataView.substituteRecord(resultItem.wrappedObject);
         getDataViewCache(dataView).UpdateData(dataView);
-        if(resortTables){
+        if (resortTables) {
           yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
         }
-        if(!dataView.selectedRow){
+        if (!dataView.selectedRow) {
           dataView.reselectOrSelectFirst();
         }
-        dataView.focusManager.stopAutoFocus();
+        dataView.formFocusManager.stopAutoFocus();
+        dataView.gridFocusManager.focusTableIfNeeded();
       }
       getFormScreen(ctx).setDirty(true);
       break;
@@ -89,14 +90,14 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
         const tablePanelView = dataView.tablePanelView;
         const dataSourceRow = result.wrappedObject;
         const shouldLockNewRowAtTop = sourceDataView?.modelInstanceId === dataView.modelInstanceId;
-        
-        if(dataView.isLazyLoading){
+
+        if (dataView.isLazyLoading) {
           yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
-          try{
+          try {
             dataView.lifecycle.stopSelectedRowReaction();
             dataView.selectRow(dataSourceRow);
-            yield* dataView.lifecycle.changeMasterRow();
-          }finally{
+            yield*dataView.lifecycle.changeMasterRow();
+          } finally {
             dataView.lifecycle.startSelectedRowReaction();
           }
         } else {
@@ -123,7 +124,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
     case IResponseOperation.FormSaved: {
       getFormScreen(ctx).setDirty(false);
       const workbench = getWorkbench(ctx);
-      const { cacheDependencies, lookupCleanerReloaderById } = workbench.lookupMultiEngine;
+      const {cacheDependencies, lookupCleanerReloaderById} = workbench.lookupMultiEngine;
       const dataSources = getDataSources(ctx);
       const collectedLookupIds = cacheDependencies.getDependencyLookupIdsByCacheKeys(
         dataSources.map((ds) => ds.lookupCacheKey)
@@ -139,18 +140,18 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
       const dataViews = getDataViewList(ctx);
       for (let dataView of dataViews) {
         if (getIsBindingRoot(dataView) && dataView.requestDataAfterSelectionChange) {
-          yield* dataView.lifecycle.changeMasterRow();
-          yield* dataView.lifecycle.navigateChildren();
+          yield*dataView.lifecycle.changeMasterRow();
+          yield*dataView.lifecycle.navigateChildren();
         }
-        if(!dataView.selectedRow){
+        if (!dataView.selectedRow) {
           dataView.reselectOrSelectFirst();
         }
       }
       break;
     }
     case IResponseOperation.FormNeedsRefresh: {
-      if(!getFormScreen(ctx).suppressRefresh){
-        yield* reloadScreen(ctx)(); // TODO: It is not possible to reload data... Has to be done by different API endpoint
+      if (!getFormScreen(ctx).suppressRefresh) {
+        yield*reloadScreen(ctx)(); // TODO: It is not possible to reload data... Has to be done by different API endpoint
       }
       break;
     }

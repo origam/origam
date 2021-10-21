@@ -21,7 +21,7 @@ import * as React from "react";
 import { observer } from "mobx-react";
 import S from "./BoolEditor.module.scss";
 import cx from "classnames";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 
 @observer
@@ -38,7 +38,7 @@ export class BoolEditor extends React.Component<{
   invalidMessage?: string;
   id?: string;
   forceTakeFocus?: boolean;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
@@ -66,8 +66,8 @@ export class BoolEditor extends React.Component<{
           disabled={!this.props.readOnlyNoGrey && this.props.isReadOnly}
           onChange={(event: any) => {
             this.props.onChange &&
-              !this.props.isReadOnly &&
-              this.props.onChange(event, event.target.checked);
+            !this.props.isReadOnly &&
+            this.props.onChange(event, event.target.checked);
           }}
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
@@ -78,7 +78,7 @@ export class BoolEditor extends React.Component<{
         />
         {this.props.isInvalid && (
           <div className={CS.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red" />
+            <i className="fas fa-exclamation-circle red"/>
           </div>
         )}
       </div>

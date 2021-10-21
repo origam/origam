@@ -39,9 +39,9 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   get nodes() {
     const nodes = this.props.dataView.dataTable.rows.map(
       (row) => new Node({
-        id: this.getRowId(row), 
-        label: this.getLabel(row), 
-        row: row, 
+        id: this.getRowId(row),
+        label: this.getLabel(row),
+        row: row,
         expansionGetter: (id: string) => this.expanded.includes(id)
       })
     );
@@ -68,16 +68,16 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   }
 
   @observable
-  expanded: string[]=[]
+  expanded: string[] = []
 
   onRowClick(node: Node) {
-    this.props.dataView.selectRowById(node.id);
+    this.props.dataView.setSelectedRowId(node.id);
   }
 
   onCaretClick(node: Node) {
-    if(this.expanded.includes(node.id)){
+    if (this.expanded.includes(node.id)) {
       this.expanded.remove(node.id);
-    }else{
+    } else {
       this.expanded.push(node.id);
     }
   }
@@ -107,12 +107,13 @@ class Node {
   _parent: Node | undefined;
   row: any[];
   isFolder: boolean = false;
-  expansionGetter: (nodeId: string)=> boolean;
-  get isExpanded(){
+  expansionGetter: (nodeId: string) => boolean;
+
+  get isExpanded() {
     return this.expansionGetter(this.id);
   }
 
-  constructor(args: {id: string, label: string, row: any[], expansionGetter: (nodeId: string)=> boolean}) {
+  constructor(args: { id: string, label: string, row: any[], expansionGetter: (nodeId: string) => boolean }) {
     this.id = args.id;
     this.label = args.label;
     this.row = args.row;
@@ -177,19 +178,19 @@ class Row extends React.Component<{
   }
 
   render() {
-    const { isExpanded } = this.props.node;
+    const {isExpanded} = this.props.node;
     return (
       <div
         className={S.node + " " + (this.props.isSelected ? S.nodeSelected : "")}
         onClick={this.handleRowClick}
       >
-        <div className={S.nodeLabel} style={{ paddingLeft: this.getIndent() }}>
+        <div className={S.nodeLabel} style={{paddingLeft: this.getIndent()}}>
           {this.props.node.label}
         </div>
         {this.props.node.isFolder ? (
           <div className={S.noSelect + " " + S.expander} onClick={this.handleCaretClick}>
             <i
-              className={cx({ "fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded })}
+              className={cx({"fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded})}
             />
           </div>
         ) : (

@@ -21,7 +21,9 @@ export interface IWebScreen {
   $type_IWebScreen: 1;
 
   reload(): void;
+
   setReloader(reloader: IReloader | null): void;
+
   setTitle(title: string): void;
 }
 

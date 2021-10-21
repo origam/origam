@@ -24,8 +24,8 @@ import { observer, Observer } from "mobx-react";
 import moment, { Moment } from "moment";
 import * as React from "react";
 import { toOrigamServerString } from "utils/moment";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
-import {getDefaultCsDateFormatDataFromCookie} from "../../../../utils/cookies";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
+import { getDefaultCsDateFormatDataFromCookie } from "../../../../utils/cookies";
 import DateCompleter from "./DateCompleter";
 import S from "./DateTimeEditor.module.scss";
 import { createPortal } from "react-dom";
@@ -43,7 +43,7 @@ class CalendarWidget extends React.Component<{
     for (
       let day = moment(this.displayedMonth).startOf("week"), i = 0;
       i < 7;
-      day.add({ days: 1 }), i++
+      day.add({days: 1}), i++
     ) {
       result.push(
         <div
@@ -62,9 +62,9 @@ class CalendarWidget extends React.Component<{
     const result: any[] = [];
     const today = moment();
     for (
-      let day = moment(this.displayedMonth).startOf("week").add({ weeks: weekInc }), i = 0;
+      let day = moment(this.displayedMonth).startOf("week").add({weeks: weekInc}), i = 0;
       i < 7;
-      day.add({ days: 1 }), i++
+      day.add({days: 1}), i++
     ) {
       const isNeighbourMonth = day.month() !== this.displayedMonth.month();
       const isSelectedDay = day.isSame(this.props.selectedDay, "day");
@@ -97,22 +97,22 @@ class CalendarWidget extends React.Component<{
 
   @action.bound
   handleMonthDecClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).subtract({ months: 1 });
+    this.displayedMonth = moment(this.displayedMonth).subtract({months: 1});
   }
 
   @action.bound
   handleMonthIncClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).add({ months: 1 });
+    this.displayedMonth = moment(this.displayedMonth).add({months: 1});
   }
 
   @action.bound
   handleYearDecClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).subtract({ years: 1 });
+    this.displayedMonth = moment(this.displayedMonth).subtract({years: 1});
   }
 
   @action.bound
   handleYearIncClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).add({ years: 1 });
+    this.displayedMonth = moment(this.displayedMonth).add({years: 1});
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
@@ -135,10 +135,10 @@ class CalendarWidget extends React.Component<{
             <div className={S.calendarWidgetHeader}>
               <div className={S.calendarWidgetMonthControls}>
                 <button className={S.calendarWidgetControlBtn} onClick={this.handleMonthDecClick}>
-                  <i className="fas fa-caret-left" />
+                  <i className="fas fa-caret-left"/>
                 </button>
                 <button className={S.calendarWidgetControlBtn} onClick={this.handleMonthIncClick}>
-                  <i className="fas fa-caret-right" />
+                  <i className="fas fa-caret-right"/>
                 </button>
               </div>
               <div
@@ -149,10 +149,10 @@ class CalendarWidget extends React.Component<{
               </div>
               <div className={S.calendarWidgetYearControls}>
                 <button className={S.calendarWidgetControlBtn} onClick={this.handleYearDecClick}>
-                  <i className="fas fa-caret-down" />
+                  <i className="fas fa-caret-down"/>
                 </button>
                 <button className={S.calendarWidgetControlBtn} onClick={this.handleYearIncClick}>
-                  <i className="fas fa-caret-up" />
+                  <i className="fas fa-caret-up"/>
                 </button>
               </div>
             </div>
@@ -173,7 +173,6 @@ export class DateTimeEditor extends React.Component<{
   isReadOnly?: boolean;
   isInvalid?: boolean;
   invalidMessage?: string;
-  isFocused?: boolean;
   autoFocus?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
@@ -184,7 +183,7 @@ export class DateTimeEditor extends React.Component<{
   onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   @observable isDroppedDown = false;
 
@@ -221,7 +220,6 @@ export class DateTimeEditor extends React.Component<{
   disposers: any[] = [];
 
   componentDidMount() {
-    this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
     if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
@@ -232,16 +230,8 @@ export class DateTimeEditor extends React.Component<{
     this.disposers.forEach((d) => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused?: boolean; value: string | null }) {
+  componentDidUpdate(prevProps: { value: string | null }) {
     runInAction(() => {
-      if (!prevProps.isFocused && this.props.isFocused) {
-        this.makeFocusedIfNeeded();
-      }
-      /*if (prevProps.textualValue !== this.props.textualValue) {
-        this.dirtyTextualValue = undefined;
-        this.makeFocusedIfNeeded();
-      }*/
-
       if (prevProps.value !== null && this.props.value === null) {
         this.dirtyTextualValue = "";
       }
@@ -250,13 +240,13 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound
   makeFocusedIfNeeded() {
-      setTimeout(()=>{
-          if ((this.props.autoFocus || this.props.isFocused) && this.elmInput) {
-              this.elmInput.select();
-              this.elmInput.focus();
-              this.elmInput.scrollLeft = 0;
-          }
-      });
+    setTimeout(() => {
+      if ((this.props.autoFocus) && this.elmInput) {
+        this.elmInput.select();
+        this.elmInput.focus();
+        this.elmInput.scrollLeft = 0;
+      }
+    });
   }
 
   _hLocationInterval: any;
@@ -434,7 +424,7 @@ export class DateTimeEditor extends React.Component<{
       <Dropdowner
         ref={this.refDropdowner}
         onContainerMouseDown={this.handleContainerMouseDown}
-        trigger={({ refTrigger, setDropped }) => (
+        trigger={({refTrigger, setDropped}) => (
           <div
             className={S.editorContainer}
             ref={this.refContainer}
@@ -478,7 +468,7 @@ export class DateTimeEditor extends React.Component<{
 
             {this.props.isInvalid && (
               <div className={S.notification} title={this.props.invalidMessage}>
-                <i className="fas fa-exclamation-circle red" />
+                <i className="fas fa-exclamation-circle red"/>
               </div>
             )}
             {!this.props.isReadOnly && (
@@ -487,7 +477,7 @@ export class DateTimeEditor extends React.Component<{
                 onMouseDown={() => setDropped(true)}
                 ref={refTrigger}
               >
-                <i className="far fa-calendar-alt" />
+                <i className="far fa-calendar-alt"/>
               </div>
             )}
           </div>
@@ -534,7 +524,7 @@ export class DateTimeEditor extends React.Component<{
         />
         {this.props.isInvalid && (
           <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red" />
+            <i className="fas fa-exclamation-circle red"/>
           </div>
         )}
       </div>
@@ -552,11 +542,13 @@ export class DateTimeEditor extends React.Component<{
 
 function FormatHintTooltip(props: { boundingRect?: any; line1?: string; line2?: string }) {
   const [tooltipHeight, setTooltipHeight] = React.useState(0);
+
   function refTooltip(elm: any) {
     if (elm) {
       setTooltipHeight(elm.getBoundingClientRect().height);
     }
   }
+
   if (!props.boundingRect || (!props.line1 && !props.line2)) return null;
   const bounds = props.boundingRect;
 
@@ -564,10 +556,10 @@ function FormatHintTooltip(props: { boundingRect?: any; line1?: string; line2?: 
     <div
       ref={refTooltip}
       className={S.formatHintTooltip}
-      style={{ top: bounds.top - 1 - tooltipHeight, left: bounds.left }}
+      style={{top: bounds.top - 1 - tooltipHeight, left: bounds.left}}
     >
       {props.line1}
-      {props.line2 && <br />}
+      {props.line2 && <br/>}
       {props.line2}
     </div>,
     document.getElementById("tooltip-portal")!

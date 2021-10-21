@@ -54,7 +54,7 @@ export class MainMenuItem extends React.Component<{
             isActiveScreen: this.props.isActiveScreen,
             isHighLighted: this.props.isHighLighted,
           })}
-          style={{ paddingLeft: `${this.props.level * 1.6667}em` }}
+          style={{paddingLeft: `${this.props.level * 1.6667}em`}}
           onClick={this.props.onClick}
           title={this.props.label}
         >

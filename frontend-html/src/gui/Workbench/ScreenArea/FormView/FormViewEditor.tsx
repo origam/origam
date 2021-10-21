@@ -17,39 +17,39 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {BlobEditor} from "gui/Components/ScreenElements/Editors/BlobEditor";
-import {CheckList} from "gui/Components/ScreenElements/Editors/CheckList";
-import {ImageEditor} from "gui/Components/ScreenElements/Editors/ImageEditor";
-import {NumberEditor} from "gui/Components/ScreenElements/Editors/NumberEditor";
-import {TagInputEditor} from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import {TextEditor} from "gui/Components/ScreenElements/Editors/TextEditor";
-import {inject, observer} from "mobx-react";
-import {onFieldBlur} from "model/actions-ui/DataView/TableView/onFieldBlur";
-import {onFieldChange} from "model/actions-ui/DataView/TableView/onFieldChange";
-import {getFieldErrorMessage} from "model/selectors/DataView/getFieldErrorMessage";
-import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
-import {getRowStateForegroundColor} from "model/selectors/RowState/getRowStateForegroundColor";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
+import { CheckList } from "gui/Components/ScreenElements/Editors/CheckList";
+import { ImageEditor } from "gui/Components/ScreenElements/Editors/ImageEditor";
+import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
+import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
+import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
+import { inject, observer } from "mobx-react";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
 import uiActions from "model/actions-ui-tree";
-import {IProperty} from "model/entities/types/IProperty";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {isReadOnly} from "model/selectors/RowState/isReadOnly";
-import {XmlBuildDropdownEditor} from "modules/Editors/DropdownEditor/DropdownEditor";
-import {BoolEditor} from "gui/Components/ScreenElements/Editors/BoolEditor";
-import {DateTimeEditor} from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import {FocusManager} from "model/entities/FocusManager";
-import {DomEvent} from "leaflet";
-import {onDropdownEditorClick} from "model/actions/DropdownEditor/onDropdownEditorClick";
-import {shadeHexColor} from "utils/colorUtils";
-import {getIsFormScreenDirty} from "model/selectors/FormScreen/getisFormScreenDirty";
-import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
+import { IProperty } from "model/entities/types/IProperty";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { isReadOnly } from "model/selectors/RowState/isReadOnly";
+import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
+import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { FormFocusManager } from "model/entities/FormFocusManager";
+import { DomEvent } from "leaflet";
+import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
+import { shadeHexColor } from "utils/colorUtils";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
-import {flashColor2htmlColor, htmlColor2FlashColor} from "utils/flashColorFormat";
-import {onTextFieldAutoUpdate} from "../../../../model/actions-ui/DataView/OnTextFieldAutoUpdate";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
+import { onTextFieldAutoUpdate } from "../../../../model/actions-ui/DataView/OnTextFieldAutoUpdate";
 
 
-@inject(({ property, formPanelView }) => {
+@inject(({property, formPanelView}) => {
   const row = getSelectedRow(formPanelView)!;
   return {
     property,
@@ -74,12 +74,13 @@ export class FormViewEditor extends React.Component<{
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => Promise<any>;
   backgroundColor?: string;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
-  focusManager: FocusManager;
+  focusManager: FormFocusManager;
 
   constructor(props: any) {
     super(props);
-    this.focusManager = getDataView(this.props.property).focusManager;
+    this.focusManager = getDataView(this.props.property).formFocusManager;
   }
 
   getEditor() {
@@ -112,17 +113,15 @@ export class FormViewEditor extends React.Component<{
             isPassword={this.props.property!.isPassword}
             invalidMessage={invalidMessage}
             property={this.props.property}
-            isFocused={false}
             maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
             customStyle={this.props.property?.style}
-            reFocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
-            onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
@@ -143,17 +142,15 @@ export class FormViewEditor extends React.Component<{
             customStyle={this.props.property?.style}
             maxLength={this.props.property?.maxLength}
             invalidMessage={invalidMessage}
-            isFocused={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
-            onClick={undefined}
             wrapText={true}
             onEditorBlur={this.props.onEditorBlur}
             onAutoUpdate={value => onTextFieldAutoUpdate(this.props.property!, value)}
             isRichText={this.props.isRichText}
+            onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
@@ -172,12 +169,9 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={readOnly}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
-            isFocused={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            refocuser={undefined}
             onChange={this.props.onChange}
-            onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
@@ -195,7 +189,7 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isReadOnly={readOnly}
             onChange={this.props.onChange}
-            onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
+            onClick={event => this.focusManager.stopAutoFocus()}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
@@ -212,6 +206,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor
             key={this.props.xmlNode.$iid}
+            onTextOverflowChanged={this.props.onTextOverflowChanged}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(textEditor) =>
@@ -254,14 +249,11 @@ export class FormViewEditor extends React.Component<{
                 isReadOnly={readOnly}
                 isInvalid={isInvalid}
                 invalidMessage={invalidMessage}
-                isFocused={false}
                 backgroundColor={backgroundColor}
                 foregroundColor={foregroundColor}
                 customStyle={this.props.property?.style}
-                refocuser={undefined}
                 onChange={this.props.onChange}
                 onKeyDown={this.makeOnKeyDownCallBack()}
-                onClick={undefined}
                 onEditorBlur={this.props.onEditorBlur}
               />
             }
@@ -283,7 +275,7 @@ export class FormViewEditor extends React.Component<{
               )
             }
             onKeyDown={this.makeOnKeyDownCallBack()}
-            onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
+            onClick={() => this.focusManager.stopAutoFocus()}
           />
         );
       case "Color":
@@ -304,7 +296,7 @@ export class FormViewEditor extends React.Component<{
           />
         );
       case "Image":
-        return <ImageEditor value={this.props.value} />;
+        return <ImageEditor value={this.props.value}/>;
       case "Blob":
         const isDirty = getIsFormScreenDirty(this.props.property);
         return (
@@ -343,7 +335,7 @@ export class FormViewEditor extends React.Component<{
       runInFlowWithHandler({
         ctx: this.props.property,
         action: async () => {
-          dataView.focusManager.stopAutoFocus();
+          dataView.formFocusManager.stopAutoFocus();
           if (event.key === "Tab") {
             DomEvent.preventDefault(event);
             if (event.shiftKey) {

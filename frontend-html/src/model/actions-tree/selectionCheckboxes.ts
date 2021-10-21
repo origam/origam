@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "model/selectors/DataView/getDataView"
+import { getDataView } from "model/selectors/DataView/getDataView"
 
 export function hasSelectedRowId(ctx: any, id: string) {
-   return getDataView(ctx).hasSelectedRowId(id);
+  return getDataView(ctx).hasSelectedRowId(id);
 }
 
 export function setSelectedStateRowId(ctx: any) {
-  return function* toggleSelectedId(id: string, newState: boolean) {
+  return function*toggleSelectedId(id: string, newState: boolean) {
     getDataView(ctx).setSelectedState(id, newState);
   }
 }

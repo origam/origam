@@ -19,25 +19,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { inject, observer, Observer, Provider } from "mobx-react";
 import React from "react";
-import { IDataView } from "../../../../model/entities/types/IDataView";
-import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
-import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
-import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
-import { findStrings } from "../../../../xmlInterpreters/screenXml";
+import { IDataView } from "model/entities/types/IDataView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { findStrings } from "xmlInterpreters/screenXml";
 
 import { FormRoot } from "./FormRoot";
-import { FormViewEditor } from "./FormViewEditor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import { FormField } from "gui/Components/Form/FormField";
 import { FormSection } from "gui/Components/Form/FormSection";
 import { FormLabel } from "gui/Components/Form/FormLabel";
 import { RadioButton } from "gui/Components/Form/RadioButton";
-import { getDataSourceFieldByName } from "../../../../model/selectors/DataSources/getDataSourceFieldByName";
-import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { flow } from "mobx";
-import { CheckBox } from "../../../Components/Form/CheckBox";
-import { isReadOnly } from "../../../../model/selectors/RowState/isReadOnly";
+import { CheckBox } from "gui/Components/Form/CheckBox";
+import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { DomEvent } from "leaflet";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
@@ -45,8 +44,8 @@ import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 
 
-@inject(({ dataView }) => {
-  return { dataView, xmlFormRootObject: dataView.formViewUI };
+@inject(({dataView}) => {
+  return {dataView, xmlFormRootObject: dataView.formViewUI};
 })
 @observer
 export class FormBuilder extends React.Component<{
@@ -55,14 +54,25 @@ export class FormBuilder extends React.Component<{
 }> {
   static contextType = CtxPanelVisibility
 
+  componentDidMount() {
+    document.addEventListener("click", event => this.notifyClick(event))
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("click", event => this.notifyClick(event));
+  }
+
+  notifyClick(event: any) {
+    this.props.dataView!.formFocusManager.setLastFocused(event.target);
+  }
+
   onKeyDown(event: any) {
-    this.props.dataView?.onPanelKeyDown(event);
     if (event.key === "Tab") {
       DomEvent.preventDefault(event);
       if (event.shiftKey) {
-        this.props.dataView!.focusManager.focusPrevious(document.activeElement);
+        this.props.dataView!.formFocusManager.focusPrevious(document.activeElement);
       } else {
-        this.props.dataView!.focusManager.focusNext(document.activeElement);
+        this.props.dataView!.formFocusManager.focusNext(document.activeElement);
       }
       return;
     }
@@ -82,12 +92,12 @@ export class FormBuilder extends React.Component<{
         rowId || ""
       );
     }
-    const focusManager = self.props.dataView!.focusManager;
+    const focusManager = self.props.dataView!.formFocusManager;
 
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
-          <FormRoot key={xfo.$iid} style={{ backgroundColor }}>
+          <FormRoot key={xfo.$iid} style={{backgroundColor}}>
             {xfo.elements.map((child: any) => recursive(child))}
           </FormRoot>
         );
@@ -124,7 +134,7 @@ export class FormBuilder extends React.Component<{
         const checked = row
           ? String(dataTable.getCellValueByDataSourceField(row, sourceField!)) === xfo.attributes.Value
           : false;
-          
+
         return (
           <RadioButton
             key={xfo.$iid}
@@ -141,11 +151,11 @@ export class FormBuilder extends React.Component<{
               focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }
             labelColor={foreGroundColor}
-            onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
+            onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
-              flow(function* () {
-                yield* formScreenLifecycle.updateRadioButtonValue(
+              flow(function*() {
+                yield*formScreenLifecycle.updateRadioButtonValue(
                   self.props.dataView!,
                   row,
                   xfo.attributes.Id,
@@ -179,7 +189,7 @@ export class FormBuilder extends React.Component<{
 
                 const isHidden =
                   (!getRowStateAllowRead(property, rowId || "", property.id) ||
-                  getRowStateMayCauseFlicker(property)) && !!row;
+                    getRowStateMayCauseFlicker(property)) && !!row;
 
                 if (property.column === "CheckBox") {
                   return (
@@ -192,7 +202,7 @@ export class FormBuilder extends React.Component<{
                         subscribeToFocusManager={(radioInput) =>
                           focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
                         }
-                        onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
+                        onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
                         labelColor={foreGroundColor}
                       />
                     </Provider>
@@ -214,15 +224,11 @@ export class FormBuilder extends React.Component<{
                       left={property.x}
                       top={property.y}
                       toolTip={property.toolTip}
-                      editor={
-                        <FormViewEditor
-                          value={value}
-                          isRichText={property.isRichText}
-                          textualValue={textualValue}
-                          xmlNode={property.xmlNode}
-                          backgroundColor={backgroundColor}
-                        />
-                      }
+                      value={value}
+                      isRichText={property.isRichText}
+                      textualValue={textualValue}
+                      xmlNode={property.xmlNode}
+                      backgroundColor={backgroundColor}
                     />
                   </Provider>
                 );
@@ -234,6 +240,7 @@ export class FormBuilder extends React.Component<{
         return xfo.elements.map((child: any) => recursive(child));
       }
     }
+
     const form = recursive(this.props.xmlFormRootObject);
     if (this.props.dataView?.isFirst && this.context.isVisible) {
       focusManager.autoFocus();

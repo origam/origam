@@ -28,10 +28,10 @@ import { IMainMenuState } from "./types/IMainMenu";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
 
 export class SidebarState {
-  
-  @observable 
-  searchResultGroups: ISearchResultGroup[]= [];
-  
+
+  @observable
+  searchResultGroups: ISearchResultGroup[] = [];
+
   @observable
   _activeSection = "Menu";
 
@@ -42,10 +42,10 @@ export class SidebarState {
 
   parent: any;
 
-  get resultCount(){ 
-    return this.searchResultGroups.length === 0 
-      ? 0 
-      : this.searchResultGroups.map(group => group.results.length).reduce((x,y) => x + y);
+  get resultCount() {
+    return this.searchResultGroups.length === 0
+      ? 0
+      : this.searchResultGroups.map(group => group.results.length).reduce((x, y) => x + y);
   }
 
   get activeSection() {
@@ -77,7 +77,10 @@ export class SidebarState {
 
 
 export class MainMenuState implements IMainMenuState {
-  
+
+  @observable
+  editing = false;
+
   @observable
   folderStateMap: Map<string, boolean> = new Map();
 
@@ -85,8 +88,8 @@ export class MainMenuState implements IMainMenuState {
 
   @observable
   private _highLightedItemId: string | undefined;
-  
-  closeAll(){
+
+  closeAll() {
     this.folderStateMap.clear();
   }
 
@@ -94,20 +97,20 @@ export class MainMenuState implements IMainMenuState {
     return this.folderStateMap.get(menuId) ?? false;
   }
 
-  setIsOpen(menuId: string, state: boolean){
+  setIsOpen(menuId: string, state: boolean) {
     this.folderStateMap.set(menuId, state);
   }
 
-  flipIsOpen(menuId: string){
+  flipIsOpen(menuId: string) {
     const newState = !this.isOpen(menuId);
     this.setIsOpen(menuId, newState);
   }
 
-  setReference(id: string, ref: RefObject<HTMLElement>): void{
+  setReference(id: string, ref: RefObject<HTMLElement>): void {
     this.refMap.set(id, ref);
   }
 
-  scrollToItem(id: string){
+  scrollToItem(id: string) {
     this.refMap.get(id)?.current?.scrollIntoView();
   }
 
@@ -115,7 +118,7 @@ export class MainMenuState implements IMainMenuState {
     return this._highLightedItemId;
   }
 
-  highlightItem(itemId: string){
+  highlightItem(itemId: string) {
     this._highLightedItemId = itemId;
     setTimeout(() => this._highLightedItemId = undefined, 3000)
   }

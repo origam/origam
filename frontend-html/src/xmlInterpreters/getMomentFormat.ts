@@ -17,22 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {csToMomentFormat} from "../utils/dateFormatConversion";
-import {T} from "../utils/translation";
-import {getDefaultCsDateFormatDataFromCookie} from "../utils/cookies";
+import { csToMomentFormat } from "../utils/dateFormatConversion";
+import { T } from "../utils/translation";
+import { getDefaultCsDateFormatDataFromCookie } from "../utils/cookies";
 
-export function replaceDefaultDateFormats(formatFromServer: string){
-  if(formatFromServer === "long"){
+export function replaceDefaultDateFormats(formatFromServer: string) {
+  if (formatFromServer === "long") {
     let defaultDateFormatData = getDefaultCsDateFormatDataFromCookie();
     return defaultDateFormatData.defaultLongDateFormat;
   }
 
-  if(formatFromServer === "short"){
+  if (formatFromServer === "short") {
     let defaultDateFormatData = getDefaultCsDateFormatDataFromCookie();
     return defaultDateFormatData.defaultShortDateFormat;
   }
 
-  if(formatFromServer === "time"){
+  if (formatFromServer === "time") {
     let defaultDateFormatData = getDefaultCsDateFormatDataFromCookie();
     return defaultDateFormatData.defaultTimeFormat;
   }

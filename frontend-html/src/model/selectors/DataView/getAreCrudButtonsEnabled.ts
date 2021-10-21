@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "./getDataView";
+import { getDataView } from "./getDataView";
 
 export function getAreCrudButtonsEnabled(ctx: any) {
   const dataView = getDataView(ctx);
-  if(dataView.parentBindings.length === 0){
+  if (dataView.parentBindings.length === 0) {
     return true;
   }
   return dataView.parentBindings.some(binding => binding.parentDataView.selectedRowId)

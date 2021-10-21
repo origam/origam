@@ -18,12 +18,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observer } from "mobx-react";
-import React, {useContext, useEffect, useMemo} from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
 import S from './DropdownEditor.module.scss';
 
-export function DropdownEditorInput(props:{
+export function DropdownEditorInput(props: {
   backgroundColor?: string;
   foregroundColor?: string;
   customStyle?: any;
@@ -38,11 +38,15 @@ export function DropdownEditorInput(props:{
   }, [beh]);
 
   useEffect(() => {
-    if(beh.subscribeToFocusManager && beh.elmInputElement){
+    if (beh.subscribeToFocusManager && beh.elmInputElement) {
       beh.subscribeToFocusManager(beh.elmInputElement);
     }
+    beh.updateTextOverflowState();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    beh.updateTextOverflowState();
+  }); // eslint-disable-line react-hooks/exhaustive-deps
   function getStyle() {
     if (props.customStyle) {
       return props.customStyle;
@@ -71,6 +75,10 @@ export function DropdownEditorInput(props:{
           onClick={beh.onClick}
           value={beh.inputValue || ""}
           style={getStyle()}
+          autoComplete={"off"}
+          autoCorrect={"off"}
+          autoCapitalize={"off"}
+          spellCheck={"false"}
         />
       )}
     </Observer>

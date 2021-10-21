@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TypeSymbol} from "dic/Container";
+import { TypeSymbol } from "dic/Container";
 import { ScreenAPI } from "modules/Screen/ScreenAPI";
 
 export class DataViewAPI {
@@ -25,7 +25,8 @@ export class DataViewAPI {
     public getDataStructureEntityId: () => string,
     public getEntity: () => string,
     public api: () => ScreenAPI
-  ) {}
+  ) {
+  }
 
   *getLookupList(args: {
     ColumnNames: string[];
@@ -38,11 +39,12 @@ export class DataViewAPI {
     PageSize: number;
     PageNumber: number;
   }): any {
-    return yield* this.api().getLookupList({
+    return yield*this.api().getLookupList({
       ...args,
       DataStructureEntityId: this.getDataStructureEntityId(),
       Entity: this.getEntity(),
     });
   }
 }
+
 export const IDataViewAPI = TypeSymbol<DataViewAPI>("IDataViewAPI");

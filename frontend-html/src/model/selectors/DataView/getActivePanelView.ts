@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IPanelViewType} from "../../entities/types/IPanelViewType";
-import {getDataView} from "./getDataView";
+import { IPanelViewType } from "../../entities/types/IPanelViewType";
+import { getDataView } from "./getDataView";
 
 export function getActivePanelView(ctx: any): IPanelViewType {
   return getDataView(ctx).activePanelView;

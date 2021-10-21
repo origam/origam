@@ -48,7 +48,8 @@ export default class Scroller extends React.Component<IScrollerProps> {
     }
   }
 
-  @action.bound private handleScroll(event: any) {
+  @action.bound
+  private handleScroll(event: any) {
     if (this.props.scrollingDisabled) {
       event.target.scrollLeft = this.lastScrollLeft;
       event.target.scrollTop = this.lastScrollTop;
@@ -108,11 +109,11 @@ export default class Scroller extends React.Component<IScrollerProps> {
   private runOnclick(event: any) {
     const scrollerRect = this.elmScrollerDiv!.getBoundingClientRect();
     this.props.onClick &&
-      this.props.onClick(
-        event,
-        event.clientX - scrollerRect.left,
-        event.clientY - scrollerRect.top
-      );
+    this.props.onClick(
+      event,
+      event.clientX - scrollerRect.left,
+      event.clientY - scrollerRect.top
+    );
   }
 
   lastMouseX = 0;
@@ -178,7 +179,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
           (!this.props.isVisible ? " hidden" : "")
         }
         tabIndex={1}
-        style={{ width: this.props.width, height: this.props.height }}
+        style={{width: this.props.width, height: this.props.height}}
         onScroll={this.handleScroll}
         onClick={(e) => this.clickHandler.handleClick(e)}
         onMouseMove={(event) => this.handleMouseMove(event)}

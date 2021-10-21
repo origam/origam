@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataViewLifecycle} from "model/selectors/DataView/getDataViewLifecycle"
+import { getDataViewLifecycle } from "model/selectors/DataView/getDataViewLifecycle"
 
 export function navigateAsChild(ctx: any, rows?: any[]) {
-  return function* navigateAsChild() {
-    yield* getDataViewLifecycle(ctx).navigateAsChild(rows);
+  return function*navigateAsChild() {
+    yield*getDataViewLifecycle(ctx).navigateAsChild(rows);
   }
 }

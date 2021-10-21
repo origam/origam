@@ -17,13 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getMainMenu} from "./getMainMenu";
+import { getMainMenu } from "./getMainMenu";
 
 const BREAK_RECURSION = Symbol("BREAK_RECURSION");
 
 export function getMainMenuItemById(ctx: any, id: string) {
   const rawMenu = getMainMenu(ctx)!.menuUI;
   let result: any;
+
   function recursive(node: any) {
     if (node.attributes.id === id) {
       result = node;
@@ -33,6 +34,7 @@ export function getMainMenuItemById(ctx: any, id: string) {
       recursive(child);
     }
   }
+
   try {
     recursive(rawMenu);
   } catch (e) {

@@ -17,26 +17,26 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
-import {getOpenedScreen} from "model/selectors/getOpenedScreen";
-import {IRefreshOnReturnType} from "../entities/WorkbenchLifecycle/WorkbenchLifecycle";
-import {getApi} from "../selectors/getApi";
-import {ICRUDResult, processCRUDResult} from "./DataLoading/processCRUDResult";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
-import {getDataViewLifecycle} from "model/selectors/DataView/getDataViewLifecycle";
-import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
-import {onRefreshSessionClick} from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { IRefreshOnReturnType } from "../entities/WorkbenchLifecycle/WorkbenchLifecycle";
+import { getApi } from "../selectors/getApi";
+import { ICRUDResult, processCRUDResult } from "./DataLoading/processCRUDResult";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { getDataViewLifecycle } from "model/selectors/DataView/getDataViewLifecycle";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 
 export function closeForm(ctx: any) {
-  return function* closeForm(): Generator {
+  return function*closeForm(): Generator {
     const lifecycle = getWorkbenchLifecycle(ctx);
     const openedScreen = getOpenedScreen(ctx);
-    yield* lifecycle.closeForm(openedScreen);
-    if(openedScreen.content?.refreshOnReturnType){
+    yield*lifecycle.closeForm(openedScreen);
+    if (openedScreen.content?.refreshOnReturnType) {
       const refreshOnReturnType = openedScreen.content.refreshOnReturnType;
       const parentScreen = getOpenedScreen(openedScreen.parentContext);
       const parentFormScreen = getFormScreen(openedScreen.parentContext);
-      switch(refreshOnReturnType){
+      switch (refreshOnReturnType) {
         case IRefreshOnReturnType.ReloadActualRecord:
           if (isLazyLoading(ctx)) {
             break;
@@ -52,9 +52,9 @@ export function closeForm(ctx: any) {
         case IRefreshOnReturnType.MergeModalDialogChanges:
           const api = getApi(ctx);
           const parentScreenSessionId = parentScreen!.content!.formScreen!.sessionId;
-          const changes = (yield api.pendingChanges({ sessionFormIdentifier: parentScreenSessionId})) as ICRUDResult[];
+          const changes = (yield api.pendingChanges({sessionFormIdentifier: parentScreenSessionId})) as ICRUDResult[];
           for (let change of changes) {
-            yield* processCRUDResult(openedScreen.parentContext, change);
+            yield*processCRUDResult(openedScreen.parentContext, change);
           }
           const dataViews = parentScreen?.content?.formScreen?.dataViews ?? [];
           for (const dataView of dataViews) {

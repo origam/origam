@@ -17,15 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "../../selectors/DataView/getDataView";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 export function selectLastRow(ctx: any) {
-  return function* selectLastRow() {
+  return function*selectLastRow() {
     let dataView = getDataView(ctx);
     const loadLastPage = dataView.infiniteScrollLoader?.loadLastPage;
-    if(loadLastPage)yield* loadLastPage();
+    if (loadLastPage) yield*loadLastPage();
     dataView.selectLastRow();
     getTablePanelView(ctx).scrollToCurrentRow();
+    if (!isLazyLoading(ctx)) {
+      setTimeout(() => {
+        getGridFocusManager(ctx).focusTableIfNeeded();
+      });
+    }
   };
 }

@@ -35,22 +35,22 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
         <>
           {props.state.isDropped
             ? createPortal(
-                <div
-                  className={"Dropdowner_droppedBox"}
-                  style={{ top: props.state.top, left: props.state.left }}
-                >
-                  <div className="Dropdown_root">
-                    <div
-                      className={"DropdownItem_root"}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      onClick={props.state.handleRefreshClick}
-                    >
-                      Refresh
-                    </div>
+              <div
+                className={"Dropdowner_droppedBox"}
+                style={{top: props.state.top, left: props.state.left}}
+              >
+                <div className="Dropdown_root">
+                  <div
+                    className={"DropdownItem_root"}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onClick={props.state.handleRefreshClick}
+                  >
+                    Refresh
                   </div>
-                </div>,
-                document.getElementById("dropdown-portal")!
-              )
+                </div>
+              </div>,
+              document.getElementById("dropdown-portal")!
+            )
             : null}
         </>
       )}
@@ -59,7 +59,8 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
 }
 
 class TriggerContextMenuState {
-  constructor(public behaviour: DropdownEditorBehavior) {}
+  constructor(public behaviour: DropdownEditorBehavior) {
+  }
 
   @observable isDropped = false;
   @observable top = 0;
@@ -139,11 +140,11 @@ export function DropdownEditorControl(props: {
             )}
           </div>
 
-          <TriggerContextMenu state={triggerContextMenu} />
+          <TriggerContextMenu state={triggerContextMenu}/>
 
           {props.isInvalid && (
             <div className={CS.notification} title={props.invalidMessage}>
-              <i className="fas fa-exclamation-circle red" />
+              <i className="fas fa-exclamation-circle red"/>
             </div>
           )}
         </div>

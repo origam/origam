@@ -40,4 +40,5 @@ export class LookupScopeRegistry {
     return this.items.has(lookupId);
   }
 }
+
 export const ILookupScopeRegistry = TypeSymbol<LookupScopeRegistry>("ILookupScopeRegistry");

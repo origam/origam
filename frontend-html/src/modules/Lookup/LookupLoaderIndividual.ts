@@ -27,12 +27,13 @@ export interface ILookupIndividualResultListenerArgs {
 }
 
 export class LookupLoaderIndividual {
-  constructor(public lookupId: string, private loader: LookupLoaderMulti) {}
+  constructor(public lookupId: string, private loader: LookupLoaderMulti) {
+  }
 
   @action.bound
   handleResultingLabels(args: ILookupMultiResultListenerArgs) {
     for (let [k, v] of args.labels.entries()) {
-      if (k === this.lookupId) this.resultListeners.trigger({ labels: v });
+      if (k === this.lookupId) this.resultListeners.trigger({labels: v});
     }
   }
 
@@ -54,4 +55,5 @@ export class LookupLoaderIndividual {
     return this.loader.isWorking(this.lookupId, key);
   }
 }
+
 export const ILookupLoaderIndividual = TypeSymbol<LookupLoaderIndividual>("ILookupLoaderIndividual");

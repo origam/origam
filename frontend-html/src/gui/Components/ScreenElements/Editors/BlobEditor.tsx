@@ -37,16 +37,16 @@ import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { handleError } from "model/actions/handleError";
-import { IFocusAble } from "model/entities/FocusManager";
+import { IFocusable } from "model/entities/FormFocusManager";
 import cx from "classnames";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
-import { runInFlowWithHandler, runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
-@inject(({ property }: { property: IProperty }, { value }) => {
+@inject(({property}: { property: IProperty }, {value}) => {
   return {
     api: getApi(property),
     processCRUDResult: (result: any) => processCRUDResult(property, result),
@@ -80,7 +80,7 @@ export class BlobEditor extends React.Component<{
   Entity?: string;
   SessionFormIdentifier?: string;
   parameters?: any;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   isInvalid: boolean;
   canUpload: boolean;
   invalidMessage?: string;
@@ -124,7 +124,7 @@ export class BlobEditor extends React.Component<{
       parameters: this.props.parameters,
       isPreview: args.isPreview,
     });
-    await this.props.api!.getBlob({ downloadToken: token });
+    await this.props.api!.getBlob({downloadToken: token});
   }
 
   *upload(): any {
@@ -169,11 +169,11 @@ export class BlobEditor extends React.Component<{
             Entity: this.props.Entity!,
             RowId: this.props.RowId!,
           });
-          yield* this.props.processCRUDResult!(crudResult);
+          yield*this.props.processCRUDResult!(crudResult);
         }
       }
     } catch (e) {
-      yield* this.props.handleError!(e);
+      yield*this.props.handleError!(e);
     } finally {
       this.isUploading = false;
       if (this.elmInput) this.elmInput.value = "";
@@ -223,38 +223,38 @@ export class BlobEditor extends React.Component<{
         })
       )
     ) {
-      const { parameters } = this.props;
+      const {parameters} = this.props;
       const changeSet: Array<{ fieldId: string; value: any }> = [];
-      changeSet.push({ fieldId: this.props.Property!, value: null });
+      changeSet.push({fieldId: this.props.Property!, value: null});
       if (parameters["AuthorMember"]) {
-        changeSet.push({ fieldId: parameters["AuthorMember"], value: null });
+        changeSet.push({fieldId: parameters["AuthorMember"], value: null});
       }
       if (parameters["BlobMember"]) {
-        changeSet.push({ fieldId: parameters["BlobMember"], value: null });
+        changeSet.push({fieldId: parameters["BlobMember"], value: null});
       }
       if (parameters["CompressionStateMember"]) {
-        changeSet.push({ fieldId: parameters["CompressionStateMember"], value: null });
+        changeSet.push({fieldId: parameters["CompressionStateMember"], value: null});
       }
       if (parameters["DateCreatedMember"]) {
-        changeSet.push({ fieldId: parameters["DateCreatedMember"], value: null });
+        changeSet.push({fieldId: parameters["DateCreatedMember"], value: null});
       }
       if (parameters["DateLastModifiedMember"]) {
-        changeSet.push({ fieldId: parameters["DateLastModifiedMember"], value: null });
+        changeSet.push({fieldId: parameters["DateLastModifiedMember"], value: null});
       }
       if (parameters["FileSizeMember"]) {
-        changeSet.push({ fieldId: parameters["FileSizeMember"], value: null });
+        changeSet.push({fieldId: parameters["FileSizeMember"], value: null});
       }
       if (parameters["OriginalPathMember"]) {
-        changeSet.push({ fieldId: parameters["OriginalPathMember"], value: null });
+        changeSet.push({fieldId: parameters["OriginalPathMember"], value: null});
       }
       if (parameters["RemarkMember"]) {
-        changeSet.push({ fieldId: parameters["RemarkMember"], value: null });
+        changeSet.push({fieldId: parameters["RemarkMember"], value: null});
       }
       if (parameters["ThumbnailMember"]) {
-        changeSet.push({ fieldId: parameters["ThumbnailMember"], value: null });
+        changeSet.push({fieldId: parameters["ThumbnailMember"], value: null});
       }
-      yield* this.props.changeManyFields!(changeSet);
-      yield* this.props.flushCurrentRowData!();
+      yield * this.props.changeManyFields!(changeSet);
+      yield * this.props.flushCurrentRowData!();
     }
   }
 
@@ -267,7 +267,7 @@ export class BlobEditor extends React.Component<{
         {this.renderInput()}
         {this.props.isInvalid && (
           <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red" />
+            <i className="fas fa-exclamation-circle red"/>
           </div>
         )}
       </div>
@@ -313,8 +313,8 @@ export class BlobEditor extends React.Component<{
           </label>
           {this.isUploading && (
             <div className="progress">
-              <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
-                <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
+              <div className="progressBar" style={{width: `${this.progressValue * 100}%`}}>
+                <div className="progressBar" style={{width: `${this.progressValue * 100}%`}}>
                   {(this.progressValue * 100).toFixed(0)}%
                 </div>
               </div>
@@ -331,13 +331,13 @@ export class BlobEditor extends React.Component<{
           value={this.props.value || ""}
           disabled={this.props.isReadOnly}
           onChange={(event: any) =>
-              !this.props.isReadOnly && this.props.onChange && this.props.onChange(event, event.target.value)
+            !this.props.isReadOnly && this.props.onChange && this.props.onChange(event, event.target.value)
           }
           onBlur={event => !this.props.isReadOnly && this.props.onEditorBlur && this.props.onEditorBlur(event)}
         />
         <div>
           <Dropdowner
-            trigger={({ refTrigger, setDropped, isDropped }) => (
+            trigger={({refTrigger, setDropped, isDropped}) => (
               <div className={CS.control} ref={refTrigger}>
                 <div
                   className={cx("inputBtn", "lastOne")}
@@ -351,14 +351,14 @@ export class BlobEditor extends React.Component<{
                 </div>
               </div>
             )}
-            content={({ setDropped }) => (
+            content={({setDropped}) => (
               <Dropdown>
                 <DropdownItem
                   onClick={(event: any) => {
                     setDropped(false);
                     runInFlowWithHandler({
                       ctx: this.props.Property!,
-                      action: async () => await this.download({ isPreview: false }),
+                      action: async () => await this.download({isPreview: false}),
                     });
                   }}
                 >
@@ -381,7 +381,7 @@ export class BlobEditor extends React.Component<{
                     setDropped(false);
                     runInFlowWithHandler({
                       ctx: this.props.Property!,
-                      action: async () => await this.download({ isPreview: true }),
+                      action: async () => await this.download({isPreview: true}),
                     });
                   }}
                 >

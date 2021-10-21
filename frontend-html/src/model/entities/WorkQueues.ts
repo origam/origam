@@ -33,6 +33,7 @@ export class WorkQueues implements IWorkQueues {
   }
 
   @observable items: any[] = [];
+
   @computed get totalItemCount() {
     return this.items.map((item) => item.countTotal).reduce((a, b) => a + b, 0);
   }
@@ -41,11 +42,11 @@ export class WorkQueues implements IWorkQueues {
 
   *startTimer(refreshIntervalMs: number) {
     if (localStorage.getItem("debugNoPolling")) return;
-    yield* this.loader.start(refreshIntervalMs);
+    yield*this.loader.start(refreshIntervalMs);
   }
 
   *stopTimer() {
-    yield* this.loader.stop();
+    yield*this.loader.stop();
   }
 
   hRefreshTimer: any;

@@ -17,10 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
+import React, { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
 import _ from "lodash";
 import { Observer } from "mobx-react";
-import React from "react";
 
 export class ResponsiveBlock {
   constructor(private onChildrenSetUpdate?: (ids: Set<any>) => void) {
@@ -31,16 +30,14 @@ export class ResponsiveBlock {
   hiddenChildren = new Set<any>();
 
   childToKey = new Map<any, any>();
-  keyToChildRec = new Map<
-    any,
+  keyToChildRec = new Map<any,
     {
       elmChild: any;
       width: number;
       order: number | undefined;
       compensate: number;
       setHidden: (state: boolean) => void;
-    }
-  >();
+    }>();
 
   container: any;
   containerWidth = Number.MAX_SAFE_INTEGER;
@@ -152,7 +149,7 @@ export class ResponsiveBlock {
   ) {
     if (elm) {
       this.childToKey.set(elm, key);
-      this.keyToChildRec.set(key, { elmChild: elm, width: 0, order, compensate, setHidden });
+      this.keyToChildRec.set(key, {elmChild: elm, width: 0, order, compensate, setHidden});
       this.domObsv.observe(elm);
     } else {
       const childRec = this.keyToChildRec.get(key);
@@ -189,7 +186,7 @@ export function ResponsiveChild(
     },
     [props.childKey]
   );
-  return <Observer>{() => <>{props.children({ refChild, isHidden })}</>}</Observer>;
+  return <Observer>{() => <>{props.children({refChild, isHidden})}</>}</Observer>;
 }
 
 export function ResponsiveContainer(

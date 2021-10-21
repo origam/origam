@@ -35,6 +35,7 @@ import { getLocaleFromCookie, initLocaleCookie } from "utils/cookies";
 import moment from "moment";
 import "moment/min/locales";
 import { preventDoubleclickSelect } from "utils/mouse";
+import { RootError } from "RootError";
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -80,11 +81,19 @@ async function main() {
       }
     }
   }
-  const user = await ensureLogin();
+  let user;
+  try {
+    user = await ensureLogin();
+  } catch (e) {
+    const application = createApplication();
+    await initLocaleCookie(application);
+    await translationsInit(application);
+    ReactDOM.render(<RootError error={e}/>, document.getElementById("root"));
+    return;
+  }
   if (user) {
     if (window.sessionStorage.getItem("teleportAfterLogin")) {
       window.sessionStorage.removeItem("teleportAfterLogin");
-      //window.location.assign(newUrl);
       return;
     }
     const application = createApplication();
@@ -103,9 +112,7 @@ async function main() {
 
     await translationsInit(application);
 
-    ReactDOM.render(<Root application={application} />, document.getElementById("root"));
-  } else {
-    // TODO: ???
+    ReactDOM.render(<Root application={application}/>, document.getElementById("root"));
   }
 }
 

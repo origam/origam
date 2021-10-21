@@ -27,7 +27,7 @@ export function ValueBox<T>() {
   }
 
   function set(value: T) {
-    if(_active) throw new Error("Value already set.");
+    if (_active) throw new Error("Value already set.");
     _value = value;
     _active = true;
   }

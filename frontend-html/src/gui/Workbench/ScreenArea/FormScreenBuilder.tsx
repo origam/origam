@@ -34,9 +34,9 @@ import actions from "model/actions-ui-tree";
 import { HBox } from "gui/Components/ScreenElements/HBox";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
-import {serverValueToPanelSizeRatio} from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
-import {pluginLibrary} from "../../../plugins/tools/PluginLibrary";
-import {getSessionId} from "../../../model/selectors/getSessionId";
+import { serverValueToPanelSizeRatio } from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
+import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
+import { getSessionId } from "../../../model/selectors/getSessionId";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -51,7 +51,8 @@ export class FormScreenBuilder extends React.Component<{
   buildScreen() {
     const self = this;
     const dataViewMap = new Map<string, IDataView>();
-    function getDataView(xso: any){
+
+    function getDataView(xso: any) {
       const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
       if (dataView) {
         dataViewMap.set(xso.attributes.Id, dataView);
@@ -61,9 +62,8 @@ export class FormScreenBuilder extends React.Component<{
 
 
     function recursive(xso: any) {
-      if (xso.attributes.Type === "FormLevelPlugin" ||
-          xso.attributes.Type === "SectionLevelPlugin")
-      {
+      if (xso.attributes.Type === "ScreenLevelPlugin" ||
+        xso.attributes.Type === "SectionLevelPlugin") {
         let dataView = getDataView(xso);
         let sessionId = getSessionId(self.formScreen);
         return pluginLibrary.getComponent(

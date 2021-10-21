@@ -17,12 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 export function selectPrevRow(ctx: any) {
-  return function* selectPrevRow() {
+  return function*selectPrevRow() {
     getDataView(ctx).selectPrevRow();
     getTablePanelView(ctx).scrollToCurrentRow();
+    if (!isLazyLoading(ctx)) {
+      setTimeout(() => {
+        getGridFocusManager(ctx).focusTableIfNeeded();
+      });
+    }
   };
 }

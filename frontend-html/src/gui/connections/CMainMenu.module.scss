@@ -1,0 +1,55 @@
+div svg.deleteIcon{
+  stroke: var(--red);
+}
+
+.favoritesMenuItem{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: var(--grey1);
+}
+
+:global(.openItem){
+  background-color: var(--white);
+}
+
+
+.addToFavoritesIconContainer{
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  margin-right: 20px;
+}
+
+.addToFavoritesIcon {
+  stroke: var(--blue1);
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+:global(.activeAddToFavoritesIcon){
+  stroke: var(--grey25);
+}
+
+.isOpenedScreen{
+  background-color: var(--white);
+}
+
+.itemGrip{
+  color: var(--grey25);
+  width: 16px;
+  margin-right: 20px;
+}
+
+.topMenuHeader{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+:global(.isHidden){
+  display: none;
+}

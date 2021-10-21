@@ -18,14 +18,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  context2d, dataCellOffset, drawingColumnIndex,
+  context2d,
+  dataCellOffset,
+  drawingColumnIndex,
   getCurrentRowRightBorderDrawn,
   scRenderCell,
   scrollLeft,
-  scrollTop, selectionColumnShown, setCurrentRowRightBorderDrawn,
+  scrollTop,
+  selectionColumnShown,
+  setCurrentRowRightBorderDrawn,
 } from "../renderingValues";
 import {
-  currentColumnLeft, currentColumnRight,
+  currentColumnLeft,
+  currentColumnRight,
   currentColumnWidth,
   currentRowHeight,
   currentRowTop,

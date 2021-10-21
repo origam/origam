@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {ScreenContainer} from "gui/Components/Screen/ScreenContainer";
-import {MobXProviderContext, observer} from "mobx-react";
-import {IWorkbench} from "model/entities/types/IWorkbench";
-import {getOpenedNonDialogScreenItems} from "model/selectors/getOpenedNonDialogScreenItems";
+import { ScreenContainer } from "gui/Components/Screen/ScreenContainer";
+import { MobXProviderContext, observer } from "mobx-react";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import React from "react";
-import {CScreen} from "gui/connections/CScreen";
+import { CScreen } from "gui/connections/CScreen";
 
 @observer
 export class CScreenContent extends React.Component {
@@ -37,7 +37,7 @@ export class CScreenContent extends React.Component {
     return (
       <ScreenContainer>
         {openedScreenItems.map(item => (
-          <CScreen key={`${item.menuItemId}@${item.order}`} openedScreen={item} />
+          <CScreen key={`${item.menuItemId}@${item.order}`} openedScreen={item}/>
         ))}
       </ScreenContainer>
     );

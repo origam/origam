@@ -29,7 +29,7 @@ import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
 import uiActions from "../../../actions-ui-tree";
 
 export function onTableKeyDown(ctx: any) {
-  return flow(function* onTableKeyDown(event: any) {
+  return flow(function*onTableKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
       switch (event.key) {
@@ -38,7 +38,7 @@ export function onTableKeyDown(ctx: any) {
           if (!(yield shouldProceedToChangeRow(dataView))) {
             break;
           }
-          yield* selectPrevRow(ctx)();
+          yield*selectPrevRow(ctx)();
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowDown":
@@ -46,7 +46,7 @@ export function onTableKeyDown(ctx: any) {
           if (!(yield shouldProceedToChangeRow(dataView))) {
             break;
           }
-          yield* selectNextRow(ctx)();
+          yield*selectNextRow(ctx)();
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowLeft":
@@ -76,8 +76,8 @@ export function onTableKeyDown(ctx: any) {
         case "Enter":
           if (dataView.firstEnabledDefaultAction) {
             uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
-                event,
-                dataView.firstEnabledDefaultAction
+              event,
+              dataView.firstEnabledDefaultAction
             );
           }
           break;
@@ -89,7 +89,7 @@ export function onTableKeyDown(ctx: any) {
         }
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

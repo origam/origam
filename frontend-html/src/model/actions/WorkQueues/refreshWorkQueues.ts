@@ -18,12 +18,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getSearcher } from "model/selectors/getSearcher";
-import {getWorkQueues} from "model/selectors/WorkQueues/getWorkQueues";
+import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 
 export function refreshWorkQueues(ctx: any) {
   return function*refreshWorkQueues() {
     const workQueues = getWorkQueues(ctx);
-    yield* workQueues.getWorkQueueList();
+    yield*workQueues.getWorkQueueList();
     getSearcher(ctx).indexWorkQueues(workQueues.items);
   }
 }

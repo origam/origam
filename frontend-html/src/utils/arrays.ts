@@ -22,7 +22,7 @@ export function firstGteIndex(
   elementCount: number,
   num: number
 ) {
-  let indexLeft= 0;
+  let indexLeft = 0;
   let indexRight = elementCount - 1;
   const T = num;
   let element;
@@ -72,7 +72,7 @@ export function rangeQuery(
 ) {
   const firstGreaterThanNumber = firstGteIndex(elementGetterL, elementCount, start);
   const lastLessThanNumber = lastLteIndex(elementGetterR, elementCount, end);
-  return { lastLessThanNumber, firstGreaterThanNumber };
+  return {lastLessThanNumber, firstGreaterThanNumber};
 }
 
 declare global {
@@ -83,11 +83,11 @@ declare global {
 
 declare global {
   interface Array<T> {
-    groupBy<K>(keyGetter: (key: T) => K):  Map<K, T[]>;
+    groupBy<K>(keyGetter: (key: T) => K): Map<K, T[]>;
   }
 }
 
-Array.prototype.remove = function(item){
+Array.prototype.remove = function (item) {
   const index = this.indexOf(item);
   if (index > -1) {
     this.splice(index, 1);
@@ -95,16 +95,16 @@ Array.prototype.remove = function(item){
   return this;
 }
 
-Array.prototype.groupBy = function<T, K>(keyGetter: (key: T) => K) {
+Array.prototype.groupBy = function <T, K>(keyGetter: (key: T) => K) {
   const map = new Map<K, T[]>();
   this.forEach((item) => {
-       const key = keyGetter(item);
-       const collection = map.get(key);
-       if (!collection) {
-           map.set(key, [item]);
-       } else {
-           collection.push(item);
-       }
+    const key = keyGetter(item);
+    const collection = map.get(key);
+    if (!collection) {
+      map.set(key, [item]);
+    } else {
+      collection.push(item);
+    }
   });
   return map;
 }

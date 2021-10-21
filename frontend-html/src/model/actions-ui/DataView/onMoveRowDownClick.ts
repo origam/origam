@@ -19,18 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { flow } from "mobx";
 import { handleError } from "../../actions/handleError";
-import {getDataView} from "../../selectors/DataView/getDataView";
-import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import { getDataView } from "../../selectors/DataView/getDataView";
+import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 
 export function onMoveRowDownClick(ctx: any) {
-  return flow(function* onMoveRowDownClick(event: any) {
+  return flow(function*onMoveRowDownClick(event: any) {
     try {
       getDataView(ctx).moveSelectedRowDown();
-      yield* getFormScreenLifecycle(ctx).onFlushData();
-      getTablePanelView(ctx)?.triggerOnFocusTable();
+      yield*getFormScreenLifecycle(ctx).onFlushData();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {formatNumberWithLocale} from "../model/entities/NumberFormating";
+import { formatNumberWithLocale } from "../model/entities/NumberFormating";
 
 
 test.each([
@@ -28,7 +28,7 @@ test.each([
   ["### ###.###", 123456.7, "de-CH", "123,456.7"],
   ["######.###", 123456.7, "de-CH", "123456.7"],
   ["######.00#", 123456.7, "de-CH", "123456.70"],
-])('Format %s to: %s', (customNumericFormat: string, value: number, locale: string, expected: string ) => {
+])('Format %s to: %s', (customNumericFormat: string, value: number, locale: string, expected: string) => {
   const formattedValue = formatNumberWithLocale(customNumericFormat, value, locale)
   expect(formattedValue).toBe(expected);
 });

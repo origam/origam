@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getFilterConfiguration} from "./getFilterConfiguration";
-import {filterToFilterItem, joinWithAND} from "../../entities/OrigamApiHelpers";
-import {getDataView} from "./getDataView";
+import { getFilterConfiguration } from "./getFilterConfiguration";
+import { filterToFilterItem, joinWithAND } from "../../entities/OrigamApiHelpers";
+import { getDataView } from "./getDataView";
 
-export function getUserFilters(args:{ctx: any, excludePropertyId?: string}){
+export function getUserFilters(args: { ctx: any, excludePropertyId?: string }) {
   const dataView = getDataView(args.ctx);
   const filterConfiguration = getFilterConfiguration(dataView);
   const filterList = filterConfiguration.activeFilters

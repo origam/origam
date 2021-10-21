@@ -61,17 +61,17 @@ export class CWorkbenchPage extends React.Component {
     return (
       <Provider workbench={this.workbench}>
         <WorkbenchPage
-          sidebar={<CSidebar />}
+          sidebar={<CSidebar/>}
           mainbar={
             <MainBar>
-              <CScreenToolbar />
+              <CScreenToolbar/>
               <ScreenTabsArea>
-                <CScreenTabbedViewHandleRow />
+                <CScreenTabbedViewHandleRow/>
                 <Fullscreen isFullscreen={isFullscreen}>
-                  <CScreenHeader />
-                  <CScreenContent />
+                  <CScreenHeader/>
+                  <CScreenContent/>
                 </Fullscreen>
-                <CDialogContent />
+                <CDialogContent/>
                 {/*<ScreenTabbedViewHandleRow>
                 <ScreenTabbedViewHandle isActive={false} hasCloseBtn={true}>
                   Cubehór

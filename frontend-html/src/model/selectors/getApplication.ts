@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IApplication} from '../entities/types/IApplication';
+import { IApplication } from '../entities/types/IApplication';
 
 export function getApplication(ctx?: any): IApplication {
   let cn = ctx;
-  while(cn.parent) {
+  while (cn.parent) {
     cn = cn.parent;
   }
   return cn;

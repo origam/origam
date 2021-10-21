@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Memoized} from "./common/Memoized";
-import {isCheckBoxedTable, scRenderRow, scrollLeft} from "./renderingValues";
-import {dataRowCellsDraws, dataRowCellsWidths, isCurrentDataRow} from "./rowCells/dataRowCells";
-import {groupRowCellsDraws, groupRowCellsWidths, isCurrentGroupRow,} from "./rowCells/groupRowCells";
-import {currentCellLayerIndex} from "./currentCellLayerIndex";
+import { Memoized } from "./common/Memoized";
+import { isCheckBoxedTable, scRenderRow, scrollLeft } from "./renderingValues";
+import { dataRowCellsDraws, dataRowCellsWidths, isCurrentDataRow } from "./rowCells/dataRowCells";
+import { groupRowCellsDraws, groupRowCellsWidths, isCurrentGroupRow, } from "./rowCells/groupRowCells";
+import { currentCellLayerIndex } from "./currentCellLayerIndex";
 
 function computeDimensions(cellWidths: number[]) {
   const result: { left: number; width: number; right: number; leftVisible: number; widthVisible: number; }[] = [];
@@ -32,19 +32,18 @@ function computeDimensions(cellWidths: number[]) {
     const width = cellWidths[i];
     let leftVisible = left;
     let widthVisible = width;
-    if(isCheckBoxedTable() && scrollLeft() > left){
-      if(i > 0){
-        const fixedColumnWidth = cellWidths[0] 
+    if (isCheckBoxedTable() && scrollLeft() > left) {
+      if (i > 0) {
+        const fixedColumnWidth = cellWidths[0]
         leftVisible = scrollLeft() + fixedColumnWidth
         widthVisible = width - (leftVisible - left)
-      }
-      else if(i === 0){
+      } else if (i === 0) {
         leftVisible = scrollLeft()
       }
     }
     acc = acc + width;
     const right = acc;
-    result.push({ left, width, right, leftVisible, widthVisible});
+    result.push({left, width, right, leftVisible, widthVisible});
   }
   return result;
 }

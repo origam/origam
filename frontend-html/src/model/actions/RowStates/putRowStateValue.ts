@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getRowStatesByEntity} from "model/selectors/RowState/getRowStatesByEntity";
+import { getRowStatesByEntity } from "model/selectors/RowState/getRowStatesByEntity";
 
 export function putRowStateValue(ctx: any) {
   return function putRowStateValue(entity: string, state: any) {

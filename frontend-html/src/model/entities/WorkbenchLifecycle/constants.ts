@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-export const PARALLEL = { type: "parallel" };
-export const FINAL = { type: "final" };
+export const PARALLEL = {type: "parallel"};
+export const FINAL = {type: "final"};
 
 export const sSetLoadingScreen = "sSetLoadingScreen";
 export const sInitUI = "sInitUI";

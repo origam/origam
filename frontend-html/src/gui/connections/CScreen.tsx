@@ -29,9 +29,10 @@ import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDial
 import { ErrorBoundaryEncapsulated } from "gui/Components/Utilities/ErrorBoundary";
 import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
+import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
-  const { openedScreen } = props;
+  const {openedScreen} = props;
   const [isLoading, setLoading] = useState(false);
   const refIFrame = useRef<any>(null);
 
@@ -81,6 +82,9 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
       const contentDocument = frameWindow?.contentDocument;
 
       if (contentDocument) {
+        contentDocument.closeOrigamTab = (() => {
+          onScreenTabCloseClick(openedScreen)(undefined);
+        });
         contentDocument.addEventListener(
           "click",
           (event: any) => {
@@ -108,11 +112,11 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
           ((openedScreen as unknown) as IWebScreen).setReloader(
             elm
               ? {
-                  reload: () => {
-                    setLoading(true);
-                    elm.contentWindow.location.reload();
-                  },
-                }
+                reload: () => {
+                  setLoading(true);
+                  elm.contentWindow.location.reload();
+                },
+              }
               : null
           );
         }}
@@ -126,11 +130,11 @@ export class CScreen extends React.Component<{
   openedScreen: IOpenedScreen;
 }> {
   render() {
-    const { openedScreen } = this.props;
+    const {openedScreen} = this.props;
     if (openedScreen.screenUrl) {
       return (
         <ErrorBoundaryEncapsulated ctx={openedScreen}>
-          <WebScreenComposite openedScreen={openedScreen} />
+          <WebScreenComposite openedScreen={openedScreen}/>
         </ErrorBoundaryEncapsulated>
       );
     }
@@ -139,7 +143,7 @@ export class CScreen extends React.Component<{
     return !formScreen.isLoading ? (
       <Provider key={formScreen.formScreen!.screenUI.$iid} formScreen={formScreen}>
         <ErrorBoundaryEncapsulated ctx={openedScreen}>
-          <CScreenInner openedScreen={openedScreen} formScreen={formScreen} />
+          <CScreenInner openedScreen={openedScreen} formScreen={formScreen}/>
         </ErrorBoundaryEncapsulated>
       </Provider>
     ) : null;
@@ -152,13 +156,13 @@ class CScreenInner extends React.Component<{
   formScreen: IFormScreenEnvelope;
 }> {
   render() {
-    const { openedScreen, formScreen } = this.props;
+    const {openedScreen, formScreen} = this.props;
     return (
       <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
         <CtxPanelVisibility.Provider
-          value={{ isVisible: getIsTopmostNonDialogScreen(openedScreen) }}
+          value={{isVisible: getIsTopmostNonDialogScreen(openedScreen)}}
         >
-          <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI} />
+          <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI}/>
         </CtxPanelVisibility.Provider>
       </Screen>
     );

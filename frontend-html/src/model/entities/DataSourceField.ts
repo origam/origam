@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IDataSourceField, IDataSourceFieldData} from "./types/IDataSourceField";
+import { IDataSourceField, IDataSourceFieldData } from "./types/IDataSourceField";
 
 export class DataSourceField implements IDataSourceField {
   $type_IDataSourceField: 1 = 1;
-  
+
   constructor(data: IDataSourceFieldData) {
     Object.assign(this, data);
   }

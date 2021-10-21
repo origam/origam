@@ -49,12 +49,12 @@ export function preventDoubleclickSelect() {
       },
       {
         actions: {
-          preventDefault: (ctx, { payload: { domEvent } }) => {
+          preventDefault: (ctx, {payload: {domEvent}}) => {
             domEvent.preventDefault();
           },
         },
         guards: {
-          isNotEditable: (ctx, { payload: { domEvent } }) => {
+          isNotEditable: (ctx, {payload: {domEvent}}) => {
             const targetTag = domEvent.target.tagName.toLowerCase();
             return targetTag !== "textarea" && targetTag !== "input";
           },
@@ -64,6 +64,6 @@ export function preventDoubleclickSelect() {
   ).start();
 
   window.addEventListener("mousedown", (e) => {
-    interpreter.send({ type: "MOUSE_DOWN", payload: { domEvent: e } });
+    interpreter.send({type: "MOUSE_DOWN", payload: {domEvent: e}});
   });
 }

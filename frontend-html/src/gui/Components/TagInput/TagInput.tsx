@@ -49,7 +49,7 @@ export const TagInputAdd: React.FC<{
       onMouseDown={props.onMouseDown}
       ref={props.domRef}
     >
-      <i className="fas fa-plus" />
+      <i className="fas fa-plus"/>
     </div>
   );
 };
@@ -63,7 +63,7 @@ export const TagInputItemDelete: React.FC<{
       className={S.tagInputItemDelete + (props.className ? ` ${props.className}` : "")}
       onClick={props.onClick}
     >
-      <i className="fas fa-times" />
+      <i className="fas fa-times"/>
     </div>
   );
 };

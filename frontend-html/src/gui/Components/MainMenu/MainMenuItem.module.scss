@@ -70,7 +70,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:not(:global(.isActive)):hover {
     color: $textColorHover;
     svg:global(.icon) {
-      stroke: var(--black);
       stroke-width: 1.5;
     }
   }
@@ -95,6 +94,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .linkContainer {
   width: 100%;
+  overflow: hidden;
 }
 
 

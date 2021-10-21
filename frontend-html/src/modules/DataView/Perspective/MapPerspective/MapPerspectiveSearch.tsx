@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observer } from "mobx-react";
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { createPortal } from "react-dom";
 import { Grid } from "react-virtualized";
 import Highlighter from "react-highlight-words";
@@ -27,7 +27,7 @@ import S from "./MapPerspectiveUI.module.scss";
 import { CtxMapRootStore } from "./stores/MapRootStore";
 
 export function MapPerspectiveSearch() {
-  const { mapSearchStore, mapSetupStore } = useContext(CtxMapRootStore);
+  const {mapSearchStore, mapSetupStore} = useContext(CtxMapRootStore);
   return (
     <Observer>
       {() => (
@@ -47,22 +47,22 @@ export function MapPerspectiveSearch() {
                   onClick={mapSearchStore.handleClearClick}
                   onMouseDown={mapSearchStore.handleClearMouseDown}
                 >
-                  <i className="fas fa-times" />
+                  <i className="fas fa-times"/>
                 </button>
                 <button className={"inputCaret"} onMouseDown={mapSearchStore.handleCaretMouseDown}>
-                  <i className="fas fa-caret-down" />
+                  <i className="fas fa-caret-down"/>
                 </button>
               </div>
               {mapSearchStore.isDropped &&
-                createPortal(
-                  <MapPerspectiveSearchDropdown
-                    domRef={mapSearchStore.refDropdown}
-                    top={mapSearchStore.dropdownTop + 2}
-                    left={mapSearchStore.dropdownLeft}
-                    width={mapSearchStore.dropdownWidth}
-                  />,
-                  document.getElementById("dropdown-portal")!
-                )}
+              createPortal(
+                <MapPerspectiveSearchDropdown
+                  domRef={mapSearchStore.refDropdown}
+                  top={mapSearchStore.dropdownTop + 2}
+                  left={mapSearchStore.dropdownLeft}
+                  width={mapSearchStore.dropdownWidth}
+                />,
+                document.getElementById("dropdown-portal")!
+              )}
             </div>
           ) : null}
         </>
@@ -80,10 +80,10 @@ export function MapPerspectiveSearchDropdown(props: {
   return (
     <div
       ref={props.domRef}
-      style={{ top: props.top, left: props.left, width: props.width }}
+      style={{top: props.top, left: props.left, width: props.width}}
       className={S.mapSearchDropdown}
     >
-      <SearchResults width={props.width - 4} />
+      <SearchResults width={props.width - 4}/>
     </div>
   );
 }
@@ -91,7 +91,7 @@ export function MapPerspectiveSearchDropdown(props: {
 const ROW_HEIGHT = 25;
 
 export function SearchResults(props: { width: number }) {
-  const { mapSearchStore } = useContext(CtxMapRootStore);
+  const {mapSearchStore} = useContext(CtxMapRootStore);
   const rowCount = mapSearchStore.searchResults.length;
   return (
     <Observer>
@@ -103,13 +103,13 @@ export function SearchResults(props: { width: number }) {
           columnWidth={props.width}
           rowCount={rowCount}
           columnCount={1}
-          cellRenderer={({ key, style, rowIndex, columnIndex }) => {
+          cellRenderer={({key, style, rowIndex, columnIndex}) => {
             const searchResult = mapSearchStore.searchResults[rowIndex];
             return (
               <Observer key={key}>
                 {() => (
                   <div
-                    className={cx("cell", { c1: rowIndex % 2 === 0, c2: rowIndex % 2 === 1 })}
+                    className={cx("cell", {c1: rowIndex % 2 === 0, c2: rowIndex % 2 === 1})}
                     style={style}
                     onClick={(e) => mapSearchStore.handleSearchResultClick(e, searchResult.id)}
                   >

@@ -17,25 +17,25 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { createAtom, IAtom, action } from "mobx";
+import { action, createAtom, IAtom } from "mobx";
 import _ from "lodash";
 import { LookupCacheIndividual } from "./LookupCacheIndividual";
-import {
-  LookupLoaderIndividual,
-  ILookupIndividualResultListenerArgs,
-} from "./LookupLoaderIndividual";
+import { ILookupIndividualResultListenerArgs, LookupLoaderIndividual, } from "./LookupLoaderIndividual";
 import { TypeSymbol } from "dic/Container";
 
 export class LookupResolver {
-  constructor(private cache: LookupCacheIndividual, private loader: LookupLoaderIndividual) {}
+  constructor(private cache: LookupCacheIndividual, private loader: LookupLoaderIndividual) {
+  }
 
   resolved = new Map<any, any>();
   atoms = new Map<any, IAtom>();
 
   globalAtom = createAtom(
     "LookupGlobal",
-    () => {},
-    () => {}
+    () => {
+    },
+    () => {
+    }
   );
 
   handleAtomObserved(key: any, atom: IAtom) {
@@ -148,4 +148,5 @@ export class LookupResolver {
     } else return false;
   }
 }
+
 export const ILookupResolver = TypeSymbol<LookupResolver>("ILookupResolver");

@@ -25,7 +25,7 @@ export function getUserFilterLookups(ctx: any): { [key: string]: string } | unde
   const filterConfiguration = getFilterConfiguration(dataView);
   const lookupMap = filterConfiguration.activeFilters
     .filter((filter) => filter.setting.isComplete && filter.setting.lookupId)
-    .reduce(function (lookupMap: {[key: string]: string }, filter) {
+    .reduce(function (lookupMap: { [key: string]: string }, filter) {
       lookupMap[filter.propertyId] = filter.setting.lookupId!;
       return lookupMap;
     }, {});

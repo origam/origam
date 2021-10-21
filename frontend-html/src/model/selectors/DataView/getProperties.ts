@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IProperty} from "../../entities/types/IProperty";
-import {getDataView} from "./getDataView";
+import { IProperty } from "../../entities/types/IProperty";
+import { getDataView } from "./getDataView";
 
 export function getProperties(ctx: any): IProperty[] {
   return getDataView(ctx).properties;

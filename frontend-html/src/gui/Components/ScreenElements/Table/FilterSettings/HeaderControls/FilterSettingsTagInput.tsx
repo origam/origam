@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import React, { useContext, useState } from "react";
@@ -36,10 +36,7 @@ import {
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
-import {
-  DropdownColumnDrivers,
-  DropdownDataTable,
-} from "modules/Editors/DropdownEditor/DropdownTableModel";
+import { DropdownColumnDrivers, DropdownDataTable, } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
 import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
@@ -50,11 +47,11 @@ import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/Hea
 import { prepareForFilter } from "../../../../../../model/selectors/PortalSettings/getStringFilterConfig";
 
 const OPERATORS = [
-    Operator.in,
-    Operator.notIn,
-    Operator.isNull,
-    Operator.isNotNull
-  ];
+  Operator.in,
+  Operator.notIn,
+  Operator.isNull,
+  Operator.isNotNull
+];
 
 const OpCombo: React.FC<{
   setting: IFilterSetting
@@ -67,10 +64,14 @@ const OpCombo: React.FC<{
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
-            props.setting.type = op.type;
-            props.setting.isComplete = op.type === "null" || op.type === "nnull";
-            props.setting.val1 = undefined;
-            props.setting.val2 = undefined;
+            runInAction(() => {
+              props.setting.type = op.type;
+              props.setting.isComplete = op.type === "null" || op.type === "nnull" || props.setting.val1 !== undefined;
+              if (op.type === "null" || op.type === "nnull") {
+                props.setting.val1 = undefined;
+                props.setting.val2 = undefined;
+              }
+            });
           }}
         >
           {op.caption}
@@ -95,7 +96,7 @@ class OpEditors extends React.Component<{
 }> {
 
   render() {
-    const { setting } = this.props;
+    const {setting} = this.props;
     switch (setting?.type) {
       case "in":
       case "nin":
@@ -125,7 +126,7 @@ export class FilterSettingsTagInput extends React.Component<{
   setting: IFilterSetting;
   autoFocus: boolean;
 }> {
-  static get defaultSettings(){
+  static get defaultSettings() {
     return new TagInputFilterSetting(OPERATORS[0].type)
   }
 
@@ -166,25 +167,25 @@ export class TagInputFilterSetting implements IFilterSetting {
     }
   }
 
-  get filterValue2() {    
-    return this.type === "between" || this.type === "nbetween" 
-      ? this.val2 
+  get filterValue2() {
+    return this.type === "between" || this.type === "nbetween"
+      ? this.val2
       : undefined;
   }
 
 
-  get val1ServerForm(){
+  get val1ServerForm() {
     return this.val1 ? this.val1.join(",") : this.val1;
   }
 
-  get val2ServerForm(){
+  get val2ServerForm() {
     return this.val2;
   }
 
-  constructor(type: string, isComplete=false, val1?:string, val2?: any) {
+  constructor(type: string, isComplete = false, val1?: string, val2?: any) {
     this.type = type;
     this.isComplete = isComplete;
-    if(val1 !== undefined && val1 !== null){
+    if (val1 !== undefined && val1 !== null) {
       this.val1 = [...new Set(val1.split(","))];
     }
     this.val2 = val2 ?? undefined;
@@ -201,11 +202,11 @@ export function FilterBuildDropdownEditor(props: {
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const workbench = mobxContext.workbench;
-  const { lookupListCache } = workbench;
+  const {lookupListCache} = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
-    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.setting); 
+    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.setting);
 
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
@@ -280,9 +281,7 @@ export function FilterBuildDropdownEditor(props: {
             value={value}
             isReadOnly={false}
             isInvalid={false}
-            isFocused={false}
             autoFocus={props.autoFocus}
-            refocuser={undefined}
             onClick={undefined}
           />
         }
@@ -292,8 +291,11 @@ export function FilterBuildDropdownEditor(props: {
 }
 
 export class FilterEditorData implements IDropdownEditorData {
-  constructor( public setting: IFilterSetting) {
-    }
+  constructor(public setting: IFilterSetting) {
+  }
+
+  setValue(value: string[]) {
+  }
 
   @computed get value(): string | string[] | null {
     return this.setting.val1;
@@ -307,16 +309,16 @@ export class FilterEditorData implements IDropdownEditorData {
     return false;
   }
 
-  onChange(){
+  onChange() {
     this.setting.val2 = undefined;
     this.setting.isComplete = this.setting.val1 !== undefined && this.setting.val1.length > 0;
   }
 
   @action.bound chooseNewValue(value: any) {
     if (value !== null && !this.setting.val1?.includes(value)) {
-      if(this.setting.val1 === undefined){
+      if (this.setting.val1 === undefined) {
         this.setting.val1 = [value];
-      }else{
+      } else {
         this.setting.val1 = [...this.setting.val1, value];
       }
       this.onChange();
@@ -329,12 +331,12 @@ export class FilterEditorData implements IDropdownEditorData {
 
   remove(valueToRemove: any): void {
     const index = this.setting.val1.indexOf(valueToRemove)
-    if(index > -1){
+    if (index > -1) {
       this.setting.val1.splice(index, 1);
     }
-    if(this.setting.val1?.length === 0){
+    if (this.setting.val1?.length === 0) {
       this.setting.val1 = undefined;
-    }else{
+    } else {
       this.setting.val1 = [...this.setting.val1];
     }
     this.onChange();
@@ -342,7 +344,8 @@ export class FilterEditorData implements IDropdownEditorData {
 }
 
 class DropDownApi implements IDropdownEditorApi {
-  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
+  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {
+  }
 
   *getLookupList(searchTerm: string): Generator {
     return yield this.getOptions("");

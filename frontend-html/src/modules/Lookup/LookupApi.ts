@@ -21,7 +21,8 @@ import { TypeSymbol } from "dic/Container";
 import { IApi } from "model/entities/types/IApi";
 
 export class LookupApi {
-  constructor(private api: () => IApi) {}
+  constructor(private api: () => IApi) {
+  }
 
   async getLookupLabels(request: Map<string, Map<any, any>>) {
     const requestRaw: any[] = [];
@@ -47,4 +48,5 @@ export class LookupApi {
     return result;
   }
 }
+
 export const ILookupApi = TypeSymbol<LookupApi>("ILookupApi");

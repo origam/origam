@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import { bodyCellClass } from "./CellsCommon";
-import { IBodyCellDriver, DropdownDataTable } from "../DropdownTableModel";
+import { DropdownDataTable, IBodyCellDriver } from "../DropdownTableModel";
 import cx from "classnames";
 import S from "./NumberCell.module.scss";
 import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
@@ -30,7 +30,8 @@ export class NumberCellDriver implements IBodyCellDriver {
     private dataIndex: number,
     private dataTable: DropdownDataTable,
     private behavior: DropdownEditorBehavior
-  ) {}
+  ) {
+  }
 
   render(rowIndex: number) {
     const value = this.dataTable.getValue(rowIndex, this.dataIndex);
@@ -52,4 +53,5 @@ export class NumberCellDriver implements IBodyCellDriver {
     );
   }
 }
+
 export const INumberCellDriver = TypeSymbol<NumberCellDriver>("INumberCellDriver");

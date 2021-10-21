@@ -26,8 +26,8 @@ import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./Dropd
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
-import { IFocusAble } from "../../../model/entities/FocusManager";
-import {compareStrings} from "../../../utils/string";
+import { IFocusable } from "../../../model/entities/FormFocusManager";
+import { compareStrings } from "../../../utils/string";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -39,10 +39,12 @@ export class DropdownEditorBehavior {
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
     public onClick?: (event: any) => void,
-    public subscribeToFocusManager?: (obj: IFocusAble) => void,
+    public subscribeToFocusManager?: (obj: IFocusable) => void,
     private onKeyDown?: (event: any) => void,
     private autoSort?: boolean,
-  ) {}
+    private onTextOverflowChanged?: (toolTip: string | null | undefined) => void
+  ) {
+  }
 
   @observable isDropped = false;
   @observable isWorking = false;
@@ -95,7 +97,7 @@ export class DropdownEditorBehavior {
       } else {
         this.ensureRequestRunning();
       }
-      if(this.chosenRowId !== null && !Array.isArray(this.chosenRowId)){
+      if (this.chosenRowId !== null && !Array.isArray(this.chosenRowId)) {
         this.cursorRowId = this.chosenRowId;
       }
     }
@@ -131,7 +133,7 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound handleInputFocus(event: any) {
-    const { target } = event;
+    const {target} = event;
     if (target) {
       target.select();
       target.scrollLeft = 0;
@@ -184,8 +186,6 @@ export class DropdownEditorBehavior {
         }
         break;
       case "Delete":
-        event.preventDefault();
-        event.stopPropagation();
         this.userEnteredValue = undefined;
         this.cursorRowId = "";
         this.data.chooseNewValue(null);
@@ -247,6 +247,7 @@ export class DropdownEditorBehavior {
     } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
     }
+    this.updateTextOverflowState();
   }
 
   @action.bound handleInputChangeImm() {
@@ -316,9 +317,9 @@ export class DropdownEditorBehavior {
         this.ensureRequestRunning();
       }
     }
-    if(this.dontClearScrollToRow){
+    if (this.dontClearScrollToRow) {
       this.dontClearScrollToRow = false;
-    }else{
+    } else {
       this.scrollToRowIndex = undefined;
     }
   }
@@ -355,15 +356,23 @@ export class DropdownEditorBehavior {
     }
   }
 
+  updateTextOverflowState() {
+    if (!this.elmInputElement) {
+      return;
+    }
+    const textOverflow = this.elmInputElement.offsetWidth < this.elmInputElement.scrollWidth
+    this.onTextOverflowChanged?.(textOverflow ? this.inputValue : undefined);
+  }
+
   @action.bound runGetLookupList(searchTerm: string) {
     const self = this;
-    this.runningPromise = flow(function* () {
+    this.runningPromise = flow(function*() {
       try {
         self.isWorking = true;
         const setup = self.setup();
-        const items = yield* self.api.getLookupList(searchTerm);
+        const items = yield*self.api.getLookupList(searchTerm);
         if (self.autoSort) {
-          items.sort((i1: string[], i2: string[]) => compareStrings(i1[1], i2[1]));
+          items.sort((i1: any[], i2: any[]) => compareLookUpItems(i1[1], i2[1]))
         }
         if (setup.dropdownType === EagerlyLoadedGrid) {
           self.dataTable.setData(items);
@@ -413,6 +422,14 @@ export class DropdownEditorBehavior {
   elmDropdownBody: any;
 }
 
+function compareLookUpItems(item1: any, item2: any) {
+  if (typeof item1 === 'number' && typeof item2 === 'number') {
+    if (item1 > item2) return 1;
+    if (item1 < item2) return -1;
+    return 0;
+  }
+  return compareStrings(item1, item2)
+}
 
 decorate(DropdownEditorBehavior, {
   isReadOnly: observable,

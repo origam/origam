@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import * as React from "react";
-import {IScrolleeProps} from "./types";
+import { IScrolleeProps } from "./types";
 import S from "./Scrollee.module.css";
 
 /*

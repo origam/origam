@@ -36,6 +36,9 @@ export class TagInputEditorData implements IDropdownEditorData {
     this.dropdownEditorData = new DropdownEditorData(dataTable, rowCursor, setup);
   }
 
+  setValue(value: string[]) {
+  }
+
   @computed get value(): string | string[] | null {
     return this.dropdownEditorData.value;
   }
@@ -49,7 +52,7 @@ export class TagInputEditorData implements IDropdownEditorData {
   }
 
   @action.bound chooseNewValue(value: any) {
-    if(this.value && this.value.includes(value)){
+    if (this.value && this.value.includes(value)) {
       return;
     }
     const newArray = [...this.value ?? [], value];

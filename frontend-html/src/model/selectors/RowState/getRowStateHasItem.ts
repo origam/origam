@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getRowStates} from "./getRowStates";
+import { getRowStates } from "./getRowStates";
 
 export function getRowStateHasItem(ctx: any, key: string) {
   return getRowStates(ctx).hasValue(key);

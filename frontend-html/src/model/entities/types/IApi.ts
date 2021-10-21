@@ -21,9 +21,7 @@ import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
-import { GroupingUnit } from "./GroupingUnit";
-import { IColumnSettings } from "./IColumnSettings";
-import {ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { PubSub } from "utils/events";
 
 export interface IApi {
@@ -106,7 +104,7 @@ export interface IApi {
 
   refreshSession(sessionFormIdentifier: string): Promise<any>;
 
-  revertChanges(data: {sessionFormIdentifier: string}): Promise<any>;
+  revertChanges(data: { sessionFormIdentifier: string }): Promise<any>;
 
   sessionChangeMasterRecord(data: {
     SessionFormIdentifier: string;
@@ -347,17 +345,15 @@ export interface IApi {
     MenuId: string;
     DataStructureEntityId: string;
     RowId: string;
-  }): Promise<
-    Array<{
-      id: string;
-      dateTime: string;
-      userName: string;
-      fieldName: string;
-      oldValue: string | null;
-      newValue: string | null;
-      actionType: number;
-    }>
-  >;
+  }): Promise<Array<{
+    id: string;
+    dateTime: string;
+    userName: string;
+    fieldName: string;
+    oldValue: string | null;
+    newValue: string | null;
+    actionType: number;
+  }>>;
 
   getReport(data: { reportUrl: string }): Promise<any>;
 
@@ -435,7 +431,7 @@ export interface IApi {
   }): Promise<any>;
 }
 
-export interface ILazyLoadedEntityInput{
+export interface ILazyLoadedEntityInput {
   MenuId: string;
   DataStructureEntityId: string;
   Filter: string;
@@ -447,7 +443,7 @@ export interface ILazyLoadedEntityInput{
   SessionFormIdentifier: string;
 }
 
-export interface IEntityExportField{
+export interface IEntityExportField {
   Caption: string;
   FieldName: string;
   LookupId: string | undefined;
@@ -455,12 +451,12 @@ export interface IEntityExportField{
   PolymorphRules: IPolymorphRules | undefined;
 }
 
-export interface IPolymorphRules{
+export interface IPolymorphRules {
   ControlField: string;
   Rules: any;
 }
 
-export interface IUIGridFilterCoreConfiguration{
+export interface IUIGridFilterCoreConfiguration {
   id: string | undefined;
   name: string;
   isGlobal: boolean;

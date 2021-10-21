@@ -18,14 +18,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import {IWorkbench} from "model/entities/types/IWorkbench";
-import {MobXProviderContext, observer} from "mobx-react";
-import {getWorkQueuesItems} from "model/selectors/WorkQueues/getWorkQueuesItems";
-import {WorkQueuesItem} from "gui/Components/WorkQueues/WorkQueuesItem";
-import {computed} from "mobx";
-import {Icon} from "gui/Components/Icon/Icon";
-import {onWorkQueuesListItemClick} from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
-import {getActiveScreen} from "model/selectors/getActiveScreen";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import { MobXProviderContext, observer } from "mobx-react";
+import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
+import { WorkQueuesItem } from "gui/Components/WorkQueues/WorkQueuesItem";
+import { computed } from "mobx";
+import { Icon } from "gui/Components/Icon/Icon";
+import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
 export class CWorkQueues extends React.Component {

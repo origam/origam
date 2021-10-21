@@ -48,7 +48,8 @@ interface ICat {
 const ICat = TypeSymbol<ICat>("ICat");
 
 class Cat implements ICat {
-  constructor(public garden = IGarden()) {}
+  constructor(public garden = IGarden()) {
+  }
 
   catName = "Garfield";
 }
@@ -61,7 +62,8 @@ interface IFish {
 const IFish = TypeSymbol<IFish>("IFish");
 
 class Fish implements IFish {
-  constructor(public garden = IGarden()) {}
+  constructor(public garden = IGarden()) {
+  }
 
   fishName = "Nemo";
 }
@@ -86,27 +88,32 @@ interface IHouse {
 const IHouse = TypeSymbol<IHouse>("IHouse");
 
 class House implements IHouse {
-  constructor(public dog = IDog(), public cat = ICat(), public fish = IFish()) {}
+  constructor(public dog = IDog(), public cat = ICat(), public fish = IFish()) {
+  }
 
   houseCity = "Kladno";
 }
 
 class A {
-  constructor(public b = IB(), public c = IC()) {}
+  constructor(public b = IB(), public c = IC()) {
+  }
 }
 
 const IA = TypeSymbol<A>("IA");
 
-class B {}
+class B {
+}
 
 const IB = TypeSymbol<B>("IB");
 
-class C {}
+class C {
+}
 
 const IC = TypeSymbol<C>("IC");
 
 class X {
-  constructor(public a = Func(IA)()) {}
+  constructor(public a = Func(IA)()) {
+  }
 }
 
 const IX = TypeSymbol<X>("IX");
@@ -135,13 +142,14 @@ const IPluginC = TypeSymbol<any>("IPluginC");
 const IPluginEnumeration = TypeSymbol<IPlugin[]>("IPluginEnumeration");
 
 class PluginConsumer {
-  constructor(public plugins = IPluginEnumeration()) {}
+  constructor(public plugins = IPluginEnumeration()) {
+  }
 }
 
 const IPluginConsumer = TypeSymbol<PluginConsumer>("IPluginConsumer");
 
 function createContainerTransient() {
-  const container = new Container({ defaultLifetime: ILifetime.PerDependency });
+  const container = new Container({defaultLifetime: ILifetime.PerDependency});
   container.registerClass(IDog, Dog);
   container.registerClass(ICat, Cat);
   container.registerClass(IHouse, House);
@@ -151,7 +159,7 @@ function createContainerTransient() {
 }
 
 function createContainerSingle() {
-  const container = new Container({ defaultLifetime: ILifetime.Single });
+  const container = new Container({defaultLifetime: ILifetime.Single});
   container.registerClass(IDog, Dog);
   container.registerClass(ICat, Cat);
   container.registerClass(IHouse, House);
@@ -161,13 +169,13 @@ function createContainerSingle() {
 }
 
 function createContainerScoped() {
-  const container = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+  const container = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
   container.registerClass(IDog, Dog);
   return container;
 }
 
 function createContainerSingleWithScopedRegistration() {
-  const container = new Container({ defaultLifetime: ILifetime.Single });
+  const container = new Container({defaultLifetime: ILifetime.Single});
   container.registerClass(IDog, Dog).scopedInstance("myScope");
   container.registerClass(ICat, Cat);
   container.registerClass(IHouse, House);
@@ -252,9 +260,10 @@ describe("Container", () => {
         expect(getScopePath()).toEqual([c4, c3, c2, c1]);
       }
     }
+
     const IK = TypeSymbol<K>("IK");
 
-    const c1 = new Container({ defaultLifetime: ILifetime.Single });
+    const c1 = new Container({defaultLifetime: ILifetime.Single});
     c1.registerClass(IK, K);
     const c2 = c1.beginLifetimeScope("l1");
     const c3 = c2.beginLifetimeScope("l2");
@@ -303,7 +312,7 @@ describe("Container", () => {
   });
 
   it("resolves can resolve all instances for all registrations of one symbol", () => {
-    const container = new Container({ defaultLifetime: ILifetime.Single });
+    const container = new Container({defaultLifetime: ILifetime.Single});
     container.registerClass(IPluginConsumer, PluginConsumer);
     container.register(IPluginEnumeration, undefined, (cont) => cont.resolveAll(IPlugin));
     container.registerClass(IPlugin, PluginA).transientInstance();
@@ -318,7 +327,7 @@ describe("Container", () => {
   });
 
   it("resolves can resolve all instances for all registrations of one symbol - allows symbol redirect", () => {
-    const container = new Container({ defaultLifetime: ILifetime.Single });
+    const container = new Container({defaultLifetime: ILifetime.Single});
     container.registerClass(IPluginConsumer, PluginConsumer);
     container.register(IPluginEnumeration, undefined, (cont) => cont.resolveAll(IPlugin));
     container.register(IPlugin, IPluginA).transientInstance();
@@ -337,7 +346,7 @@ describe("Container", () => {
   });
 
   it("allows to inject lazy object creators", () => {
-    const container = new Container({ defaultLifetime: ILifetime.Single });
+    const container = new Container({defaultLifetime: ILifetime.Single});
     const callOrder: any[] = [];
 
     container
@@ -384,17 +393,19 @@ describe("Container", () => {
 
   it("passes given args to func creator", () => {
     class X {
-      constructor(public y = Func(IY)()) {}
+      constructor(public y = Func(IY)()) {
+      }
     }
 
     class Y {
-      constructor(public k: number, public l: number) {}
+      constructor(public k: number, public l: number) {
+      }
     }
 
     const IX = TypeSymbol<X>("IX");
     const IY = TypeSymbol<Y>("IY");
 
-    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    const $cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
     $cont.register(IY, (k: number, l: number) => new Y(k, l));
     $cont.registerClass(IX, X);
 
@@ -406,22 +417,25 @@ describe("Container", () => {
 
   it("holds instance created by automatic factory with arguments", () => {
     class X {
-      constructor(public y = Func(IY)()) {}
+      constructor(public y = Func(IY)()) {
+      }
     }
 
     class Y {
-      constructor(public k: number, public l: number, public z = IZ()) {}
+      constructor(public k: number, public l: number, public z = IZ()) {
+      }
     }
 
     class Z {
-      constructor(public y = Func(IY)()) {}
+      constructor(public y = Func(IY)()) {
+      }
     }
 
     const IX = TypeSymbol<X>("IX");
     const IY = TypeSymbol<Y>("IY");
     const IZ = TypeSymbol<Z>("IZ");
 
-    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    const $cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
     $cont.register(IY, (k: number, l: number) => new Y(k, l));
     $cont.registerClass(IX, X);
     $cont.registerClass(IZ, Z);
@@ -434,15 +448,18 @@ describe("Container", () => {
 
   it("allows for using factories which open new lifetime scopes.", () => {
     class X {
-      constructor(public y = INewY()) {}
+      constructor(public y = INewY()) {
+      }
     }
 
     class Y {
-      constructor(public k: number, public l: number, public z = IZ()) {}
+      constructor(public k: number, public l: number, public z = IZ()) {
+      }
     }
 
     class Z {
-      constructor(public y = Func(IY)()) {}
+      constructor(public y = Func(IY)()) {
+      }
     }
 
     function NewY($cont: Container) {
@@ -454,7 +471,7 @@ describe("Container", () => {
     const INewY = TypeSymbol<(k: number, l: number) => Y>("INewY");
     const IZ = TypeSymbol<Z>("IZ");
 
-    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    const $cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
     $cont.registerClass(IZ, Z).scopedInstance("YScope");
     $cont.registerClass(IY, Y);
     $cont.register(INewY, undefined, NewY);
@@ -472,12 +489,14 @@ describe("Container", () => {
 
   it("can switch scopes by a function provided during registration.", () => {
     class X {
-      constructor() {}
+      constructor() {
+      }
     }
+
     const IX1 = TypeSymbol<X>("IX1");
     const IX2 = TypeSymbol<X>("IX2");
 
-    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    const $cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
 
     function topmostScope(scopeName: string) {
       return ($cont: Container) => {
@@ -512,7 +531,7 @@ describe("Container", () => {
 
 describe("Container lifecycle event", () => {
   it("runs onPreparing before resolving the instance", () => {
-    const container = new Container({ defaultLifetime: ILifetime.PerDependency });
+    const container = new Container({defaultLifetime: ILifetime.PerDependency});
     const callOrder: any[] = [];
 
     container
@@ -539,7 +558,7 @@ describe("Container lifecycle event", () => {
   });
 
   it("runs onActivating right after the instance has been resolved", () => {
-    const container = new Container({ defaultLifetime: ILifetime.PerDependency });
+    const container = new Container({defaultLifetime: ILifetime.PerDependency});
     const callOrder: any[] = [];
 
     container
@@ -573,7 +592,7 @@ describe("Container lifecycle event", () => {
   });
 
   it("runs onActivated after the whole resolution flow has finished.", () => {
-    const container = new Container({ defaultLifetime: ILifetime.PerDependency });
+    const container = new Container({defaultLifetime: ILifetime.PerDependency});
     const callOrder: any[] = [];
 
     container
@@ -609,30 +628,37 @@ describe("Container lifecycle event", () => {
   it("runs onRelease when scope gets disposed.", () => {
     class K {
       id = "k";
-      constructor(public l = IL(), public m = IM()) {}
+
+      constructor(public l = IL(), public m = IM()) {
+      }
     }
+
     const IK = TypeSymbol<K>("IK");
 
     class L {
       id = "l";
-      constructor(m = IM()) {}
+
+      constructor(m = IM()) {
+      }
     }
+
     const IL = TypeSymbol<K>("IL");
 
     class M {
       id = "m";
     }
+
     const IM = TypeSymbol<K>("IM");
     const callOrder: any = [];
 
-    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
-    cont.registerClass(IK, K).onRelease(({ instance }) => {
+    const cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
+    cont.registerClass(IK, K).onRelease(({instance}) => {
       callOrder.push(instance.id);
     });
-    cont.registerClass(IL, L).onRelease(({ instance }) => {
+    cont.registerClass(IL, L).onRelease(({instance}) => {
       callOrder.push(instance.id);
     });
-    cont.registerClass(IM, M).onRelease(({ instance }) => {
+    cont.registerClass(IM, M).onRelease(({instance}) => {
       callOrder.push(instance.id);
     });
     cont.resolve(IK);
@@ -644,9 +670,12 @@ describe("Container lifecycle event", () => {
 
   it("allows maintaining reference to an instance in some collection.", () => {
     let idgen = 1;
+
     class K {
       id = idgen++;
-      constructor() {}
+
+      constructor() {
+      }
     }
 
     class KCollection {
@@ -660,27 +689,29 @@ describe("Container lifecycle event", () => {
         this.items.delete(k.id);
       }
     }
+
     const IKCollection = TypeSymbol<KCollection>("IKCollection");
     const IK = TypeSymbol<K>("IK");
 
     interface ICollection<TInstance> {
       put(obj: TInstance): void;
+
       del(obj: TInstance): void;
     }
 
     function maintainInCollection<TInstance>(collectionSym: ITypeSymbol<ICollection<TInstance>>) {
       return (reg: IRegistrator<TInstance>) => {
         return reg
-          .onActivating(({ instance, container }) => {
+          .onActivating(({instance, container}) => {
             collectionSym().put(instance);
           })
-          .onRelease(({ instance }) => {
+          .onRelease(({instance}) => {
             collectionSym().del(instance);
           });
       };
     }
 
-    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    const cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
     cont.registerClass(IKCollection, KCollection).singleInstance();
     const chcont = cont.beginLifetimeScope();
     chcont.registerClass(IK, K).transientInstance().forward(maintainInCollection(IKCollection));
@@ -705,11 +736,13 @@ describe("Container lifecycle event", () => {
 describe("Creator stack", () => {
   it("keeps track of creators to be used for current dependency chain", () => {
     class A {
-      constructor(public b = IB()) {}
+      constructor(public b = IB()) {
+      }
     }
 
     class B {
-      constructor(public c = IC()) {}
+      constructor(public c = IC()) {
+      }
     }
 
     class C {
@@ -722,7 +755,7 @@ describe("Creator stack", () => {
     const IB = TypeSymbol<B>("IB");
     const IC = TypeSymbol<C>("IC");
 
-    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    const cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
     cont.registerClass(IA, A);
     cont.registerClass(IB, B);
     cont.registerClass(IC, C);
@@ -731,17 +764,23 @@ describe("Creator stack", () => {
 
   it("allows to supply different implementations based on creator stack content", () => {
     class A {
-      constructor(public b = IB(), public c = IC(), public d = ID()) {}
+      constructor(public b = IB(), public c = IC(), public d = ID()) {
+      }
+
       v = "a";
     }
 
     class B {
-      constructor(public c = IC()) {}
+      constructor(public c = IC()) {
+      }
+
       v = "b";
     }
 
     class C1 {
-      constructor(public c = IC()) {}
+      constructor(public c = IC()) {
+      }
+
       v = "c1";
     }
 
@@ -760,7 +799,7 @@ describe("Creator stack", () => {
     const IC2 = TypeSymbol<C2>("IC1");
     const ID = TypeSymbol<D>("ID");
 
-    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    const cont = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
     cont.registerClass(IA, A);
     cont.registerClass(IB, B);
     cont

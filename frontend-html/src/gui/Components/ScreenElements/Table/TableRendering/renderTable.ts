@@ -28,6 +28,7 @@ import {
   gridLeadCellDimensions,
   groupingColumnIds,
   isCheckBoxedTable,
+  mouseMoveSubscriptions,
   mouseOverSubscriptions,
   propertyById,
   realFixedColumnCount,
@@ -38,20 +39,20 @@ import {
   scRenderTable,
   scrollLeft,
   scrollTop,
+  setCurrentRowRightBorderDrawn,
   tableColumnIds,
   tableRows,
   viewportHeight,
   viewportWidth,
-  mouseMoveSubscriptions,setCurrentRowRightBorderDrawn,
 } from "./renderingValues";
-import {firstDrawableRowIndex, lastDrawableRowIndex} from "./drawableRowIndex";
-import {drawCurrentCell} from "./currentCell";
-import {firstDrawableColumnIndex, lastDrawableColumnIndex} from "./drawableColumnIndex";
-import {IClickSubsItem, IMouseOverSubsItem, ITableRow} from "./types";
-import {CPR} from "utils/canvas";
-import {IProperty} from "model/entities/types/IProperty";
-import {currentRowCellsDimensions, currentRowCellsDraws,} from "./currentRowCells";
-import {cellLayerCount, setLayerIndex} from "./currentCellLayerIndex";
+import { firstDrawableRowIndex, lastDrawableRowIndex } from "./drawableRowIndex";
+import { drawCurrentCell } from "./currentCell";
+import { firstDrawableColumnIndex, lastDrawableColumnIndex } from "./drawableColumnIndex";
+import { IClickSubsItem, IMouseOverSubsItem, ITableRow } from "./types";
+import { CPR } from "utils/canvas";
+import { IProperty } from "model/entities/types/IProperty";
+import { currentRowCellsDimensions, currentRowCellsDraws, } from "./currentRowCells";
+import { cellLayerCount, setLayerIndex } from "./currentCellLayerIndex";
 
 export function renderTable(
   aCtx: any,
@@ -97,7 +98,7 @@ export function renderTable(
     mouseMoveSubscriptions().length = 0;
     const ctx2d = context2d();
     ctx2d.fillStyle = "white";
-    ctx2d.fillRect(0, 0, CPR()*viewportWidth(), CPR()*viewportHeight());
+    ctx2d.fillRect(0, 0, CPR() * viewportWidth(), CPR() * viewportHeight());
     const i0 = firstDrawableRowIndex();
     const i1 = lastDrawableRowIndex();
     if (i0 === undefined || i1 === undefined) return;
@@ -139,7 +140,7 @@ export function renderRow(rowIdx: number) {
   try {
     if (!currentRow()) return;
     renderRowInternal();
-    if(cellLayerCount() === 2) {
+    if (cellLayerCount() === 2) {
       renderSecondLayerCells();
     }
   } finally {

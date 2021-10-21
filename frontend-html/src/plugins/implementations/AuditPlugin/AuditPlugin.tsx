@@ -19,54 +19,54 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { Fragment } from "react";
 import S from './AuditPlugin.module.scss';
-import {IPluginData} from "../../types/IPluginData";
-import {IPluginProperty} from "../../types/IPluginProperty";
-import {observer} from "mobx-react";
-import {ISectionPlugin} from "../../types/ISectionPlugin";
-import {observable} from "mobx";
+import { IPluginData } from "../../types/IPluginData";
+import { IPluginProperty } from "../../types/IPluginProperty";
+import { observer } from "mobx-react";
+import { ISectionPlugin } from "../../types/ISectionPlugin";
+import { observable } from "mobx";
 import moment from "moment";
-import {IPluginTableRow} from "../../types/IPluginRow";
-import {IPluginDataView} from "../../types/IPluginDataView";
-import {Localizer} from "../../tools/Localizer";
-import {localizations} from "./AuditPluginLocalization";
+import { IPluginTableRow } from "../../types/IPluginRow";
+import { IPluginDataView } from "../../types/IPluginDataView";
+import { Localizer } from "../../tools/Localizer";
+import { localizations } from "./AuditPluginLocalization";
 
-export default class AuditPlugin implements ISectionPlugin{
+export default class AuditPlugin implements ISectionPlugin {
   $type_ISectionPlugin: 1 = 1;
   id: string = ""
 
-  initialize(xmlAttributes: {[key: string]: string}): void{
+  initialize(xmlAttributes: { [key: string]: string }): void {
 
   }
 
   getComponent(data: IPluginData): JSX.Element {
     return <AuditComponent
       pluginData={data}
-      getFormParameters={this.getFormParameters}
+      getScreenParameters={this.getScreenParameters}
       localizer={new Localizer(localizations, "en-US")}/>;
   }
 
   @observable
-  getFormParameters: (() => { [parameter: string]: string }) | undefined;
+  getScreenParameters: (() => { [parameter: string]: string }) | undefined;
 }
 
 @observer
 class AuditComponent extends React.Component<{
   pluginData: IPluginData,
-  getFormParameters: (() => { [parameter: string]: string }) | undefined;
+  getScreenParameters: (() => { [parameter: string]: string }) | undefined;
   localizer: Localizer
 }> {
 
-  translate = (key: string, parameters?: {[key: string]: any}) => this.props.localizer.translate(key, parameters);
+  translate = (key: string, parameters?: { [key: string]: any }) => this.props.localizer.translate(key, parameters);
   dataView = this.props.pluginData.dataView;
   propertiesToRender: IPluginProperty[] = [];
 
   constructor(props: any) {
     super(props);
     this.propertiesToRender = ["RecordCreated", "refColumnId", "OldValue", "NewValue", "RecordCreatedBy"]
-      .map(propId => this.props.pluginData.dataView.properties.find(prop=> prop.id === propId)!);
+      .map(propId => this.props.pluginData.dataView.properties.find(prop => prop.id === propId)!);
   }
 
-  renderHeader(properties: IPluginProperty[]){
+  renderHeader(properties: IPluginProperty[]) {
     return properties.map(property =>
       <Fragment key={property.id}>
         <div className={S.header}>{property.name}</div>
@@ -75,51 +75,51 @@ class AuditComponent extends React.Component<{
     );
   }
 
-  renderRow(row: any[]){
+  renderRow(row: any[]) {
     return this.propertiesToRender.map(property =>
       <div key={property.id} className={S.column}>
         {this.dataView.getCellText(row, property.id)}
       </div>)
   }
 
-  getGroupContainer(){
-    const parameters = this.props.getFormParameters?.();
-    if(!parameters){
+  getGroupContainer() {
+    const parameters = this.props.getScreenParameters?.();
+    if (!parameters) {
       return undefined;
     }
     const dateFrom = parameters["OrigamDataAuditLog_DateFrom"];
-    if(dateFrom.endsWith("01T00:00:00")){
+    if (dateFrom.endsWith("01T00:00:00")) {
       return new MonthTimeGroupContainer(this.dataView);
     }
-    if(dateFrom.endsWith("00:00:00")){
+    if (dateFrom.endsWith("00:00:00")) {
       return new DayTimeGroupContainer(this.dataView);
     }
-    if(dateFrom.endsWith("00:00")){
+    if (dateFrom.endsWith("00:00")) {
       return new HourTimeGroupContainer(this.dataView);
     }
   }
 
-  render(){
+  render() {
     const groupContainer = this.getGroupContainer();
-    if(this.dataView.tableRows.length === 0 || !groupContainer){
+    if (this.dataView.tableRows.length === 0 || !groupContainer) {
       return <div>{this.translate("empty")}</div>;
     }
 
-    return(
+    return (
       <div>
         <div className={S.summary}>
           {this.renderSummary()}
         </div>
         {Array.from(groupContainer.groups.keys())
-          .sort((a, b) => a-b)
+          .sort((a, b) => a - b)
           .map(subTimeunitValue => this.renderGroup(subTimeunitValue, groupContainer))
         }
       </div>
     );
   }
 
-  renderGroup(subTimeunitValue: number, groupContainer: ITimeGroupContainer){
-    return(
+  renderGroup(subTimeunitValue: number, groupContainer: ITimeGroupContainer) {
+    return (
       <div className={S.table}>
         <div className={S.groupHeader}>{groupContainer.makeGroupHeaderText(subTimeunitValue)}</div>
         <div className={S.row}>
@@ -151,13 +151,14 @@ class AuditComponent extends React.Component<{
   }
 }
 
-interface ITimeGroupContainer{
-  groups: Map<number,IPluginTableRow[]>
+interface ITimeGroupContainer {
+  groups: Map<number, IPluginTableRow[]>
+
   makeGroupHeaderText(timeUnitValue: number): string;
 }
 
-class MonthTimeGroupContainer implements ITimeGroupContainer{
-  groups: Map<number,IPluginTableRow[]>;
+class MonthTimeGroupContainer implements ITimeGroupContainer {
+  groups: Map<number, IPluginTableRow[]>;
   dataView: IPluginDataView;
 
   constructor(dataView: IPluginDataView) {
@@ -173,8 +174,8 @@ class MonthTimeGroupContainer implements ITimeGroupContainer{
   }
 }
 
-class DayTimeGroupContainer implements ITimeGroupContainer{
-  groups: Map<number,IPluginTableRow[]>;
+class DayTimeGroupContainer implements ITimeGroupContainer {
+  groups: Map<number, IPluginTableRow[]>;
   dataView: IPluginDataView;
 
   constructor(dataView: IPluginDataView) {
@@ -191,8 +192,8 @@ class DayTimeGroupContainer implements ITimeGroupContainer{
   }
 }
 
-class HourTimeGroupContainer implements ITimeGroupContainer{
-  groups: Map<number,IPluginTableRow[]>;
+class HourTimeGroupContainer implements ITimeGroupContainer {
+  groups: Map<number, IPluginTableRow[]>;
   dataView: IPluginDataView;
 
   constructor(dataView: IPluginDataView) {

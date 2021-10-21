@@ -85,7 +85,7 @@ export const DialogScreen: React.FC<{
               !!window.localStorage.getItem("debugKeepProgressIndicatorsOn")
             }
             titleButtons={
-              <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)} />
+              <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)}/>
             }
             buttonsCenter={null}
             buttonsLeft={null}
@@ -96,13 +96,13 @@ export const DialogScreen: React.FC<{
                     <>
                       {props.openedScreen.content
                         .formScreen!.dialogActions.filter(
-                          (action) =>
-                            action.placement !== IActionPlacement.PanelHeader &&
-                            action.placement !== IActionPlacement.PanelMenu
-                        )
+                        (action) =>
+                          action.placement !== IActionPlacement.PanelHeader &&
+                          action.placement !== IActionPlacement.PanelMenu
+                      )
                         .map((action, idx) => (
                           <button
-                            className={cx({ isPrimary: action.isDefault })}
+                            className={cx({isPrimary: action.isDefault})}
                             tabIndex={0}
                             key={action.id}
                             onClick={(event: any) => {
@@ -132,9 +132,9 @@ export const DialogScreen: React.FC<{
                 >
                   {
                     !props.openedScreen.content.isLoading ? (
-                      <CtxPanelVisibility.Provider value={{ isVisible: true }}>
+                      <CtxPanelVisibility.Provider value={{isVisible: true}}>
                         {renderActionButtons()}
-                        <DialogScreenBuilder openedScreen={props.openedScreen} />
+                        <DialogScreenBuilder openedScreen={props.openedScreen}/>
                       </CtxPanelVisibility.Provider>
                     ) : null /*<DialogLoadingContent />*/
                   }

@@ -37,8 +37,8 @@ export class SelectionCheckBoxHeader extends React.Component<{
   render() {
     const isChecked = this.props.dataView.selectAllCheckboxChecked;
     return (
-      <div style={{ minWidth: this.props.width + "px" }} className={S.root} onClick={this.onClick}>
-        {isChecked ? <i className="far fa-check-square" /> : <i className="far fa-square" />}
+      <div style={{minWidth: this.props.width + "px"}} className={S.root} onClick={this.onClick}>
+        {isChecked ? <i className="far fa-check-square"/> : <i className="far fa-square"/>}
       </div>
     );
   }

@@ -17,19 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getColumnConfigurationDialog} from "model/selectors/getColumnConfigurationDialog";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {shouldProceedToChangeRow} from "./TableView/shouldProceedToChangeRow";
+import { getColumnConfigurationDialog } from "model/selectors/getColumnConfigurationDialog";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 
 export function onColumnConfigurationClick(ctx: any) {
-  return flow(function* onColumnConfigurationClick(event: any) {
+  return flow(function*onColumnConfigurationClick(event: any) {
     try {
-      if(yield shouldProceedToChangeRow(ctx)){
+      if (yield shouldProceedToChangeRow(ctx)) {
         getColumnConfigurationDialog(ctx).onColumnConfClick(event);
       }
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

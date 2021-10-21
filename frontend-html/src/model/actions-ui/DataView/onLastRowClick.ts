@@ -17,18 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {flow} from "mobx";
-import {selectLastRow} from "../../actions/DataView/selectLastRow";
-import {handleError} from "../../actions/handleError";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import { flow } from "mobx";
+import { selectLastRow } from "../../actions/DataView/selectLastRow";
+import { handleError } from "../../actions/handleError";
 
 export function onLastRowClick(ctx: any) {
-  return flow(function* onLastRowClick(event: any) {
+  return flow(function*onLastRowClick(event: any) {
     try {
-      yield* selectLastRow(ctx)();
-      getTablePanelView(ctx)?.triggerOnFocusTable();
+      yield*selectLastRow(ctx)();
     } catch (e) {
-      yield* handleError(ctx)(e);
+      yield*handleError(ctx)(e);
       throw e;
     }
   });

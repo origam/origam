@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
-import {getOpenedScreen} from "./getOpenedScreen";
+import { getOpenedScreen } from "./getOpenedScreen";
 
 export function isLazyLoading(ctx: any) {
   const openScreen = getOpenedScreen(ctx);

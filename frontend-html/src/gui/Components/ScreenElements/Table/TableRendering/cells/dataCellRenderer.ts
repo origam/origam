@@ -30,10 +30,10 @@ import {
 import {
   cellPaddingLeft,
   cellPaddingLeftFirstCell,
+  cellPaddingRight,
   checkBoxCharacterFontSize,
   numberCellPaddingRight,
   topTextOffset,
-  cellPaddingRight,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { CPR } from "utils/canvas";
 import moment from "moment";
@@ -47,6 +47,7 @@ import { flashColor2htmlColor } from "utils/flashColorFormat";
 
 interface IDataCellRenderer {
   drawCellText(): void;
+
   cellText: string | undefined;
   cellTextMulitiline: string | undefined;
   paddingLeft: number;
@@ -76,7 +77,8 @@ export function currentDataCellRenderer(ctx2d: CanvasRenderingContext2D) {
 }
 
 class ColorCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   cellText = "";
   cellTextMulitiline = "";
@@ -94,7 +96,8 @@ class ColorCellRenderer implements IDataCellRenderer {
 }
 
 class CheckBoxCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   get paddingLeft() {
     return getPaddingLeft();
@@ -122,7 +125,8 @@ class CheckBoxCellRenderer implements IDataCellRenderer {
 }
 
 class DateCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   get paddingLeft() {
     return getPaddingLeft();
@@ -155,8 +159,10 @@ class DateCellRenderer implements IDataCellRenderer {
     }
   }
 }
+
 class TagInputCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   get paddingLeft() {
     return getPaddingLeft();
@@ -182,7 +188,8 @@ class TagInputCellRenderer implements IDataCellRenderer {
 }
 
 class CheckListCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   get paddingLeft() {
     return getPaddingLeft();
@@ -221,7 +228,8 @@ class CheckListCellRenderer implements IDataCellRenderer {
 }
 
 class NumberInputCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   get paddingLeft() {
     return currentColumnWidth() - this.paddingRight;
@@ -254,7 +262,8 @@ class NumberInputCellRenderer implements IDataCellRenderer {
 }
 
 class ImageCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   get paddingLeft() {
     return getPaddingLeft();
@@ -273,7 +282,7 @@ class ImageCellRenderer implements IDataCellRenderer {
     if (!value) {
       return;
     }
-    const { pictureCache } = formScreen();
+    const {pictureCache} = formScreen();
     const img = pictureCache.getImage(value);
 
     if (!img || !img.complete) {
@@ -305,7 +314,8 @@ class ImageCellRenderer implements IDataCellRenderer {
 }
 
 class GenericCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {}
+  constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
 
   get paddingLeft() {
     return getPaddingLeft();

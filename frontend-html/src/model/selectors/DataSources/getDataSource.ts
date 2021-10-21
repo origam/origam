@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {isIDataView} from "model/entities/types/IDataView";
-import {isIDataSource} from "model/entities/types/IDataSource";
+import { isIDataView } from "model/entities/types/IDataView";
+import { isIDataSource } from "model/entities/types/IDataSource";
 
 export function getDataSource(ctx: any) {
   let cn = ctx;
@@ -26,7 +26,7 @@ export function getDataSource(ctx: any) {
     if (isIDataView(cn)) {
       return cn.dataSource;
     }
-    if(isIDataSource(cn)) {
+    if (isIDataSource(cn)) {
       return cn
     }
     cn = cn.parent;

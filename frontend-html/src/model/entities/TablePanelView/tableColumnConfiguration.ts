@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IColumnConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
-import {observable} from "mobx";
-import {AggregationType} from "model/entities/types/AggregationType";
-import {GroupingUnit} from "model/entities/types/GroupingUnit";
+import { IColumnConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { observable } from "mobx";
+import { AggregationType } from "model/entities/types/AggregationType";
+import { GroupingUnit } from "model/entities/types/GroupingUnit";
 
 export class TableColumnConfiguration implements IColumnConfiguration {
 

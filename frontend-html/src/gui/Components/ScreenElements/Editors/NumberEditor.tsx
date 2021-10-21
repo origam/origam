@@ -22,12 +22,10 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
-import {
-  formatNumber,
-  getCurrentDecimalSeparator,
-} from "../../../../model/entities/NumberFormating";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { formatNumber, getCurrentDecimalSeparator, } from "../../../../model/entities/NumberFormating";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
+
 @observer
 export class NumberEditor extends React.Component<{
   value: string | null;
@@ -35,20 +33,19 @@ export class NumberEditor extends React.Component<{
   isPassword?: boolean;
   isInvalid: boolean;
   invalidMessage?: string;
-  isFocused: boolean;
   property?: IProperty;
   backgroundColor?: string;
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
   maxLength?: number;
   customStyle?: any;
-  reFocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
   disposers: any[] = [];
 
@@ -76,32 +73,21 @@ export class NumberEditor extends React.Component<{
   }
 
   componentDidMount() {
-    this.props.reFocuser && this.disposers.push(this.props.reFocuser(this.makeFocusedIfNeeded));
-    this.makeFocusedIfNeeded();
     if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
     }
+    this.updateTextOverflowState();
   }
 
   componentWillUnmount() {
     this.disposers.forEach((d) => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean; value: any }) {
-    if (!prevProps.isFocused && this.props.isFocused) {
-      this.makeFocusedIfNeeded();
-    }
+  componentDidUpdate(prevProps: { value: any }) {
     if (this.props.value !== prevProps.value && !this.wasChanged) {
       this.editingValue = this.numeralFormattedValue;
     }
-  }
-
-  @action.bound
-  makeFocusedIfNeeded() {
-    if (this.props.isFocused && this.elmInput) {
-      this.elmInput.select();
-      this.elmInput.scrollLeft = 0;
-    }
+    this.updateTextOverflowState();
   }
 
   @action.bound
@@ -113,6 +99,14 @@ export class NumberEditor extends React.Component<{
       this.elmInput.select();
       this.elmInput.scrollLeft = 0;
     }
+  }
+
+  private updateTextOverflowState() {
+    if (!this.elmInput) {
+      return;
+    }
+    const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
+    this.props.onTextOverflowChanged?.(textOverflow ? this.numeralFormattedValue : undefined);
   }
 
   @action.bound
@@ -147,6 +141,7 @@ export class NumberEditor extends React.Component<{
     const invalidChars = new RegExp("[^\\d\\-" + getCurrentDecimalSeparator() + "]", "g");
     this.editingValue = (event.target.value || "").replace(invalidChars, "");
     this.props.onChange && this.props.onChange(null, this.numericValue);
+    this.updateTextOverflowState();
   }
 
   @action.bound handleKeyDown(event: any) {
@@ -201,7 +196,7 @@ export class NumberEditor extends React.Component<{
         />
         {this.props.isInvalid && (
           <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red" />
+            <i className="fas fa-exclamation-circle red"/>
           </div>
         )}
       </div>

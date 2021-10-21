@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getDataView} from "model/selectors/DataView/getDataView";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export function getIsRowMovingDisabled(ctx: any) {
   return getDataView(ctx).dataTable.addedRowPositionLocked;

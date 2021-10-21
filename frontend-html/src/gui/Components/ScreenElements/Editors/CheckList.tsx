@@ -28,7 +28,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
-import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import cx from "classnames";
 
@@ -49,9 +49,10 @@ export interface IRawCheckListProps {
   isInvalid: boolean;
   isReadonly?: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 
   onChange?(newValue: string[]): void;
+
   onKeyDown(event: any): void;
 }
 
@@ -68,7 +69,7 @@ export class CheckListControler {
   @action.bound
   loadLookupList() {
     const self = this;
-    flow(function* () {
+    flow(function*() {
       const lookupList = yield self.props.api.getLookupList({
         Entity: self.props.Entity,
         SessionFormIdentifier: self.props.SessionFormIdentifier,
@@ -111,11 +112,11 @@ export const CheckList: React.FC<{
   isInvalid: boolean;
   isReadonly?: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown(event: any): void;
   onClick: () => void;
 }> = observer((props) => {
-  const { property } = useContext(MobXProviderContext);
+  const {property} = useContext(MobXProviderContext);
 
   return (
     <CheckListRaw
@@ -193,7 +194,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
 
   return (
     <div className={S.editorContainer}>
-      <div className={cx(S.root, { isReadonly: props.isReadonly })}>
+      <div className={cx(S.root, {isReadonly: props.isReadonly})}>
         {controller.items.map((item, i) => (
           <CheckListItem
             key={item.value}
@@ -218,7 +219,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
       </div>
       {props.isInvalid && (
         <div className={CS.notification} title={props.invalidMessage}>
-          <i className="fas fa-exclamation-circle red" />
+          <i className="fas fa-exclamation-circle red"/>
         </div>
       )}
     </div>
@@ -235,7 +236,7 @@ export const CheckListItem: React.FC<{
   focusUp: (x: number, y: number) => void;
   focusDown: (x: number, y: number) => void;
   label: string;
-  subscribeToFocusManager?: (obj: IFocusAble) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }> = (props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -288,7 +289,6 @@ export const CheckListItem: React.FC<{
   }
 
 
-
   return (
     <div className={S.item} onClick={onClick}>
       <input
@@ -309,7 +309,8 @@ export const CheckListItem: React.FC<{
 };
 
 class InputReference {
-  constructor(private inputRef: RefObject<HTMLInputElement>) {}
+  constructor(private inputRef: RefObject<HTMLInputElement>) {
+  }
 
   get x() {
     return this.inputRef.current?.getBoundingClientRect()!.x || 0;

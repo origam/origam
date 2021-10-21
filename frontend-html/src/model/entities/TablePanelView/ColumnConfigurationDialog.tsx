@@ -18,18 +18,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import {action, computed} from "mobx";
-import {getDialogStack} from "../../selectors/DialogStack/getDialogStack";
-import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
-import {ColumnsDialog,} from "gui/Components/Dialogs/ColumnsDialog";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
-import {ITableConfiguration} from "./types/IConfigurationManager";
-import {runGeneratorInFlowWithHandler, runInFlowWithHandler} from "utils/runInFlowWithHandler";
-import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
-import {NewConfigurationDialog} from "gui/Components/Dialogs/NewConfigurationDialog";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
+import { action, computed } from "mobx";
+import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
+import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { ColumnsDialog, } from "gui/Components/Dialogs/ColumnsDialog";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { ITableConfiguration } from "./types/IConfigurationManager";
+import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { NewConfigurationDialog } from "gui/Components/Dialogs/NewConfigurationDialog";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 
 export interface IColumnOptions {
   canGroup: boolean;
@@ -42,7 +42,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
 
   tableConfigBeforeChanges: ITableConfiguration | undefined;
 
-  getColumnOptions(){
+  getColumnOptions() {
     const groupingOnClient = !isLazyLoading(this);
     const activeTableConfiguration = this.configManager.activeTableConfiguration;
     const optionsMap = new Map<string, IColumnOptions>()
@@ -54,7 +54,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         property.id,
         {
           canGroup: groupingOnClient ||
-            (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
+            (!property.isAggregatedColumn && property.fieldType !== "DetachedField"),
           canAggregate: groupingOnClient ||
             (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
           entity: property.entity,
@@ -93,10 +93,10 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     const self = this;
     runGeneratorInFlowWithHandler({
       ctx: this,
-      generator: function* (){
+      generator: function*() {
         self.onColumnConfSubmit(configuration);
         self.tableConfigBeforeChanges = undefined;
-        yield* saveColumnConfigurations(self)();
+        yield*saveColumnConfigurations(self)();
       }()
     })
   }
@@ -114,7 +114,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   }
 
   @action.bound onSaveAsClick(event: any, configuration: ITableConfiguration): void {
-     const closeDialog = getDialogStack(this).pushDialog(
+    const closeDialog = getDialogStack(this).pushDialog(
       "",
       <NewConfigurationDialog
         onOkClick={(name) => {
@@ -141,7 +141,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     configuration.apply(this.tablePanelView);
     const groupingIsOffNow = !this.tablePanelView?.groupingConfiguration.isGrouping;
 
-    if(groupingWasOnBefore && groupingIsOffNow){
+    if (groupingWasOnBefore && groupingIsOffNow) {
       getFormScreenLifecycle(this).loadInitialData();
     }
     getDialogStack(this).closeDialog(this.dialogKey);
@@ -151,7 +151,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     return getTablePanelView(this);
   }
 
-  get configManager(){
+  get configManager() {
     return getConfigurationManager(this);
   }
 

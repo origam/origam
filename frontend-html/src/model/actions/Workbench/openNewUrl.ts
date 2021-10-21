@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {IUrlUpenMethod} from "model/entities/types/IUrlOpenMethod";
-import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
+import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 export function openNewUrl(ctx: any) {
-  return function* openNewUrl(
+  return function*openNewUrl(
     url: string,
     urlOpenMethod: IUrlUpenMethod,
     title: string
   ) {
     switch (urlOpenMethod) {
       case IUrlUpenMethod.OrigamTab:
-        yield* getWorkbenchLifecycle(ctx).openNewUrl(url, title);
+        yield*getWorkbenchLifecycle(ctx).openNewUrl(url, title);
         break;
       default:
         // TODO: Transform url to be absolute to urlroot?

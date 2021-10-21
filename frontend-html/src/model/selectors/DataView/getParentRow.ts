@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {getBindingParents} from "./getBindingParents";
-import {getSelectedRow} from "./getSelectedRow";
+import { getBindingParents } from "./getBindingParents";
+import { getSelectedRow } from "./getSelectedRow";
 
 export function getParentRow(ctx: any) {
   const bps = getBindingParents(ctx);

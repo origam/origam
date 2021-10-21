@@ -26,7 +26,7 @@ import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
 import { IPanelConfiguration } from "./IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
 import { ScreenPictureCache } from "../ScreenPictureCache";
-import {DataViewCache} from "../DataViewCache";
+import { DataViewCache } from "../DataViewCache";
 
 /*
 export interface ILoadedFormScreenData {
@@ -104,6 +104,7 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
   formScreen?: IFormScreen;
 
   setFormScreen(formScreen?: IFormScreen): void;
+
   start(initUIResult: any, preloadIsDirty?: boolean): Generator;
 
   parent?: any;
@@ -153,19 +154,29 @@ export interface IFormScreen extends IFormScreenData {
   dataViewCache: DataViewCache;
 
   clearDataCache(): void;
+
   getPanelPosition(id: string): number | undefined;
+
   getData(childEntity: string, modelInstanceId: string, parentRecordId: string, rootRecordId: string): Promise<any>;
+
   getBindingsByChildId(childId: string): IComponentBinding[];
+
   getBindingsByParentId(parentId: string): IComponentBinding[];
+
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;
+
   getDataViewsByEntity(entity: string): IDataView[];
+
   getDataSourceByEntity(entity: string): IDataSource | undefined;
 
   getFirstFormPropertyId(): string | undefined;
-  
+
   setPanelSize(id: string, size: number): void;
+
   setDirty(state: boolean): void;
+
   setTitle(title: string): void;
+
   printMasterDetailTree(): void;
 
   parent?: any;

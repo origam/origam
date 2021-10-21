@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {action, computed, observable} from "mobx";
-import {MAX_CHUNKS_TO_HOLD, SCROLL_ROW_CHUNK,} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {IRowsContainer} from "./types/IRowsContainer";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {fixRowIdentifier} from "utils/dataRow";
-import {IProperty} from "model/entities/types/IProperty";
+import { action, computed, observable } from "mobx";
+import { MAX_CHUNKS_TO_HOLD, SCROLL_ROW_CHUNK, } from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { IRowsContainer } from "./types/IRowsContainer";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { fixRowIdentifier } from "utils/dataRow";
+import { IProperty } from "model/entities/types/IProperty";
 
 // The constants have to be defined here for the unit tests to work.
 // const MAX_CHUNKS_TO_HOLD = 20;
@@ -41,19 +41,22 @@ export class ScrollRowContainer implements IRowsContainer {
   rowChunks: RowChunk[] = [];
   private readonly rowIdGetter: (row: any[]) => string;
 
-  getTrueIndexById(id: string){
+  getTrueIndexById(id: string) {
     const chunk = this.findChunkByRowId(id);
-    if(!chunk){
+    if (!chunk) {
       return undefined;
     }
     return chunk.rowOffset + chunk.getRowIdxById(id)!;
   }
 
-  async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {}
+  async updateSortAndFilter(data?: { retainPreviousSelection?: true }) {
+  }
 
-  start() {}
+  start() {
+  }
 
-  stop() {}
+  stop() {
+  }
 
   @computed
   get rows() {
@@ -64,7 +67,7 @@ export class ScrollRowContainer implements IRowsContainer {
     return this.rows;
   }
 
-  getAllValuesOfProp(property: IProperty){
+  getAllValuesOfProp(property: IProperty) {
     return this.rows;
   }
 
@@ -75,7 +78,7 @@ export class ScrollRowContainer implements IRowsContainer {
   delete(row: any[]): void {
     const rowId = this.rowIdGetter(row);
     const chunk = this.findChunkByRowId(rowId);
-    if(!chunk){
+    if (!chunk) {
       throw new Error(`Row with id "${rowId}" was not found`);
     }
     chunk.delete(rowId);
@@ -87,7 +90,7 @@ export class ScrollRowContainer implements IRowsContainer {
 
   findChunkByRowIndex(indexInContainer: number) {
     let rowCounter = 0;
-    if(this.rowChunks.length === 0){
+    if (this.rowChunks.length === 0) {
       return {
         chunk: undefined,
         indexInChunk: undefined,
@@ -113,10 +116,10 @@ export class ScrollRowContainer implements IRowsContainer {
   insert(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
     const dataTable = getDataTable(this);
     row = fixRowIdentifier(row, dataTable.identifierDataIndex);
-    const { chunk, indexInChunk } = this.findChunkByRowIndex(index);
-    if(!chunk){
+    const {chunk, indexInChunk} = this.findChunkByRowIndex(index);
+    if (!chunk) {
       this.rowChunks.push(new RowChunk(0, [row], this.rowIdGetter, undefined));
-    }else{
+    } else {
       chunk.insert(indexInChunk!, row);
     }
     return Promise.resolve();
@@ -130,7 +133,7 @@ export class ScrollRowContainer implements IRowsContainer {
       rows.push(fixRowIdentifier(row, dataTable.identifierDataIndex));
     }
     this.clear();
-    if(rows.length !== 0){
+    if (rows.length !== 0) {
       this.rowChunks.push(new RowChunk(rowOffset, rows, this.rowIdGetter, isFinal));
     }
     this.notifyResetListeners();
@@ -236,7 +239,8 @@ export class ScrollRowContainer implements IRowsContainer {
     return this.rows.length === MAX_CHUNKS_TO_HOLD * SCROLL_ROW_CHUNK;
   }
 
-  unlockAddedRowPosition(): void {}
+  unlockAddedRowPosition(): void {
+  }
 
   addedRowPositionLocked: boolean = false;
 

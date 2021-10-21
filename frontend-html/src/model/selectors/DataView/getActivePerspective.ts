@@ -17,9 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FocusManager } from "model/entities/FocusManager";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { scopeFor } from "dic/Container";
+import { IViewConfiguration } from "modules/DataView/ViewConfiguration";
 
-export function getFocusManager(ctx: any): FocusManager {
-  return getDataView(ctx).focusManager;
+export function getActivePerspective(ctx: any) {
+  const dataView = getDataView(ctx);
+  const $cont = scopeFor(dataView);
+  const viewConfiguration = $cont && $cont.resolve(IViewConfiguration);
+  return viewConfiguration?.activePerspective
 }

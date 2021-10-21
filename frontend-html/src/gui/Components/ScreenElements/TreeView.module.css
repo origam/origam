@@ -54,9 +54,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .node:hover{
-    background: var(--grey2);
+    background: var(--blue4);
 }
 
 .nodeSelected{
-    background: var(--blue4);
+    background: var(--blue1);
 }
