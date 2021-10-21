@@ -24,6 +24,7 @@ using System.Collections;
 using System.Data;
 using System.Linq;
 using System.Xml;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders
@@ -32,17 +33,19 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
     {
         public static void Build(XmlElement parentNode, string text,
             DataTable table, DataStructure dataStructure, bool isPreloaded,
-            bool isIndependent, Hashtable dataSources, string modelId)
+            bool isIndependent, Hashtable dataSources, string modelId, string dataMember)
         {
             DataStructureEntity entity = dataStructure
-                .GetChildByName(table.TableName, DataStructureEntity.CategoryConst)
-                as DataStructureEntity;
+                .ChildItemsByTypeRecursive(DataStructureEntity.CategoryConst)
+                .Cast<DataStructureEntity>()
+                .First(item => item.Name == table.TableName);
             parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
             parentNode.SetAttribute("Type", "SectionLevelPlugin");
             parentNode.SetAttribute("Name", text);
             parentNode.SetAttribute("HasPanelConfiguration", XmlConvert.ToString (true));
             parentNode.SetAttribute("Entity", entity.Name);
             parentNode.SetAttribute("ModelId", modelId);
+            parentNode.SetAttribute("DataMember", dataMember);
 
             FormXmlBuilder.AddDataSource(dataSources, table, modelId, isIndependent);
             

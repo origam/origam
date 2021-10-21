@@ -857,7 +857,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					(grids[0] as XmlElement).SetAttribute("IsRootGrid", "true");
 				}
 			}
-			grids = doc.SelectNodes("//*[@Type='Grid' or @Type='TreePanel' or @Type='ReportButton']");
+			grids = doc.SelectNodes("//*[@Type='Grid' or @Type='TreePanel' or @Type='ReportButton' or @Type='SectionLevelPlugin']");
 			foreach(XmlElement g in grids)
 			{
 				if(g.GetAttribute("IsRootGrid") == "false" && g.GetAttribute("IsRootEntity") == "false")
@@ -1203,7 +1203,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 		                    isPreloaded: isPreloaded,
 		                    isIndependent: isIndependent, 
 		                    dataSources: dataSources, 
-		                    modelId: control.Id.ToString());
+		                    modelId: control.Id.ToString(),
+		                    dataMember: renderData.DataMember);
 	                    break;
                     case "Label":
                         FormLabelBuilder.Build(parentNode, renderData.Text);
