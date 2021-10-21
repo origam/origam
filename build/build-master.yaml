@@ -331,6 +331,13 @@ jobs:
          artifactName: 'origam-setup'
          downloadPath: '$(build.artifactstagingdirectory)'
      - task: DownloadBuildArtifacts@0
+       displayName: Download origam-client artifact
+       inputs:
+         buildType: 'current'
+         downloadType: 'single'
+         artifactName: 'origam-client'
+         downloadPath: '$(build.artifactstagingdirectory)'
+     - task: DownloadBuildArtifacts@0
        displayName: Download origam-html-server artifact
        inputs:
          buildType: 'current'
@@ -467,6 +474,7 @@ jobs:
      - powershell: |
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-html-server", "$(build.artifactstagingdirectory)\origam-html.zip"); }
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-model", "$(build.artifactstagingdirectory)\origam-model.zip"); }
+        & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-client", "$(build.artifactstagingdirectory)\origam-client.zip"); }
        displayName: Zip files for release
      # ------------------------------------
      # RELEASE ORIGAM_SOURCE - TAG
@@ -493,6 +501,7 @@ jobs:
            ```
            Related change logs: [HTML Client](https://github.com/origam/origam-html/releases/tag/$(TAG)) | [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) | [Root Model](https://github.com/origam/origam-model/releases/tag/$(TAG))
          assets: |
+           $(Build.ArtifactStagingDirectory)/origam-client.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
            $(Build.ArtifactStagingDirectory)/origam-html.zip
            $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
