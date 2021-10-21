@@ -24,7 +24,6 @@ import { new_ProcessActionResult } from "model/actions/Actions/processActionResu
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { handleError } from "model/actions/handleError";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { IAction } from "model/entities/types/IAction";
 import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
@@ -38,7 +37,6 @@ import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreen
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
-import React from "react";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
 import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
@@ -88,7 +86,7 @@ import { getIsAddButtonVisible } from "../../selectors/DataView/getIsAddButtonVi
 import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
 import { isIScreenPlugin } from "plugins/types/IScreenPlugin";
 import { isISectionPlugin } from "../../../plugins/types/ISectionPlugin";
-
+import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
   NoSave = 1,
@@ -1120,7 +1118,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         await when(() => this.allDataViewsSteady);
       }, 10);
     }
-    yield*clearRowStates(this)();
+    yield*refreshRowStates(this)();
     yield*refreshWorkQueues(this)();
   }
 
