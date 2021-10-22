@@ -25,8 +25,9 @@ import { getGridFocusManager } from "model/entities/GridFocusManager";
 export function selectLastRow(ctx: any) {
   return function*selectLastRow() {
     let dataView = getDataView(ctx);
-    const loadLastPage = dataView.infiniteScrollLoader?.loadLastPage;
-    if (loadLastPage) yield*loadLastPage();
+    if (dataView.infiniteScrollLoader){
+      yield*dataView.infiniteScrollLoader.loadLastPage();
+    }
     dataView.selectLastRow();
     getTablePanelView(ctx).scrollToCurrentRow();
     if (!isLazyLoading(ctx)) {
