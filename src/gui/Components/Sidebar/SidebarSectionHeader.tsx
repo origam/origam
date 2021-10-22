@@ -28,10 +28,12 @@ export class SidebarSectionHeader extends React.Component<{
   onClick?(event: any): void;
   refDom?: any;
   onContextMenu?: (event: any) => void;
+  id?: string;
 }> {
   render() {
     return (
       <a
+        id={this.props.id}
         ref={this.props.refDom}
         className={cx(S.root, {
           isActive: this.props.isActive

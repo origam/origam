@@ -32,6 +32,7 @@ export class ScreenToolbarAction extends React.Component<{
   onClick?(event: any): void;
   onShortcut?(event: any): void;
   shortcutPredicate?(event: any): boolean;
+  id?: string;
 }> {
   @action.bound
   handleWindowKeyDown(event: any) {
@@ -86,6 +87,7 @@ export class ScreenToolbarAction extends React.Component<{
         )}
         onMouseDown={this.props.onMouseDown}
         onClick={this.props.onClick}
+        id={this.props.id}
         title={this.props.label}
       >
         {this.props.icon && <div className={S.icon}>{this.props.icon}</div>}

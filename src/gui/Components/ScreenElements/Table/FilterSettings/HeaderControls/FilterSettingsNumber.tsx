@@ -46,9 +46,11 @@ const OPERATORS =
 const OpCombo: React.FC<{
   setting: any;
   onChange: () => void;
+  id: string;
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
+      id={props.id}
       trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).caption}</>}
     >
       {OPERATORS.map((op) => (
@@ -76,6 +78,7 @@ class OpEditors extends React.Component<{
   onCurrentValue1Changed: ((value1: any) => void);
   onCurrentValue2Changed: ((value2: any) => void);
   autoFocus: boolean;
+  id: string;
 }> {
 
   inputRef = (elm: any) => (this.inputTag = elm);
@@ -99,6 +102,7 @@ class OpEditors extends React.Component<{
       case "gte":
         return (
           <input
+            id={this.props.id}
             type="number"
             className={CS.input}
             value={this.props.currentValue1 ?? ""}
@@ -113,6 +117,7 @@ class OpEditors extends React.Component<{
         return (
           <>
             <input
+              id={"from_" + this.props.id}
               type="number"
               className={CS.input}
               value={this.props.currentValue1 ?? ""}
@@ -121,6 +126,7 @@ class OpEditors extends React.Component<{
               ref={this.inputRef}
             />
             <input
+              id={"to_" + this.props.id}
               type="number"
               className={CS.input}
               value={this.props.currentValue2 ?? ""}
@@ -141,7 +147,8 @@ class OpEditors extends React.Component<{
 export class FilterSettingsNumber extends React.Component<{
   setting?: any;
   autoFocus: boolean;
-  onChange: () => void;
+  onChange: ()=>void;
+  id: string;
 }> {
 
   static get defaultSettings() {
@@ -236,11 +243,13 @@ export class FilterSettingsNumber extends React.Component<{
     return (
       <>
         <OpCombo
+          id={"combo_" + this.props.id}
           setting={this.props.setting}
           onChange={this.handleFilterTypeChange}
         />
         <OpEditors
-          setting={this.props.setting}
+          id={"input_" + this.props.id}
+          setting={this.props.setting} 
           onBlur={this.handleBlur}
           currentValue1={this.currentValue1}
           currentValue2={this.currentValue2}

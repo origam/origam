@@ -127,6 +127,7 @@ export class TableViewEditor extends React.Component<{
       case "Text":
         return (
           <TextEditor
+            id={"editor_" + this.props.property?.modelInstanceId}
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
             isInvalid={false}

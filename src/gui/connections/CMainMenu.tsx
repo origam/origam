@@ -133,6 +133,7 @@ export class CMainMenu extends React.Component<{
           onMouseLeave={() => this.mouseInHeader = false}
         >
           <SidebarSectionHeader
+            id={"menuHeader"}
             isActive={this.props.isActive}
             icon={<Icon src="./icons/menu.svg" tooltip={T("Menu", "menu")}/>}
             label={T("Menu", "menu")}
@@ -223,6 +224,7 @@ class CMainMenuCommandItem extends React.Component<{
             <MainMenuItem
               refDom={refTrigger}
               level={props.level}
+              id={"menu_"+props.node.attributes.id}
               isActive={false}
               icon={
                 <Icon
@@ -568,6 +570,7 @@ class CMainMenuFolderItem extends React.Component<{
           level={props.level}
           isActive={false}
           icon={this.icon}
+          id={"menu_"+props.node.attributes.id}
           label={props.node.attributes.label}
           isHidden={!props.isOpen}
           onClick={this.handleClick}

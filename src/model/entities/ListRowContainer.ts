@@ -27,6 +27,8 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import _ from "lodash";
 import { fixRowIdentifier } from "utils/dataRow";
 import { IDataView } from "./types/IDataView";
+import { FlowBusyMonitor } from "utils/flow";
+import { T } from "utils/translation";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
@@ -105,12 +107,15 @@ export class ListRowContainer implements IRowsContainer {
   getOrderingProperty(dataView: IDataView, ordering: IOrdering) {
     const property = getDataViewPropertyById(dataView, ordering.columnId)
     if (!property) {
-      throw new Error(`Panel ${dataView.modelId} has default sort set to column ${ordering.columnId}. This column does not exist in the panel. Cannot set default sort.`);
+      // throw new Error(`Panel ${dataView.modelId} has default sort set to column ${ordering.columnId}. This column does not exist in the panel. Cannot set default sort.`);
+      throw new Error(T(`Panel ${dataView.modelId} has default sort set to column ${ordering.columnId}. This column does not exist in the panel. Cannot set default sort.`,
+        "invalid_sort_column", dataView.modelId, ordering.columnId, dataView.name));
     }
     return property;
   }
 
   updateSortAndFilterDebounced = _.debounce(this.updateSortAndFilter, 10);
+  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
 
   @action
   async updateSortAndFilter(data?: { retainPreviousSelection?: boolean }) {

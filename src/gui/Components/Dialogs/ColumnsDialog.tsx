@@ -113,6 +113,7 @@ export class ColumnsDialog extends React.Component<{
         buttonsCenter={
           <>
             <button
+              id={"columnConfigOk"}
               tabIndex={0}
               onClick={(event: any) =>
                 this.props.onOkClick && this.props.onOkClick(this.configuration)
@@ -177,7 +178,7 @@ export class ColumnsDialog extends React.Component<{
       timeGroupingUnit,
     } = this.sortedColumnConfigs[rowIndex];
 
-    const {name, entity, canGroup, canAggregate} = this.props.columnOptions.get(propertyId)!;
+    const { name, entity, canGroup, canAggregate, modelInstanceId } = this.props.columnOptions.get(propertyId)!;
 
     const aggregationOptions =  [
       new AggregationOption("", undefined),
@@ -211,8 +212,9 @@ export class ColumnsDialog extends React.Component<{
         return name;
       case 2:
         return (
-          <label className={S.checkBox}>
+          <label id={"group_index_" + modelInstanceId} className={S.checkBox}>
             <input
+              id={"group_by_" + modelInstanceId}
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}

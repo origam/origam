@@ -215,6 +215,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   className={isDirty ? "isRed isHoverGreen" : ""}
                   onClick={onSaveSessionClick(formScreen)}
                   onShortcut={onSaveSessionClick(formScreen)}
+                  id={"saveButton"}
                   shortcutPredicate={isSaveShortcut}
                   icon={
                     <Icon
@@ -230,6 +231,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(formScreen)}
                   onShortcut={onRefreshSessionClick(formScreen)}
+                  id={"refreshButton"}
                   shortcutPredicate={isRefreshShortcut}
                   icon={
                     <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")}/>

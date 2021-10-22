@@ -53,16 +53,23 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
   switch (property.column) {
     case "Text":
       return <FilterSettingsString
+        id={property.modelInstanceId}
         setting={getSettings(FilterSettingsString.defaultSettings)}
         onChange={onFilterValueChange}
         autoFocus={props.autoFocus}/>;
     case "CheckBox":
-      return <FilterSettingsBoolean setting={getSettings(FilterSettingsBoolean.defaultSettings)}/>;
+      return <FilterSettingsBoolean
+        id={property.modelInstanceId}
+        setting={getSettings(FilterSettingsBoolean.defaultSettings)}
+      />;
     case "Date":
-      return <FilterSettingsDate setting={getSettings(FilterSettingsDate.defaultSettings)}
-                                 autoFocus={props.autoFocus}/>;
+      return <FilterSettingsDate
+        id={property.modelInstanceId}
+        setting={getSettings(FilterSettingsDate.defaultSettings)} autoFocus={props.autoFocus}
+      />;
     case "Number":
       return <FilterSettingsNumber
+        id={property.modelInstanceId}
         setting={getSettings(FilterSettingsNumber.defaultSettings)}
         onChange={onFilterValueChange}
         autoFocus={props.autoFocus}/>;
@@ -71,6 +78,7 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
       setting.lookupId = property.lookupId;
       return (
         <FilterSettingsLookup
+          id={property.modelInstanceId}
           setting={setting}
           property={property}
           lookup={property.lookup!}
@@ -93,6 +101,7 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
     case "TagInput":
       return (
         <FilterSettingsTagInput
+          id={property.modelInstanceId}
           setting={getSettings(FilterSettingsTagInput.defaultSettings)}
           property={property}
           lookup={property.lookup!}

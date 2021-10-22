@@ -339,47 +339,47 @@ export class CDataViewHeaderInner extends React.Component<{
                           </DataViewHeaderGroup>
                         ) : null}
 
-                        <DataViewHeaderGroup noShrink={true}>
-                          {isAddButton && (
-                            <DataViewHeaderAction
-                              className={crudButtonsEnabled ? "isGreenHover" : ""}
-                              onClick={onCreateRowClickEvt}
-                              onShortcut={onCreateRowClickEvt}
-                              isDisabled={!crudButtonsEnabled}
-                              shortcutPredicate={isAddRecordShortcut}
-                            >
-                              <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")}/>
-                            </DataViewHeaderAction>
-                          )}
+                          <DataViewHeaderGroup noShrink={true}>
+                            {isAddButton && (
+                              <DataViewHeaderAction
+                                className={"addRow "+(crudButtonsEnabled ? "isGreenHover" : "")}
+                                onClick={onCreateRowClickEvt}
+                                onShortcut={onCreateRowClickEvt}
+                                isDisabled={!crudButtonsEnabled}
+                                shortcutPredicate={isAddRecordShortcut}
+                              >
+                                <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
+                              </DataViewHeaderAction>
+                            )}
 
-                          {isDelButton && !!selectedRow && (
-                            <DataViewHeaderAction
-                              className="isRedHover"
-                              onMouseDown={onDeleteRowClickEvt}
-                              onShortcut={onDeleteRowClickEvt}
-                              shortcutPredicate={isDeleteRecordShortcut}
-                            >
-                              <Icon
-                                src="./icons/minus.svg"
-                                tooltip={T("Delete", "delete_tool_tip")}
-                              />
-                            </DataViewHeaderAction>
-                          )}
+                            {isDelButton && !!selectedRow && (
+                              <DataViewHeaderAction
+                                className="deleteRow isRedHover"
+                                onMouseDown={onDeleteRowClickEvt}
+                                onShortcut={onDeleteRowClickEvt}
+                                shortcutPredicate={isDeleteRecordShortcut}
+                              >
+                                <Icon
+                                  src="./icons/minus.svg"
+                                  tooltip={T("Delete", "delete_tool_tip")}
+                                />
+                              </DataViewHeaderAction>
+                            )}
 
-                          {isCopyButton && !!selectedRow && (
-                            <DataViewHeaderAction
-                              className="isOrangeHover"
-                              onMouseDown={onCopyRowClickEvt}
-                              onShortcut={onCopyRowClickEvt}
-                              shortcutPredicate={isDuplicateRecordShortcut}
-                            >
-                              <Icon
-                                src="./icons/duplicate.svg"
-                                tooltip={T("Duplicate", "add_duplicate_tool_tip")}
-                              />
-                            </DataViewHeaderAction>
-                          )}
-                        </DataViewHeaderGroup>
+                            {isCopyButton && !!selectedRow && (
+                              <DataViewHeaderAction
+                                className="copyRow isOrangeHover"
+                                onMouseDown={onCopyRowClickEvt}
+                                onShortcut={onCopyRowClickEvt}
+                                shortcutPredicate={isDuplicateRecordShortcut}
+                              >
+                                <Icon
+                                  src="./icons/duplicate.svg"
+                                  tooltip={T("Duplicate", "add_duplicate_tool_tip")}
+                                />
+                              </DataViewHeaderAction>
+                            )}
+                          </DataViewHeaderGroup>
 
                         <DataViewHeaderGroup grovable={true}>
                           {this.props.extension.render("actions")}
@@ -423,11 +423,11 @@ export class CDataViewHeaderInner extends React.Component<{
                               </DataViewHeaderAction>
                             </DataViewHeaderGroup>
 
-                            <DataViewHeaderGroup noShrink={true}>
-                              {this.renderRowCount()}
-                            </DataViewHeaderGroup>
-                          </>
-                        )}
+                              <DataViewHeaderGroup noShrink={true} className={"rowCount"}>
+                                {this.renderRowCount()}
+                              </DataViewHeaderGroup>
+                            </>
+                          )}
 
                         <DataViewHeaderGroup noShrink={true}>
                           {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
@@ -450,108 +450,110 @@ export class CDataViewHeaderInner extends React.Component<{
                         </DataViewHeaderGroup>
                       </div>
 
-                      <DataViewHeaderGroup noShrink={true}>
-                        <Dropdowner
-                          trigger={({refTrigger, setDropped}) => (
-                            <DataViewHeaderAction
-                              refDom={refTrigger}
-                              onMouseDown={() => setDropped(true)}
-                              isActive={false}
-                            >
-                              <Icon
-                                src="./icons/dot-menu.svg"
-                                tooltip={T("Tools", "tools_tool_tip")}
-                              />
-                            </DataViewHeaderAction>
-                          )}
-                          content={({setDropped}) => (
-                            <Dropdown>
-                              <DropdownItem
-                                onClick={(event: any) => {
-                                  setDropped(false);
-                                  onExportToExcelClickEvt(event);
-                                }}
+                        <DataViewHeaderGroup noShrink={true}>
+                          <Dropdowner
+                            trigger={({ refTrigger, setDropped }) => (
+                              <DataViewHeaderAction
+                                className={"threeDotMenu"}
+                                refDom={refTrigger}
+                                onMouseDown={() => setDropped(true)}
+                                isActive={false}
                               >
-                                {T("Export to Excel", "excel_tool_tip")}
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={(event: any) => {
-                                  setDropped(false);
-                                  onColumnConfigurationClickEvt(event);
-                                }}
-                              >
-                                {T("Column configuration", "column_config_tool_tip")}
-                              </DropdownItem>
-                              {!isDialog && (
+                                <Icon
+                                  src="./icons/dot-menu.svg"
+                                  tooltip={T("Tools", "tools_tool_tip")}
+                                />
+                              </DataViewHeaderAction>
+                            )}
+                            content={({ setDropped }) => (
+                              <Dropdown>
                                 <DropdownItem
-                                  isDisabled={false}
                                   onClick={(event: any) => {
                                     setDropped(false);
-                                    onRecordInfoClick(dataView)(event);
+                                    onExportToExcelClickEvt(event);
                                   }}
                                 >
-                                  {T("Show record information", "info_button_tool_tip")}
+                                  {T("Export to Excel", "excel_tool_tip")}
                                 </DropdownItem>
-                              )}
-                              {customTableConfigsExist && [
                                 <DropdownItem
-                                  isDisabled={false}
-                                  isSelected={
-                                    configurationManager.defaultTableConfiguration.isActive
-                                  }
-                                  onClick={async (event: any) => {
+                                  id={"columnConfigItem"}
+                                  onClick={(event: any) => {
                                     setDropped(false);
-                                    configurationManager.activeTableConfiguration =
-                                      configurationManager.defaultTableConfiguration;
-                                    await configurationManager.saveTableConfigurations();
+                                    onColumnConfigurationClickEvt(event);
                                   }}
                                 >
-                                  {T("Default View", "default_grid_view_view")}
-                                </DropdownItem>,
-                                ...configurationManager.customTableConfigurations.map(
-                                  (tableConfig) => (
-                                    <DropdownItem
-                                      isDisabled={false}
-                                      isSelected={tableConfig.isActive}
-                                      onClick={async (event: any) => {
-                                        setDropped(false);
-                                        configurationManager.activeTableConfiguration = tableConfig;
-                                        await configurationManager.saveTableConfigurations();
-                                      }}
-                                    >
-                                      {tableConfig.name}
-                                    </DropdownItem>
-                                  )
-                                ),
-                                <DropdownItem
-                                  isDisabled={false}
-                                  onClick={async (event: any) => {
-                                    setDropped(false);
-                                    await configurationManager.saveTableConfigurations();
-                                  }}
-                                >
-                                  {T("Save View", "save_current_column_config")}
-                                </DropdownItem>,
-                                <DropdownItem
-                                  isDisabled={
-                                    configurationManager.defaultTableConfiguration.isActive
-                                  }
-                                  onClick={async (event: any) => {
-                                    setDropped(false);
-                                    await configurationManager.deleteActiveTableConfiguration();
-                                  }}
-                                >
-                                  {T("Delete View", "delete_current_column_config")}
-                                </DropdownItem>,
-                              ]}
-                              {this.relevantMenuActions.length > 0 && <DropdownDivider/>}
-                              {this.renderMenuActions({setMenuDropped: setDropped})}
-                            </Dropdown>
-                          )}
-                        />
-                      </DataViewHeaderGroup>
-                    </>
-                  ))}
+                                  {T("Column configuration", "column_config_tool_tip")}
+                                </DropdownItem>
+                                {!isDialog && (
+                                  <DropdownItem
+                                    isDisabled={false}
+                                    onClick={(event: any) => {
+                                      setDropped(false);
+                                      onRecordInfoClick(dataView)(event);
+                                    }}
+                                  >
+                                    {T("Show record information", "info_button_tool_tip")}
+                                  </DropdownItem>
+                                )}
+                                {customTableConfigsExist && [
+                                  <DropdownItem
+                                    isDisabled={false}
+                                    isSelected={
+                                      configurationManager.defaultTableConfiguration.isActive
+                                    }
+                                    onClick={async (event: any) => {
+                                      setDropped(false);
+                                      configurationManager.activeTableConfiguration =
+                                        configurationManager.defaultTableConfiguration;
+                                      await configurationManager.saveTableConfigurations();
+                                    }}
+                                  >
+                                    {T("Default View", "default_grid_view_view")}
+                                  </DropdownItem>,
+                                  ...configurationManager.customTableConfigurations.map(
+                                    (tableConfig) => (
+                                      <DropdownItem
+                                        isDisabled={false}
+                                        isSelected={tableConfig.isActive}
+                                        onClick={async (event: any) => {
+                                          setDropped(false);
+                                          configurationManager.activeTableConfiguration = tableConfig;
+                                          await configurationManager.saveTableConfigurations();
+                                        }}
+                                      >
+                                        {tableConfig.name}
+                                      </DropdownItem>
+                                    )
+                                  ),
+                                  <DropdownItem
+                                    isDisabled={false}
+                                    onClick={async (event: any) => {
+                                      setDropped(false);
+                                      await configurationManager.saveTableConfigurations();
+                                    }}
+                                  >
+                                    {T("Save View", "save_current_column_config")}
+                                  </DropdownItem>,
+                                  <DropdownItem
+                                    isDisabled={
+                                      configurationManager.defaultTableConfiguration.isActive
+                                    }
+                                    onClick={async (event: any) => {
+                                      setDropped(false);
+                                      await configurationManager.deleteActiveTableConfiguration();
+                                    }}
+                                  >
+                                    {T("Delete View", "delete_current_column_config")}
+                                  </DropdownItem>,
+                                ]}
+                                {this.relevantMenuActions.length > 0 && <DropdownDivider />}
+                                {this.renderMenuActions({ setMenuDropped: setDropped })}
+                              </Dropdown>
+                            )}
+                          />
+                        </DataViewHeaderGroup>
+                      </>
+                    ))}
                 </DataViewHeader>
               )}
             </Observer>

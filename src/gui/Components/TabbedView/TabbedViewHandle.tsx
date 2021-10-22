@@ -24,6 +24,7 @@ import { Icon } from "gui/Components/Icon/Icon";
 
 export class TabbedViewHandle extends React.Component<{
   title?: string;
+  id?: string;
   isActive?: boolean;
   hasCloseBtn?: boolean;
   isDirty?: boolean;
@@ -37,6 +38,7 @@ export class TabbedViewHandle extends React.Component<{
         onClick={this.props.onClick}
         className={cx(S.root, {isActive: this.props.isActive, isDirty: this.props.isDirty})}
         title={this.props.title}
+        id={this.props.id}
       >
         <div className={S.label}>{this.props.children}</div>
         {this.props.hasCloseBtn && (

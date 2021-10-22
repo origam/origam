@@ -29,6 +29,7 @@ import _ from "lodash";
 @observer
 export class FilterSettingsComboBox extends React.Component<{
   trigger: React.ReactNode;
+  id: string;
 }> {
   @observable isDroppedDown = false;
 
@@ -84,7 +85,7 @@ export class FilterSettingsComboBox extends React.Component<{
         {({measureRef: refTriggerMeasure, contentRect: triggerContentRect}) => (
           <Observer>
             {() => (
-              <div className={S.container} ref={this.refDropdown}>
+              <div id={this.props.id} className={S.container} ref={this.refDropdown}>
                 <div
                   ref={refTriggerMeasure}
                   className={S.trigger}
@@ -96,21 +97,22 @@ export class FilterSettingsComboBox extends React.Component<{
                   </div>
                 </div>
                 {this.isDroppedDown &&
-                createPortal(
-                  <div
-                    className={S.dropdown}
-                    onClick={this.handleDropdownClick}
-                    style={{
-                      position: "absolute",
-                      top: triggerContentRect.bounds?.bottom,
-                      left: triggerContentRect.bounds?.left,
-                      minWidth: triggerContentRect.bounds?.width,
-                    }}
-                  >
-                    {this.props.children}
-                  </div>,
-                  document.getElementById("dropdown-portal")!
-                )}
+                  createPortal(
+                    <div
+                      id={"dropdown_" + this.props.id}
+                      className={S.dropdown}
+                      onClick={this.handleDropdownClick}
+                      style={{
+                        position: "absolute",
+                        top: triggerContentRect.bounds?.bottom,
+                        left: triggerContentRect.bounds?.left,
+                        minWidth: triggerContentRect.bounds?.width,
+                      }}
+                    >
+                      {this.props.children}
+                    </div>,
+                    document.getElementById("dropdown-portal")!
+                  )}
               </div>
             )}
           </Observer>

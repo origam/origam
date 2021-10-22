@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import {
   currentCellText,
   currentCellTextMultiline,
-  currentCellValue,
+  currentCellValue, currentColumnId,
   currentColumnLeft,
   currentColumnWidth,
   currentProperty,
@@ -39,11 +39,13 @@ import { CPR } from "utils/canvas";
 import moment from "moment";
 import selectors from "model/selectors-tree";
 import {
+  context,
   drawingColumnIndex,
   formScreen,
-  rowHeight,
+  rowHeight, rowIndex,
 } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
+import {setTableDebugValue} from "gui/Components/ScreenElements/Table/TableRendering/DebugTableMonitor";
 
 interface IDataCellRenderer {
   drawCellText(): void;
@@ -121,6 +123,7 @@ class CheckBoxCellRenderer implements IDataCellRenderer {
       CPR() * xCenter(),
       CPR() * (currentRowTop() + topTextOffset - 5)
     );
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), this.cellText);
   }
 }
 
@@ -157,6 +160,7 @@ class DateCellRenderer implements IDataCellRenderer {
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), dateTimeText);
   }
 }
 
@@ -184,6 +188,7 @@ class TagInputCellRenderer implements IDataCellRenderer {
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), this.cellText);
   }
 }
 
@@ -221,6 +226,7 @@ class CheckListCellRenderer implements IDataCellRenderer {
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), currentCellText());
     if (isLink) {
       this.ctx2d.restore();
     }
@@ -258,6 +264,7 @@ class NumberInputCellRenderer implements IDataCellRenderer {
       );
       this.ctx2d.restore();
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), currentCellText());
   }
 }
 
@@ -341,6 +348,7 @@ class GenericCellRenderer implements IDataCellRenderer {
         this.ctx2d.fillText("*******", numberCellPaddingRight() * CPR(), 15 * CPR());
       }
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), currentCellText())
   }
 }
 

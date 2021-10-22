@@ -46,9 +46,11 @@ const OPERATORS = [
 const OpCombo: React.FC<{
   setting: any;
   onChange: (newSetting: any) => void;
+  id: string;
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
+      id={props.id}
       trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).caption}</>}
     >
       {OPERATORS.map((op) => (
@@ -73,6 +75,7 @@ const OpEditors: React.FC<{
   onBlur?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   autoFocus: boolean;
+  id: string;
 }> = observer((props) => {
   const {setting} = props;
   const dateFormatCs = getDefaultCsDateFormatDataFromCookie().defaultLongDateFormat;
@@ -86,6 +89,7 @@ const OpEditors: React.FC<{
     case "gte":
       return (
         <DateTimeEditor
+          id={props.id}
           value={setting.val1 ?? ""}
           outputFormat={dateFormatMoment}
           outputFormatToShow={dateFormatCs}
@@ -106,6 +110,7 @@ const OpEditors: React.FC<{
       return (
         <>
           <DateTimeEditor
+            id={"from_"+props.id}
             value={setting.val1}
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
@@ -120,6 +125,7 @@ const OpEditors: React.FC<{
             onKeyDown={props.onKeyDown}
           />
           <DateTimeEditor
+            id={"to_"+props.id}
             value={setting.val2}
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
@@ -146,6 +152,7 @@ const OpEditors: React.FC<{
 export class FilterSettingsDate extends React.Component<{
   setting?: any;
   autoFocus: boolean
+  id: string;
 }> {
 
   static get defaultSettings() {
@@ -183,8 +190,17 @@ export class FilterSettingsDate extends React.Component<{
   render() {
     return (
       <>
-        <OpCombo setting={this.props.setting} onChange={this.handleChange}/>
-        <OpEditors setting={this.props.setting} onChange={this.handleChange} autoFocus={this.props.autoFocus}/>
+        <OpCombo
+          setting={this.props.setting}
+          onChange={this.handleChange}
+          id={"combo_" + this.props.id}
+        />
+        <OpEditors
+          id={"input_" + this.props.id}
+          setting={this.props.setting}
+          onChange={this.handleChange}
+          autoFocus={this.props.autoFocus}
+        />
       </>
     );
   }

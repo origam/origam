@@ -36,6 +36,7 @@ export interface IColumnOptions {
   canAggregate: boolean;
   entity: string;
   name: string;
+  modelInstanceId: string;
 }
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
@@ -59,6 +60,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
             (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
           entity: property.entity,
           name: property.name,
+          modelInstanceId: property.modelInstanceId
         })
     }
     return optionsMap;

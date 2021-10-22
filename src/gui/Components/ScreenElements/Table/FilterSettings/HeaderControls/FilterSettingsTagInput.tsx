@@ -55,9 +55,11 @@ const OPERATORS = [
 
 const OpCombo: React.FC<{
   setting: IFilterSetting
+  id: string;
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
+      id={props.id}
       trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).caption}</>}
     >
       {OPERATORS.map((op) => (
@@ -93,6 +95,7 @@ class OpEditors extends React.Component<{
   lookup: ILookup;
   property: IProperty;
   autoFocus: boolean;
+  id: string;
 }> {
 
   render() {
@@ -102,6 +105,7 @@ class OpEditors extends React.Component<{
       case "nin":
         return (
           <FilterBuildDropdownEditor
+            id={this.props.id}
             lookup={this.props.lookup}
             property={this.props.property}
             getOptions={this.props.getOptions}
@@ -125,6 +129,7 @@ export class FilterSettingsTagInput extends React.Component<{
   property: IProperty;
   setting: IFilterSetting;
   autoFocus: boolean;
+  id: string;
 }> {
   static get defaultSettings() {
     return new TagInputFilterSetting(OPERATORS[0].type)
@@ -134,8 +139,12 @@ export class FilterSettingsTagInput extends React.Component<{
     const setting = this.props.setting;
     return (
       <>
-        <OpCombo setting={setting}/>
+        <OpCombo
+          setting={setting}
+          id={"combo_" + this.props.id}
+        />
         <OpEditors
+          id={"input_" + this.props.id}
           setting={setting}
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
@@ -199,6 +208,7 @@ export function FilterBuildDropdownEditor(props: {
   values: Array<any>;
   setting: IFilterSetting;
   autoFocus: boolean;
+  id: string;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const workbench = mobxContext.workbench;
@@ -277,6 +287,7 @@ export function FilterBuildDropdownEditor(props: {
       <DropdownEditor
         editor={
           <TagInputEditor
+            id={props.id}
             customInputClass={S.tagInput}
             value={value}
             isReadOnly={false}

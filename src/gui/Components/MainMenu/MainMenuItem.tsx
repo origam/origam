@@ -34,7 +34,7 @@ export class MainMenuItem extends React.Component<{
   isActive: boolean;
   isHidden: boolean;
   isHighLighted?: boolean;
-
+  id?: string;
   isOpenedScreen?: boolean;
   isActiveScreen?: boolean;
 
@@ -59,7 +59,7 @@ export class MainMenuItem extends React.Component<{
           title={this.props.label}
         >
           <div className={S.icon}>{this.props.icon}</div>
-          <div className={S.label}>{this.props.label}</div>
+          <div className={S.label} id={this.props.id}>{this.props.label}</div>
         </a>
       </div>
     );
