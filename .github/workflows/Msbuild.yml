@@ -43,7 +43,7 @@ jobs:
       
       - uses: actions/cache@v1
         with:
-          path: $NUGET_PACKAGES
+          path: ~/.nuget/packages
           key: nuget-2021-04-11-01-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
           restore-keys: |
             nuget-2021-04-11-01-${{ runner.os }}
