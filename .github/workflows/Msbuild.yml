@@ -45,7 +45,7 @@ jobs:
           path: ~/.nuget/packages
           key: nuget-2021-04-11-01-${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
           restore-keys: |
-            nuget-2021-04-11-01-${{ runner.os }}
+            nuget-2021-04-11-01-${{ runner.os }}-nuget-
         
       - name: Restore Nuget
         if: steps.cache.outputs.cache-hit != 'true'
@@ -54,5 +54,5 @@ jobs:
               nuget restore Origam.sln
         
       - name: Build Architect
-        run: msbuild backend/Origam.sln /p:Configutation="Release Architect" /p:Platform=x64
+        run: msbuild backend/Origam.sln -m /p:Configutation="Release Architect" /p:Platform="Any CPU" 
 
