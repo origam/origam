@@ -54,5 +54,5 @@ jobs:
               nuget restore Origam.sln
         
       - name: Build Architect
-        run: msbuild Origam.sln /p:Configutation="Release Architect" /p:Platform=x64
+        run: msbuild backend/Origam.sln /p:Configutation="Release Architect" /p:Platform=x64
 
