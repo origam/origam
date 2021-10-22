@@ -1567,10 +1567,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						bindingMember = bindItem.Value;
 					}
 					var fieldType = csi.FirstParentOfType<PanelControlSet>()
-						.DataEntity
-						.ChildItems.ToGeneric()
-						.OfType<IDataEntityColumn>()
-						.FirstOrDefault(child => child.Name == bindingMember)
+						?.DataEntity
+						?.ChildItems?.ToGeneric()
+						?.OfType<IDataEntityColumn>()
+						?.FirstOrDefault(child => child.Name == bindingMember)
 						?.FieldType ?? "";
 					
 					if (int.Parse(tabIndex) >= 0)
