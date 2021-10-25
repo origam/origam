@@ -63,7 +63,7 @@ class PgSqlRenderer : SqlRenderer
     internal override string DateAdd(DateTypeSql datepart, string number,
         string date)
     {
-        return string.Format("({0} + ( {1} || '{2}')::interval)", date, number,
+        return string.Format("({0}::date + ( {1} || '{2}')::interval)", date, number,
             GetAddDateSql(datepart));
     }
     
