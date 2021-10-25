@@ -24,6 +24,7 @@ using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
@@ -416,7 +417,7 @@ namespace Origam.DA
 			for (int iRowSource = 0 ; nbRowSource > iRowSource ; ++iRowSource) 
 			{
 				drSource = in_dtSource.Rows[iRowSource];
-				
+				drTarget = null;
 				if(hasPrimaryKeys)
 				{
 					for(int i=0; i<adcPK.Length; i++)
@@ -432,12 +433,23 @@ namespace Origam.DA
 						}
 					}
 
-					// Locate/add source row in target (INSERT ?)
-					drTarget = inout_dtTarget.Rows.Find(aRowKey);
-				}
-				else
-				{
-					drTarget = null;
+					// Locate source row in target 
+					if (drSource.RowState == DataRowState.Deleted)
+					{
+						DataRow deletedRow = inout_dtTarget.Rows.Cast<DataRow>()
+							.FirstOrDefault(
+								row => row.RowState == DataRowState.Deleted &&
+								       PrimaryKey(row).SequenceEqual(aRowKey)
+							);
+						if (deletedRow != null)
+						{
+							continue; // Deleted row is already marked as deleted so there is nothing to do
+						}
+					}
+					else
+					{
+						drTarget = inout_dtTarget.Rows.Find(aRowKey); 
+					}
 				}
 
 				if (null == drTarget)
