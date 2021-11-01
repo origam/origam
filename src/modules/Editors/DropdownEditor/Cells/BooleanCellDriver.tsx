@@ -33,8 +33,14 @@ export class BooleanCellDriver implements IBodyCellDriver {
   ) {
   }
 
+  formattedText(rowIndex: number){
+    if(this.dataTable.rowCount <= rowIndex){
+      return "";
+    }
+    return this.dataTable.getValue(rowIndex, this.dataIndex) ?? "";
+  }
+
   render(rowIndex: number) {
-    const value = this.dataTable.getValue(rowIndex, this.dataIndex);
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     return (
       <div
@@ -44,7 +50,7 @@ export class BooleanCellDriver implements IBodyCellDriver {
         )}
         onClick={(e) => this.behavior.handleTableCellClicked(e, rowIndex)}
       >
-        {value ? <i className="far fa-check-square"></i> : <i className="far fa-square"></i>}
+        {this.formattedText(rowIndex) ? <i className="far fa-check-square"></i> : <i className="far fa-square"></i>}
       </div>
     );
   }

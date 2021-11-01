@@ -34,11 +34,17 @@ export class DateCellDriver implements IBodyCellDriver {
   ) {
   }
 
-  render(rowIndex: number) {
+  formattedText(rowIndex: number){
+    if(this.dataTable.rowCount <= rowIndex){
+      return "";
+    }
     const value = this.dataTable.getValue(rowIndex, this.dataIndex);
-    const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     let momentValue = moment(value);
-    const formattedValue = momentValue.isValid() ? momentValue.format(this.formatterPattern) : "";
+    return momentValue.isValid() ? momentValue.format(this.formatterPattern) : "";
+  }
+
+  render(rowIndex: number) {
+    const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
 
     return (
       <div
@@ -51,7 +57,7 @@ export class DateCellDriver implements IBodyCellDriver {
           this.behavior.handleTableCellClicked(e, rowIndex);
         }}
       >
-        {formattedValue}
+        {this.formattedText(rowIndex)}
       </div>
     );
   }

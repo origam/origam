@@ -33,8 +33,14 @@ export class NumberCellDriver implements IBodyCellDriver {
   ) {
   }
 
+  formattedText(rowIndex: number){
+    if(this.dataTable.rowCount <= rowIndex){
+      return "";
+    }
+    return this.dataTable.getValue(rowIndex, this.dataIndex) ?? "";
+  }
+
   render(rowIndex: number) {
-    const value = this.dataTable.getValue(rowIndex, this.dataIndex);
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     return (
       <div
@@ -48,7 +54,7 @@ export class NumberCellDriver implements IBodyCellDriver {
         )}
         onClick={(e) => this.behavior.handleTableCellClicked(e, rowIndex)}
       >
-        {value}
+        {this.formattedText(rowIndex)}
       </div>
     );
   }
