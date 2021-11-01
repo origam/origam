@@ -842,12 +842,7 @@ namespace Origam.Gui.Designer
 
 		public void OnComponentChanged(object component, MemberDescriptor member, object oldValue, object newValue)
 		{
-			if (Equals(oldValue, newValue))
-			{
-				return;
-			}
-
-			if (ComponentChanged != null) 
+            if (ComponentChanged != null) 
 			{
 				ComponentChangedEventArgs ce = new ComponentChangedEventArgs(component, member, oldValue, newValue);
 				try
