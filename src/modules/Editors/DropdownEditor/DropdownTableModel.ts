@@ -132,8 +132,6 @@ export interface IHeaderCellDriver {
 
 export interface IBodyCellDriver {
   render(rowIndex: number): React.ReactNode;
-
-  formattedText(i: number): string;
 }
 
 export interface IDropdownColumnDriver {
