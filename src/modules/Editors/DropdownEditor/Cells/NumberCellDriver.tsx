@@ -3,7 +3,7 @@ import { bodyCellClass } from "./CellsCommon";
 import { IDropdownDataTable, IBodyCellDriver, DropdownDataTable } from "../DropdownTableModel";
 import cx from "classnames";
 import S from "./NumberCell.module.scss";
-import { IDropdownEditorBehavior, DropdownEditorBehavior } from "../DropdownEditorBehavior";
+import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { TypeSymbol } from "dic/Container";
 
 export class NumberCellDriver implements IBodyCellDriver {
@@ -13,8 +13,11 @@ export class NumberCellDriver implements IBodyCellDriver {
     private behavior: DropdownEditorBehavior
   ) {}
 
+  formattedText(rowIndex: number){
+    return this.dataTable.getValue(rowIndex, this.dataIndex) ?? "";
+  }
+
   render(rowIndex: number) {
-    const value = this.dataTable.getValue(rowIndex, this.dataIndex);
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     return (
       <div
@@ -28,7 +31,7 @@ export class NumberCellDriver implements IBodyCellDriver {
         )}
         onClick={(e) => this.behavior.handleTableCellClicked(e, rowIndex)}
       >
-        {value}
+        {this.formattedText(rowIndex)}
       </div>
     );
   }
