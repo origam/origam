@@ -11,11 +11,8 @@ export class TextCellDriver implements IBodyCellDriver {
     private behavior: DropdownEditorBehavior
   ) {}
 
-  formattedText(rowIndex: number){
-    return this.dataTable.getValue(rowIndex, this.dataIndex) ?? "";
-  }
-
   render(rowIndex: number) {
+    const value = this.dataTable.getValue(rowIndex, this.dataIndex);
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     return (
       <div
@@ -28,7 +25,7 @@ export class TextCellDriver implements IBodyCellDriver {
           this.behavior.handleTableCellClicked(e, rowIndex)}
         }
       >
-        {this.formattedText(rowIndex)}
+        {value}
       </div>
     );
   }
