@@ -31,14 +31,8 @@ export class TextCellDriver implements IBodyCellDriver {
   ) {
   }
 
-  formattedText(rowIndex: number){
-    if(this.dataTable.rowCount <= rowIndex){
-      return "";
-    }
-    return this.dataTable.getValue(rowIndex, this.dataIndex) ?? "";
-  }
-
   render(rowIndex: number) {
+    const value = this.dataTable.getValue(rowIndex, this.dataIndex);
     const rowId = this.dataTable.getRowIdentifierByIndex(rowIndex);
     return (
       <div
@@ -52,7 +46,7 @@ export class TextCellDriver implements IBodyCellDriver {
         }
         }
       >
-        {this.formattedText(rowIndex)}
+        {value}
       </div>
     );
   }
