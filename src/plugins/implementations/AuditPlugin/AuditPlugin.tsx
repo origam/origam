@@ -27,8 +27,9 @@ import { observable } from "mobx";
 import moment from "moment";
 import { IPluginTableRow } from "../../types/IPluginRow";
 import { IPluginDataView } from "../../types/IPluginDataView";
-import { Localizer } from "../../tools/Localizer";
 import { localizations } from "./AuditPluginLocalization";
+import { ILocalization } from "plugins/types/ILocalization";
+import { ILocalizer } from "plugins/types/ILocalizer";
 
 export default class AuditPlugin implements ISectionPlugin {
   $type_ISectionPlugin: 1 = 1;
@@ -38,11 +39,11 @@ export default class AuditPlugin implements ISectionPlugin {
 
   }
 
-  getComponent(data: IPluginData): JSX.Element {
+  getComponent(data: IPluginData, createLocalizer: (localizations: ILocalization[]) => ILocalizer): JSX.Element {
     return <AuditComponent
       pluginData={data}
       getScreenParameters={this.getScreenParameters}
-      localizer={new Localizer(localizations, "en-US")}/>;
+      localizer={createLocalizer(localizations)}/>;
   }
 
   @observable
@@ -53,7 +54,7 @@ export default class AuditPlugin implements ISectionPlugin {
 class AuditComponent extends React.Component<{
   pluginData: IPluginData,
   getScreenParameters: (() => { [parameter: string]: string }) | undefined;
-  localizer: Localizer
+  localizer: ILocalizer
 }> {
 
   translate = (key: string, parameters?: { [key: string]: any }) => this.props.localizer.translate(key, parameters);

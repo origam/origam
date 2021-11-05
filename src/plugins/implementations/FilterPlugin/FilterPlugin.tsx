@@ -28,8 +28,9 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { IOption, SimpleDropdown } from "gui/Components/PublicComponents/SimpleDropdown";
 import { Button } from "gui/Components/PublicComponents/Button";
-import { Localizer } from "../../tools/Localizer";
 import { localizations } from "./FilterPluginLocalization";
+import { ILocalization } from "plugins/types/ILocalization";
+import { ILocalizer } from "plugins/types/ILocalizer";
 
 export default class FilterPlugin implements IScreenPlugin {
   $type_IScreenPlugin: 1 = 1;
@@ -75,8 +76,8 @@ export default class FilterPlugin implements IScreenPlugin {
     this.setScreenParameters?.(parameters);
   }
 
-  getComponent(data: IPluginData): JSX.Element {
-    let localizer = new Localizer(localizations, "en-US");
+  getComponent(data: IPluginData, createLocalizer: (localizations: ILocalization[]) => ILocalizer): JSX.Element {
+    let localizer = createLocalizer(localizations);
     for (let timeUnit of this.timeUnits) {
       timeUnit.label = localizer.translate(timeUnit.value)
     }
@@ -143,7 +144,7 @@ export default class FilterPlugin implements IScreenPlugin {
 @observer
 class FilterComponent extends React.Component<{
   filterPlugin: FilterPlugin,
-  localizer: Localizer
+  localizer: ILocalizer
 }> {
 
   plugin = this.props.filterPlugin;

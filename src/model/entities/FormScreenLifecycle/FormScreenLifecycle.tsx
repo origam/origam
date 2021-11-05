@@ -527,8 +527,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         if (!isISectionPlugin(plugin)) {
           throw new Error(`Plugin ${node.attributes.Name} is not SectionLevelPlugin`)
         }
-        const dataView = getDataViewByGridId(this, node.attributes.ModelInstanceId);
-        dataView!.clear();
         plugin.getScreenParameters = () => _.cloneDeep(this.parameters);
         plugin.initialize(node.attributes)
       });
@@ -1318,6 +1316,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *applyData(data: any): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
+      // debugger;
       for (let dataView of dataViews) {
         yield dataView.setRecords((entityValue as any).data);
         dataView.setRowCount(dataView.dataTable.rows.length);

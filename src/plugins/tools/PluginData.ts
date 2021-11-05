@@ -44,7 +44,15 @@ class PluginDataView implements IPluginDataView {
   constructor(
     private dataView: IDataView,
   ) {
-    this.properties = getProperties(this.dataView);
+    this.properties = getProperties(this.dataView)
+      .map(property => {
+        return{
+          id: property.id,
+          name: property.name,
+          type: property.column,
+          momentFormatterPattern: property.formatterPattern
+        }
+      });
   }
 
   getCellText(row: any[], propertyId: string): any {
@@ -53,6 +61,14 @@ class PluginDataView implements IPluginDataView {
       throw new Error("Property named \"" + propertyId + "\" was not found");
     }
     return this.dataView.dataTable.getCellText(row, property);
+  }
+
+  getCellValue(row: any[], propertyId: string): any {
+    const property = getProperties(this.dataView).find(prop => prop.id === propertyId);
+    if (!property) {
+      throw new Error("Property named \"" + propertyId + "\" was not found");
+    }
+    return this.dataView.dataTable.getCellValue(row, property);
   }
 
   getRowId(row: IPluginTableRow) {

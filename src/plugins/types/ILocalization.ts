@@ -17,14 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-import { registerPlugin } from "plugins/tools/PluginLibrary";
-import FilterPlugin from "plugins/implementations/FilterPlugin/FilterPlugin";
-import AuditPlugin from "plugins/implementations/AuditPlugin/AuditPlugin";
-import { RadarChartPlugin } from "plugins/implementations/RadarChartPlugin/RadarChartPlugin";
-
-export function registerPlugins(){
-  registerPlugin("FilterPlugin", ()=> new FilterPlugin());
-  registerPlugin("AuditPlugin", ()=> new AuditPlugin());
-  registerPlugin("RadarChartPlugin", ()=> new RadarChartPlugin());
+export interface ILocalization {
+  locale: string;
+  translations: { [key: string]: string };
 }
+
