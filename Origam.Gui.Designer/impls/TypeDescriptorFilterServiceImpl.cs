@@ -19,11 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Windows.Forms;
+using MoreLinq;
 using Origam.Schema.GuiModel;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Designer
 {
@@ -97,6 +101,8 @@ namespace Origam.Gui.Designer
 					finalprops.Add(propItem.Name, propItem.Name);
 				}
 
+				AddInheritedProperties(component, finalprops);
+
 				if(!finalprops.ContainsKey("Size"))	finalprops.Add("Size", "Size");
 				if(!finalprops.ContainsKey("Location")) finalprops.Add("Location", "Location");
 				if(!finalprops.ContainsKey("DataSource")) finalprops.Add("DataSource", "DataSource");
@@ -164,6 +170,21 @@ namespace Origam.Gui.Designer
 			
 			return false;
 		}
+
+		private static void AddInheritedProperties(IComponent component,
+			Hashtable finalProps)
+		{
+			ControlItem inheritorItem = DynamicTypeFactory
+				.GetAssociatedControlItem(component.GetType());
+
+			if (inheritorItem == null) return;
+			foreach (ControlPropertyItem propItem in inheritorItem.ChildItemsByType(
+				ControlPropertyItem.CategoryConst))
+			{
+				finalProps[propItem.Name] = propItem.Name;
+			}
+		}
+
 		#endregion
 	}
 }

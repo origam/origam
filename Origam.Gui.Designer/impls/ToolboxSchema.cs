@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.Schema;
+using Origam.Schema.GuiModel;
 
 
 //------------------------------------------------------------------------------
@@ -57,5 +58,6 @@ namespace Origam.Gui.Designer
 		public Origam.Schema.GuiModel.PanelControlSet PanelSetItem;
 		public string ColumnName;
 		public string Name;
+		public ControlItem ControlItem { get; set; }
 	}
 }

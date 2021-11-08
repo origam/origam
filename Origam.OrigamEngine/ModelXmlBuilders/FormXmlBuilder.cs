@@ -1152,8 +1152,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			bool isIndependent = renderData.IndependentDataSourceId != Guid.Empty;
 			if (!control.ControlItem.IsComplexType)
-            {
-                switch (control.ControlItem.Name)
+			{
+				var controlItem = GentControlItem(control);
+				switch (controlItem.Name)
                 {
                     case "Panel":
                         PanelBuilder.Build(parentNode);
@@ -1327,6 +1328,19 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 
 			return true;
+		}
+
+		private static AbstractSchemaItem GentControlItem(ControlSetItem control)
+		{
+			if (control.ControlItem.Ancestors.Count > 1)
+			{
+				throw new Exception(
+					$"Could not find control for {control.ControlItem.Name} because it has more than one ancestor.");
+			}
+
+			return control.ControlItem.Ancestors.Count == 1
+				? control.ControlItem.Ancestors[0].Ancestor
+				: control.ControlItem;
 		}
 
 		private static void AddDynamicProperties(XmlElement parentNode, UIElementRenderData renderData)

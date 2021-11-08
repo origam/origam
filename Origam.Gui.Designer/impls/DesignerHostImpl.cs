@@ -161,12 +161,16 @@ namespace Origam.Gui.Designer
 				return false;
 			}
 		}
-
 		public IComponent CreateComponent(Type componentClass, string name)
+		{
+			return CreateComponent(componentClass, null, name);
+		}
+
+		public IComponent CreateComponent(Type componentClass, ControlItem controlItem, string name)
 		{
 			try
 			{
-				return TryCreateComponent(componentClass, name);
+				return TryCreateComponent(componentClass, controlItem, name);
 			} catch (Exception ex)
 			{
 				AsMessageBox.ShowError(WorkbenchSingleton.Workbench as IWin32Window,
@@ -175,10 +179,11 @@ namespace Origam.Gui.Designer
 			}
 		}
 
-		private IComponent TryCreateComponent(Type componentClass, string name)
+		private IComponent TryCreateComponent(Type componentClass, 
+			ControlItem controlItem, string name)
 		{
-			IComponent newComponent = CreateComponentInstance(componentClass);
-			Add(newComponent,name);
+			var( newComponent, componentName) = CreateComponentInstance(componentClass, controlItem);
+			Add(newComponent, name ?? componentName);
 			if(this.IsFieldControl && this.DataSet !=null && newComponent is IAsControl)
 			{
 				string BindProp = (newComponent as IAsControl).DefaultBindableProperty;
@@ -213,21 +218,23 @@ namespace Origam.Gui.Designer
 			return newComponent;
 		}
 
-		private IComponent CreateComponentInstance(Type type)
+		private (IComponent, string) CreateComponentInstance(Type type, ControlItem controlItem)
 		{
 			if (IsComplexControl)
 			{
-				return Generator.LoadControl(FormTools.GetItemFromControlSet(PanelSet));
+				Control instance = Generator.LoadControl(FormTools.GetItemFromControlSet(PanelSet));
+				return (instance, null);
 			}
 			
-			ControlItem refControl = ServiceManager.Services
+			ControlItem refControl = controlItem ?? ToolboxPane.DragAndDropControl 
+				?? ServiceManager.Services
 				.GetService<ISchemaService>()
 				.GetProvider<UserControlSchemaItemProvider>()
 				.ChildItems.ToGeneric()
 				.Cast<ControlItem>()
 				.FirstOrDefault(item =>
 					item.ControlType == type.FullName);
-
+			
 			var missingPropertyItems = refControl?
 				.ChildItemsByType(ControlPropertyItem.CategoryConst)
 				.Cast<ControlPropertyItem>()
@@ -236,19 +243,21 @@ namespace Origam.Gui.Designer
 			
 			if (missingPropertyItems == null || missingPropertyItems.Count == 0)
 			{
-				return Activator.CreateInstance(type) as IComponent;
+				IComponent instance = Activator.CreateInstance(type) as IComponent;
+				return (instance, refControl?.Name);
 			}
 
 			DynamicTypeFactory dynamicTypeFactory = new DynamicTypeFactory();
 			Type newType =
 				dynamicTypeFactory.CreateNewTypeWithDynamicProperties(
-					type,
-					missingPropertyItems.Select(propItem =>
+					parentType: type,
+					inheritor: refControl,
+					dynamicProperties: missingPropertyItems.Select(propItem =>
 						new DynamicProperty
 						{
 							Name = propItem.Name,
 							SystemType = propItem.SystemType,
-							Category = "Data"
+							Category = "Data",
 						})
 				);
 			IComponent component = Activator.CreateInstance(newType) as IComponent;
@@ -257,12 +266,12 @@ namespace Origam.Gui.Designer
 				control.Name = type.Name;
 				control.Text = type.Name;
 			}
-			return component;
+			return (component, refControl?.Name);
 		}
 
 		IComponent System.ComponentModel.Design.IDesignerHost.CreateComponent(Type componentClass)
 		{
-			return CreateComponent(componentClass,null);
+			return CreateComponent(componentClass, null, null);
 		}
 
 		// Gets a value indicating whether the designer host is currently in a transaction.
@@ -623,6 +632,10 @@ namespace Origam.Gui.Designer
 				Type nameType = DynamicTypeFactory.GetOriginalType(component.GetType());
 				name = nameCreationService.CreateName(this, nameType);
 			}
+			else
+			{
+				name = ModifyNameIfPresent(name);
+			}
 
 			// if we own the component and the name has changed
 			// we just rename the component
@@ -692,6 +705,23 @@ namespace Origam.Gui.Designer
 				}
 				catch{}
 			}
+		}
+
+		private string ModifyNameIfPresent(string componentName)
+		{
+			if (!sites.Contains(componentName))
+			{
+				return componentName;
+			}
+			for (int i = 1; i < 1000; i++)
+			{
+				string candidateName = componentName + i;
+				if (!sites.Contains(candidateName))
+				{
+					return candidateName;
+				}
+			}
+			throw new Exception("Could not create a valid name from " + componentName);
 		}
 
 		void System.ComponentModel.IContainer.Add(IComponent component)

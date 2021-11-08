@@ -22,7 +22,7 @@ namespace Origam.Workbench {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings {
+    public class Strings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Origam.Workbench {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Origam.Workbench.Strings", typeof(Strings).Assembly);
@@ -51,7 +51,7 @@ namespace Origam.Workbench {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Do you really want to delete the attachment?.
         /// </summary>
-        internal static string Attachments_DeleteQuestionText {
+        public static string Attachments_DeleteQuestionText {
             get {
                 return ResourceManager.GetString("Attachments.DeleteQuestionText", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Delete Attachment.
         /// </summary>
-        internal static string Attachments_DeleteQuestionTitle {
+        public static string Attachments_DeleteQuestionTitle {
             get {
                 return ResourceManager.GetString("Attachments.DeleteQuestionTitle", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Attachments.
         /// </summary>
-        internal static string AttachmentsTitle {
+        public static string AttachmentsTitle {
             get {
                 return ResourceManager.GetString("AttachmentsTitle", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Audit.
         /// </summary>
-        internal static string AuditTitle {
+        public static string AuditTitle {
             get {
                 return ResourceManager.GetString("AuditTitle", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
-        internal static string ButtonAdd {
+        public static string ButtonAdd {
             get {
                 return ResourceManager.GetString("ButtonAdd", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Add Reference.
         /// </summary>
-        internal static string ButtonAddReference {
+        public static string ButtonAddReference {
             get {
                 return ResourceManager.GetString("ButtonAddReference", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Clone.
         /// </summary>
-        internal static string ButtonClone {
+        public static string ButtonClone {
             get {
                 return ResourceManager.GetString("ButtonClone", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
-        internal static string ButtonDelete {
+        public static string ButtonDelete {
             get {
                 return ResourceManager.GetString("ButtonDelete", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
-        internal static string ButtonRemove {
+        public static string ButtonRemove {
             get {
                 return ResourceManager.GetString("ButtonRemove", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Remove Reference.
         /// </summary>
-        internal static string ButtonRemoveReference {
+        public static string ButtonRemoveReference {
             get {
                 return ResourceManager.GetString("ButtonRemoveReference", resourceCulture);
             }
@@ -153,16 +153,25 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Rollback.
         /// </summary>
-        internal static string ButtonUndo {
+        public static string ButtonUndo {
             get {
                 return ResourceManager.GetString("ButtonUndo", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not load toolbox item {0} because its type and/or namespace is not specified.
+        /// </summary>
+        public static string CannotLoadItem {
+            get {
+                return ResourceManager.GetString("CannotLoadItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
-        internal static string CategoryTitle {
+        public static string CategoryTitle {
             get {
                 return ResourceManager.GetString("CategoryTitle", resourceCulture);
             }
@@ -171,7 +180,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Change.
         /// </summary>
-        internal static string Change {
+        public static string Change {
             get {
                 return ResourceManager.GetString("Change", resourceCulture);
             }
@@ -180,7 +189,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Copy of {0}.
         /// </summary>
-        internal static string CopyOf {
+        public static string CopyOf {
             get {
                 return ResourceManager.GetString("CopyOf", resourceCulture);
             }
@@ -189,7 +198,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Copyright:.
         /// </summary>
-        internal static string CopyrightLabel {
+        public static string CopyrightLabel {
             get {
                 return ResourceManager.GetString("CopyrightLabel", resourceCulture);
             }
@@ -198,7 +207,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Data Connection.
         /// </summary>
-        internal static string DataConnectionTitle {
+        public static string DataConnectionTitle {
             get {
                 return ResourceManager.GetString("DataConnectionTitle", resourceCulture);
             }
@@ -207,7 +216,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
-        internal static string DateTitle {
+        public static string DateTitle {
             get {
                 return ResourceManager.GetString("DateTitle", resourceCulture);
             }
@@ -216,7 +225,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Deduplication.
         /// </summary>
-        internal static string Deduplication {
+        public static string Deduplication {
             get {
                 return ResourceManager.GetString("Deduplication", resourceCulture);
             }
@@ -225,7 +234,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Deleted.
         /// </summary>
-        internal static string Deleted {
+        public static string Deleted {
             get {
                 return ResourceManager.GetString("Deleted", resourceCulture);
             }
@@ -234,7 +243,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
-        internal static string DeleteTitle {
+        public static string DeleteTitle {
             get {
                 return ResourceManager.GetString("DeleteTitle", resourceCulture);
             }
@@ -243,7 +252,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Description:.
         /// </summary>
-        internal static string DescriptionLabel {
+        public static string DescriptionLabel {
             get {
                 return ResourceManager.GetString("DescriptionLabel", resourceCulture);
             }
@@ -252,7 +261,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
-        internal static string DescriptionTitle {
+        public static string DescriptionTitle {
             get {
                 return ResourceManager.GetString("DescriptionTitle", resourceCulture);
             }
@@ -261,7 +270,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Documentation.
         /// </summary>
-        internal static string DocumentationTitle {
+        public static string DocumentationTitle {
             get {
                 return ResourceManager.GetString("DocumentationTitle", resourceCulture);
             }
@@ -270,7 +279,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Do you want to save {0}?.
         /// </summary>
-        internal static string DoYouWantSave {
+        public static string DoYouWantSave {
             get {
                 return ResourceManager.GetString("DoYouWantSave", resourceCulture);
             }
@@ -279,7 +288,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to By cancelling a global transaction you CANCEL all the changes up to the selected time point..
         /// </summary>
-        internal static string DoYouWishCancelGlobalTransaction0 {
+        public static string DoYouWishCancelGlobalTransaction0 {
             get {
                 return ResourceManager.GetString("DoYouWishCancelGlobalTransaction0", resourceCulture);
             }
@@ -288,7 +297,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Do you really want to CANCEL all the changes?.
         /// </summary>
-        internal static string DoYouWishCancelGlobalTransaction1 {
+        public static string DoYouWishCancelGlobalTransaction1 {
             get {
                 return ResourceManager.GetString("DoYouWishCancelGlobalTransaction1", resourceCulture);
             }
@@ -297,7 +306,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Do you really want to delete &apos;{0}&apos;?.
         /// </summary>
-        internal static string DoYouWishDelete {
+        public static string DoYouWishDelete {
             get {
                 return ResourceManager.GetString("DoYouWishDelete", resourceCulture);
             }
@@ -306,7 +315,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to (empty).
         /// </summary>
-        internal static string Empty {
+        public static string Empty {
             get {
                 return ResourceManager.GetString("Empty", resourceCulture);
             }
@@ -315,7 +324,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot add reference to this package. It would create a circular dependency..
         /// </summary>
-        internal static string ErrorAddReference {
+        public static string ErrorAddReference {
             get {
                 return ResourceManager.GetString("ErrorAddReference", resourceCulture);
             }
@@ -324,7 +333,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to ORIGAM Architect Command Error.
         /// </summary>
-        internal static string ErrorArchitectCommand {
+        public static string ErrorArchitectCommand {
             get {
                 return ResourceManager.GetString("ErrorArchitectCommand", resourceCulture);
             }
@@ -333,7 +342,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot delete schema item which does not belong to the active extension..
         /// </summary>
-        internal static string ErrorDeleteItemNotActiveExtension {
+        public static string ErrorDeleteItemNotActiveExtension {
             get {
                 return ResourceManager.GetString("ErrorDeleteItemNotActiveExtension", resourceCulture);
             }
@@ -343,7 +352,7 @@ namespace Origam.Workbench {
         ///   Looks up a localized string similar to Cannot move the item to &quot;{0}&quot; because it has dependencies in packages not referenced by the target package:
         ///			{1}.
         /// </summary>
-        internal static string ErrorDependenciesInPackagesNotReferencedByTargetPackage {
+        public static string ErrorDependenciesInPackagesNotReferencedByTargetPackage {
             get {
                 return ResourceManager.GetString("ErrorDependenciesInPackagesNotReferencedByTargetPackage", resourceCulture);
             }
@@ -352,7 +361,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot edit configurations. Property pad cannot be displayed..
         /// </summary>
-        internal static string ErrorEditConfigurations {
+        public static string ErrorEditConfigurations {
             get {
                 return ResourceManager.GetString("ErrorEditConfigurations", resourceCulture);
             }
@@ -361,7 +370,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot edit this object.
         /// </summary>
-        internal static string ErrorEditObject {
+        public static string ErrorEditObject {
             get {
                 return ResourceManager.GetString("ErrorEditObject", resourceCulture);
             }
@@ -370,7 +379,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to PackageEditor can only edit packages..
         /// </summary>
-        internal static string ErrorEditPackagesOnly {
+        public static string ErrorEditPackagesOnly {
             get {
                 return ResourceManager.GetString("ErrorEditPackagesOnly", resourceCulture);
             }
@@ -379,7 +388,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Model element is opened for viewing only. Cannot change property..
         /// </summary>
-        internal static string ErrorElementReadOnly {
+        public static string ErrorElementReadOnly {
             get {
                 return ResourceManager.GetString("ErrorElementReadOnly", resourceCulture);
             }
@@ -388,7 +397,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot execute the file {0}.
         /// </summary>
-        internal static string ErrorExecuteFile {
+        public static string ErrorExecuteFile {
             get {
                 return ResourceManager.GetString("ErrorExecuteFile", resourceCulture);
             }
@@ -397,7 +406,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Only ISchemaItem objects are supported..
         /// </summary>
-        internal static string ErrorISchemaItemOnly {
+        public static string ErrorISchemaItemOnly {
             get {
                 return ResourceManager.GetString("ErrorISchemaItemOnly", resourceCulture);
             }
@@ -406,16 +415,16 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Could not load editor.
         /// </summary>
-        internal static string ErrorLoadEditorFailed {
+        public static string ErrorLoadEditorFailed {
             get {
                 return ResourceManager.GetString("ErrorLoadEditorFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Owner must be of type SchemaExtension.
+        ///   Looks up a localized string similar to Owner must be of type Package.
         /// </summary>
-        internal static string ErrorNotSchemaExtension {
+        public static string ErrorNotSchemaExtension {
             get {
                 return ResourceManager.GetString("ErrorNotSchemaExtension", resourceCulture);
             }
@@ -424,7 +433,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot open requested model package..
         /// </summary>
-        internal static string ErrorOpenModelPackage {
+        public static string ErrorOpenModelPackage {
             get {
                 return ResourceManager.GetString("ErrorOpenModelPackage", resourceCulture);
             }
@@ -433,7 +442,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot remove the package reference. Elements from this package are used in the current package..
         /// </summary>
-        internal static string ErrorRemovePackageReference {
+        public static string ErrorRemovePackageReference {
             get {
                 return ResourceManager.GetString("ErrorRemovePackageReference", resourceCulture);
             }
@@ -442,7 +451,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot partly rollback the transaction while a wizard is running..
         /// </summary>
-        internal static string ErrorRollBackTransactionWorkflow {
+        public static string ErrorRollBackTransactionWorkflow {
             get {
                 return ResourceManager.GetString("ErrorRollBackTransactionWorkflow", resourceCulture);
             }
@@ -451,7 +460,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Cannot set this property.
         /// </summary>
-        internal static string ErrorSetProperty {
+        public static string ErrorSetProperty {
             get {
                 return ResourceManager.GetString("ErrorSetProperty", resourceCulture);
             }
@@ -460,7 +469,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
-        internal static string ErrorTitle {
+        public static string ErrorTitle {
             get {
                 return ResourceManager.GetString("ErrorTitle", resourceCulture);
             }
@@ -470,7 +479,7 @@ namespace Origam.Workbench {
         ///   Looks up a localized string similar to &quot;Cannot move the item to &quot;{0}&quot; because items that depend on it would not be able to reach it:
         ///			{1}&quot;.
         /// </summary>
-        internal static string ErrorUsagesInPackagesWhichDontDependOnTargetPackage {
+        public static string ErrorUsagesInPackagesWhichDontDependOnTargetPackage {
             get {
                 return ResourceManager.GetString("ErrorUsagesInPackagesWhichDontDependOnTargetPackage", resourceCulture);
             }
@@ -479,7 +488,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Operation cancelled by user..
         /// </summary>
-        internal static string ErrorUserCanceled {
+        public static string ErrorUserCanceled {
             get {
                 return ResourceManager.GetString("ErrorUserCanceled", resourceCulture);
             }
@@ -488,7 +497,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Error occured while adding root node &apos;{0}&apos;.{1}.
         /// </summary>
-        internal static string ErrorWhenAddRoot {
+        public static string ErrorWhenAddRoot {
             get {
                 return ResourceManager.GetString("ErrorWhenAddRoot", resourceCulture);
             }
@@ -497,7 +506,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Error while loading package &apos;{0}&apos;.
         /// </summary>
-        internal static string ErrorWhenLoadPackage {
+        public static string ErrorWhenLoadPackage {
             get {
                 return ResourceManager.GetString("ErrorWhenLoadPackage", resourceCulture);
             }
@@ -506,7 +515,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Error occured while reading child nodes of node &apos;{0}&apos;.{1}.
         /// </summary>
-        internal static string ErrorWhenReadChildNodes {
+        public static string ErrorWhenReadChildNodes {
             get {
                 return ResourceManager.GetString("ErrorWhenReadChildNodes", resourceCulture);
             }
@@ -515,7 +524,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Error occured while refreshing form data &apos;{0}&apos;.
         /// </summary>
-        internal static string ErrorWhenRefreshForm {
+        public static string ErrorWhenRefreshForm {
             get {
                 return ResourceManager.GetString("ErrorWhenRefreshForm", resourceCulture);
             }
@@ -524,7 +533,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Field.
         /// </summary>
-        internal static string FieldTitle {
+        public static string FieldTitle {
             get {
                 return ResourceManager.GetString("FieldTitle", resourceCulture);
             }
@@ -533,7 +542,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to File name.
         /// </summary>
-        internal static string FileNameTitle {
+        public static string FileNameTitle {
             get {
                 return ResourceManager.GetString("FileNameTitle", resourceCulture);
             }
@@ -542,7 +551,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Find Results.
         /// </summary>
-        internal static string FindResultsTitle {
+        public static string FindResultsTitle {
             get {
                 return ResourceManager.GetString("FindResultsTitle", resourceCulture);
             }
@@ -551,7 +560,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Folder.
         /// </summary>
-        internal static string FolderTitle {
+        public static string FolderTitle {
             get {
                 return ResourceManager.GetString("FolderTitle", resourceCulture);
             }
@@ -560,7 +569,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Found In.
         /// </summary>
-        internal static string FoundInTitle {
+        public static string FoundInTitle {
             get {
                 return ResourceManager.GetString("FoundInTitle", resourceCulture);
             }
@@ -569,7 +578,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Global Transaction History.
         /// </summary>
-        internal static string GlobalTransactionsHistory {
+        public static string GlobalTransactionsHistory {
             get {
                 return ResourceManager.GetString("GlobalTransactionsHistory", resourceCulture);
             }
@@ -578,7 +587,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Importing model....
         /// </summary>
-        internal static string ImportingModel {
+        public static string ImportingModel {
             get {
                 return ResourceManager.GetString("ImportingModel", resourceCulture);
             }
@@ -587,7 +596,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Information.
         /// </summary>
-        internal static string InformationLabel {
+        public static string InformationLabel {
             get {
                 return ResourceManager.GetString("InformationLabel", resourceCulture);
             }
@@ -596,7 +605,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Select Schema File to Load.
         /// </summary>
-        internal static string LoadSchemaTitle {
+        public static string LoadSchemaTitle {
             get {
                 return ResourceManager.GetString("LoadSchemaTitle", resourceCulture);
             }
@@ -605,7 +614,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to error.
         /// </summary>
-        internal static string MappingNameNotFound {
+        public static string MappingNameNotFound {
             get {
                 return ResourceManager.GetString("MappingNameNotFound", resourceCulture);
             }
@@ -614,7 +623,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Model Browser.
         /// </summary>
-        internal static string ModelBrowserTitle {
+        public static string ModelBrowserTitle {
             get {
                 return ResourceManager.GetString("ModelBrowserTitle", resourceCulture);
             }
@@ -623,7 +632,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Model Connection / Path.
         /// </summary>
-        internal static string ModelConnectionTitle {
+        public static string ModelConnectionTitle {
             get {
                 return ResourceManager.GetString("ModelConnectionTitle", resourceCulture);
             }
@@ -632,7 +641,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Name:.
         /// </summary>
-        internal static string NameLabel {
+        public static string NameLabel {
             get {
                 return ResourceManager.GetString("NameLabel", resourceCulture);
             }
@@ -641,7 +650,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
-        internal static string NameTitle {
+        public static string NameTitle {
             get {
                 return ResourceManager.GetString("NameTitle", resourceCulture);
             }
@@ -650,7 +659,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
-        internal static string New {
+        public static string New {
             get {
                 return ResourceManager.GetString("New", resourceCulture);
             }
@@ -659,7 +668,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to New Value.
         /// </summary>
-        internal static string NewValueTitle {
+        public static string NewValueTitle {
             get {
                 return ResourceManager.GetString("NewValueTitle", resourceCulture);
             }
@@ -668,7 +677,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to There are no attachments.
         /// </summary>
-        internal static string NoAttachments {
+        public static string NoAttachments {
             get {
                 return ResourceManager.GetString("NoAttachments", resourceCulture);
             }
@@ -677,7 +686,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Remark.
         /// </summary>
-        internal static string NoteTitle {
+        public static string NoteTitle {
             get {
                 return ResourceManager.GetString("NoteTitle", resourceCulture);
             }
@@ -686,7 +695,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Original Value.
         /// </summary>
-        internal static string OldValueTitle {
+        public static string OldValueTitle {
             get {
                 return ResourceManager.GetString("OldValueTitle", resourceCulture);
             }
@@ -695,7 +704,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Output.
         /// </summary>
-        internal static string OutputTitle {
+        public static string OutputTitle {
             get {
                 return ResourceManager.GetString("OutputTitle", resourceCulture);
             }
@@ -704,7 +713,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Package Browser.
         /// </summary>
-        internal static string PackageBrowserTitle {
+        public static string PackageBrowserTitle {
             get {
                 return ResourceManager.GetString("PackageBrowserTitle", resourceCulture);
             }
@@ -713,7 +722,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Package References.
         /// </summary>
-        internal static string PackageReferencesLabel {
+        public static string PackageReferencesLabel {
             get {
                 return ResourceManager.GetString("PackageReferencesLabel", resourceCulture);
             }
@@ -722,7 +731,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Packages.
         /// </summary>
-        internal static string PackagesTitle {
+        public static string PackagesTitle {
             get {
                 return ResourceManager.GetString("PackagesTitle", resourceCulture);
             }
@@ -731,7 +740,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Package.
         /// </summary>
-        internal static string PackageTitle {
+        public static string PackageTitle {
             get {
                 return ResourceManager.GetString("PackageTitle", resourceCulture);
             }
@@ -740,7 +749,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Partly global transaction rollback.
         /// </summary>
-        internal static string PartialGlobalRollBackTitle {
+        public static string PartialGlobalRollBackTitle {
             get {
                 return ResourceManager.GetString("PartialGlobalRollBackTitle", resourceCulture);
             }
@@ -749,7 +758,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Partly Rollback.
         /// </summary>
-        internal static string PartialRollBackTitle {
+        public static string PartialRollBackTitle {
             get {
                 return ResourceManager.GetString("PartialRollBackTitle", resourceCulture);
             }
@@ -758,7 +767,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Properties.
         /// </summary>
-        internal static string PropertiesTitle {
+        public static string PropertiesTitle {
             get {
                 return ResourceManager.GetString("PropertiesTitle", resourceCulture);
             }
@@ -767,7 +776,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to References.
         /// </summary>
-        internal static string ReferencesLabel {
+        public static string ReferencesLabel {
             get {
                 return ResourceManager.GetString("ReferencesLabel", resourceCulture);
             }
@@ -776,7 +785,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Rollback Point.
         /// </summary>
-        internal static string RollBackPointTitle {
+        public static string RollBackPointTitle {
             get {
                 return ResourceManager.GetString("RollBackPointTitle", resourceCulture);
             }
@@ -785,7 +794,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Root Type.
         /// </summary>
-        internal static string RootTypeTitle {
+        public static string RootTypeTitle {
             get {
                 return ResourceManager.GetString("RootTypeTitle", resourceCulture);
             }
@@ -794,7 +803,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Save metadata to a file.
         /// </summary>
-        internal static string SaveMetadataTitle {
+        public static string SaveMetadataTitle {
             get {
                 return ResourceManager.GetString("SaveMetadataTitle", resourceCulture);
             }
@@ -803,7 +812,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
-        internal static string SaveTitle {
+        public static string SaveTitle {
             get {
                 return ResourceManager.GetString("SaveTitle", resourceCulture);
             }
@@ -812,7 +821,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Text.
         /// </summary>
-        internal static string TextTitle {
+        public static string TextTitle {
             get {
                 return ResourceManager.GetString("TextTitle", resourceCulture);
             }
@@ -821,7 +830,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Time.
         /// </summary>
-        internal static string TimeTitle {
+        public static string TimeTitle {
             get {
                 return ResourceManager.GetString("TimeTitle", resourceCulture);
             }
@@ -830,7 +839,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Removes the attachment.
         /// </summary>
-        internal static string TooltipDelete {
+        public static string TooltipDelete {
             get {
                 return ResourceManager.GetString("TooltipDelete", resourceCulture);
             }
@@ -839,7 +848,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Appends the attachment to the current record.
         /// </summary>
-        internal static string TooltipLoad {
+        public static string TooltipLoad {
             get {
                 return ResourceManager.GetString("TooltipLoad", resourceCulture);
             }
@@ -848,7 +857,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Saves changes to the database.
         /// </summary>
-        internal static string TooltipRefresh {
+        public static string TooltipRefresh {
             get {
                 return ResourceManager.GetString("TooltipRefresh", resourceCulture);
             }
@@ -857,7 +866,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Saves the attachment to a file.
         /// </summary>
-        internal static string TooltipSave {
+        public static string TooltipSave {
             get {
                 return ResourceManager.GetString("TooltipSave", resourceCulture);
             }
@@ -866,7 +875,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Displays the attachment in an associated viewer.
         /// </summary>
-        internal static string TooltipShow {
+        public static string TooltipShow {
             get {
                 return ResourceManager.GetString("TooltipShow", resourceCulture);
             }
@@ -875,7 +884,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Transaction.
         /// </summary>
-        internal static string TransactionsTitle {
+        public static string TransactionsTitle {
             get {
                 return ResourceManager.GetString("TransactionsTitle", resourceCulture);
             }
@@ -884,7 +893,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
-        internal static string TypeTitle {
+        public static string TypeTitle {
             get {
                 return ResourceManager.GetString("TypeTitle", resourceCulture);
             }
@@ -893,7 +902,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to User.
         /// </summary>
-        internal static string UserTitle {
+        public static string UserTitle {
             get {
                 return ResourceManager.GetString("UserTitle", resourceCulture);
             }
@@ -902,7 +911,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Set version using the Deployment model elements..
         /// </summary>
-        internal static string VersionInfoLabel {
+        public static string VersionInfoLabel {
             get {
                 return ResourceManager.GetString("VersionInfoLabel", resourceCulture);
             }
@@ -911,7 +920,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Version:.
         /// </summary>
-        internal static string VersionLabel {
+        public static string VersionLabel {
             get {
                 return ResourceManager.GetString("VersionLabel", resourceCulture);
             }
@@ -920,7 +929,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Version.
         /// </summary>
-        internal static string VersionTitle {
+        public static string VersionTitle {
             get {
                 return ResourceManager.GetString("VersionTitle", resourceCulture);
             }
@@ -929,7 +938,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to Visible Referenced Elements.
         /// </summary>
-        internal static string VisibleReferedItemsLabel {
+        public static string VisibleReferedItemsLabel {
             get {
                 return ResourceManager.GetString("VisibleReferedItemsLabel", resourceCulture);
             }
@@ -938,7 +947,7 @@ namespace Origam.Workbench {
         /// <summary>
         ///   Looks up a localized string similar to xml files (*.xml)|*.xml|All files (*.*)|*.*.
         /// </summary>
-        internal static string XmlFilesFilter {
+        public static string XmlFilesFilter {
             get {
                 return ResourceManager.GetString("XmlFilesFilter", resourceCulture);
             }
