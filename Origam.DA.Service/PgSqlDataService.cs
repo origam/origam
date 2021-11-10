@@ -88,54 +88,75 @@ namespace Origam.DA.Service
 
         internal override void HandleException(Exception ex, string recordErrorMessage, DataRow row)
 		{
-			NpgsqlException sqle = ex as NpgsqlException;
-            string customMessage = "";
-            if (sqle != null)
+            if (ex is NpgsqlException NgPsqlEx)
             {
-                PostgresException postgresException = ((Npgsql.PostgresException)sqle);
-
-                if (postgresException.SqlState == "42601")
+                string customMessage = NgPsqlEx.Message;
+                if (NgPsqlEx is PostgresException postgresException)
                 {
-                    throw new DataException("Syntax Error" + 
-                        Environment.NewLine  + recordErrorMessage + Environment.NewLine + ex.Message, ex);
-                }
-                else if (postgresException.SqlState == "42P01")
-                {
-                    int firstApostrophe = ex.Message.IndexOf("\"");
-                    if (ex.Message.Length > firstApostrophe)
+                    switch (postgresException.SqlState)
                     {
-                        int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
-                        string tableName = ex.Message.Substring(firstApostrophe + 1,
-                            secondApostrophe - firstApostrophe - 1);
-                        throw new DatabaseTableNotFoundException(tableName, ex);
-                    }
-                }
-                else if (postgresException.SqlState == "42883")
-                {
-                    int firstApostrophe = ex.Message.IndexOf("\"");
-                    string procedureName = ex.Message;
-                    if (ex.Message.Length > firstApostrophe && firstApostrophe != -1 )
-                    {
-                        int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
-                        if (secondApostrophe != -1 && secondApostrophe > firstApostrophe)
-                        {
-                            procedureName = ex.Message.Substring(firstApostrophe + 1,
-                                secondApostrophe - firstApostrophe - 1);
+                        case "42601":
+                            PgDataException(recordErrorMessage, ex);
+                            break;
+                        case "42P01":
+                            DataTableException(ex);
+                            break;
+                        case "42883":
+                            SQLProcedureException(ex);
+                            break;
+                        default:
+                            {
+                                switch (postgresException.SqlState.Substring(0, 2))
+                                {
+                                    case "23":
+                                        customMessage = ResourceUtils.GetString("IntegrityError");
+                                        break;
+                                    default:
+                                        customMessage = ResourceUtils.GetString("ExceptionWhenUpdate");
+                                        break;
+                                }
+                                break;
+                            }
                         }
-                    }
-                    throw new DatabaseProcedureNotFoundException(procedureName, ex);
-                }
-                else if(postgresException.SqlState.StartsWith("23"))
-                {
-                    customMessage = ResourceUtils.GetString("IntegrityError");
-                }
-                else
-                {
-                    customMessage = ResourceUtils.GetString("ExceptionWhenUpdate");
                 }
                 string message = string.Format("{0} {1}", recordErrorMessage, customMessage);
                 throw new OrigamException(message, ex.Message, ex);
             }
+            throw new OrigamException(ex.Message, ex);
+        }
+
+        private void SQLProcedureException(Exception ex)
+        {
+            int firstApostrophe = ex.Message.IndexOf("\"");
+            string procedureName = ex.Message;
+            if (ex.Message.Length > firstApostrophe && firstApostrophe != -1)
+            {
+                int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
+                if (secondApostrophe != -1 && secondApostrophe > firstApostrophe)
+                {
+                    procedureName = ex.Message.Substring(firstApostrophe + 1,
+                        secondApostrophe - firstApostrophe - 1);
+                }
+            }
+            throw new DatabaseProcedureNotFoundException(procedureName, ex);
+        }
+
+        private void DataTableException(Exception ex)
+        {
+            int firstApostrophe = ex.Message.IndexOf("\"");
+            if (ex.Message.Length > firstApostrophe)
+            {
+                int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
+                string tableName = ex.Message.Substring(firstApostrophe + 1,
+                    secondApostrophe - firstApostrophe - 1);
+                throw new DatabaseTableNotFoundException(tableName, ex);
+            }
+        }
+
+        private void PgDataException(string recordErrorMessage, Exception ex)
+        {
+            throw new DataException("Syntax Error" +
+                            Environment.NewLine + recordErrorMessage + Environment.NewLine + ex.Message, ex);
         }
 
         public override string[] DatabaseSpecificDatatypes()
