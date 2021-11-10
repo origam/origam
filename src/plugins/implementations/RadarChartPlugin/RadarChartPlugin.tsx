@@ -33,6 +33,9 @@ const seriesLabelFieldName = "SeriesLabelField";
 const seriesValueFieldsName = "SeriesValueFields";
 const filterFieldName = "FilterField";
 const noDataMessageName = "NoDataMessage";
+const axisMinName = "AxisMin";
+const axisMaxName = "AxisMax";
+const stepSizeName = "StepSize";
 
 export class RadarChartPlugin implements ISectionPlugin {
   $type_ISectionPlugin: 1 = 1;
@@ -41,7 +44,9 @@ export class RadarChartPlugin implements ISectionPlugin {
   seriesLabelField: string | undefined;
   noDataMessage: string | undefined;
   filterField: string | undefined;
-
+  axisMin: number | undefined;
+  axisMax: number | undefined;
+  stepSize: number | undefined;
 
   @observable
   initialized = false;
@@ -51,6 +56,9 @@ export class RadarChartPlugin implements ISectionPlugin {
     this.seriesLabelField = this.getXmlParameter(xmlAttributes, seriesLabelFieldName);
     this.noDataMessage = this.getXmlParameter(xmlAttributes, noDataMessageName);
     this.filterField = xmlAttributes[filterFieldName];
+    this.axisMin = this.getPositiveNumericParameter(xmlAttributes, axisMinName);
+    this.axisMax = this.getPositiveNumericParameter(xmlAttributes, axisMaxName);
+    this.stepSize = this.getPositiveNumericParameter(xmlAttributes, stepSizeName);
     this.initialized = true;
   }
 
@@ -59,6 +67,15 @@ export class RadarChartPlugin implements ISectionPlugin {
       throw new Error(`Parameter ${parameterName} was not found. Cannot plot anything.`)
     }
     return xmlAttributes[parameterName];
+  }
+
+  getPositiveNumericParameter(xmlAttributes: { [key: string]: string }, parameterName: string){
+    let value = xmlAttributes[parameterName];
+    if(!value || value.trim() === ""){
+      return undefined;
+    }
+    const number = Number(value);
+    return (isNaN(number) || number < 0) ? undefined : number;
   }
 
   getLabel(data: IPluginData, row: IPluginTableRow){
@@ -112,7 +129,19 @@ export class RadarChartPlugin implements ISectionPlugin {
             datasets: dataSets,
           }}
           options={
-            {maintainAspectRatio: false}
+            {
+              maintainAspectRatio: false,
+              scales: {
+                r: {
+                  beginAtZero: this.axisMin === 0,
+                  suggestedMin: this.axisMin,
+                  suggestedMax: this.axisMax,
+                  ticks: {
+                    stepSize: this.stepSize
+                  }
+                }
+              }
+            }
           }
         />
       </div>
