@@ -24,8 +24,9 @@ export function getRowById(grouper: IGrouper, id: string): any[] | undefined {
 
 export function getRowIndex(grouper: IGrouper, rowId: string): number | undefined {
   return grouper.allGroups
-  .map(group => group.getRowIndex(rowId))
-  .find(index => index !== -1);
+    .filter(group => group.childGroups.length === 0)
+    .map(group => group.getRowIndex(rowId))
+    .find(index => index !== -1);
 }
 
 export function getRowCount(grouper: IGrouper, rowId: string){
@@ -38,7 +39,6 @@ export function getCellOffset(grouper: IGrouper, rowId: string): ICellOffset {
   const containingGroup =  grouper.allGroups
   .filter(group => group.getRowById(rowId) && group.isExpanded)
   .sort((g1, g2) => g2.level - g1.level)[0]
-  
   let rowOffset = 0;
   for (const group of grouper.allGroups) {
     rowOffset++;
