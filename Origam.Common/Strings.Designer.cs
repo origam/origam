@@ -19,7 +19,7 @@ namespace Origam {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -79,11 +79,20 @@ namespace Origam {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot save configuration. Configuration names must be unique..
+        ///   Looks up a localized string similar to Cannot save configuration..
         /// </summary>
         public static string CantSaveConfig {
             get {
                 return ResourceManager.GetString("CantSaveConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot save configuration. Configuration names must be unique..
+        /// </summary>
+        public static string CantSaveConfigDuplicateName {
+            get {
+                return ResourceManager.GetString("CantSaveConfigDuplicateName", resourceCulture);
             }
         }
         
@@ -160,6 +169,15 @@ namespace Origam {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session store has already been disposed.
+        /// </summary>
+        public static string SessionStoreDisposed {
+            get {
+                return ResourceManager.GetString("SessionStoreDisposed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} Copyright (C) 2021  Advantage Solutions, s.r.o 
         ///This program comes with ABSOLUTELY NO WARRANTY.
         ///This is free software, and you are welcome to redistribute it
@@ -204,6 +222,15 @@ namespace Origam {
         public static string UserNotLoggedInException {
             get {
                 return ResourceManager.GetString("UserNotLoggedInException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempting to merge an XML document that has a root element with attributes. Root element should have no attributes. This is probably a result of an XSLT transformation that does not produce a proper root element..
+        /// </summary>
+        public static string XmlNoRoot {
+            get {
+                return ResourceManager.GetString("XmlNoRoot", resourceCulture);
             }
         }
         

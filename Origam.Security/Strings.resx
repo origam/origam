@@ -58,7 +58,7 @@
 		<value>Could not load user profile.</value>
 	</data>
 	<data name="ErrorUnableToLoadProfile1">
-		<value>1. You were logged out after a long inactivity - try to sign in again.</value>
+		<value>1. You were logged out after a long inactivity - try to log in again.</value>
 	</data>
 	<data name="ErrorUnableToLoadProfile2">
 		<value>2. User account is not assigned in the system - please contact your administrator.</value>
