@@ -5,7 +5,7 @@
   "dependencies": {
     "@decorize/bind": "^1.0.3",
     "@messageformat/core": "^3.0.0",
-    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/classnames": "^2.3.1",
@@ -17,7 +17,7 @@
     "@types/lodash": "^4.14.175",
     "@types/node": "^16.10.8",
     "@types/numeral": "^2.0.2",
-    "@types/react": "^17.0.31",
+    "@types/react": "^17.0.34",
     "@types/react-color": "^3.0.6",
     "@types/react-dom": "^17.0.9",
     "@types/react-draft-wysiwyg": "^1.13.3",
