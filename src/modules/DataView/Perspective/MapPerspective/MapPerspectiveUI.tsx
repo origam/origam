@@ -580,6 +580,9 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             this.mapFittedToLayers = true;
           }
           this.highlightSelectedLayer();
+          if(layers.length === 1){
+            this.panToFirstObject();
+          }
         },
         {
           delay: 100,
