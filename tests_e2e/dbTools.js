@@ -31,12 +31,13 @@ async function restoreAllDataTypesTable(){
   await executeProcedure("dbo.restoreAllDataTypes");
 }
 
+async function clearScreenConfiguration(){
+  await executeProcedure("dbo.clearScreenConfiguration");
+}
+
 // restores original state of the WidgetSectionTestMaster and dependent tables
 async function restoreWidgetSectionTestMaster(){
   await executeProcedure("dbo.restoreWidgetSectionTestMaster");
 }
 
-module.exports = { restoreAllDataTypesTable, restoreWidgetSectionTestMaster }
-
-// for module testing purposes:
-// restoreAllDataTypesTable().then(r => console.log("DONE"));
+module.exports = { restoreAllDataTypesTable, restoreWidgetSectionTestMaster, clearScreenConfiguration }

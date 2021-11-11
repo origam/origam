@@ -3,13 +3,14 @@ const { backEndUrl } = require('./additionalConfig');
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData} = require('./testTools');
 const {setDateFilter, setTwoFieldDateFilter, setFilter, setTwoFieldFilter, setComboFilter, openFilters} = require("./filterTestTools");
 const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader} = require("./modelIds");
-const {restoreAllDataTypesTable} = require("./dbTools");
+const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
 let browser;
 let page;
 
 beforeAll(async() => {
   await restoreAllDataTypesTable();
+  await clearScreenConfiguration();
 });
 
 beforeEach(async () => {

@@ -3,16 +3,16 @@ const { backEndUrl } = require('./additionalConfig');
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
   catchRequests, waitForRowSelected
 } = require('./testTools');
-const {setDateFilter, setTwoFieldDateFilter, setFilter, setTwoFieldFilter, setComboFilter, openFilters} = require("./filterTestTools");
 const {installMouseHelper} = require('./instalMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
-const {restoreAllDataTypesTable} = require("./dbTools");
+const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
 let browser;
 let page;
 
 beforeAll(async() => {
   await restoreAllDataTypesTable();
+  await clearScreenConfiguration();
 });
 
 beforeEach(async () => {
