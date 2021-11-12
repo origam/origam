@@ -28,6 +28,7 @@ import { IPluginData } from "plugins/types/IPluginData";
 import { IPluginTableRow } from "plugins/types/IPluginRow";
 import { ILocalization } from "plugins/types/ILocalization";
 import { ILocalizer } from "plugins/types/ILocalizer";
+import { csToMomentFormat } from "utils/dateFormatConversion";
 
 const seriesLabelFieldName = "SeriesLabelField";
 const seriesValueFieldsName = "SeriesValueFields";
@@ -36,6 +37,7 @@ const noDataMessageName = "NoDataMessage";
 const axisMinName = "AxisMin";
 const axisMaxName = "AxisMax";
 const stepSizeName = "StepSize";
+const labelFormatName = "LabelFormat";
 
 export class RadarChartPlugin implements ISectionPlugin {
   $type_ISectionPlugin: 1 = 1;
@@ -47,6 +49,8 @@ export class RadarChartPlugin implements ISectionPlugin {
   axisMin: number | undefined;
   axisMax: number | undefined;
   stepSize: number | undefined;
+  labelFormat: string | undefined;
+  labels: string[] = [];
 
   @observable
   initialized = false;
@@ -56,6 +60,7 @@ export class RadarChartPlugin implements ISectionPlugin {
     this.seriesLabelField = this.getXmlParameter(xmlAttributes, seriesLabelFieldName);
     this.noDataMessage = this.getXmlParameter(xmlAttributes, noDataMessageName);
     this.filterField = xmlAttributes[filterFieldName];
+    this.labelFormat = xmlAttributes[labelFormatName];
     this.axisMin = this.getPositiveNumericParameter(xmlAttributes, axisMinName);
     this.axisMax = this.getPositiveNumericParameter(xmlAttributes, axisMaxName);
     this.stepSize = this.getPositiveNumericParameter(xmlAttributes, stepSizeName);
@@ -78,12 +83,26 @@ export class RadarChartPlugin implements ISectionPlugin {
     return (isNaN(number) || number < 0) ? undefined : number;
   }
 
-  getLabel(data: IPluginData, row: IPluginTableRow){
+  getLabel(data: IPluginData, row: IPluginTableRow): string{
     const property = this.getProperty(data, this.seriesLabelField!)
 
-    return property.type === "Date"
-      ? moment(data.dataView.getCellValue(row, property.id)).format(property.momentFormatterPattern)
-      : data.dataView.getCellValue(row, property.id);
+    let cellValue = data.dataView.getCellValue(row, property.id);
+    if (property.type === "Date") {
+      const format = csToMomentFormat(this.labelFormat) ?? property.momentFormatterPattern
+      return moment(cellValue).format(format);
+    } else {
+      return (cellValue ?? "").toString();
+    }
+  }
+
+  getUniqueLabel(data: IPluginData, row: IPluginTableRow){
+    let newLabel = this.getLabel(data, row);
+    let numberOfDuplicates = this.labels.filter(label => label === newLabel).length;
+    if(numberOfDuplicates > 0){
+      newLabel = `${newLabel}(${numberOfDuplicates})`;
+    }
+    this.labels.push(newLabel);
+    return newLabel;
   }
 
   getProperty(data: IPluginData, propertyId: string){
@@ -105,13 +124,14 @@ export class RadarChartPlugin implements ISectionPlugin {
     const properties = this.seriesValueFields!
       .split(";")
       .map(propertyId => this.getProperty(data, propertyId.trim()))
-
+    this.labels = [];
     const dataSets = data.dataView.tableRows
       .filter(row => !this.filterField || data.dataView.getCellValue(row, this.filterField))
-      .map((row, i) => {
-        const color = SeriesColor.getBySeriesNumber(i);
+      .map(row => {
+        const index = data.dataView.tableRows.indexOf(row);
+        const color = SeriesColor.getBySeriesNumber(index);
         return {
-          label: this.getLabel(data, row),
+          label: this.getUniqueLabel(data, row), // it is important to make the labels unique, otherwise the Radar component throws reference exceptions. Probably a bug in react-chartjs-2
           data: properties.map(prop => data.dataView.getCellValue(row, prop.id)),
           backgroundColor: color.background,
           borderColor: color.border,
@@ -160,11 +180,13 @@ class SeriesColor{
     new SeriesColor(234, 99, 255),
     new SeriesColor(99, 112, 255),
     new SeriesColor(99, 252, 255),
+    new SeriesColor(168, 164, 50),
     new SeriesColor(99, 255, 102),
+    new SeriesColor(247, 161, 0),
   ]
 
   static getBySeriesNumber(seriesNumber: number){
-    return SeriesColor.seriesColorsRGB[seriesNumber % 5];
+    return SeriesColor.seriesColorsRGB[seriesNumber % SeriesColor.seriesColorsRGB.length];
   }
 
   constructor(

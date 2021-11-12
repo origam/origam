@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 // https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
 // https://momentjs.com/docs/#/displaying/format/
-export function csToMomentFormat(csDateFormat: string) {
-  if (!isValidCsFormat(csDateFormat)) {
+export function csToMomentFormat(csDateFormat: string | undefined) {
+  if (!csDateFormat || !isValidCsFormat(csDateFormat)) {
     return null;
   }
   return csDateFormat                       // Meaning of the replaced character in c#:
