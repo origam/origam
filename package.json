@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@decorize/bind": "^1.0.3",
+    "@mapbox/geojson-area": "^0.2.2",
     "@messageformat/core": "^3.0.0",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
@@ -16,6 +17,7 @@
     "@types/leaflet-draw": "^1.0.5",
     "@types/lodash": "^4.14.176",
     "@types/node": "^16.11.7",
+    "@types/mapbox__geojson-area": "^0.2.1",
     "@types/numeral": "^2.0.2",
     "@types/react": "^17.0.34",
     "@types/react-color": "^3.0.6",
