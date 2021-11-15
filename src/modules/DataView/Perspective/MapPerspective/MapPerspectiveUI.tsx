@@ -12,6 +12,7 @@ import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
 import { MapLayer } from "./stores/MapSetupStore";
 import Measure, { ContentRect } from "react-measure";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
+import { ring as area } from "@mapbox/geojson-area";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -328,8 +329,27 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     const layer = event.layer;
     this.leafletMapObjects.clearLayers();
     this.leafletMapObjects.addLayer(layer);
-    const obj = layer.toGeoJSON().geometry;
-    this.props.onChange?.(obj);
+    const geoJSON = layer.toGeoJSON();
+    const geometry = geoJSON.geometry.type === "Polygon"
+      ? this.getCounterClockWisePolygonPoints(geoJSON.geometry)
+      : geoJSON.geometry;
+    this.props.onChange?.(geometry);
+  }
+
+  getCounterClockWisePolygonPoints(polygonGeometry: any){
+    if(!polygonGeometry || polygonGeometry.coordinates?.length !== 1){
+      console.warn(`Failed to check polygonGeometry:`);
+      console.warn(polygonGeometry);
+      return polygonGeometry;
+    }
+    const polygonArea = area(polygonGeometry.coordinates[0]);
+    if(polygonArea > 0) {
+      return {
+        type: "Polygon",
+        coordinates: [polygonGeometry.coordinates[0].reverse()]
+      };
+    }
+    return polygonGeometry
   }
 
   @action.bound handleObjectEdited(event: any) {
