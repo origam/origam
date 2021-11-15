@@ -370,6 +370,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			foreach(WorkQueueClassEntityMapping mapping in mappedColumns)
 			{
+				// don't add RecordCreated twice
+				if(mapping.Name == "RecordCreated") 
+				{
+					continue;
+				}
 				AddColumn(entity, mapping.Name, ref memoColumn, 
 					ref lastPos, propertiesElement,	propertyNamesElement, table, mapping.FormatPattern);
 			}
@@ -380,6 +385,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
 			AddColumn(entity, "ErrorText", ref memoColumn, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
+			AddColumn(entity, "RecordCreated", ref memoColumn,
+				ref lastPos, propertiesElement, propertyNamesElement, table, null);
 
 			SetUserConfig(doc, listElement, wqc.DefaultPanelConfiguration, queueId, Guid.Empty);
 
