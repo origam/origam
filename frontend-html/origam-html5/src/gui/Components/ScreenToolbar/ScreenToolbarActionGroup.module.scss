@@ -1,0 +1,46 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "~@origam/styles/dist/styles/definitions";
+
+.root {
+  height: 2.5em;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-color: var(--background3);
+  border-style: solid;
+  border-width: 0 0 0 1px;
+  padding: 0 0.9em;
+  overflow: hidden;
+  min-width: 0;
+  
+  &:first-of-type {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  &:global(.grovable) {
+    flex: 1 1;
+    display: flex;
+    flex-direction: row;
+    
+  }
+}

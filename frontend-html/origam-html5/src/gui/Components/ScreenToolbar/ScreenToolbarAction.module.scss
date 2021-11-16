@@ -1,0 +1,119 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "~@origam/styles/dist/styles/commonStyles";
+
+.root {
+  display: flex;
+  flex-direction: row;
+  color: var(--background6);
+  padding: 1.2em 0.9em;
+  position: relative;
+  white-space: nowrap;
+  min-width: 0;
+  cursor: pointer;
+
+  &:global(.isHidden) {
+    position: fixed;
+    top: 110%;
+    left: 110%;
+  }
+
+  &:hover {
+    .icon {
+      svg {
+        stroke: var(--background8);
+        stroke-width: 1.5;
+        &:global(.isHoverGreen) {
+          stroke: var(--ok1);
+        }
+      }
+    }
+    .label {
+      color:var(--background8);
+    }
+  }
+
+  &:global(.isLabelless) {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    .icon {
+      margin: 0;
+    }
+  }
+}
+
+.icon {
+  margin: 0 0.5em 0 0;
+  width: 1.6667em;
+  height: 1.6667em;
+  overflow: inherit;
+  svg {
+    overflow: inherit;
+    stroke: var(--background6);
+    stroke-width: 1;
+    &:global(.isRed) {
+      stroke: var(--error1);
+    }
+    @include hoverItemAnimation;
+  }
+}
+
+.label {
+  @include hoverItemAnimation;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:global(.isRed) .label {
+  color: var(--error1);
+  &:hover {
+    //color: var(--error1) !important;
+  }
+}
+
+:global(.isHoverGreen):hover .label {
+  color: var(--ok1);
+}
+
+:global(.dropdownItem) .root {
+  &:hover {
+    .label {
+      color:var(--background1);
+    }
+  }
+  .label {
+    color: var(--foreground1);
+  }
+}
+
+:global(.dropdownItem):hover .root {
+  .label {
+    color:var(--background1);
+  }
+}
+
+:global(.isActiveDropDownAction) {
+  color: var(--foreground1);
+  &:hover {
+    color: var(--foreground1);
+  }
+}
