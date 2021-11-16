@@ -45,4 +45,7 @@
 	<data name="OnlyXmlDocSupported">
 		<value>Only XmlDataDocument or empty data source is supported.</value>
 	</data>
+	<data name="ParametersDontMatch" xml:space="preserve">
+		<value>Parameters don't match.</value>
+	</data>
 </root>
