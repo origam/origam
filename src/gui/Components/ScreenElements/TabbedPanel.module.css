@@ -40,18 +40,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--grey4);
-  color: var(--grey25);
+  background-color: var(--background6);
+  color: var(--background4);
   height: 20px;
   padding: 2px 10px 2px 10px;
-  border-right: 1px solid var(--grey2);
+  border-right: 1px solid var(--background3);
   cursor: default;
 }
 
 .tabHandle:hover,
 .tabHandle:global(.active) {
-  background-color: var(--blue6);
-  color:var(--white);
+  background-color: var(--foreground6);
+  color:var(--background1);
 }
 
 .tabBody {

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/definitions";
 
 .columnTable {
   width: 640px;
@@ -51,7 +51,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding-right: 10px;
   white-space: nowrap;
   overflow: hidden;
-  border-bottom: 1px solid var(--grey2);
+  border-bottom: 1px solid var(--background3);
 }
 
 .columnTableCell:global(.header) {
@@ -59,11 +59,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .columnTableCell:global(.odd) {
-  background-color: var(--grey1);
+  background-color: var(--background2);
 }
 
 .columnTableCell:global(.even) {
-  background-color: var(--white);
+  background-color: var(--background1);
 }
 
 .columnWidthHandle {
@@ -71,8 +71,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   width: 3px;
   height: 100%;
   right: 0;
-  background: var(--grey2);
-  border-color: var(--white);
+  background: var(--background3);
+  border-color: var(--background1);
   border-style: solid;
   border-width: 0 1px;
 }

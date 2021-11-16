@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
+@import "~@origam/styles/dist/styles/commonStyles";
 
 .root {
   display: flex;
   flex-direction: row;
-  color: var(--grey4);
+  color: var(--background6);
   padding: 1.2em 0.9em;
   position: relative;
   white-space: nowrap;
@@ -38,15 +38,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:hover {
     .icon {
       svg {
-        stroke: var(--black);
+        stroke: var(--background8);
         stroke-width: 1.5;
         &:global(.isHoverGreen) {
-          stroke: var(--green);
+          stroke: var(--ok1);
         }
       }
     }
     .label {
-      color:var(--black);
+      color:var(--background8);
     }
   }
 
@@ -66,10 +66,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow: inherit;
   svg {
     overflow: inherit;
-    stroke: var(--grey4);
+    stroke: var(--background6);
     stroke-width: 1;
     &:global(.isRed) {
-      stroke: var(--red);
+      stroke: var(--error1);
     }
     @include hoverItemAnimation;
   }
@@ -84,36 +84,36 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 :global(.isRed) .label {
-  color: var(--red);
+  color: var(--error1);
   &:hover {
-    //color: var(--red) !important;
+    //color: var(--error1) !important;
   }
 }
 
 :global(.isHoverGreen):hover .label {
-  color: var(--green);
+  color: var(--ok1);
 }
 
 :global(.dropdownItem) .root {
   &:hover {
     .label {
-      color:var(--white);
+      color:var(--background1);
     }
   }
   .label {
-    color: var(--blue1);
+    color: var(--foreground1);
   }
 }
 
 :global(.dropdownItem):hover .root {
   .label {
-    color:var(--white);
+    color:var(--background1);
   }
 }
 
 :global(.isActiveDropDownAction) {
-  color: var(--blue1);
+  color: var(--foreground1);
   &:hover {
-    color: var(--blue1);
+    color: var(--foreground1);
   }
 }

@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { Observer } from "mobx-react";
 import React, { useContext, useState } from "react";
-import CS from "./Dropdown/Dropdown.module.scss";
+import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
 import cx from "classnames";
-import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
+import { CtxDropdownRefCtrl } from "@origam/components";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
 import { action, observable } from "mobx";

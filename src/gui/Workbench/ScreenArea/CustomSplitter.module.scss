@@ -17,18 +17,22 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.mainRow{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.buttonRow{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-top: 10px;
-}
+@import "../../Components/Splitter/Splitter.module";
+@import "~@origam/styles/dist/styles/definitions";
 
-.controlsColumn{
-  padding-right: 10px;
+.divider {
+  background: var(--background1);
+  &:global(.isDragging) {
+    position: relative;
+    z-index: 1000;
+    background: var(--foreground1);
+    @include opacity(0.8);
+    border-color: var(--foreground1) !important;
+  }
+  &:not(:global(.isDragging)):hover {
+    :global(.dividerLine) {
+      border-color: var(--foreground1) !important;
+    }
+    background: var(--background1);
+  }
 }

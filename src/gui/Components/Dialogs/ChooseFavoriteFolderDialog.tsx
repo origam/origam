@@ -25,7 +25,7 @@ import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 import { FavoriteFolder } from "model/entities/Favorites";
-import { IOption, SimpleDropdown } from "gui/Components/PublicComponents/SimpleDropdown";
+import { IOption, SimpleDropdown } from "@origam/components";
 
 @observer
 export class ChooseFavoriteFolderDialog extends React.Component<{

@@ -28,14 +28,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.233);
+  background-color: rgba(var(--background1-rgb), 0.233);
   z-index: 999;
 }
 
 .label {
   padding: 20px;
-  border: 1px solid var(--white);
-  background-color: var(--blue6);
+  border: 1px solid var(--background1);
+  background-color: var(--foreground6);
   text-transform: uppercase;
-  color:var(--white);
+  color:var(--background1);
 }

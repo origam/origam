@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   min-height: 0px;
   max-height: 0px;
   flex-shrink: 0;
-  background: var(--white);
+  background: var(--background1);
   padding: 0 1em 0 2em;
   display: flex;
   flex-direction: row;
@@ -33,16 +33,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-wrap: nowrap;
   position: relative;
   width: 100%;
-  border-top: 1px solid var(--grey25);
+  border-top: 1px solid var(--background4);
 
   border-style: solid;
-  border-color: var(--grey2) !important;
+  border-color: var(--background3) !important;
   border-width: 0 0 1px 0;
   
   &:global(.isVisible) {
     min-height: 35px;
     max-height: 35px;
-    border-bottom: 1px solid var(--grey25);
+    border-bottom: 1px solid var(--background4);
   }
 
   .inner {

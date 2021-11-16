@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
+@import "~@origam/styles/dist/styles/commonStyles";
 
 .resultItem{
   padding: 0 1.6667em;
@@ -30,14 +30,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   text-decoration: none;
   font-style: normal;
   color: $textColorNoHover;
-  background-color: var(--grey1);
+  background-color: var(--background2);
   transition: all 300ms linear;
   @include hoverItemAnimation;
 
   &:not(:global(.isActive)):hover {
     color: $textColorHover;
     svg:global(.icon) {
-      stroke: var(--black);
+      stroke: var(--background8);
       stroke-width: 1.5;
     }
   }
@@ -78,7 +78,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 28px;
   display: flex;
   align-items: center;
-  background-color: var(--grey1);
+  background-color: var(--background2);
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -95,5 +95,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .arrow{
   font-size: 20px;
-  color:var(--black);
+  color:var(--background8);
 }

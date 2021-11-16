@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   height: 50px;
-  background: var(--white);
+  background: var(--background1);
   padding: 0 1em 0 2em;
   display: flex;
   align-items: center;
@@ -49,10 +49,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .workflowActionBtn {
   @include dialogButton();
-  background: var(--grey2);
-  border: 1px solid var(--grey3);
+  background: var(--background3);
+  border: 1px solid var(--background5);
   box-sizing: border-box;
-  color: var(--black);
+  color: var(--background8);
   font-size: $font-size;
   height: 2em;
     margin: 0 0.5em;
@@ -65,7 +65,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     margin-right: 0;
   }
   &:hover {
-    background: var(--grey3);
-      color: var(--black);
+    background: var(--background5);
+      color: var(--background8);
   }
 }

@@ -19,11 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { createPluginData } from "./PluginData";
-import { IPlugin } from "../types/IPlugin";
 import React, { Fragment } from "react";
 import { registerPlugins } from "plugins/tools/PluginRegistration";
 import { Localizer } from "plugins/tools/Localizer";
-import { ILocalization } from "plugins/types/ILocalization";
+import {
+  ILocalization,
+  IPlugin
+} from "@origam/plugin-interfaces";
 
 const pluginFactoryFunctions: Map<string, () => IPlugin> = new Map<string, () => IPlugin>();
 

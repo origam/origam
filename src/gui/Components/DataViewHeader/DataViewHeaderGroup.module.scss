@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   display: flex;
@@ -25,7 +25,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   flex-wrap: nowrap;
 
-  border-right: 1px solid var(--grey2);
+  border-right: 1px solid var(--background3);
   padding: 0 0.5em;
   overflow: hidden;
   user-select: none;
@@ -50,7 +50,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:first-of-type {
     &:not(:global(.noDivider)) {
-      border-left: 1px solid var(--grey2);
+      border-left: 1px solid var(--background3);
     }
     border-right: none;
   }

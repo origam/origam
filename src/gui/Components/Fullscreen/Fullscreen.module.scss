@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: var(--grey2);
+  background-color: var(--background3);
   &:global(.isFullscreen) {
     position: fixed;
     z-index: 500;

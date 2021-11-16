@@ -17,18 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "./EditorsCommon.scss";
-@import "src/styles/common_styles.scss";
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/editorsCommon";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/definitions";
 
 .droppedPanelContainer {
   z-index: 1000;
-  background-color:var(--white);
+  background-color:var(--background1);
   overflow: hidden;
   @include popoverShadow;
 
-  box-shadow: 0 0.5em 1.5em 0 rgba(var(--black-rgb), 0.25);
-  border: 1px solid var(--grey3);
+  box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
+  border: 1px solid var(--background5);
   @include border-radius(4px);
 }
 
@@ -50,13 +50,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .colorDiv {
-  border: 1px solid var(--grey3);
+  border: 1px solid var(--background5);
   border-radius: 2px;
   padding: 2px;
   width: 100%;
   height: 100%;
   &:focus {
-    border-color: var(--blue1);
+    border-color: var(--foreground1);
   }
 }
 

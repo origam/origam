@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
+@import "~@origam/styles/dist/styles/commonStyles";
 
 .root {
-  color: var(--grey4);
+  color: var(--background6);
   padding: 1.2em 0.9em;
   position: relative;
   flex-shrink: 0;
@@ -30,24 +30,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: pointer;
   &:hover {
     svg {
-      stroke: var(--black);
+      stroke: var(--background8);
       stroke-width: 1.5;
     }
   }
   &:global(.isGreenOnHover):not(:global(.isActive)):hover svg {
-    stroke: var(--green);
+    stroke: var(--ok1);
   }
   &:global(.isOrangeOnHover):not(:global(.isActive)):hover svg {
-    stroke: var(--orange);
+    stroke: var(--warning2);
   }
   &:global(.isActive) svg {
-    stroke: var(--blue1);
+    stroke: var(--foreground1);
     stroke-width: 2;
   }
   svg {
     height: 1.6667em;
     overflow: inherit;
-    stroke: var(--grey4);
+    stroke: var(--background6);
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 1;

@@ -17,19 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "./EditorsCommon.scss";
-@import "src/styles/common_styles.scss";
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/editorsCommon";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/definitions";
 
 
 .droppedPanelContainer {
   z-index: 1000;
-  background-color:var(--white);
+  background-color:var(--background1);
   overflow: hidden;
   @include popoverShadow;
 
-  box-shadow: 0 0.5em 1.5em 0 rgba(var(--black-rgb), 0.25);
-  border: 1px solid var(--grey3);
+  box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
+  border: 1px solid var(--background5);
   @include border-radius(4px);
 }
 
@@ -57,17 +57,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   cursor: pointer;
   height: auto;
   border: none;
-  background: var(--white);
-  color: var(--black);
+  background: var(--background1);
+  color: var(--background8);
 }
 
 .calendarWidgetCell:hover {
-  background-color: var(--grey25);
+  background-color: var(--background4);
 }
 
 .calendarWidgetSelectedDay {
-  background: var(--blue1);
-  color: var(--white);
+  background: var(--foreground1);
+  color: var(--background1);
   font-weight: 700;
   @include border-radius(5em);
 }
@@ -79,15 +79,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: center;
   height: auto;
   border: none;
-  background: var(--white);
-  color: var(--black);
+  background: var(--background1);
+  color: var(--background8);
   font-size: 0.9em;
   font-weight: 700;
 }
 
 .calendarWidgetNeighbourMonthCell {
-  //background-color: var(--grey2);
-  color: var(--grey3);
+  //background-color: var(--background3);
+  color: var(--background5);
 }
 
 .calendarWidgetHeader {
@@ -96,8 +96,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
   align-items: center;
   height: auto;
-  background: var(--grey2);
-  border-bottom: 1px solid var(--grey3);
+  background: var(--background3);
+  border-bottom: 1px solid var(--background5);
 }
 
 .calendarWidgetControlBtn {
@@ -105,7 +105,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border: none;
   cursor: pointer;
   box-sizing: content-box;
-  color: var(--blue1);
+  color: var(--foreground1);
   height: 1em;
   line-height: 0.8em;
   margin: 0 0.25em;
@@ -114,8 +114,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   @extend %transition;
 
   &:hover {
-    background: var(--blue1);
-    color: var(--white);
+    background: var(--foreground1);
+    color: var(--background1);
     @include border-radius(5em);
   }
   i {
@@ -166,7 +166,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .formatHintTooltip {
   padding: 5px;
   position: fixed;
-  border: 1px solid var(--black);
-  background-color:var(--white);
+  border: 1px solid var(--background8);
+  background-color:var(--background1);
   z-index: 5000;
 }

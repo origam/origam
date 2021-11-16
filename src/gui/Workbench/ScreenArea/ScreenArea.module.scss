@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/common_styles.scss";
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/definitions";
 
 .Root {
   width: 100%;
@@ -26,14 +26,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow: hiddwen;
   display: flex;
   flex-direction: column;
-  background-color: var(--grey2);
+  background-color: var(--background3);
 }
 
 .TabHandles {
   height: 20px;
   display: flex;
   flex-direction: row;
-  background-color: var(--grey5);
+  background-color: var(--background7);
   user-select: none;
 }
 
@@ -42,7 +42,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding: 2px 20px 2px 10px;
   margin: 0px 1px 1px 0px;
   cursor: pointer;
-  background-color: var(--grey4);
+  background-color: var(--background6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,18 +59,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .TabHandleCloseBtn:hover {
-  background-color: var(--blue6);
-  color:var(--white);
+  background-color: var(--foreground6);
+  color:var(--background1);
 }
 
 .TabHandle:hover {
-  background-color: var(--blue6);
+  background-color: var(--foreground6);
 }
 
 .TabHandle.active {
   margin-bottom: 0;
-  background-color: var(--grey2);
-  color:var(--black);
+  background-color: var(--background3);
+  color:var(--background8);
 }
 
 .dialogLoadingContent {
@@ -88,10 +88,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .workflowActionBtn {
 @include dialogButton();
-  background: var(--grey2);
-  border: 1px solid var(--grey3);
+  background: var(--background3);
+  border: 1px solid var(--background5);
   box-sizing: border-box;
-  color: var(--black);
+  color: var(--background8);
   font-size: $font-size;
   height: 2em;
   margin: 0 0.5em;
@@ -104,8 +104,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
    margin-right: 0;
  }
 &:hover {
-   background: var(--grey3);
-   color: var(--black);
+   background: var(--background5);
+   color: var(--background8);
  }
 }
 

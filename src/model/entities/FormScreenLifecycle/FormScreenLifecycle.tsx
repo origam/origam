@@ -78,13 +78,12 @@ import { IGroupingSettings } from "../types/IGroupingConfiguration";
 import { groupingUnitToString } from "../types/GroupingUnit";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "../../../utils/runInFlowWithHandler";
+import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { onFieldBlur } from "../../actions-ui/DataView/TableView/onFieldBlur";
 import { getRowStates } from "../../selectors/RowState/getRowStates";
 import { getIsAddButtonVisible } from "../../selectors/DataView/getIsAddButtonVisible";
-import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
-import { isIScreenPlugin } from "plugins/types/IScreenPlugin";
-import { isISectionPlugin } from "../../../plugins/types/ISectionPlugin";
+import { pluginLibrary } from "plugins/tools/PluginLibrary";
+import { isIScreenPlugin, isISectionPlugin } from "@origam/plugin-interfaces";
 import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 import {T} from "utils/translation";
 

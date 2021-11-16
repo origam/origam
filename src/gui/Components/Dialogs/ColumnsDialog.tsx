@@ -30,7 +30,7 @@ import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/ce
 import { GroupingUnit, groupingUnitToLabel } from "model/entities/types/GroupingUnit";
 import { IColumnConfiguration, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
-import { IOption, SimpleDropdown } from "gui/Components/PublicComponents/SimpleDropdown";
+import { IOption, SimpleDropdown } from "@origam/components";
 import { compareStrings } from "utils/string";
 
 @observer

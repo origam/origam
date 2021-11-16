@@ -43,7 +43,7 @@ import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
-import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
+import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @inject(({property}: { property: IProperty }, {value}) => {

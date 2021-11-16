@@ -19,13 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .formSection {
   position: absolute;
-  background-color: var(--grey25);
+  background-color: var(--background4);
 }
 
 .sectionTitle {
   padding: 3px;
   font-weight: bold;
-  background-color: var(--grey2);
+  background-color: var(--background3);
   font-size: 14px;
-  color: var(--grey5);
+  color: var(--background7);
 }

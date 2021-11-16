@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
-import SSplitter from "styles/CustomSplitter.module.scss";
+import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
 import { Splitter } from "gui/Components/Splitter/Splitter";
 
 export const WorkbenchPage: React.FC<{

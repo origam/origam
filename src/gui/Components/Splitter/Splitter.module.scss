@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   height: 100%;
@@ -36,10 +36,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .divider {
-  background-color:var(--blue1);
+  background-color:var(--foreground1);
   flex-shrink: 0;
   :global(.dividerLine) {
-    border-color: var(--white) !important;
+    border-color: var(--background1) !important;
 		border-style: solid !important;
 		@extend %transition;
   }
@@ -52,7 +52,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     :global(.dividerLine) {
       width: 1px;
       height: 100%;
-      border-left: 1px dotted var(--grey25);
+      border-left: 1px dotted var(--background4);
       border-width: 0 1px 0 1px !important;
     }
   }
@@ -65,16 +65,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     :global(.dividerLine) {
       height: 1px;
       width: 100%;
-      border-top: 1px dotted var(--grey25);
+      border-top: 1px dotted var(--background4);
       border-width: 1px 0 1px 0 !important;
     }
   }
   &:global(.isDragging) {
     position: relative;
-    background-color:var(--yellow);
+    background-color:var(--warning1);
   }
   &:not(:global(.isDragging)):hover {
-    background-color:var(--red);
+    background-color:var(--error1);
   }
 }
 

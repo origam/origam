@@ -23,7 +23,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
-import SSplitter from "styles/CustomSplitter.module.scss";
+import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
 import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
 import { Box } from "../../Components/ScreenElements/Box";
 import { DataView } from "../../Components/ScreenElements/DataView";

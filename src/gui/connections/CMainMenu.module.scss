@@ -1,5 +1,5 @@
 div svg.deleteIcon{
-  stroke: var(--red);
+  stroke: var(--error1);
 }
 
 .favoritesMenuItem{
@@ -8,11 +8,11 @@ div svg.deleteIcon{
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  background-color: var(--grey1);
+  background-color: var(--background2);
 }
 
 :global(.openItem){
-  background-color: var(--white);
+  background-color: var(--background1);
 }
 
 
@@ -24,20 +24,20 @@ div svg.deleteIcon{
 }
 
 .addToFavoritesIcon {
-  stroke: var(--blue1);
+  stroke: var(--foreground1);
   stroke-width: 1.5px;
   cursor: pointer;
 }
 :global(.activeAddToFavoritesIcon){
-  stroke: var(--grey25);
+  stroke: var(--background4);
 }
 
 .isOpenedScreen{
-  background-color: var(--white);
+  background-color: var(--background1);
 }
 
 .itemGrip{
-  color: var(--grey25);
+  color: var(--background4);
   width: 16px;
   margin-right: 20px;
 }

@@ -21,10 +21,9 @@ import { observer, Observer } from "mobx-react";
 import React, { useContext, useEffect, useMemo, createRef } from "react";
 import { GridCellProps, MultiGrid } from "react-virtualized";
 import { CtxCell } from "./Cells/CellsCommon";
-import S from "./Dropdown/Dropdown.module.scss";
-import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "./Dropdown/DropdownCommon";
+import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
+import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "@origam/components";
 import { CtxDropdownEditor } from "./DropdownEditor";
-import SE from "./DropdownEditor.module.scss";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import cx from "classnames";
 import { getCanvasFontSize, getTextWidth } from "utils/textMeasurement";
@@ -196,8 +195,8 @@ export class DropdownEditorTable extends  React.Component<{
         scrollToRow={this.props.beh.scrollToRowIndex}
         scrollToAlignment="center"
         onScrollbarPresenceChange={args => this.handleScrollbarPresenceChange(args)}
-        classNameTopRightGrid={SE.table}
-        classNameBottomRightGrid={SE.table}
+        classNameTopRightGrid={S.table}
+        classNameBottomRightGrid={S.table}
         columnCount={this.columnCount}
         rowCount={this.rowCount}
         columnWidth={({ index }) => this.widths[index]}

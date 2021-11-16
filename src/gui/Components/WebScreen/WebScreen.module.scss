@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
+@import "~@origam/styles/dist/styles/commonStyles";
 
 .root {
   width: 100%;
@@ -34,7 +34,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   .progressIndicator {
     @include progressIndicator;
     top: 0;
-    background-color:var(--white);
+    background-color:var(--background1);
   }
 
   .transparentOverlay {

@@ -17,12 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IPluginData } from "../types/IPluginData";
-import { IDataView } from "../../model/entities/types/IDataView";
-import { IPluginTableRow } from "../types/IPluginRow";
-import { getProperties } from "../../model/selectors/DataView/getProperties";
-import { IPluginDataView } from "../types/IPluginDataView";
-import { IPluginProperty } from "../types/IPluginProperty";
+import { IDataView } from "model/entities/types/IDataView";
+import { getProperties } from "model/selectors/DataView/getProperties";
+import {
+  IPluginData,
+  IPluginDataView,
+  IPluginProperty,
+  IPluginTableRow,
+} from "@origam/plugin-interfaces";
 
 
 export function createPluginData(dataView: IDataView): IPluginData | undefined {

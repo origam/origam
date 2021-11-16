@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   height: -webkit-fill-available;
@@ -39,38 +39,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:global(.isActive) {
     svg {
-      stroke: var(--blue1) !important;
+      stroke: var(--foreground1) !important;
       stroke-width: 2 !important;
     }
   }
 
   &:global(.isGreenHover):hover {
-    color: var(--green);
+    color: var(--ok1);
     svg {
-      stroke: var(--green) !important;
+      stroke: var(--ok1) !important;
     }
   }
 
   &:global(.isRedHover):hover {
-    color: var(--red);
+    color: var(--error1);
     svg {
-      stroke: var(--red) !important;
+      stroke: var(--error1) !important;
     }
   }
 
   &:global(.isOrangeHover):hover {
-    color: var(--orange);
+    color: var(--warning2);
     svg {
-      stroke: var(--orange) !important;
+      stroke: var(--warning2) !important;
     }
   }
 
   svg {
     height: 1.5em;
     width: 1.5em;
-    stroke: var(--grey4);
+    stroke: var(--background6);
     &:hover {
-      stroke: var(--black);
+      stroke: var(--background8);
     }
     @include hoverItemAnimation;
   }
@@ -78,10 +78,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .isDisabled{
   svg {
-    stroke: var(--grey3) !important;
+    stroke: var(--background5) !important;
     stroke-width: 1 !important;
     &:hover {
-      stroke: var(--grey3);
+      stroke: var(--background5);
     }
   }
 }

@@ -19,15 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .dataViewToolbar {
   height: 20px;
-  background-color: var(--blue6);
-  color: var(--white);
+  background-color: var(--foreground6);
+  color: var(--background1);
   display: flex;
   flex-direction: row;
- var(--white)-space: nowrap;
+ var(--background1)-space: nowrap;
 }
 
 .dataViewToolbar :global(.red) {
-  color: var(--red);
+  color: var(--error1);
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
     1px 1px 0 #fff;
 }
@@ -43,7 +43,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .loading {
   font-size: 14px;
   padding-right: 10px;
-  color:var(--white);
+  color:var(--background1);
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
 }
@@ -64,19 +64,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 100%;
   background: transparent;
   border: none;
-  color: var(--white);
+  color: var(--background1);
 }
 
 .toolbarBtn:global(.active) {
-  background-color: var(--blue7);
+  background-color: var(--foreground7);
 }
 
 .toolbarBtn:global(:hover:not(.disabled)) {
-  background-color: var(--blue7);
+  background-color: var(--foreground7);
 }
 
 .toolbarBtn:global(.disabled) {
-  color: var(--grey25);
+  color: var(--background4);
 }
 
 .toolbarBtn:global(.disabled):hover {
@@ -89,8 +89,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropDownMenu {
-  background-color:var(--white);
-  border: 1px solid var(--black);
+  background-color:var(--background1);
+  border: 1px solid var(--background8);
 
   position: absolute;
   z-index: 2000;
@@ -100,7 +100,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .dropDownMenuItem {
   padding: 0px 10px 0px 5px;
-  color:var(--black);
+  color:var(--background8);
   height: 20px;
   display: flex;
   align-items: center;
@@ -117,8 +117,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .dropDownMenuItem:not(:global(.disabled)):hover {
-  background-color: var(--blue6);
-  color:var(--white);
+  background-color: var(--foreground6);
+  color:var(--background1);
 }
 
 .dropDownItemIcon {
@@ -134,7 +134,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .panelViewAction {
-  color:var(--white);
+  color:var(--background1);
   background-color: darkred;
   height: 100%;
   font-weight: bold;

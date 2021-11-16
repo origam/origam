@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/definitions";
 
 .container {
   width: 100%;
@@ -37,14 +37,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   word-wrap: normal;
   @include border-radius(2px);
   @extend %transition;
-  background: var(--blue1);
-  border: 1px solid var(--blue1);
-  color: var(--white);
+  background: var(--foreground1);
+  border: 1px solid var(--foreground1);
+  color: var(--background1);
   cursor: pointer;
   margin: 0 0 0.5em 0;
   &:hover {
-    background: var(--white);
-    color: var(--blue1);
+    background: var(--background1);
+    color: var(--foreground1);
   }
 }
 
@@ -59,13 +59,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   left: 0px;
   top: 21px;
   z-index: 1000;
-  background-color:var(--white);
-  color:var(--black);
+  background-color:var(--background1);
+  color:var(--background8);
   min-width: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0.5em 1.5em 0 rgba(var(--black-rgb), 0.25);
-  border: 1px solid var(--grey3);
+  box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
+  border: 1px solid var(--background5);
   box-sizing: border-box;
   @include border-radius(4px);
 }
@@ -74,13 +74,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   min-height: 20px;
   display: flex;
   align-items: center;
-  color: var(--blue1);
+  color: var(--foreground1);
   cursor: pointer;
   font-weight: 400;
   padding: 0 0.5em;
   &:hover {
-    background: var(--blue1);
-    color: var(--white);
+    background: var(--foreground1);
+    color: var(--background1);
   }
 }
 

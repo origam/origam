@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root{
   display: flex;
@@ -44,23 +44,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-shrink: 0;
   font-weight: 700;
   cursor: default;
-  background: var(--grey1);
+  background: var(--background2);
   border: none;
   min-height: 25px;
   padding: 0 0 0 0.4em;
   transition: background-color 200ms linear;
   &:hover {
-    background: var(--grey2);
+    background: var(--background3);
     .Header_order {
-      background: var(--grey2);
+      background: var(--background3);
     }
   }
   &.changing-order {
-    color: var(--black);
+    color: var(--background8);
   }
   .Header_order {
-    background: var(--grey1);
-    color: var(--blue1);
+    background: var(--background2);
+    color: var(--foreground1);
     font-size: $font-size;
     height: 25px;
     line-height: 25px;
@@ -68,11 +68,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     right: -3px;
     @extend %transition;
   }
-}
-
-.header:global(.changing-order):hover {
-  background-color: var(--brown);
-  color:var(--white);
 }
 
 .label {
@@ -94,7 +89,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: absolute;
   right: 4px;
   font-size: 11px;
-  background-color: var(--grey2);
+  background-color: var(--background3);
   padding: 2px;
   height: 20px;
 }
@@ -111,8 +106,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .columnWidthHandle {
   flex-shrink: 0;
-  background: var(--grey2);
-  border-color: var(--grey1);
+  background: var(--background3);
+  border-color: var(--background2);
   border-style: solid;
   cursor: ew-resize;
   margin: 0;
@@ -120,7 +115,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 100%;
   @extend %transition;
   &:hover, &:focus {
-    background: var(--blue1);
+    background: var(--foreground1);
   }
   &:global(.isColumnDropTarget) {
     border-color: var(--brown);

@@ -58,7 +58,7 @@ export function clipCell() {
 export function drawSelectedRowBorder(frontStripeWidth: number) {
   const ctx2d = context2d();
   ctx2d.beginPath();
-  ctx2d.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--blue1');
+  ctx2d.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--foreground1');
   ctx2d.lineWidth = selectRowBorderWidth * CPR();
   ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
   ctx2d.lineTo(

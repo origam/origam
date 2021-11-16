@@ -184,7 +184,7 @@ class CheckListCellRenderer implements IDataCellRenderer {
 
     if (isLink) {
       this.ctx2d.save();
-      this.ctx2d.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--blue1');
+      this.ctx2d.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--foreground1');
     }
     if (currentCellText() !== null) {
       this.ctx2d.fillText(

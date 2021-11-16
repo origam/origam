@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
+@import "~@origam/styles/dist/styles/commonStyles";
 
 .root {
-  background:var(--white);
+  background:var(--background1);
   padding: 20px;
   display: flex;
   flex-direction: row;

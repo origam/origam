@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/definitions";
 
 .input {
   width: 100%;
@@ -31,14 +31,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   word-wrap: normal;
   @include border-radius(2px);
   @extend %transition;
-  background: var(--white);
-  border: 1px solid var(--grey3);
-  color: var(--black);
+  background: var(--background1);
+  border: 1px solid var(--background5);
+  color: var(--background8);
   margin: 0 0 0.25em 0;
   &:hover, &:focus {
-    background: var(--white);
-    border-color: var(--blue1);
-    color: var(--black);
+    background: var(--background1);
+    border-color: var(--foreground1);
+    color: var(--background8);
     font-size: 1em;
   }
   &:last-of-type {
@@ -50,8 +50,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: column;
   min-width: 100px;
-  background-color:var(--white);
-  border: 1px solid var(--grey25);
+  background-color:var(--background1);
+  border: 1px solid var(--background4);
 }
 
 .tagEditorDropdownItem {
@@ -61,8 +61,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   padding: 0px 10px 0px 10px;
   &:hover {
     cursor: pointer;
-    background-color: var(--blue6);
-    color:var(--white);
+    background-color: var(--foreground6);
+    color:var(--background1);
   }
 }
 

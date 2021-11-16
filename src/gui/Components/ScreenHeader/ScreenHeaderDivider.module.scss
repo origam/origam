@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
-  border-left: 1px solid var(--grey3);
+  border-left: 1px solid var(--background5);
   height: 2.5em;
   width: 1px;
-  border-color: var(--grey2);
+  border-color: var(--background3);
   margin: 0 2em;
 }

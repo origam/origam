@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   width: 500px;
@@ -52,8 +52,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 28px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--white);
-  background-color: var(--grey1);
+  border-bottom: 1px solid var(--background1);
+  background-color: var(--background2);
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
    -khtml-user-select: none; /* Konqueror HTML */
@@ -65,11 +65,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .arrow{
   font-size: 20px;
-  color:var(--black);
+  color:var(--background8);
 }
 
 .resultArea{
-  border-top: 1px solid var(--grey3);
+  border-top: 1px solid var(--background5);
   overflow-x: auto;
   overflow-y: auto;
   max-height: 35vh;
@@ -87,18 +87,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .resultIemRowSelected{
-  background-color: var(--blue1);
-  color:var(--white) !important;
+  background-color: var(--foreground1);
+  color:var(--background1) !important;
 }
 .resultIemRowSelected div svg{
-  stroke:var(--white);
+  stroke:var(--background1);
   stroke-width: 1.5;
 }
 
 .resultIemRowHovered {
   cursor: pointer;
-  background-color: var(--blue4);
-  color:var(--black) !important;
+  background-color: var(--foreground4);
+  color:var(--background8) !important;
 }
 
 .itemIcon{

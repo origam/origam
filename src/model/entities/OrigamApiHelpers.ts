@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import moment, { Moment } from "moment";
-import { toOrigamServerString } from "utils/moment";
+import { toOrigamServerString } from "@origam/utils";
 import { IFilter } from "./types/IFilter";
 
 export function joinWithAND(filterItems: string[]) {

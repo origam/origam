@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
+@import "~@origam/styles/dist/styles/commonStyles";
 
 .root {
-  color: var(--grey5);
+  color: var(--background7);
   height: 25px;
   //margin: 0 0.2em 0 0.2em;
   padding: 0 10px 0 10px;
@@ -35,30 +35,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   &:global(.isActive) {
     .label {
-      color: var(--blue1);
-      //  border-bottom: 2px solid var(--blue1);
+      color: var(--foreground1);
+      //  border-bottom: 2px solid var(--foreground1);
       // font-weight: 700;
     }
-    background-color:var(--white);
+    background-color:var(--background1);
   }
 
   &:hover {
-    //background-color:var(--white);
-    color: var(--black);
+    //background-color:var(--background1);
+    color: var(--background8);
   }
 
   &:global(.isDirty) {
     .label {
-      color: var(--red);
+      color: var(--error1);
     }
   }
 
   &:not(:global(.isActive)):hover {
-    color: var(--black);
+    color: var(--background8);
     cursor: pointer;
     .closeBtn {
       svg {
-        stroke: var(--black);
+        stroke: var(--background8);
       }
     }
   }
@@ -80,14 +80,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     margin: 0 0 0 0.5em;
     width: 1.1em;
     height: 1.1em;
-    stroke: var(--grey4);
+    stroke: var(--background6);
     stroke-width: 1;
     overflow: inherit;
     @include hoverItemAnimation;
   }
   &:hover {
     svg {
-      stroke: var(--red) !important;
+      stroke: var(--error1) !important;
       stroke-width: 2.5;
     }
   }

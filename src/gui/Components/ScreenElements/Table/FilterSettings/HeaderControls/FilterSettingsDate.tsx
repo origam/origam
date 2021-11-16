@@ -28,7 +28,7 @@ import {
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
-import { csToMomentFormat } from "../../../../../../utils/dateFormatConversion";
+import { csToMomentFormat } from "@origam/utils";
 
 const OPERATORS = [
   Operator.equals,

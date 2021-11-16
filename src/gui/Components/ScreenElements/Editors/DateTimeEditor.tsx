@@ -23,7 +23,7 @@ import { action, computed, observable, runInAction } from "mobx";
 import { observer, Observer } from "mobx-react";
 import moment, { Moment } from "moment";
 import * as React from "react";
-import { toOrigamServerString } from "utils/moment";
+import { toOrigamServerString } from "@origam/utils";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { getDefaultCsDateFormatDataFromCookie } from "../../../../utils/cookies";
 import DateCompleter from "./DateCompleter";

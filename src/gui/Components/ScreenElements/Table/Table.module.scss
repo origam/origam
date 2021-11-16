@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/definitions.scss";
+@import "~@origam/styles/dist/styles/definitions";
 
 .headers {
   min-height: 20px;
@@ -47,14 +47,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(var(--black-rgb), 0.5);
+  background-color: rgba(var(--background8-rgb), 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .loadingIcon {
-  color:var(--white);
+  color:var(--background1);
 }
 
 .headers {
@@ -63,7 +63,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-direction: row;
   z-index: 100;
   :global(.Scrollee_scrollee) {
-    background: var(--grey1);
+    background: var(--background2);
   } 
 }
 
@@ -74,9 +74,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: center;
  white-space: nowrap;
   box-sizing: border-box;
-  border-right: 1px solid var(--grey3);
+  border-right: 1px solid var(--background5);
   position: relative;
-  background-color: var(--grey2);
+  background-color: var(--background3);
   overflow: hidden;
 }
 
@@ -92,7 +92,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   position: absolute;
   right: 4px;
   font-size: 11px;
-  background-color: var(--grey2);
+  background-color: var(--background3);
   padding: 2px;
 }*/
 

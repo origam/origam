@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "src/styles/common_styles.scss";
-@import "./EditorsCommon.scss";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/editorsCommon";
 
 .blobEditor {
   width: 100%;
@@ -53,9 +53,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     left: -2px;
     width: 101%;
     height: 101%;
-    background-color:var(--white);
+    background-color:var(--background1);
     overflow: hidden;
-    border: 1px solid var(--grey3);
+    border: 1px solid var(--background5);
     border-radius: 3px;
   }
 
@@ -63,8 +63,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     border-radius: 3px;
     border: none;
     height: 100%;
-    background-color: var(--blue1);
-    color:var(--white);
+    background-color: var(--foreground1);
+    color:var(--background1);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -75,9 +75,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   :global(.btnDelete),
   :global(.customBtnChoose) {
     height: 100%;
-    border: 1px solid var(--grey3);
-    background-color: var(--blue1);
-    color:var(--white);
+    border: 1px solid var(--background5);
+    background-color: var(--foreground1);
+    color:var(--background1);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -85,8 +85,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     @include hoverItemAnimation;
     &:hover {
       cursor: pointer;
-      background-color: var(--blue4);
-      color:var(--black);
+      background-color: var(--foreground4);
+      color:var(--background8);
     }
   }
   :global(.btnDownload) {
@@ -140,7 +140,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .imageEditor {
-  background-color:var(--white);
+  background-color:var(--background1);
   position: fixed;
   top: 0;
   left: 0;
@@ -166,9 +166,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .standardBorder{
-  border: 1px solid var(--grey3);
+  border: 1px solid var(--background5);
 }
 
 .focusedBorder{
-  border: 1px solid var(--blue1);
+  border: 1px solid var(--foreground1);
 }

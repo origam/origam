@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
+@import "~@origam/styles/dist/styles/commonStyles";
 
 .root {
   height: 30px;
@@ -34,21 +34,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
   color: $textColorNoHover;
 
-  background-color: var(--grey1);
+  background-color: var(--background2);
 
   @include hoverItemAnimation;
 
   &:global(.isOpenedScreen) {
-    background-color: var(--white);
+    background-color: var(--background1);
   }
 
   &:global(.isActiveScreen) {
-    background-color: var(--white);
-    color: var(--blue1);
+    background-color: var(--background1);
+    color: var(--foreground1);
     font-weight: 700;
 
     svg:global(.icon) {
-      stroke: var(--blue1);
+      stroke: var(--foreground1);
       stroke-width: 2;
     }
   }
@@ -60,7 +60,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:global(.isEmphasized) {
     font-weight: 700;
     svg:global(.icon) {
-      stroke: var(--black);
+      stroke: var(--background8);
       stroke-width: 1.5;
     }
   }
@@ -68,7 +68,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:not(:global(.isActive)):global(.isEmphasized):hover {
     font-weight: 1000;
     svg:global(.icon) {
-      stroke: var(--black);
+      stroke: var(--background8);
       stroke-width: 2.5;
     }
   }
@@ -76,7 +76,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:not(:global(.isActive)):hover {
     color: $textColorHover;
     svg:global(.icon) {
-      stroke: var(--black);
+      stroke: var(--background8);
       stroke-width: 1.5;
     }
   }

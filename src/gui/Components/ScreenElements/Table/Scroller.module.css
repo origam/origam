@@ -29,5 +29,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .scroller:focus {
-  box-shadow: inset 0px 0px 0px 1px var(--blue1);
+  box-shadow: inset 0px 0px 0px 1px var(--foreground1);
 }

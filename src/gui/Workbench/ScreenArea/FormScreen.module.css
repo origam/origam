@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  color:var(--black);
-  background-color: var(--grey2);
+  color:var(--background8);
+  background-color: var(--background3);
 }
 
 .screen:global(.hidden) {
@@ -41,7 +41,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   font-size: 18px;
   font-weight: bold;
-  background-color: var(--grey2);
+  background-color: var(--background3);
 }
 
 .screenIcon {
@@ -61,8 +61,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .btnFullScreen:global(.active),
 .btnFullScreen:hover {
-  background-color: var(--blue6);
-  color:var(--white);
+  background-color: var(--foreground6);
+  color:var(--background1);
 }
 
 .screenBody {
@@ -91,10 +91,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 :global(.screenSplitterHandle) {
-  background-color: var(--blue6);
+  background-color: var(--foreground6);
 }
 
 :global(.screenSplitterHandle):hover {
-  background-color: var(--grey25);
+  background-color: var(--background4);
 }
 

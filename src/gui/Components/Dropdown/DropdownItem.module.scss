@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/common_styles";
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/commonStyles";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   cursor: pointer;
@@ -27,12 +27,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   align-items: center;
   white-space: nowrap;
   @include hoverItemAnimation;
-  color: var(--blue1);
+  color: var(--foreground1);
   height: 30px;
   padding: 0 1em;
 
   &:not(:global(.isDisabled)):hover {
-    background-color: var(--blue1);
+    background-color: var(--foreground1);
     //font-weight: 400;
   }
 
@@ -42,11 +42,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 
   &:global(.redItem) {
-    color: var(--red);
-    background-color:var(--white);
+    color: var(--error1);
+    background-color:var(--background1);
     &:hover {
-      color:var(--white);
-      background-color: var(--red);
+      color:var(--background1);
+      background-color: var(--error1);
     }
   }
   &:last-of-type {
@@ -54,13 +54,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     border-bottom-left-radius: 4px;
   }
   &:hover {
-    background: var(--blue1);
-    color: var(--white);
+    background: var(--foreground1);
+    color: var(--background1);
   }
   &:global(.isDisabled) {
-    color: var(--grey3);
+    color: var(--background5);
     &:hover {
-      background: var(--grey1);
+      background: var(--background2);
     }
   }
 }

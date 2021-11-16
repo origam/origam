@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "../../../styles/definitions";
+@import "~@origam/styles/dist/styles/definitions";
 
 .root {
   height: 2.5em;
@@ -25,7 +25,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-color: var(--grey2);
+  border-color: var(--background3);
   border-style: solid;
   border-width: 0 0 0 1px;
   padding: 0 0.9em;
