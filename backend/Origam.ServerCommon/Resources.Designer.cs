@@ -19,7 +19,7 @@ namespace Origam.ServerCommon {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -36,7 +36,7 @@ namespace Origam.ServerCommon {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Origam.ServerCommon.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace Origam.ServerCommon {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to File is not available..
         /// </summary>
-        internal static string BlobFileNotAvailable {
+        public static string BlobFileNotAvailable {
             get {
                 return ResourceManager.GetString("BlobFileNotAvailable", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Maximum file size exceeded ({0} kB)..
         /// </summary>
-        internal static string BlobMaxSizeError {
+        public static string BlobMaxSizeError {
             get {
                 return ResourceManager.GetString("BlobMaxSizeError", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to No file was selected..
         /// </summary>
-        internal static string BlobNoFileSelected {
+        public static string BlobNoFileSelected {
             get {
                 return ResourceManager.GetString("BlobNoFileSelected", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to You cannot select more than 1 file..
         /// </summary>
-        internal static string BlobTooManyFilesSelected {
+        public static string BlobTooManyFilesSelected {
             get {
                 return ResourceManager.GetString("BlobTooManyFilesSelected", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Please contact admin..
         /// </summary>
-        internal static string ContactAdmin {
+        public static string ContactAdmin {
             get {
                 return ResourceManager.GetString("ContactAdmin", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Record has not been changed yet..
         /// </summary>
-        internal static string DefaultTooltipNoChange {
+        public static string DefaultTooltipNoChange {
             get {
                 return ResourceManager.GetString("DefaultTooltipNoChange", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Created by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;.
         /// </summary>
-        internal static string DefaultTooltipRecordCreated {
+        public static string DefaultTooltipRecordCreated {
             get {
                 return ResourceManager.GetString("DefaultTooltipRecordCreated", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Last updated by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;.
         /// </summary>
-        internal static string DefaultTooltipRecordUpdated {
+        public static string DefaultTooltipRecordUpdated {
             get {
                 return ResourceManager.GetString("DefaultTooltipRecordUpdated", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Maximum attachment size exceeded ({0} bytes)..
         /// </summary>
-        internal static string ErrorAttachmentMaximumSize {
+        public static string ErrorAttachmentMaximumSize {
             get {
                 return ResourceManager.GetString("ErrorAttachmentMaximumSize", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Error occured while uploading attachment: No file provided..
         /// </summary>
-        internal static string ErrorAttachmentNoFile {
+        public static string ErrorAttachmentNoFile {
             get {
                 return ResourceManager.GetString("ErrorAttachmentNoFile", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Attachment not available..
         /// </summary>
-        internal static string ErrorAttachmentNotAvailable {
+        public static string ErrorAttachmentNotAvailable {
             get {
                 return ResourceManager.GetString("ErrorAttachmentNotAvailable", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Attachment not available in the database..
         /// </summary>
-        internal static string ErrorAttachmentNotFoundInDb {
+        public static string ErrorAttachmentNotFoundInDb {
             get {
                 return ResourceManager.GetString("ErrorAttachmentNotFoundInDb", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Attachment not fully received..
         /// </summary>
-        internal static string ErrorAttachmentNotFullyReceived {
+        public static string ErrorAttachmentNotFullyReceived {
             get {
                 return ResourceManager.GetString("ErrorAttachmentNotFullyReceived", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Error occured while retrieving the attachment..
         /// </summary>
-        internal static string ErrorAttachmentRetrieval {
+        public static string ErrorAttachmentRetrieval {
             get {
                 return ResourceManager.GetString("ErrorAttachmentRetrieval", resourceCulture);
             }
@@ -189,7 +189,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Entity &apos;{0}&apos; does not support attachments..
         /// </summary>
-        internal static string ErrorAttachmentsNotSupported {
+        public static string ErrorAttachmentsNotSupported {
             get {
                 return ResourceManager.GetString("ErrorAttachmentsNotSupported", resourceCulture);
             }
@@ -198,7 +198,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Record empty, cannot download file..
         /// </summary>
-        internal static string ErrorBlobRecordEmpty {
+        public static string ErrorBlobRecordEmpty {
             get {
                 return ResourceManager.GetString("ErrorBlobRecordEmpty", resourceCulture);
             }
@@ -207,7 +207,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Cannot open &apos;{0}&apos; while editing other data. Please close all screens first..
         /// </summary>
-        internal static string ErrorCannotOpenFormExclusively {
+        public static string ErrorCannotOpenFormExclusively {
             get {
                 return ResourceManager.GetString("ErrorCannotOpenFormExclusively", resourceCulture);
             }
@@ -216,7 +216,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Close &apos;{0}&apos; before opening new screens..
         /// </summary>
-        internal static string ErrorCannotOpenScreenWhenExclusiveIsOpen {
+        public static string ErrorCannotOpenScreenWhenExclusiveIsOpen {
             get {
                 return ResourceManager.GetString("ErrorCannotOpenScreenWhenExclusiveIsOpen", resourceCulture);
             }
@@ -225,7 +225,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Form not saved. It is not possible to refresh data that were not saved first..
         /// </summary>
-        internal static string ErrorCannotRefreshFormNotSaved {
+        public static string ErrorCannotRefreshFormNotSaved {
             get {
                 return ResourceManager.GetString("ErrorCannotRefreshFormNotSaved", resourceCulture);
             }
@@ -234,7 +234,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Selecting multiple records for ChangeUI is not supported..
         /// </summary>
-        internal static string ErrorChangeUIMultipleRecords {
+        public static string ErrorChangeUIMultipleRecords {
             get {
                 return ResourceManager.GetString("ErrorChangeUIMultipleRecords", resourceCulture);
             }
@@ -243,7 +243,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Trying to access column `{0}&apos;, but it is not present in a dataset..
         /// </summary>
-        internal static string ErrorColumnNotFound {
+        public static string ErrorColumnNotFound {
             get {
                 return ResourceManager.GetString("ErrorColumnNotFound", resourceCulture);
             }
@@ -252,7 +252,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to The data are being processed by another request. Please wait until the previous request is finished and then repeat the action..
         /// </summary>
-        internal static string ErrorCommandInProgress {
+        public static string ErrorCommandInProgress {
             get {
                 return ResourceManager.GetString("ErrorCommandInProgress", resourceCulture);
             }
@@ -261,7 +261,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unknown action..
         /// </summary>
-        internal static string ErrorContextUnknownAction {
+        public static string ErrorContextUnknownAction {
             get {
                 return ResourceManager.GetString("ErrorContextUnknownAction", resourceCulture);
             }
@@ -270,7 +270,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to You are not allowed to create new records..
         /// </summary>
-        internal static string ErrorCreateRecordNotAllowed {
+        public static string ErrorCreateRecordNotAllowed {
             get {
                 return ResourceManager.GetString("ErrorCreateRecordNotAllowed", resourceCulture);
             }
@@ -279,7 +279,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Dashboard view not found..
         /// </summary>
-        internal static string ErrorDashboardViewNotFound {
+        public static string ErrorDashboardViewNotFound {
             get {
                 return ResourceManager.GetString("ErrorDashboardViewNotFound", resourceCulture);
             }
@@ -288,7 +288,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Critical Error: Data were not saved while changing the actual row. Data would be in an inconsistent state. Please reload browser and try the action again..
         /// </summary>
-        internal static string ErrorDataNotSavedWhileChangingRow {
+        public static string ErrorDataNotSavedWhileChangingRow {
             get {
                 return ResourceManager.GetString("ErrorDataNotSavedWhileChangingRow", resourceCulture);
             }
@@ -297,7 +297,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t update dependent column `{0}&apos; on column `{1}&apos; at entity `{2}&apos;, ({3}).
         /// </summary>
-        internal static string ErrorDependentColumnNotFound {
+        public static string ErrorDependentColumnNotFound {
             get {
                 return ResourceManager.GetString("ErrorDependentColumnNotFound", resourceCulture);
             }
@@ -306,7 +306,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Export no longer available..
         /// </summary>
-        internal static string ErrorExportNotAvailable {
+        public static string ErrorExportNotAvailable {
             get {
                 return ResourceManager.GetString("ErrorExportNotAvailable", resourceCulture);
             }
@@ -315,7 +315,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to You have to save the form&apos;s data before executing the current action..
         /// </summary>
-        internal static string ErrorFormNotSavedBeforeAction {
+        public static string ErrorFormNotSavedBeforeAction {
             get {
                 return ResourceManager.GetString("ErrorFormNotSavedBeforeAction", resourceCulture);
             }
@@ -333,7 +333,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Could not load work queue list..
         /// </summary>
-        internal static string ErrorLoadingWorkQueueList {
+        public static string ErrorLoadingWorkQueueList {
             get {
                 return ResourceManager.GetString("ErrorLoadingWorkQueueList", resourceCulture);
             }
@@ -342,7 +342,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Session not available. Cannot log out..
         /// </summary>
-        internal static string ErrorLogOut {
+        public static string ErrorLogOut {
             get {
                 return ResourceManager.GetString("ErrorLogOut", resourceCulture);
             }
@@ -351,7 +351,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unsupported mode. Cannot pass parameters for multiple record selection..
         /// </summary>
-        internal static string ErrorMultipleRecordsParameters {
+        public static string ErrorMultipleRecordsParameters {
             get {
                 return ResourceManager.GetString("ErrorMultipleRecordsParameters", resourceCulture);
             }
@@ -360,7 +360,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to No records selected. Cannot execute action..
         /// </summary>
-        internal static string ErrorNoRecordsSelectedForAction {
+        public static string ErrorNoRecordsSelectedForAction {
             get {
                 return ResourceManager.GetString("ErrorNoRecordsSelectedForAction", resourceCulture);
             }
@@ -369,7 +369,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Selecting multiple records for OpenForm is not supported..
         /// </summary>
-        internal static string ErrorOpenFormMultipleRecords {
+        public static string ErrorOpenFormMultipleRecords {
             get {
                 return ResourceManager.GetString("ErrorOpenFormMultipleRecords", resourceCulture);
             }
@@ -378,7 +378,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Principal not set. Cannot load user profile..
         /// </summary>
-        internal static string ErrorPrincipalNotSet {
+        public static string ErrorPrincipalNotSet {
             get {
                 return ResourceManager.GetString("ErrorPrincipalNotSet", resourceCulture);
             }
@@ -387,7 +387,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Profile provider not set. Cannot load user profile..
         /// </summary>
-        internal static string ErrorProfileProviderNotSet {
+        public static string ErrorProfileProviderNotSet {
             get {
                 return ResourceManager.GetString("ErrorProfileProviderNotSet", resourceCulture);
             }
@@ -396,7 +396,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Pseudoparameter &apos;body&apos; not defined as a parametr of a API data page but attempted to use during PUT call..
         /// </summary>
-        internal static string ErrorPseudoparameterBodyNotDefined {
+        public static string ErrorPseudoparameterBodyNotDefined {
             get {
                 return ResourceManager.GetString("ErrorPseudoparameterBodyNotDefined", resourceCulture);
             }
@@ -405,7 +405,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Data row not found by the provided ID..
         /// </summary>
-        internal static string ErrorRecordNotFound {
+        public static string ErrorRecordNotFound {
             get {
                 return ResourceManager.GetString("ErrorRecordNotFound", resourceCulture);
             }
@@ -414,7 +414,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Invalid data returned by {0} for action {1}..
         /// </summary>
-        internal static string ErrorRefreshReturnInvalid {
+        public static string ErrorRefreshReturnInvalid {
             get {
                 return ResourceManager.GetString("ErrorRefreshReturnInvalid", resourceCulture);
             }
@@ -423,7 +423,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Selecting multiple records for ReportAction is not supported..
         /// </summary>
-        internal static string ErrorReportActionMultipleRecords {
+        public static string ErrorReportActionMultipleRecords {
             get {
                 return ResourceManager.GetString("ErrorReportActionMultipleRecords", resourceCulture);
             }
@@ -432,7 +432,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Report no longer available..
         /// </summary>
-        internal static string ErrorReportNotAvailable {
+        public static string ErrorReportNotAvailable {
             get {
                 return ResourceManager.GetString("ErrorReportNotAvailable", resourceCulture);
             }
@@ -441,16 +441,16 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Selecting multiple records for OpenForm/Report is not supported..
         /// </summary>
-        internal static string ErrorReportOpenFormMultipleRecords {
+        public static string ErrorReportOpenFormMultipleRecords {
             get {
                 return ResourceManager.GetString("ErrorReportOpenFormMultipleRecords", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your connection expired or the application has been restarted. Please refresh your browser or sign in again..
+        ///   Looks up a localized string similar to Your connection expired or the application has been restarted. Please refresh your browser or log in again..
         /// </summary>
-        internal static string ErrorSessionExpired {
+        public static string ErrorSessionExpired {
             get {
                 return ResourceManager.GetString("ErrorSessionExpired", resourceCulture);
             }
@@ -459,7 +459,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Session not found: {0}.
         /// </summary>
-        internal static string ErrorSessionNotFound {
+        public static string ErrorSessionNotFound {
             get {
                 return ResourceManager.GetString("ErrorSessionNotFound", resourceCulture);
             }
@@ -468,7 +468,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Too many screens are open. You have to close some tabs before opening new screens..
         /// </summary>
-        internal static string ErrorTooManyTabsOpen {
+        public static string ErrorTooManyTabsOpen {
             get {
                 return ResourceManager.GetString("ErrorTooManyTabsOpen", resourceCulture);
             }
@@ -477,7 +477,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to The node cannot be deleted. Delete all sub-ordinate nodes first..
         /// </summary>
-        internal static string ErrorTreeHasChildrenCannotDelete {
+        public static string ErrorTreeHasChildrenCannotDelete {
             get {
                 return ResourceManager.GetString("ErrorTreeHasChildrenCannotDelete", resourceCulture);
             }
@@ -486,7 +486,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to The node cannot be deleted because it is used by other data..
         /// </summary>
-        internal static string ErrorTreeItemUsedCannotDelete {
+        public static string ErrorTreeItemUsedCannotDelete {
             get {
                 return ResourceManager.GetString("ErrorTreeItemUsedCannotDelete", resourceCulture);
             }
@@ -495,7 +495,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unknown page type..
         /// </summary>
-        internal static string ErrorUnknownPageType {
+        public static string ErrorUnknownPageType {
             get {
                 return ResourceManager.GetString("ErrorUnknownPageType", resourceCulture);
             }
@@ -504,7 +504,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unknown report type..
         /// </summary>
-        internal static string ErrorUnknownReportType {
+        public static string ErrorUnknownReportType {
             get {
                 return ResourceManager.GetString("ErrorUnknownReportType", resourceCulture);
             }
@@ -513,7 +513,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unknown row change state..
         /// </summary>
-        internal static string ErrorUnknownRowChangeState {
+        public static string ErrorUnknownRowChangeState {
             get {
                 return ResourceManager.GetString("ErrorUnknownRowChangeState", resourceCulture);
             }
@@ -522,7 +522,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Could not resolve session type..
         /// </summary>
-        internal static string ErrorUnknownSessionType {
+        public static string ErrorUnknownSessionType {
             get {
                 return ResourceManager.GetString("ErrorUnknownSessionType", resourceCulture);
             }
@@ -531,7 +531,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unknown WorkflowPage action..
         /// </summary>
-        internal static string ErrorUnknownWorkflowPageAction {
+        public static string ErrorUnknownWorkflowPageAction {
             get {
                 return ResourceManager.GetString("ErrorUnknownWorkflowPageAction", resourceCulture);
             }
@@ -540,7 +540,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unknown work queue command value type..
         /// </summary>
-        internal static string ErrorUnknownWorkQueueCommandValueType {
+        public static string ErrorUnknownWorkQueueCommandValueType {
             get {
                 return ResourceManager.GetString("ErrorUnknownWorkQueueCommandValueType", resourceCulture);
             }
@@ -549,7 +549,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unsupported menu item type..
         /// </summary>
-        internal static string ErrorUnsupportedMenuItemType {
+        public static string ErrorUnsupportedMenuItemType {
             get {
                 return ResourceManager.GetString("ErrorUnsupportedMenuItemType", resourceCulture);
             }
@@ -558,7 +558,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Unsupported workflow action..
         /// </summary>
-        internal static string ErrorWorkflowActionNotSupported {
+        public static string ErrorWorkflowActionNotSupported {
             get {
                 return ResourceManager.GetString("ErrorWorkflowActionNotSupported", resourceCulture);
             }
@@ -567,7 +567,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Workflow not set for the UIWorkflowAction..
         /// </summary>
-        internal static string ErrorWorkflowNotSet {
+        public static string ErrorWorkflowNotSet {
             get {
                 return ResourceManager.GetString("ErrorWorkflowNotSet", resourceCulture);
             }
@@ -576,7 +576,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Workflow session invalid..
         /// </summary>
-        internal static string ErrorWorkflowSessionInvalid {
+        public static string ErrorWorkflowSessionInvalid {
             get {
                 return ResourceManager.GetString("ErrorWorkflowSessionInvalid", resourceCulture);
             }
@@ -585,7 +585,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Command not found..
         /// </summary>
-        internal static string ErrorWorkQueueCommandNotFound {
+        public static string ErrorWorkQueueCommandNotFound {
             get {
                 return ResourceManager.GetString("ErrorWorkQueueCommandNotFound", resourceCulture);
             }
@@ -594,7 +594,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Number of records exported exceeded the limit set by the administrator..
         /// </summary>
-        internal static string ExportLimitExceeded {
+        public static string ExportLimitExceeded {
             get {
                 return ResourceManager.GetString("ExportLimitExceeded", resourceCulture);
             }
@@ -603,7 +603,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to File path part is to be replaced by a parameter value but the value provided is NULL. Cannot construct file path..
         /// </summary>
-        internal static string FilePathPartParameterNull {
+        public static string FilePathPartParameterNull {
             get {
                 return ResourceManager.GetString("FilePathPartParameterNull", resourceCulture);
             }
@@ -621,7 +621,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Search Error.
         /// </summary>
-        internal static string SearchError {
+        public static string SearchError {
             get {
                 return ResourceManager.GetString("SearchError", resourceCulture);
             }
@@ -630,7 +630,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Taskflow Error.
         /// </summary>
-        internal static string WorkflowErrorTitle {
+        public static string WorkflowErrorTitle {
             get {
                 return ResourceManager.GetString("WorkflowErrorTitle", resourceCulture);
             }
@@ -639,7 +639,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Taskflow has finished succesfully.
         /// </summary>
-        internal static string WorkflowFinished {
+        public static string WorkflowFinished {
             get {
                 return ResourceManager.GetString("WorkflowFinished", resourceCulture);
             }
@@ -648,7 +648,7 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Taskflow Finished.
         /// </summary>
-        internal static string WorkflowFinishedTitle {
+        public static string WorkflowFinishedTitle {
             get {
                 return ResourceManager.GetString("WorkflowFinishedTitle", resourceCulture);
             }
@@ -657,15 +657,9 @@ namespace Origam.ServerCommon {
         /// <summary>
         ///   Looks up a localized string similar to Work Queue.
         /// </summary>
-        internal static string WorkQueueTitle {
+        public static string WorkQueueTitle {
             get {
                 return ResourceManager.GetString("WorkQueueTitle", resourceCulture);
-            }
-        }        
-        
-        internal static string SessionStoreDisposed {
-            get {
-                return ResourceManager.GetString("SessionStoreDisposed", resourceCulture);
             }
         }
     }

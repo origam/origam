@@ -76,7 +76,7 @@ namespace Origam.Licensing
 			{
 				GeneralValidationFailure gf = new GeneralValidationFailure();
 				gf.Message = "License not found.";
-				gf.HowToResolve = "Thank you for using ORIGAM Architect!\n\nIn order to provide the best service we will ask you to sign in or register in the next step.";
+				gf.HowToResolve = "Thank you for using ORIGAM Architect!\n\nIn order to provide the best service we will ask you to log in or register in the next step.";
                 return new List<IValidationFailure>() { gf };
 			}
 			try {

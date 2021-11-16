@@ -587,7 +587,7 @@ namespace Origam.Gui.Designer
 			}
 
             
-			result = _host.CreateComponent(type,null);
+			result = _host.CreateComponent(type, cntrlSet.ControlItem, null);
 
 			if(result==null || (!(result is Control)))
 				throw new NullReferenceException("Unsupported type: " + type.ToString());
@@ -939,6 +939,7 @@ namespace Origam.Gui.Designer
 							FDToolboxItem fd_item = new FDToolboxItem();
 							fd_item.Type =item.ControlType + ","  + item.ControlNamespace;
 							fd_item.Name = item.Name;
+							fd_item.ControlItem = item;
 							tool[i]= fd_item;
 							i++;
 						}
@@ -1002,8 +1003,13 @@ namespace Origam.Gui.Designer
 				}
 				else
 				{
-					if (item.ControlType == type.FullName || 
-					    item.ControlType == DynamicTypeFactory.GetOriginalType(type).FullName )
+					ControlItem dynamicTypeControlItem = DynamicTypeFactory.GetAssociatedControlItem(type);
+					if (dynamicTypeControlItem != null)
+					{
+						return dynamicTypeControlItem;
+					}
+
+					if (item.ControlType == type.FullName)
 					{
 						con = item;
 						break;
@@ -1181,6 +1187,7 @@ namespace Origam.Gui.Designer
             SettingSelectedItemForDataSourceCombo();
             if (_form == null)
             {
+	        ToolboxPane.DragAndDropControl = null;
                 _form = this.LoadControl(_rootControl);
             }
 			if (_isEditingMainVersion) {

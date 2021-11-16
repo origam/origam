@@ -220,7 +220,7 @@
     <value>Selecting multiple records for OpenForm/Report is not supported.</value>
   </data>
   <data name="ErrorSessionExpired" xml:space="preserve">
-    <value>Your connection expired or the application has been restarted. Please refresh your browser or sign in again.</value>
+    <value>Your connection expired or the application has been restarted. Please refresh your browser or log in again.</value>
   </data>
   <data name="ErrorSessionNotFound" xml:space="preserve">
     <value>Session not found: {0}</value>

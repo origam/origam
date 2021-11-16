@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 //------------------------------------------------------------------------------
 /// <copyright from='1997' to='2002' company='Microsoft Corporation'>
 ///    Copyright (c) Microsoft Corporation. All Rights Reserved.
@@ -35,7 +36,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Design;
 using System.Reflection;
-
+using Origam.Schema.GuiModel;
 using Origam.UI;
 
 namespace Origam.Gui.Designer
@@ -331,44 +332,53 @@ namespace Origam.Gui.Designer
 
 		private void LoadItem(FDToolboxItem item, ListBox listBox)
 		{
-			if(item != null && item.Type != null)
+			if (item == null)
 			{
-				// load the type
-				string[] assemblyClass = item.Type.Split(new char[]{','});
-				Type toolboxItemType = GetTypeFromLoadedAssembly(
-					classname: assemblyClass[0],
-					assembly: assemblyClass[1]);
-
-				ModelToolboxItem ti = new ModelToolboxItem(toolboxItemType);
-				ToolboxBitmapAttribute tba = TypeDescriptor.GetAttributes(toolboxItemType)[typeof(ToolboxBitmapAttribute)] as ToolboxBitmapAttribute;
-				if (tba != null)
-				{
-					ti.Bitmap = (Bitmap)tba.GetImage(toolboxItemType);
-				}
-
-				ti.DisplayName = item.Name;
-
-				//add ControlSetItem
-				if(item.IsComplexType)
-				{
-					ti.IsComplexType = true;
-					ti.PanelControlSet = item.PanelSetItem;
-				}
-				else if(item.IsExternal)
-				{
-					ti.IsComplexType = false;
-					ti.IsExternal = true;
-					ti.IsFieldControl = item.IsFieldItem;
-				}
-
-				if(item.IsFieldItem)
-				{
-					ti.IsFieldControl = true;
-					ti.FieldName = item.ColumnName;
-				}
-				
-				listBox.Items.Add(ti);
+				return;
 			}
+			if (string.IsNullOrWhiteSpace(item.Type) || item.Type.Trim() == ",")
+			{
+				throw new AggregateException(string.Format(Workbench.Strings.CannotLoadItem, item.Name));
+			}
+			// load the type
+			string[] assemblyClass = item.Type.Split(new char[]{','});
+			if (assemblyClass[0].Trim() == "" || assemblyClass[1].Trim() == "")
+			{
+				throw new AggregateException(string.Format(Workbench.Strings.CannotLoadItem, item.Name));
+			}
+			Type toolboxItemType = GetTypeFromLoadedAssembly(
+				classname: assemblyClass[0],
+				assembly: assemblyClass[1]);
+			ModelToolboxItem ti = new ModelToolboxItem(toolboxItemType);
+			ToolboxBitmapAttribute tba = TypeDescriptor.GetAttributes(toolboxItemType)[typeof(ToolboxBitmapAttribute)] as ToolboxBitmapAttribute;
+			if (tba != null)
+			{
+				ti.Bitmap = (Bitmap)tba.GetImage(toolboxItemType);
+			}
+
+			ti.ControlItem = item.ControlItem;
+			ti.DisplayName = item.Name;
+
+			//add ControlSetItem
+			if(item.IsComplexType)
+			{
+				ti.IsComplexType = true;
+				ti.PanelControlSet = item.PanelSetItem;
+			}
+			else if(item.IsExternal)
+			{
+				ti.IsComplexType = false;
+				ti.IsExternal = true;
+				ti.IsFieldControl = item.IsFieldItem;
+			}
+
+			if(item.IsFieldItem)
+			{
+				ti.IsFieldControl = true;
+				ti.FieldName = item.ColumnName;
+			}
+			
+			listBox.Items.Add(ti);
 		}
 
 		private Type GetTypeFromLoadedAssembly(string classname,string assembly)
@@ -511,6 +521,7 @@ namespace Origam.Gui.Designer
 					DataObject d = tbs.SerializeToolboxItem(tbi) as DataObject;
 					try
 					{
+						DragAndDropControl = (d.GetData(d.GetFormats()[0]) as ModelToolboxItem).ControlItem;
 						lbSender.DoDragDrop(d, DragDropEffects.Copy);
 					}
 					catch (Exception ex)
@@ -521,6 +532,7 @@ namespace Origam.Gui.Designer
 			}
 		}
 
+		public static ControlItem DragAndDropControl;
 		/// Go to the pointer whenever we change categories.
 		private void tabControl_SelectedIndexChanged(object sender, System.EventArgs e)
 		{

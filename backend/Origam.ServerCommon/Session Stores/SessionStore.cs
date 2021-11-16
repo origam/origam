@@ -141,7 +141,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _service;
             }
@@ -154,7 +154,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _parentSession;
             }
@@ -209,7 +209,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _activeSession;
             }
@@ -222,7 +222,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _ruleEngine;
             }
@@ -234,7 +234,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _ruleHandler;
             }
@@ -246,7 +246,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _data;
             }
@@ -298,7 +298,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _xmlData;
             }
@@ -311,7 +311,7 @@ namespace Origam.Server
             {
                 if (_isDisposed)
                 {
-                    throw new ServerObjectDisposedException(Resources.SessionStoreDisposed);
+                    throw new ServerObjectDisposedException(Strings.SessionStoreDisposed);
                 }
                 return _ruleSet;
             }

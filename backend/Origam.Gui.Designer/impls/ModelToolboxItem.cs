@@ -44,5 +44,6 @@ namespace Origam.Gui.Designer
 		public string FieldName;
         
 		public PanelControlSet  PanelControlSet;
+		public ControlItem ControlItem { get; set; }
 	}
 }

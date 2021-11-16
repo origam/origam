@@ -370,6 +370,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			foreach(WorkQueueClassEntityMapping mapping in mappedColumns)
 			{
+				// don't add RecordCreated twice
+				if(mapping.Name == "RecordCreated") 
+				{
+					continue;
+				}
 				AddColumn(entity, mapping.Name, ref memoColumn, 
 					ref lastPos, propertiesElement,	propertyNamesElement, table, mapping.FormatPattern);
 			}
@@ -380,6 +385,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
 			AddColumn(entity, "ErrorText", ref memoColumn, 
 				ref lastPos, propertiesElement,	propertyNamesElement, table, null);
+			AddColumn(entity, "RecordCreated", ref memoColumn,
+				ref lastPos, propertiesElement, propertyNamesElement, table, null);
 
 			SetUserConfig(doc, listElement, wqc.DefaultPanelConfiguration, queueId, Guid.Empty);
 
@@ -857,7 +864,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					(grids[0] as XmlElement).SetAttribute("IsRootGrid", "true");
 				}
 			}
-			grids = doc.SelectNodes("//*[@Type='Grid' or @Type='TreePanel' or @Type='ReportButton']");
+			grids = doc.SelectNodes("//*[@Type='Grid' or @Type='TreePanel' or @Type='ReportButton' or @Type='SectionLevelPlugin']");
 			foreach(XmlElement g in grids)
 			{
 				if(g.GetAttribute("IsRootGrid") == "false" && g.GetAttribute("IsRootEntity") == "false")
@@ -1152,8 +1159,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			bool isIndependent = renderData.IndependentDataSourceId != Guid.Empty;
 			if (!control.ControlItem.IsComplexType)
-            {
-                switch (control.ControlItem.Name)
+			{
+				var controlItem = GentControlItem(control);
+				switch (controlItem.Name)
                 {
                     case "Panel":
                         PanelBuilder.Build(parentNode);
@@ -1203,7 +1211,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 		                    isPreloaded: isPreloaded,
 		                    isIndependent: isIndependent, 
 		                    dataSources: dataSources, 
-		                    modelId: control.Id.ToString());
+		                    modelId: control.Id.ToString(),
+		                    dataMember: renderData.DataMember);
 	                    break;
                     case "Label":
                         FormLabelBuilder.Build(parentNode, renderData.Text);
@@ -1326,6 +1335,19 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 
 			return true;
+		}
+
+		private static AbstractSchemaItem GentControlItem(ControlSetItem control)
+		{
+			if (control.ControlItem.Ancestors.Count > 1)
+			{
+				throw new Exception(
+					$"Could not find control for {control.ControlItem.Name} because it has more than one ancestor.");
+			}
+
+			return control.ControlItem.Ancestors.Count == 1
+				? control.ControlItem.Ancestors[0].Ancestor
+				: control.ControlItem;
 		}
 
 		private static void AddDynamicProperties(XmlElement parentNode, UIElementRenderData renderData)
@@ -1567,10 +1589,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						bindingMember = bindItem.Value;
 					}
 					var fieldType = csi.FirstParentOfType<PanelControlSet>()
-						.DataEntity
-						.ChildItems.ToGeneric()
-						.OfType<IDataEntityColumn>()
-						.FirstOrDefault(child => child.Name == bindingMember)
+						?.DataEntity
+						?.ChildItems?.ToGeneric()
+						?.OfType<IDataEntityColumn>()
+						?.FirstOrDefault(child => child.Name == bindingMember)
 						?.FieldType ?? "";
 					
 					if (int.Parse(tabIndex) >= 0)

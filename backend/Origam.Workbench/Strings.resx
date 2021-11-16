@@ -413,4 +413,7 @@
   <data name="MappingNameNotFound" xml:space="preserve">
     <value>error</value>
   </data>
+  <data name="CannotLoadItem" xml:space="preserve">
+    <value>Could not load toolbox item {0} because its type and/or namespace is not specified</value>
+  </data>
 </root>

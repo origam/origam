@@ -70,7 +70,7 @@ namespace Origam.ServerCore.Controller
                     return NotFound(localizer["ErrorReportNotAvailable"]
                         .ToString());
                 }
-                // sign in as the user originally requesting the report
+                // log in as the user originally requesting the report
                 // so row level security can be applied 
                 SecurityManager.SetCustomIdentity(
                     reportRequest.UserName, HttpContext);
