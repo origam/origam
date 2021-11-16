@@ -69,6 +69,6 @@ function drawAggregationText() {
   ctx2d.textAlign = "right";
   ctx2d.fillText(
     aggregationToString(aggregation, currentProperty()),
-    CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingRight()),
+    CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingRight),
     CPR() * (currentRowTop() + topTextOffset));
 }

@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
 import { action, autorun, comparer, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
@@ -47,7 +46,7 @@ import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { IDataView } from "../types/IDataView";
 import { IAggregationInfo } from "../types/IAggregationInfo";
-import { SCROLL_ROW_CHUNK } from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { SCROLL_ROW_CHUNK } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IQueryInfo, processActionQueryInfo } from "model/actions/Actions/processActionQueryInfo";
 import { assignIIds, find } from "xmlInterpreters/xmlUtils";
 import { IOrderByDirection, IOrdering } from "../types/IOrderingConfiguration";
@@ -55,9 +54,9 @@ import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingCo
 import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
 import { getUserFilters } from "../../selectors/DataView/getUserFilters";
 import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
-import { FlowBusyMonitor } from "../../../utils/flow";
-import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
-import { scopeFor } from "../../../dic/Container";
+import { FlowBusyMonitor } from "utils/flow";
+import { IScreenEvents } from "modules/Screen/FormScreen/ScreenEvents";
+import { scopeFor } from "dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 import _, { isArray } from "lodash";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
@@ -87,6 +86,8 @@ import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
 import { isIScreenPlugin } from "plugins/types/IScreenPlugin";
 import { isISectionPlugin } from "../../../plugins/types/ISectionPlugin";
 import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
+import {T} from "utils/translation";
+
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
   NoSave = 1,
@@ -411,12 +412,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     );
     try {
+      const openedScreen = getOpenedScreen(this);
+      if(!openedScreen){
+        return;
+      }
       this.initialSelectedRowId = initUIResult.currentRecordId;
       yield*this.applyInitUIResult({initUIResult});
       this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
-        yield*this.loadData({keepCurrentData: true});
+        yield*this.loadData({keepCurrentData: false});
         yield*this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -522,8 +527,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         if (!isISectionPlugin(plugin)) {
           throw new Error(`Plugin ${node.attributes.Name} is not SectionLevelPlugin`)
         }
-        const dataView = getDataViewByGridId(this, node.attributes.ModelInstanceId);
-        dataView!.clear();
         plugin.getScreenParameters = () => _.cloneDeep(this.parameters);
         plugin.initialize(node.attributes)
       });
@@ -1293,8 +1296,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       action((resolve: (value: IQuestionDeleteDataAnswer) => void) => {
         const closeDialog = getDialogStack(this).pushDialog(
           "",
-          <QuestionDeleteData
+          <YesNoQuestion
             screenTitle={getOpenedScreen(this).tabTitle}
+            message={T("Delete selected row?", "delete_confirmation")}
             onNoClick={() => {
               closeDialog();
               resolve(IQuestionDeleteDataAnswer.No);
@@ -1312,6 +1316,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *applyData(data: any): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
+      // debugger;
       for (let dataView of dataViews) {
         yield dataView.setRecords((entityValue as any).data);
         dataView.setRowCount(dataView.dataTable.rows.length);

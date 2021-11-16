@@ -20,8 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 // https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
 // https://momentjs.com/docs/#/displaying/format/
-export function csToMomentFormat(csDateFormat: string) {
-  if (!isValidCsFormat(csDateFormat)) {
+export function csToMomentFormat(csDateFormat: string | undefined) {
+  if (!csDateFormat || !isValidCsFormat(csDateFormat)) {
     return null;
   }
   return csDateFormat                       // Meaning of the replaced character in c#:
@@ -29,7 +29,7 @@ export function csToMomentFormat(csDateFormat: string) {
     .replace(/f/g, "S") // The tenths of a second in a date and time value.
     .replace(/F/g, "S") // If non-zero, the tenths of a second in a date and time value.
     .replace(/K/g, "Z") // time zone
-    .replace(/t/g, "A") // AM/PM,
+    .replace(/tt/g, "A") // AM/PM,
     .replace(/y/g, "Y") // year,
     .replace(/g/g, "N"); // The period or era. A.D. / B.C.
 }

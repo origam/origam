@@ -43,6 +43,7 @@ export function getRowById(grouper: IGrouper, id: string): any[] | undefined {
 
 export function getRowIndex(grouper: IGrouper, rowId: string): number | undefined {
   return grouper.allGroups
+    .filter(group => group.childGroups.length === 0)
     .map(group => group.getRowIndex(rowId))
     .find(index => index !== -1);
 }

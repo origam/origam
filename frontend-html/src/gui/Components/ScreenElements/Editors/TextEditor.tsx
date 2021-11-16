@@ -35,6 +35,7 @@ const autoUpdateUntervalMs = 60_000;
 
 @observer
 export class TextEditor extends React.Component<{
+  id?: string;
   value: string | null;
   isMultiline?: boolean;
   isReadOnly: boolean;
@@ -151,6 +152,7 @@ export class TextEditor extends React.Component<{
         return (
           <div className={S.editorContainer}>
             <div
+              id={this.props.id}
               style={this.getStyle()}
               className={S.input}
               dangerouslySetInnerHTML={{__html: this.props.value ?? ""}}
@@ -180,6 +182,7 @@ export class TextEditor extends React.Component<{
     if (!this.props.isMultiline) {
       return (
         <input
+          id={this.props.id}
           style={this.getStyle()}
           className={S.input}
           type={this.props.isPassword ? "password" : "text"}
@@ -204,6 +207,7 @@ export class TextEditor extends React.Component<{
     if (this.props.isReadOnly) {
       return (
         <div
+          id={this.props.id}
           className={this.getMultilineDivClass()}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
@@ -218,6 +222,7 @@ export class TextEditor extends React.Component<{
     } else {
       return (
         <textarea
+          id={this.props.id}
           style={this.getStyle()}
           className={S.input}
           value={this.props.value || ""}

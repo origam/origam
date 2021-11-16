@@ -22,6 +22,8 @@ import { createPluginData } from "./PluginData";
 import { IPlugin } from "../types/IPlugin";
 import React, { Fragment } from "react";
 import { registerPlugins } from "plugins/tools/PluginRegistration";
+import { Localizer } from "plugins/tools/Localizer";
+import { ILocalization } from "plugins/types/ILocalization";
 
 const pluginFactoryFunctions: Map<string, () => IPlugin> = new Map<string, () => IPlugin>();
 
@@ -42,7 +44,8 @@ export class PluginLibrary {
     });
     const dataView = getDataView(args.ctx);
     const pluginData = createPluginData(dataView)
-    return <Fragment key={plugin.id}>{plugin.getComponent(pluginData!)}</Fragment>;
+    const  createLocalizer = (localizations: ILocalization[]) => new Localizer(localizations, "en-us");
+    return <Fragment key={plugin.id}>{plugin.getComponent(pluginData!, createLocalizer)}</Fragment>;
   }
 
   get(args: { name: string, modelInstanceId: string, sessionId: string }): IPlugin {

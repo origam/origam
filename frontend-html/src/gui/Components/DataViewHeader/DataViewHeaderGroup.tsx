@@ -24,12 +24,13 @@ import S from "gui/Components/DataViewHeader/DataViewHeaderGroup.module.scss";
 export const DataViewHeaderGroup: React.FC<{
   isHidden?: boolean;
   noShrink?: boolean;
+  className?: string;
   noDivider?: boolean;
   domRef?: any;
   grovable?: boolean;
 }> = (props) => (
   <div
-    className={cx(S.root, {
+    className={cx(S.root, props.className, {
       isHidden: props.isHidden,
       noDivider: props.noDivider,
       grovable: props.grovable,

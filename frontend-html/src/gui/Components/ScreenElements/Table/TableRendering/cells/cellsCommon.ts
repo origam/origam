@@ -22,7 +22,6 @@ import {
   dataCellOffset,
   drawingColumnIndex,
   getCurrentRowRightBorderDrawn,
-  scRenderCell,
   scrollLeft,
   scrollTop,
   selectionColumnShown,
@@ -37,7 +36,6 @@ import {
   isCurrentCellFixed,
 } from "../currentCell";
 import { CPR } from "utils/canvas";
-import { Memoized } from "../common/Memoized";
 import { getPaddingLeft, getPaddingRight } from "./dataCellRenderer";
 
 export function applyScrollTranslation() {
@@ -93,9 +91,7 @@ export function drawSelectedRowBorder(frontStripeWidth: number) {
   }
 }
 
-export const numberCellPaddingRight = Memoized(() => 15);
-scRenderCell.push(() => numberCellPaddingRight.clear());
-
+export const numberCellPaddingRight = 15;
 export const cellPaddingLeft = 6;
 export const cellPaddingRight = 6;
 export const cellPaddingLeftFirstCell = 25;

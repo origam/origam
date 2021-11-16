@@ -17,21 +17,34 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getLocaleFromCookie } from "../../utils/cookies";
+import { getLocaleFromCookie } from "utils/cookies";
 import MessageFormat from '@messageformat/core';
+import { ILocalizer } from "plugins/types/ILocalizer";
+import { ILocalization } from "plugins/types/ILocalization";
 
-export class Localizer {
+export class Localizer implements ILocalizer {
 
   private messageFormat: MessageFormat;
   private defaultMessageFormat: MessageFormat;
-  private activeLocalization: ILocalization;
-  private defaultLocalization: ILocalization;
+  private _activeLocalization: ILocalization | undefined;
+  private _defaultLocalization: ILocalization | undefined;
   public locale;
 
-  constructor(private localizations: ILocalization[], defaultLocale: string) {
+  get defaultLocalization(){
+    if(!this._defaultLocalization){
+     this._defaultLocalization = this.getLocalization(this.defaultLocale);
+    }
+    return this._defaultLocalization;
+  }
+  get activeLocalization(){
+    if(!this._activeLocalization){
+     this._activeLocalization = this.getLocalization(this.locale);
+    }
+    return this._activeLocalization;
+  }
+
+  constructor(private localizations: ILocalization[], private defaultLocale: string) {
     this.locale = getLocaleFromCookie()
-    this.activeLocalization = this.getLocalization(this.locale);
-    this.defaultLocalization = this.getLocalization(defaultLocale);
     this.messageFormat = new MessageFormat(this.locale);
     this.defaultMessageFormat = this.locale === defaultLocale
       ? this.messageFormat
@@ -64,7 +77,4 @@ export class Localizer {
   }
 }
 
-export interface ILocalization {
-  locale: string;
-  translations: { [key: string]: string };
-}
+

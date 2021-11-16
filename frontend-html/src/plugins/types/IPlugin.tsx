@@ -19,11 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import { IPluginData } from "./IPluginData";
+import { ILocalization } from "plugins/types/ILocalization";
+import { ILocalizer } from "plugins/types/ILocalizer";
 
 export interface IPlugin {
   initialize(xmlAttributes: { [key: string]: string }): void;
 
-  getComponent(data: IPluginData): JSX.Element;
+  getComponent(data: IPluginData, createLocalizer: (localizations: ILocalization[]) => ILocalizer): JSX.Element;
 
   id: string;
 }

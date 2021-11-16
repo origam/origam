@@ -73,6 +73,7 @@ export const CtxDataViewHeaderExtension = createContext<DataViewHeaderExtension>
 
 interface IDataViewProps {
   id: string;
+  modelInstanceId: string;
   height?: number;
   width?: number;
   isHeadless: boolean;
@@ -129,7 +130,7 @@ export class DataViewInner extends React.Component<IDataViewProps> {
     return (
       <CtxDataViewHeaderExtension.Provider value={this.dataViewHeaderExtension}>
         <Provider dataView={this.props.dataView}>
-          <div className={S.dataView} style={this.getDataViewStyle()}>
+          <div className={S.dataView} style={this.getDataViewStyle()} id={"dataView_"+this.props.modelInstanceId}>
             {this.props.dataView?.type === "TreePanel" ? (
               <TreeView dataView={this.props.dataView}/>
             ) : (

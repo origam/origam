@@ -20,4 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 export interface IPluginProperty {
   id: string
   name: string
+  type: string;
+  momentFormatterPattern: string;
 }

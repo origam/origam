@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { action, computed, flow, reaction } from "mobx";
-import { parse as wktParse, stringify as wtkStringify } from "wkt";
+import { parse as wktParse, stringify as wktStringify } from "wkt";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { MapRootStore } from "./MapRootStore";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
@@ -146,7 +146,7 @@ export class MapObjectsStore {
           event: undefined,
           row: selectedRow,
           property: property,
-          value: geoJson ? wtkStringify(geoJson) : null,
+          value: geoJson ? wktStringify(geoJson) : null,
         });
         getDataTable(self.dataView).flushFormToTable(selectedRow);
         yield*getFormScreenLifecycle(self.dataView).onFlushData();

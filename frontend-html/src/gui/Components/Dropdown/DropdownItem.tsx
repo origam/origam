@@ -26,6 +26,7 @@ export const DropdownItem: React.FC<{
   onClick?(event: any): void;
   isDisabled?: boolean;
   isSelected?: boolean;
+  id?: string;
 }> = props => {
   function getStyle() {
     if (props.isDisabled) {
@@ -35,6 +36,7 @@ export const DropdownItem: React.FC<{
   }
 
   return <div
+    id={props.id}
     onClick={props.onClick}
     className={cx(S.root, getStyle(), props.className, "dropdownItem")}
   >

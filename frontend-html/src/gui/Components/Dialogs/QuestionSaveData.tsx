@@ -56,7 +56,11 @@ export class QuestionSaveData extends React.Component<{
             >
               {T("Save", "save")}
             </button>
-            <button tabIndex={0} onClick={this.props.onDontSaveClick}>
+            <button
+              tabIndex={0}
+              onClick={this.props.onDontSaveClick}
+              id={"dontSaveButton"}
+            >
               {T("Don't Save", "close_without_saving")}
             </button>
             <button tabIndex={0} onClick={this.props.onCancelClick}>

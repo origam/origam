@@ -176,7 +176,7 @@ export class NumberEditor extends React.Component<{
         <input
           style={this.getStyle()}
           title={this.props.customNumberFormat || undefined}
-          className={cx(S.input, "isRightAligned")}
+          className={cx(S.input)}
           type={this.props.isPassword ? "password" : "text"}
           autoComplete={this.props.isPassword ? "new-password" : undefined}
           value={

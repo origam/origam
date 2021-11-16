@@ -198,6 +198,7 @@ export class FormScreenBuilder extends React.Component<{
             <DataView
               key={xso.$iid}
               id={xso.attributes.Id}
+              modelInstanceId={xso.attributes.ModelInstanceId}
               height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
               width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
               isHeadless={xso.attributes.IsHeadless === "true"}

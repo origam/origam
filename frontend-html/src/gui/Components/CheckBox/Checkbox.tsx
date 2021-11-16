@@ -25,8 +25,10 @@ export const Checkbox: React.FC<{
   onChange?: (event: any) => void;
   onClick?: (event: any) => void;
   onClickCapture?: (event: any) => void;
+  id: string;
 }> = props => (
   <input
+    id={props.id}
     type="checkbox"
     checked={props.checked}
     onChange={props.onChange}

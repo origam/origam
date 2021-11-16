@@ -19,8 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import {
   currentCellText,
-  currentCellTextMultiline,
   currentCellValue,
+  currentColumnId,
   currentColumnLeft,
   currentColumnWidth,
   currentProperty,
@@ -39,22 +39,25 @@ import { CPR } from "utils/canvas";
 import moment from "moment";
 import selectors from "model/selectors-tree";
 import {
+  context,
   drawingColumnIndex,
   formScreen,
   rowHeight,
+  rowIndex,
 } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
+import { setTableDebugValue } from "gui/Components/ScreenElements/Table/TableRendering/DebugTableMonitor";
+import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 
 interface IDataCellRenderer {
   drawCellText(): void;
-
   cellText: string | undefined;
-  cellTextMulitiline: string | undefined;
-  paddingLeft: number;
 }
 
 export function currentDataCellRenderer(ctx2d: CanvasRenderingContext2D) {
-  const type = currentProperty().column;
+  let property = currentProperty();
+  const type = property.column;
+  const cellAlignment = new CellAlignment( drawingColumnIndex() === 0, type, property.style);
   switch (type) {
     case "CheckBox":
       return new CheckBoxCellRenderer(ctx2d);
@@ -66,13 +69,13 @@ export function currentDataCellRenderer(ctx2d: CanvasRenderingContext2D) {
     case "Checklist":
       return new CheckListCellRenderer(ctx2d);
     case "Number":
-      return new NumberInputCellRenderer(ctx2d);
+      return new GenericCellRenderer(ctx2d, property.style, cellAlignment);
     case "Image":
       return new ImageCellRenderer(ctx2d);
     case "Color":
       return new ColorCellRenderer(ctx2d);
     default:
-      return new GenericCellRenderer(ctx2d);
+      return new GenericCellRenderer(ctx2d, property.style, cellAlignment);
   }
 }
 
@@ -81,8 +84,6 @@ class ColorCellRenderer implements IDataCellRenderer {
   }
 
   cellText = "";
-  cellTextMulitiline = "";
-  paddingLeft = 0;
 
   drawCellText(): void {
     this.ctx2d.fillStyle = flashColor2htmlColor(currentCellValue()) || "black";
@@ -99,16 +100,8 @@ class CheckBoxCellRenderer implements IDataCellRenderer {
   constructor(private ctx2d: CanvasRenderingContext2D) {
   }
 
-  get paddingLeft() {
-    return getPaddingLeft();
-  }
-
   get cellText() {
     return currentCellText();
-  }
-
-  get cellTextMulitiline() {
-    return currentCellTextMultiline();
   }
 
   drawCellText(): void {
@@ -121,15 +114,12 @@ class CheckBoxCellRenderer implements IDataCellRenderer {
       CPR() * xCenter(),
       CPR() * (currentRowTop() + topTextOffset - 5)
     );
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), this.cellText);
   }
 }
 
 class DateCellRenderer implements IDataCellRenderer {
   constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft() {
-    return getPaddingLeft();
   }
 
   get cellText() {
@@ -144,19 +134,16 @@ class DateCellRenderer implements IDataCellRenderer {
     }
   }
 
-  get cellTextMulitiline() {
-    return this.cellText;
-  }
-
   drawCellText(): void {
     const dateTimeText = this.cellText;
     if (dateTimeText) {
       this.ctx2d.fillText(
         dateTimeText,
-        CPR() * (currentColumnLeft() + this.paddingLeft),
+        CPR() * (currentColumnLeft() + getPaddingLeft()),
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), dateTimeText);
   }
 }
 
@@ -164,26 +151,19 @@ class TagInputCellRenderer implements IDataCellRenderer {
   constructor(private ctx2d: CanvasRenderingContext2D) {
   }
 
-  get paddingLeft() {
-    return getPaddingLeft();
-  }
-
   get cellText() {
     return currentCellText();
-  }
-
-  get cellTextMulitiline() {
-    return currentCellTextMultiline();
   }
 
   drawCellText(): void {
     if (this.cellText !== null) {
       this.ctx2d.fillText(
         "" + this.cellText!,
-        CPR() * (currentColumnLeft() + this.paddingLeft),
+        CPR() * (currentColumnLeft() + getPaddingLeft()),
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), this.cellText);
   }
 }
 
@@ -191,16 +171,8 @@ class CheckListCellRenderer implements IDataCellRenderer {
   constructor(private ctx2d: CanvasRenderingContext2D) {
   }
 
-  get paddingLeft() {
-    return getPaddingLeft();
-  }
-
   get cellText() {
     return currentCellText();
-  }
-
-  get cellTextMulitiline() {
-    return currentCellTextMultiline();
   }
 
   drawCellText(): void {
@@ -217,45 +189,12 @@ class CheckListCellRenderer implements IDataCellRenderer {
     if (currentCellText() !== null) {
       this.ctx2d.fillText(
         "" + currentCellText()!,
-        CPR() * (currentColumnLeft() + this.paddingLeft),
+        CPR() * (currentColumnLeft() + getPaddingLeft()),
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), currentCellText());
     if (isLink) {
-      this.ctx2d.restore();
-    }
-  }
-}
-
-class NumberInputCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft() {
-    return currentColumnWidth() - this.paddingRight;
-  }
-
-  get cellText() {
-    return currentCellText();
-  }
-
-  get cellTextMulitiline() {
-    return currentCellTextMultiline();
-  }
-
-  get paddingRight() {
-    return currentProperty().column === "Number" ? numberCellPaddingRight() : 0;
-  }
-
-  drawCellText(): void {
-    if (currentCellText() !== null) {
-      this.ctx2d.save();
-      this.ctx2d.textAlign = "right";
-      this.ctx2d.fillText(
-        "" + currentCellText()!,
-        CPR() * (currentColumnLeft() + this.paddingLeft),
-        CPR() * (currentRowTop() + topTextOffset)
-      );
       this.ctx2d.restore();
     }
   }
@@ -265,16 +204,8 @@ class ImageCellRenderer implements IDataCellRenderer {
   constructor(private ctx2d: CanvasRenderingContext2D) {
   }
 
-  get paddingLeft() {
-    return getPaddingLeft();
-  }
-
   get cellText() {
     return currentCellText();
-  }
-
-  get cellTextMulitiline() {
-    return currentCellTextMultiline();
   }
 
   drawCellText(): void {
@@ -314,38 +245,40 @@ class ImageCellRenderer implements IDataCellRenderer {
 }
 
 class GenericCellRenderer implements IDataCellRenderer {
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft() {
-    return getPaddingLeft();
+  constructor(
+    private ctx2d: CanvasRenderingContext2D,
+    private style: ({[key: string]: string}) | undefined,
+    private cellAlignment: CellAlignment) {
   }
 
   get cellText() {
     return currentCellText();
   }
 
-  get cellTextMulitiline() {
-    return currentCellTextMultiline();
-  }
-
   drawCellText(): void {
     if (currentCellText() !== null) {
       if (!currentProperty().isPassword) {
+        this.ctx2d.font = getCustomTextStyle(this.style, this.ctx2d);
+        let x = getCellXCoordinate(this.cellAlignment);
+        this.ctx2d.textAlign = this.cellAlignment.alignment as CanvasTextAlign;
         this.ctx2d.fillText(
           "" + currentCellText()!,
-          CPR() * (currentColumnLeft() + this.paddingLeft),
+          CPR() * x,
           CPR() * (currentRowTop() + topTextOffset)
         );
       } else {
-        this.ctx2d.fillText("*******", numberCellPaddingRight() * CPR(), 15 * CPR());
+        this.ctx2d.fillText("*******", numberCellPaddingRight * CPR(), 15 * CPR());
       }
     }
+    setTableDebugValue(context(), currentColumnId(), rowIndex(), currentCellText())
   }
 }
 
-export function getPaddingLeft() {
-  return drawingColumnIndex() === 0 ? cellPaddingLeftFirstCell : cellPaddingLeft;
+export function getPaddingLeft(isFirstColumn?: boolean) {
+  if(isFirstColumn === undefined){
+    isFirstColumn = drawingColumnIndex() === 0
+  }
+  return isFirstColumn ? cellPaddingLeftFirstCell : cellPaddingLeft;
 }
 
 export function getPaddingRight() {
@@ -358,4 +291,24 @@ export function xCenter() {
 
 export function yCenter() {
   return currentRowTop() + rowHeight() / 2;
+}
+
+function getCustomTextStyle(style: ({[key: string]: string}) | undefined, ctx2d: CanvasRenderingContext2D){
+  if(style?.["fontWeight"] === "bold"){
+   return "bold " + ctx2d.font
+  }
+  return ctx2d.font;
+}
+
+function getCellXCoordinate(cellAlignment: CellAlignment){
+
+  if(cellAlignment.alignment === "center") {
+    return xCenter() ;
+  }
+  else if(cellAlignment.alignment === "right"){
+    return currentColumnLeft() + currentColumnWidth() - cellAlignment.paddingRight;
+  }
+  else {
+    return currentColumnLeft()  + cellAlignment.paddingLeft;
+  }
 }

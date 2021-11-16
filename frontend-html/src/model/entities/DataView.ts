@@ -163,7 +163,7 @@ export class DataView implements IDataView {
   @computed
   get totalRowCount() {
     if (!this.rowCount) {
-      return undefined;
+      return this.rowCount;
     }
     return this.rowCount + this.dataTable.rowsAddedSinceSave;
   }

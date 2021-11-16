@@ -66,6 +66,7 @@ export class CScreenSectionTabbedView extends React.Component<{
               {() => (
                 <TabbedViewHandle
                   title={box.attributes.Name}
+                  id={"tabHandle_"+box.attributes.ModelInstanceId}
                   key={box.attributes.Id}
                   isActive={this.activePanelId === box.attributes.Id}
                   onClick={() => this.activateTab(box.attributes.Id)}

@@ -167,6 +167,7 @@ class CalendarWidget extends React.Component<{
 
 @observer
 export class DateTimeEditor extends React.Component<{
+  id?: string;
   value: string | null;
   outputFormat: string;
   outputFormatToShow: string;
@@ -443,6 +444,7 @@ export class DateTimeEditor extends React.Component<{
                     />
                   )}
                   <input
+                    id={this.props.id}
                     title={this.autocompletedText + '\n' + this.props.outputFormatToShow}
                     style={{
                       color: this.props.foregroundColor,
@@ -505,6 +507,7 @@ export class DateTimeEditor extends React.Component<{
         }}
       >
         <input
+          id={this.props.id}
           style={{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor,
