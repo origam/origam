@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-  <title>warning</title>
-  <path d="M19.1,19.1H.9a1,1,0,0,1-.8-1.4L9.2,1.4A1,1,0,0,1,10,.9a1,1,0,0,1,.8.5l9.1,16.3a1,1,0,0,1-.8,1.4Z" fill="none"/>
-  <circle cx="10" cy="15.9" r="1" fill="none"/>
-  <polygon points="10 13.5 11 6.5 9 6.5 10 13.5" fill="none"/>
-</svg>
