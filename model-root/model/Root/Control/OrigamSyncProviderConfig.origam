@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="0e65dc78-b0a6-4a83-8d2e-1bf10e422796"
+    ci:isComplex="true"
+    asi:name="OrigamSyncProviderConfig"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="Root/PanelControlSet/Synchronization/OrigamSyncProviderConfig.origam#OrigamSyncProviderConfig/7b7a9794-21e2-46fe-ac12-0d773690f496"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="0e573a0f-bf86-4a21-a98e-cf8491b7eee4" />
+  </ci:Control>
+</x:file>

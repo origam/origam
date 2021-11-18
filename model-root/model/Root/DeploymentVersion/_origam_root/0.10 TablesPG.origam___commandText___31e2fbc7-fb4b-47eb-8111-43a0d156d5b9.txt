@@ -1,0 +1,10 @@
+﻿CREATE TABLE "Counter" (
+	"ReferenceCode" Varchar(40) NOT NULL,
+	"Description" Varchar(300) NULL,
+	"ManageValidityByDate" Boolean NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  UNIQUE INDEX  "Counter_ix_ReferenceCode" ON "Counter" ("ReferenceCode" ASC);

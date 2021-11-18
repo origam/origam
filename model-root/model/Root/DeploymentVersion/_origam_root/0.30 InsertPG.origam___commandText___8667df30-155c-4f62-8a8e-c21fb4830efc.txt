@@ -1,0 +1,1 @@
+﻿INSERT INTO "WorkQueueCommandType" ("Id", "Name", "RecordCreated") VALUES ('{cb9d374c-da12-46ff-8810-980597ae0a21}', 'Přesun do fronty', now())

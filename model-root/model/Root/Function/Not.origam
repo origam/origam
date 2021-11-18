@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Boolean"
+    x:id="c0850737-cacc-4a18-8cde-ee126c880150"
+    asi:name="Not"
+    f:type="Standard">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="b58e6a77-975b-455a-934c-42c287196c28"
+      asi:name="Argument" />
+  </f:Function>
+</x:file>

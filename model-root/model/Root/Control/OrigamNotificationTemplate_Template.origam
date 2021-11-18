@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="858853b0-146b-4f95-9702-956c11d7817e"
+    ci:isComplex="true"
+    asi:name="OrigamNotificationTemplate_Template"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="Root/PanelControlSet/__system/OrigamNotificationTemplate_Template.origam#OrigamNotificationTemplate_Template/8007bf5a-631f-4dcd-856d-38ec4a11acc8"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="90b0aad9-5a94-4e58-b379-420a3b498d8c" />
+  </ci:Control>
+</x:file>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.0"
+    x:id="4765b155-a907-4bd9-8627-29ffd1f5f8c8"
+    asi:name="5.0.2"
+    dv:version="5.0.2">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.0.2.origam___commandText___a342b3f8-5e12-4166-be08-7497b226bb48.txt"
+      x:id="a342b3f8-5e12-4166-be08-7497b226bb48"
+      asi:name="00010_WorkQueue_ExternalSourceConnection_Memo"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

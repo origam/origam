@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <de:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    x:id="851ca8d8-9133-4d91-8a03-0f2cfd402527"
+    asi:name="OrigamSpreadsheetWorkbook"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="5eaeaf03-ff07-4d2d-aa89-aed3b8985052" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="1f8cd46f-8f38-4a3b-9a59-72fe41e186c4"
+      adec:isPrimaryKey="false"
+      asi:name="ActiveSheetIndex"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="3d73eea8-1ffc-4321-b6b0-67c932ddfce8"
+      asi:name="Sheet"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetSheet.origam#OrigamSpreadsheetSheet/dc98ed3a-0b1f-4438-8ea3-b02f934ceaa8"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="95a34604-3223-4291-9935-6a9d24cd9b46"
+        asi:name="SheetKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetSheet.origam#OrigamSpreadsheetSheet/refOrigamSpreadsheetWorkbookId/b8f2cc59-59f4-4066-b031-c2249f7cfc4c" />
+    </eri:EntityRelation>
+  </de:DataEntity>
+</x:file>

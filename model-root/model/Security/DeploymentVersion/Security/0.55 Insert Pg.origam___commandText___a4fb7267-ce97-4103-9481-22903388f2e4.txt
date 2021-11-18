@@ -1,0 +1,1 @@
+﻿INSERT INTO "OrigamApplicationRole" ("Id", "Name", "IsSystemRole", "RecordCreated") VALUES (gen_random_uuid(), 'SYS_OrigamClient_GlobalTransaction', true, now())

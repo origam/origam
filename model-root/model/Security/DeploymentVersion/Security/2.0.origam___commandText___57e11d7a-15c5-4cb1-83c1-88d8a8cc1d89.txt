@@ -1,0 +1,1 @@
+﻿ALTER TABLE [AsapRole] ADD [Alias] NVARCHAR(255) NULL

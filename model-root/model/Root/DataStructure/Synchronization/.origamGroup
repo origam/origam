@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="2b95c3cd-2185-4f80-81e6-10d0e6aae349"
+    x:isFolder="true"
+    g:name="Synchronization"
+    g:rootItemType="DataStructure" />
+</x:file>

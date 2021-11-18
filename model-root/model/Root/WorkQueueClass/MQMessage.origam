@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0" xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <wqc:WorkQueueClass
+    asi:abstract="false"
+    x:id="0dba45e7-44f2-471e-b139-55637b39abbf"
+    asi:name="MQMessage"
+    wqc:workQueueItemCountLookup="Root/DataLookup/Work Queue/WorkQueueCount_Total.origam#WorkQueueCount_Total/2a953c7d-0276-42c4-99b9-aa484808bbcb"
+    wqc:workQueueStructure="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/df65d708-2ea9-4d4e-a2c5-8f32e3b2e85e"
+    wqc:workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/ByReceivedTime/5f5bdacb-4d37-479c-a44b-4b9c617147fa"
+    wqc:workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_MQMessage.origam#WQ_MQMessage/GetByQueueId/1bce28e3-af27-4838-bf58-25fa89222e70">
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="2e0f2b14-9c18-41e4-940b-1729c2a82d92"
+      asi:name="ReceivedTime"
+      wqcem:sortOrder="1"
+      wqcem:xPath="/ROOT/Message/ReceivedTime" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="c32a9f94-833b-47d7-be6c-a6bb22688353"
+      asi:name="MessageSequenceNumber"
+      wqcem:xPath="/ROOT/Message/MessageSequenceNumber" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="2e2ef577-6262-4eb4-b8ea-b8f2d604a241"
+      asi:name="Message"
+      wqcem:sortOrder="2"
+      wqcem:xPath="/ROOT/Message/Message" />
+  </wqc:WorkQueueClass>
+</x:file>

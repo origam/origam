@@ -1,0 +1,3 @@
+﻿INSERT [WorkQueueExternalSourceType] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'57bed127-45cc-46f1-b29b-53c635f665b3', getdate(), NULL, N'IMAP')
+INSERT [WorkQueueExternalSourceType] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'07329b7b-90e8-4594-b738-c04856fc998e', getdate(), NULL, N'File')
+INSERT [WorkQueueExternalSourceType] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'4c15f1a1-4bd8-4fa6-9a37-df5aa19f02a5', getdate(), NULL, N'POP3')

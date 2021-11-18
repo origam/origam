@@ -1,0 +1,1 @@
+﻿ALTER TABLE [WorkQueue] ADD [CreationCondition] NTEXT NULL

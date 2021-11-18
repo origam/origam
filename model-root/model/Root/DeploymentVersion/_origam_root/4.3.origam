@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="1316314f-a7bc-4b83-8cd9-1681015a159b"
+    asi:name="4.3"
+    dv:version="4.3">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:4.3.origam___commandText___1451702a-07dc-4082-91a9-1e8d57dbe3f2.txt"
+      x:id="1451702a-07dc-4082-91a9-1e8d57dbe3f2"
+      asi:name="00020_Database_Column_Mapping_OrigamStyleColor.Description"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:4.3.origam___commandText___56248e0b-1674-45d6-abdb-517cfabcd8ef.txt"
+      x:id="56248e0b-1674-45d6-abdb-517cfabcd8ef"
+      asi:name="00010_Database_Object_Mapping_OrigamStyleColor"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

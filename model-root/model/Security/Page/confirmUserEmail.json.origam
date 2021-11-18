@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ppm="http://schemas.origam.com/Origam.Schema.GuiModel.PageParameterMapping/6.0.0" xmlns:wp="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowPage/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <wp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    wp:disableConstraintForInputValidation="false"
+    x:id="7494a972-168e-4af5-8825-5efa3e44a623"
+    ap:mimeType="application/json"
+    asi:name="confirmUserEmail.json"
+    ap:roles="*"
+    ap:url="confirmUserEmail.json"
+    wp:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/0019e8e5-31c9-4fa9-a22a-a4096aab8a59">
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="d1dfec01-5737-475d-b0c3-493b31c0a556"
+      ppm:isList="false"
+      ppm:mappedParameter="token"
+      asi:name="Token" />
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="0c3ab5a7-9b30-4ee5-9664-aaaf00c97996"
+      ppm:isList="false"
+      ppm:mappedParameter="userId"
+      asi:name="UserId" />
+  </wp:Page>
+</x:file>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Integer"
+    x:id="a8c70560-d3fc-4b08-a948-7b01d3833254"
+    asi:name="DaysToAnniversary"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="abcb8b44-6a4d-44fa-839b-fb4530f36523"
+      asi:name="Date" />
+  </f:Function>
+</x:file>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="f229eb75-03ab-4b62-ab60-bc8e74860332"
+    ade:label="User's Favorite Menu Items"
+    tmi:mappedObjectName="OrigamFavoritesUserConfig"
+    asi:name="OrigamFavoritesUserConfig"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="2956802f-b4a8-43c2-a724-be03fa689766" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="2684fcd0-43bc-4a54-9b5a-2e266771df9a"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="ConfigXml"
+      asi:name="ConfigXml"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="330c9c38-213c-4058-9950-783a45480a05"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refBusinessPartnerId"
+      asi:name="refBusinessPartnerId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="b64cd687-3e54-4785-9606-f7b76cf38cd0"
+      asi:name="ix_refBusinessPartnerId"
+      dei:unique="true">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/refBusinessPartnerId/330c9c38-213c-4058-9950-783a45480a05"
+        x:id="36cd7a89-7dba-404b-bb34-19a1c54fc25a"
+        asi:name="0_refBusinessPartnerId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="de7e62ac-c64a-4a6f-840b-b2c85a112302"
+      asi:name="GetByBusinessPartnerId">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="247471c7-2df3-4feb-901c-d6855a495571"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="0d646e02-a494-4dd7-be2f-81b4207b0e32"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr:ParameterReference
+            asi:abstract="false"
+            x:id="7fcc7d77-88bb-46a3-9aea-6b696750dab5"
+            asi:name="parBusinessPartnerId"
+            pr:parameter="Root/DataEntity/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/parBusinessPartnerId/b3ed0c5a-71f0-4317-ae30-4a514992eeab" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="47f64721-6749-44b8-8aec-e6bbc42a1316"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/refBusinessPartnerId/330c9c38-213c-4058-9950-783a45480a05"
+            x:id="5c6dc11a-49c2-4144-9319-17fc0204f95c"
+            asi:name="refBusinessPartnerId" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <sip:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="UniqueIdentifier"
+      x:id="b3ed0c5a-71f0-4317-ae30-4a514992eeab"
+      asi:name="parBusinessPartnerId" />
+  </tmi:DataEntity>
+</x:file>

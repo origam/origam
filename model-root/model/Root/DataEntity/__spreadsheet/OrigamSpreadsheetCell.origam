@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <de:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    x:id="c6559c7f-0381-4448-9e16-e137aa27b0c0"
+    asi:name="OrigamSpreadsheetCell"
+    ade:readOnly="false">
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      x:id="1ae9bf1f-c00d-4cfd-8991-7b6b3bcce20c"
+      adec:isPrimaryKey="false"
+      asi:name="Value"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/__spreadsheet/OrigamSpreadsheetDataType_String.origam#OrigamSpreadsheetDataType_String/fbcd50bf-14f0-4ab8-9ed8-c34b977410a1"
+      adec:excludeFromAllFields="false"
+      x:id="76ae1371-dcd7-4ed7-b529-8c780f314640"
+      adec:isPrimaryKey="false"
+      asi:name="Type"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="4cec0c06-55bc-4414-8f4b-a4876e01b3ac"
+      adec:isPrimaryKey="false"
+      asi:name="RowIndex"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Hidden" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="a74cdf31-126e-4df9-95ad-b65e61bc121c"
+      adec:isPrimaryKey="true"
+      asi:name="Index"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+  </de:DataEntity>
+</x:file>

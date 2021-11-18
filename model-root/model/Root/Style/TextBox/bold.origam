@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:uis="http://schemas.origam.com/Origam.Schema.GuiModel.UIStyle/6.0.0" xmlns:uisp="http://schemas.origam.com/Origam.Schema.GuiModel.UIStyleProperty/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <uis:Style
+    asi:abstract="false"
+    x:id="84c92bf3-57d6-47da-b4e4-bb1eff346d65"
+    asi:name="bold"
+    uis:widget="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/7d1ec946-017e-4a00-9d92-d4d6b9fabffc">
+    <uisp:StyleProperty
+      asi:abstract="false"
+      x:id="5c8d1da0-f6a1-499f-b9ab-2f76605762fd"
+      asi:name="fontWeight: bold"
+      uisp:property="Root/Control/_Basic Controls/AsTextBox.origam#AsTextBox/fontWeight/394cb463-7104-4ec5-b165-3a31342f45d5"
+      uisp:value="bold" />
+  </uis:Style>
+</x:file>

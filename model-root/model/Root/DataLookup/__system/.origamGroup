@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="87338ae4-e684-4111-a693-6cbe93391ad7"
+    x:isFolder="true"
+    g:name="__system"
+    g:rootItemType="DataLookup" />
+</x:file>

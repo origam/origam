@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="a6445ce4-9d16-4125-9eed-1bcc2a08fd17"
+    ds:localized="false"
+    asi:name="OrigamWorkflowMenuItemConfig">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/a6b6c611-06c7-4ca2-ac57-e0f2c9427e4b"
+      x:id="cca93bd5-e55e-4cb6-afa9-31a3f1e4a1c7"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkflowMenuItemConfig"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="600f31f3-19ee-4a64-8d31-2eee388f8849"
+      asi:name="GetConfig">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/WorkflowMenuItemConfig/cca93bd5-e55e-4cb6-afa9-31a3f1e4a1c7"
+        dsfsf:filter="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/GetConfig/b015b152-3d8e-46b4-b0d1-12b877b391fc"
+        x:id="0d31051c-659c-4b96-a8a1-a9e7cf7ef57c"
+        asi:name="OrigamWorkflowConfig_GetConfig"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

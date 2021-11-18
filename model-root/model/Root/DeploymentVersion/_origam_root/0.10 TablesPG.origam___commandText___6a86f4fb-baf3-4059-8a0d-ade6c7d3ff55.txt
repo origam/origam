@@ -1,0 +1,25 @@
+﻿
+ALTER TABLE "WorkQueue" ADD CONSTRAINT FK_WorkQueue_refRemovalOrigamStateMachineEventTypeId_OrigamStateMachineEventType
+	FOREIGN KEY (
+		"refRemovalOrigamStateMachineEventTypeId"
+	)
+
+	REFERENCES "OrigamStateMachineEventType" (
+		"Id"
+	);
+ALTER TABLE "WorkQueue" ADD CONSTRAINT FK_WorkQueue_refWorkQueueExternalSourceTypeId_WorkQueueExternalSourceType
+	FOREIGN KEY (
+		"refWorkQueueExternalSourceTypeId"
+	)
+
+	REFERENCES "WorkQueueExternalSourceType" (
+		"Id"
+	);
+ALTER TABLE "WorkQueue" ADD CONSTRAINT FK_WorkQueue_refCreationOrigamStateMachineEventTypeId_OrigamStateMachineEventType
+	FOREIGN KEY (
+		"refCreationOrigamStateMachineEventTypeId"
+	)
+
+	REFERENCES "OrigamStateMachineEventType" (
+		"Id"
+	);

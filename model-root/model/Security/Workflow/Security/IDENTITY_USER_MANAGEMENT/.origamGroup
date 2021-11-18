@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="b3118592-7ae2-43bd-a448-d7d2cce7179b"
+    x:isFolder="true"
+    g:name="IDENTITY_USER_MANAGEMENT"
+    g:rootItemType="Workflow" />
+</x:file>

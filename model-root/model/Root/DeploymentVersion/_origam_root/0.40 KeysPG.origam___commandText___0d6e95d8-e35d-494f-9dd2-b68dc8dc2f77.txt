@@ -1,0 +1,28 @@
+﻿INSERT INTO "WorkQueueCommandType" ("Id", "Name", "RecordCreated") 
+VALUES ('{98aaf208-dd29-48b0-9a37-7549918dd86d}', 'Archive To Queue', now());
+INSERT INTO "WorkQueueCommandType" ("Id", "Name", "RecordCreated") 
+VALUES ('{e620695d-6054-4b0a-af2b-1d3a5349b274}', 'Execute Queue Loader', now());
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") 
+VALUES (gen_random_uuid(),'Archivovat do fronty', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),
+now(), '{98aaf208-dd29-48b0-9a37-7549918dd86d}');
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") 
+VALUES (gen_random_uuid(),'Spustit načtení z externího zdroje', (select "Id" from "Language" where "TagIETF" like '%cs-CZ%'),
+now(), '{e620695d-6054-4b0a-af2b-1d3a5349b274}');
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") 
+VALUES (gen_random_uuid(),'Zu anderer Queue archivieren', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),
+now(), '{98aaf208-dd29-48b0-9a37-7549918dd86d}');
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") 
+VALUES (gen_random_uuid(),'Extern loader ausführen', (select "Id" from "Language" where "TagIETF" like '%de-CH%'),
+now(), '{e620695d-6054-4b0a-af2b-1d3a5349b274}');
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") 
+VALUES (gen_random_uuid(),'Zu anderer Queue archivieren', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),
+now(), '{98aaf208-dd29-48b0-9a37-7549918dd86d}');
+
+insert into "WorkQueueCommandType_l10n" ("Id","Name","refLanguageId","RecordCreated","refWorkQueueCommandTypeId") 
+VALUES (gen_random_uuid(),'Extern loader ausführen', (select "Id" from "Language" where "TagIETF" like '%de-DE%'),
+now(), '{e620695d-6054-4b0a-af2b-1d3a5349b274}');

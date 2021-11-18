@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="19ec12a2-98a1-4935-a3ac-e009ee12c0e9"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/8903b2c4-be5f-4741-9268-7fd461a86f5f"
+    adl:listDisplayMember="IsFridayWorkingDay"
+    adl:listValueMember="Id"
+    asi:name="OrigamCalendar_IsFridayWorkingDay"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/8903b2c4-be5f-4741-9268-7fd461a86f5f"
+    adl:valueDisplayMember="IsFridayWorkingDay"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/GetId/3df928ca-5eb8-4852-a1b3-9d18b02a15f6"
+    adl:valueValueMember="Id" />
+</x:file>

@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamMapLayer" (
+	"Name" Varchar(200) NOT NULL,
+	"ReferenceCode" Varchar(20) NOT NULL,
+	"refOrigamMapLayerTypeId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamMapLayer_ix_Unique" ON "OrigamMapLayer" ("ReferenceCode" ASC);

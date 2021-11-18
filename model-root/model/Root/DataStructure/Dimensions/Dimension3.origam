@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="06e3a3c0-8b5f-4830-9acb-651ac970db08"
+    ds:localized="false"
+    asi:name="Dimension3">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Dimensions/Dimension3.origam#Dimension3/8928dc62-e5e2-412b-b69c-a4dc6f3c1f51"
+      x:id="0f12cc6e-54c2-4b77-adfb-caa1f69976f5"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="Dimension3"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+  </ds:DataStructure>
+</x:file>

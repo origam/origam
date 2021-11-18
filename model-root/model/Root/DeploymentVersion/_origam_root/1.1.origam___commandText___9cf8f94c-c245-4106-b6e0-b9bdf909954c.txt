@@ -1,0 +1,16 @@
+﻿CREATE TABLE [AsapCalendar] (
+	[IsThursdayWorkingDay] BIT NOT NULL,
+	[IsWednesdayWorkingDay] BIT NOT NULL,
+	[Name] NVARCHAR(100) NOT NULL,
+	[IsFridayWorkingDay] BIT NOT NULL,
+	[IsSundayWorkingDay] BIT NOT NULL,
+	[IsSaturdayWorkingDay] BIT NOT NULL,
+	[IsMondayWorkingDay] BIT NOT NULL,
+	[IsTuesdayWorkingDay] BIT NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)

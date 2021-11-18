@@ -1,0 +1,1 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'FRM_Map', 'Menu > Settings > Maps > Map Configuration', 1, getdate())

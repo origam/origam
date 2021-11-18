@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="17d0c24a-e2c3-4493-a359-0041c5359cce"
+    asi:name="3.7"
+    dv:version="3.7">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:3.7.origam___commandText___4c22212f-4e3a-4ee3-a040-3d7d8fcb203e.txt"
+      x:id="4c22212f-4e3a-4ee3-a040-3d7d8fcb203e"
+      asi:name="00010_Database_Field_OrigamApplicationRole.UserRemarks"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

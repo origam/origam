@@ -1,0 +1,2 @@
+﻿create index "OrigamDataAuditLog_ix_SecondReferenceKey"
+on "OrigamDataAuditLog"("SecondReferenceKey") where "SecondReferenceKey" is not null and "ActionType" = 8;

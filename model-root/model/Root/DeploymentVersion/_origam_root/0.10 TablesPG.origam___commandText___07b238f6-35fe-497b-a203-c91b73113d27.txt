@@ -1,0 +1,21 @@
+﻿CREATE TABLE "BusinessPartner" (
+	"FirstName" Varchar(255) NULL,
+	"UserName" Varchar(255) NULL,
+	"ParentId" Uuid NULL,
+	"refLanguageId" Uuid NULL,
+	"ReferenceCode" Varchar(255) NULL,
+	"Name" Varchar(255) NOT NULL,
+	"UserEmail" Varchar(255) NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"refDimension4Id" Uuid NULL,
+	"refDimension3Id" Uuid NULL,
+	"refDimension1Id" Uuid NULL,
+	"refDimension2Id" Uuid NULL);
+CREATE  INDEX  "BusinessPartner_ix_ReferenceCode" ON "BusinessPartner" ("ReferenceCode" ASC);
+CREATE UNIQUE  INDEX  "BusinessPartner_ix_UniqueUserEmail" ON "BusinessPartner" ("UserEmail" ASC);

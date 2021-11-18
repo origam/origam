@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="524434fc-2dfd-40e6-8b40-ec0cfc474693"
+    ds:localized="false"
+    asi:name="OrigamSyncRun_Complete">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/bfc2edfb-ada8-4b4f-bd9f-722fea74fc54"
+      x:id="034d87b3-1da8-455e-b495-115a3b51ca99"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamSyncRun"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/OrigamSyncRunLog/2c34a7ae-694f-4b10-9259-6fda672eb70d"
+        x:id="61631117-57f0-45bf-a494-420e9dd95b60"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamSyncRunLog"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="db784f55-3009-4875-b26a-ed63ed538144"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Synchronization/OrigamSyncRun_Complete.origam#OrigamSyncRun_Complete/OrigamSyncRun/034d87b3-1da8-455e-b495-115a3b51ca99"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="9f184d63-e3b0-485f-b99f-9e05dd01ed11"
+        asi:name="OrigamSyncRun_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="c8b6ca41-891a-4a59-b3bc-b642fdd84a29"
+      asi:name="NewestFirst">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Root/DataStructure/Synchronization/OrigamSyncRun_Complete.origam#OrigamSyncRun_Complete/OrigamSyncRun/034d87b3-1da8-455e-b495-115a3b51ca99"
+        dsssi:fieldName="TimeStart"
+        x:id="4f766eb9-aaa1-4305-b7a4-5efe03d41b99"
+        asi:name="OrigamSyncRun_0_TimeStart"
+        dsssi:sortDirection="Descending" />
+    </dsss:DataStructureSortSet>
+  </ds:DataStructure>
+</x:file>

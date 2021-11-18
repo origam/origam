@@ -1,0 +1,9 @@
+﻿CREATE TABLE [OrigamChatRoom] (
+	[Name] NVarChar(50) NOT NULL,
+	[ReferenceId] UniqueIdentifier NULL,
+	[ReferenceEntity] NVarChar(50) NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

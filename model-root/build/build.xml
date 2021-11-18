@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="ORIGAM Root Modle" default="standard" basedir=".">
+  <description>Build file for SIMPLICOR Core</description>
+  <property name="dist" value="../dist"/>
+  <property name="git-exec" value="C:\Program Files\Git\bin\git"/>
+  <target name="standard">
+    <delete dir="${dist}" failonerror="false"/>
+    <mkdir dir="${dist}"/>
+    <copy todir="${dist}">
+      <fileset basedir="../.">
+        <include name="*.xml"/>
+        <include name="l10n/*.*"/>
+        <include name="Root/**/*.*"/>
+        <include name="Security/**/*.*"/>
+        <include name="Root Menu/**/*.*"/>
+      </fileset>
+    </copy>
+  </target>
+  <target name="create-release-notes">
+        <delete dir="../rn" failonerror="false"/>
+        <mkdir dir="../rn"/>
+        <exec workingdir="c:/TeamCity/src/origam-model" program="${git-exec}" failonerror="false">
+            <arg value="fetch"/>
+        </exec>
+        <exec workingdir="c:/TeamCity/src/origam-model" program="${git-exec}" output="../rn/release-notes__Model_${projectSuffix}_root_${configurationSuffix}_${buildNumber}_artifacts__root__${branchMarker}.txt">
+            <arg value="log"/>
+            <arg value="^origin/${previousBranch}"/>
+            <arg value="origin/${currentBranch}"/>
+            <arg value="--oneline"/>
+            <arg value="--no-merges"/>
+            <arg value="--first-parent"/>
+            <arg value="--date=iso"/>
+            <arg value="--pretty=format:&quot;%H%x09%an%x09%ad%x09%s&quot;"/>
+        </exec>
+    </target>
+</project>

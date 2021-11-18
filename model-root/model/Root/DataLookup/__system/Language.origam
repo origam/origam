@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="e8c52e36-ead4-459a-9d71-1a923c3f9c71"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage.origam#LookupLanguage/6ead80be-4c45-4a4f-b697-8448149dacef"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="Language"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupLanguage.origam#LookupLanguage/6ead80be-4c45-4a4f-b697-8448149dacef"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupLanguage.origam#LookupLanguage/GetId/e7de7ad6-e535-435d-8c97-b4cc00e2dddd"
+    adl:valueValueMember="Id" />
+</x:file>

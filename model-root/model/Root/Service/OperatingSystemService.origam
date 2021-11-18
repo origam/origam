@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <s:Service
+    asi:abstract="false"
+    x:id="a6442bc9-063a-4c23-a897-220aee2906c2"
+    asi:name="OperatingSystemService">
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="4bfda941-65f7-4f8c-924f-ee556507ddb1"
+      asi:name="StartProcess"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="1000"
+        sip:dataType="String"
+        x:id="eafd36c9-95ce-4013-aa18-1c1d2cf97eb7"
+        asi:name="FileName" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Integer"
+        x:id="aed4787c-654c-44a8-8575-1dfd49c9af93"
+        asi:name="Timeout" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="1000"
+        sip:dataType="String"
+        x:id="21e623ca-9c98-4051-95dd-704ca01ffda8"
+        asi:name="Arguments" />
+    </sm:ServiceMethod>
+  </s:Service>
+</x:file>

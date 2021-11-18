@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="2a953c7d-0276-42c4-99b9-aa484808bbcb"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/dc584e78-c5d9-490f-bd12-9a7d59cb96a4"
+    adl:listDisplayMember="Count"
+    adl:listValueMember="Count"
+    asi:name="WorkQueueCount_Total"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/dc584e78-c5d9-490f-bd12-9a7d59cb96a4"
+    adl:valueDisplayMember="Count"
+    adl:valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCount_Total.origam#LookupWorkQueueCount_Total/GetByrefWorkQueueId/f812a89b-2c80-4865-809c-b01ac35ab6f1"
+    adl:valueValueMember="Count" />
+</x:file>

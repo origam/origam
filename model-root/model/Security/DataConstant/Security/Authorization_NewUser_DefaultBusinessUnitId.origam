@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="31dbbc02-c625-4d54-b67d-1de6ba08195c"
+    dc:lookup="Root/DataLookup/Organization Management/BusinessUnit_WithOrganizations.origam#BusinessUnit_WithOrganizations/c45d0c18-9529-44b7-8140-25096c3241b8"
+    asi:name="Authorization_NewUser_DefaultBusinessUnitId"
+    dc:userDefinable="false"
+    dc:value="00000000-0000-0000-0000-000000000000" />
+</x:file>

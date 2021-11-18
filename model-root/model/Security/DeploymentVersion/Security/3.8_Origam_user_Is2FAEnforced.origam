@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="c75280b0-4f19-452a-a1cd-6f599b1432a5"
+    asi:name="3.8_Origam_user_Is2FAEnforced"
+    dv:version="3.8">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:3.8_Origam_user_Is2FAEnforced.origam___commandText___b992b751-30ec-4a7c-8cb4-4df58285304e.txt"
+      x:id="b992b751-30ec-4a7c-8cb4-4df58285304e"
+      asi:name="00010_Database_Field_OrigamUser.Is2FAEnforced"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

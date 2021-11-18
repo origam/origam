@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="cb99121b-aa05-45e6-ab4d-bf9bfbf18bf4"
+    x:isFolder="true"
+    g:name="Audit"
+    g:rootItemType="Rule" />
+</x:file>

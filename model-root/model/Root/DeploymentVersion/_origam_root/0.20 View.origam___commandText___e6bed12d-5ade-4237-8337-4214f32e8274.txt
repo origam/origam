@@ -1,0 +1,7 @@
+﻿CREATE VIEW "ResourceAccessList" AS
+SELECT
+	ralr."refResourceAccessLevelId",
+	rl."refMemberResourceId" as refResourceId
+FROM
+	"ResourceAccessLevelResource" ralr
+	INNER JOIN "ResourceList" rl ON rl."refGroupResourceId" = ralr."refResourceId"

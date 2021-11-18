@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [CounterDetail] ADD CONSTRAINT FK_CounterDetail_refCounterId_Counter
+	FOREIGN KEY (
+		[refCounterId]
+	)
+
+	REFERENCES [Counter] (
+		[Id]
+	)

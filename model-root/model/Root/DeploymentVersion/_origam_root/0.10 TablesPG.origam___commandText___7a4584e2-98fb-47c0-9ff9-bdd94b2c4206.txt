@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamTraceWorkflow" (
+	"WorkflowId" Uuid NOT NULL,
+	"WorkflowName" Varchar(255) NOT NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);

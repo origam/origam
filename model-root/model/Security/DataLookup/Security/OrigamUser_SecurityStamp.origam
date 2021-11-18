@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="918a69c4-094c-456b-8ed7-af854b6b612f"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/bb9facc3-8143-4858-8ba9-7d6b9e184ca2"
+    adl:listDisplayMember="RecordUpdated"
+    adl:listValueMember="Id"
+    asi:name="OrigamUser_SecurityStamp"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/bb9facc3-8143-4858-8ba9-7d6b9e184ca2"
+    adl:valueDisplayMember="RecordUpdated"
+    adl:valueMethod="Security/DataStructure/Security/LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId.origam#LookupOrigamUser_SecurityStamp_ByBuseinssPartnerId/GetByBusinessPartnerId/d3ed46a3-92df-4d9a-bd4d-b52e88cb9880"
+    adl:valueValueMember="Id" />
+</x:file>

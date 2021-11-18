@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.Feature/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Feature
+    asi:abstract="false"
+    x:id="b1b66918-f3f5-4a02-915c-8c4fc4cedb59"
+    asi:name="IDENTITY_USER_MANAGEMENT" />
+</x:file>

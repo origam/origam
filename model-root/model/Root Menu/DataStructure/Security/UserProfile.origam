@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsfs:DataStructureFilterSet
+    asi:abstract="false"
+    dsfs:dynamic="false"
+    x:id="1de4285a-deed-4036-9298-3f7d5e54d0ff"
+    asi:name="GetUsers"
+    x:parentId="f4c92dce-d634-4179-adb4-98876b870cc7" />
+  <dsss:DataStructureSortSet
+    asi:abstract="false"
+    x:id="b87bfc0c-c7fd-46ae-b1e0-14248c5ce317"
+    asi:name="ByName"
+    x:parentId="f4c92dce-d634-4179-adb4-98876b870cc7">
+    <dsssi:DataStructureSortSetItem
+      asi:abstract="false"
+      dsssi:entity="Security/DataStructure/Security/UserProfile.origam#UserProfile/BusinessPartner/cc61170c-8e81-44bc-bebc-25c7c672ebdb"
+      dsssi:fieldName="FirstName"
+      x:id="cf2a48f6-3af7-4e92-bd7b-571eb5f2c9ba"
+      asi:name="BusinessPartner_1_FirstName"
+      dsssi:sortDirection="Ascending"
+      dsssi:sortOrder="1" />
+    <dsssi:DataStructureSortSetItem
+      asi:abstract="false"
+      dsssi:entity="Security/DataStructure/Security/UserProfile.origam#UserProfile/BusinessPartner/cc61170c-8e81-44bc-bebc-25c7c672ebdb"
+      dsssi:fieldName="Name"
+      x:id="dd68e2ce-e8d9-4207-8999-fce2be55de71"
+      asi:name="BusinessPartner_0_Name"
+      dsssi:sortDirection="Ascending" />
+  </dsss:DataStructureSortSet>
+</x:file>

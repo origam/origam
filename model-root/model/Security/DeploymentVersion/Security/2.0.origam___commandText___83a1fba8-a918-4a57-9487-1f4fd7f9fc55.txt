@@ -1,0 +1,2 @@
+﻿insert into AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated)
+(select newid(), (select x.Id from AsapRole x where x.Name = AsapApplicationRole.Name) , Id, getdate() from AsapApplicationRole)

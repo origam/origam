@@ -1,0 +1,9 @@
+﻿CREATE TABLE "OrganizationMapping" (
+	"refParentOrganizationId" Uuid NOT NULL,
+	"refOrganizationId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrganizationMapping_ix_Organization" ON "OrganizationMapping" ("refParentOrganizationId" ASC);

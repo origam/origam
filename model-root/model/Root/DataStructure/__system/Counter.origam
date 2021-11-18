@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="b9a9c301-d33c-4139-ad22-a10e8514e3d5"
+    ds:localized="false"
+    asi:name="Counter">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/Counter.origam#Counter/0593c75d-3112-4eda-b4fd-2bf9bf6c82f1"
+      x:id="4655bfe0-5e80-407c-aaf7-0e73265086ac"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="Counter"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/Counter.origam#Counter/CounterDetail/d0baa1e1-3a12-4f27-a3c4-6281ac33d7c6"
+        x:id="04d7a8f1-10b2-4f2c-94fd-9f2a20987311"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="CounterDetail"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="01cc148c-1099-4653-8a17-95d1c9a033be"
+      asi:name="GetByReferenceCode">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/Counter.origam#Counter/Counter/4655bfe0-5e80-407c-aaf7-0e73265086ac"
+        dsfsf:filter="Root/DataEntity/__system/Counter.origam#Counter/GetByReferenceCode/a049f084-75c7-4eb7-a028-19cca880e05b"
+        x:id="1183e398-a791-418d-9508-7e7770429bdd"
+        asi:name="Counter_GetByReferenceCode"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="930ae1c9-0267-4c8d-b637-6988745fd44c"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_Id_ActiveByReferenceCode.origam#LookupWorkQueue_Id_ActiveByReferenceCode/5349df52-1d99-49b1-8ede-8aee4219e91d"
+    adl:listDisplayMember="Id"
+    adl:listValueMember="Id"
+    asi:name="WorkQueue_Id_ActiveByReferenceCode"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_Id_ActiveByReferenceCode.origam#LookupWorkQueue_Id_ActiveByReferenceCode/5349df52-1d99-49b1-8ede-8aee4219e91d"
+    adl:valueDisplayMember="Id"
+    adl:valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue_Id_ActiveByReferenceCode.origam#LookupWorkQueue_Id_ActiveByReferenceCode/GetByReferenceCode/404782f7-47ac-4df7-bb2f-459d3a4d243b"
+    adl:valueValueMember="Id" />
+</x:file>

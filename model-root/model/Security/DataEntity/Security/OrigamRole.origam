@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:aesr="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractEntitySecurityRule/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:efsr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldSecurityRule/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:esr="http://schemas.origam.com/Origam.Schema.EntityModel.EntitySecurityRule/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="049ffdd3-05f4-4e64-a97f-a4baefab1cb1"
+    ade:label="User Role"
+    tmi:mappedObjectName="OrigamRole"
+    asi:name="OrigamRole"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="df2a0755-b481-45f6-8545-c1420a090092" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="255"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="6ba55d4b-31be-4ba9-8564-7ed18b6936b4"
+      adec:isPrimaryKey="false"
+      adec:label="Alias"
+      fmi:mappedColumnName="Alias"
+      asi:name="Alias"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="a6121654-0d31-47fb-8b30-b3adfe6234c3"
+        aesr:level="5"
+        asi:name="5_Permit_Update_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="SavedValue" />
+    </fmi:DataEntityColumn>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="255"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="61829bb4-5587-4562-a981-892a7da69a6d"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="7c206df3-a2c5-4be1-97de-66368c330ee1"
+      asi:name="ix_Unique"
+      dei:unique="true">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Security/DataEntity/Security/OrigamRole.origam#OrigamRole/Name/61829bb4-5587-4562-a981-892a7da69a6d"
+        x:id="ee9cc077-61ee-48d7-9763-f4c920679d46"
+        asi:name="0_Name"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="3ba3e085-c534-4ac4-9d9c-445a918f2677"
+      asi:name="OrigamRoleOrigamApplicationRole"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/69606215-a699-439f-a499-769cba583df7"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="f95e85b3-1790-48c1-88bc-ab89fd0c1839"
+        asi:name="OrigamRoleOrigamApplicationRoleKey1"
+        ercpi:relatedEntityField="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/refOrigamRoleId/0f00bccd-2c1e-464d-9e0d-8e145f617855" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="e9bd0bb4-22ae-4093-ab6f-ef5dc8796d99"
+      asi:name="BusinessPartnerOrigamRole"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Security/DataEntity/Security/BusinessPartnerOrigamRole.origam#BusinessPartnerOrigamRole/ad2aebfe-e684-4e2e-8843-775c468357d5"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="2ce85e96-5cd7-45fe-b141-905faffb97f7"
+        asi:name="BusinessPartnerOrigamRoleKey1"
+        ercpi:relatedEntityField="Security/DataEntity/Security/BusinessPartnerOrigamRole.origam#BusinessPartnerOrigamRole/refOrigamRoleId/15ea6af0-68cc-4260-a0b4-7d912b7e87e4" />
+    </eri:EntityRelation>
+    <esr:EntitySecurityRule
+      asi:abstract="false"
+      esr:createCredential="false"
+      esr:deleteCredential="true"
+      x:id="a4863cb7-90ed-4116-afc6-b44ae9a9665b"
+      aesr:level="10"
+      asi:name="10_Deny_UpdateDelete_OrigamRole_IsBuilIntSuperUser_*"
+      aesr:roles="*"
+      aesr:rule="Security/Rule/Security/OrigamRole_IsBuilIntSuperUser.origam#OrigamRole_IsBuilIntSuperUser/bfdc54a2-e9d7-4abb-9863-2bdf87e63a88"
+      aesr:type="Deny"
+      esr:updateCredential="true"
+      aesr:valueType="SavedValue" />
+    <esr:EntitySecurityRule
+      asi:abstract="false"
+      esr:createCredential="true"
+      esr:deleteCredential="true"
+      x:id="a0208314-c2f0-4b07-9807-c1a158f6057c"
+      aesr:level="999"
+      asi:name="999_Permit_CreateUpdateDelete_*"
+      aesr:roles="*"
+      aesr:type="Permit"
+      esr:updateCredential="true"
+      aesr:valueType="SavedValue" />
+  </tmi:DataEntity>
+</x:file>

@@ -1,0 +1,16 @@
+﻿CREATE TABLE "CounterDetail" (
+	"refCounterId" Uuid NOT NULL,
+	"Prefix" Varchar(255) NULL,
+	"ValidFrom" Timestamp(3) NULL,
+	"CurrentPosition" Integer NOT NULL,
+	"Length" Integer NOT NULL,
+	"Increment" Integer NOT NULL,
+	"ValidTo" Timestamp(3) NULL,
+	"CounterFrom" Integer NOT NULL,
+	"CounterTo" Integer NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "CounterDetail_ix_refCounterId" ON "CounterDetail" ("refCounterId" ASC);

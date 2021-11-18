@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
+  <s:Service
+    asi:abstract="false"
+    s:classPath="Origam.Workflow.ModelServiceAgent,Origam.Workflow"
+    x:id="92d3277e-dabc-4093-bd25-bc010078b925"
+    asi:name="ModelService">
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="6ed7e428-32bc-45d9-89b9-9424a5f2cf74"
+      asi:name="ElementAttribute"
+      sm:returnValueDataType="String">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="747b3b35-a813-4349-9506-d0e778f92dff"
+        asi:name="Id" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="17448517-ab08-4135-9a7a-854d5361480d"
+        asi:name="AttributeName" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="a8f75de6-ede4-45f4-bce4-a04673d14d2b"
+      asi:name="ElementListByParent"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="UniqueIdentifier"
+        x:id="42546dc6-bb2e-4047-aed9-7f56d7615bad"
+        asi:name="ParentId" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="5315fb7c-cb0e-41db-af1b-dfe5778c6674"
+        asi:name="ItemType" />
+    </sm:ServiceMethod>
+  </s:Service>
+</x:file>

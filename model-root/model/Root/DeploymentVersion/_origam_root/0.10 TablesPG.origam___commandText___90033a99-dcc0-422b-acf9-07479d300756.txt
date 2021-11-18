@@ -1,0 +1,10 @@
+﻿CREATE TABLE "ResourceAccessLevelResource" (
+	"refResourceAccessLevelId" Uuid NOT NULL,
+	"refResourceId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "ResourceAccessLevelResource_ix_ResourceAccessLevel" ON "ResourceAccessLevelResource" ("refResourceAccessLevelId" ASC);
+CREATE  INDEX  "ResourceAccessLevelResource_ix_Resource" ON "ResourceAccessLevelResource" ("refResourceId" ASC);

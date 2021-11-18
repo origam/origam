@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="3d88780a-0ab0-4fa7-ab85-9bc4bce3715c"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpContext_IdString.origam#LookupOrigamTooltipHelpContext_IdString/5d5432af-ee99-47a6-9ded-f293b5330e80"
+    adl:listDisplayMember="IdString"
+    adl:listValueMember="Id"
+    asi:name="OrigamTooltipHelpContext_IdString"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpContext_IdString.origam#LookupOrigamTooltipHelpContext_IdString/5d5432af-ee99-47a6-9ded-f293b5330e80"
+    adl:valueDisplayMember="IdString"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpContext_IdString.origam#LookupOrigamTooltipHelpContext_IdString/GetId/68f1d278-37ff-4e18-bf34-e4995dfcb616"
+    adl:valueValueMember="Id" />
+</x:file>

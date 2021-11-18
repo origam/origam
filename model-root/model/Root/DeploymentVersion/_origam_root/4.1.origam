@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="ffd7f52a-6f53-440c-b47b-e7c0f08ba06a"
+    asi:name="4.1"
+    dv:version="4.1">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:4.1.origam___commandText___617ae0bc-c9ea-4dc5-8981-4785fd20424e.txt"
+      x:id="617ae0bc-c9ea-4dc5-8981-4785fd20424e"
+      asi:name="00020_GrantPermissions"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:4.1.origam___commandText___cf5652d6-47c7-44c8-9569-54e7719c2806.txt"
+      x:id="cf5652d6-47c7-44c8-9569-54e7719c2806"
+      asi:name="00010_TYPE_OrigamListValue"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

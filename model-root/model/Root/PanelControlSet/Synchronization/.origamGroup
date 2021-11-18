@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="a290f010-7f8d-4d25-b407-c1a20f49687a"
+    x:isFolder="true"
+    g:name="Synchronization"
+    g:rootItemType="PanelControlSet" />
+</x:file>

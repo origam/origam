@@ -1,0 +1,41 @@
+﻿
+ALTER TABLE "DimensionTransformationMatrix" ADD CONSTRAINT FK_DimensionTransformationMatrix_refSource4DimensionEntityId_DimensionEntity
+	FOREIGN KEY (
+		"refSource4DimensionEntityId"
+	)
+
+	REFERENCES "DimensionEntity" (
+		"Id"
+	);
+ALTER TABLE "DimensionTransformationMatrix" ADD CONSTRAINT FK_DimensionTransformationMatrix_refSource2DimensionEntityId_DimensionEntity
+	FOREIGN KEY (
+		"refSource2DimensionEntityId"
+	)
+
+	REFERENCES "DimensionEntity" (
+		"Id"
+	);
+ALTER TABLE "DimensionTransformationMatrix" ADD CONSTRAINT FK_DimensionTransformationMatrix_refTargetDimensionEntityId_DimensionEntity
+	FOREIGN KEY (
+		"refTargetDimensionEntityId"
+	)
+
+	REFERENCES "DimensionEntity" (
+		"Id"
+	);
+ALTER TABLE "DimensionTransformationMatrix" ADD CONSTRAINT FK_DimensionTransformationMatrix_refSource3DimensionEntityId_DimensionEntity
+	FOREIGN KEY (
+		"refSource3DimensionEntityId"
+	)
+
+	REFERENCES "DimensionEntity" (
+		"Id"
+	);
+ALTER TABLE "DimensionTransformationMatrix" ADD CONSTRAINT FK_DimensionTransformationMatrix_refSource1DimensionEntityId_DimensionEntity
+	FOREIGN KEY (
+		"refSource1DimensionEntityId"
+	)
+
+	REFERENCES "DimensionEntity" (
+		"Id"
+	);

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Boolean"
+    x:id="117c67e4-6e84-4263-9ab9-3f25cd82f0f3"
+    asi:name="FullTextContains"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="99b53863-6229-4aa0-b3c1-38224ba176b3"
+      asi:name="Fields" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="5a07c0eb-1ce4-4df9-a601-5425a99c8a62"
+      asi:name="Expression" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="4263b425-3419-4066-8e01-fbc93f4254a3"
+      asi:name="Language" />
+  </f:Function>
+</x:file>

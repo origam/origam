@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Boolean"
+    x:id="d282e478-fcbb-4330-a26d-c4d9ba17403b"
+    asi:name="LessThan"
+    f:type="Standard">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="06b7c48e-ce52-45a1-ae5b-423bad79c199"
+      asi:name="Right"
+      fp:ordinalPosition="1" />
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="a63f78ac-e508-4a8a-ba5d-fed0f483821d"
+      asi:name="Left" />
+  </f:Function>
+</x:file>

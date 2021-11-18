@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamRegularExpression] ALTER COLUMN [Expression] nvarchar(max) NOT NULL

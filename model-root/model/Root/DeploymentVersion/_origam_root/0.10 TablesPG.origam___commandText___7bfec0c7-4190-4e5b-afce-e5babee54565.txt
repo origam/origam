@@ -1,0 +1,9 @@
+﻿CREATE TABLE "OrigamTooltipHelpUsage" (
+	"refBusinessPartnerId" Uuid NOT NULL,
+	"refOrigamTooltipHelpId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamTooltipHelpUsage_ix_OrigamTooltipHelp" ON "OrigamTooltipHelpUsage" ("refOrigamTooltipHelpId" ASC);

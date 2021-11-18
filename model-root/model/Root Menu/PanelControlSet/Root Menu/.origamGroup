@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="b26e3ade-2182-42ae-9edb-524a71dbf9dc"
+    x:isFolder="true"
+    g:name="Root Menu"
+    g:rootItemType="PanelControlSet" />
+</x:file>
