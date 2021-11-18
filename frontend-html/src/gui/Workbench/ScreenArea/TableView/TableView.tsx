@@ -1,0 +1,394 @@
+import bind from "bind-decorator";
+import { action, autorun, computed, observable, reaction } from "mobx";
+import { inject, observer, Provider } from "mobx-react";
+import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
+import React, { useContext } from "react";
+import { onColumnHeaderClick } from "../../../../model/actions-ui/DataView/TableView/onColumnHeaderClick";
+import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
+import { IDataView } from "../../../../model/entities/types/IDataView";
+import { IProperty } from "../../../../model/entities/types/IProperty";
+import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
+import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
+import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
+import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
+import { FilterSettings } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
+import { Header } from "../../../Components/ScreenElements/Table/Header";
+import { RawTable, Table } from "../../../Components/ScreenElements/Table/Table";
+import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
+import { TableViewEditor } from "./TableViewEditor";
+import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
+import { onNoCellClick } from "model/actions-ui/DataView/TableView/onNoCellClick";
+import { onOutsideTableClick } from "model/actions-ui/DataView/TableView/onOutsideTableClick";
+import { getFixedColumnsCount } from "model/selectors/TablePanelView/getFixedColumnsCount";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { onColumnWidthChanged } from "model/actions-ui/DataView/TableView/onColumnWidthChanged";
+import { onColumnWidthChangeFinished } from "model/actions-ui/DataView/TableView/onColumnWidthChangeFinished";
+import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getLeadingColumnCount } from "model/selectors/TablePanelView/getLeadingColumnCount";
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
+import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
+import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
+import { IAggregation } from "model/entities/types/IAggregation";
+import { SelectionCheckBoxHeader } from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
+import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
+import {
+  parseAggregations,
+  calcAggregations,
+  aggregationToString,
+} from "model/entities/Aggregatioins";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import _ from "lodash";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
+import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { CtxDataView, DataViewContext } from "gui/Components/ScreenElements/DataView";
+
+interface ITableViewProps {
+  dataView?: IDataView;
+  tablePanelView?: ITablePanelView;
+  onColumnDialogCancel?: (event: any) => void;
+  onColumnDialogOk?: (event: any, configuration: ITableConfiguration) => void;
+  onTableKeyDown?: (event: any) => void;
+}
+
+@inject(({ dataView }) => {
+  return {
+    dataView,
+    tablePanelView: dataView.tablePanelView,
+    onColumnDialogCancel: dataView.tablePanelView.onColumnConfCancel,
+    onColumnDialogOk: dataView.tablePanelView.onColumnConfSubmit,
+
+    onTableKeyDown: onTableKeyDown(dataView),
+  };
+})
+@observer
+export class TableViewInner extends React.Component<
+  ITableViewProps & { dataViewContext?: DataViewContext }
+> {
+  constructor(props: any) {
+    super(props);
+
+    this.props.dataView?.initializeNewScrollLoader();
+    getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
+      this.props.dataView?.initializeNewScrollLoader();
+    });
+  }
+
+  componentDidMount() {
+    const openScreen = getOpenedScreen(this.props.dataView);
+    const dataViews = openScreen.content.formScreen?.dataViews;
+    const isMainDataView =
+      (dataViews && dataViews.length > 0 && this.props.dataView?.isBindingRoot) ||
+      dataViews?.length === 1;
+
+    if (openScreen.isActive && isMainDataView) {
+      if (!this.props.dataView?.isFormViewActive()) {
+        const tablePanelView = getTablePanelView(this.props.dataView);
+        tablePanelView.triggerOnFocusTable();
+      }
+    }
+  }
+
+  refTableDisposer: any;
+  refTable = (elmTable: RawTable | null) => {
+    this.elmTable = elmTable;
+    if (elmTable) {
+      const d1 = this.props.tablePanelView!.subOnFocusTable(elmTable.focusTable);
+      const d2 = this.props.tablePanelView!.subOnScrollToCellShortest(
+        elmTable.scrollToCellShortest
+      );
+      this.refTableDisposer = () => {
+        d1();
+        d2();
+      };
+    } else {
+      this.refTableDisposer && this.refTableDisposer();
+    }
+  };
+
+  elmTable: RawTable | null = null;
+
+  headerRenderer = new HeaderRenderer({
+    gridDimensions: this.props.dataView!.gridDimensions,
+    tablePanelView: this.props.tablePanelView!,
+    getFixedColumnCount: () => getFixedColumnsCount(this.props.tablePanelView),
+    getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(this.props.tablePanelView),
+    dataView: this.props.dataView!,
+    getColumnHeaders: () => getColumnHeaders(this.props.dataView),
+    getTableViewProperties: () => getTableViewProperties(this.props.dataView),
+    onColumnWidthChange: (propertyId, width) =>
+      onColumnWidthChanged(this.props.tablePanelView, propertyId, width),
+    onColumnOrderChange: (id1, id2) =>
+      onColumnOrderChangeFinished(this.props.tablePanelView, id1, id2),
+    onColumnOrderAttendantsChange: (idSource, idTarget) =>
+      this.onColumnOrderAttendantsChange(idSource, idTarget),
+  });
+
+  onColumnOrderAttendantsChange(idSource: string | undefined, idTarget: string | undefined) {
+    this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget);
+    getDataTable(this.props.dataView).unlockAddedRowPosition();
+  }
+
+  @action.bound
+  handleTableKeyDown(event: any) {
+    this.props.onTableKeyDown?.(event);
+    this.props.dataViewContext?.handleTableKeyDown(event);
+  }
+
+  render() {
+    const self = this;
+    const isSelectionCheckboxes = getIsSelectionCheckboxesShown(this.props.tablePanelView);
+    const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
+    let editingColumnIndex = getSelectedColumnIndex(this.props.tablePanelView);
+    if (editingColumnIndex !== undefined && isSelectionCheckboxes) {
+      editingColumnIndex++;
+    }
+    const fixedColumnCount = this.props.tablePanelView
+      ? this.props.tablePanelView.fixedColumnCount || 0
+      : 0;
+
+    return (
+      <Provider tablePanelView={this.props.tablePanelView}>
+        <>
+          <Table
+            tableRows={this.props.dataView!.tableRows}
+            gridDimensions={self.props.dataView!.gridDimensions}
+            scrollState={self.props.dataView!.scrollState}
+            editingRowIndex={editingRowIndex}
+            editingColumnIndex={editingColumnIndex}
+            isEditorMounted={getIsEditing(this.props.tablePanelView)}
+            isLoading={false}
+            fixedColumnCount={fixedColumnCount}
+            headerContainers={self.headerRenderer.headerContainers}
+            renderEditor={() => (
+              <TableViewEditor key={`${editingRowIndex}@${editingColumnIndex}`} />
+            )}
+            onNoCellClick={onNoCellClick(this.props.tablePanelView)}
+            onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
+            onContentBoundsChanged={(bounds) => (this.props.dataView!.contentBounds = bounds)}
+            refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
+            onKeyDown={this.handleTableKeyDown}
+            refTable={this.refTable}
+            onFocus={() => getFormScreenLifecycle(this.props.dataView).focusedDataViewId = this.props.dataView?.id}
+          />
+        </>
+      </Provider>
+    );
+  }
+}
+
+export function TableView(props: ITableViewProps) {
+  const dataViewContext = useContext(CtxDataView);
+  return <TableViewInner {...props} dataViewContext={dataViewContext} />;
+}
+
+interface IHeaderRendererData {
+  getTableViewProperties: () => IProperty[];
+
+  tablePanelView: ITablePanelView;
+  getColumnHeaders: () => IColumnHeader[];
+  getIsSelectionCheckboxes: () => boolean;
+  onColumnWidthChange: (id: string, newWidth: number) => void;
+  onColumnOrderChange: (id: string, targetId: string) => void;
+  onColumnOrderAttendantsChange: (
+    idSource: string | undefined,
+    idTarget: string | undefined
+  ) => void;
+  dataView: IDataView;
+  gridDimensions: IGridDimensions;
+  getFixedColumnCount: () => number;
+}
+
+class HeaderRenderer implements IHeaderRendererData {
+  constructor(data: IHeaderRendererData) {
+    Object.assign(this, data);
+  }
+  gridDimensions: IGridDimensions = null as any;
+  getTableViewProperties: () => IProperty[] = null as any;
+  getIsSelectionCheckboxes: () => boolean = null as any;
+  dataView: IDataView = null as any;
+  getFixedColumnCount = null as any;
+
+  @computed get tableViewPropertiesOriginal() {
+    return this.getTableViewProperties();
+  }
+
+  @computed get tableViewProperties() {
+    return this.tableViewPropertiesOriginal;
+  }
+
+  getColumnHeaders: () => IColumnHeader[] = null as any;
+  onColumnWidthChange: (id: string, newWidth: number) => void = null as any;
+  onColumnOrderChange: (id: string, targetId: string) => void = null as any;
+  onColumnOrderAttendantsChange: (
+    idSource: string | undefined,
+    idTarget: string | undefined
+  ) => void = null as any;
+  tablePanelView: ITablePanelView = null as any;
+
+  columnOrderChangeSourceId: string | undefined;
+  columnOrderChangeTargetId: string | undefined;
+
+  @computed get columnHeaders() {
+    return this.getColumnHeaders();
+  }
+
+  @computed get isSelectionCheckboxes() {
+    return this.getIsSelectionCheckboxes();
+  }
+
+  @observable isColumnOrderChanging = false;
+
+  @action.bound handleStartColumnOrderChanging(id: string) {
+    this.isColumnOrderChanging = true;
+    this.columnOrderChangeSourceId = id;
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
+  }
+
+  @action.bound handleStopColumnOrderChanging(id: string) {
+    this.isColumnOrderChanging = false;
+    this.columnOrderChangeSourceId = undefined;
+    this.columnOrderChangeTargetId = undefined;
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
+  }
+
+  @action.bound handlePossibleColumnOrderChange(targetId: string | undefined) {
+    this.columnOrderChangeTargetId = targetId;
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
+  }
+
+  @action.bound handleColumnOrderDrop(targetId: string) {
+    this.onColumnOrderChange(this.columnOrderChangeSourceId!, targetId);
+    this.onColumnOrderAttendantsChange(
+      this.columnOrderChangeSourceId,
+      this.columnOrderChangeTargetId
+    );
+  }
+
+  @computed get headerContainers() {
+    const columnDimensions = this.gridDimensions.displayedColumnDimensionsCom;
+    const leadingColumnCount = getLeadingColumnCount(this.dataView);
+    const selectionCheckBoxesShown = getIsSelectionCheckboxesShown(this.dataView);
+    const groupingColumnCount = leadingColumnCount - (selectionCheckBoxesShown ? 1 : 0);
+    const dataColumnCount = columnDimensions.length - leadingColumnCount;
+    const headerContainers = [];
+
+    if (selectionCheckBoxesShown) {
+      headerContainers.push(
+        new HeaderContainer({
+          header: this.renderSelectionCheckBoxHeader(columnDimensions[0].width),
+          isFixed: true,
+          width: columnDimensions[0].width,
+        })
+      );
+    }
+
+    let columnsToFix = this.getFixedColumnCount();
+    for (let i = 0; i < groupingColumnCount; i++) {
+      headerContainers.push(
+        new HeaderContainer({
+          header: this.renderDummyHeader(columnDimensions[i].width),
+          isFixed: columnsToFix > i,
+          width: columnDimensions[i].width,
+        })
+      );
+    }
+
+    columnsToFix -= groupingColumnCount;
+    for (let i = 0; i < dataColumnCount; i++) {
+      const columnWidth = columnDimensions[i + leadingColumnCount].width;
+      headerContainers.push(
+        new HeaderContainer({
+          header: this.renderDataHeader({
+            columnIndex: i,
+            columnWidth: columnWidth,
+          }),
+          isFixed: columnsToFix > i,
+          width: columnWidth,
+        })
+      );
+    }
+
+    return headerContainers;
+  }
+
+  renderDummyHeader(columnWidth: number) {
+    return <div style={{ minWidth: columnWidth + "px" }}></div>;
+  }
+
+  renderSelectionCheckBoxHeader(columnWidth: number) {
+    return <SelectionCheckBoxHeader width={columnWidth} dataView={this.dataView} />;
+  }
+
+  @bind
+  renderDataHeader(args: { columnIndex: number; columnWidth: number }) {
+    const property = this.tableViewProperties[args.columnIndex];
+    const header = this.columnHeaders[args.columnIndex];
+
+    return (
+      <Provider key={property.id} property={property}>
+        <Header
+          key={header.id}
+          id={header.id}
+          width={args.columnWidth}
+          label={header.label}
+          orderingDirection={header.ordering}
+          orderingOrder={header.order + 1}
+          onColumnWidthChange={this.onColumnWidthChange}
+          onColumnWidthChangeFinished={onColumnWidthChangeFinished(this.tablePanelView)}
+          isColumnOrderChanging={this.isColumnOrderChanging}
+          onColumnOrderDrop={this.handleColumnOrderDrop}
+          onStartColumnOrderChanging={this.handleStartColumnOrderChanging}
+          onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
+          onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
+          onClick={onColumnHeaderClick(this.tablePanelView)}
+          additionalHeaderContent={this.makeAdditionalHeaderContent(header.id, property)}
+        />
+      </Provider>
+    );
+  }
+
+  makeAdditionalHeaderContent(columnId: string, property: IProperty) {
+    const filterControlsDisplayed = this.tablePanelView.filterConfiguration
+      .isFilterControlsDisplayed;
+    if (!filterControlsDisplayed && this.dataView.aggregationData.length === 0) {
+      return undefined;
+    }
+    const headerContent: JSX.Element[] = [];
+    if (filterControlsDisplayed) {
+      headerContent.push(<FilterSettings />);
+    }
+    if (this.dataView.aggregationData.length !== 0) {
+      const aggregation = this.dataView.aggregationData.find((agg) => agg.columnId === columnId);
+      if (aggregation) {
+        headerContent.push(<div>{aggregationToString(aggregation, property)}</div>);
+      }
+    }
+    return () => <>{headerContent}</>;
+  }
+}
+
+export interface IHeaderContainer {
+  header: JSX.Element;
+  isFixed: boolean;
+  width: number;
+}
+
+class HeaderContainer implements IHeaderContainer {
+  constructor(data: IHeaderContainer) {
+    Object.assign(this, data);
+  }
+  header: JSX.Element = null as any;
+  isFixed: boolean = null as any;
+  width: number = null as any;
+}

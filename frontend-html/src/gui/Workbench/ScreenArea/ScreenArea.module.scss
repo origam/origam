@@ -1,0 +1,92 @@
+@import "src/styles/common_styles.scss";
+@import "src/styles/definitions.scss";
+
+.Root {
+  width: 100%;
+  height: 100%;
+  overflow: hiddwen;
+  display: flex;
+  flex-direction: column;
+  background-color: #e5e5e5;
+}
+
+.TabHandles {
+  height: 20px;
+  display: flex;
+  flex-direction: row;
+  background-color: #4c4c4c;
+  user-select: none;
+}
+
+.TabHandle {
+  position: relative;
+  padding: 2px 20px 2px 10px;
+  margin: 0px 1px 1px 0px;
+  cursor: pointer;
+  background-color: #666666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.TabHandleCloseBtn {
+  position: absolute;
+  top: 0px;
+  right: 2px;
+  background: transparent;
+  padding: 2px;
+  border: none;
+  cursor: pointer;
+}
+
+.TabHandleCloseBtn:hover {
+  background-color: #8998c5;
+  color: white;
+}
+
+.TabHandle:hover {
+  background-color: #8998c5;
+}
+
+.TabHandle.active {
+  margin-bottom: 0;
+  background-color: #e5e5e5;
+  color: black;
+}
+
+.dialogLoadingContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.actionButtonHeader{
+  display: flex;
+  flex-direction: row;
+}
+
+.workflowActionBtn {
+@include dialogButton();
+  background: #E9E8F0;
+  border: 1px solid $grey3;
+  box-sizing: border-box;
+  color: $black;
+  font-size: $font-size;
+  height: 2em;
+  margin: 0 0.5em;
+  padding: 0 1.5em;
+@include border-radius(3em);
+&:first-of-type {
+   margin-left: 0;
+ }
+&:last-of-type {
+   margin-right: 0;
+ }
+&:hover {
+   background: $grey3;
+   color: $black;
+ }
+}
+

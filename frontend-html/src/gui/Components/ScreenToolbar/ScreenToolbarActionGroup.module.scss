@@ -1,0 +1,27 @@
+@import "../../../styles/definitions";
+
+.root {
+  height: 2.5em;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-color: $grey2;
+  border-style: solid;
+  border-width: 0 0 0 1px;
+  padding: 0 0.9em;
+  overflow: hidden;
+  min-width: 0;
+  
+  &:first-of-type {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  &:global(.grovable) {
+    flex: 1 1;
+    display: flex;
+    flex-direction: row;
+    
+  }
+}

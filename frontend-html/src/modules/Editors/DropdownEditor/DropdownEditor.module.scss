@@ -1,0 +1,57 @@
+@import "src/styles/definitions.scss";
+
+.table {
+  :global(.cell) {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px 0 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    //border-top: 1px solid #ebeaee;
+    overflow: hidden;
+    white-space: nowrap;
+    &:global(.ord1) {
+      background-color: #f7f6fa;
+    }
+    &:global(.ord2) {
+      background-color: #ffffff;
+    }
+    &:global(.header) {
+      background-color: #f7f6fa;
+      //justify-content: center;
+      font-weight: bold;
+    }
+    &:global(.withCursor) {
+      background-color: $blue;
+      color: white !important;
+    }
+    &:global(.selected) {
+      font-weight: bold;
+      color: $blue;
+    }
+  }
+
+  :global(.isHoveredRow) :global(.cell) {
+    background-color: #acc6ff;
+    color: black !important;
+  }
+
+  :global(.resizeHandle) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #bbbbbb;
+  }
+}
+
+.input {
+  &:global(.isLink) {
+    color: #4c84ff !important;
+    cursor: pointer !important;
+  }
+}

@@ -1,0 +1,10 @@
+.root {
+  flex-grow: 0;
+  overflow: hidden;
+  height: 0;
+  &:global(.isActive) {
+    flex-grow: 1;
+    overflow: auto;
+    height: auto;
+  }
+}

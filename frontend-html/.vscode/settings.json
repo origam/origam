@@ -1,0 +1,19 @@
+{
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "cSpell.words": [
+    "Dropdowner",
+    "Horiz",
+    "Millis",
+    "Origam",
+    "Unmount",
+    "autorun",
+    "esnext",
+    "immer",
+    "nbetween",
+    "ncontain",
+    "nends",
+    "nnull",
+    "nstarts",
+    "uuidv"
+  ]
+}

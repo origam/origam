@@ -1,0 +1,9 @@
+.root {
+  position: absolute;
+  background-color: #ffffff;
+  padding: 1.5em;
+
+  &:global(.hasTitle) {
+    padding-top: 0;
+  }
+}

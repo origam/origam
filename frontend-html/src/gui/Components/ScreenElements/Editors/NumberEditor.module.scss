@@ -1,0 +1,19 @@
+@import "./EditorsCommon.scss";
+
+.input {
+  @include input;
+
+  &:global(.isRightAligned) {
+    text-align: right;
+    padding-left: 3px;
+    padding-right: 14px;
+  }
+}
+
+.editorContainer {
+  @include editorContainer;
+}
+
+.notification {
+  @include notification;
+}

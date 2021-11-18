@@ -1,0 +1,27 @@
+
+.alert {
+  padding: 15px;
+  margin: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alertDanger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.root {
+  background-color: #E9E8F0;
+  height: 100%
+}
+
+.inPageLink{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.returnLink{
+  padding-left: 35px;
+}

@@ -1,0 +1,209 @@
+{
+  "name": "origam-html5",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "^7.13.10",
+    "@decorize/bind": "^1.0.1",
+    "@mapbox/geojson-area": "^0.2.2",
+    "@svgr/webpack": "4.3.3",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/classnames": "^2.2.10",
+    "@types/jest": "^24.0.0",
+    "@types/js-cookie": "^2.2.6",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/leaflet": "^1.5.12",
+    "@types/leaflet-draw": "^1.0.2",
+    "@types/lodash": "^4.14.155",
+    "@types/mapbox__geojson-area": "^0.2.1",
+    "@types/node": "^12.0.0",
+    "@types/numeral": "^0.0.28",
+    "@types/react": "^16.9.0",
+    "@types/react-color": "^3.0.4",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-draft-wysiwyg": "^1.13.0",
+    "@types/react-highlight-words": "^0.16.1",
+    "@types/react-inlinesvg": "^1.0.0",
+    "@types/react-measure": "^2.0.6",
+    "@types/react-virtualized": "^9.21.10",
+    "@types/string-strip-html": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.10.0",
+    "@typescript-eslint/parser": "^2.10.0",
+    "@xstate/inspect": "^0.4.1",
+    "axios": "^0.19.2",
+    "babel-eslint": "10.1.0",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "8.1.0",
+    "babel-plugin-named-asset-import": "^0.3.6",
+    "babel-preset-react-app": "^9.1.2",
+    "bind-decorator": "^1.0.11",
+    "camelcase": "^5.3.1",
+    "case-sensitive-paths-webpack-plugin": "2.3.0",
+    "classnames": "^2.2.6",
+    "css-loader": "3.4.2",
+    "dotenv": "8.2.0",
+    "dotenv-expand": "5.1.0",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "eslint": "^6.6.0",
+    "eslint-config-react-app": "^5.2.1",
+    "eslint-loader": "3.0.3",
+    "eslint-plugin-flowtype": "4.6.0",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-react": "7.19.0",
+    "eslint-plugin-react-hooks": "^1.6.1",
+    "file-cli": "^1.2.0",
+    "file-loader": "4.3.0",
+    "flexsearch": "^0.6.32",
+    "fs-extra": "^8.1.0",
+    "html-to-draftjs": "^1.5.0",
+    "html-webpack-plugin": "4.0.0-beta.11",
+    "identity-obj-proxy": "3.0.0",
+    "immer": "^6.0.9",
+    "immutable": "^4.0.0-rc.12",
+    "jest": "24.9.0",
+    "jest-environment-jsdom-fourteen": "1.0.1",
+    "jest-resolve": "24.9.0",
+    "jest-watch-typeahead": "0.4.2",
+    "js-cookie": "^2.2.1",
+    "js-file-download": "^0.4.12",
+    "jsonwebtoken": "^8.5.1",
+    "leaflet": "^1.6.0",
+    "leaflet-draw": "^1.0.4",
+    "lodash": "^4.17.15",
+    "mini-css-extract-plugin": "0.9.0",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.2.2",
+    "moment": "^2.26.0",
+    "node-sass": "^4.14.1",
+    "numeral": "^2.0.6",
+    "oidc-client": "^1.10.1",
+    "optimize-css-assets-webpack-plugin": "5.0.3",
+    "pnp-webpack-plugin": "1.6.4",
+    "postcss-flexbugs-fixes": "4.1.0",
+    "postcss-loader": "3.0.0",
+    "postcss-normalize": "8.0.1",
+    "postcss-preset-env": "6.7.0",
+    "postcss-safe-parser": "4.0.1",
+    "react": "^16.13.1",
+    "react-app-polyfill": "^1.0.6",
+    "react-color": "^2.19.3",
+    "react-dev-utils": "^10.2.1",
+    "react-dom": "^16.13.1",
+    "react-draft-wysiwyg": "^1.14.5",
+    "react-highlight-words": "^0.16.0",
+    "react-inlinesvg": "^1.2.0",
+    "react-measure": "^2.3.0",
+    "react-virtualized": "^9.21.2",
+    "resolve": "1.15.0",
+    "resolve-url-loader": "3.1.1",
+    "sass-loader": "^8.0.2",
+    "semver": "6.3.0",
+    "string-strip-html": "^6.3.0",
+    "style-loader": "0.23.1",
+    "terser-webpack-plugin": "2.3.5",
+    "ts-pnp": "1.1.6",
+    "tui-image-editor": "^3.9.0",
+    "url-loader": "2.3.0",
+    "webpack": "4.42.0",
+    "webpack-dev-server": "3.10.3",
+    "webpack-manifest-plugin": "2.2.0",
+    "wkt": "^0.1.1",
+    "workbox-webpack-plugin": "4.3.1",
+    "xml-js": "^1.6.11",
+    "xstate": "^4.16.2"
+  },
+  "homepage": "./",
+  "scripts": {
+    "start": "node scripts/start.js",
+    "start-selenium": "set BROWSER=node none.js && set REACT_APP_SELENIUM_KICK=1 && concurrently --kill-others \"node-dev --respawn --no-deps --dedupe ./tests/fixture-server01\" \"node scripts/start.js\"",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js",
+    "test:debug": "node  --inspect-brk scripts/test.js test --runInBand --no-cache ",
+    "test-endtoend": "set REACT_APP_TESTS_ENDTOEND_RUNNING=1 && node scripts/start.js",
+    "start-server": "node-dev --respawn --no-deps --dedupe ./src-server/index-server.js",
+    "postinstall": "cd ./server && yarn",
+    "start-prod": "cd ./server/build && node ./main.js",
+    "heroku-postbuild": "node scripts/build.js && cd ./server && yarn build",
+    "transform-plugin": "set BABEL_ENV=production&& babel src-plugins/myplugin.js --out-file src-plugins/myplugin.tr.js --config-file ./src-plugins/babel.config.json"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jest-environment-jsdom-fourteen",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "prettier": {
+    "printWidth": 100
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "@babel/preset-react": "^7.12.13",
+    "typescript": "3.9.9"
+  }
+}

@@ -1,0 +1,30 @@
+@import "./EditorsCommon.scss";
+
+.input {
+  @include input;
+  overflow-x: hidden;
+}
+
+.scrollY{
+  overflow-y: auto;
+}
+
+.noScrollY{
+  overflow-y: hidden;
+}
+
+.wrapText{
+  overflow-wrap: anywhere;
+}
+
+.multiLine{
+  white-space: pre-line;
+}
+
+.editorContainer {
+  @include editorContainer;
+}
+
+.notification {
+  @include notification;
+}

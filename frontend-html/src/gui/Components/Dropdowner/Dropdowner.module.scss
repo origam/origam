@@ -1,0 +1,14 @@
+.droppedBox {
+  position: absolute;
+  z-index: 2000;
+}
+
+.dropdownerContainer {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+}
