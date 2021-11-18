@@ -1,0 +1,393 @@
+/*	---------------------------------------------------------------------- */
+/*	
+	Name: origamlogin
+	Date: September 2012
+	Description: CSS for selected Browsers
+	Version: 1.0
+	Author: Tomas Vavrda
+	Autor URI: advantages.cz
+*/
+/*	---------------------------------------------------------------------- */
+
+
+/*	---------------------------------------------------------------------- */
+/* 	colors
+	
+	Grey5: #626466 ----- rgba(98,100,102,1)
+	Grey4: #909294 ----- rgba(144,146,148,1)
+	Grey3: #B9BBBD ----- rgba(185,187,189,1)
+	Grey2: #E0E2E4 ----- rgba(224,226,228,1)
+	Grey1: #F3F5F6 ----- rgba(243,245,247,1)
+	
+*/
+/*	---------------------------------------------------------------------- */
+
+/* Imports */
+@import url("reset.css");
+/*	---------------------------------------------------------------------- */
+/* 	global */
+/*	---------------------------------------------------------------------- */
+
+frameset
+{
+	border: solid 1px #999;
+	border-top: solid 0px #999;
+	border-left: solid 0px #999;
+	border-bottom: solid 0px #999;
+	border-right: solid 0px #999;
+}
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 150%;
+	text-align: left;
+	padding: 10px;
+}
+
+
+.emptyContent {
+	position: absolute;
+	width: 300px;
+	height: 50px;
+	top: 50%;
+	left: 50%;
+	margin-left: -150px;
+	margin-top: -25px;
+}
+
+div.section
+{
+	position: relative;
+}
+
+/* Headings */
+h1 {
+	color: #8a98c5;
+	display: block;
+	font-size: 2.1em;
+	margin-bottom: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+div.subtitle
+{
+	border-bottom: 1px solid #666666;
+	padding-bottom: 0.25em;
+	margin-bottom: 0.75em;
+}
+
+div.modelElementId
+{
+	position: relative;
+	float: right;
+	color: LightGray;
+}
+
+/* Anchors */
+a, a:visited {
+	color: #8a98c5;
+	cursor: pointer;
+	text-decoration: none;
+	font-style: normal;
+}
+a:hover, a:active { text-decoration: underline; }
+a:focus {
+	-moz-outline-style: none;
+	outline: none;
+}
+
+a.linknormal 
+{
+    text-decoration: underline;
+}
+/* Paragraphs */
+p { margin-bottom: 0.5em; }
+p.nobreak, .ui-accordion-content p { margin-bottom: 0; }
+strong, b { }
+em, i { font-style: italic; }
+
+pre
+{
+	background-color: #F3F5F6;
+	max-width: 70em;
+	padding: 0.5em;
+	border: 0px;
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+pre.example
+{
+	border: 0px;
+	padding: 0.5em;
+}
+
+span.urlParameter
+{
+	color: blue;
+}
+
+div.parameter
+{
+	margin-left: 1em;
+}
+
+div.parameter p
+{
+	margin-left: 1em;
+	margin-top: 0.5em;
+}
+
+div.parameterName
+{
+	font-style: italic;
+}
+
+h2
+{
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+	font-size: 1.3em;
+}
+
+div.parameter h2
+{
+	margin-top: 0.5em;
+	margin-left: 1em;
+	font-size: small;
+	margin-bottom: 0em;
+}
+
+div.parameter pre
+{
+	margin-left: 1em;
+	margin-bottom: 0.5em;
+}
+
+div.fieldName
+{
+	font-weight: bold;
+}
+
+ul
+{
+	list-style-type: none;
+	margin-left: 0.5em;
+}
+
+li.tocref
+{
+	text-align: left;
+	width: 1010px;
+}
+
+li.tocref.extended a, a.visited{
+	color: gray;
+}
+
+img
+{
+	margin-right: 0.25em;
+	vertical-align: text-bottom;
+}
+
+a.tocref.extended
+{
+	color: Gray;
+}
+
+table
+{
+	padding: 0px;
+	width: 100%;
+	border-collapse: collapse;
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+table, th, td
+{
+	border:1px solid #bbb;
+}
+
+th, td
+{
+	border-bottom: 1px solid #dbdbdb;
+	margin: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right: 8px;
+	padding-left: 8px;
+}
+
+th
+{
+	background-color: #ededed;
+	color: #636363;
+	text-align: center;
+}
+
+td.mandatoryField
+{
+	text-align: center;
+	width: 10px;
+}
+
+td.dataType
+{
+	width: 8em;
+}
+
+div.diagram
+{
+	position: relative;
+	padding-bottom: 2em;
+}
+
+.diagramElement 
+{
+	border: 1px solid black; 
+	background-color: #F0F0F0; 
+	text-align: center;
+	padding: 5px;
+}
+
+.entity, .dataStructureEntity
+{
+	border: 1px solid DimGrey; 
+	background-color: LightGoldenRodYellow; 
+}
+
+.workflowStep
+{
+	padding: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.state
+{
+	border: 2px solid black; 
+	background-color: #fff; 
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div.workflowBlock
+{
+	background-color: #fff;
+	border: 1px dotted; 
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.label
+{
+	background-color: White;
+	text-align: right;
+}
+
+div.diagramElement li
+{
+	height: 20px;
+	text-align: left;
+}
+
+div.diagramElement div.title
+{
+	font-weight: bold;
+	height: 20px;
+}
+
+span.lit
+{
+	color: Black;
+}
+
+span.str, span.atv
+{
+	color: #CC3333;
+}
+
+span.atn
+{
+	color: #660;
+}
+
+span.kwd
+{
+	color: Blue;
+}
+
+
+span.tag, span.pun
+{
+	color: DarkMagenta;
+}
+
+span.com
+{
+	color: Green;
+}
+
+div.sequentialWorkflow
+{
+	border: none;
+	background-color: #aaa;
+	color: White;
+	-webkit-border-radius: 500px;
+	-moz-border-radius: 500px;
+	border-radius: 500px;
+}
+
+div.workflowBlock div.title
+{
+	height: 30px;
+}
+
+span.workflowStepNameWide
+{
+    display: block;
+    overflow: hidden;
+}
+
+img.workflowStepImageWide 
+{
+    float: left;
+}
+div.error
+{
+	border: solid 1px Red;
+	padding: 1em;
+	background-color: LightGoldenRodYellow;
+	color: Red;
+}
+
+div.screenField {
+	display: table;
+	background-color: #eee;
+	margin: 5px;
+	margin-left: 0px;
+	width: 100%;
+}
+
+div.screenField div.title {
+	background-color: #aaa;
+	color: White;
+	display: table-cell;
+	width: 20%;
+	padding: 0.25em 0.25em 0.25em 0.5em;
+}
+
+div.screenField div.description {
+	display: table-cell;
+	padding: 0.25em 0.25em 0.25em 0.5em;
+	width: 80%;
+}

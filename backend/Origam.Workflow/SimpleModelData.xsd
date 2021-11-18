@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SimpleModelData" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="SimpleModelData" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="3aaec7cd-5e40-40af-b4ad-1edd0e0fdade">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="OrigamEntity" msdata:IsLoading="False" msdata:DisplayExpression="'Entity'" msprop:IsAuditingEnabled="All" msprop:EntityId="992fe444-f487-4bd2-9251-afb5bbef88b2" msprop:DescribingField="Name" msprop:Id="5af274ba-1976-453b-89d6-703c37523d95">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OrigamField" msdata:IsLoading="False" msdata:DisplayExpression="'Field'" msprop:IsAuditingEnabled="All" msprop:EntityId="4e21407c-999b-49f5-8806-d8abc523cc55" msprop:DescribingField="Name" msprop:Id="8cd1f02a-cb42-436f-9eca-7bee19d980d9" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <msdata:Relationship name="OrigamField" msdata:parent="OrigamEntity" msdata:child="OrigamField" msdata:parentkey="Id" msdata:childkey="refOrigamEntityId" />
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="refOrigamDataTypeId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Data Type" msprop:Id="c1a9ff4e-9b44-4983-8178-2abcc4aadd08" msprop:OnCopyAction="Copy" msprop:FieldId="72eed0ed-11f0-49e3-a114-b3aab90e0b21" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="6b2e4892-9a76-44a5-99cf-77a15b0bf89e" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" use="required" />
+                  <xs:attribute name="RecordCreated" msdata:Caption="Time Created" msprop:FieldId="f5006bd6-8211-4052-8032-be6a5cf7375d" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Date" msprop:OnCopyAction="Copy" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+                  <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" msprop:FieldId="5bf0661d-ab0d-4917-8fd1-563f4376e740" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" use="required" />
+                  <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Updated By" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" msprop:OnCopyAction="Copy" msprop:FieldId="f5dc3783-364e-4dd9-ade3-3ba7066bd00b" msprop:IsAuditingEnabled="None" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+                  <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Created By" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" msprop:OnCopyAction="Copy" msprop:FieldId="4ec6fc38-a406-4e46-a66f-83b7df7b184b" msprop:IsAuditingEnabled="None" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+                  <xs:attribute name="NewEntityLabel" msdata:Caption="New Table Label" msprop:FieldId="9ea39ed0-14a6-49dd-b61f-abfe6af52841" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="String" msprop:OnCopyAction="Copy" msprop:Id="4ddc549a-852e-46cf-9f56-fe5f61c4bea0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="200" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="MappedColumn" msdata:Caption="Mapped Column" msprop:OnCopyAction="Copy" msprop:Id="fa63e4f3-87f1-436b-a37c-f52608fcbf75" msprop:FieldId="93d38973-2945-4a23-8cc5-f2c904cf2406" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="String" use="required">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="3" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="RecordUpdated" msdata:Caption="Time Updated" msprop:FieldId="f1fb60f5-8103-4f70-a7f5-469d363b264f" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Date" msprop:OnCopyAction="Copy" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+                  <xs:attribute name="refLookupOrigamEntityId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Linked Table" msprop:Id="341c383d-6631-4a4c-b1d2-f4178db3e721" msprop:OnCopyAction="Copy" msprop:FieldId="ca6f11d2-4fe2-4dc9-b09b-c68426dd2438" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="885d0b8c-a03b-49b5-830d-2dc852d64325" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+                  <xs:attribute name="Label" msprop:OnCopyAction="Copy" msprop:Id="88677612-6ccb-4963-9eb7-c2af8cf984de" msprop:FieldId="f1730f8a-76c5-4102-a7fe-d01571973365" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="String" use="required">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="200" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="IsMandatory" msdata:Caption="Mandatory" msprop:OnCopyAction="Copy" msprop:Id="bc62815a-e519-4118-9886-9762c6eae037" msprop:FieldId="4d123c42-e30a-41b6-b216-9166cfccbdfd" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="Boolean" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+                  <xs:attribute name="TextLength" msdata:Caption="Text Length" msprop:FieldId="f1cfb4b7-baaf-44a2-8a06-3854cd2776db" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="Integer" msprop:OnCopyAction="Copy" msprop:Id="2d5a5b00-0195-42e5-8eaa-8bf2306353de" type="xs:int" />
+                  <xs:attribute name="Name" msprop:OnCopyAction="Copy" msprop:Id="5d827240-69cf-4f03-be7f-52fc92ab08c4" msprop:FieldId="d9b83833-8feb-4b83-8e81-183560cb3288" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="String" use="required">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="Position" msprop:OnCopyAction="Copy" msprop:Id="20ddb19b-409b-4a2c-93bb-4d13214c43e2" msprop:FieldId="18ccb867-7671-4342-b991-027023da3700" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="Integer" type="xs:int" use="required" />
+                  <xs:attribute name="refOrigamEntityId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Entity" msprop:OnCopyAction="Copy" msprop:Id="16dd929b-f54d-44f8-b80b-4137bcd7534a" msprop:FieldId="654536e2-668d-40f4-a86f-d5764c04d574" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" use="required" />
+                  <xs:attribute name="refOrigamLinkTypeId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Link To" msprop:Id="da995eb3-acd8-4639-bb08-e1f49ce4728c" msprop:OnCopyAction="Copy" msprop:FieldId="42121a9f-d5b1-429c-aa60-68925e97bde6" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:DefaultLookupId="673dfae1-1506-418c-b377-e6eda4cde29f" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" use="required" />
+                  <xs:attribute name="Selected" msprop:OnCopyAction="Copy" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" msprop:FieldId="6df9aaab-d136-4f8f-8d06-61efee2e0c34" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Boolean" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="refCalendarResourceOrigamFieldId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Resource Field" msprop:Id="c0734d16-b3fe-4c4e-8955-52267840770a" msprop:OnCopyAction="Copy" msprop:FieldId="1fd23aa9-e47b-44d6-b093-18629899cec2" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="b9b04c4d-e533-4869-ad91-e124224b11c7" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+            <xs:attribute name="RecordCreated" msdata:Caption="Time Created" msprop:FieldId="48fa7250-fca7-470b-8c62-6ebca15f5051" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Date" msprop:OnCopyAction="Copy" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+            <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" msprop:FieldId="9dca7f89-7772-4b9f-888e-54d8f36d7ead" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" use="required" />
+            <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Updated By" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" msprop:OnCopyAction="Copy" msprop:FieldId="e3bdfa85-fae2-4da3-83a1-430c74b2ec1a" msprop:IsAuditingEnabled="None" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+            <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Created By" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" msprop:OnCopyAction="Copy" msprop:FieldId="783f422d-ea7e-4e48-af31-7e2b4d59bc5a" msprop:IsAuditingEnabled="None" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+            <xs:attribute name="WorkflowCount" msdata:Caption="Workflow Count" msprop:FieldId="51030edf-577f-4e85-af7c-093615eaee2c" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Integer" msprop:OnCopyAction="Copy" msprop:Id="25729755-7a24-433b-8317-4c62abf22e9e" type="xs:int" />
+            <xs:attribute name="CalendarImageUrl" msprop:OnCopyAction="Copy" msprop:Id="801eef57-7964-46c2-94ed-fda2388e8336" msprop:FieldId="aed42b37-2f6b-49d0-9d6a-f9c2510086f4" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="String" msdata:DefaultValue="calendar_image.png" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="200" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="RecordUpdated" msdata:Caption="Time Updated" msprop:FieldId="bb399a04-4654-4c77-9367-4480479c88e8" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Date" msprop:OnCopyAction="Copy" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+            <xs:attribute name="refCalendarDateEndOrigamFieldId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="End Date Field" msprop:Id="4ad583a4-00a1-4618-8d36-e120bb2bc907" msprop:OnCopyAction="Copy" msprop:FieldId="d37adbe1-8db7-4fc4-af40-1b60868e7ce9" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="e29387fa-3a77-4e91-a46b-1796f1b4b531" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+            <xs:attribute name="Name" msprop:OnCopyAction="Copy" msprop:Id="02cc1de9-39f7-4ab1-96c3-bab0d822dc1f" msprop:FieldId="6684b918-d091-4237-a9e1-4b05c7bc5730" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="String" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="50" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="refCalendarNameOrigamFieldId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Name Field" msprop:Id="fa6eb470-f42c-4bdf-ae0f-b0976c10402c" msprop:OnCopyAction="Copy" msprop:FieldId="7575ed5f-a659-4561-bab9-3a8cdbb8f366" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="d2e079a3-a6a7-4623-a538-9608edb8ccb6" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+            <xs:attribute name="refCalendarDateStartOrigamFieldId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Start Date Field" msprop:Id="5b530ad9-fdda-450f-a2fe-9f5e327397c0" msprop:OnCopyAction="Copy" msprop:FieldId="36abd341-f208-4f0c-b310-6418ffd29292" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="e29387fa-3a77-4e91-a46b-1796f1b4b531" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+            <xs:attribute name="Label" msprop:OnCopyAction="Copy" msprop:Id="31bd7d2c-1686-4f53-9c16-8fcd2f7997fe" msprop:FieldId="eb36dc82-feb1-46c1-864d-5e5aa16aa36f" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="String" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="200" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="refCalendarDescriptionOrigamFieldId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Description Field" msprop:Id="7b20fbd7-ddcc-481d-bc90-894ffb84789b" msprop:OnCopyAction="Copy" msprop:FieldId="f275d928-cb7f-4408-9cf5-6a83d145d46a" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="d2e079a3-a6a7-4623-a538-9608edb8ccb6" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" />
+            <xs:attribute name="refOrigamApplicationId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Application" msprop:Id="b687801b-922b-4f74-9d32-60f8fd3e9890" msprop:OnCopyAction="Copy" msprop:FieldId="ab2783db-c55c-4276-9227-af46deba714d" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:DefaultLookupId="f18de5b3-7f69-45ab-9544-d9692244f4a2" msprop:OrigamDataType="UniqueIdentifier" type="xs:string" use="required" />
+            <xs:attribute name="IsCalendarEnabled" msdata:Caption="Enable Calendar View" msprop:OnCopyAction="Copy" msprop:Id="dc03d9bc-dac4-4c92-a383-d534a033bc6c" msprop:FieldId="561a5a6b-7453-46dc-aa37-64cf0625ecca" msprop:AllowNulls="False" msprop:IsAuditingEnabled="All" msprop:OrigamDataType="Boolean" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+            <xs:attribute name="Selected" msprop:OnCopyAction="Copy" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" msprop:FieldId="4df3d5fa-5217-4e14-8b6d-44ccd6854f44" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Boolean" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="OrigamField_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//OrigamField" />
+      <xs:field xpath="@Id" />
+    </xs:unique>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//OrigamEntity" />
+      <xs:field xpath="@Id" />
+    </xs:unique>
+    <xs:keyref name="FK_OrigamEntity" refer="Constraint1" msdata:ConstraintOnly="true">
+      <xs:selector xpath=".//OrigamField" />
+      <xs:field xpath="@refOrigamEntityId" />
+    </xs:keyref>
+  </xs:element>
+</xs:schema>

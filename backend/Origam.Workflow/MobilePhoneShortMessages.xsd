@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+	xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+	<xs:element name="MobilePhoneShortMessages" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="ccf80780-0990-47f9-bf25-54a4ad33af0b"
+		msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff">
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="Message" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Message'" msprop:Id="816bb25d-1318-426e-b47b-485e9cfbc8fa"
+					msprop:EntityId="347f03a6-879c-478b-83ac-c95ef87bd50b" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+					msprop:IsAuditingEnabled="False">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SourcePhoneNumber" msprop:Id="16222372-6fb5-4747-b16a-6e92478191a3" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="20" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Type" msprop:Id="a757b124-ddb9-4834-bc5e-7f2949274eed" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								type="xs:int" minOccurs="0" />
+							<xs:element name="ReceivedDate" msprop:Id="69dacecd-b606-4828-80a6-5d3909a8887f" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								type="xs:dateTime" />
+							<xs:element name="Text" msprop:Id="8d493114-b362-4997-b2de-c53a3abc885b" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="160" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="DestinationPhoneNumber" msprop:Id="55b13b73-1e56-4acc-838a-3a98da7dbdc7" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								minOccurs="0">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="20" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="EMSCurrentPiece" msprop:Id="7045c3c1-e84e-4785-9537-bc8320c9df88" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								type="xs:int" />
+							<xs:element name="StatusReportState" msprop:Id="45da4dde-05c0-4a6f-aee7-20b3e9949243" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								type="xs:int" minOccurs="0" />
+							<xs:element name="EMSTotalPiece" msprop:Id="0e13e53e-4961-4448-9c41-fb72ea1dcc72" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								type="xs:int" />
+							<xs:element name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msdata:Caption="Záznam aktualizoval" msprop:Id="efb83735-bedb-4eee-b9eb-f111dd46980e" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								msprop:DefaultHideUI="True" type="xs:string" minOccurs="0" />
+							<xs:element name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msdata:Caption="Záznam vytvořil" msprop:Id="253ce61e-509c-4d08-864f-c0e03d3eed4b" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								msprop:DefaultHideUI="True" type="xs:string" minOccurs="0" />
+							<xs:element name="RecordUpdatedServer" msdata:Caption="Záznam aktualizován (server)" msprop:Id="9424c659-0c83-4aa9-b2a4-aeec9d9e8d40"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="RecordCreated" msdata:Caption="Záznam vytvořen" msprop:Id="2340af1e-d939-47ae-930b-e24b0cb3a756"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="RecordUpdated" msdata:Caption="Záznam aktualizován" msprop:Id="bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="RecordCreatedServer" msdata:Caption="Záznam vytvořen (server)" msprop:Id="da9c4ff5-2e67-4744-935a-60a39b886828"
+								msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff" msprop:DefaultHideUI="True"
+								type="xs:dateTime" minOccurs="0" />
+							<xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+								msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" msprop:SchemaVersionId="3ee8324c-0dbe-4704-9add-2f3bf70212ff"
+								msprop:DefaultHideUI="True" type="xs:string" />
+							<xs:element name="PositionInPhone" type="xs:int" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+		<xs:unique name="PK_Id" msdata:PrimaryKey="true">
+			<xs:selector xpath=".//Message" />
+			<xs:field xpath="Id" />
+		</xs:unique>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorsInForm" xml:space="preserve">
+    <value>Formular enthält Fehler (leere Pflichtfelder). Beheben Sie die Fehler, bevor Sie die Aktion ausführen.</value>
+  </data>
+  <data name="ErorrMessage" xml:space="preserve">
+    <value>Fehler beim Ausführen von '{0}' im Formular '{1}'</value>
+  </data>
+  <data name="ErrorNotString" xml:space="preserve">
+    <value>Daten sind nicht vom Typ String</value>
+  </data>
+  <data name="ErrorNotBlob" xml:space="preserve">
+    <value>Daten sind nicht vom Typ  Blob</value>
+  </data>
+  <data name="ErrorUserCanceled" xml:space="preserve">
+    <value>Arbeitsschritt abgebrochen durch den Anwender.</value>
+  </data>
+  <data name="ErrorNoRecords" xml:space="preserve">
+    <value>Angeforderter Befehl konnte nicht ausgeführt werden. Keine Datensätze verfügbar.</value>
+  </data>
+  <data name="OKMessage" xml:space="preserve">
+    <value>OK; {0} Elemente.</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Fehler: {0}</value>
+  </data>
+  <data name="ErrorStepFailed" xml:space="preserve">
+    <value>Ausführung des Arbeitsschrittes '{0}'{1} fehlgeschlagen</value>
+  </data>
+  <data name="ErrorChangeState" xml:space="preserve">
+    <value>Aktueller {0} ist '{3}'. Ein Wechsel zu {0} '{2}' ist nicht möglich.</value>
+  </data>
+  <data name="ErrorStateMachineNotFound" xml:space="preserve">
+    <value>Zustandsmaschine nicht gefunden. Ereignisse können nicht ausgeführt werden.</value>
+  </data>
+  <data name="ErrorsInForm1" xml:space="preserve">
+    <value>Formular enthält Fehler (einige Pflichtfelder sind leer). Nach der Korrektur der Daten können Sie die gewünschte Aktion wiederholen.</value>
+  </data>
+  <data name="ProcessFinished" xml:space="preserve">
+    <value>Arbeitsschritt beendet</value>
+  </data>
+  <data name="ErrorRecordsLockedAlready" xml:space="preserve">
+    <value>Elemente werden durch einen anderen Prozess belegt. Elemente in der Warteschlange können nicht verarbeitet werden.</value>
+  </data>
+  <data name="ErrorWorkQueueNotFoundByReferenceCode" xml:space="preserve">
+    <value>Keine Work queue mit Code {0} gefunden.</value>
+  </data>
+  <data name="ErrorEmailNotString" xml:space="preserve">
+    <value>E-Mail ist kein String</value>
+  </data>
+  <data name="ErrorPasswordAnswerNotString" xml:space="preserve">
+    <value>PasswordAnswer ist kein String</value>
+  </data>
+  <data name="ErrorPasswordQuestionNotString" xml:space="preserve">
+    <value>PasswordQuestion ist kein String</value>
+  </data>
+  <data name="ErrorProviderUserKeyNotGuid" xml:space="preserve">
+    <value>ProviderUserKey ist nicht vom Typ guid</value>
+  </data>
+  <data name="ErrorUsernameNotString" xml:space="preserve">
+    <value>Username ist kein String</value>
+  </data>
+  <data name="ErrorNoRecordsSelectedForAction" xml:space="preserve">
+    <value>Keine Datensätze ausgewählt. Aktion kann nicht ausgeführt werden.</value>
+  </data>
+</root>

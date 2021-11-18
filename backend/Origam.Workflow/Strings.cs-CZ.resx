@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorsInForm" xml:space="preserve">
+    <value>Data ve formuláři obsahují chyby. Opravte tyto chyby před spuštěním akce.</value>
+  </data>
+  <data name="ExecuteActionTitle" xml:space="preserve">
+    <value>Spuštění akce</value>
+  </data>
+  <data name="ErrorContextStoreNotFound" xml:space="preserve">
+    <value>Context store with the name not found. Cannot execute the workflow.</value>
+  </data>
+  <data name="ErrorUnsupportedActionType" xml:space="preserve">
+    <value>Action type not supported.</value>
+  </data>
+  <data name="ErrorNoDataMember" xml:space="preserve">
+    <value>Cannot execute workflow. No DataMember set to the workflow button.</value>
+  </data>
+  <data name="ErrorFieldNotFound" xml:space="preserve">
+    <value>Field mapped to a workflow context not found in the provided data row. Cannot execute workflow.</value>
+  </data>
+  <data name="ErorrMessage" xml:space="preserve">
+    <value>Chyba při spuštění '{0}' ve formuláři '{1}'</value>
+  </data>
+  <data name="WorkflowWatchTitle" xml:space="preserve">
+    <value>Workflow Watch</value>
+  </data>
+  <data name="ErrorSettingsNotFound" xml:space="preserve">
+    <value>OrigamSettings not found.</value>
+  </data>
+  <data name="ErrorTableMappingNotFound" xml:space="preserve">
+    <value>Table Mapping not found in the model ({0})</value>
+  </data>
+  <data name="ErrorNoPrimaryKey" xml:space="preserve">
+    <value>Entity has no primary key. Cannot update entity {0}</value>
+  </data>
+  <data name="ErrorMultiColumnPrimaryKey" xml:space="preserve">
+    <value>Entity has multi-column primary key. Cannot update entity {0}</value>
+  </data>
+  <data name="ErrorPrimaryKeyNotMapped" xml:space="preserve">
+    <value>Entity primary key is not database mapped. Cannot update entity {0}</value>
+  </data>
+  <data name="ErrorNotDataStructureReference" xml:space="preserve">
+    <value>DataStructure is not of type DataStructureReference</value>
+  </data>
+  <data name="ErrorNotHashtable" xml:space="preserve">
+    <value>Parameters is not of type Hashtable</value>
+  </data>
+  <data name="ErrorNotXmlDataDocument" xml:space="preserve">
+    <value>Data is not of type XmlDataDocument</value>
+  </data>
+  <data name="ErrorNameNotString" xml:space="preserve">
+    <value>Name is not string</value>
+  </data>
+  <data name="ErrorEntityIdNotGuid" xml:space="preserve">
+    <value>EntityId is not Guid</value>
+  </data>
+  <data name="ErrorPathNotString" xml:space="preserve">
+    <value>Path is not of type string</value>
+  </data>
+  <data name="ErrorNotXmlDocument" xml:space="preserve">
+    <value>Data is not of type XmlDocument</value>
+  </data>
+  <data name="ErrorNotBlob" xml:space="preserve">
+    <value>Data is not of type Blob</value>
+  </data>
+  <data name="ErrorServerNotString" xml:space="preserve">
+    <value>Server is not of type string</value>
+  </data>
+  <data name="ErrorPortNotInt" xml:space="preserve">
+    <value>Port is not of type int</value>
+  </data>
+  <data name="ErrorMailServerNotString" xml:space="preserve">
+    <value>MailServer is not of type string</value>
+  </data>
+  <data name="ErrorPasswordNotString" xml:space="preserve">
+    <value>Password is not of type string</value>
+  </data>
+  <data name="ErrorSMSDataNotBuffer" xml:space="preserve">
+    <value>SMS data not found in the buffer</value>
+  </data>
+  <data name="ErrorNoPosition" xml:space="preserve">
+    <value>Could not get phone message position</value>
+  </data>
+  <data name="ErrorBufferNotXmlDataDocument" xml:space="preserve">
+    <value>Buffer must be of type XmlDataDocument</value>
+  </data>
+  <data name="ErrorArgumentsNotString" xml:space="preserve">
+    <value>Arguments is not of type string</value>
+  </data>
+  <data name="ErrorTimeoutNotInt" xml:space="preserve">
+    <value>Timeout is not of type int</value>
+  </data>
+  <data name="ErrorReportNotGuid" xml:space="preserve">
+    <value>Report is not of type Uniqueidentifier</value>
+  </data>
+  <data name="ErrorPrinterNameNotString" xml:space="preserve">
+    <value>PrinterName is not string.</value>
+  </data>
+  <data name="ErrorCopiesNotInt" xml:space="preserve">
+    <value>Copies is not integer.</value>
+  </data>
+  <data name="ErrorFormatNotString" xml:space="preserve">
+    <value>Format is not string.</value>
+  </data>
+  <data name="ErrorOpenPort" xml:space="preserve">
+    <value>Cannot open port {0}.{1}</value>
+  </data>
+  <data name="ErrorSPConnectTimeout" xml:space="preserve">
+    <value>Timeout expired while connecting to the serial port.</value>
+  </data>
+  <data name="ErrorUnknownOutputEndType" xml:space="preserve">
+    <value>Unknown outputEndType</value>
+  </data>
+  <data name="ErrorSPComTimeout" xml:space="preserve">
+    <value>Timeout expired while waiting for the serial port communication</value>
+  </data>
+  <data name="ErrorCommandNotString" xml:space="preserve">
+    <value>Command must be string</value>
+  </data>
+  <data name="ErrorSettingsNotString" xml:space="preserve">
+    <value>Settings must be string</value>
+  </data>
+  <data name="ErrorOutputEndTypeNotInt" xml:space="preserve">
+    <value>OutputEndType must be integer</value>
+  </data>
+  <data name="ErrorInvalidPhoneNumber" xml:space="preserve">
+    <value>Invalid destination phone number.</value>
+  </data>
+  <data name="ErrorMessageTooLong" xml:space="preserve">
+    <value>The length of the text message cannot be greater than 160 characters.</value>
+  </data>
+  <data name="ErrorDataTooBig" xml:space="preserve">
+    <value>The size of the data cannot be greater than 140 bytes.</value>
+  </data>
+  <data name="ErrorIndexProperty" xml:space="preserve">
+    <value>The Index property must be an integer greater than zero.</value>
+  </data>
+  <data name="ErrorInvalidStatus" xml:space="preserve">
+    <value>Invalid value for Status property.</value>
+  </data>
+  <data name="ErrorInvalidMessageType" xml:space="preserve">
+    <value>Invalid message type. Only strings and byte arrays are allowed.</value>
+  </data>
+  <data name="ErrorEncode" xml:space="preserve">
+    <value>Cannot encode user data into octet sequence.</value>
+  </data>
+  <data name="ErrorInvalidLengthValue" xml:space="preserve">
+    <value>Invalid SMSC-INFO-LENGTH value.</value>
+  </data>
+  <data name="ErrorUnexpectedFormat" xml:space="preserve">
+    <value>Unexpected format for SMSC number.</value>
+  </data>
+  <data name="ErrorPduParameter" xml:space="preserve">
+    <value>The pdu parameter is not an SMS-DELIVER PDU.</value>
+  </data>
+  <data name="ErrorTpPid" xml:space="preserve">
+    <value>The PDU's TP-PID field must have the value 0x00.</value>
+  </data>
+  <data name="ErrorLengthMatch" xml:space="preserve">
+    <value>The length of the message (byte array) does not match the value USER-DATA-LENGTH field.</value>
+  </data>
+  <data name="ErrorParsePdu" xml:space="preserve">
+    <value>There was an error parsing the PDU (byte array).</value>
+  </data>
+  <data name="ErrorConvertOctet" xml:space="preserve">
+    <value>Cannot convert octet sequence into text message.</value>
+  </data>
+  <data name="ErrorDecodePhoneNumber" xml:space="preserve">
+    <value>Cannot decode phone number from semi-octet sequence.</value>
+  </data>
+  <data name="ErrorDecodeTimeStamp" xml:space="preserve">
+    <value>Cannot decode time stamp from semi-octed sequence.</value>
+  </data>
+  <data name="ErrorEvenNumber" xml:space="preserve">
+    <value>The length of the hexadecimal string passed to the ConvertToByteArray method must be an even number.</value>
+  </data>
+  <data name="ErrorConvertHexString" xml:space="preserve">
+    <value>Cannot convert hex string to byte array.</value>
+  </data>
+  <data name="ErrorConvertArray" xml:space="preserve">
+    <value>Cannot convert byte array to hex string.</value>
+  </data>
+  <data name="ErrorXslScriptNotGuid" xml:space="preserve">
+    <value>XslScript is not of type Guid</value>
+  </data>
+  <data name="ErrorWorkflowDefinition" xml:space="preserve">
+    <value>Workflow definition not found.</value>
+  </data>
+  <data name="ErrorWorkflowContext" xml:space="preserve">
+    <value>Context not found for the workflow '{0}'</value>
+  </data>
+  <data name="ErrorWorkflowNotGuid" xml:space="preserve">
+    <value>Workflow must be guid</value>
+  </data>
+  <data name="ErrorSourceContextNotXmlDocument" xml:space="preserve">
+    <value>Source context store is not XmlDocument. Cannot perform for-each operation.</value>
+  </data>
+  <data name="ErrorNoEndRule" xml:space="preserve">
+    <value>End rule not specified for step {0}</value>
+  </data>
+  <data name="ErrorNoContextStore" xml:space="preserve">
+    <value>ContextSore not set: {0}</value>
+  </data>
+  <data name="ErrorUnknowWorkflow" xml:space="preserve">
+    <value>Unknown type of workflow property</value>
+  </data>
+  <data name="ErrorWhenCommit" xml:space="preserve">
+    <value>Exception occured while commiting the transaction. Data are in an unknown state now.{0}</value>
+  </data>
+  <data name="ErrorRollBackFailed" xml:space="preserve">
+    <value>Storno transakce se nezdařilo.</value>
+  </data>
+  <data name="ErrorContextEmpty" xml:space="preserve">
+    <value>Context empty. Cannot display form.</value>
+  </data>
+  <data name="ErrorNoResultData" xml:space="preserve">
+    <value>Result data not set.</value>
+  </data>
+  <data name="ErrorUserCanceled" xml:space="preserve">
+    <value>Úkol byl přerušen uživatelem.</value>
+  </data>
+  <data name="ErrorContextEvalFailed" xml:space="preserve">
+    <value>Context evaluation failed for '{0}'</value>
+  </data>
+  <data name="ErrorUnknownAccessMode" xml:space="preserve">
+    <value>Unknown file access mode.</value>
+  </data>
+  <data name="ErrorInvalidConnectionString" xml:space="preserve">
+    <value>Invalid connection string.</value>
+  </data>
+  <data name="ErrorNoPath" xml:space="preserve">
+    <value>Path not specified.</value>
+  </data>
+  <data name="ErrorNoSearchPattern" xml:space="preserve">
+    <value>Search pattern not specified.</value>
+  </data>
+  <data name="ErrorNoServer" xml:space="preserve">
+    <value>Server not specified.</value>
+  </data>
+  <data name="ErrorNoString" xml:space="preserve">
+    <value>Port not specified.</value>
+  </data>
+  <data name="ErrorMaxWorkQueueEntities" xml:space="preserve">
+    <value>Maximum number of Work Queue related entities is 7!</value>
+  </data>
+  <data name="ErrorNoFilterSet" xml:space="preserve">
+    <value>DataStructure {0} must contain filter set {1}!</value>
+  </data>
+  <data name="ErrorUnknownWorkQueueCommand" xml:space="preserve">
+    <value>Unknown Work Queue Command type.</value>
+  </data>
+  <data name="ErrorNoRecords" xml:space="preserve">
+    <value>Nebylo možné provést požadovaný povel. Nebyly načteny žádné záznamy, které by bylo možné změnit.</value>
+  </data>
+  <data name="ErrorSourceFieldNotFound" xml:space="preserve">
+    <value>V datovém zdroji nebylo nalezeno požadované pole. Zkontrolujte nastavení WorkQueue povelu.</value>
+  </data>
+  <data name="ErrorConvertToType" xml:space="preserve">
+    <value>Cannot convert value to the target data type: {0}. Check Work Queue configuration.</value>
+  </data>
+  <data name="ErrorUnknownWorkQueueCommandValue" xml:space="preserve">
+    <value>Unknown work queue command value type.</value>
+  </data>
+  <data name="ErrorUnknownQueueAdapter" xml:space="preserve">
+    <value>Unknown external work queue adapter. Cannot retrieve queue.</value>
+  </data>
+  <data name="OKMessage" xml:space="preserve">
+    <value>OK; {0} položek.</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Chyba: {0}</value>
+  </data>
+  <data name="ErrorUnexpectedIAsyncResult" xml:space="preserve">
+    <value>Unexpected IAsyncResult instance passed</value>
+  </data>
+  <data name="ErrorUnsupportedState" xml:space="preserve">
+    <value>State is not supported</value>
+  </data>
+  <data name="ErrorNoWorkflow" xml:space="preserve">
+    <value>Workflow not set</value>
+  </data>
+  <data name="ErrorNoHost" xml:space="preserve">
+    <value>Host not set</value>
+  </data>
+  <data name="ErrorNoXmlStore" xml:space="preserve">
+    <value>XML Store structure cannot be null.</value>
+  </data>
+  <data name="ErrorUnsupportedXmlStore" xml:space="preserve">
+    <value>Unsupported XML storage.</value>
+  </data>
+  <data name="ErrorStepFailed" xml:space="preserve">
+    <value>Selhalo vykonání kroku '{0}'{1}</value>
+  </data>
+  <data name="ErrorNoOutputContext" xml:space="preserve">
+    <value>Output context of task '{0}' is not set.</value>
+  </data>
+  <data name="ErrorBuildStateList" xml:space="preserve">
+    <value>State machine is defined for this field but current state is not defined in the state machine. Cannot build state list.</value>
+  </data>
+  <data name="ErrorChangeState" xml:space="preserve">
+    <value>{0} záznamu '{1}' nemůže přejít do stavu '{2}'. Současný stav: '{3}'.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition0" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateEntry je nutné zadat novou hodnotu pro přidání Work Queue.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition1" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateExit je nutné zadat původní hodnotu pro přidání Work Queue.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition2" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateTransition je nutné zadat původní hodnotu pro přidání Work Queue.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition3" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateEntry je nutné zadat novou hodnotu pro smazání Work Queue.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition4" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateTransition je nutné zadat novou hodnotu pro přidání Work Queue.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition5" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateExit je nutné zadat původní hodnotu pro smazání Work Queue.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition6" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateTransition je nutné zadat původní hodnotu pro smazání Work Queue.</value>
+  </data>
+  <data name="ErrorInvalidWorkQueueDefinition7" xml:space="preserve">
+    <value>Definice Work Queue {0} je neplatná. Pro StateTransition je nutné zadat novou hodnotu pro smazání Work Queue.</value>
+  </data>
+  <data name="ErrorStateMachineNotFound" xml:space="preserve">
+    <value>State machine not found. Cannot execute events.</value>
+  </data>
+  <data name="ErrorResultNotBool" xml:space="preserve">
+    <value>StateMachine operation rule resulted in a result which is not boolean. Cannot evaluate non-boolean rules. Operation: {0}</value>
+  </data>
+  <data name="ErrorNoUpdateField" xml:space="preserve">
+    <value>UpdatedField value not specified for the StateMachineEventType = ValueUpdated. Event: {0}</value>
+  </data>
+  <data name="ErrorNoTransaction" xml:space="preserve">
+    <value>No transaction specified for the state machine workflow. Cannot execute workflow.</value>
+  </data>
+  <data name="ErrorWorkflowUnspecified" xml:space="preserve">
+    <value>Workflow not specified. Cannot execute state machine event '{0}'.</value>
+  </data>
+  <data name="ErrorTwoValuesOneContext0" xml:space="preserve">
+    <value>State machine event parameter mapping would assign two different values to the same workflow context (Id: {0}).</value>
+  </data>
+  <data name="ErrorTwoValuesOneContext1" xml:space="preserve">
+    <value>Check state machine event '{0}'.</value>
+  </data>
+  <data name="ErrorWhenFormCheck" xml:space="preserve">
+    <value>Chyba při kontrole dat formuláře průvodce '{0}'</value>
+  </data>
+  <data name="ErrorsInForm1" xml:space="preserve">
+    <value>Data formuláře obsahují chyby. Zkontrolujte, prosím, data a znovu opakujte akci.</value>
+  </data>
+  <data name="ProcessFinished" xml:space="preserve">
+    <value>Proces dokončen.</value>
+  </data>
+  <data name="ButtonClose" xml:space="preserve">
+    <value>&amp;Zavřít</value>
+  </data>
+  <data name="ButtonRepeat" xml:space="preserve">
+    <value>&amp;Opakovat proces</value>
+  </data>
+  <data name="ProcessSteps" xml:space="preserve">
+    <value>Proces prošel následujícími kroky:</value>
+  </data>
+  <data name="FormLoading" xml:space="preserve">
+    <value>Načítá se formulář, vyčkejte prosím...</value>
+  </data>
+  <data name="WorkflowFinishedTitle" xml:space="preserve">
+    <value>Průvodce ukončen</value>
+  </data>
+  <data name="WorkflowReportTitle" xml:space="preserve">
+    <value>Hlášení průvodce '{0}'</value>
+  </data>
+  <data name="ErrorTaskNotRunning" xml:space="preserve">
+    <value>Task {0} is not running. Cannot abort task.</value>
+  </data>
+  <data name="ErrorNoWorkflowUI" xml:space="preserve">
+    <value>UIFormTask called but no WorkflowUI was specified</value>
+  </data>
+  <data name="ErrorStepNotImplemented" xml:space="preserve">
+    <value>Workflow step not implemented.</value>
+  </data>
+  <data name="ExcelFileNotFound" xml:space="preserve">
+    <value>Požadovaný soubor Excelu nebyl nalezen.</value>
+  </data>
+  <data name="ErrorReverseLookupNotSet" xml:space="preserve">
+    <value>Pro třídu pracovní fronty '{0}' nebylo nastaveno pole ReverseLookup. Nebylo možné přeložit hodnotu pole.</value>
+  </data>
+  <data name="ExcelSheetNotFound" xml:space="preserve">
+    <value>Požadovaný list v souboru Excelu neexistuje.</value>
+  </data>
+  <data name="ErrorUrlNotString" xml:space="preserve">
+    <value>Url musí být textový řetězec.</value>
+  </data>
+  <data name="ErrorMethodNotString" xml:space="preserve">
+    <value>Method musí být textový nebo řetězec nebo prázdná hodnota.</value>
+  </data>
+  <data name="ErrorRecordsLockedAlready" xml:space="preserve">
+    <value>Položky jsou  uzamčeny jiným procesem. Nelze zpracovat položky fronty zpráv.</value>
+  </data>
+  <data name="ErrorNoRecordsSelectedForAction" xml:space="preserve">
+    <value>Nebyly vybrány žádné záznamy, není možné spustit požadovaný povel.</value>
+  </data>
+</root>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+
+    <services>
+        <service-include file-path="remoting-config.xml" />
+        <service-include file-path="messaging-config.xml" />
+        <service-include file-path="data-management-config.xml" />
+        <service id="remoting-weborb-service"
+            class="Weborb.V3Types.Core.RemotingHandler"
+            messageTypes="flex.messaging.messages.RemotingMessage">
+            <adapters />
+
+            <default-channels>
+                <channel ref="weborb-rtmp"/>
+                <channel ref="air-nohttp"/>
+            </default-channels>
+
+            <destination id="MessagingDestination">
+                <properties>
+                    <source>*</source>
+                </properties>
+            </destination>   
+
+            <destination id="GenericAIRDestination">
+              <properties>
+                <source>*</source>
+              </properties>
+            </destination>     
+        </service>        
+    </services>
+
+    <channels>
+        <channel-definition id="my-amf" class="mx.messaging.channels.AMFChannel">
+            <endpoint uri="weborb.aspx" class="flex.messaging.endpoints.AMFEndpoint"/>
+            <properties>
+                <polling-enabled>false</polling-enabled>
+            </properties>
+        </channel-definition>
+        
+        <channel-definition id="amf-sessionactivation" class="mx.messaging.channels.AMFChannel">
+            <endpoint uri="weborb.aspx?activate=session" class="flex.messaging.endpoints.AMFEndpoint"/>
+            <properties>
+                <polling-enabled>false</polling-enabled>
+            </properties>
+        </channel-definition>
+
+        <channel-definition id="amf-singletonactivation" class="mx.messaging.channels.AMFChannel">
+            <endpoint uri="weborb.aspx?activate=application" class="flex.messaging.endpoints.AMFEndpoint"/>
+            <properties>
+                <polling-enabled>false</polling-enabled>
+            </properties>
+        </channel-definition>        
+
+        <channel-definition id="my-secure-amf" class="mx.messaging.channels.SecureAMFChannel">
+            <endpoint uri="weborb.aspx" class="flex.messaging.endpoints.SecureAMFEndpoint"/>
+        </channel-definition>
+
+        <channel-definition id="weborb-rtmp" class="weborb.messaging.WeborbMessagingChannel">
+            <endpoint uri="rtmp://{server.name}:2037" />
+        </channel-definition>
+        
+        <channel-definition id="air-http" class="mx.messaging.channels.AMFChannel">
+            <endpoint uri="http://localhost:80/weborb30/weborb.aspx" class="flex.messaging.endpoints.AMFEndpoint"/>
+              <properties>
+                 <polling-enabled>false</polling-enabled>
+              </properties>
+        </channel-definition>
+
+    <channel-definition id="air-nohttp" class="weborb.messaging.WeborbMessagingChannel">
+              <endpoint uri="rtmp://localhost:2037"/>
+        </channel-definition>
+    </channels>
+    
+</services-config>

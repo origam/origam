@@ -1,0 +1,525 @@
+/*	---------------------------------------------------------------------- */
+/*	
+	Name: origamlogin
+	Date: September 2012
+	Description: CSS for selected Browsers
+	Version: 1.0
+	Author: Daniel Baumgartner
+	Autor URI: icontel.com
+*/
+/*	---------------------------------------------------------------------- */
+
+
+/*	---------------------------------------------------------------------- */
+/* 	colors
+	
+	Grey5: #626466 ----- rgba(98,100,102,1)
+	Grey4: #909294 ----- rgba(144,146,148,1)
+	Grey3: #B9BBBD ----- rgba(185,187,189,1)
+	Grey2: #E0E2E4 ----- rgba(224,226,228,1)
+	Grey1: #F3F5F6 ----- rgba(243,245,247,1)
+	
+*/
+/*	---------------------------------------------------------------------- */
+
+/* Imports */
+@import url("reset.css");
+/*	---------------------------------------------------------------------- */
+/* 	global */
+/*	---------------------------------------------------------------------- */
+
+body {
+	background-color: #4C4C4C;
+	/* background-image: url(../assets/backgroundfocus.png);
+	background-repeat: no-repeat; 
+	background-position: top center; */
+	color: #FFFFFF;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 150%;
+	text-align: left;
+}
+/*	---------------------------------------------------------------------- */
+/* 	fonts */
+/*	---------------------------------------------------------------------- */
+
+/* Headings */
+h1, h2 {
+	text-transform: uppercase;
+	color: #8a98c5;
+	display: block;
+}
+h1 {
+	text-align: center;
+	border-bottom: 2px solid #666666;
+	font-size: 1.4em;
+	line-height: 110%;
+	margin-bottom: 1em;
+	padding-bottom: 0.5em;
+}
+h2 {
+	font-size: 1.1em;
+	margin: 1em auto;
+}
+/* Anchors */
+a, a:visited, a img, a img:visited {
+	color: #FFFFFF;
+	cursor: pointer;
+	text-decoration: none;
+	font-style: normal;
+	-webkit-transition: ease-out;
+	-webkit-transition-duration: 0.3s;
+	-webkit-transition-timing-function: ease-out;
+	-webkit-transition-delay: initial;
+	-moz-transition: ease-out;
+	-moz-transition-duration: 0.3s;
+	-moz-transition-timing-function: ease-out;
+	-moz-transition-delay: initial;
+	-o-transition: ease-out;
+	-o-transition-duration: 0.3s;
+	-o-transition-timing-function: ease-out;
+	-o-transition-delay: initial;
+	-ms-transition: ease-out;
+	-ms-transition-duration: 0.3s;
+	-ms-transition-timing-function: ease-out;
+	-ms-transition-delay: initial;
+	transition: ease-out;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-out;
+	transition-delay: initial;
+}
+a:hover, a:active { text-decoration: underline; }
+a img { border: none; }
+a img:hover, a img:active {
+	border: none;
+	-ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0.7)";
+	filter: alpha(opacity=0.7);
+	opacity: 0.7;
+	-webkit-transition: all 0.2s ease-in-out 0.2s;
+	-moz-transition: all 0.2s ease-in-out 0.2s;
+	-o-transition: all 0.2s ease-in-out 0.2s;
+	-ms-transition: all 0.2s ease-in-out 0.2s;
+	transition: all 0.2s ease-in-out 0.2s;
+}
+a:focus {
+	-moz-outline-style: none;
+	outline: none;
+}
+
+a.linknormal 
+{
+    text-decoration: underline;
+}
+/* Paragraphs */
+p { margin-bottom: 2.5em; }
+p.nobreak, .ui-accordion-content p { margin-bottom: 0; }
+strong, b { }
+em, i { font-style: italic; }
+/* Lists */
+
+/* lines */
+ul, ol {
+	list-style: none;
+	padding: 0;
+	margin-bottom: 10px;
+}
+li {
+	display: block;
+	margin: 0.2em 0;
+}
+::selection {
+	background: #F3F5F6;
+	color: #000;
+}
+::-moz-selection {
+ background: #F3F5F6;
+ color: #000;
+}
+::-webkit-selection {
+ background: #F3F5F6;
+ color: #000;
+}
+/*	---------------------------------------------------------------------- */
+/* 	layout */
+/*	---------------------------------------------------------------------- */
+
+.wrapper {
+	margin: 0 auto;
+	position: relative;
+	width: 210px;
+	padding: 0 20px;
+}
+#container_content_admin.wrapper { width: 310px; }
+
+/*	---------------------------------------------------------------------- */
+/* 	main elements */
+#container_user {
+	position: fixed;
+	right: 25px;
+	top: 25px;
+}
+#container_systemAdmin_navigation {
+	position: fixed;
+	top: 25px;
+	right: 25px;
+	text-shadow: 0 1px 0 #E0E2E4;
+}
+#container_logo {
+	height: 210px;
+	margin-top: 100px;
+	margin-bottom: 50px;
+}
+#container_content { text-align: center; }
+#container_content_admin {
+	text-align: center;
+}
+#container_footer {
+	height: 65px;
+	margin-top: 100px;
+}
+/*	---------------------------------------------------------------------- */
+/* 	login page */
+#container_content input[type=text], #container_content input[type=password] {
+	-webkit-transition-duration: 600ms;
+	-webkit-transition-property: background;
+	-moz-transition-duration: 600ms;
+	-moz-transition-property: background;
+	-o-transition-duration: 600ms;
+	-o-transition-property: background;
+	transition-duration: 600ms;
+	transition-property: background;
+	background: #666666;
+	border: 1px solid #666666;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 1em;
+	margin: 0 0 12px 0;
+	padding: 10px 7px;
+	width: 194px;
+	color: #e5e5e5;
+}
+#container_content input[type=text]:hover, #container_content input[type=password]:hover {
+	-webkit-transition: background-color 0s ease 0s;
+	-moz-transition: background-color 0s ease 0s;
+	-o-transition: background-color 0s ease 0s;
+	transition: background-color 0s ease 0s;
+	background: #666666;
+	border: 1px solid #8a98c5;
+	color: #FFF;
+}
+#container_content input[type=text]:focus, #container_content input[type=password]:focus {
+	-webkit-transition: background-color 0s ease 0s;
+	-moz-transition: background-color 0s ease 0s;
+	-o-transition: background-color 0s ease 0s;
+	transition: background-color 0s ease 0s;
+	background-color: #8a98c5;
+	border: 1px solid #8a98c5;
+	color: #FFF;
+	outline: none;
+}
+#container_content input[type=text].errorfield, #container_content input[type=password].errorfield {
+	background: #6A4545;
+	border-color: #E3272A;
+	/* color: #E3272A; */
+}
+
+#container_content input[type=text].input-validation-error, #container_content input[type=password].input-validation-error {
+	background: #6A4545;
+	border-color: #E3272A;
+	/* color: #E3272A; */
+}
+
+a.btn {
+	background: none repeat scroll 0 0 #8a98c5;
+	border: none;
+	color: #FFFFFF;
+	display: inline-block;
+	font-weight: normal;
+	padding: 10px 20px 8px 20px;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	text-align: center;
+	margin: 10px auto;
+}
+a.btn:hover, a.btn:focus, a.btn:active {
+	background: none repeat scroll 0 0 #435ba3;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a.btn.login {
+	width: 115px;
+	padding: 10px 0 8px 0;
+	margin: 10px auto 30px auto;
+}
+input[type=submit] {
+	background: none repeat scroll 0 0 #8a98c5;
+	border: none;
+	color: #FFFFFF;
+	display: inline-block;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	padding: 10px 20px 8px 20px;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	text-align: center;
+	margin: 10px auto;
+	cursor: pointer;
+
+	-webkit-transition: ease-out;
+	-webkit-transition-duration: 0.3s;
+	-webkit-transition-timing-function: ease-out;
+	-webkit-transition-delay: initial;
+	-moz-transition: ease-out;
+	-moz-transition-duration: 0.3s;
+	-moz-transition-timing-function: ease-out;
+	-moz-transition-delay: initial;
+	-o-transition: ease-out;
+	-o-transition-duration: 0.3s;
+	-o-transition-timing-function: ease-out;
+	-o-transition-delay: initial;
+	-ms-transition: ease-out;
+	-ms-transition-duration: 0.3s;
+	-ms-transition-timing-function: ease-out;
+	-ms-transition-delay: initial;
+	transition: ease-out;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-out;
+	transition-delay: initial;
+
+
+}
+input[type=submit]:hover, input[type=submit]:focus, input[type=submit]:active {
+	background: none repeat scroll 0 0 #435ba3;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+input[type=submit].login {
+	width: 115px;
+	padding: 10px 0 8px 0;
+	margin: 10px auto 30px auto;
+}
+input[type=checkbox] {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+.helpbtn {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	background: url(../assets/helpHover.gif) no-repeat top center;
+}
+.adminbtn {
+	position: fixed;
+	top: 65px;
+	left: 10px;
+	background: url(../assets/adminHover.gif) no-repeat top center;
+}
+.helpbtn a img:hover, .helpbtn a img:active, .adminbtn a img:hover, .adminbtn a img:active {
+	-ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	opacity: 0;
+}
+
+.errorMessage {
+	color: #8a98c5;
+	font-size: 1.5em; 
+	font-weight: bold;
+	line-height: 1.2em; 
+	margin: 0 0 20px 0;
+}
+
+/*	---------------------------------------------------------------------- */
+/* 	admin */
+span.label {
+	width: 100%;
+	display: block;
+}
+#container_content_admin input[type=text], #container_content_admin input[type=password], #container_content_admin textarea {
+	-webkit-transition-duration: 600ms;
+	-webkit-transition-property: -webkit-box-shadow, background;
+	-moz-transition-duration: 600ms;
+	-moz-transition-property: -moz-box-shadow, background;
+	-o-transition-duration: 600ms;
+	-o-transition-property: -o-box-shadow, background;
+	transition-duration: 600ms;
+	transition-property: box-shadow, background;
+	background: #666666;
+	border: 1px solid #666666;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 1em;
+	margin: 0 0 12px 0;
+	padding: 7px;
+	width: 294px;
+	color: #e5e5e5;
+}
+#container_content_admin input[type=text]:hover, #container_content_admin input[type=password]:hover, #container_content_admin textarea:hover {
+	-webkit-transition: background-color 0s ease 0s;
+	-moz-transition: background-color 0s ease 0s;
+	-o-transition: background-color 0s ease 0s;
+	transition: background-color 0s ease 0s;
+	background: #666666;
+	border: 1px solid #8a98c5;
+	color: #FFF;
+}
+#container_content_admin input[type=text]:focus, #container_content_admin input[type=password]:focus, #container_content_admin textarea:focus {
+	-webkit-transition: background-color 0s ease 0s;
+	-moz-transition: background-color 0s ease 0s;
+	-o-transition: background-color 0s ease 0s;
+	transition: background-color 0s ease 0s;
+	background-color: #8a98c5;
+	border: 1px solid #8a98c5;
+	color: #FFF;
+	outline: none;
+}
+span.username {
+	margin-right: 30px;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	font-weight: bold;
+}
+#container_systemAdmin_navigation a {
+	margin-left: 25px;
+}
+#container_systemAdmin_navigation a.active {
+	font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#container_content_admin input[type=text].errorfield, #container_content_admin input[type=password].errorfield {
+	background: #6A4545;
+	border-color: #E3272A;
+	/* color: #E3272A; */
+}
+#container_content_admin form label {
+	display: block;
+    text-align: left;
+}
+
+/*	---------------------------------------------------------------------- */
+/* 	user list */
+
+#formPlaceHolder_adminPanel {
+	border-top: 1px solid #666666;
+    margin-top: 30px;
+}
+#formPlaceHolder_adminPanel h2 {
+	text-align: left;
+}
+ul.userList {
+	margin-bottom: 30px;
+}
+.userList li {
+	border-bottom: 1px solid #666666;
+	margin: 0;
+}
+.userList li a {
+	display: block;
+	padding: 0.5em;
+	text-decoration: none;
+	cursor: pointer;
+	text-align: left;
+}
+.userList li a:hover {
+	background: #8A98C5;
+	color: #FFF;
+}
+
+/* 	company list */
+
+ul.companyList {
+	margin-top: 30px;
+}
+.companyList li {
+	border-bottom: 1px solid #666666;
+	margin: 0;
+}
+.companyList li a {
+	display: block;
+	padding: 0.5em;
+	text-decoration: none;
+	cursor: pointer;
+}
+.companyList li a:hover {
+	background: #8A98C5;
+	color: #FFF;
+}
+
+input[type=submit].attachUser, input[type=submit].createAttachUser {
+	padding: 10px 9px 8px 8px;
+}
+
+a.backToList {
+	display: block;
+	margin: 20px 0 0 0;
+	text-align: right;
+}
+
+/*	---------------------------------------------------------------------- */
+
+/* 	footer */
+#footer_logo {
+	background: url(../assets/logo_hosting_bottom_active.png) no-repeat center;
+	width: 153px;
+	height: 30px;
+	margin: 0 auto;
+}
+#footer_logo a img:hover, #footer_logo a img:active {
+	border: none;
+	-ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0.0)";
+	filter: alpha(opacity=0.0);
+	opacity: 0.0;
+	-webkit-transition: all 0.2s ease-in-out 0.2s;
+	-moz-transition: all 0.2s ease-in-out 0.2s;
+	-o-transition: all 0.2s ease-in-out 0.2s;
+	-ms-transition: all 0.2s ease-in-out 0.2s;
+	transition: all 0.2s ease-in-out 0.2s;
+}
+/*	---------------------------------------------------------------------- */
+/* 	REMOVE FOR PRODUCTION */
+#container_remote {
+	position: fixed;
+	bottom: 10px;
+	left: 10px;
+	font-size: 0.8em;
+}
+#container_remote a {
+	display: block;
+	color: #666;
+	text-decoration: none;
+}
+#container_remote a:hover { color: #000; text-decoration: underline; }
+
+.validator {
+	color:#FFFFFF;
+	font-weight:bolder;
+	font-size:12pt;
+	background-image:url('/assets/star.png');
+	white-space:nowrap;
+	position: fixed;	
+	}
+
+/*
+.input {
+  margin: 5px 0;
+  background: white;
+  float: left;
+  clear: both;
+}
+*/
+.input span {
+  position: absolute;
+  padding: 7px;
+  margin-left: 3px;
+  color: #999;
+}
+/*
+.input input, .input textarea, .input select {
+  position: relative;
+  margin: 0;
+  border-width: 1px;
+  padding: 6px;
+  background: transparent;
+  font: inherit;
+}
+*/

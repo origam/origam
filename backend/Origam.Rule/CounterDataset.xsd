@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="CounterDataset" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="b9a9c301-d33c-4139-ad22-a10e8514e3d5">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="Counter" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Counter'" msprop:Id="4655bfe0-5e80-407c-aaf7-0e73265086ac" msprop:EntityId="0593c75d-3112-4eda-b4fd-2bf9bf6c82f1" msprop:IsAuditingEnabled="False">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CounterDetail" msdata:Locale="cs-CZ" msdata:DisplayExpression="'CounterDetail'" msprop:Id="04d7a8f1-10b2-4f2c-94fd-9f2a20987311" msprop:EntityId="927dd50b-1a42-4cc9-b427-69245216ac8c" msprop:IsAuditingEnabled="False" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <msdata:Relationship name="CounterDetail" msdata:parent="Counter" msdata:child="CounterDetail" msdata:parentkey="Id" msdata:childkey="refCounterId" />
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:attribute name="refCounterId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:Id="08e22bfe-69f5-4e24-878f-0188526ddc59" type="xs:string" use="required" />
+                  <xs:attribute name="Prefix" msprop:Id="74658e86-c13d-4c65-887b-06c893a9efb4">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="255" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="ValidFrom" msdata:Caption="Platí od" msprop:Id="e8b87f9a-9ab9-479b-bbf4-11908d299b14" type="xs:dateTime" />
+                  <xs:attribute name="CurrentPosition" msdata:Caption="Současná pozice" msprop:AllowNulls="False" msprop:Id="12805c26-2849-416c-8d76-51fa6470fde7" type="xs:int" use="required" />
+                  <xs:attribute name="Length" msdata:Caption="Délka čísla" msprop:AllowNulls="False" msprop:Id="25da68f5-2893-4e31-b0e4-53697477bb24" type="xs:int" use="required" />
+                  <xs:attribute name="Increment" msprop:AllowNulls="False" msprop:Id="7e5deb1c-43f8-4973-8545-71cc28457e79" type="xs:int" use="required" />
+                  <xs:attribute name="ValidTo" msdata:Caption="Platí do" msprop:Id="16b7ef84-5207-4d58-87a2-89fae8e1d6f9" type="xs:dateTime" />
+                  <xs:attribute name="CounterFrom" msdata:Caption="Od" msprop:AllowNulls="False" msprop:Id="4264cf78-6967-4c5c-a73b-8b5a06698f68" type="xs:int" use="required" />
+                  <xs:attribute name="CounterTo" msdata:Caption="Do" msprop:Id="f6ae7af3-c023-4fa2-993f-b4b0da2dc311" type="xs:int" />
+                  <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" type="xs:string" />
+                  <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" type="xs:string" />
+                  <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" type="xs:string" use="required" />
+                  <xs:attribute name="RecordCreated" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+                  <xs:attribute name="RecordUpdated" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+                  <xs:attribute name="Selected" msprop:AllowNulls="False" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="ReferenceCode" msdata:Caption="Kód" msprop:AllowNulls="False" msprop:Id="b4c0ec14-7b66-4ae5-84ca-91b42d9778b4" use="required">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="40" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="ManageValidityByDate" msdata:Caption="Spravovat platnost podle data" msprop:AllowNulls="False" msprop:Id="34341cdb-cad9-4150-bb2c-f778f58b2d0f" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+            <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" type="xs:string" />
+            <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" type="xs:string" />
+            <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" type="xs:string" use="required" />
+            <xs:attribute name="RecordCreated" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+            <xs:attribute name="RecordUpdated" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+            <xs:attribute name="Selected" msprop:AllowNulls="False" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="CounterDetail_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//CounterDetail" />
+      <xs:field xpath="@Id" />
+    </xs:unique>
+    <xs:unique name="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//Counter" />
+      <xs:field xpath="@Id" />
+    </xs:unique>
+    <xs:keyref name="FK_Counter" refer="PK_Id" msdata:ConstraintOnly="true" msdata:AcceptRejectRule="Cascade">
+      <xs:selector xpath=".//CounterDetail" />
+      <xs:field xpath="@refCounterId" />
+    </xs:keyref>
+  </xs:element>
+</xs:schema>

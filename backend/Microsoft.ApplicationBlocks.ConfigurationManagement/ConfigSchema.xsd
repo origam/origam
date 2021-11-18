@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ConfigSchema" elementFormDefault="unqualified" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="ApplicationConfigurationManagement">
+		<xs:sequence>
+			<xs:element name="configSection" type="ConfigSection" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="defaultSection" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="ConfigSection">
+		<xs:sequence>
+			<xs:element name="configCache" type="ConfigCache" minOccurs="0" maxOccurs="1" />
+			<xs:element name="configProvider" type="ConfigProvider" maxOccurs="1" minOccurs="1" />
+			<xs:element name="protectionProvider" type="ProtectionProvider" maxOccurs="1" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="ConfigProvider">
+		<xs:sequence>
+			<xs:any maxOccurs="1" minOccurs="0" processContents="skip" />
+		</xs:sequence>
+		<xs:attribute name="assembly" type="xs:string" use="required" />
+		<xs:attribute name="type" type="xs:string" use="required" />
+		<xs:attribute name="refreshOnChange" type="xs:boolean" />
+		<xs:attribute name="encrypted" type="xs:boolean" />
+		<xs:attribute name="signed" type="xs:boolean" />
+		<xs:anyAttribute processContents="skip" />
+	</xs:complexType>
+	<xs:complexType name="ProtectionProvider">
+		<xs:sequence>
+			<xs:any maxOccurs="1" minOccurs="0" processContents="skip" />
+		</xs:sequence>
+		<xs:attribute name="assembly" type="xs:string" use="required" />
+		<xs:attribute name="type" type="xs:string" use="required" />
+		<xs:attribute name="keyStore" type="xs:string" use="optional" />
+		<xs:attribute name="hashKeyRegistryPath" type="xs:string" use="optional" />
+		<xs:attribute name="hashKey" type="xs:string" use="optional" />
+		<xs:attribute name="symmetricKey" type="xs:string" use="optional" />
+		<xs:attribute name="symmetricKeyRegistryPath" type="xs:string" use="optional" />
+		<xs:attribute name="initializationVector" type="xs:string" use="optional" />
+		<xs:attribute name="initializationVectorRegistryKey" type="xs:string" use="optional" />
+		<xs:anyAttribute processContents="skip" />
+	</xs:complexType>
+	<xs:complexType name="ConfigCache">
+		<xs:sequence />
+		<xs:attribute name="enabled" type="xs:boolean" use="required" />
+		<xs:attribute name="refresh" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:element name="applicationConfigurationManagement" type="ApplicationConfigurationManagement"></xs:element>
+</xs:schema>

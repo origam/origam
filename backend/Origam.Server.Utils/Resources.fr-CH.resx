@@ -1,0 +1,473 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>Über</value>
+  </data>
+  <data name="AccountCreatedMessage" xml:space="preserve">
+    <value>Benutzerkonto wurde erfolgreich erstellt. Bestätigungsmail wurde versandt.</value>
+  </data>
+  <data name="AccountCreatedTitle" xml:space="preserve">
+    <value>Abgeschlossen.</value>
+  </data>
+  <data name="AdministrationTitle" xml:space="preserve">
+    <value>Verwaltung</value>
+  </data>
+  <data name="Attach" xml:space="preserve">
+    <value>Anhängen</value>
+  </data>
+  <data name="AttachUser" xml:space="preserve">
+    <value>Anwender anhängen</value>
+  </data>
+  <data name="AttachUserTitle" xml:space="preserve">
+    <value>Anwender anhängen</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Zurück zur Liste</value>
+  </data>
+  <data name="BackToStart" xml:space="preserve">
+    <value>Zurück zur Startseite</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="ChangedPasswordMailEnjoy" xml:space="preserve">
+    <value>Einen schönen Tag</value>
+  </data>
+  <data name="ChangedPasswordMailIntro" xml:space="preserve">
+    <value>Lieber Anwender, Ihr Passwort für SIMPLICOR (http://my.simplicor.com) wurde geändert. Falls nicht Sie diese Passwortänderung beantragt haben, senden Sie bitte eine Anfrage an support@simplicor.com.</value>
+  </data>
+  <data name="ChangedPasswordMailSignature" xml:space="preserve">
+    <value>SIMPLICOR-Team</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Passwort ändern</value>
+  </data>
+  <data name="ChangePasswordTitle" xml:space="preserve">
+    <value>Passwort ändern</value>
+  </data>
+  <data name="CompanyForm" xml:space="preserve">
+    <value>Firma:</value>
+  </data>
+  <data name="ConfirmNewPasswordForm" xml:space="preserve">
+    <value>Neues Passwort bestätigen:</value>
+  </data>
+  <data name="ConfirmPasswordForm" xml:space="preserve">
+    <value>Passwort bestätigen:</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Erzeugen</value>
+  </data>
+  <data name="CreateAndAttach" xml:space="preserve">
+    <value>Erzeugen und anhängen</value>
+  </data>
+  <data name="CreateAndAttachTitle" xml:space="preserve">
+    <value>Anwender erzeugen und anhängen</value>
+  </data>
+  <data name="CreateNewCompanyTitle" xml:space="preserve">
+    <value>Neue Firma erzeugen</value>
+  </data>
+  <data name="CreateNewUser" xml:space="preserve">
+    <value>Neuen Anwender erzeugen</value>
+  </data>
+  <data name="CreateUserMailEnjoy" xml:space="preserve">
+    <value>Warum erhalten Sie diese E-Mail?
+Sie oder jemand anderes hat auf my.simplicor.com ein Benutzerkonto erzeugt. SIMPLICOR ist ein Ort, wo Geschäftsanwendungen schnell erstellt und betrieben werden können.
+
+Haben Sie Fragen oder Wünsche, können Sie diese an unser Supportteam senden: support@simplicor.com.</value>
+  </data>
+  <data name="CreateUserMailIntro" xml:space="preserve">
+    <value>Lieber Neuanwender,
+
+für Ihre SIMPLICOR-Anwendungen (http://my.simplicor.com) wurde ein neues Konto für Sie erstellt. Wir werden Ihnen Ihre Login-Informationen zusenden.</value>
+  </data>
+  <data name="CreateUserMailSignature" xml:space="preserve">
+    <value>SIMPLICOR-Team</value>
+  </data>
+  <data name="CreateUserMailSubject" xml:space="preserve">
+    <value>Willkommen bei SIMPLICOR!</value>
+  </data>
+  <data name="CreatingCompany" xml:space="preserve">
+    <value>Neue Firma wird erzeugt... Kann einige Zeit dauern...</value>
+  </data>
+  <data name="DeleteCompany" xml:space="preserve">
+    <value>Firma löschen</value>
+  </data>
+  <data name="DetachUser" xml:space="preserve">
+    <value>Anwender trennen</value>
+  </data>
+  <data name="EmailForm" xml:space="preserve">
+    <value>E-Mail:</value>
+  </data>
+  <data name="EnterCompanyName" xml:space="preserve">
+    <value>Firmennamen eingeben</value>
+  </data>
+  <data name="EnterUserInfo" xml:space="preserve">
+    <value>Benuzterinformationen eingeben</value>
+  </data>
+  <data name="EnterUserName" xml:space="preserve">
+    <value>Geben Sie Ihren Benutzernamen ein, um Ihr Passwort zu erhalten.</value>
+  </data>
+  <data name="FirstNameForm" xml:space="preserve">
+    <value>Vorname:</value>
+  </data>
+  <data name="GoToAdministration" xml:space="preserve">
+    <value>Gehen Sie in "Verwaltung"</value>
+  </data>
+  <data name="InfoAboutSimplicor" xml:space="preserve">
+    <value>Über SIMPLICOR</value>
+  </data>
+  <data name="JoinSimplicor" xml:space="preserve">
+    <value>SIMPLICOR beitreten</value>
+  </data>
+  <data name="LoginTitle" xml:space="preserve">
+    <value>SIMPLICOR-Hosting</value>
+  </data>
+  <data name="NewPasswordForm" xml:space="preserve">
+    <value>Neues Passwort:</value>
+  </data>
+  <data name="NewPasswordMatchError" xml:space="preserve">
+    <value>Die Bestätigung des neuen Passworts muss mit dem neuen Passwort übereinstimmen.</value>
+  </data>
+  <data name="NewPasswordRequired" xml:space="preserve">
+    <value>Neues Passwort wird verlangt.</value>
+  </data>
+  <data name="DuplicateUserName" xml:space="preserve">
+    <value>Bitte anderen Benutzernamen eingeben. </value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>Die eingegebene E-Mail Adresse wird schon verwendet. Bitte eine andere E-Mail Adresse eingeben. </value>
+  </data>
+  <data name="InvalidPassword" xml:space="preserve">
+    <value>Passwort mit mindestens 7 Zeichen, davon 1 Sonderzeichen </value>
+  </data>
+  <data name="NewsFeedHeadline" xml:space="preserve">
+    <value>News-Feed</value>
+  </data>
+  <data name="OwnedCompanies" xml:space="preserve">
+    <value>Eingene Firmen</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="PasswordChanged" xml:space="preserve">
+    <value>Passwortänderung abgeschlossen</value>
+  </data>
+  <data name="PasswordForm" xml:space="preserve">
+    <value>Mot de passe:</value>
+  </data>
+  <data name="PasswordMatchError" xml:space="preserve">
+    <value>Die Bestätigung des Passworts muss mit dem Passwort übereinstimmen.</value>
+  </data>
+  <data name="PasswordSent" xml:space="preserve">
+    <value>Ihr Passwort wurde Ihnen zugesandt.</value>
+  </data>
+  <data name="RecoverPassword" xml:space="preserve">
+    <value>Passwort wieder herstellen</value>
+  </data>
+  <data name="RegisterHeadline" xml:space="preserve">
+    <value>Einschreiben</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registrieren</value>
+  </data>
+  <data name="SelectCompanyForm" xml:space="preserve">
+    <value>Firma auswählen:</value>
+  </data>
+  <data name="SelectCompanyTitle" xml:space="preserve">
+    <value>Firma auswählen</value>
+  </data>
+  <data name="ShowBackups" xml:space="preserve">
+    <value>Backups anzeigen</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>connecter</value>
+  </data>
+  <data name="SignInHeader" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="SignUpFor" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Slogan" xml:space="preserve">
+    <value>CRM/ERP um Ihnen die Arbeit zu erleichtern</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Absenden</value>
+  </data>
+  <data name="SurnameForm" xml:space="preserve">
+    <value>Nachname:</value>
+  </data>
+  <data name="SecurityQuestionForm" xml:space="preserve">
+    <value>Sicherheistfrage:</value>
+  </data>
+  <data name="SecurityAnswerForm" xml:space="preserve">
+    <value>Antwort:</value>
+  </data>
+  <data name="UserAlreadyAttached" xml:space="preserve">
+    <value>Der Anwender ist bereits mit der Firma verbunden.</value>
+  </data>
+  <data name="UserDoesntExist" xml:space="preserve">
+    <value>Anwender existiert nicht.</value>
+  </data>
+  <data name="UserInfoHeader" xml:space="preserve">
+    <value>Benutzerinformationen</value>
+  </data>
+  <data name="UserNameForm" xml:space="preserve">
+    <value>Nom d’utilisateur:</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>Benutzername ist erforderlich.</value>
+  </data>
+  <data name="UserRoleForm" xml:space="preserve">
+    <value>Eigenschaft:</value>
+  </data>
+  <data name="UserRoleRequired" xml:space="preserve">
+    <value>Benutzereigenschaft ist erforderlich.</value>
+  </data>
+  <data name="UsersSection" xml:space="preserve">
+    <value>Anwender</value>
+  </data>
+  <data name="WelcomeHeadline" xml:space="preserve">
+    <value>Willkommen</value>
+  </data>
+  <data name="YourPasswordWasChanged" xml:space="preserve">
+    <value>Ihr Passwort wurde geändert. Eine Bestätigungsmail wurde an Ihre Adresse geschickt.</value>
+  </data>
+  <data name="EmailInvalid" xml:space="preserve">
+    <value>Ungültige E-Mail-Adresse.</value>
+  </data>
+  <data name="ShowFullScreen" xml:space="preserve">
+    <value>Volle Bildschirmgrösse anzeigen</value>
+  </data>
+  <data name="FullScreenTitle" xml:space="preserve">
+    <value>Volle Bildschirmgrösse</value>
+  </data>
+  <data name="MessageForm" xml:space="preserve">
+    <value>Nachrichten an den Anwender:</value>
+  </data>
+  <data name="ReportProblemMailOpening" xml:space="preserve">
+    <value>Dies ist eine ORIGAM Fehlermeldung von Benutzer {0}.</value>
+  </data>
+  <data name="UserCreatedHeader" xml:space="preserve">
+    <value>Benutzerkonto wurde erfolgreich angelegt.</value>
+  </data>
+  <data name="UserCreatedText" xml:space="preserve">
+    <value>Benutzerkonto wurde im System angelegt. Zur Aktivierung bitte auf den Link in der zugestellen E-Mail klicken.</value>
+  </data>
+  <data name="UserRegisteredMailActivationInfo" xml:space="preserve">
+    <value>Die Einrichtung Ihres Benutzerkontos ist fast fertig. Bevor Sie sich zum ersten Mal anmelden können, müssen Sie</value>
+  </data>
+  <data name="UserRegisteredMailActivationInfoClickthru" xml:space="preserve">
+    <value>hier klicken um Ihr Konto zu verifizieren.</value>
+  </data>
+  <data name="UserRegisteredMailIntro" xml:space="preserve">
+    <value>Sehr geehrter Benutzer, ein neues ORIGAM Benutzerkonto wurde soben für Sie angelegt.</value>
+  </data>
+  <data name="UserRegisteredMailSupport" xml:space="preserve">
+    <value>Bitte kontaktieren Sie uns, falls Sie Probleme mit der Registration haben. Senden Sie uns eine Antwort auf diese E-Mail.</value>
+  </data>
+  <data name="UserRegisteredMail_Subject" xml:space="preserve">
+    <value>Willkommen bei ORIGAM</value>
+  </data>
+  <data name="VerifyNewUser_accountApproved" xml:space="preserve">
+    <value>Ihr Benutzerkonto wurde freigeschaltet. Bitte</value>
+  </data>
+  <data name="VerifyNewUser_alreadyActivated" xml:space="preserve">
+    <value>Das angegebene Benutzerkonto wurde schon aktiviert.</value>
+  </data>
+  <data name="VerifyNewUser_header" xml:space="preserve">
+    <value>Überprüfung des Benutzerkontos.</value>
+  </data>
+  <data name="VerifyNewUser_loginHere" xml:space="preserve">
+    <value>Hier anmelden.</value>
+  </data>
+  <data name="YourAccount" xml:space="preserve">
+    <value>Ihr Benutzerkonto</value>
+  </data>
+  <data name="UserRegisteredMail_Enjoy" xml:space="preserve">
+    <value>Wir wünschen Ihnen einen schönen Tag</value>
+  </data>
+  <data name="UserRegisteredMail_Signature" xml:space="preserve">
+    <value>ORIGAM Team</value>
+  </data>
+  <data name="LoginFailed" xml:space="preserve">
+    <value>Anmeldung fehlgeschlagen. Bitte versuchen Sie es nochmals.</value>
+  </data>
+  <data name="ChangedPasswordMailSubject" xml:space="preserve">
+    <value>Passwort zurücksetzen</value>
+  </data>
+  <data name="FailedToSendPassword" xml:space="preserve">
+    <value>Das Passwort wurde geändert, aber die E-Mail mit dem neuen Passwort konnte nicht zugestellt werden. Bitte kontaktieren Sie den Systemadministrator.</value>
+  </data>
+  <data name="FailedToRecoverPassword" xml:space="preserve">
+    <value>Passwort konnte nicht zurück gesetzt werden. Bitte kontaktieren Sie den Administrator.</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="InvalidCode" xml:space="preserve">
+    <value>Ungültiger Code.</value>
+  </data>
+  <data name="EmailConfirmed" xml:space="preserve">
+    <value>E-Mail ist bestätigt.</value>
+  </data>
+  <data name="ConfirmationCode" xml:space="preserve">
+    <value>Bestätigungs-Code</value>
+  </data>
+  <data name="InvalidRequest" xml:space="preserve">
+    <value>Ungültige Anfrage</value>
+  </data>
+  <data name="ApplicationSetupAlready" xml:space="preserve">
+    <value>Die Applikation ist schon eingerichtet.</value>
+  </data>
+  <data name="NewUserRegistrationMailSent" xml:space="preserve">
+    <value>Erfolgreich registriert. Eine E-Mail mit einem Aktivierungslink wurde an Ihre E-Mail Adresse gesandt.</value>
+  </data>
+  <data name="PasswordResetHeadline" xml:space="preserve">
+    <value>Passwort für Benutzer {0} zurücksetzen</value>
+  </data>
+  <data name="PasswordResetSuccess" xml:space="preserve">
+    <value>Das Passwort wurde erfolgreich geändert.</value>
+  </data>
+  <data name="FailedToGeneratePasswordResetToken" xml:space="preserve">
+    <value>Das Passwort konnte nicht zurück gesetzt werden. Bitte kontaktieren Sie den Administrator.</value>
+  </data>
+  <data name="InvokeResetPassword_Headline" xml:space="preserve">
+    <value>Passwort zurücksetzen</value>
+  </data>
+  <data name="ResetPassword_LinkFromLoginScreen" xml:space="preserve">
+    <value>Passwort vergessen?</value>
+  </data>
+  <data name="EmptyMenuNoAccess" xml:space="preserve">
+    <value>Aufgrund ihrer Berechtigung stehen keine Elemente zur Verfügung. Kontaktieren Sie den Systemadministrator.</value>
+  </data>
+  <data name="No2FAProvider" xml:space="preserve">
+    <value>2-Faktor-Authentifizierung ist erforderlich, jedoch steht der zweite Faktor-Provider nicht zur Verfügung. Bitte kontaktieren Sie den Systemadministrator.</value>
+  </data>
+</root>

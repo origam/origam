@@ -1,0 +1,1 @@
+The password of server.pfx is 'test' [without the quotes].

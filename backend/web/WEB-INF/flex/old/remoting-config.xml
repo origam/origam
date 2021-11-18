@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="remoting-service"
+    class="Weborb.V3Types.Core.RemotingHandler"
+    messageTypes="flex.messaging.messages.RemotingMessage">
+
+    <adapters />
+
+    <default-channels>
+        <channel ref="my-amf"/>
+        <channel ref="my-secure-amf"/>        
+    </default-channels>
+    
+    <destination id="computerinfo">
+        <properties>
+            <source>GettingStarted.Examples.ComputerInfoService</source>
+        </properties>
+    </destination>
+    
+    <destination id="autoupdater">
+        <properties>
+            <source>Weborb.Service.AutoUpdater</source>
+        </properties>
+    </destination>
+    
+    <destination id="ApplicationManager">
+        <properties>
+            <source>FlexStore.ApplicationManager.ProductFetcher</source>
+        </properties>
+    </destination>      
+
+    <destination id="WeborbSecurity">
+        <properties>
+            <source>Weborb.Management.SecurityService</source>
+        </properties>
+    </destination>   
+    
+    <destination id="WeborbManagement">
+        <properties>
+            <source>Weborb.Management.ManagementService</source>
+        </properties>
+    </destination>      
+
+    <destination id="WeborbConfiguration">
+        <properties>
+            <source>Weborb.Management.ConfigurationService</source>
+        </properties>
+    </destination>      
+    
+    <destination id="SecureTest">
+        <properties>
+            <source>Weborb.Examples.InvocationTests.SecureTest</source>
+        </properties>
+        <security>
+          <security-constraint>
+        <auth-method>Custom</auth-method>
+          <roles>
+            <role>administrator</role>
+          </roles>
+          </security-constraint>        
+        </security>        
+    </destination>      
+    
+    <destination id="AccountBalanceDestination">
+        <properties>
+            <source>Weborb.Examples.AccountBalance</source>
+        </properties>
+        <security>
+          <security-constraint>
+        <auth-method>Custom</auth-method>
+          <roles>
+            <role>examplesuser</role>
+          </roles>
+          </security-constraint>        
+        </security>        
+    </destination>          
+    
+    <destination id="WDMFCodeGen">
+        <properties>
+            <source>Weborb.Management.DataManagement.Codegen.AppHandler</source>
+        </properties>
+    </destination>     
+
+    <destination id="GenericDestination">
+        <properties>
+            <source>*</source>
+        </properties>
+    </destination>   
+    
+    <destination id="BusinessIntelligenceDestination">
+        <properties>
+            <source>Weborb.Management.RBIManagementService</source>
+        </properties>
+    </destination>    
+    
+    <destination channels="amf-sessionactivation" id="SessionGenericDestination">
+        <channels>
+          <channel ref="amf-sessionactivation" />
+        </channels>    
+        <properties>
+            <source>*</source>
+        </properties>
+    </destination>         
+
+    <destination channels="amf-singletonactivation" id="SingletonGenericDestination">
+        <channels>
+          <channel ref="amf-singletonactivation" />
+        </channels>    
+        <properties>
+            <source>*</source>
+        </properties>
+    </destination>                
+</service>

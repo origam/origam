@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/2015/model-persistence" xmlns="http://schemas.origam.com/2015/model-element" xmlns:p="http://schemas.origam.com/2015/package">
+  <FormControlSet name="Language" abstract="false" dataStructure="Root/DataStructure/__system/Language.origam#Language/a406c361-3f02-4947-90ef-f9d73228ed60" x:id="481e8542-6651-4045-8979-d79f2bb31b28" x:type="Origam.Schema.GuiModel.FormControlSet">
+    <ControlSetItem roles="" features="" isAlternative="false" requestSaveAfterChange="false" level="0" name="LanguageRootControl" abstract="false" widget="Root/Control/_Basic Controls/AsForm.origam#AsForm/ff32a695-c533-4262-87d6-e4cd4451e2c9" x:id="488f8ff4-5ab1-438e-9268-b214a6ffecf0" x:type="Origam.Schema.GuiModel.ControlSetItem">
+      <ControlSetItem roles="" features="" isAlternative="false" requestSaveAfterChange="false" level="0" name="AsPanel1" abstract="false" widget="Root/Control/Language.origam#Language/4445441a-d2b7-4e8a-b610-245397316f76" x:id="208cdb8d-ea8f-45cb-bab7-6cb8e877897c" x:type="Origam.Schema.GuiModel.ControlSetItem">
+        <PropertyValueItem intValue="0" boolValue="false" value="" name="MapTextRotationMember" abstract="false" propertyId="0688ff2b-b946-463f-9e87-069fa03387c9" x:id="cf25693c-a501-4bb4-9610-cd8044f197b3" x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem intValue="0" boolValue="false" value="" name="MapTextLocationMember" abstract="false" propertyId="1ca1946f-3b37-4c49-8443-10c1503dc76c" x:id="8afba476-ce1e-4c8c-b5e8-d3326b0e658d" x:type="Origam.Schema.GuiModel.PropertyValueItem" test="Test file blable" />
+      </ControlSetItem>
+      <PropertyValueItem intValue="15" boolValue="false" value="" name="Top" abstract="false" propertyId="2d33a742-193c-42b2-8a21-c8c6ccedfd6c" x:id="32a0b424-7fee-4d32-97f0-d6130619539f" x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+      <PropertyValueItem
+        value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;string&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&amp;gt;&#xD;&#xA;&amp;lt;ComponentBindings xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; /&amp;gt;&lt;/string&gt;"
+        propertyId="3cd32bca-fad9-49b4-8641-3ff4e77e567a"
+        name="ExtraControlBindings"
+        abstract="false"
+        x:id="221bf117-1afb-462e-8c38-5b66ad84c347"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        test="Test blable string" />
+    </ControlSetItem>
+  </FormControlSet>
+</x:file>

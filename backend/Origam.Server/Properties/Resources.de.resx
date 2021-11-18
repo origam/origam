@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BlobMaxSizeError" xml:space="preserve">
+    <value>Maximale Dateigrösse hat ({0} kB) überschritten.</value>
+  </data>
+  <data name="BlobNoFileSelected" xml:space="preserve">
+    <value>Keine Datei ausgewählt.</value>
+  </data>
+  <data name="BlobTooManyFilesSelected" xml:space="preserve">
+    <value>Sie können nicht mehr als 1 Datei auswählen.</value>
+  </data>
+  <data name="DefaultTooltipNoChange" xml:space="preserve">
+    <value>Datensatz wurde noch nicht verändert.</value>
+  </data>
+  <data name="DefaultTooltipRecordCreated" xml:space="preserve">
+    <value>Erstellt von &lt;b&gt;{0}&lt;/b&gt; am &lt;b&gt;{1}&lt;/b&gt;</value>
+  </data>
+  <data name="DefaultTooltipRecordUpdated" xml:space="preserve">
+    <value>Letztes Update von &lt;b&gt;{0}&lt;/b&gt; am &lt;b&gt;{1}&lt;/b&gt;</value>
+  </data>
+  <data name="ErrorAttachmentMaximumSize" xml:space="preserve">
+    <value>Maximale Grösse des Anhangs hat ({0} bytes) überschritten.</value>
+  </data>
+  <data name="ErrorAttachmentNoFile" xml:space="preserve">
+    <value>Fehler beim Laden des Anhangs: Keine Datei angegeben.</value>
+  </data>
+  <data name="ErrorAttachmentNotAvailable" xml:space="preserve">
+    <value>Anhang nicht verfügbar.</value>
+  </data>
+  <data name="ErrorAttachmentNotFoundInDb" xml:space="preserve">
+    <value>Anhang nicht verfügbar in der Datenbank.</value>
+  </data>
+  <data name="ErrorAttachmentNotFullyReceived" xml:space="preserve">
+    <value>Anhang nicht vollständig erhalten.</value>
+  </data>
+  <data name="ErrorAttachmentRetrieval" xml:space="preserve">
+    <value>Fehler beim Aufrufen des Anhangs.</value>
+  </data>
+  <data name="ErrorBlobRecordEmpty" xml:space="preserve">
+    <value>Leerer Datensatz, Datei kann nicht heruntergeladen werden.</value>
+  </data>
+  <data name="ErrorChangeUIMultipleRecords" xml:space="preserve">
+    <value>Auswahl mehrerer Datensätze für ChangeUI wird nicht unterstützt.</value>
+  </data>
+  <data name="ErrorCommandInProgress" xml:space="preserve">
+    <value>Die Daten werden von einer anderen Anfrage bearbeitet. Bitte warten Sie, bis die vorherige Anfrage beendet ist und wiederholen Sie die Aktion.</value>
+  </data>
+  <data name="ErrorDashboardViewNotFound" xml:space="preserve">
+    <value>Dashboard Ansicht nicht gefunden.</value>
+  </data>
+  <data name="ErrorExportNotAvailable" xml:space="preserve">
+    <value>Export nicht mehr verfügbar.</value>
+  </data>
+  <data name="ErrorFormNotSavedBeforeAction" xml:space="preserve">
+    <value>Sie müssen die Formulareinträge speichern, bevor Sie die aktuelle Aktion ausführen.</value>
+  </data>
+  <data name="ErrorInForm" xml:space="preserve">
+    <value>Formulareintrag enthält Fehler (einige Plichtfelder sind leer). Beheben Sie diese Fehler, bevor Sie weiterfahren.</value>
+  </data>
+  <data name="ErrorLoadingWorkQueueList" xml:space="preserve">
+    <value>Liste der Auftäge in der Warteschlange konnte nicht geladen werden.</value>
+  </data>
+  <data name="ErrorLogOut" xml:space="preserve">
+    <value>Sitzung nicht verfügbar. Ausloggen nicht möglich.</value>
+  </data>
+  <data name="ErrorMultipleRecordsParameters" xml:space="preserve">
+    <value>Modus wird nicht unterstützt. Parameter für das Auswählen von mehreren Datensätzen können nicht weitergereicht werden.</value>
+  </data>
+  <data name="ErrorNoRecordsSelectedForAction" xml:space="preserve">
+    <value>Keine Datensätze ausgewählt. Aktion kann nicht ausgeführt werden.</value>
+  </data>
+  <data name="ErrorOpenFormMultipleRecords" xml:space="preserve">
+    <value>Auswahl mehrerer Datensätze für OpenForm wir nicht unterstützt.</value>
+  </data>
+  <data name="ErrorRecordNotFound" xml:space="preserve">
+    <value>Tabellenzeile wird von der mitgelieferten ID nicht gefunden.</value>
+  </data>
+  <data name="ErrorRefreshReturnInvalid" xml:space="preserve">
+    <value>Ungültige Datenstruktur von {0} zurückgegeben für Aktion {1}.</value>
+  </data>
+  <data name="ErrorReportActionMultipleRecords" xml:space="preserve">
+    <value>Auswahl mehrerer Datensätze für ReportAction wird nicht unterstützt.</value>
+  </data>
+  <data name="ErrorReportNotAvailable" xml:space="preserve">
+    <value>Protokoll nicht mehr verfügbar.</value>
+  </data>
+  <data name="ErrorReportOpenFormMultipleRecords" xml:space="preserve">
+    <value>Auswahl mehrerer Datensätze für OpenForm/Report wird nicht unterstützt.</value>
+  </data>
+  <data name="ErrorSessionExpired" xml:space="preserve">
+    <value>Ihre Verbindung ist abgelaufen oder die Anwendung wurde neu gestartet. Bitte aktualisieren Sie Ihren Browser oder melden Sie sich erneut an.</value>
+  </data>
+  <data name="ErrorSessionNotFound" xml:space="preserve">
+    <value>Sitzung nicht gefunden: {0}</value>
+  </data>
+  <data name="ExportLimitExceeded" xml:space="preserve">
+    <value>Anzahl der exportierten Dateien hat die vom Administrator gesetzte Limite überschritten.</value>
+  </data>
+  <data name="WorkflowErrorTitle" xml:space="preserve">
+    <value>Fehler im Arbeitsablauf</value>
+  </data>
+  <data name="WorkflowFinished" xml:space="preserve">
+    <value>Arbeitsfluss wurde erfolgreich beendet</value>
+  </data>
+  <data name="WorkflowFinishedTitle" xml:space="preserve">
+    <value>Ende des Arbeitsflusses</value>
+  </data>
+  <data name="WorkQueueTitle" xml:space="preserve">
+    <value>Arbeitsvorrat</value>
+  </data>
+  <data name="ErrorCannotRefreshFormNotSaved" xml:space="preserve">
+    <value>Eingabe nicht gespeichert. Nicht gespeicherte Daten können nicht aktualisert werden.</value>
+  </data>
+  <data name="ErrorDataNotSavedWhileChangingRow" xml:space="preserve">
+    <value>Kritischer Fehler: Daten wurden während dem Ändern der aktuellen Zeile nicht gespeichert. Daten würden dadurch inkonsistent. Bitte Seite neu laden und nochmals versuchen.</value>
+  </data>
+  <data name="ErrorTreeHasChildrenCannotDelete" xml:space="preserve">
+    <value>Der Knoten kann nicht gelöscht werden. Bitte vorgängig alle Unterknoten löschen.</value>
+  </data>
+  <data name="ErrorTreeItemUsedCannotDelete" xml:space="preserve">
+    <value>Der Knoten kann nicht gelöscht werden, da er von anderen Daten verwendet wird.</value>
+  </data>
+  <data name="ErrorCreateRecordNotAllowed" xml:space="preserve">
+    <value>Fehlende Berechtigung zum Anlegen neuer Datensätze.</value>
+  </data>
+  <data name="ErrorWorkflowNotSet" xml:space="preserve">
+    <value>Workflow für die UIWorkflowAction nicht definiert.</value>
+  </data>
+  <data name="ErrorTooManyTabsOpen" xml:space="preserve">
+    <value>Zu viele Fenster geöffnet. Bitte schliessen Sie unbenötigte Reiter vor dem Öffnen neuer Fenster.</value>
+  </data>
+  <data name="ErrorPseudoparameterBodyNotDefined" xml:space="preserve">
+    <value>Pseudoparameter 'body' ist nicht als Paramter einer API Datenseite definiert, wurde aber in einem PUT Call verwendet.</value>
+  </data>
+  <data name="ErrorColumnNotFound" xml:space="preserve">
+    <value>Versuch, auf die im Datenset nicht vorhandene Reihe `{0}' zuzugreifen.</value>
+  </data>
+  <data name="ErrorDependentColumnNotFound" xml:space="preserve">
+    <value>Zeile `{0}' abhängig von Zeile `{1}' bei Entität `{2}', ({3}) konnte nicht aktualisiert werden.</value>
+  </data>
+</root>

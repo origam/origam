@@ -1,0 +1,2651 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+      Microsoft ResX Schema 
+      
+      Version 2.0
+      
+      The primary goals of this format is to allow a simple XML format 
+      that is mostly human readable. The generation and parsing of the 
+      various data types are done through the TypeConverter classes 
+      associated with the data types.
+      
+      Example:
+      
+      ... ado.net/XML headers & schema ...
+      <resheader name="resmimetype">text/microsoft-resx</resheader>
+      <resheader name="version">2.0</resheader>
+      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+      <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+      <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+      <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+          <value>[base64 mime encoded serialized .NET Framework object]</value>
+      </data>
+      <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+          <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+          <comment>This is a comment</comment>
+      </data>
+                  
+      There are any number of "resheader" rows that contain simple 
+      name/value pairs.
+      
+      Each data row contains a name, and value. The row also contains a 
+      type or mimetype. Type corresponds to a .NET class that support 
+      text/value conversion through the TypeConverter architecture. 
+      Classes that don't support this are serialized and stored with the 
+      mimetype set.
+      
+      The mimetype is used for serialized objects, and tells the 
+      ResXResourceReader how to depersist the object. This is currently not 
+      extensible. For a given mimetype the value must be set accordingly:
+      
+      Note - application/x-microsoft.net.object.binary.base64 is the format 
+      that the ResXResourceWriter will generate, however the reader can 
+      read any of the formats listed below.
+      
+      mimetype: application/x-microsoft.net.object.binary.base64
+      value   : The object must be serialized with 
+              : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+              : and then encoded with base64 encoding.
+      
+      mimetype: application/x-microsoft.net.object.soap.base64
+      value   : The object must be serialized with 
+              : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+              : and then encoded with base64 encoding.
+  
+      mimetype: application/x-microsoft.net.object.bytearray.base64
+      value   : The object must be serialized into a byte array 
+              : using a System.ComponentModel.TypeConverter
+              : and then encoded with base64 encoding.
+      -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="1_8_0001" xml:space="preserve">
+    <value>CREATE TABLE [DeploymentUpdateScriptActivity] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[SchemaVersionId] [uniqueidentifier] NOT NULL ,
+	[ActivityOrder] [int] NOT NULL 
+)</value>
+  </data>
+  <data name="1_8_0002" xml:space="preserve">
+    <value>ALTER TABLE [DeploymentUpdateScriptActivity] ADD 
+	CONSTRAINT [PK_DeploymentUpdateScriptActivity] PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id],
+		[SchemaVersionId]
+	)</value>
+  </data>
+  <data name="1_8_0003" xml:space="preserve">
+    <value>CREATE TABLE [DeploymentVersion] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[SchemaVersionId] [uniqueidentifier] NOT NULL ,
+	[Version] [nvarchar] (20)
+)</value>
+  </data>
+  <data name="1_8_0004" xml:space="preserve">
+    <value>ALTER TABLE [DeploymentVersion] ADD 
+	CONSTRAINT [PK_DeploymentVersion] PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id],
+		[SchemaVersionId]
+	)</value>
+  </data>
+  <data name="1_8_0005" xml:space="preserve">
+    <value>CREATE TABLE [MenuModelDataConstantReferenceMenuItem] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[SchemaVersionId] [uniqueidentifier] NOT NULL ,
+	[refDataConstantId] UNIQUEIDENTIFIER NOT NULL,
+	[refDataConstantSchemaVersionId] UNIQUEIDENTIFIER NOT NULL)</value>
+  </data>
+  <data name="1_8_0006" xml:space="preserve">
+    <value>ALTER TABLE [MenuModelDataConstantReferenceMenuItem] ADD 
+	CONSTRAINT [PK_MenuModelDataConstantReferenceMenuItem] PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id],
+		[SchemaVersionId]
+	)</value>
+  </data>
+  <data name="1_8_0007" xml:space="preserve">
+    <value>CREATE TABLE [DeploymentServiceCommandUpdateScriptActivity] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[SchemaVersionId] [uniqueidentifier] NOT NULL ,
+	[refServiceId] UNIQUEIDENTIFIER NOT NULL,
+	[refServiceSchemaVersionId] UNIQUEIDENTIFIER NOT NULL,
+	[CommandText] NTEXT NOT NULL)</value>
+  </data>
+  <data name="1_8_0008" xml:space="preserve">
+    <value>ALTER TABLE [DeploymentServiceCommandUpdateScriptActivity] ADD 
+	CONSTRAINT [PK_DeploymentServiceCommandUpdateScriptActivity] PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id],
+		[SchemaVersionId]
+	)</value>
+  </data>
+  <data name="1_8_0009" xml:space="preserve">
+    <value>CREATE TABLE [DeploymentFileRestoreUpdateScriptActivity] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[SchemaVersionId] [uniqueidentifier] NOT NULL ,
+	[File] IMAGE NOT NULL,
+	[ManualLocation] NVARCHAR(2000) NULL,
+	[TargetLocation] INT NOT NULL)</value>
+  </data>
+  <data name="1_8_0010" xml:space="preserve">
+    <value>ALTER TABLE [DeploymentFileRestoreUpdateScriptActivity] ADD 
+	CONSTRAINT [PK_DeploymentFileRestoreUpdateScriptActivity] PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id],
+		[SchemaVersionId]
+	)</value>
+  </data>
+  <data name="1_8_0011" xml:space="preserve">
+    <value>ALTER TABLE [EntityModelDataEntityColumn] ADD
+	[XmlMappingType] int NOT NULL CONSTRAINT DF_EntityModelDataEntityColumn_XmlMappingType DEFAULT 0</value>
+  </data>
+  <data name="1_8_0012" xml:space="preserve">
+    <value>ALTER TABLE [EntityModelDataEntityColumn]
+	DROP CONSTRAINT DF_EntityModelDataEntityColumn_XmlMappingType</value>
+  </data>
+  <data name="1_8_0013" xml:space="preserve">
+    <value>CREATE TABLE [WorkflowModelTransactionWorkflowBlock] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[SchemaVersionId] [uniqueidentifier] NOT NULL ,
+	[TransactionType] INT NOT NULL
+)</value>
+  </data>
+  <data name="1_8_0014" xml:space="preserve">
+    <value>ALTER TABLE [WorkflowModelTransactionWorkflowBlock] ADD 
+	CONSTRAINT [PK_WorkflowModelTransactionWorkflowBlock] PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id],
+		[SchemaVersionId]
+	)</value>
+  </data>
+  <data name="1_8_0015" xml:space="preserve">
+    <value>INSERT INTO WorkflowModelTransactionWorkflowBlock ([Id], [SchemaVersionId], [TransactionType])
+SELECT Id, SchemaVersionId, 0 FROM [SchemaItem] where [TargetType] = 'CZ.Advantages.Asap.Schema.WorkflowModel.TransactionWorkflowBlock'</value>
+  </data>
+  <data name="1_8_0016" xml:space="preserve">
+    <value>ALTER TABLE [MenuModelMenuItem] ADD [refGraphicsId] UNIQUEIDENTIFIER NULL, [refGraphicsSchemaVersionId] UNIQUEIDENTIFIER NULL</value>
+  </data>
+  <data name="1_8_0017" xml:space="preserve">
+    <value>ALTER TABLE [EntityModelTableMappingItem] ADD
+	[GenerateDeploymentScript] bit NOT NULL CONSTRAINT DF_EntityModelTableMappingItem_GenerateDeploymentScript DEFAULT 1
+</value>
+  </data>
+  <data name="1_8_0018" xml:space="preserve">
+    <value>ALTER TABLE [EntityModelTableMappingItem]
+	DROP CONSTRAINT DF_EntityModelTableMappingItem_GenerateDeploymentScript
+</value>
+  </data>
+  <data name="1_8_0019" xml:space="preserve">
+    <value>ALTER TABLE [EntityModelTableMappingItem] ADD
+	DatabaseObjectType int NOT NULL CONSTRAINT DF_EntityModelTableMappingItem_DatabaseObjectType DEFAULT 0</value>
+  </data>
+  <data name="1_8_0020" xml:space="preserve">
+    <value>ALTER TABLE [EntityModelTableMappingItem]
+	DROP CONSTRAINT DF_EntityModelTableMappingItem_DatabaseObjectType</value>
+  </data>
+  <data name="1_8_0021" xml:space="preserve">
+    <value>ALTER TABLE [SchemaExtension] ADD [Version] NVARCHAR(20) NULL</value>
+  </data>
+  <data name="1_8_0022" xml:space="preserve">
+    <value>delete from SchemaItem where id in (
+SELECT     id
+FROM         GuiModelPropertyValueItem
+WHERE     (refControlPropertyId in ('f63e5bd1-ffa5-4b6c-8874-ac19626c9057', 'ee8d4a3e-5b5b-4474-8d23-bbaf89b774ff'))
+)</value>
+  </data>
+  <data name="1_8_0023" xml:space="preserve">
+    <value>delete
+FROM         GuiModelPropertyValueItem
+WHERE     (refControlPropertyId in ('f63e5bd1-ffa5-4b6c-8874-ac19626c9057', 'ee8d4a3e-5b5b-4474-8d23-bbaf89b774ff'))</value>
+  </data>
+  <data name="1_8_0024" xml:space="preserve">
+    <value>CREATE TABLE [GuiModelGraphics] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[SchemaVersionId] [uniqueidentifier] NOT NULL ,
+	[GraphicsData] IMAGE NOT NULL
+)</value>
+  </data>
+  <data name="1_8_0025" xml:space="preserve">
+    <value>ALTER TABLE [GuiModelGraphics] ADD 
+	CONSTRAINT [PK_GuiModelGraphics] PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id],
+		[SchemaVersionId]
+	)</value>
+  </data>
+  <data name="1_8_0026" xml:space="preserve">
+    <value>delete from SchemaItem where id in (
+SELECT     id
+FROM         GuiModelPropertyValueItem
+WHERE     (refControlPropertyId in ('4d8878c9-88e1-467c-b4f8-ee412915edfc', 'effd26ba-d2ed-419e-bcf7-f5edfab3a3e2', '611fd85e-10eb-452d-84e0-457af5504e5c', '56a6a315-d607-406f-b346-3a4ad0447d57', '9932b52d-a079-4b27-8f26-19c8900355f8', 'f14373f2-6004-47c9-8a02-3d4640f41a2e', 'c28a81c4-d738-48b5-8013-31a141b78253', '08b4b082-1c17-474a-a84d-237bf0df2aa9', '73adf932-d9dd-4ea4-8d7b-51ec5a447970', 'b8ebe670-6b5e-45e5-8717-2a8c204f24c6', '6eea923a-cbf3-4bdf-8258-3f244ca5b11f'))
+)
+</value>
+  </data>
+  <data name="1_8_0027" xml:space="preserve">
+    <value>delete
+FROM         GuiModelPropertyValueItem
+WHERE     (refControlPropertyId in ('4d8878c9-88e1-467c-b4f8-ee412915edfc', 'effd26ba-d2ed-419e-bcf7-f5edfab3a3e2', '611fd85e-10eb-452d-84e0-457af5504e5c', '56a6a315-d607-406f-b346-3a4ad0447d57', '9932b52d-a079-4b27-8f26-19c8900355f8', 'f14373f2-6004-47c9-8a02-3d4640f41a2e', 'c28a81c4-d738-48b5-8013-31a141b78253', '08b4b082-1c17-474a-a84d-237bf0df2aa9', '73adf932-d9dd-4ea4-8d7b-51ec5a447970', 'b8ebe670-6b5e-45e5-8717-2a8c204f24c6', '6eea923a-cbf3-4bdf-8258-3f244ca5b11f'))
+</value>
+  </data>
+  <data name="1_8_0028" xml:space="preserve">
+    <value>ALTER TABLE DataLookupModelDataLookup
+	DROP CONSTRAINT PK_DataLookupModelDataLookup
+ALTER TABLE DataLookupModelDataLookup ADD CONSTRAINT
+	PK_DataLookupModelDataLookup PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE DataLookupModelDataLookup
+	DROP COLUMN SchemaVersionId, refListMenuItemSchemaVersionId, refListDataStructureSchemaVersionId, refValueDataStructureSchemaVersionId
+
+
+ALTER TABLE DataStructureEntity
+	DROP CONSTRAINT PK_DataStructure
+ALTER TABLE DataStructureEntity ADD CONSTRAINT
+	PK_DataStructureEntity PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE DataStructureEntity
+	DROP COLUMN SchemaVersionId, refEntitySchemaVersionId
+ALTER TABLE DataStructureFilterSetFilter
+	DROP CONSTRAINT PK_DataStructureFilterSetFilter
+ALTER TABLE DataStructureFilterSetFilter ADD CONSTRAINT
+	PK_DataStructureFilterSetFilter PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE DataStructureFilterSetFilter
+	DROP COLUMN SchemaVersionId, refDataStructureEntitySchemaVersionId, refFilterSchemaVersionId
+ALTER TABLE DeploymentFileRestoreUpdateScriptActivity
+	DROP CONSTRAINT PK_DeploymentFileRestoreUpdateScriptActivity
+ALTER TABLE DeploymentFileRestoreUpdateScriptActivity ADD CONSTRAINT
+	PK_DeploymentFileRestoreUpdateScriptActivity PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE DeploymentFileRestoreUpdateScriptActivity
+	DROP COLUMN SchemaVersionId
+ALTER TABLE DeploymentServiceCommandUpdateScriptActivity
+	DROP CONSTRAINT PK_DeploymentServiceCommandUpdateScriptActivity
+ALTER TABLE DeploymentServiceCommandUpdateScriptActivity ADD CONSTRAINT
+	PK_DeploymentServiceCommandUpdateScriptActivity PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE DeploymentServiceCommandUpdateScriptActivity
+	DROP COLUMN SchemaVersionId, refServiceSchemaVersionId
+ALTER TABLE DeploymentUpdateScriptActivity
+	DROP CONSTRAINT PK_DeploymentUpdateScriptActivity
+ALTER TABLE DeploymentUpdateScriptActivity ADD CONSTRAINT
+	PK_DeploymentUpdateScriptActivity PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE DeploymentUpdateScriptActivity
+	DROP COLUMN SchemaVersionId
+ALTER TABLE DeploymentVersion
+	DROP CONSTRAINT PK_DeploymentVersion
+ALTER TABLE DeploymentVersion ADD CONSTRAINT
+	PK_DeploymentVersion PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE DeploymentVersion
+	DROP COLUMN SchemaVersionId
+ALTER TABLE Documentation
+	DROP CONSTRAINT PK_Documentation
+ALTER TABLE Documentation ADD CONSTRAINT
+	PK_Documentation PRIMARY KEY NONCLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE Documentation
+	DROP COLUMN SchemaVersionId, refSchemaItemSchemaVersionId
+ALTER TABLE EntityModelAggregatedColumn
+	DROP CONSTRAINT PK_EntityModelAggregatedColumn
+ALTER TABLE EntityModelAggregatedColumn ADD CONSTRAINT
+	PK_EntityModelAggregatedColumn PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelAggregatedColumn
+	DROP COLUMN SchemaVersionId, refRelationSchemaVersionId, refColumnSchemaVersionId
+ALTER TABLE EntityModelDataConstant
+	DROP CONSTRAINT PK_EntityModelDataConstant
+ALTER TABLE EntityModelDataConstant ADD CONSTRAINT
+	PK_EntityModelDataConstant PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelDataConstant
+	DROP COLUMN SchemaVersionId, refDataLookupSchemaVersionId
+ALTER TABLE EntityModelDataConstantReference
+	DROP CONSTRAINT PK_DataConstantReference
+ALTER TABLE EntityModelDataConstantReference ADD CONSTRAINT
+	PK_EntityModelDataConstantReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelDataConstantReference
+	DROP COLUMN SchemaVersionId, refDataConstantSchemaVersionId
+ALTER TABLE EntityModelDataEntity
+	DROP CONSTRAINT PK_EntityModelDataEntity
+ALTER TABLE EntityModelDataEntity ADD CONSTRAINT
+	PK_EntityModelDataEntity PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelDataEntity
+	DROP COLUMN SchemaVersionId
+ALTER TABLE EntityModelDataEntityColumn
+	DROP CONSTRAINT PK_DataFieldExpressionItem
+ALTER TABLE EntityModelDataEntityColumn ADD CONSTRAINT
+	PK_EntityModelDataEntityColumn PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelDataEntityColumn
+	DROP COLUMN SchemaVersionId, refDefaultLookupSchemaVersionId, refDefaultValueSchemaVersionId, refForeignEntitySchemaVersionId, refForeignEntityColumnSchemaVersionId
+ALTER TABLE EntityModelDataEntityIndexField
+	DROP CONSTRAINT PK_EntityModelDataEntityIndexField
+ALTER TABLE EntityModelDataEntityIndexField ADD CONSTRAINT
+	PK_EntityModelDataEntityIndexField PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelDataEntityIndexField
+	DROP COLUMN SchemaVersionId, refColumnSchemaVersionId
+ALTER TABLE EntityModelDataStructureReference
+	DROP CONSTRAINT PK_EntityModelDataStructureReference
+ALTER TABLE EntityModelDataStructureReference ADD CONSTRAINT
+	PK_EntityModelDataStructureReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelDataStructureReference
+	DROP COLUMN SchemaVersionId, refDataStructureSchemaVersionId, refDataStructureFilterSetSchemaVersionId
+ALTER TABLE EntityModelEntityColumnReference
+	DROP CONSTRAINT PK_EntityColumnReference
+ALTER TABLE EntityModelEntityColumnReference ADD CONSTRAINT
+	PK_EntityModelEntityColumnReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelEntityColumnReference
+	DROP COLUMN SchemaVersionId, refColumnSchemaVersionId
+ALTER TABLE EntityModelEntityFilterReference
+	DROP CONSTRAINT PK_EntityModelEntityFilterReference
+ALTER TABLE EntityModelEntityFilterReference ADD CONSTRAINT
+	PK_EntityModelEntityFilterReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelEntityFilterReference
+	DROP COLUMN SchemaVersionId, refFilterSchemaVersionId
+ALTER TABLE EntityModelEntityRelationColumnPairItem
+	DROP CONSTRAINT PK_EntityModelEntityRelationColumnPairItem
+ALTER TABLE EntityModelEntityRelationColumnPairItem ADD CONSTRAINT
+	PK_EntityModelEntityRelationColumnPairItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelEntityRelationColumnPairItem
+	DROP COLUMN SchemaVersionId, refBaseEntityColumnSchemaVersionId, refRelatedEntityColumnSchemaVersionId
+ALTER TABLE EntityModelEntityRelationFilter
+	DROP CONSTRAINT PK_EntityModelEntityRelationFilter
+ALTER TABLE EntityModelEntityRelationFilter ADD CONSTRAINT
+	PK_EntityModelEntityRelationFilter PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelEntityRelationFilter
+	DROP COLUMN SchemaVersionId, refFilterSchemaVersionId
+ALTER TABLE EntityModelEntityRelationItem
+	DROP CONSTRAINT PK_EntityModelEntityRelationItem
+ALTER TABLE EntityModelEntityRelationItem ADD CONSTRAINT
+	PK_EntityModelEntityRelationItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelEntityRelationItem
+	DROP COLUMN SchemaVersionId, refRelatedEntitySchemaVersionId
+ALTER TABLE EntityModelFieldMappingItem ADD CONSTRAINT
+	PK_EntityModelFieldMappingItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelFieldMappingItem
+	DROP COLUMN SchemaVersionId
+ALTER TABLE EntityModelFunctionCall
+	DROP CONSTRAINT PK_FunctionCall
+ALTER TABLE EntityModelFunctionCall ADD CONSTRAINT
+	PK_EntityModelFunctionCall PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelFunctionCall
+	DROP COLUMN SchemaVersionId, refFunctionSchemaVersionId
+ALTER TABLE EntityModelFunctionCallParameter ADD CONSTRAINT
+	PK_EntityModelFunctionCallParameter PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelFunctionCallParameter
+	DROP COLUMN SchemaVersionId, refFunctionParameterSchemaVersionId
+ALTER TABLE EntityModelTableMappingItem
+	DROP CONSTRAINT PK_DataTable
+ALTER TABLE EntityModelTableMappingItem ADD CONSTRAINT
+	PK_EntityModelTableMappingItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE EntityModelTableMappingItem
+	DROP COLUMN SchemaVersionId
+ALTER TABLE [Function]
+	DROP CONSTRAINT PK_Function
+ALTER TABLE [Function] ADD CONSTRAINT
+	PK_Function PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE [Function]
+	DROP COLUMN SchemaVersionId
+ALTER TABLE FunctionParameter
+	DROP CONSTRAINT PK_FunctionParameter
+ALTER TABLE FunctionParameter ADD CONSTRAINT
+	PK_FunctionParameter PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE FunctionParameter
+	DROP COLUMN SchemaVersionId
+ALTER TABLE GuiModelColumnParameterMapping
+	DROP CONSTRAINT PK_GuiModelColumnParameterMapping
+ALTER TABLE GuiModelColumnParameterMapping ADD CONSTRAINT
+	PK_GuiModelColumnParameterMapping PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelColumnParameterMapping
+	DROP COLUMN SchemaVersionId
+ALTER TABLE GuiModelControlItem
+	DROP CONSTRAINT PK_GuidModelControlItem
+ALTER TABLE GuiModelControlItem ADD CONSTRAINT
+	PK_GuiModelControlItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelControlItem
+	DROP COLUMN SchemaVersionId, refPanelControlSetSchemaVersionId
+ALTER TABLE GuiModelControlPropertyItem
+	DROP CONSTRAINT PK_GuiModelControlPropertyItem
+ALTER TABLE GuiModelControlPropertyItem ADD CONSTRAINT
+	PK_GuiModelControlPropertyItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelControlPropertyItem
+	DROP COLUMN SchemaVersionId
+ALTER TABLE GuiModelControlSet
+	DROP CONSTRAINT PK_GuiModelControlSet
+ALTER TABLE GuiModelControlSet ADD CONSTRAINT
+	PK_GuiModelControlSet PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelControlSet
+	DROP COLUMN SchemaVersionId, refDataSourceVersionId, refDataStructureFilterSetSchemaVersionId
+ALTER TABLE GuiModelControlSetItem
+	DROP CONSTRAINT PK_GuiModelControlSetItem
+ALTER TABLE GuiModelControlSetItem ADD CONSTRAINT
+	PK_GuiModelControlSetItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelControlSetItem
+	DROP COLUMN SchemaVersionId, refControlSchemaVersionId
+ALTER TABLE GuiModelCrystalReport
+	DROP CONSTRAINT PK_GuiModelCrystalReport
+ALTER TABLE GuiModelCrystalReport ADD CONSTRAINT
+	PK_GuiModelCrystalReport PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelCrystalReport
+	DROP COLUMN SchemaVersionId
+ALTER TABLE GuiModelGraphics
+	DROP CONSTRAINT PK_GuiModelGraphics
+ALTER TABLE GuiModelGraphics ADD CONSTRAINT
+	PK_GuiModelGraphics PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelGraphics
+	DROP COLUMN SchemaVersionId
+ALTER TABLE GuiModelPropertyValueItem
+	DROP CONSTRAINT PK_GuiModelPropertyValueItem
+ALTER TABLE GuiModelPropertyValueItem ADD CONSTRAINT
+	PK_GuiModelPropertyValueItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelPropertyValueItem
+	DROP COLUMN SchemaVersionId, refControlPropertySchemaVersionId
+ALTER TABLE GuiModelReport
+	DROP CONSTRAINT PK_GuiModelReport
+ALTER TABLE GuiModelReport ADD CONSTRAINT
+	PK_GuiModelReport PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelReport
+	DROP COLUMN SchemaVersionId, refDataStructureSchemaVersionId, refDataStructureFilterSetSchemaVersionId
+ALTER TABLE GuiModelReportReference
+	DROP CONSTRAINT PK_GuiModelReportReference
+ALTER TABLE GuiModelReportReference ADD CONSTRAINT
+	PK_GuiModelReportReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE GuiModelReportReference
+	DROP COLUMN SchemaVersionId, refReportSchemaVersionId
+ALTER TABLE MenuModelDataConstantReferenceMenuItem
+	DROP CONSTRAINT PK_MenuModelDataConstantReferenceMenuItem
+ALTER TABLE MenuModelDataConstantReferenceMenuItem ADD CONSTRAINT
+	PK_MenuModelDataConstantReferenceMenuItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE MenuModelDataConstantReferenceMenuItem
+	DROP COLUMN SchemaVersionId, refDataConstantSchemaVersionId
+ALTER TABLE MenuModelFormReferenceMenuItem
+	DROP CONSTRAINT PK_MenuModelFormReferenceMenuItem
+ALTER TABLE MenuModelFormReferenceMenuItem ADD CONSTRAINT
+	PK_MenuModelFormReferenceMenuItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE MenuModelFormReferenceMenuItem
+	DROP COLUMN SchemaVersionId, refFormSchemaVersionId
+ALTER TABLE MenuModelMenu
+	DROP CONSTRAINT PK_MenuModelMenu
+ALTER TABLE MenuModelMenu ADD CONSTRAINT
+	PK_MenuModelMenu PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE MenuModelMenu
+	DROP COLUMN SchemaVersionId
+ALTER TABLE MenuModelMenuItem
+	DROP CONSTRAINT PK_MenuModelMenuItem
+ALTER TABLE MenuModelMenuItem ADD CONSTRAINT
+	PK_MenuModelMenuItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE MenuModelMenuItem
+	DROP COLUMN SchemaVersionId, refGraphicsSchemaVersionId
+ALTER TABLE MenuModelReportReferenceMenuItem
+	DROP CONSTRAINT PK_MenuModelReportReferenceMenuItem
+ALTER TABLE MenuModelReportReferenceMenuItem ADD CONSTRAINT
+	PK_MenuModelReportReferenceMenuItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE MenuModelReportReferenceMenuItem
+	DROP COLUMN SchemaVersionId, refReportSchemaVersionId
+ALTER TABLE MenuModelWorkflowReferenceMenuItem
+	DROP CONSTRAINT PK_MenuModelWorkflowReferenceMenuItem
+ALTER TABLE MenuModelWorkflowReferenceMenuItem ADD CONSTRAINT
+	PK_MenuModelWorkflowReferenceMenuItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE MenuModelWorkflowReferenceMenuItem
+	DROP COLUMN SchemaVersionId, refWorkflowSchemaVersionId
+ALTER TABLE ParameterReference
+	DROP CONSTRAINT PK_ParameterReference
+ALTER TABLE ParameterReference ADD CONSTRAINT
+	PK_ParameterReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE ParameterReference
+	DROP COLUMN SchemaVersionId, refParameterSchemaVersionId
+ALTER TABLE RuleModelRule
+	DROP CONSTRAINT PK_RuleModelRule
+ALTER TABLE RuleModelRule ADD CONSTRAINT
+	PK_RuleModelRule PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE RuleModelRule
+	DROP COLUMN SchemaVersionId, refDataStructureSchemaVersionId
+ALTER TABLE RuleModelXPathRule
+	DROP CONSTRAINT PK_RuleModelXPathRule
+ALTER TABLE RuleModelXPathRule ADD CONSTRAINT
+	PK_RuleModelXPathRule PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE RuleModelXPathRule
+	DROP COLUMN SchemaVersionId
+ALTER TABLE RuleModelXslRule
+	DROP CONSTRAINT PK_RuleModelXslRule
+ALTER TABLE RuleModelXslRule ADD CONSTRAINT
+	PK_RuleModelXslRule PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE RuleModelXslRule
+	DROP COLUMN SchemaVersionId
+ALTER TABLE SchemaExtension
+	DROP CONSTRAINT PK_SchemaExtension
+ALTER TABLE SchemaExtension ADD CONSTRAINT
+	PK_SchemaExtension PRIMARY KEY CLUSTERED 
+	(
+	SchemaExtensionGuid
+	)
+ALTER TABLE SchemaItem
+	DROP CONSTRAINT PK_SchemaItem
+DROP INDEX SchemaItem.IX_Extension
+ALTER TABLE SchemaItem ADD CONSTRAINT
+	PK_SchemaItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE SchemaItem
+	DROP COLUMN SchemaVersionId, refParentItemSchemaVersionId, refSchemaItemGroupSchemaVersionId, refSchemaExtensionSchemaVersionId
+CREATE INDEX IX_Extension ON SchemaItem
+	(
+	refSchemaExtensionId
+	)
+ALTER TABLE SchemaItemAncestor
+	DROP CONSTRAINT PK_SchemaItemAncestor
+ALTER TABLE SchemaItemAncestor ADD CONSTRAINT
+	PK_SchemaItemAncestor PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE SchemaItemAncestor
+	DROP COLUMN SchemaVersionId, refSchemaItemSchemaVersionId, refAncestorSchemaVersionId
+ALTER TABLE SchemaItemGroup
+	DROP CONSTRAINT PK_SchemaItemGroup
+DROP INDEX SchemaItemGroup.IX_Extension
+ALTER TABLE SchemaItemGroup ADD CONSTRAINT
+	PK_SchemaItemGroup PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+CREATE INDEX IX_Extension ON SchemaItemGroup
+	(
+	refSchemaExtensionId
+	)
+ALTER TABLE SchemaItemGroup
+	DROP COLUMN SchemaVersionId, refParentGroupSchemaVersionId, refSchemaExtensionSchemaVersionId, refParentItemSchemaVersionId
+ALTER TABLE SchemaItemParameter
+	DROP CONSTRAINT PK_SchemaItemParameter
+ALTER TABLE SchemaItemParameter ADD CONSTRAINT
+	PK_SchemaItemParameter PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE SchemaItemParameter
+	DROP COLUMN SchemaVersionId
+ALTER TABLE TestModelTestCase
+	DROP CONSTRAINT PK__TestModelTestCas__7246E95D
+ALTER TABLE TestModelTestCase ADD CONSTRAINT
+	PK_TestModelTestCase PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE TestModelTestCase
+	DROP COLUMN SchemaVersionId
+ALTER TABLE TestModelTestCaseStep
+	DROP CONSTRAINT PK_TestModelTestCaseStep
+ALTER TABLE TestModelTestCaseStep ADD CONSTRAINT
+	PK_TestModelTestCaseStep PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE TestModelTestCaseStep
+	DROP COLUMN SchemaVersionId, refTestChecklistRuleSchemaVersionId
+ALTER TABLE TransformationReference
+	DROP CONSTRAINT PK_ObjectStoreReference
+ALTER TABLE TransformationReference ADD CONSTRAINT
+	PK_TransformationReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE TransformationReference
+	DROP COLUMN SchemaVersionId, refTransformationSchemaVersionId
+ALTER TABLE WorkflowModelContextStore
+	DROP CONSTRAINT PK_WorkflowModelContextStore
+ALTER TABLE WorkflowModelContextStore ADD CONSTRAINT
+	PK_WorkflowModelContextStore PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+
+ALTER TABLE WorkflowModelContextStore
+	DROP COLUMN SchemaVersionId, refDataStructureSchemaVersionId
+ALTER TABLE WorkflowModelContextStoreLink
+	DROP CONSTRAINT PK_WorkflowModelContextStoreLink
+ALTER TABLE WorkflowModelContextStoreLink ADD CONSTRAINT
+	PK_WorkflowModelContextStoreLink PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelContextStoreLink
+	DROP COLUMN SchemaVersionId, refCallerContextStoreSchemaVersionId, refTargetContextStoreSchemaVersionId
+ALTER TABLE WorkflowModelForeachWorkflowBlock
+	DROP CONSTRAINT PK_WorkflowModelForeachWorkflowBlock
+ALTER TABLE WorkflowModelForeachWorkflowBlock ADD CONSTRAINT
+	PK_WorkflowModelForeachWorkflowBlock PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelForeachWorkflowBlock
+	DROP COLUMN SchemaVersionId, refSourceContextStoreSchemaVersionId
+ALTER TABLE WorkflowModelServiceMethod
+	DROP CONSTRAINT PK_WorkflowModelServiceMethod
+ALTER TABLE WorkflowModelServiceMethod ADD CONSTRAINT
+	PK_WorkflowModelServiceMethod PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelServiceMethod
+	DROP COLUMN SchemaVersionId
+ALTER TABLE WorkflowModelServiceMethodCallParameter
+	DROP CONSTRAINT PK_WorkflowModelServiceMethodCallParameter
+ALTER TABLE WorkflowModelServiceMethodCallParameter ADD CONSTRAINT
+	PK_WorkflowModelServiceMethodCallParameter PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelServiceMethodCallParameter
+	DROP COLUMN SchemaVersionId, refServiceMethodParameterSchemaVersionId
+ALTER TABLE WorkflowModelServiceMethodCallTask
+	DROP CONSTRAINT PK_WorkflowModelServiceMethodCallTask
+ALTER TABLE WorkflowModelServiceMethodCallTask ADD CONSTRAINT
+	PK_WorkflowModelServiceMethodCallTask PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelServiceMethodCallTask
+	DROP COLUMN SchemaVersionId, refServiceMethodSchemaVersionId, refServiceSchemaVersionId
+ALTER TABLE WorkflowModelSetWorkflowPropertyTask
+	DROP CONSTRAINT PK_WorkflowModelSetWorkflowPropertyTask
+ALTER TABLE WorkflowModelSetWorkflowPropertyTask ADD CONSTRAINT
+	PK_WorkflowModelSetWorkflowPropertyTask PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelSetWorkflowPropertyTask
+	DROP COLUMN SchemaVersionId, refContextStoreSchemaVersionId
+ALTER TABLE WorkflowModelSimpleScheduleTime
+	DROP CONSTRAINT PK_WorkflowModelSimpleScheduleTime
+ALTER TABLE WorkflowModelSimpleScheduleTime ADD CONSTRAINT
+	PK_WorkflowModelSimpleScheduleTime PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelSimpleScheduleTime
+	DROP COLUMN SchemaVersionId
+ALTER TABLE WorkflowModelSystemFunctionCall
+	DROP CONSTRAINT PK_WorkflowModelSystemFunctionCall
+ALTER TABLE WorkflowModelSystemFunctionCall ADD CONSTRAINT
+	PK_WorkflowModelSystemFunctionCall PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelSystemFunctionCall
+	DROP COLUMN SchemaVersionId
+ALTER TABLE WorkflowModelTransactionWorkflowBlock
+	DROP CONSTRAINT PK_WorkflowModelTransactionWorkflowBlock
+ALTER TABLE WorkflowModelTransactionWorkflowBlock ADD CONSTRAINT
+	PK_WorkflowModelTransactionWorkflowBlock PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelTransactionWorkflowBlock
+	DROP COLUMN SchemaVersionId
+ALTER TABLE WorkflowModelUIFormTask
+	DROP CONSTRAINT PK_WorkflowModelUIFormTask
+ALTER TABLE WorkflowModelUIFormTask ADD CONSTRAINT
+	PK_WorkflowModelUIFormTask PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelUIFormTask
+	DROP COLUMN SchemaVersionId, refFormSchemaVersionId
+ALTER TABLE WorkflowModelWorkflow
+	DROP CONSTRAINT PK_WorkflowModelWorkflow
+ALTER TABLE WorkflowModelWorkflow ADD CONSTRAINT
+	PK_WorkflowModelWorkflow PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelWorkflow
+	DROP COLUMN SchemaVersionId
+ALTER TABLE WorkflowModelWorkflowCallTask
+	DROP CONSTRAINT PK_WorkflowModelWorkflowCallTask
+ALTER TABLE WorkflowModelWorkflowCallTask ADD CONSTRAINT
+	PK_WorkflowModelWorkflowCallTask PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelWorkflowCallTask
+	DROP COLUMN SchemaVersionId, refWorkflowSchemaVersionId
+ALTER TABLE WorkflowModelWorkflowContextReference
+	DROP CONSTRAINT PK_WorkflowModelWorkflowContextReference
+ALTER TABLE WorkflowModelWorkflowContextReference ADD CONSTRAINT
+	PK_WorkflowModelWorkflowContextReference PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelWorkflowContextReference
+	DROP COLUMN SchemaVersionId, refContextStoreSchemaVersionId
+ALTER TABLE WorkflowModelWorkflowSchedule
+	DROP CONSTRAINT PK_WorkflowModelWorkflowSchedule
+ALTER TABLE WorkflowModelWorkflowSchedule ADD CONSTRAINT
+	PK_WorkflowModelWorkflowSchedule PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelWorkflowSchedule
+	DROP COLUMN SchemaVersionId, refWorkflowSchemaVersionId, refScheduleTimeSchemaVersionId
+ALTER TABLE WorkflowModelWorkflowStep
+	DROP CONSTRAINT PK_WorkflowModelWorkflowStep
+ALTER TABLE WorkflowModelWorkflowStep ADD CONSTRAINT
+	PK_WorkflowModelWorkflowStep PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelWorkflowStep
+	DROP COLUMN SchemaVersionId, refStartRuleContextStoreSchemaVersionId, refStartRuleSchemaVersionId, refEndRuleContextStoreSchemaVersionId, refEndRuleSchemaVersionId
+ALTER TABLE WorkflowModelWorkflowTask
+	DROP CONSTRAINT PK_WorkflowModelWorkflowTask
+ALTER TABLE WorkflowModelWorkflowTask ADD CONSTRAINT
+	PK_WorkflowModelWorkflowTask PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelWorkflowTask
+	DROP COLUMN SchemaVersionId, refOutputContextStoreSchemaVersionId, refStartRuleId, refStartRuleSchemaVersionId, refStartRuleContextStoreId, refStartRuleContextStoreSchemaVersionId
+ALTER TABLE WorkflowModelWorkflowTaskDependency
+	DROP CONSTRAINT PK_WorkflowModelWorkflowTaskDependency
+ALTER TABLE WorkflowModelWorkflowTaskDependency ADD CONSTRAINT
+	PK_WorkflowModelWorkflowTaskDependency PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE WorkflowModelWorkflowTaskDependency
+	DROP COLUMN SchemaVersionId, refWorkflowTaskSchemaVersionId
+ALTER TABLE XsdDataStructure
+	DROP CONSTRAINT PK_XsdDataStructure
+ALTER TABLE XsdDataStructure ADD CONSTRAINT
+	PK_XsdDataStructure PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE XsdDataStructure
+	DROP COLUMN SchemaVersionId
+ALTER TABLE XslTransformation
+	DROP CONSTRAINT PK_ObjectStore
+ALTER TABLE XslTransformation ADD CONSTRAINT
+	PK_XslTransformation PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)
+ALTER TABLE XslTransformation
+	DROP COLUMN SchemaVersionId
+
+CREATE CLUSTERED
+  INDEX [ix_refSchemaItemId] ON [dbo].[Documentation] ([refSchemaItemId])
+</value>
+  </data>
+  <data name="1_8_0029" xml:space="preserve">
+    <value>DELETE
+FROM         SchemaItem
+WHERE     (NOT EXISTS
+                          (SELECT     *
+                            FROM          schemaitem si2
+                            WHERE      si2.id = schemaitem.refparentitemid)) AND (refParentItemId IS NOT NULL)</value>
+  </data>
+  <data name="1_8_0030" xml:space="preserve">
+    <value>delete from datastructurecolumn where not exists (select * from schemaitem where schemaitem.id = datastructurecolumn.id)
+</value>
+  </data>
+  <data name="1_8_0031" xml:space="preserve">
+    <value>delete from WorkflowModelServiceMethodCallParameter where not exists (select * from schemaitem where schemaitem.id = WorkflowModelServiceMethodCallParameter.id)</value>
+  </data>
+  <data name="1_8_0032" xml:space="preserve">
+    <value>delete from EntityModelFunctionCallParameter where not exists (select * from schemaitem where schemaitem.id = EntityModelFunctionCallParameter.id)</value>
+  </data>
+  <data name="1_8_0033" xml:space="preserve">
+    <value>drop table [Schema]</value>
+  </data>
+  <data name="1_8_0034" xml:space="preserve">
+    <value>drop table [SchemaVersion]</value>
+  </data>
+  <data name="1_8_0035" xml:space="preserve">
+    <value>ALTER TABLE SchemaExtension
+	DROP COLUMN SchemaVersionGuid</value>
+  </data>
+  <data name="1_8_0036" xml:space="preserve">
+    <value>CREATE TABLE [PackageReference] (
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[refPackageId] UNIQUEIDENTIFIER NOT NULL,
+	[refReferencedPackageId] UNIQUEIDENTIFIER NOT NULL, [IncludeAllElements] BIT NOT NULL, 
+	[ReferenceType] INT NOT NULL)</value>
+  </data>
+  <data name="1_8_0037" xml:space="preserve">
+    <value>insert into PackageReference (Id, refPackageId, refReferencedPackageId, ReferenceType, IncludeAllElements)
+select newid(), SchemaExtensionGuid, ParentSchemaExtensionGuid, 1, 1 from SchemaExtension where ParentSchemaExtensionGuid is not null</value>
+  </data>
+  <data name="1_8_0038" xml:space="preserve">
+    <value>alter table SchemaExtension drop column ParentSchemaExtensionGuid</value>
+  </data>
+  <data name="1_8_0039" xml:space="preserve">
+    <value>ALTER TABLE dbo.DataLookupModelDataServiceDataLookup
+	DROP CONSTRAINT PK_DataLookupModelDataServiceDataLookup
+ALTER TABLE dbo.DataLookupModelDataServiceDataLookup ADD CONSTRAINT
+	PK_DataLookupModelDataServiceDataLookup PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+ALTER TABLE dbo.DataLookupModelDataServiceDataLookup
+	DROP COLUMN SchemaVersionId, refListDataStructureFilterSetSchemaVersionId, refValueDataStructureFilterSetSchemaVersionId
+
+ALTER TABLE dbo.DataStructureColumn
+	DROP CONSTRAINT PK_DataStructureColumn
+ALTER TABLE dbo.DataStructureColumn ADD CONSTRAINT
+	PK_DataStructureColumn PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+ALTER TABLE dbo.DataStructureColumn
+	DROP COLUMN SchemaVersionId, refColumnSchemaVersionId, refDefaultLookupSchemaVersionId
+
+
+ALTER TABLE [SchemaExtension] ADD [Copyright] NVARCHAR(250) NULL
+
+CREATE TABLE [PackageReferenceElement] (
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED,
+	[refElementId] UNIQUEIDENTIFIER NOT NULL,
+	[refPackageReferenceId] UNIQUEIDENTIFIER NOT NULL)
+CREATE INDEX [ix_refPackageReferenceId] ON [PackageReferenceElement] ([refPackageReferenceId] ASC)
+
+CREATE INDEX [ix_refPackageId] ON [PackageReference] ([refPackageId] ASC)
+
+</value>
+  </data>
+  <data name="1_8_0040" xml:space="preserve">
+    <value>CREATE TABLE Tmp_XslTransformation
+	(
+	Id uniqueidentifier NOT NULL,
+	TextStore ntext NULL
+	)
+	 TEXTIMAGE_ON [PRIMARY]
+IF EXISTS(SELECT * FROM XslTransformation)
+	 EXEC('INSERT INTO Tmp_XslTransformation (Id, TextStore)
+		SELECT Id, TextStore FROM XslTransformation TABLOCKX')
+DROP TABLE XslTransformation
+EXECUTE sp_rename N'Tmp_XslTransformation', N'XslTransformation', 'OBJECT'
+ALTER TABLE XslTransformation ADD CONSTRAINT
+	PK_XslTransformation PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+ALTER TABLE SchemaItem
+	DROP CONSTRAINT DF_SchemaItem_IsAbstract
+CREATE TABLE Tmp_SchemaItem
+	(
+	Id uniqueidentifier NOT NULL,
+	Name nvarchar(255) NOT NULL,
+	refParentItemId uniqueidentifier NULL,
+	refSchemaItemGroupId uniqueidentifier NULL,
+	TargetType nvarchar(255) NOT NULL,
+	refSchemaExtensionId uniqueidentifier NOT NULL,
+	ItemType nvarchar(255) NOT NULL,
+	IsAbstract bit NOT NULL
+	)
+ALTER TABLE Tmp_SchemaItem ADD CONSTRAINT
+	DF_SchemaItem_IsAbstract DEFAULT (0) FOR IsAbstract
+IF EXISTS(SELECT * FROM SchemaItem)
+	 EXEC('INSERT INTO Tmp_SchemaItem (Id, Name, refParentItemId, refSchemaItemGroupId, TargetType, refSchemaExtensionId, ItemType, IsAbstract)
+		SELECT Id, Name, refParentItemId, refSchemaItemGroupId, TargetType, refSchemaExtensionId, ItemType, IsAbstract FROM SchemaItem TABLOCKX')
+DROP TABLE SchemaItem
+EXECUTE sp_rename N'Tmp_SchemaItem', N'SchemaItem', 'OBJECT'
+CREATE NONCLUSTERED INDEX IX_Extension ON SchemaItem
+	(
+	refSchemaExtensionId
+	) ON [PRIMARY]
+ALTER TABLE SchemaItem ADD CONSTRAINT
+	PK_SchemaItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+CREATE TABLE Tmp_SchemaItemGroup
+	(
+	Id uniqueidentifier NOT NULL,
+	refParentGroupId uniqueidentifier NULL,
+	refSchemaExtensionId uniqueidentifier NOT NULL,
+	refParentItemId uniqueidentifier NULL,
+	RootItemType nvarchar(255) NULL,
+	Name nvarchar(255) NOT NULL
+	)
+IF EXISTS(SELECT * FROM SchemaItemGroup)
+	 EXEC('INSERT INTO Tmp_SchemaItemGroup (Id, refParentGroupId, refSchemaExtensionId, refParentItemId, RootItemType, Name)
+		SELECT Id, refParentGroupId, refSchemaExtensionId, refParentItemId, RootItemType, Name FROM SchemaItemGroup TABLOCKX')
+DROP TABLE SchemaItemGroup
+EXECUTE sp_rename N'Tmp_SchemaItemGroup', N'SchemaItemGroup', 'OBJECT'
+ALTER TABLE SchemaItemGroup ADD CONSTRAINT
+	PK_SchemaItemGroup PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+CREATE NONCLUSTERED INDEX IX_Extension ON SchemaItemGroup
+	(
+	refSchemaExtensionId
+	) ON [PRIMARY]
+CREATE TABLE Tmp_DeploymentVersion
+	(
+	Id uniqueidentifier NOT NULL,
+	Version nvarchar(20) NOT NULL
+	)
+IF EXISTS(SELECT * FROM DeploymentVersion)
+	 EXEC('INSERT INTO Tmp_DeploymentVersion (Id, Version)
+		SELECT Id, Version FROM DeploymentVersion TABLOCKX')
+DROP TABLE DeploymentVersion
+EXECUTE sp_rename N'Tmp_DeploymentVersion', N'DeploymentVersion', 'OBJECT'
+ALTER TABLE DeploymentVersion ADD CONSTRAINT
+	PK_DeploymentVersion PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+ALTER TABLE EntityModelDataEntity
+	DROP CONSTRAINT DF_EntityModelDataEntity_IsAuditingEnabled
+CREATE TABLE Tmp_EntityModelDataEntity
+	(
+	Id uniqueidentifier NOT NULL,
+	Caption nvarchar(255) NULL,
+	IsReadOnly bit NOT NULL,
+	IsAuditingEnabled bit NOT NULL
+	)
+IF EXISTS(SELECT * FROM EntityModelDataEntity)
+	 EXEC('INSERT INTO Tmp_EntityModelDataEntity (Id, Caption, IsReadOnly, IsAuditingEnabled)
+		SELECT Id, Caption, IsReadOnly, IsAuditingEnabled FROM EntityModelDataEntity TABLOCKX')
+DROP TABLE EntityModelDataEntity
+EXECUTE sp_rename N'Tmp_EntityModelDataEntity', N'EntityModelDataEntity', 'OBJECT'
+ALTER TABLE EntityModelDataEntity ADD CONSTRAINT
+	PK_EntityModelDataEntity PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+CREATE TABLE Tmp_EntityModelFieldMappingItem
+	(
+	Id uniqueidentifier NOT NULL,
+	SourceFieldName nvarchar(255) NOT NULL
+	)
+IF EXISTS(SELECT * FROM EntityModelFieldMappingItem)
+	 EXEC('INSERT INTO Tmp_EntityModelFieldMappingItem (Id, SourceFieldName)
+		SELECT Id, SourceFieldName FROM EntityModelFieldMappingItem TABLOCKX')
+DROP TABLE EntityModelFieldMappingItem
+EXECUTE sp_rename N'Tmp_EntityModelFieldMappingItem', N'EntityModelFieldMappingItem', 'OBJECT'
+ALTER TABLE EntityModelFieldMappingItem ADD CONSTRAINT
+	PK_EntityModelFieldMappingItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+CREATE TABLE Tmp_EntityModelTableMappingItem
+	(
+	Id uniqueidentifier NOT NULL,
+	SourceTableName nvarchar(255) NOT NULL,
+	GenerateDeploymentScript bit NOT NULL,
+	DatabaseObjectType int NOT NULL
+	)
+
+IF EXISTS(SELECT * FROM EntityModelTableMappingItem)
+	 EXEC('INSERT INTO Tmp_EntityModelTableMappingItem (Id, SourceTableName, GenerateDeploymentScript, DatabaseObjectType)
+		SELECT Id, SourceTableName, GenerateDeploymentScript, DatabaseObjectType FROM EntityModelTableMappingItem TABLOCKX')
+DROP TABLE EntityModelTableMappingItem
+EXECUTE sp_rename N'Tmp_EntityModelTableMappingItem', N'EntityModelTableMappingItem', 'OBJECT'
+ALTER TABLE EntityModelTableMappingItem ADD CONSTRAINT
+	PK_EntityModelTableMappingItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+CREATE TABLE Tmp_GuiModelControlItem
+	(
+	Id uniqueidentifier NOT NULL,
+	ControlType nvarchar(255) NULL,
+	ControlNamespace nvarchar(255) NULL,
+	IsComplexType bit NOT NULL,
+	refPanelControlSetId uniqueidentifier NULL,
+	ControlToolBoxVisibility int NOT NULL
+	)
+IF EXISTS(SELECT * FROM GuiModelControlItem)
+	 EXEC('INSERT INTO Tmp_GuiModelControlItem (Id, ControlType, ControlNamespace, IsComplexType, refPanelControlSetId, ControlToolBoxVisibility)
+		SELECT Id, ControlType, ControlNamespace, IsComplexType, refPanelControlSetId, ControlToolBoxVisibility FROM GuiModelControlItem TABLOCKX')
+DROP TABLE GuiModelControlItem
+EXECUTE sp_rename N'Tmp_GuiModelControlItem', N'GuiModelControlItem', 'OBJECT'
+ALTER TABLE GuiModelControlItem ADD CONSTRAINT
+	PK_GuiModelControlItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+CREATE TABLE Tmp_GuiModelPropertyValueItem
+	(
+	Id uniqueidentifier NOT NULL,
+	refControlPropertyId uniqueidentifier NULL,
+	OldXmlValue varchar(2000) NULL,
+	DesignDataSetPath nvarchar(1024) NULL,
+	BoolValue bit NULL,
+	IntValue int NULL,
+	GuidValue uniqueidentifier NULL,
+	[Value] nvarchar(2000) NULL
+	)
+IF EXISTS(SELECT * FROM GuiModelPropertyValueItem)
+	 EXEC('INSERT INTO Tmp_GuiModelPropertyValueItem (Id, refControlPropertyId, OldXmlValue, DesignDataSetPath, BoolValue, IntValue, GuidValue, [Value])
+		SELECT Id, refControlPropertyId, OldXmlValue, DesignDataSetPath, BoolValue, IntValue, GuidValue, [Value] FROM GuiModelPropertyValueItem TABLOCKX')
+DROP TABLE GuiModelPropertyValueItem
+EXECUTE sp_rename N'Tmp_GuiModelPropertyValueItem', N'GuiModelPropertyValueItem', 'OBJECT'
+ALTER TABLE GuiModelPropertyValueItem ADD CONSTRAINT
+	PK_GuiModelPropertyValueItem PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+
+CREATE TABLE Tmp_MenuModelMenu
+	(
+	Id uniqueidentifier NOT NULL,
+	DisplayName nvarchar(255) NOT NULL
+	)
+IF EXISTS(SELECT * FROM MenuModelMenu)
+	 EXEC('INSERT INTO Tmp_MenuModelMenu (Id, DisplayName)
+		SELECT Id, DisplayName FROM MenuModelMenu TABLOCKX')
+DROP TABLE MenuModelMenu
+EXECUTE sp_rename N'Tmp_MenuModelMenu', N'MenuModelMenu', 'OBJECT'
+ALTER TABLE MenuModelMenu ADD CONSTRAINT
+	PK_MenuModelMenu PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]
+ALTER TABLE GuiModelPropertyValueItem
+	DROP COLUMN OldXmlValue
+
+CREATE TABLE Tmp_SchemaExtension
+	(
+	SchemaExtensionGuid uniqueidentifier NOT NULL,
+	Name nvarchar(200) NOT NULL,
+	Version nvarchar(20) NULL,
+	Copyright nvarchar(250) NULL
+	)
+IF EXISTS(SELECT * FROM SchemaExtension)
+	 EXEC('INSERT INTO Tmp_SchemaExtension (SchemaExtensionGuid, Name, Version, Copyright)
+		SELECT SchemaExtensionGuid, Name, Version, Copyright FROM SchemaExtension TABLOCKX')
+DROP TABLE SchemaExtension
+EXECUTE sp_rename N'Tmp_SchemaExtension', N'SchemaExtension', 'OBJECT'
+ALTER TABLE SchemaExtension ADD CONSTRAINT
+	PK_SchemaExtension PRIMARY KEY CLUSTERED 
+	(
+	SchemaExtensionGuid
+	) ON [PRIMARY]
+
+CREATE TABLE Tmp_EntityModelDataEntityColumn
+	(
+	Id uniqueidentifier NOT NULL,
+	DataType int NOT NULL,
+	DataLength int NOT NULL,
+	AllowNulls bit NOT NULL,
+	IsPrimaryKey bit NOT NULL,
+	Caption nvarchar(255) NULL,
+	refDefaultLookupId uniqueidentifier NULL,
+	AutoIncrement bit NOT NULL,
+	AutoIncrementSeed bigint NOT NULL,
+	AutoIncrementStep bigint NOT NULL,
+	refDefaultValueId uniqueidentifier NULL,
+	refForeignEntityId uniqueidentifier NULL,
+	refForeignEntityColumnId uniqueidentifier NULL,
+	XmlMappingType int NOT NULL
+	)
+IF EXISTS(SELECT * FROM EntityModelDataEntityColumn)
+	 EXEC('INSERT INTO Tmp_EntityModelDataEntityColumn (Id, DataType, DataLength, AllowNulls, IsPrimaryKey, Caption, refDefaultLookupId, AutoIncrement, AutoIncrementSeed, AutoIncrementStep, refDefaultValueId, refForeignEntityId, refForeignEntityColumnId, XmlMappingType)
+		SELECT Id, DataType, DataLength, AllowNulls, IsPrimaryKey, Caption, refDefaultLookupId, AutoIncrement, CONVERT(bigint, AutoIncrementSeed), CONVERT(bigint, AutoIncrementStep), refDefaultValueId, refForeignEntityId, refForeignEntityColumnId, XmlMappingType FROM EntityModelDataEntityColumn TABLOCKX')
+DROP TABLE EntityModelDataEntityColumn
+EXECUTE sp_rename N'Tmp_EntityModelDataEntityColumn', N'EntityModelDataEntityColumn', 'OBJECT'
+ALTER TABLE EntityModelDataEntityColumn ADD CONSTRAINT
+	PK_EntityModelDataEntityColumn PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) ON [PRIMARY]</value>
+  </data>
+  <data name="1_8_0041" xml:space="preserve">
+    <value>ALTER TABLE dbo.WorkflowModelContextStore ADD
+	DataType int NOT NULL CONSTRAINT DF_WorkflowModelContextStore_DataType DEFAULT 11
+
+
+ALTER TABLE dbo.WorkflowModelContextStore DROP CONSTRAINT DF_WorkflowModelContextStore_DataType
+
+CREATE TABLE dbo.Tmp_WorkflowModelContextStore
+	(
+	Id uniqueidentifier NOT NULL,
+	refDataStructureId uniqueidentifier NULL,
+	DataType int NOT NULL
+	)  
+
+IF EXISTS(SELECT * FROM dbo.WorkflowModelContextStore)
+	 EXEC('INSERT INTO dbo.Tmp_WorkflowModelContextStore (Id, refDataStructureId, DataType)
+		SELECT Id, refDataStructureId, DataType FROM dbo.WorkflowModelContextStore TABLOCKX')
+
+DROP TABLE dbo.WorkflowModelContextStore
+
+EXECUTE sp_rename N'dbo.Tmp_WorkflowModelContextStore', N'WorkflowModelContextStore', 'OBJECT'
+
+ALTER TABLE dbo.WorkflowModelContextStore ADD CONSTRAINT
+	PK_WorkflowModelContextStore PRIMARY KEY CLUSTERED 
+	(
+	Id
+	) </value>
+  </data>
+  <data name="1_8_0042" xml:space="preserve">
+    <value>CREATE TABLE [StateMachineOperation] (
+	[refRuleId] UNIQUEIDENTIFIER NULL,
+	[refTargetStateId] UNIQUEIDENTIFIER NOT NULL,
+	[Roles] NVARCHAR(500) NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED)
+ 
+CREATE TABLE [StateMachine] (
+	[refEntityId] UNIQUEIDENTIFIER NOT NULL,
+	[refFieldId] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED)
+ 
+CREATE TABLE [StateMachineState] (
+	[Type] INT NOT NULL,
+	[IntValue] INT NULL,
+	[StringValue] NVARCHAR(200) NULL,
+	[GuidValue] UNIQUEIDENTIFIER NULL,
+	[refDefaultSubstateId] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED)
+
+CREATE TABLE [StateMachineEvent] (
+	[refNewStateId] UNIQUEIDENTIFIER NULL,
+	[Type] INT NOT NULL,
+	[refWorkflowId] UNIQUEIDENTIFIER NOT NULL,
+	[refOldStateId] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED)
+
+CREATE TABLE [WorkflowModelWorkflowEntityParameterMapping] (
+	[refFieldId] UNIQUEIDENTIFIER NOT NULL,
+	[refContextId] UNIQUEIDENTIFIER NOT NULL,
+	[Type] INT NOT NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED)</value>
+  </data>
+  <data name="1_9_0001" xml:space="preserve">
+    <value>CREATE TABLE [DataStructureDefaultSetDefault] (
+	[refDataStructureEntityId] UNIQUEIDENTIFIER NOT NULL,
+	[refDataConstantId] UNIQUEIDENTIFIER NOT NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED,
+	[refEntityFieldId] UNIQUEIDENTIFIER NOT NULL)</value>
+  </data>
+  <data name="1_9_0002" xml:space="preserve">
+    <value>ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refDefaultSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refFilterSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [OnlyNewRecords] BIT NOT NULL CONSTRAINT DF_MenuModelFormReferenceMenuItem_OnlyNewRecords DEFAULT 0
+ALTER TABLE MenuModelFormReferenceMenuItem
+	DROP CONSTRAINT DF_MenuModelFormReferenceMenuItem_OnlyNewRecords
+
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refSelectionPanelId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refSelectionPanelBeforeTransformationId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refSelectionPanelAfterTransformationId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refSelectionEndRuleId] UNIQUEIDENTIFIER NULL</value>
+  </data>
+  <data name="1_9_0003" xml:space="preserve">
+    <value>ALTER TABLE [SchemaExtension] ADD [Description] NTEXT NULL</value>
+  </data>
+  <data name="1_9_0004" xml:space="preserve">
+    <value>CREATE TABLE [MenuModelSelectionDialogParameterMapping] (
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CLUSTERED,
+	[refEntityFieldId] UNIQUEIDENTIFIER NULL)</value>
+  </data>
+  <data name="1_9_0005" xml:space="preserve">
+    <value>update MenuModelFormReferenceMenuItem
+	set refFilterSetId = form.refDataStructureFilterSetId
+from 
+	MenuModelFormReferenceMenuItem
+	inner join GuiModelControlSet form on
+		form.Id = MenuModelFormReferenceMenuItem.refFormId</value>
+  </data>
+  <data name="1_9_0006" xml:space="preserve">
+    <value>alter table GuiModelControlSet drop column  refDataStructureFilterSetId</value>
+  </data>
+  <data name="1_10_0001" xml:space="preserve">
+    <value>ALTER TABLE [EntityModelDataConstant] ADD [FloatValue] DECIMAL(18,10) NULL
+ALTER TABLE [EntityModelDataConstant] ADD [CurrencyValue] MONEY NULL
+ALTER TABLE [StateMachineState] ADD [CurrencyValue] MONEY NULL
+ALTER TABLE [StateMachineState] ADD [FloatValue] DECIMAL NULL
+ALTER TABLE [WorkflowModelUIFormTask] ADD [refDefaultSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [WorkflowModelUIFormTask] ADD [refTemplateSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [WorkflowModelUIFormTask] ADD [refDefaultTemplateId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refListDataStructureId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refListFilterSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refListEntityId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refTemplateSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refDefaultTemplateId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [EntityModelDataConstant] ADD [BooleanValue] BIT NOT NULL CONSTRAINT [DF_EntityModelDataConstant_BooleanValue] DEFAULT 0
+ALTER TABLE [EntityModelDataConstant] DROP CONSTRAINT [DF_EntityModelDataConstant_BooleanValue]
+ALTER TABLE [StateMachineState] ADD [BooleanValue] BIT NOT NULL CONSTRAINT [DF_StateMachineState_BooleanValue] DEFAULT 0
+ALTER TABLE [StateMachineState] DROP CONSTRAINT [DF_StateMachineState_BooleanValue]
+ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refRecordEditFilterSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [EntityModelDataEntityColumn] ADD [OnCopyAction] INT NOT NULL CONSTRAINT [DF_EntityModelDataEntityColumn_OnCopyAction] DEFAULT 0
+ALTER TABLE [EntityModelDataEntityColumn] DROP CONSTRAINT [DF_EntityModelDataEntityColumn_OnCopyAction]</value>
+  </data>
+  <data name="1_10_0002" xml:space="preserve">
+    <value>CREATE TABLE [DataStructureTransformationTemplate] (
+	[refTransformationId] UNIQUEIDENTIFIER NOT NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED)</value>
+  </data>
+  <data name="1_10_0003" xml:space="preserve">
+    <value>CREATE TABLE [DataStructureTemplate] (
+	[Id] [uniqueidentifier] NOT NULL ,
+	[refDataStructureEntityId] [uniqueidentifier] NOT NULL 
+)
+
+ALTER TABLE [DataStructureTemplate] ADD 
+	 PRIMARY KEY  NONCLUSTERED 
+	(
+		[Id]
+	)</value>
+  </data>
+  <data name="1_10_0004" xml:space="preserve">
+    <value>CREATE TABLE [DataLookupMenuBinding] (
+	[refMenuItemId] UNIQUEIDENTIFIER NOT NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[Roles] NVARCHAR(500) NULL)</value>
+  </data>
+  <data name="1_10_0005" xml:space="preserve">
+    <value>insert into SchemaItem --(Id, Name, refParentItemId, TargetType, refSchemaExtensionId, ItemType, IsAbstract)
+select
+	newid() as Id, 'MenuBinding' as Name, Id as refParentItemId, null as refSchemaItemGroupId, 'CZ.Advantages.Asap.Schema.LookupModel.DataLookupMenuBinding' as TargetType, refSchemaExtensionId, 'DataLookupMenuBinding' as ItemType, IsAbstract
+from
+	SchemaItem 
+where 
+	Id in (select Id from DataLookupModelDataLookup where refListMenuItemId is not null)
+
+insert into DataLookupMenuBinding (Id, refMenuItemId, Roles)
+select
+	(select si.Id from SchemaItem si where refParentItemId =  DataLookupModelDataLookup.Id) as Id,
+	refListMenuItemId as refMenuItemId,
+               '*' as Roles
+from
+	DataLookupModelDataLookup
+where 
+	refListMenuItemId is not null
+
+alter table DataLookupModelDataLookup drop column refListMenuItemId</value>
+  </data>
+  <data name="1_11_0001" xml:space="preserve">
+    <value>CREATE TABLE [DataStructureRule] (
+	[refDataStructureEntityId] UNIQUEIDENTIFIER NOT NULL,
+	[refFieldId] UNIQUEIDENTIFIER NULL,
+	[refValueRuleId] UNIQUEIDENTIFIER NOT NULL,
+	[refCheckRuleId] UNIQUEIDENTIFIER NULL,
+	[Priority] INT NOT NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[refTargetFieldId] UNIQUEIDENTIFIER NULL)</value>
+  </data>
+  <data name="1_11_0002" xml:space="preserve">
+    <value>ALTER TABLE [MenuModelFormReferenceMenuItem] ADD [refRuleSetId] UNIQUEIDENTIFIER NULL
+ALTER TABLE [WorkflowModelContextStore] ADD [refRuleSetId] UNIQUEIDENTIFIER NULL</value>
+  </data>
+  <data name="1_11_0003" xml:space="preserve">
+    <value>CREATE TABLE [DataStructureRuleDependency] (
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[refDataStructureEntityId] UNIQUEIDENTIFIER NOT NULL,
+	[refFieldId] UNIQUEIDENTIFIER NOT NULL)
+
+insert into SchemaItem (Id, Name, refParentItemId, TargetType, refSchemaExtensionId, ItemType, IsAbstract)
+Select newid(), Name, Id, 'CZ.Advantages.Asap.Schema.EntityModel.DataStructureRuleDependency', refSchemaExtensionId, 'DataStructureRuleDependency', IsAbstract from SchemaItem where ItemType = 'DataStructureRule' and (select dsr.refFieldId from DataStructureRule dsr where dsr.Id = SchemaItem.Id) is not null
+
+insert into DataStructureRuleDependency (Id, refFieldId, refDataStructureEntityId)
+select id, (select dsr.refFieldId from DataStructureRule dsr where dsr.Id = refParentItemId), (select dsr.refDataStructureEntityId from DataStructureRule dsr where dsr.Id = refParentItemId) from SchemaItem where ItemType = 'DataStructureRuleDependency' and (select dsr.refFieldId from DataStructureRule dsr where dsr.Id = refParentItemId) is not null
+
+alter table DataStructureRule drop column refFieldId</value>
+  </data>
+  <data name="1_12_0001" xml:space="preserve">
+    <value>CREATE TABLE dbo.Tmp_GuiModelReport
+	(
+	Id uniqueidentifier NOT NULL,
+	refDataStructureId uniqueidentifier NULL,
+	refDataStructureFilterSetId uniqueidentifier NULL
+	)
+
+IF EXISTS(SELECT * FROM dbo.GuiModelReport)
+	 EXEC('INSERT INTO dbo.Tmp_GuiModelReport (Id, refDataStructureId, refDataStructureFilterSetId)
+		SELECT Id, refDataStructureId, refDataStructureFilterSetId FROM dbo.GuiModelReport TABLOCKX')
+
+DROP TABLE dbo.GuiModelReport
+
+EXECUTE sp_rename N'dbo.Tmp_GuiModelReport', N'GuiModelReport', 'OBJECT'
+
+ALTER TABLE dbo.GuiModelReport ADD CONSTRAINT
+	PK_GuiModelReport PRIMARY KEY CLUSTERED 
+	(
+	Id
+	)</value>
+  </data>
+  <data name="1_13_0001" xml:space="preserve">
+    <value>CREATE TABLE [EntityModelEntitySecurityFilterReference] (
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[refFilterId] UNIQUEIDENTIFIER NOT NULL,
+	[Roles] NVARCHAR(500) NULL)</value>
+  </data>
+  <data name="1_14_0001" xml:space="preserve">
+    <value>ALTER TABLE [SchemaItem] ADD [L01] BIGINT NULL
+
+ALTER TABLE [SchemaItem] ADD [L02] BIGINT NULL
+
+ALTER TABLE [SchemaItem] ADD [BLB01] IMAGE NULL
+
+ALTER TABLE [SchemaItem] ADD [LS01] NVARCHAR(2000) NULL
+
+ALTER TABLE [SchemaItem] ADD [SS01] NVARCHAR(300) NULL
+
+ALTER TABLE [SchemaItem] ADD [SS02] NVARCHAR(300) NULL
+
+ALTER TABLE [SchemaItem] ADD [SS03] NVARCHAR(300) NULL
+
+ALTER TABLE [SchemaItem] ADD [SS04] NVARCHAR(300) NULL
+
+ALTER TABLE [SchemaItem] ADD [SS05] NVARCHAR(300) NULL
+
+ALTER TABLE [SchemaItem] ADD [M01] NTEXT NULL
+
+ALTER TABLE [SchemaItem] ADD [I01] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I02] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I03] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I04] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I05] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I06] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I07] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I08] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [I09] INT NULL
+
+ALTER TABLE [SchemaItem] ADD [G01] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G02] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G03] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G04] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G05] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G06] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G07] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G08] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G09] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G10] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G11] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G12] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G13] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G14] UNIQUEIDENTIFIER NULL
+
+ALTER TABLE [SchemaItem] ADD [G15] UNIQUEIDENTIFIER NULL
+
+
+ALTER TABLE [SchemaItem] ADD [C01] MONEY NULL
+
+ALTER TABLE [SchemaItem] ADD [C02] MONEY NULL
+
+ALTER TABLE [SchemaItem] ADD [F01] DECIMAL(18,10) NULL
+
+ALTER TABLE [SchemaItem] ADD [F02] DECIMAL(18,10) NULL
+
+ALTER TABLE [SchemaItem] ADD [B01] BIT NULL
+
+ALTER TABLE [SchemaItem] ADD [B02] BIT NULL
+
+ALTER TABLE [SchemaItem] ADD [B03] BIT NULL
+
+ALTER TABLE [SchemaItem] ADD [B04] BIT NULL
+
+ALTER TABLE [SchemaItem] ADD [B05] BIT NULL
+
+ALTER TABLE [SchemaItem] ADD [B06] BIT NULL
+
+ALTER TABLE [SchemaItem] ADD [B07] BIT NULL</value>
+  </data>
+  <data name="1_14_0002" xml:space="preserve">
+    <value>update SchemaItem set
+	SS01 = ListDisplayMember,
+	B01 = IsTree,
+	SS02 = TreeParentMember,
+	SS03 = ListValueMember,
+	G01 = refListDataStructureId,
+	SS04 = ValueDisplayMember,
+	G02 = refValueDataStructureId,
+	SS05 = ValueValueMember
+from SchemaItem inner join
+	DataLookupModelDataLookup x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G03 = refListDataStructureFilterSetId,
+	G04 = refValueDataStructureFilterSetId
+from SchemaItem inner join
+	DataLookupModelDataServiceDataLookup x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refMenuItemId,
+	LS01 = Roles
+from SchemaItem inner join
+	DataLookupMenuBinding x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refColumnId,
+	SS01 = Caption,
+	G02 = refDefaultLookupId,
+	I01 = SortOrder,
+	I02 = SortDirection,
+	B01 = UseLookupValue
+from SchemaItem inner join
+	DataStructureColumn x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureEntityId,
+	G02 = refDataConstantId,
+	G03 = refEntityFieldId
+from SchemaItem inner join
+	DataStructureDefaultSetDefault x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refEntityId,
+	SS01 = Caption,
+	I01 = RelationType,
+	B01 = AllColumns
+from SchemaItem inner join
+	DataStructureEntity x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureEntityId,
+	G02 = refFilterId
+from SchemaItem inner join
+	DataStructureFilterSetFilter x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureEntityId,
+	G02 = refValueRuleId,
+	G03 = refCheckRuleId,
+	I01 = Priority,
+	G04 = refTargetFieldId
+from SchemaItem inner join
+	DataStructureRule x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureEntityId,
+	G02 = refFieldId
+from SchemaItem inner join
+	DataStructureRuleDependency x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureEntityId
+from SchemaItem inner join
+	DataStructureTemplate x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G05 = refTransformationId
+from SchemaItem inner join
+	DataStructureTransformationTemplate x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = ActivityOrder
+from SchemaItem inner join
+	DeploymentUpdateScriptActivity x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	LS01 = ManualLocation,
+	I05 = TargetLocation,
+	BLB01 = [File]
+from SchemaItem inner join
+	DeploymentFileRestoreUpdateScriptActivity x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G05 = refServiceId,
+	M01 = CommandText
+from SchemaItem inner join
+	DeploymentServiceCommandUpdateScriptActivity x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS01 = Version
+from SchemaItem inner join
+	DeploymentVersion x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = DataType,
+	I02 = [DataLength],
+	B01 = AllowNulls,
+	B02 = IsPrimaryKey,
+	SS01 = Caption,
+	G01 = refDefaultLookupId,
+	B03 = AutoIncrement,
+	L01 = AutoIncrementSeed,
+	L02 = AutoIncrementStep,
+	G02 = refDefaultValueId,
+	G03 = refForeignEntityId,
+	G04 = refForeignEntityColumnId,
+	I03 = XmlMappingType,
+	I04 = OnCopyAction
+from SchemaItem inner join
+	EntityModelDataEntityColumn x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I07 = AggregationType,
+	G07 = refRelationId,
+	G08 = refColumnId
+from SchemaItem inner join
+	EntityModelAggregatedColumn x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = GuidValue,
+	LS01 = StringValue,
+	I01 = IntValue,
+	I02 = DataType,
+	G02 = refDataLookupId,
+	F01 = FloatValue,
+	C01 = CurrencyValue,
+	B01 = BooleanValue
+from SchemaItem inner join
+	EntityModelDataConstant x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataConstantId
+from SchemaItem inner join
+	EntityModelDataConstantReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS01 = Caption,
+	B01 = IsReadOnly,
+	B02 = IsAuditingEnabled
+from SchemaItem inner join
+	EntityModelDataEntity x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = SortOrder,
+	G01 = refColumnId,
+	I02 = OrdinalPosition
+from SchemaItem inner join
+	EntityModelDataEntityIndexField x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureId,
+	G02 = refDataStructureFilterSetId
+from SchemaItem inner join
+	EntityModelDataStructureReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refColumnId
+from SchemaItem inner join
+	EntityModelEntityColumnReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refFilterId
+from SchemaItem inner join
+	EntityModelEntityFilterReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refBaseEntityColumnId,
+	G02 = refRelatedEntityColumnId
+from SchemaItem inner join
+	EntityModelEntityRelationColumnPairItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refFilterId
+from SchemaItem inner join
+	EntityModelEntityRelationFilter x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refRelatedEntityId,
+	B01 = IsParentChild,
+	B02 = IsSelfJoin
+from SchemaItem inner join
+	EntityModelEntityRelationItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refFilterId,
+	LS01 = Roles
+from SchemaItem inner join
+	EntityModelEntitySecurityFilterReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS03 = SourceFieldName
+from SchemaItem inner join
+	EntityModelFieldMappingItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G07 = refFunctionId
+from SchemaItem inner join
+	EntityModelFunctionCall x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refFunctionParameterId
+from SchemaItem inner join
+	EntityModelFunctionCallParameter x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS03 = SourceTableName,
+	B05 = GenerateDeploymentScript,
+	I05 = DatabaseObjectType
+from SchemaItem inner join
+	EntityModelTableMappingItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = DataType,
+	I02 = FunctionType
+from SchemaItem inner join
+	[Function] x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = OrdinalPosition
+from SchemaItem inner join
+	FunctionParameter x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS01 = ColumnName
+from SchemaItem inner join
+	GuiModelColumnParameterMapping x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS01 = ControlType,
+	SS02 = ControlNamespace,
+	B01 = IsComplexType,
+	G01 = refPanelControlSetId,
+	I01 = ControlToolBoxVisibility
+from SchemaItem inner join
+	GuiModelControlItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = PropertyType,
+	B01 = IsBindOnly
+from SchemaItem inner join
+	GuiModelControlPropertyItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataSourceId
+from SchemaItem inner join
+	GuiModelControlSet x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refControlId
+from SchemaItem inner join
+	GuiModelControlSetItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureId,
+	G02 = refDataStructureFilterSetId
+from SchemaItem inner join
+	GuiModelReport x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	LS01 = ReportFileName
+from SchemaItem inner join
+	GuiModelCrystalReport x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	BLB01 = GraphicsData
+from SchemaItem inner join
+	GuiModelGraphics x on x.Id = SchemaItem.Id
+
+
+update SchemaItem set
+	G01 = refControlPropertyId,
+	SS01 = DesignDataSetPath,
+	B01 = BoolValue,
+	I01 = IntValue,
+	G02 = GuidValue,
+	LS01 = Value
+from SchemaItem inner join
+	GuiModelPropertyValueItem x on x.Id = SchemaItem.Id
+
+
+update SchemaItem set
+	G01 = refReportId
+from SchemaItem inner join
+	GuiModelReportReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS01 = DisplayName,
+	LS01 = Roles,
+	G01 = refGraphicsId
+from SchemaItem inner join
+	MenuModelMenuItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G02 = refDataConstantId
+from SchemaItem inner join
+	MenuModelDataConstantReferenceMenuItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G02 = refFormId,
+	B01 = ReadOnlyAccess,
+	G03 = refDefaultSetId,
+	G04 = refFilterSetId,
+	B02 = OnlyNewRecords,
+	G05 = refSelectionPanelId,
+	G06 = refSelectionPanelBeforeTransformationId,
+	G07 = refSelectionPanelAfterTransformationId,
+	G08 = refSelectionEndRuleId,
+	G09 = refTemplateSetId,
+	G10 = refDefaultTemplateId,
+	G11 = refListDataStructureId,
+	G12 = refListFilterSetId,
+	G13 = refListEntityId,
+	G14 = refRecordEditFilterSetId,
+	G15 = refRuleSetId
+from SchemaItem inner join
+	MenuModelFormReferenceMenuItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	SS01 = DisplayName
+from SchemaItem inner join
+	MenuModelMenu x on x.Id = SchemaItem.Id
+
+
+update SchemaItem set
+	G02 = refReportId
+from SchemaItem inner join
+	MenuModelReportReferenceMenuItem x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refEntityFieldId
+from SchemaItem inner join
+	MenuModelSelectionDialogParameterMapping x on x.Id = SchemaItem.Id
+
+
+update SchemaItem set
+	G02 = refWorkflowId
+from SchemaItem inner join
+	MenuModelWorkflowReferenceMenuItem x on x.Id = SchemaItem.Id
+
+
+update SchemaItem set
+	G01 = refParameterId
+from SchemaItem inner join
+	ParameterReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureId,
+	I01 = DataType
+from SchemaItem inner join
+	RuleModelRule x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	M01 = XPath
+from SchemaItem inner join
+	RuleModelXPathRule x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	M01 = Xsl
+from SchemaItem inner join
+	RuleModelXslRule x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = DataType,
+	I02 = [DataLength],
+	B01 = AllowNulls
+from SchemaItem inner join
+	SchemaItemParameter x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refEntityId,
+	G02 = refFieldId
+from SchemaItem inner join
+	StateMachine x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = Type,
+	G01 = refWorkflowId,
+	G02 = refOldStateId,
+	G03 = refNewStateId
+from SchemaItem inner join
+	StateMachineEvent x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refRuleId,
+	G02 = refTargetStateId,
+	LS01 = Roles
+from SchemaItem inner join
+	StateMachineOperation x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = Type,
+	I02 = IntValue,
+	SS01 = StringValue,
+	G01 = GuidValue,
+	G02 = refDefaultSubstateId,
+	C01 = CurrencyValue,
+	F01 = FloatValue,
+	B01 = BooleanValue
+from SchemaItem inner join
+	StateMachineState x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	LS01 = Role
+from SchemaItem inner join
+	TestModelTestCase x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refTestChecklistRuleId,
+	I01 = StepType
+from SchemaItem inner join
+	TestModelTestCaseStep x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refTransformationId
+from SchemaItem inner join
+	TransformationReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refDataStructureId,
+	I01 = DataType,
+	G02 = refRuleSetId
+from SchemaItem inner join
+	WorkflowModelContextStore x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = Direction,
+	G01 = refCallerContextStoreId,
+	G02 = refTargetContextStoreId,
+	LS01 = XPath
+from SchemaItem inner join
+	WorkflowModelContextStoreLink x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refStartRuleContextStoreId,
+	G02 = refStartRuleId,
+	G03 = refEndRuleContextStoreId,
+	G04 = refEndRuleId,
+	I01 = TraceLevel
+from SchemaItem inner join
+	WorkflowModelWorkflowStep x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G07 = refOutputContextStoreId,
+	I05 = OutputMethod
+from SchemaItem inner join
+	WorkflowModelWorkflowTask x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G07 = refSourceContextStoreId,
+	LS01 = IteratorXPath
+from SchemaItem inner join
+	WorkflowModelForeachWorkflowBlock x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = ReturnValueDataType
+from SchemaItem inner join
+	WorkflowModelServiceMethod x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refServiceMethodParameterId
+from SchemaItem inner join
+	WorkflowModelServiceMethodCallParameter x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G10 = refServiceId,
+	G11 = refServiceMethodId
+from SchemaItem inner join
+	WorkflowModelServiceMethodCallTask x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G10 = refContextStoreId,
+	LS01 = XPath,
+	I05 = WorkflowProperty,
+	SS03 = Delimiter,
+	I06 = Method
+from SchemaItem inner join
+	WorkflowModelSetWorkflowPropertyTask x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = IntervalType,
+	I02 = Milliseconds,
+	I03 = Seconds,
+	I04 = Minutes,
+	I05 = Hours,
+	I06 = Days
+from SchemaItem inner join
+	WorkflowModelSimpleScheduleTime x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = [Function]
+from SchemaItem inner join
+	WorkflowModelSystemFunctionCall x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I05 = TransactionType
+from SchemaItem inner join
+	WorkflowModelTransactionWorkflowBlock x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G10 = refFormId,
+	G11 = refDefaultSetId,
+	G12 = refTemplateSetId,
+	G13 = refDefaultTemplateId
+from SchemaItem inner join
+	WorkflowModelUIFormTask x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	I01 = TraceLevel
+from SchemaItem inner join
+	WorkflowModelWorkflow x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G10 = refWorkflowId
+from SchemaItem inner join
+	WorkflowModelWorkflowCallTask x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refContextStoreId,
+	LS01 = XPath
+from SchemaItem inner join
+	WorkflowModelWorkflowContextReference x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refFieldId,
+	G02 = refContextId,
+	I01 = Type
+from SchemaItem inner join
+	WorkflowModelWorkflowEntityParameterMapping x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refWorkflowId,
+	G02 = refScheduleTimeId
+from SchemaItem inner join
+	WorkflowModelWorkflowSchedule x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	G01 = refWorkflowTaskId,
+	I01 = StartEvent
+from SchemaItem inner join
+	WorkflowModelWorkflowTaskDependency x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	M01 = Xsd
+from SchemaItem inner join
+	XsdDataStructure x on x.Id = SchemaItem.Id
+
+update SchemaItem set
+	M01 = TextStore
+from SchemaItem inner join
+	XslTransformation x on x.Id = SchemaItem.Id</value>
+  </data>
+  <data name="1_14_0003" xml:space="preserve">
+    <value>drop table DataLookupMenuBinding
+drop table DataLookupModelDataLookup
+drop table DataLookupModelDataServiceDataLookup
+drop table DataStructureColumn
+drop table DataStructureDefaultSetDefault
+drop table DataStructureEntity
+drop table DataStructureFilterSetFilter
+drop table DataStructureRule
+drop table DataStructureRuleDependency
+drop table DataStructureTemplate
+drop table DataStructureTransformationTemplate
+drop table DeploymentFileRestoreUpdateScriptActivity
+drop table DeploymentServiceCommandUpdateScriptActivity
+drop table DeploymentUpdateScriptActivity
+drop table DeploymentVersion
+drop table EntityModelAggregatedColumn
+drop table EntityModelDataConstant
+drop table EntityModelDataConstantReference
+drop table EntityModelDataEntity
+drop table EntityModelDataEntityColumn
+drop table EntityModelDataEntityIndexField
+drop table EntityModelDataStructureReference
+drop table EntityModelEntityColumnReference
+drop table EntityModelEntityFilterReference
+drop table EntityModelEntityRelationColumnPairItem
+drop table EntityModelEntityRelationFilter
+drop table EntityModelEntityRelationItem
+drop table EntityModelEntitySecurityFilterReference
+drop table EntityModelFieldMappingItem
+drop table EntityModelFunctionCall
+drop table EntityModelFunctionCallParameter
+drop table EntityModelTableMappingItem
+drop table [Function]
+drop table FunctionParameter
+drop table GuiModelColumnParameterMapping
+drop table GuiModelControlItem
+drop table GuiModelControlPropertyItem
+drop table GuiModelControlSet
+drop table GuiModelControlSetItem
+drop table GuiModelCrystalReport
+drop table GuiModelGraphics
+drop table GuiModelPropertyValueItem
+drop table GuiModelReport
+drop table GuiModelReportReference
+drop table MenuModelDataConstantReferenceMenuItem
+drop table MenuModelFormReferenceMenuItem
+drop table MenuModelMenu
+drop table MenuModelMenuItem
+drop table MenuModelReportReferenceMenuItem
+drop table MenuModelSelectionDialogParameterMapping
+drop table MenuModelWorkflowReferenceMenuItem
+drop table ParameterReference
+drop table RuleModelRule
+drop table RuleModelXPathRule
+drop table RuleModelXslRule
+drop table SchemaItemParameter
+drop table StateMachine
+drop table StateMachineEvent
+drop table StateMachineOperation
+drop table StateMachineState
+drop table TestModelTestCase
+drop table TestModelTestCaseStep
+drop table TransformationReference
+drop table WorkflowModelContextStore
+drop table WorkflowModelContextStoreLink
+drop table WorkflowModelForeachWorkflowBlock
+drop table WorkflowModelServiceMethod
+drop table WorkflowModelServiceMethodCallParameter
+drop table WorkflowModelServiceMethodCallTask
+drop table WorkflowModelSetWorkflowPropertyTask
+drop table WorkflowModelSimpleScheduleTime
+drop table WorkflowModelSystemFunctionCall
+drop table WorkflowModelTransactionWorkflowBlock
+drop table WorkflowModelUIFormTask
+drop table WorkflowModelWorkflow
+drop table WorkflowModelWorkflowCallTask
+drop table WorkflowModelWorkflowContextReference
+drop table WorkflowModelWorkflowEntityParameterMapping
+drop table WorkflowModelWorkflowSchedule
+drop table WorkflowModelWorkflowStep
+drop table WorkflowModelWorkflowTask
+drop table WorkflowModelWorkflowTaskDependency
+drop table XsdDataStructure
+drop table XslTransformation</value>
+  </data>
+  <data name="1_14_0004" xml:space="preserve">
+    <value>ALTER TABLE [SchemaItem] ADD [D01] DATETIME NULL
+
+ALTER TABLE [SchemaItem] ADD [D02] DATETIME NULL
+
+ALTER TABLE [SchemaItem] ADD [D03] DATETIME NULL
+
+ALTER TABLE [SchemaItem] ADD [D04] DATETIME NULL</value>
+  </data>
+  <data name="1_15_0001" xml:space="preserve">
+    <value>update SchemaItem set SS02 = '*' where ItemType = 'WorkflowTask'</value>
+  </data>
+  <data name="1_15_0002" xml:space="preserve">
+    <value>update SchemaItem set LS01 = '*' where ItemType = 'StateMachineEvent'</value>
+  </data>
+  <data name="1_16_0001" xml:space="preserve">
+    <value>ALTER TABLE [SchemaItem] ADD [G16] UNIQUEIDENTIFIER NULL
+ALTER TABLE [SchemaItem] ADD [G17] UNIQUEIDENTIFIER NULL
+ALTER TABLE [SchemaItem] ADD [G18] UNIQUEIDENTIFIER NULL
+ALTER TABLE [SchemaItem] ADD [G19] UNIQUEIDENTIFIER NULL
+ALTER TABLE [SchemaItem] ADD [G20] UNIQUEIDENTIFIER NULL</value>
+  </data>
+  <data name="1_16_0002" xml:space="preserve">
+    <value>insert into SchemaItem (Id, Name, refParentItemId, TargetType, refSchemaExtensionId, ItemType, IsAbstract)
+select
+	newid() as Id,
+	'Default' as Name,
+	rootItem.Id as refParentItemId,
+	'CZ.Advantages.Asap.Schema.EntityModel.DataStructureSortSet' as TargetType,
+	rootItem.refSchemaExtensionId as refSchemaExtensionId,
+	'DataStructureSortSet' as ItemType,
+	0 as IsAbstract
+from	
+	(
+		select distinct
+			dbo.getRootItemId(Id, refParentItemId) as rootId
+		from 
+			SchemaItem si 
+		where 
+			ItemType = 'DataStructureColumn' 
+			and I02 &gt; 0
+	) as x
+	inner join SchemaItem rootItem on
+		rootItem.Id = rootId</value>
+  </data>
+  <data name="1_16_0003" xml:space="preserve">
+    <value>insert into SchemaItem (Id, Name, refParentItemId, TargetType, refSchemaExtensionId, ItemType, IsAbstract, I01, I02, G01, SS01)
+select
+	newid() as Id,
+	EntityName + '_' + cast(x.I01 as varchar(10)) + '_' + x.Name as Name,
+	sortSet.Id as refParentItemId,
+	'CZ.Advantages.Asap.Schema.EntityModel.DataStructureSortSetItem' as TargetType,
+	rootItem.refSchemaExtensionId as refSchemaExtensionId,
+	'DataStructureSortSetItem' as ItemType,
+	0 as IsAbstract,
+	x.I01,
+	x.I02,
+	x.refParentItemId as G01,
+	x.Name as SS01
+from	
+	(
+		select
+			Name,
+			(select entity.Name from SchemaItem entity where entity.Id = si.refParentItemId) as EntityName,
+			I01,
+			I02,
+			refParentItemId,
+			dbo.getRootItemId(Id, refParentItemId) as rootId
+		from 
+			SchemaItem si 
+		where 
+			ItemType = 'DataStructureColumn' 
+			and I02 &gt; 0
+	) as x
+	inner join SchemaItem rootItem on
+		rootItem.Id = rootId
+	inner join SchemaItem sortSet on
+		sortSet.refParentItemId = rootItem.Id
+		and sortSet.ItemType = 'DataStructureSortSet'</value>
+  </data>
+  <data name="1_16_0004" xml:space="preserve">
+    <value>-- reports
+update 
+	SchemaItem
+SET
+	G03 = (select sortSet.Id from SchemaItem sortSet where sortSet.ItemType = 'DataStructureSortSet' and sortSet.refParentItemId = SchemaItem.G01)
+where 
+	ItemType = 'Report'
+
+
+-- data structure reference
+update 
+	SchemaItem
+SET
+	G03 = (select sortSet.Id from SchemaItem sortSet where sortSet.ItemType = 'DataStructureSortSet' and sortSet.refParentItemId = SchemaItem.G01)
+where 
+	ItemType = 'DataStructureReference'
+
+-- menu
+update 
+	SchemaItem
+SET
+	G16 = (select sortSet.Id from SchemaItem sortSet inner join SchemaItem form on sortSet.refParentItemId = form.G01 where sortSet.ItemType = 'DataStructureSortSet' and form.Id = SchemaItem.G02)
+where 
+	TargetType = 'CZ.Advantages.Asap.Schema.MenuModel.FormReferenceMenuItem'
+
+-- lookup
+update 
+	SchemaItem
+SET
+	G05 = (select sortSet.Id from SchemaItem sortSet where sortSet.ItemType = 'DataStructureSortSet' and sortSet.refParentItemId = SchemaItem.G02)
+where 
+	TargetType = 'CZ.Advantages.Asap.Schema.LookupModel.DataServiceDataLookup'</value>
+  </data>
+  <data name="1_17_0001" xml:space="preserve">
+    <value>update SchemaItem set I01 = 9 where ItemType = 'WorkflowContextReference'</value>
+  </data>
+  <data name="1_18_0001" xml:space="preserve">
+    <value>update SchemaItem set I02 = 1 where B02 = 1 and ItemType = 'DataStructureEntity'</value>
+  </data>
+  <data name="1_18_0002" xml:space="preserve">
+    <value>update SchemaItem set B02 = 0 where ItemType = 'DataStructureEntity'</value>
+  </data>
+  <data name="4_6_0001" xml:space="preserve">
+    <value>update SchemaItem
+set I05 = 127,
+TargetType = 'CZ.Advantages.Asap.Schema.WorkflowModel.ServiceMethodParameter'
+from
+SchemaItem
+inner join SchemaItem parent on parent.Id = SchemaItem.refParentItemId 
+where
+SchemaItem.TargetType = 'CZ.Advantages.Asap.Schema.SchemaItemParameter'
+and parent.TargetType = 'CZ.Advantages.Asap.Schema.WorkflowModel.ServiceMethod'</value>
+  </data>
+  <data name="4_7_0001" xml:space="preserve">
+    <value>insert into SchemaItem (Id, Name, refParentItemId, TargetType, refSchemaExtensionId, ItemType, IsAbstract, G01)
+select 
+	newid() as Id,
+	field.Name,
+	si.Id as refParentItemId,
+	'CZ.Advantages.Asap.Schema.WorkflowModel.StateMachineEventFieldDependency' as TargetType,
+	si.refSchemaExtensionId,
+	'StateMachineEventFieldDependency' as ItemType,
+	0 as IsAbstract,
+	si.G04 as G01
+from
+	SchemaItem si
+	inner join SchemaItem field ON field.Id = si.G04
+where
+	si.ItemType = 'StateMachineEvent'
+	and si.G04 is not null
+</value>
+  </data>
+  <data name="4_7_0002" xml:space="preserve">
+    <value>update SchemaItem set I01 = 4, G04 = null WHERE ItemType = 'StateMachineEvent' and I01 = 6</value>
+  </data>
+  <data name="4_8_0001" xml:space="preserve">
+    <value>ALTER TABLE SchemaItem ADD M02 NTEXT NULL
+		ALTER TABLE SchemaItem ADD M03 NTEXT NULL
+		ALTER TABLE SchemaItem ADD M04 NTEXT NULL
+		ALTER TABLE SchemaItem ADD M05 NTEXT NULL</value>
+  </data>
+  <data name="4_9_0001" xml:space="preserve">
+    <value>
+      DELETE FROM SchemaItem WHERE G01 = 'F9BE9E38-D92F-423B-9380-F7095680908F'
+      AND TargetType = 'CZ.Advantages.Asap.Schema.GuiModel.PropertyValueItem'
+    </value>
+  </data>
+  <data name="4_10_0001" xml:space="preserve">
+    <value>
+      -- XSLT Data Page - SaveValidationBeforeMerge &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G09 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.GuiModel.XsltDataPage')
+    </value>
+  </data>
+  <data name="4_10_0002" xml:space="preserve">
+    <value>
+      -- XSLT Data Page - SaveValidationAfterMerge &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G10 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.GuiModel.XsltDataPage')
+    </value>
+  </data>
+  <data name="4_10_0003" xml:space="preserve">
+    <value>
+      -- UI Workflow Action - ConfirmationRule &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G07 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.MenuModel.EntityWorkflowAction')
+    </value>
+  </data>
+  <data name="4_10_0004" xml:space="preserve">
+    <value>
+      -- Screen Menu Item - SelectionDialogEndRule &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G07 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.MenuModel.FormReferenceMenuItem')
+    </value>
+  </data>
+  <data name="4_10_0005" xml:space="preserve">
+    <value>
+      -- Screen Menu Item - ConfirmationRule &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G19 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.MenuModel.FormReferenceMenuItem')
+    </value>
+  </data>
+  <data name="4_10_0006" xml:space="preserve">
+    <value>
+      -- Screen Menu Item - SelectionDialogEndRule &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G06 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.MenuModel.ReportReferenceMenuItem')
+    </value>
+  </data>
+  <data name="4_10_0007" xml:space="preserve">
+    <value>
+      -- AbstractWorkflowTask - EndRule &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G04 = SchemaItem.Id
+      and ref.ItemType = 'WorkflowTask')
+    </value>
+  </data>
+  <data name="4_10_0008" xml:space="preserve">
+    <value>
+      -- UI Task - SaveConfirmationRule &gt; EndRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.EndRuleLookupXPath'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G15 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.WorkflowModel.UIFormTask')
+    </value>
+  </data>
+  <data name="4_10_0009" xml:space="preserve">
+    <value>
+      -- DataStructureRule - ValueRule &gt; DataRule
+      UPDATE SchemaItem SET TargetType = (CASE TargetType
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XslRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.ComplexDataRule'
+      WHEN 'CZ.Advantages.Asap.Schema.RuleModel.XPathRule'
+      THEN 'CZ.Advantages.Asap.Schema.RuleModel.SimpleDataRule'
+      ELSE TargetType END)
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G02 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.EntityModel.DataStructureRule')
+    </value>
+  </data>
+  <data name="4_10_0010" xml:space="preserve">
+    <value>
+      -- DataStructureRule - ConditionRule &gt; StartRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.StartRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G03 = SchemaItem.Id
+      and ref.TargetType = 'CZ.Advantages.Asap.Schema.EntityModel.DataStructureRule')
+    </value>
+  </data>
+  <data name="4_10_0011" xml:space="preserve">
+    <value>
+      -- WorkflowStep - StartRule &gt; StartRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.StartRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G02 = SchemaItem.Id
+      and ref.ItemType = 'WorkflowTask')
+    </value>
+  </data>
+  <data name="4_10_0012" xml:space="preserve">
+    <value>
+      -- WorkflowPageAction (redirect) - ConditionRule &gt; StartRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.StartRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G01 = SchemaItem.Id
+      and ref.ItemType = 'WorkflowPageAction')
+    </value>
+  </data>
+  <data name="4_10_0013" xml:space="preserve">
+    <value>
+      -- AbstractEntitySecurityRule - Rule &gt; EntityRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.EntityRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G01 = SchemaItem.Id
+      and ref.ItemType = 'EntitySecurityRule')
+    </value>
+  </data>
+  <data name="4_10_0014" xml:space="preserve">
+    <value>
+      -- EntityConditionalFormatting - Rule &gt; EntityRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.EntityRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G01 = SchemaItem.Id
+      and ref.ItemType = 'EntityConditionalFormatting')
+    </value>
+  </data>
+  <data name="4_10_0015" xml:space="preserve">
+    <value>
+      -- EntityFieldDynamicLabel - Rule &gt; EntityRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.EntityRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G01 = SchemaItem.Id
+      and ref.ItemType = 'EntityFieldDynamicLabel')
+    </value>
+  </data>
+  <data name="4_10_0016" xml:space="preserve">
+    <value>
+      -- EntityUIAction - Rule &gt; EntityRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.EntityRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G03 = SchemaItem.Id
+      and ref.ItemType = 'EntityUIAction')
+    </value>
+  </data>
+  <data name="4_10_0017" xml:space="preserve">
+    <value>
+      -- EntityWorkflowActionScriptCall - Rule &gt; EntityRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.EntityRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G01 = SchemaItem.Id
+      and ref.ItemType = 'EntityWorkflowActionScriptCall')
+    </value>
+  </data>
+  <data name="4_10_0018" xml:space="preserve">
+    <value>
+      -- StateMachineOperation - Rule &gt; EntityRule
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.EntityRule'
+      where ItemType = 'Rule'
+      and exists (select * from SchemaItem ref where ref.G01 = SchemaItem.Id
+      and ref.ItemType = 'StateMachineOperation')
+    </value>
+  </data>
+  <data name="4_10_0019" xml:space="preserve">
+    <value>
+      UPDATE SchemaItem SET TargetType = 'CZ.Advantages.Asap.Schema.RuleModel.EndRule'
+      where Id = 'E1C65FCD-118D-4EB3-9C2F-AA27FEC132BA'
+    </value>
+  </data>
+  <data name="4_11_0001" xml:space="preserve">
+    <value>update SchemaItem set I01 = B02 where ItemType = 'DataEntity'
+update SchemaItem set B02 = 0 where ItemType = 'DataEntity'</value>
+  </data>
+  <data name="5_0" xml:space="preserve">
+    <value>UPDATE [SchemaItem] SET [TargetType] = REPLACE([TargetType], 'CZ.Advantages.Asap', 'Origam');
+EXEC sp_rename 'AsapDatabaseSchemaVersion', 'OrigamDatabaseSchemaVersion';
+UPDATE [SchemaItem] SET Name = REPLACE(Name, 'Asap', 'Origam');
+UPDATE [SchemaItem] -- Cleanup SchemaItem. L01 and L02 columns are no longer used by DataEntityColumn
+SET L01 = null, L02 = null
+Where ItemType = 'DataEntityColumn';	
+UPDATE [SchemaItem] -- Cleanup SchemaItem. Column LS01 is not used if constant type is Integer (I02=8) 
+Set LS01 = null
+Where ItemType = 'DataConstant' And I02=8 And LS01='0';  
+UPDATE [SchemaItem] -- Cleanup SchemaItem. Column I01 is not used if constant type is Bool (I02=0) 
+Set I01 = null
+Where ItemType = 'DataConstant' And I02=0;
+	</value>
+  </data>
+</root>

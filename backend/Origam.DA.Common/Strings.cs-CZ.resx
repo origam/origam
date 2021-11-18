@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="PartialRollbackNotSupported">
+		<value>Partial rollback of transaction is not supported by {0}</value>
+	</data>
+	<data name="SavingNotSupported">
+		<value>Saving of transaction is not supported by {0}</value>
+	</data>
+	<data name="FileTooBig">
+		<value>File is too big to store, can't store files larger than {0} bytes.</value>
+	</data>
+	<data name="ErrorWhileReading">
+		<value>Error occured while reading file {0}</value>
+	</data>
+	<data name="ErrorWhileWriting">
+		<value>Error in writing file {0}</value>
+	</data>
+	<data name="OnlyDatetimeSupported">
+		<value>Only DateTime or NULL value is supported.</value>
+	</data>
+	<data name="CopyPrefix">
+		<value>Kopie - </value>
+	</data>
+	<data name="ChildErrors">
+		<value>Podřízené záznamy obsahují chyby</value>
+	</data>
+	<data name="CantBeEmpty">
+		<value>{0} nesmí být prázdné</value>
+	</data>
+	<data name="FillPlease">
+		<value>Vyplňte, prosím, {0}</value>
+	</data>
+	<data name="TableNotFound">
+		<value>Table not found: {0}</value>
+	</data>
+	<data name="NoRowsInTable">
+		<value>No rows exist in table '{0}'. Cannot get parameter.</value>
+	</data>
+	<data name="RelationNotFound">
+		<value>Relation '{0}' not found while fetching parent record for parameter mapping.</value>
+	</data>
+	<data name="MappedColumnNotFound">
+		<value>Mapped column not found in the data source. Cannot map to the parameter '{0}'.</value>
+	</data>
+	<data name="NoKeyInPrimaryKey">
+		<value>Primary key does not contain key '{0}'</value>
+	</data>
+	<data name="InvalidNumberKeys">
+		<value>Invalid number of keys in the primary key of this object</value>
+	</data>
+	<data name="MemberNameRequired">
+		<value>Member name required for checking this rule.</value>
+	</data>
+	<data name="CantBeNull">
+		<value>{0} cannot be empty.</value>
+	</data>
+</root>

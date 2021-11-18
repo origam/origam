@@ -1,0 +1,17 @@
+#languageLinkContainer{
+    display: flex;
+    flex-direction: row;
+}
+
+.languageLinkSeparator{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.languageLink{
+    user-select: none;
+}
+
+.inactiveLanguageLink{
+    pointer-events: none;
+}

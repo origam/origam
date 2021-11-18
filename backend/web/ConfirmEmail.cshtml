@@ -1,0 +1,17 @@
+﻿@using Origam.Server.Utils;
+
+@{
+    Layout = "~/_Layout.cshtml";
+    string userIdField = "userId";
+    string tokenField = "token";
+    string successUrlField = "successUrl";
+    string resultMessage = LoginHelper.ConfirmEmail(this, userIdField, tokenField, successUrlField);
+}
+
+<div class="errorMessage">
+    @resultMessage
+</div>
+<br />
+<div>
+    <a href="~/Login">@Resources.BackToStart</a>
+</div>

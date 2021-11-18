@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ROOT" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+  <xs:element name="PptDocumentation" msdata:IsDataSet="true" msdata:Locale="cs-CZ" msprop:Id="f798a0ed-10f1-4894-9173-9edb2e09a1f2">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="BusinessCase" msdata:Locale="cs-CZ" msdata:DisplayExpression="'BusinessCase'" msprop:Id="053ea127-3bdd-47ec-b04d-14f2a747c202" msprop:EntityId="1347e684-f9f1-4742-90ba-a95c367829d1" msprop:IsAuditingEnabled="True">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msdata:Caption="Název" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="b5aaaf99-dc8e-4daa-a1b9-44745929081b" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="refEndConsumerBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Koncový zákazník" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="ea1d547c-3e93-449b-bd83-5c72b0059599" msprop:DefaultLookupId="67145562-2adc-4328-bc1f-ae3960ce94ad" type="xs:string" minOccurs="0" />
+              <xs:element name="refPartnerContactPersonBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Kontaktní osoba" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="b8d14709-813a-43ae-baf0-03121ab5a5f9" msprop:DefaultLookupId="64173731-7fee-4156-b51b-eaf5b9fb49d2" type="xs:string" minOccurs="0" />
+              <xs:element name="refKeyAccountBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="KAM" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="bc3c4c19-e421-408b-a097-bb6e587e163c" msprop:DefaultLookupId="67145562-2adc-4328-bc1f-ae3960ce94ad" type="xs:string" minOccurs="0" />
+              <xs:element name="refPartnerBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Partner" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="e7539b07-a3d3-4e91-ba49-6da8f9d18b5d" msprop:DefaultLookupId="64173731-7fee-4156-b51b-eaf5b9fb49d2" type="xs:string" minOccurs="0" />
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="ReferenceCode" msdata:Caption="Kód obch. případu" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="acd87699-5885-4552-b1ca-5431132ef0ad">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="40" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TelcoService" msdata:Locale="cs-CZ" msdata:DisplayExpression="'TelcoService'" msprop:Id="a2010a69-8b04-4b3b-8083-103b0a812c79" msprop:EntityId="9f049de5-9a94-46fe-91f0-2ea0af34c670" msprop:IsAuditingEnabled="True" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <msdata:Relationship name="TelcoService" msdata:parent="BusinessCase" msdata:child="TelcoService" msdata:parentkey="Id" msdata:childkey="refBusinessCaseId" />
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="TelcoProtocol_Text" msdata:ReadOnly="true" msdata:Caption="Protokol" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="5d3f79cc-2e22-4486-851e-fcf2e81a0490" minOccurs="0">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:maxLength value="255" />
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+                    <xs:element name="ReferenceCode" msdata:Caption="Název" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="8ebeb368-349f-4ef6-913c-9d4fa64e0625">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:maxLength value="255" />
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="refBusinessCaseId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="0cdbb63f-9776-490b-b7d5-d0b0617cd684" type="xs:string" minOccurs="0" />
+                    <xs:element name="BandwidthKbpsMir" msdata:Caption="Rychlost MIR (kb/s)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Integer" msprop:Id="9cbfd811-a81c-4188-8977-ba1c4e336097" type="xs:int" minOccurs="0" />
+                    <xs:element name="TelcoServiceNetworkElement" msdata:Locale="cs-CZ" msdata:DisplayExpression="'TelcoServiceNetworkElement'" msprop:Id="3f1ac2de-fe16-420f-8a37-b1fdd9d95bde" msprop:EntityId="29bc4846-36ac-4337-85df-753f6841022a" msprop:IsAuditingEnabled="True" minOccurs="0" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <msdata:Relationship name="TelcoServiceNetworkElement" msdata:parent="TelcoService" msdata:child="TelcoServiceNetworkElement" msdata:parentkey="Id" msdata:childkey="refTelcoServiceId" />
+                        </xs:appinfo>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="refUserBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Uživatel" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="214bd520-36db-4529-bafa-855ba7de2dc2" type="xs:string" minOccurs="0" />
+                          <xs:element name="refTelcoNetworkElementId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Síťový prvek" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2b7c5a5e-7c2b-405e-a42b-2a1f02fefb70" msprop:DefaultLookupId="80e57328-c793-4c99-8d62-7c3a1a4ff33c" type="xs:string" />
+                          <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+                          <xs:element name="refTelcoServiceId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="58f2a804-e175-4b16-b56c-2f2c123d6a27" type="xs:string" />
+                          <xs:element name="TelcoInterfaceType_Text" msdata:ReadOnly="true" msdata:Caption="Rozhraní" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="fbeb1d9e-5d31-4236-ba0b-6a9889780e76" minOccurs="0">
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:maxLength value="255" />
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:element>
+                          <xs:element name="TelcoServiceNetworkElementBusinessPartner" msdata:Locale="cs-CZ" msdata:DisplayExpression="'TelcoServiceNetworkElementBusinessPartner'" msprop:Id="a69012d5-bce8-4096-97f6-61b9fd860a62" msprop:EntityId="e25b4816-4682-4866-b6ed-f72983708022" msprop:IsAuditingEnabled="False" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                              <xs:appinfo>
+                                <msdata:Relationship name="TelcoServiceNetworkElementBusinessPartner" msdata:parent="TelcoServiceNetworkElement" msdata:child="TelcoServiceNetworkElementBusinessPartner" msdata:parentkey="Id" msdata:childkey="refTelcoServiceNetworkElementId" />
+                              </xs:appinfo>
+                            </xs:annotation>
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="refTelcoServiceNetworkElementId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="c6360e2f-8d79-4d60-b826-05c1f7e7ba8f" type="xs:string" />
+                                <xs:element name="Remark" msdata:Caption="Poznámka" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="c7cae9a3-81bb-4ef2-bcb1-4dc46747da32" minOccurs="0">
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                      <xs:maxLength value="127" />
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                                <xs:element name="refBusinessPartnerRoleId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Role" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="6efb8173-d144-483f-8691-fe7808b41b89" msprop:DefaultLookupId="43801f16-452c-46a2-ad19-5751f0f2fae2" type="xs:string" minOccurs="0" />
+                                <xs:element name="refBusinessPartnerId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Kontakt" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="5fe17511-e20e-46f6-af3f-ffc995464466" msprop:DefaultLookupId="67145562-2adc-4328-bc1f-ae3960ce94ad" type="xs:string" />
+                                <xs:element name="RecordCreatedServer" msdata:Caption="Záznam vytvořen (server)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="da9c4ff5-2e67-4744-935a-60a39b886828" type="xs:dateTime" minOccurs="0" />
+                                <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+                                <xs:element name="RecordUpdatedServer" msdata:Caption="Záznam aktualizován (server)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="9424c659-0c83-4aa9-b2a4-aeec9d9e8d40" type="xs:dateTime" minOccurs="0" />
+                                <xs:element name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Záznam vytvořil" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="253ce61e-509c-4d08-864f-c0e03d3eed4b" type="xs:string" minOccurs="0" />
+                                <xs:element name="RecordCreated" msdata:Caption="Záznam vytvořen" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="2340af1e-d939-47ae-930b-e24b0cb3a756" type="xs:dateTime" minOccurs="0" />
+                                <xs:element name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Záznam aktualizoval" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="efb83735-bedb-4eee-b9eb-f111dd46980e" type="xs:string" minOccurs="0" />
+                                <xs:element name="RecordUpdated" msdata:Caption="Záznam aktualizován" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18" type="xs:dateTime" minOccurs="0" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Project" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Project'" msprop:Id="1c5f33f2-c803-469f-a463-4fae10de67f7" msprop:EntityId="b72e3412-552d-43c8-a04b-d1e683e8092c" msprop:IsAuditingEnabled="True" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                              <xs:appinfo>
+                                <msdata:Relationship name="Project" msdata:parent="TelcoServiceNetworkElement" msdata:child="Project" msdata:parentkey="Id" msdata:childkey="refTelcoServiceNetworkElementId" />
+                              </xs:appinfo>
+                            </xs:annotation>
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+                                <xs:element name="refTelcoServiceNetworkElementId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="47fe88b9-8bf5-4104-b9c4-2bd01fac883e" msprop:DefaultLookupId="fbe39b81-d865-4df0-8e79-afd02bb890d3" type="xs:string" minOccurs="0" />
+                                <xs:element name="ReferenceCode" msdata:Caption="Kód projektu" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="30d9fc2d-f518-4e1b-9000-0834d82a5ada">
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                      <xs:maxLength value="40" />
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PartnerBusinessPartner" msdata:Locale="cs-CZ" msdata:DisplayExpression="'PartnerBusinessPartner'" msprop:Id="806e9048-44f0-4d1d-8ead-001889fe8c3d" msprop:EntityId="457a4391-e94f-424c-89d0-dc3804121ce6" msprop:IsAuditingEnabled="True">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msdata:Caption="Firma (Příjmení)" msprop:OnCopyAction="PrependCopyText" msprop:OrigamDataType="String" msprop:Id="7a5f60a2-895a-49d7-b009-929b4a6a4c5a" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="FirstName" msdata:Caption="Firma dovětek (Jméno)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="6d9c8b71-337e-4572-87ff-1dd7e1fa3c53" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TelcoNetworkElement" msdata:Locale="cs-CZ" msdata:DisplayExpression="'TelcoNetworkElement'" msprop:Id="abef6bb6-e53c-49f6-86e3-055a3482e097" msprop:EntityId="150fbc9c-c1c3-47b1-bf94-3960b2810cd2" msprop:IsAuditingEnabled="True">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="refLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Lokalita" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="8b448f44-84f4-46d5-8de1-d6affb5e1429" msprop:DefaultLookupId="c0e75a39-b449-4852-aeeb-ccc7ed990cb7" type="xs:string" minOccurs="0" />
+              <xs:element name="ReferenceCode" msdata:Caption="Kód" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="438cd02f-4df5-4658-a398-f01e15b115c3">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="40" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Location" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Location'" msprop:Id="6efe9ab7-a6cb-4116-a733-87c8694e3666" msprop:EntityId="2b2bc108-5a33-4623-83c8-d9f799ee0416" msprop:IsAuditingEnabled="False">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msdata:Caption="Název" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="98424d1d-4f9a-4c73-b66e-7fcbd8cd350e">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="refRegionId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Síť" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="4e1a9f79-25e7-472b-aa58-95b97bc9a43a" type="xs:string" minOccurs="0" />
+              <xs:element name="City" msdata:Caption="Obec" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="4e4bad9e-6a21-4a83-b031-abe0b7e8afcb" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ReferenceCode" msdata:Caption="Kód lokality" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="55a584b7-d9ef-4fa1-baaf-99ca1bd5ed66">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="40" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PostalCode" msdata:Caption="PSČ" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="455737e1-bcaf-4ba4-9a6d-613849d19666" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="refStreetId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Ulice" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="f00bb537-3037-4c0e-aab7-7807e7c283f8" msprop:DefaultLookupId="63aba915-fab0-4eec-832c-425c933f0f77" type="xs:string" minOccurs="0" />
+              <xs:element name="HouseNumber" msdata:Caption="Číslo domu" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="7b9df670-5349-41a6-a2fd-2006a9477fca" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="LocationBusinessPartner" msdata:Locale="cs-CZ" msdata:DisplayExpression="'LocationBusinessPartner'" msprop:Id="24469ca4-8368-40ab-bc56-60b7adb29a26" msprop:EntityId="4b37c2c0-2fea-43cd-ab3a-d0fe76f4c95d" msprop:IsAuditingEnabled="False" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <msdata:Relationship name="LocationBusinessPartner" msdata:parent="Location" msdata:child="LocationBusinessPartner" msdata:parentkey="Id" msdata:childkey="refLocationId" />
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+                    <xs:element name="refBusinessPartner" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Kontakt" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="1af9e6e1-fe2d-44b2-b8e5-3c03ca8e1bbc" msprop:DefaultLookupId="67145562-2adc-4328-bc1f-ae3960ce94ad" type="xs:string" minOccurs="0" />
+                    <xs:element name="refLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Lokalita" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="7c30aeee-d639-4a6d-825e-cab1e5084643" type="xs:string" minOccurs="0" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="TelcoNetworkElementsInRange" msdata:Locale="cs-CZ" msdata:DisplayExpression="'TelcoNetworkElementsInRange'" msprop:Id="438f3f41-2fa9-4db5-bfaf-b957ff084fad" msprop:EntityId="8e8f3174-704f-4122-8658-8889e5191d57" msprop:IsAuditingEnabled="False" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <msdata:Relationship name="TelcoNetworkElementsInRange" msdata:parent="Location" msdata:child="TelcoNetworkElementsInRange" msdata:parentkey="Id" msdata:childkey="refLocationId" />
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Azimuth" msdata:Caption="Azimut" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Integer" msprop:Id="3d72ac7b-8bfe-4ae2-aa08-fcd526bf8fc4" type="xs:int" minOccurs="0" />
+                    <xs:element name="refLocationId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="a9a2396f-a425-4817-b16c-6a17940daffd" type="xs:string" />
+                    <xs:element name="DistanceKm" msdata:Caption="Vzdálenost" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="05457484-a44b-4edf-b44e-467f78ee36ea" type="xs:decimal" minOccurs="0" />
+                    <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+                    <xs:element name="refSubTelcoNetworkElementId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Sektor" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="e4574a3b-3eaa-4ca9-afff-9a55612a3e0f" msprop:DefaultLookupId="80e57328-c793-4c99-8d62-7c3a1a4ff33c" type="xs:string" />
+                    <xs:element name="refTelcoNetworkElementId" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Base station" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="6596e830-7b01-4da0-9d14-c09b44ec74c3" msprop:DefaultLookupId="80e57328-c793-4c99-8d62-7c3a1a4ff33c" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="LocationBusinessPartnerData" msdata:Locale="cs-CZ" msdata:DisplayExpression="'LocationBusinessPartnerData'" msprop:Id="590a1c70-c1be-4b5c-9a41-cc8dabf8a0e7" msprop:EntityId="5ff75cca-06c1-42d3-8553-0e5105820b51" msprop:IsAuditingEnabled="False">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CommunicationPhoneWork" msdata:Caption="Telefon (pracovní)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="5b888383-9772-43c1-bb9d-97d2674ad41e" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="FirstName" msdata:Caption="Firma dovětek (Jméno)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="6d9c8b71-337e-4572-87ff-1dd7e1fa3c53" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CommunicationPhoneWork2" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="cb0eadfe-17c7-4423-877b-033495a724e6" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="Name" msdata:Caption="Firma (Příjmení)" msprop:OnCopyAction="PrependCopyText" msprop:OrigamDataType="String" msprop:Id="7a5f60a2-895a-49d7-b009-929b4a6a4c5a" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CommunicationPhoneMobile" msdata:Caption="Telefon (mobilní)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="f3c1f4e5-a5f0-4746-9a9a-70dc2bd5a6aa" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Street" msdata:Locale="cs-CZ" msdata:DisplayExpression="'Street'" msprop:Id="83b320c5-4f0d-4fe7-b4e9-b24ade1255f0" msprop:EntityId="ba07c371-2b2c-4c12-b656-920a7991692f" msprop:IsAuditingEnabled="False">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="Name" msdata:Caption="Název" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="191626f4-e668-4105-b651-929edfdc0d56">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="NetworkElementInRange" msdata:Locale="cs-CZ" msdata:DisplayExpression="'NetworkElementInRange'" msprop:Id="b518bb0d-80bc-4491-9901-25856e3fd8a9" msprop:EntityId="150fbc9c-c1c3-47b1-bf94-3960b2810cd2" msprop:IsAuditingEnabled="True">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ReferenceCode" msdata:Caption="Kód" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="438cd02f-4df5-4658-a398-f01e15b115c3">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="40" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="Description" msdata:Caption="Popis" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="a27fa10f-3cfa-45a4-ba73-5013ac2144b4" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2000" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="SubNetworkElementInRange" msdata:Locale="cs-CZ" msdata:DisplayExpression="'SubNetworkElementInRange'" msprop:Id="6e8efa25-9ed9-4402-a844-47707b934681" msprop:EntityId="150fbc9c-c1c3-47b1-bf94-3960b2810cd2" msprop:IsAuditingEnabled="True">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="ReferenceCode" msdata:Caption="Kód" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="438cd02f-4df5-4658-a398-f01e15b115c3">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="40" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TelcoServiceNetworkElementBusinessPartnerData" msdata:Locale="cs-CZ" msdata:DisplayExpression="'TelcoServiceNetworkElementBusinessPartnerData'" msprop:Id="82f91194-1785-4c49-9033-a4ffcd430843" msprop:EntityId="5ff75cca-06c1-42d3-8553-0e5105820b51" msprop:IsAuditingEnabled="False">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+              <xs:element name="Name" msdata:Caption="Firma (Příjmení)" msprop:OnCopyAction="PrependCopyText" msprop:OrigamDataType="String" msprop:Id="7a5f60a2-895a-49d7-b009-929b4a6a4c5a" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="FirstName" msdata:Caption="Firma dovětek (Jméno)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="6d9c8b71-337e-4572-87ff-1dd7e1fa3c53" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CommunicationPhoneMobile" msdata:Caption="Telefon (mobilní)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="f3c1f4e5-a5f0-4746-9a9a-70dc2bd5a6aa" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CommunicationPhoneWork" msdata:Caption="Telefon (pracovní)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="5b888383-9772-43c1-bb9d-97d2674ad41e" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CommunicationPhoneWork2" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="cb0eadfe-17c7-4423-877b-033495a724e6" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="500" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="KeyAccountManager" msdata:Locale="cs-CZ" msdata:DisplayExpression="'KeyAccountManager'" msprop:Id="1f23bf01-4342-403b-a9b9-7e92ed19df96" msprop:EntityId="457a4391-e94f-424c-89d0-dc3804121ce6" msprop:IsAuditingEnabled="True">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name2" msdata:Caption="Firma (Příjmení)" msprop:OnCopyAction="PrependCopyText" msprop:OrigamDataType="String" msprop:Id="7a5f60a2-895a-49d7-b009-929b4a6a4c5a" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Name1" msdata:Caption="Firma dovětek (Jméno)" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="6d9c8b71-337e-4572-87ff-1dd7e1fa3c53" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Id" msdata:DataType="System.Guid, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:AllowNulls="False" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="2fdc34b8-fe8b-4353-aa84-92bb5d768370" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="TelcoServiceNetworkElementBusinessPartner_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//TelcoServiceNetworkElementBusinessPartner" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="Project_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//Project" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="TelcoServiceNetworkElement_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//TelcoServiceNetworkElement" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="TelcoService_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//TelcoService" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//BusinessCase" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="PartnerBusinessPartner_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//PartnerBusinessPartner" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="TelcoNetworkElement_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//TelcoNetworkElement" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="LocationBusinessPartner_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//LocationBusinessPartner" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="TelcoNetworkElementsInRange_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//TelcoNetworkElementsInRange" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="Location_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//Location" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="LocationBusinessPartnerData_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//LocationBusinessPartnerData" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="Street_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//Street" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="NetworkElementInRange_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//NetworkElementInRange" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="SubNetworkElementInRange_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//SubNetworkElementInRange" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="TelcoServiceNetworkElementBusinessPartnerData_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//TelcoServiceNetworkElementBusinessPartnerData" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:unique name="KeyAccountManager_PK_Id" msdata:ConstraintName="PK_Id" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//KeyAccountManager" />
+      <xs:field xpath="Id" />
+    </xs:unique>
+    <xs:keyref name="TelcoNetworkElementsInRange_FK_Location" refer="Location_PK_Id" msdata:ConstraintName="FK_Location" msdata:ConstraintOnly="true">
+      <xs:selector xpath=".//TelcoNetworkElementsInRange" />
+      <xs:field xpath="refLocationId" />
+    </xs:keyref>
+    <xs:keyref name="FK_Location" refer="Location_PK_Id" msdata:ConstraintOnly="true">
+      <xs:selector xpath=".//LocationBusinessPartner" />
+      <xs:field xpath="refLocationId" />
+    </xs:keyref>
+    <xs:keyref name="FK_BusinessCase" refer="PK_Id" msdata:ConstraintOnly="true">
+      <xs:selector xpath=".//TelcoService" />
+      <xs:field xpath="refBusinessCaseId" />
+    </xs:keyref>
+    <xs:keyref name="FK_TelcoService" refer="TelcoService_PK_Id" msdata:ConstraintOnly="true">
+      <xs:selector xpath=".//TelcoServiceNetworkElement" />
+      <xs:field xpath="refTelcoServiceId" />
+    </xs:keyref>
+    <xs:keyref name="Project_FK_TelcoServiceNetworkElement" refer="TelcoServiceNetworkElement_PK_Id" msdata:ConstraintName="FK_TelcoServiceNetworkElement" msdata:ConstraintOnly="true">
+      <xs:selector xpath=".//Project" />
+      <xs:field xpath="refTelcoServiceNetworkElementId" />
+    </xs:keyref>
+    <xs:keyref name="FK_TelcoServiceNetworkElement" refer="TelcoServiceNetworkElement_PK_Id" msdata:ConstraintOnly="true">
+      <xs:selector xpath=".//TelcoServiceNetworkElementBusinessPartner" />
+      <xs:field xpath="refTelcoServiceNetworkElementId" />
+    </xs:keyref>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="PartnerBusinessPartner" msdata:parent="BusinessCase" msdata:child="PartnerBusinessPartner" msdata:parentkey="refPartnerBusinessPartnerId" msdata:childkey="Id" />
+      <msdata:Relationship name="TelcoNetworkElement" msdata:parent="TelcoServiceNetworkElement" msdata:child="TelcoNetworkElement" msdata:parentkey="refTelcoNetworkElementId" msdata:childkey="Id" />
+      <msdata:Relationship name="Location" msdata:parent="TelcoNetworkElement" msdata:child="Location" msdata:parentkey="refLocationId" msdata:childkey="Id" />
+      <msdata:Relationship name="LocationBusinessPartnerData" msdata:parent="LocationBusinessPartner" msdata:child="LocationBusinessPartnerData" msdata:parentkey="refBusinessPartner" msdata:childkey="Id" />
+      <msdata:Relationship name="Street" msdata:parent="Location" msdata:child="Street" msdata:parentkey="refStreetId" msdata:childkey="Id" />
+      <msdata:Relationship name="NetworkElementInRange" msdata:parent="TelcoNetworkElementsInRange" msdata:child="NetworkElementInRange" msdata:parentkey="refTelcoNetworkElementId" msdata:childkey="Id" />
+      <msdata:Relationship name="SubNetworkElementInRange" msdata:parent="TelcoNetworkElementsInRange" msdata:child="SubNetworkElementInRange" msdata:parentkey="refSubTelcoNetworkElementId" msdata:childkey="Id" />
+      <msdata:Relationship name="TelcoServiceNetworkElementBusinessPartnerData" msdata:parent="TelcoServiceNetworkElementBusinessPartner" msdata:child="TelcoServiceNetworkElementBusinessPartnerData" msdata:parentkey="refBusinessPartnerId" msdata:childkey="Id" />
+      <msdata:Relationship name="KeyAccountManager" msdata:parent="BusinessCase" msdata:child="KeyAccountManager" msdata:parentkey="refKeyAccountBusinessPartnerId" msdata:childkey="Id" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

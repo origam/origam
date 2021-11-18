@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="AsMail" targetNamespace="http://schema.advantages.cz/AsMail.xsd" elementFormDefault="qualified"
+	xmlns="http://schema.advantages.cz/AsMail.xsd" xmlns:mstns="http://schema.advantages.cz/AsMail.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="mailAddressType">
+		<xs:sequence>
+			<xs:element name="Address" type="xs:string" />
+			<xs:element name="Name" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="mailAddressCollectionType">
+		<xs:sequence>
+			<xs:element name="EmailAddress" type="mailAddressType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="mailType">
+		<xs:sequence>
+			<xs:element name="From" type="mailAddressType" />
+			<xs:element name="To" type="mailAddressCollectionType" />
+			<xs:element name="CC" type="mailAddressCollectionType" />
+			<xs:element name="BCC" type="mailAddressCollectionType" />
+			<xs:element name="Subject" type="xs:string" />
+			<xs:element name="Body">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="HTML">
+							<xs:complexType>
+								<xs:sequence />
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="MessageIdentifier" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Mails">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Mail" type="mailType" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

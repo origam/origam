@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+    <services> 
+        <service id="remoting-service"
+                 class="flex.messaging.services.RemotingService"
+                 messageTypes="flex.messaging.messages.RemotingMessage">
+            <destination id="GenericDestination">
+                <channels> 
+                    <channel ref="my-amf"/>
+                </channels> 
+                <properties> 
+                    <source>*</source> 
+                </properties> 
+            </destination> 
+        </service> 
+    </services> 
+
+<security> 
+   <login-command class="com.TheSilentGroup.Fluorine.Messaging.Security.GenericLoginCommand" server="asp.net"/>
+</security> 
+
+<channels> 
+        <channel-definition id="my-amf" class="mx.messaging.channels.AMFChannel">
+            <endpoint uri="http://{server.name}:{server.port}/{context.root}/gateway.aspx" class="flex.messaging.endpoints.AMFEndpoint"/>
+		<properties>
+                 <legacy-collection>true</legacy-collection>
+               </properties>
+        </channel-definition>
+    </channels> 
+</services-config>
