@@ -248,16 +248,16 @@ jobs:
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: |
         yarn
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html\
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
        displayName: 'origam-html yarn'
      - script: |
         yarn build
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html\
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
        displayName: 'origam-html yarn build'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-client'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html\build'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\build'
          ArtifactName: origam-html-client
        condition: succeededOrFailed()
      - script: |
