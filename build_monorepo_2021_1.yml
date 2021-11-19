@@ -475,14 +475,14 @@ jobs:
         & { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::CreateFromDirectory("$(Build.ArtifactStagingDirectory)\origam-client", "$(build.artifactstagingdirectory)\origam-client.zip"); }
        displayName: Zip files for release
      # ------------------------------------
-     # RELEASE ORIGAM_SOURCE - TAG
+     # RELEASE ORIGAM_ORIGAM - TAG
      # ------------------------------------
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
          repositoryName: 'origam/origam'
          action: 'create'
-         target: $(ORIGAM_SOURCE_COMMIT_ID)
+         target: $(ORIGAM_ORIGAM_COMMIT_ID)
          tagSource: 'userSpecifiedTag'
          tag: '$(TAG)'
          title: '$(TAG)'
@@ -495,42 +495,59 @@ jobs:
            
            Docker image
            ```
-           docker pull origam/server:$(TAG).$(Build.BuildId)
+           docker pull origam/server:mono_$(TAG).$(Build.BuildId)
            ```
-           Related change logs: [HTML Client](https://github.com/origam/origam-html/releases/tag/$(TAG)) | [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) | [Root Model](https://github.com/origam/origam-model/releases/tag/$(TAG))
+           Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
            $(Build.ArtifactStagingDirectory)/origam-client.zip
            $(Build.ArtifactStagingDirectory)/origam-model.zip
            $(Build.ArtifactStagingDirectory)/origam-html.zip
            $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
-         addChangeLog: false
+         addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub $(TAG) release
      # ------------------------------------
-     # RELEASE ORIGAM_HTML - TAG
+     # RELEASE ORIGAM_ORIGAM - TAG_LATEST
      # ------------------------------------
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-html'
+         repositoryName: 'origam/origam'
          action: 'create'
-         target: $(ORIGAM_HTML_COMMIT_ID)
+         target: $(ORIGAM_ORIGAM_COMMIT_ID)
          tagSource: 'userSpecifiedTag'
-         tag: '$(TAG)'
-         title: '$(TAG)'
+         tag: '$(TAG_LATEST)'
+         title: '$(TAG_LATEST)'
          isPreRelease: $(IS_PRERELASE)
          releaseNotesSource: 'inline'
          releaseNotesInline: |
-           The latest $(TAG) build. Version $(VERSION_NUMBER).
-           Downloads at <a href="https://github.com/origam/backend/releases/tag/$(TAG)">backend/$(TAG)</a>
-         assets:
-         addChangeLog: false
+           The latest $(BRANCH) build. Version $(VERSION_NUMBER).
+           
+           ---
+           
+           Docker image
+           ```
+           docker pull origam/server:mono_$(TAG_LATEST)
+           ```
+           Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
+         assets: |
+           $(Build.ArtifactStagingDirectory)/origam-model.zip
+           $(Build.ArtifactStagingDirectory)/origam-html.zip
+           $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
+         addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
-       displayName: Create new GitHub origam-html/$(TAG) release
+       displayName: Create new GitHub $(TAG_LATEST) release
+     - task: DeleteFiles@1
+       inputs:
+         SourceFolder: '$(Build.ArtifactStagingDirectory)'
+         Contents: |
+           **\*.*
+         RemoveSourceFolder: false
+       displayName: 'origam-release clean up'
      # ------------------------------------
      # RELEASE ORIGAM_HTML_CHAT - TAG
      # ------------------------------------
@@ -547,36 +564,34 @@ jobs:
          releaseNotesSource: 'inline'
          releaseNotesInline: |
            The latest $(TAG) build. Version $(VERSION_NUMBER).
-           Downloads at <a href="https://github.com/origam/backend/releases/tag/$(TAG)">backend/$(TAG)</a>
-         assets:
+           Downloads at <a href="https://github.com/origam/origam-source/releases/tag/$(TAG)">origam-source/$(TAG)</a>
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub origam-html-chat/$(TAG) release
      # ------------------------------------
-     # RELEASE ORIGAM_MODEL - TAG
+     # RELEASE ORIGAM_HTML_CHAT - TAG_LATEST
      # ------------------------------------
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-model'
+         repositoryName: 'origam/origam-html-chat'
          action: 'create'
-         target: '$(ORIGAM_MODEL_COMMIT_ID)'
+         target: $(ORIGAM_HTML_CHAT_COMMIT_ID)
          tagSource: 'userSpecifiedTag'
-         tag: '$(TAG)'
-         title: '$(TAG)'
+         tag: '$(TAG_LATEST)'
+         title: '$(TAG_LATEST)'
          isPreRelease: $(IS_PRERELASE)
          releaseNotesSource: 'inline'
          releaseNotesInline: |
-           The latest $(TAG) build. Version $(VERSION_NUMBER).
-           Downloads at <a href="https://github.com/origam/backend/releases/tag/$(TAG)">backend/$(TAG)</a>
-         assets:
+           The latest $(BRANCH) build. Version $(VERSION_NUMBER).
+           Downloads at <a href="https://github.com/origam/origam-source/releases/tag/$(TAG_LATEST)">origam-source/$(TAG_LATEST)</a>
          addChangeLog: true
          changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
-       displayName: Create new GitHub origam-model/$(TAG) release
+       displayName: Create new GitHub origam-html-chat/$(TAG_LATEST) release
   # ------------------------------------
   # DOCKER
   # ------------------------------------
