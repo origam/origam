@@ -315,7 +315,7 @@ jobs:
     pool:
       vmImage: windows-2019
     steps:
-     - checkout: origam-html
+     - checkout: origam
        fetchDepth: 1
      - checkout: origam-html-chat
        fetchDepth: 1
@@ -328,21 +328,21 @@ jobs:
      - task: Cache@2
        displayName: 'Yarn Cache'
        inputs:
-         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/yarn.lock'
+         key: 'yarn-2021-05-13-01 | "$(Agent.OS)" | $(Agent.BuildDirectory)/s/origam/frontend-html/yarn.lock,$(Agent.BuildDirectory)/s/origam-html-chat/client/yarn.lock'
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: |
         yarn
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html\
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
        displayName: 'origam-html yarn'
      - script: |
         yarn build
-       workingDirectory: $(Agent.BuildDirectory)\s\origam-html\
+       workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
        displayName: 'origam-html yarn build'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-client'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html\build'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\build'
          ArtifactName: origam-html-client
        condition: succeededOrFailed()
      - script: |
@@ -367,32 +367,22 @@ jobs:
     pool:
       vmImage: windows-2019
     steps:
-     - checkout: backend
+     - checkout: origam
        fetchDepth: 1
        persistCredentials: true
      - checkout: origam-html-chat
        fetchDepth: 1
        persistCredentials: true
      - powershell: |
-         $commitId = (git -C $(Agent.BuildDirectory)\s\backend rev-parse HEAD)
+         $commitId = (git -C $(Agent.BuildDirectory)\s\origam rev-parse HEAD)
          Write-Host $commitId
          Write-Host "##vso[task.setvariable variable=ORIGAM_SOURCE_COMMIT_ID;]$commitId"
        displayName: Store backend commit id
-     - powershell: |
-         $htmlCommitId = (git -C $(Agent.BuildDirectory)\s\origam-html rev-parse HEAD)
-         Write-Host $htmlCommitId
-         Write-Host "##vso[task.setvariable variable=ORIGAM_HTML_COMMIT_ID;]$htmlCommitId"
-       displayName: Store origam-html commit id
      - powershell: |
          $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-html-chat rev-parse HEAD)
          Write-Host $htmlChatCommitId
          Write-Host "##vso[task.setvariable variable=ORIGAM_HTML_CHAT_COMMIT_ID;]$htmlChatCommitId"
        displayName: Store origam-html-chat commit id
-     - powershell: |
-         $modelCommitId = (git -C $(Agent.BuildDirectory)\s\origam-model rev-parse HEAD)
-         Write-Host $modelCommitId
-         Write-Host "##vso[task.setvariable variable=ORIGAM_MODEL_COMMIT_ID;]$modelCommitId"
-       displayName: Store origam-model commit id
      - task: DownloadBuildArtifacts@0
        displayName: Download origam-setup artifact
        inputs:
@@ -622,7 +612,7 @@ jobs:
     pool:
       vmImage: ubuntu-20.04
     steps:
-     - checkout: backend
+     - checkout: origam
        fetchDepth: 1
      - task: DownloadBuildArtifacts@0
        displayName: 'Download origam-html artifact'
