@@ -97,6 +97,10 @@
       <Project>{976F3ABA-938D-4242-A93B-7D7A1861A66E}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj">
+      <Project>{EF5DE64E-88B2-4B0A-BB7F-4A537B56F3D1}</Project>
+      <Name>Origam.UI.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.UI\Origam.UI.csproj">
       <Project>{79dd815d-6900-4074-8886-7e7d6946460b}</Project>
       <Name>Origam.UI</Name>
