@@ -27,6 +27,7 @@ using System.Xml.XPath;
 using System.Collections;
 using System;
 using Origam.Extensions;
+using Origam.ServiceCore;
 
 namespace Origam.Rule
 {

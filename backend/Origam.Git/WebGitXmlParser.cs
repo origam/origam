@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Xml;
+using Origam.ServiceCore;
 using static Origam.NewProjectEnums;
 
 namespace Origam.Git

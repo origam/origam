@@ -44,7 +44,8 @@ namespace Origam.Workflow.Tasks
 				if (serviceAgent == null)
 				{
 					ServiceMethodCallTask task = Step as ServiceMethodCallTask;
-					ServiceAgentFactory serviceAgentFactory = new ServiceAgentFactory();
+					ServiceAgentFactory serviceAgentFactory = 
+						new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent));
 					serviceAgent = serviceAgentFactory.GetAgent(task.Service.Name,
 						this.Engine.RuleEngine, this.Engine);
 				}

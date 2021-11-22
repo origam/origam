@@ -30,6 +30,7 @@ using System.Data;
 using log4net;
 using System.Text;
 using Extender;
+using Origam.ServiceCore;
 
 namespace Origam.Workflow.FileService
 {

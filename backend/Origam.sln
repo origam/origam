@@ -188,6 +188,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrigamSetup", "OrigamSetup"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Docker", "Origam.Docker\Origam.Docker.csproj", "{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ServiceCore", "Origam.ServiceCore\Origam.ServiceCore.csproj", "{77A7BD8A-554D-4214-BD41-E95A92F384D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect|Any CPU = Debug Architect|Any CPU
@@ -1359,6 +1361,22 @@ Global
 		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAE7BB27-93AD-44B1-B8AD-2490BF1FE461}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release Architect|Any CPU.Build.0 = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release Client|Any CPU.Build.0 = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release Server|Any CPU.Build.0 = Debug|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77A7BD8A-554D-4214-BD41-E95A92F384D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -32,6 +32,7 @@ using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 using log4net;
 using Origam.BI.SSRS.SSRSWebReference;
+using Origam.ServiceCore;
 
 namespace Origam.BI.SSRS
 {

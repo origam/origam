@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace Origam.Rule
+namespace Origam.ServiceCore
 {
 	/// <summary>
 	/// Summary description for RuleException.

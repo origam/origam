@@ -33,6 +33,7 @@ using System.Data;
 using Origam.Workbench.Services;
 using Origam.Services;
 using Origam.Extensions;
+using Origam.ServiceCore;
 
 namespace Origam.Rule
 {

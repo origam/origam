@@ -54,6 +54,7 @@ using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Gui;
+using Origam.ServiceCore;
 using Origam.Windows.Editor.GIT;
 
 namespace OrigamArchitect.Commands

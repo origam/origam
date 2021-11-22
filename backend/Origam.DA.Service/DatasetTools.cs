@@ -29,6 +29,7 @@ using System.Text;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
+using Origam.ServiceCore;
 
 namespace Origam.DA
 {

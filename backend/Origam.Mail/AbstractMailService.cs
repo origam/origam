@@ -28,6 +28,7 @@ using CSharpFunctionalExtensions;
 using MailKit.Net.Pop3;
 using MailKit.Security;
 using MimeKit;
+using Origam.ServiceCore;
 
 
 namespace Origam.Mail

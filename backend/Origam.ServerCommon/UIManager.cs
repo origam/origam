@@ -38,6 +38,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.ServerCommon;
+using Origam.ServiceCore;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Workflow;

@@ -27,6 +27,7 @@ using Origam.Rule;
 using log4net;
 using Origam.Security.Common;
 using Microsoft.Extensions.DependencyInjection;
+using Origam.ServiceCore;
 
 namespace Origam.Security.Identity
 {
@@ -694,7 +695,7 @@ namespace Origam.Security.Identity
                 tokenResultNode.Attributes.Append(errorMessageAttr);
 
                 rootNode.AppendChild(tokenResultNode);
-                result = new Origam.XmlContainer(xmlDoc);
+                result = new XmlContainer(xmlDoc);
             }
         }
 

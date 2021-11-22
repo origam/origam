@@ -25,6 +25,8 @@ using Origam.Schema.WorkflowModel;
 using Origam.Services;
 using System.Reflection;
 using System.Linq;
+using Origam.ServiceCore;
+using Origam.Workflow;
 
 namespace Origam.Workbench.Services
 {
@@ -33,6 +35,8 @@ namespace Origam.Workbench.Services
     /// </summary>
     public class ServiceAgentFactory : IBusinessServicesService
     {
+        private readonly Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent;
+
         private static readonly log4net.ILog log
             = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);   
@@ -77,8 +81,9 @@ namespace Origam.Workbench.Services
             }
         }
 
-        public ServiceAgentFactory()
+        public ServiceAgentFactory(Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent)
         {
+            this.fromExternalAgent = fromExternalAgent;
             _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
         }
 
@@ -144,26 +149,15 @@ namespace Origam.Workbench.Services
 
 					Service service = services.GetChildByName(serviceName, Service.CategoryConst) as Service;
 
-					if(service.ClassPath != null && service.ClassPath != string.Empty)
-					{
-						string[] classPath = service.ClassPath.Split(",".ToCharArray());
-
-						string className = classPath[0];
-                        string assembly = String.Join(",", classPath.Skip(1));
-                        result = (IServiceAgent)Reflector.InvokeObject(className, assembly);
-					}
-					else
-					{
-						result = (IServiceAgent)Reflector.InvokeObject(
-							"Origam.Workflow." + serviceName 
-							+ "." + serviceName + "Agent"
-							, "Origam.Workflow." + serviceName);
-					}
-
-					if(result == null)
+                    object agent = InstantiateObject(serviceName, service);
+                    if(agent == null)
 					{
 						throw new ArgumentOutOfRangeException("serviceName", serviceName, ResourceUtils.GetString("ErrorUnknownService"));
 					}
+
+                    result = agent is IExternalServiceAgent externalAgent
+                        ? fromExternalAgent(externalAgent)
+                        : agent as IServiceAgent;
 					break;
 
 			}
@@ -174,6 +168,27 @@ namespace Origam.Workbench.Services
 
             return result;
         }
+
+        private static object InstantiateObject(string serviceName,
+            Service service)
+        {
+            if (service.ClassPath != null && service.ClassPath != string.Empty)
+            {
+                string[] classPath = service.ClassPath.Split(",".ToCharArray());
+
+                string className = classPath[0];
+                string assembly = String.Join(",", classPath.Skip(1));
+                return Reflector.InvokeObject(className, assembly);
+            }
+            else
+            {
+                return Reflector.InvokeObject(
+                    "Origam.Workflow." + serviceName
+                                       + "." + serviceName + "Agent"
+                    , "Origam.Workflow." + serviceName);
+            }
+        }
+
         #region IBusinessServicesService Members
 
         public IServiceAgent GetAgent(string serviceType, string instanceName, object ruleEngine, object workflowEngine)

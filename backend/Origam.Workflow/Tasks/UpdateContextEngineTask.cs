@@ -28,6 +28,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.Rule;
+using Origam.ServiceCore;
 
 
 namespace Origam.Workflow.Tasks

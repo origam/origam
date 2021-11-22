@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 
-namespace Origam
+namespace Origam.ServiceCore
 {
     public class XmlReaderCore : XmlReader
     {
@@ -123,7 +123,7 @@ namespace Origam
                 innerReader.HasAttributes &&
                 innerReader.Depth == 0)
             {
-                throw new System.Exception(ResourceUtils.GetString("XmlNoRoot"));
+                throw new System.Exception(Strings.XmlNoRoot);
             }
             if (innerReader.NodeType == XmlNodeType.Element && 
                 !innerReader.HasAttributes &&

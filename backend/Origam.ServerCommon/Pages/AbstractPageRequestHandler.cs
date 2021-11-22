@@ -48,6 +48,7 @@ using System.Collections;
 using System.Xml;
 using Origam.Rule;
 using Origam.Schema.RuleModel;
+using Origam.ServiceCore;
 
 namespace Origam.ServerCommon.Pages
 {

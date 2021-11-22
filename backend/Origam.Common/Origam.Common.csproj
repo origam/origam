@@ -89,4 +89,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -32,6 +32,7 @@ using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Gui;
 using System.Linq;
+using Origam.ServiceCore;
 
 namespace Origam.Gui.Win
 {

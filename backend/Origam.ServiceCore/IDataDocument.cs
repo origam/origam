@@ -19,43 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
+using System.Data;
+using System.Xml;
 
-namespace Origam.Rule
+namespace Origam.ServiceCore
 {
-	public enum RuleExceptionSeverity
-	{
-		High,
-		Low
-	}
-
-	/// <summary>
-	/// Summary description for RuleExceptionData.
-	/// </summary>
-	[Serializable]
-	public class RuleExceptionData
-	{
-		public RuleExceptionData() 
-		{
-		}
-
-		public RuleExceptionData(string message) 
-		{
-			this.Message = message;
-		}
-
-		public RuleExceptionData(string message, RuleExceptionSeverity severity,
-			string fieldName, string entityName)
-		{
-			this.Message = message;
-			this.Severity = severity;
-			this.FieldName = fieldName;
-			this.EntityName = entityName;
-		}
-
-		public string FieldName = "";
-		public string EntityName = "";
-		public string Message = "";
-		public RuleExceptionSeverity Severity;
-	}
+    public interface IDataDocument: IXmlContainer
+    {
+        DataSet DataSet { get; }
+        void AppendChild(XmlNodeType element, string prefix, string name);
+        void AppendChild(XmlElement documentElement, bool deep);
+    }
 }

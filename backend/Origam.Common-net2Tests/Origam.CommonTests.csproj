@@ -81,6 +81,10 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj">
+      <Project>{77a7bd8a-554d-4214-bd41-e95a92f384d7}</Project>
+      <Name>Origam.ServiceCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.ReflectorCache\Origam.ReflectorCache.csproj">
       <Project>{ffc2dce2-b8b5-48a4-aa18-1e93f99e1d54}</Project>
       <Name>Origam.ReflectorCache</Name>

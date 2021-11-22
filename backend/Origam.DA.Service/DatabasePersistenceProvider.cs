@@ -999,9 +999,9 @@ namespace Origam.DA.ObjectPersistence.Providers
 				foreach(Constraint constraint in table.Constraints)
 				{
 					ForeignKeyConstraint fk = constraint as ForeignKeyConstraint;
-					if(fk != null && fk.DeleteRule == Rule.Cascade)
+					if(fk != null && fk.DeleteRule == System.Data.Rule.Cascade)
 					{
-						fk.DeleteRule = Rule.None;
+						fk.DeleteRule = System.Data.Rule.None;
 						relations.Add(fk);
 					}
 				}
@@ -1014,7 +1014,7 @@ namespace Origam.DA.ObjectPersistence.Providers
 		{
 			foreach(ForeignKeyConstraint fk in constraints)
 			{
-				fk.DeleteRule = Rule.Cascade;
+				fk.DeleteRule = System.Data.Rule.Cascade;
 			}
 
 			//_dataSet.EnforceConstraints = true;

@@ -1,3 +1,5 @@
+using Origam.ServiceCore;
+
 namespace Origam.Mail
 {
     public interface IMailService

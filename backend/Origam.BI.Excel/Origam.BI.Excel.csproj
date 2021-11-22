@@ -94,6 +94,10 @@
       <Project>{eab7c8d5-a75d-4940-9dde-d6788fc9cd93}</Project>
       <Name>Origam.Excel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj">
+      <Project>{77a7bd8a-554d-4214-bd41-e95a92f384d7}</Project>
+      <Name>Origam.ServiceCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
       <Name>Origam.Rule</Name>

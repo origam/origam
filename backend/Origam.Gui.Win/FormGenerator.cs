@@ -42,6 +42,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.Gui;
 using Origam.Gui.UI;
+using Origam.ServiceCore;
 
 namespace Origam.Gui.Win
 {
@@ -324,7 +325,7 @@ namespace Origam.Gui.Win
 			return columnName;
 		}
 
-        public static bool DisplayRuleException(IWin32Window window, Rule.RuleException ruleEx)
+        public static bool DisplayRuleException(IWin32Window window, RuleException ruleEx)
         {
             bool shouldReturn = false;
             if (ruleEx.IsSeverityHigh)

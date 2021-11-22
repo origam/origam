@@ -26,6 +26,7 @@ using System.Collections;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Rule;
+using Origam.ServiceCore;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.Tasks

@@ -27,6 +27,7 @@ using Origam.DA;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.ServiceCore;
 
 namespace Origam.Gui
 {

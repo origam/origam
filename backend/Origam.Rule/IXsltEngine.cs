@@ -26,6 +26,7 @@ using Origam.Schema.EntityModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.XPath;
 using System.IO;
+using Origam.ServiceCore;
 
 namespace Origam.Rule
 {

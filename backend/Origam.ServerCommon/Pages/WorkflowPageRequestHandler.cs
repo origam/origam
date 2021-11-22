@@ -50,6 +50,7 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Rule;
 using System.Xml;
+using Origam.ServiceCore;
 
 namespace Origam.ServerCommon.Pages
 {

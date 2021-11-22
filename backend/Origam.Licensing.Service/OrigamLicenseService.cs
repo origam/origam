@@ -25,6 +25,9 @@ using System.Linq;
 using System.Xml;
 using Origam.Workflow;
 using Origam.Licensing.Validation;
+using Origam.Rule;
+using Origam.ServiceCore;
+using ResourceUtils = Origam.Workflow.ResourceUtils;
 
 namespace Origam.Licensing.Service
 {
@@ -66,8 +69,8 @@ namespace Origam.Licensing.Service
 
 					if (failures.Count() > 0)
 					{
-						throw new Origam.Rule.RuleException(
-							new Origam.Rule.RuleExceptionDataCollection
+						throw new RuleException(
+							new RuleExceptionDataCollection
 							(
 								failures.Select(x => x.RuleException()).ToArray()
 							)

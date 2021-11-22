@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam
+namespace Origam.ServiceCore
 {
     public interface IUserException
     {

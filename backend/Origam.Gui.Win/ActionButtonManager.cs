@@ -31,6 +31,7 @@ using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.GuiModel.Designer;
 using Origam.Gui.UI;
+using Origam.ServiceCore;
 
 namespace Origam.Gui.Win
 {

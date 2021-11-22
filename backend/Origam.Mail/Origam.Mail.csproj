@@ -80,6 +80,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MIMEParser\MIMEParser.csproj" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
+    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj" />
   </ItemGroup>
 
 

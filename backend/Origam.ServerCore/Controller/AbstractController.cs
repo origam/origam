@@ -41,6 +41,7 @@ using Origam.ServerCommon.Session_Stores;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model;
 using Origam.ServerCore.Model.UIService;
+using Origam.ServiceCore;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 

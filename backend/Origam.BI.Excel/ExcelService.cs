@@ -31,6 +31,7 @@ using NPOI.SS.UserModel;
 using Origam.Excel;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
+using Origam.ServiceCore;
 
 namespace Origam.BI.Excel
 {

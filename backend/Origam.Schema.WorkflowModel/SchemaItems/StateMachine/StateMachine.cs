@@ -31,6 +31,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Origam.DA;
+using Origam.ServiceCore;
 
 namespace Origam.Schema.WorkflowModel
 {

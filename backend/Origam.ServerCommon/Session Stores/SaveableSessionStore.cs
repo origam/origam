@@ -56,6 +56,7 @@ using Origam.Rule;
 using Origam.ServerCommon;
 using Origam.ServerCommon.Session_Stores;
 using Origam.Schema.MenuModel;
+using Origam.ServiceCore;
 
 namespace Origam.Server
 {

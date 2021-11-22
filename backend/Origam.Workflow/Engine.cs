@@ -40,6 +40,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using Origam.ServiceCore;
 
 namespace Origam.Workflow
 {
@@ -758,7 +759,7 @@ namespace Origam.Workflow
 		{
 			if(rule == null) return;
 
-			Rule.RuleExceptionDataCollection result = this.RuleEngine.EvaluateEndRule(
+			RuleExceptionDataCollection result = this.RuleEngine.EvaluateEndRule(
 				rule: rule, 
 				data: data, 
 				parentIsTracing: IsTrace(step)
@@ -781,7 +782,7 @@ namespace Origam.Workflow
 			// if there are some exceptions, we actually throw them
 			if(result != null && result.Count != 0)
 			{
-				throw new Rule.RuleException(result);
+				throw new RuleException(result);
 			}		
 		}
 
@@ -952,7 +953,7 @@ namespace Origam.Workflow
 			{
 				log.Debug("Evaluating validation rule for step " + step.Name);
 			}
-			Rule.RuleExceptionDataCollection result = 
+			RuleExceptionDataCollection result = 
 				this.RuleEngine.EvaluateEndRule(step.ValidationRule, step.ValidationRuleContextStore);
 
 			if (result == null)
@@ -966,7 +967,7 @@ namespace Origam.Workflow
 			// if there are some exceptions, we actually throw them
 			if(result.Count != 0)
 			{
-				throw new Rule.RuleException(result);
+				throw new RuleException(result);
 			}
 		}
 
@@ -1433,7 +1434,7 @@ namespace Origam.Workflow
 						{
 							EvaluateEndRuleTimed(currentModelStep.ValidationRule, validationRuleStore, currentModelStep);
 						}
-						catch(Rule.RuleException ruleException)
+						catch(RuleException ruleException)
 						{
 							if(ruleException.IsSeverityHigh) throw ruleException;
 						}

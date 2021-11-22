@@ -117,6 +117,10 @@
       <Project>{76038b9a-f924-4f7f-b4cc-4b9a0a6a55e3}</Project>
       <Name>Origam.Gui.Designer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj">
+      <Project>{77a7bd8a-554d-4214-bd41-e95a92f384d7}</Project>
+      <Name>Origam.ServiceCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Name>Origam.OrigamEngine</Name>
       <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>

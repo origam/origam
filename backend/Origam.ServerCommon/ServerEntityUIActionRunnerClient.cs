@@ -31,6 +31,7 @@ using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 using Origam.Gui;
 using Origam.ServerCommon;
+using Origam.ServiceCore;
 
 
 namespace Origam.Server

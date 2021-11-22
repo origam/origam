@@ -40,6 +40,7 @@ using System.Linq;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Origam.Extensions;
+using Origam.ServiceCore;
 
 namespace Origam.Server
 {
