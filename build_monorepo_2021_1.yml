@@ -609,18 +609,18 @@ jobs:
          buildType: 'current'
          downloadType: 'single'
          artifactName: 'origam-html'
-         downloadPath: '$(Agent.BuildDirectory)/s/OrigamDocker'
+         downloadPath: '$(Agent.BuildDirectory)/s/docker'
      - bash: |
         mv origam-html HTML5
-       workingDirectory: '$(Agent.BuildDirectory)/s/OrigamDocker'
+       workingDirectory: '$(Agent.BuildDirectory)/s/docker'
        displayName: Download origam-html artifact
      - task: Docker@2
        displayName: 'Build and publish docker image'
        inputs:
          containerRegistry: dockerhub
          repository: origam/server
-         Dockerfile: '$(Agent.BuildDirectory)/s/OrigamDocker/Dockerfile'
-         buildContext: '$(Agent.BuildDirectory)/s/OrigamDocker'
+         Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile'
+         buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId)
            $(TAG_LATEST)
