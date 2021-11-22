@@ -72,7 +72,8 @@ namespace Origam
 			bool traceEnabled,
 			string authorizationProvider,
 			string profileProvider,
-			string pathToRuntimeModelConfig)
+			string pathToRuntimeModelConfig,
+			string pathToSmsHandler)
 		{
 			
 			this.Name = name;
@@ -104,6 +105,7 @@ namespace Origam
 		    this.AuthorizationProvider = authorizationProvider;
 		    this.ProfileProvider = profileProvider;
 		    this.PathToRuntimeModelConfig = pathToRuntimeModelConfig;
+		    this.SmsService = pathToSmsHandler;
 		}
 
 		public override string ToString()
@@ -267,6 +269,9 @@ namespace Origam
 
         [Category("Model Connection")]
         public bool CheckFileHashesAfterModelLoad { get; set; } = true;
+        
+        [Category("SmsService")] 
+        public string SmsService { get; set; } = "Origam.Twilio.Origam.TwilioService, Origam.Twilio";
 
         public string ReportsFolder()
 		{
@@ -325,7 +330,8 @@ namespace Origam
 				this.TraceEnabled,
                 this.AuthorizationProvider,
                 this.ProfileProvider,
-				this.PathToRuntimeModelConfig
+				this.PathToRuntimeModelConfig,
+				this.SmsService
 				);
 		}
 
