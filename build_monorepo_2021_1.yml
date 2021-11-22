@@ -376,7 +376,7 @@ jobs:
      - powershell: |
          $commitId = (git -C $(Agent.BuildDirectory)\s\origam rev-parse HEAD)
          Write-Host $commitId
-         Write-Host "##vso[task.setvariable variable=ORIGAM_SOURCE_COMMIT_ID;]$commitId"
+         Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
        displayName: Store backend commit id
      - powershell: |
          $htmlChatCommitId = (git -C $(Agent.BuildDirectory)\s\origam-html-chat rev-parse HEAD)
