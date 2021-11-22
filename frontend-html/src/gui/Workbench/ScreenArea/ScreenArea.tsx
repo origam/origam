@@ -79,10 +79,11 @@ export const DialogScreen: React.FC<{
                     <>
                       {props.openedScreen.content
                         .formScreen!.dialogActions.filter(
-                          (action) =>
-                            action.placement !== IActionPlacement.PanelHeader &&
-                            action.placement !== IActionPlacement.PanelMenu
-                        )
+                        (action) =>
+                          action.placement !== IActionPlacement.PanelHeader &&
+                          action.placement !== IActionPlacement.PanelMenu &&
+                          action.isEnabled
+                      )
                         .map((action, idx) => (
                           <button
                             className={cx({ isPrimary: action.isDefault })}
