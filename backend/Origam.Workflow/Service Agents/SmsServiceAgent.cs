@@ -41,14 +41,16 @@ namespace Origam.Workflow.Service_Agents
             {
                 case "SendSms":
                     if(! (this.Parameters["from"] is null))
-                        throw new InvalidCastException(ResourceUtils.GetString("Parameter from cannot be null"));
+                        throw new InvalidCastException(ResourceUtils.GetString("Parameter 'from' cannot be null"));
                     if(! (this.Parameters["to"] is null))
-                        throw new InvalidCastException(ResourceUtils.GetString("Parameter to cannot be null"));
+                        throw new InvalidCastException(ResourceUtils.GetString("Parameter 'to' cannot be null"));
                     if(! (this.Parameters["body"] is null))
-                        throw new InvalidCastException(ResourceUtils.GetString("Parameter body cannot be null"));
+                        throw new InvalidCastException(ResourceUtils.GetString("Parameter 'body' cannot be null"));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
+
+                    _result = SmsServiceFactory.GetSmsService().SendSms();
             }
         }
     }

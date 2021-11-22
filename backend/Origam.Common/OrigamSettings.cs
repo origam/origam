@@ -271,7 +271,7 @@ namespace Origam
         public bool CheckFileHashesAfterModelLoad { get; set; } = true;
         
         [Category("SmsService")] 
-        public string SmsService { get; set; } = "Origam.Twilio.Origam.TwilioService, Origam.Twilio";
+        public string SmsService { get; set; } = "Origam.Twilio.TwilioService, Origam.Twilio";
 
         public string ReportsFolder()
 		{
