@@ -495,7 +495,7 @@ jobs:
            
            Docker image
            ```
-           docker pull origam/server:mono_$(TAG).$(Build.BuildId)
+           docker pull origam/server:$(TAG).$(Build.BuildId)
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
@@ -529,7 +529,7 @@ jobs:
            
            Docker image
            ```
-           docker pull origam/server:mono_$(TAG_LATEST)
+           docker pull origam/server:$(TAG_LATEST)
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
          assets: |
