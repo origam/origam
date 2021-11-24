@@ -1619,6 +1619,24 @@
     react-chartjs-2 "^3.3.0"
     rollup-plugin-postcss "^4.0.1"
 
+"@origam/plugin-chart@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-1.0.1.tgz#702789a2067bb8bda8c2bc21a7a904e81e443c71"
+  integrity sha512-i39ZhtnB4CHomqdtC0grpQ2G+zV0eE2WSEOVE1JmyqJMdQw3GE/2pDuVidrtDKGr/4hr/gVqjRVJQIiWn2Qk6w==
+  dependencies:
+    "@origam/plugin-interfaces" "^1.0.0"
+    "@origam/styles" "^1.0.0"
+    "@origam/utils" "^1.0.0"
+    "@types/classnames" "^2.3.1"
+    chart.js "^3.6.0"
+    mobx "5"
+    mobx-react "6"
+    moment "^2.29.1"
+    node-sass "5"
+    postcss "^8.3.11"
+    react-chartjs-2 "^3.3.0"
+    rollup-plugin-postcss "^4.0.1"
+
 "@origam/plugin-filter@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/plugin-filter/-/plugin-filter-1.0.0.tgz#ce0defa0e833fd3018744868e36c620e5b16ea79"
@@ -1641,24 +1659,6 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.0.0.tgz#f393a21243051559eacc6793dc77c2e43bcfb07a"
   integrity sha512-ttaWDJr4Xc5MiKCpsP/8gMBoiVr+1ptCb9dMRAejZaTB7OweDtxKD85Fk1GMHoI3onm4pC0kEAM7pl8t+7fidg==
-
-"@origam/plugin-radar-chart@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-radar-chart/-/plugin-radar-chart-1.0.0.tgz#fb9d08a7258bcd0e7c14fb4d6b978f2e9d864d04"
-  integrity sha512-3FeTD37vnOmtlnAmo/sjPTTVIX05uDuG0WGG8tRfkxOyhheypK7HPbaVB06KJe+ye51P6kXXqmjhHF6vNIMjxg==
-  dependencies:
-    "@origam/plugin-interfaces" "^1.0.0"
-    "@origam/styles" "^1.0.0"
-    "@origam/utils" "^1.0.0"
-    "@types/classnames" "^2.3.1"
-    chart.js "^3.6.0"
-    mobx "5"
-    mobx-react "6"
-    moment "^2.29.1"
-    node-sass "5"
-    postcss "^8.3.11"
-    react-chartjs-2 "^3.3.0"
-    rollup-plugin-postcss "^4.0.1"
 
 "@origam/styles@^1.0.0":
   version "1.0.0"
