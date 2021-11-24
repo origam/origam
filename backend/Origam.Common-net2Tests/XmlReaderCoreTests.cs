@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Xml;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Common_net2Tests
 {

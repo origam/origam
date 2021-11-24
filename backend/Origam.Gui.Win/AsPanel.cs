@@ -47,7 +47,7 @@ using Origam.Schema.GuiModel.Designer;
 using Origam.Gui;
 using Origam.Schema.MenuModel;
 using Origam.Gui.UI;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Gui.Win
 {

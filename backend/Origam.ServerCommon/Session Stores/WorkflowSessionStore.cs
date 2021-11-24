@@ -60,7 +60,7 @@ using Origam.Gui;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Schema.RuleModel;
 using Origam.ServerCommon;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Server
 {

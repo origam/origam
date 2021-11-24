@@ -37,7 +37,7 @@ using DataService
     = Origam.Workbench.Services.CoreServices.DataService;
 using Origam.Schema.WorkflowModel.WorkQueue;
 using System.Linq;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {

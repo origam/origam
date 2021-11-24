@@ -42,7 +42,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.Gui;
 using Origam.Gui.UI;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Gui.Win
 {

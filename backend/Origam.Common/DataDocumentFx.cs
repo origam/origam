@@ -26,7 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam
 {

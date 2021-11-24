@@ -270,7 +270,7 @@ namespace Origam.Workflow
 
 				IBusinessServicesService serviceProvider = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
 
-                foreach (Service service in services.ChildItems)
+                foreach (Schema.WorkflowModel.Service service in services.ChildItems)
 				{
 					AddHeader(service.Name, result);
 

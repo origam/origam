@@ -26,7 +26,7 @@ using System.Xml;
 using Origam.Workflow;
 using Origam.Licensing.Validation;
 using Origam.Rule;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using ResourceUtils = Origam.Workflow.ResourceUtils;
 
 namespace Origam.Licensing.Service

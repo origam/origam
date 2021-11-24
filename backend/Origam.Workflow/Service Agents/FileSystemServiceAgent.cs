@@ -27,7 +27,7 @@ using Origam.Services;
 using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using System.Data;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using Directory = System.IO.Directory;
 
 namespace Origam.Workflow

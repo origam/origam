@@ -26,7 +26,7 @@ using System.IO;
 using FastReport;
 using FastReport.Export.PdfSimple;
 using Origam.Schema.GuiModel;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.BI.FastReport
 {

@@ -30,7 +30,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Schema.RuleModel;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.Tasks

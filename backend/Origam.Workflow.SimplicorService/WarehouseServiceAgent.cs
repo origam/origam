@@ -26,7 +26,7 @@ using System.Data;
 
 using Origam.DA;
 using Origam.Rule;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 

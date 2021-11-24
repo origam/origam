@@ -27,7 +27,7 @@ using Origam.DA;
 using Origam.Gui.Win;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {

@@ -31,7 +31,7 @@ using Origam.Workbench.Services.CoreServices;
 using Origam.Gui;
 using Origam.ServerCommon;
 using Origam.Extensions;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Server
 {

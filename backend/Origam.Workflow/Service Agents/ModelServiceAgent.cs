@@ -27,7 +27,7 @@ using Origam.Schema;
 using Origam.Services;
 using Origam.Workbench.Services;
 using System.Data;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {

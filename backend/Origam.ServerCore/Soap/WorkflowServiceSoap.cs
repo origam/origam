@@ -7,7 +7,7 @@ using System.Xml;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.ServerCore.Controller;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore

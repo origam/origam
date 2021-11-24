@@ -47,7 +47,7 @@ using DiffPlex.DiffBuilder;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Rule
 {

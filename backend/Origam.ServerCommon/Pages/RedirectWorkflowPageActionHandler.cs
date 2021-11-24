@@ -47,7 +47,7 @@ using Origam.Rule;
 using System.Xml.XPath;
 using System.Xml;
 using Microsoft.AspNetCore.Http;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.ServerCommon.Pages
 {

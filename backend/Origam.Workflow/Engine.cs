@@ -40,7 +40,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {

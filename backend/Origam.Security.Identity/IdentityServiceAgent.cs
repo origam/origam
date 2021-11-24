@@ -27,7 +27,7 @@ using Origam.Rule;
 using log4net;
 using Origam.Security.Common;
 using Microsoft.Extensions.DependencyInjection;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Security.Identity
 {

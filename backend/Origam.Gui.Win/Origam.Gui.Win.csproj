@@ -88,10 +88,6 @@
       <Project>{FF4722B4-01F8-4062-AF39-F243A6BF336D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj">
-      <Project>{77a7bd8a-554d-4214-bd41-e95a92f384d7}</Project>
-      <Name>Origam.ServiceCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Project>{233d40c6-ae59-4651-b7bd-dd09d5835e21}</Project>
       <Name>Origam.OrigamEngine</Name>
@@ -680,6 +676,9 @@
   <ItemGroup>
     <PackageReference Include="DockPanelSuite">
       <Version>3.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="Origam.Service.Core">
+      <Version>1.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">

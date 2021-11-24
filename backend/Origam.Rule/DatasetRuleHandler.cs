@@ -24,7 +24,7 @@ using System.Data;
 using System.Xml;
 using Origam.DA;
 using Origam.Schema.EntityModel;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Rule
 {

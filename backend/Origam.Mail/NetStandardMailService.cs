@@ -26,7 +26,7 @@ using System.Net.Mail;
 using System.Xml.XPath;
 using System.Net.Mime;
 using System.Net;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Mail
 {

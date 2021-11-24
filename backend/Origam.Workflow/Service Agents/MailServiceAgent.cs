@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using Origam.Mail;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {

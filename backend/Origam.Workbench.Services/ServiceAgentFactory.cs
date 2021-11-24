@@ -25,7 +25,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Services;
 using System.Reflection;
 using System.Linq;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using Origam.Workflow;
 
 namespace Origam.Workbench.Services
@@ -55,7 +55,7 @@ namespace Origam.Workbench.Services
                         _xslFunctionProviderServices = new List<IServiceAgent>();
                         SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
                         ServiceSchemaItemProvider serviceItemProvider = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
-                        foreach (Service service in serviceItemProvider.ChildItemsByType(Service.CategoryConst))
+                        foreach (Origam.Schema.WorkflowModel.Service service in serviceItemProvider.ChildItemsByType(Origam.Schema.WorkflowModel.Service.CategoryConst))
                         {
                             try
                             {
@@ -147,7 +147,7 @@ namespace Origam.Workbench.Services
 					SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 					ServiceSchemaItemProvider services = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
 
-					Service service = services.GetChildByName(serviceName, Service.CategoryConst) as Service;
+                    Origam.Schema.WorkflowModel.Service service = services.GetChildByName(serviceName, Origam.Schema.WorkflowModel.Service.CategoryConst) as Origam.Schema.WorkflowModel.Service;
 
                     object agent = InstantiateObject(serviceName, service);
                     if(agent == null)
@@ -170,7 +170,7 @@ namespace Origam.Workbench.Services
         }
 
         private static object InstantiateObject(string serviceName,
-            Service service)
+            Origam.Schema.WorkflowModel.Service service)
         {
             if (service.ClassPath != null && service.ClassPath != string.Empty)
             {

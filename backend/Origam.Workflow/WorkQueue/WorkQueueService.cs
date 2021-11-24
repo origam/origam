@@ -42,7 +42,7 @@ using System.Linq;
 using System.Threading;
 using Origam.Services;
 using System.Transactions;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using Timer = System.Timers.Timer;
 
 namespace Origam.Workflow.WorkQueue

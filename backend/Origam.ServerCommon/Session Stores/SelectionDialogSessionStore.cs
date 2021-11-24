@@ -54,7 +54,7 @@ using Origam.Schema.RuleModel;
 using Origam.Workbench.Services;
 using Origam.Gui;
 using Origam.ServerCommon;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Server
 {

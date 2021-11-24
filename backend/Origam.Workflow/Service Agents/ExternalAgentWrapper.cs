@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {

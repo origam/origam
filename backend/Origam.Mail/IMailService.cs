@@ -1,4 +1,4 @@
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.Mail
 {

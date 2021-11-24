@@ -28,7 +28,7 @@ using System.Diagnostics;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.Tasks

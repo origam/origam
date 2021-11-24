@@ -29,7 +29,7 @@ using Origam.Schema.GuiModel;
 using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using System.Drawing.Printing;
-using Origam.ServiceCore;
+using Origam.Service.Core;
 
 namespace Origam.BI.CrystalReports
 {

@@ -22,9 +22,11 @@ import { registerPlugin } from "plugins/tools/PluginLibrary";
 import { AuditPlugin } from "@origam/plugin-audit";
 import { FilterPlugin  } from "@origam/plugin-filter";
 import { RadarChartPlugin  } from "@origam/plugin-radar-chart";
+import { PivotTablePlugin  } from "@origam/plugin-pivot-table";
 
 export function registerPlugins() {
   registerPlugin("FilterPlugin", () => new FilterPlugin());
   registerPlugin("AuditPlugin", () => new AuditPlugin());
   registerPlugin("RadarChartPlugin", () => new RadarChartPlugin());
+  registerPlugin("PivotTablePlugin", () => new PivotTablePlugin());
 }
