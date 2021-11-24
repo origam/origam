@@ -65,6 +65,7 @@
     <ProjectReference Include="..\Origam.Schema.EntityModel\Origam.Schema.EntityModel.csproj" />
     <ProjectReference Include="..\Origam.Schema.WorkflowModel\Origam.Schema.WorkflowModel.csproj" />
     <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj" />
+    <ProjectReference Include="..\Origam.Sms\Origam.Sms.csproj" />
     <ProjectReference Include="..\Origam.UI.Common\Origam.UI.Common.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
 

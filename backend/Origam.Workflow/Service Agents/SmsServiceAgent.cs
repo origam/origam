@@ -18,9 +18,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
+
 using System;
 
-namespace Origam.Workflow.Service_Agents
+namespace Origam.Workflow
 {
     public class SmsServiceAdapter : AbstractServiceAgent
     {
@@ -40,18 +41,29 @@ namespace Origam.Workflow.Service_Agents
             switch (MethodName)
             {
                 case "SendSms":
-                    if(! (this.Parameters["from"] is null))
-                        throw new InvalidCastException(ResourceUtils.GetString("Parameter 'from' cannot be null"));
-                    if(! (this.Parameters["to"] is null))
-                        throw new InvalidCastException(ResourceUtils.GetString("Parameter 'to' cannot be null"));
-                    if(! (this.Parameters["body"] is null))
-                        throw new InvalidCastException(ResourceUtils.GetString("Parameter 'body' cannot be null"));
+                    _result = CreateSmsService().SendSms(
+                        GetParameter<string>("from"),
+                        GetParameter<string>("to"),
+                        GetParameter<string>("to"));
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
-
-                    _result = SmsServiceFactory.GetSmsService().SendSms();
+                    throw new ArgumentOutOfRangeException(
+                        "MethodName", this.MethodName,
+                        ResourceUtils.GetString("InvalidMethodName"));
             }
+        }
+
+        private static ISmsService CreateSmsService()
+        {
+            OrigamSettings settings = 
+                ConfigurationManager.GetActiveConfiguration();
+            string assembly = settings.DataDataService
+                .Split(",".ToCharArray())[0].Trim();
+            string classname = settings.DataDataService
+                .Split(",".ToCharArray())[1].Trim();
+            return Reflector.InvokeObject(
+                assembly,
+                classname) as ISmsService;;
         }
     }
 }

@@ -218,7 +218,7 @@ namespace Origam
 
         [Category("Data Connection"), DefaultValue(2000)]
 		public int DataServiceExecuteProcedureTimeout { get; set; } = 2000;
-
+		
 		[Category("Data Connection"), DefaultValue(false)]
 		public bool UseProgressiveCaching { get; set; } = false;
 
@@ -271,7 +271,7 @@ namespace Origam
         public bool CheckFileHashesAfterModelLoad { get; set; } = true;
         
         [Category("SmsService")] 
-        public string SmsService { get; set; } = "Origam.Twilio.TwilioService, Origam.Twilio";
+        public string SmsService { get; set; } = "Origam.Sms.DebugSmsService, Origam.Sms";
 
         public string ReportsFolder()
 		{
