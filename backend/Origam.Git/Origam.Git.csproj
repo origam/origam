@@ -76,10 +76,6 @@
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj">
-      <Project>{77a7bd8a-554d-4214-bd41-e95a92f384d7}</Project>
-      <Name>Origam.ServiceCore</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp">

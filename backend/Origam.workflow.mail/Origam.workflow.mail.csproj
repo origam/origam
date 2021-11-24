@@ -141,10 +141,6 @@
       <Project>{3C49F590-14AC-464D-B0F9-8738576249A9}</Project>
       <Name>Origam.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.ServiceCore\Origam.ServiceCore.csproj">
-      <Project>{77a7bd8a-554d-4214-bd41-e95a92f384d7}</Project>
-      <Name>Origam.ServiceCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Mail\Origam.Mail.csproj">
       <Project>{9d53bb7f-97de-4592-b958-f57ae3f83ff3}</Project>
       <Name>Origam.Mail</Name>
