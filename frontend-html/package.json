@@ -9,7 +9,7 @@
     "@origam/components": "^1.0.1",
     "@origam/plugin-audit": "^1.0.0",
     "@origam/plugin-filter": "^1.0.0",
-    "@origam/plugin-interfaces": "^1.1.0",
+    "@origam/plugin-interfaces": "^1.2.0",
     "@origam/plugin-radar-chart": "^1.0.0",
     "@origam/styles": "^1.0.0",
     "@origam/utils": "^1.0.0",
