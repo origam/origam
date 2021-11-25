@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.Sms;
 using System;
 
 namespace Origam.Workflow
