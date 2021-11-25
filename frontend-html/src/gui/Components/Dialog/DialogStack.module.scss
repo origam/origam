@@ -17,16 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/EditorsCommon.module";
-
-.input {
-  @include input;
-}
-
-.editorContainer {
-  @include editorContainer;
-}
-
-.notification {
-  @include notification;
+.modalWindowOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(var(--background8-rgb), 0.4);
+    z-index: 1000;
 }

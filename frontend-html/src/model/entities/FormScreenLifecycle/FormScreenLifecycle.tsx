@@ -59,7 +59,7 @@ import { IScreenEvents } from "modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 import _, { isArray } from "lodash";
-import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
+import { YesNoQuestion } from "@origam/components";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
@@ -1276,6 +1276,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           "",
           <YesNoQuestion
             screenTitle={getOpenedScreen(this).tabTitle}
+            yesLabel={T("Yes", "button_yes")}
+            noLabel={T("No", "button_no")}
             message={T("Delete selected row?", "delete_confirmation")}
             onNoClick={() => {
               closeDialog();

@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useContext } from "react";
 import ReactDOM from "react-dom";
-import S from "./Dialog.module.scss";
+import S from "./DialogStack.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { getDialogStack } from "../../../model/selectors/DialogStack/getDialogStack";
 import { IDialogInfo } from "model/entities/types/IDialogInfo";

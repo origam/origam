@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
-import { CloseButton, ModalWindow } from "../Dialog/Dialog";
+import { CloseButton, ModalWindow } from "@origam/components";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { action, observable } from "mobx";

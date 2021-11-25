@@ -21,7 +21,7 @@ import { Icon } from "gui/Components/Icon/Icon";
 import { observer } from "mobx-react";
 import React, { RefObject } from "react";
 import { T } from "utils/translation";
-import { ModalWindow } from "../Dialog/Dialog";
+import { ModalWindow } from "@origam/components";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { action, observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
