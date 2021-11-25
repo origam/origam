@@ -70,10 +70,10 @@ jobs:
       uses: microsoft/setup-msbuild@v1
 
     - name: NuGet Restore
-      run: nuget restore Origam.sln
+      run: nuget restore backend/Origam.sln
     
     - run: |
-       msbuild Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
+       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
