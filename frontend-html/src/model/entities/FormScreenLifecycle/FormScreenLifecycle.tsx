@@ -86,6 +86,7 @@ import { pluginLibrary } from "plugins/tools/PluginLibrary";
 import { isIScreenPlugin, isISectionPlugin } from "@origam/plugin-interfaces";
 import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 import {T} from "utils/translation";
+import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -165,32 +166,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     action: IAction,
     selectedItems: string[]
   ): Generator<any, any, any> {
-    if (action.confirmationMessage && !(yield this.askYesNoQuestion(action.confirmationMessage))) {
+    if (action.confirmationMessage && !(yield askYesNoQuestion(this, getOpenedScreen(this).tabTitle, action.confirmationMessage))) {
       return;
     }
     yield*this.executeAction(gridId, entity, action, selectedItems);
-  }
-
-  askYesNoQuestion(question: string) {
-    return new Promise(
-      action((resolve: (value: boolean) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
-          "",
-          <YesNoQuestion
-            screenTitle={getOpenedScreen(this).tabTitle}
-            message={question}
-            onYesClick={() => {
-              closeDialog();
-              resolve(true);
-            }}
-            onNoClick={() => {
-              closeDialog();
-              resolve(false);
-            }}
-          />
-        );
-      })
-    );
   }
 
   *onRequestDeleteRow(entity: string, rowId: string, dataView: IDataView): any {
