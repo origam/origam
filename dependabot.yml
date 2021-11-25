@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/backend"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/frontend-html"
+    schedule:
+      interval: "daily"
