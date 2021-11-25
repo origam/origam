@@ -1642,6 +1642,11 @@
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.0.0.tgz#f393a21243051559eacc6793dc77c2e43bcfb07a"
   integrity sha512-ttaWDJr4Xc5MiKCpsP/8gMBoiVr+1ptCb9dMRAejZaTB7OweDtxKD85Fk1GMHoI3onm4pC0kEAM7pl8t+7fidg==
 
+"@origam/plugin-interfaces@^1.1.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.1.1.tgz#521e565d149410a1e59a02cd2b197ec0671e9240"
+  integrity sha512-8iyPPcWc2ZIlUlulGO76IzI+MZH87PT20GRwH8Rsw3eBbPSJeTSY9neN3ynPyBXqhOBopCty1fHNEBkC8tTnCg==
+
 "@origam/plugin-radar-chart@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/plugin-radar-chart/-/plugin-radar-chart-1.0.0.tgz#fb9d08a7258bcd0e7c14fb4d6b978f2e9d864d04"

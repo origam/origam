@@ -318,6 +318,7 @@ export interface IApi {
     sessionFormIdentifier: string;
     instanceId: string;
     tableConfigurations: ITableConfiguration[];
+    customConfigurations?: {[nodeName: string] : string};
     defaultView: string;
   }): Promise<any>;
 

@@ -32,6 +32,10 @@ export interface IConfigurationManager {
 
   cloneAndActivate(configuration: ITableConfiguration, newName: string): void;
 
+  getCustomConfiguration(configName: string): string | undefined;
+
+  setCustomConfiguration(configName: string, configuration: string): void;
+
   activeTableConfiguration: ITableConfiguration;
   customTableConfigurations: ITableConfiguration[],
   defaultTableConfiguration: ITableConfiguration,

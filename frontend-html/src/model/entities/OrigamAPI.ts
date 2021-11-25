@@ -555,8 +555,22 @@ export class OrigamAPI implements IApi {
     sessionFormIdentifier: string;
     instanceId: string;
     tableConfigurations: ITableConfiguration[];
+    customConfigurations?: {[nodeName: string] : string};
     defaultView: string;
   }): Promise<any> {
+    let customConfigurationXml = "";
+    if(data.customConfigurations){
+      const customConfigurations = Object.entries(data.customConfigurations)
+        .filter(entry => entry[0] && entry[1])
+        .map(entry => {
+          const encodedConfig = window.btoa(unescape(encodeURIComponent(entry[1])))
+          return `<${entry[0]}Configuration>\n${encodedConfig}\n</${entry[0]}Configuration>`
+        });
+      if(customConfigurations.length > 0) {
+        customConfigurationXml = `<CustomConfigurations>\n${customConfigurations.join("\n")}\n</CustomConfigurations>`
+      }
+    }
+
     const tableConfigurationsXml = data.tableConfigurations.map(tableConfig => {
       return "<TableConfiguration" +
         ` name="${tableConfig.name ?? ""}"` +
@@ -581,6 +595,7 @@ export class OrigamAPI implements IApi {
       ObjectInstanceId: data.instanceId,
       SectionNameAndData: {
         tableConfigurations: tableConfigurationsXml.join("\n"),
+        customConfigurations: customConfigurationXml,
         defaultView: `<view id="${data.defaultView}" />`,
       }
     });

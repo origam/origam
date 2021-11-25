@@ -19,12 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IDataView } from "model/entities/types/IDataView";
 import { getProperties } from "model/selectors/DataView/getProperties";
-import {
-  IPluginData,
-  IPluginDataView,
-  IPluginProperty,
-  IPluginTableRow,
-} from "@origam/plugin-interfaces";
+import { IPluginData, IPluginDataView, IPluginProperty, IPluginTableRow, } from "@origam/plugin-interfaces";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { getApi } from "model/selectors/getApi";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
 
 
 export function createPluginData(dataView: IDataView): IPluginData | undefined {
@@ -55,6 +54,26 @@ class PluginDataView implements IPluginDataView {
           momentFormatterPattern: property.formatterPattern
         }
       });
+  }
+
+  async saveConfiguration(pluginName: string, configuration: string): Promise<void> {
+    const configurationManager = getConfigurationManager(this.dataView);
+    configurationManager.setCustomConfiguration(pluginName, configuration);
+    const customConfigurations: {[key:string]: string} = {};
+    customConfigurations[pluginName] = configuration;
+
+    await getApi(this.dataView).saveObjectConfiguration({
+      sessionFormIdentifier: getSessionId(this.dataView),
+      instanceId: this.dataView.modelInstanceId,
+      tableConfigurations: configurationManager.allTableConfigurations,
+      customConfigurations: customConfigurations,
+      defaultView: getActivePanelView(this.dataView),
+    });
+  }
+
+  getConfiguration(pluginName: string){
+    const configurationManager = getConfigurationManager(this.dataView);
+    return configurationManager.getCustomConfiguration(pluginName)
   }
 
   getCellText(row: any[], propertyId: string): any {

@@ -22,7 +22,7 @@ import { ConfigurationManager } from "model/entities/TablePanelView/configuratio
 import { findStopping } from "xmlInterpreters/xmlUtils";
 import { tryParseAggregationType } from "model/entities/types/AggregationType";
 import { fixColumnWidth } from "xmlInterpreters/screenXml";
-import { TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
+import { ICustomConfiguration, TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
 import { TableColumnConfiguration } from "model/entities/TablePanelView/tableColumnConfiguration";
 
 function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any, isLazyLoading: boolean) {
@@ -50,15 +50,16 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   const defaultConfiguration = TableConfiguration.createDefault(properties);
   if (configurationNodes.length === 0) {
     return new ConfigurationManager(
-      [], defaultConfiguration);
+      [], defaultConfiguration, []);
   } else if (configurationNodes.length > 1) {
     throw new Error("Can not process more than one configuration node")
   }
 
   const tableConfigurationNodes = findStopping(configurationNodes[0], (n) => n.name === "tableConfigurations")?.[0]?.elements;
+  const customConfigurations = parseCustomConfigurations(configurationNodes[0]);
   if (!tableConfigurationNodes) {
     return new ConfigurationManager(
-      [], defaultConfiguration);
+      [], defaultConfiguration, customConfigurations);
   }
   const tableConfigurations: TableConfiguration[] = tableConfigurationNodes.map((tableConfigNode: any) => {
       return TableConfiguration.create(
@@ -84,7 +85,8 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   return new ConfigurationManager(
     tableConfigurations
       .filter((tableConfig: TableConfiguration) => tableConfig !== defaultTableConfiguration),
-    defaultTableConfiguration
+    defaultTableConfiguration,
+    customConfigurations
   );
 }
 
@@ -111,4 +113,22 @@ function parseColumnConfigurationNode(columnConfigNode: any, property: IProperty
 function parseIntOrZero(value: string): number {
   const intValue = parseInt(value, 10);
   return isNaN(intValue) ? 0 : intValue;
+}
+
+function parseCustomConfigurations(configurationNode: any): ICustomConfiguration[]{
+  const customConfigurationNodes = findStopping(configurationNode, (n) => n.name === "customConfigurations")
+    ?.[0]?.elements
+    ?.[0]?.elements;
+  if(!customConfigurationNodes) {
+    return [];
+  }
+  return customConfigurationNodes
+    .map((customConfigNode: any) => {
+      const config = customConfigNode.elements[0]?.text ?? "";
+      const decodedConfig = decodeURIComponent(escape(window.atob(config)))
+      return{
+        name: customConfigNode.name.replace("Configuration", ""),
+        value: decodedConfig
+      }
+    });
 }
