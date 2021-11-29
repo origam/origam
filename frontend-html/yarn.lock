@@ -1621,6 +1621,24 @@
     react-chartjs-2 "^3.3.0"
     rollup-plugin-postcss "^4.0.1"
 
+"@origam/plugin-chart@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-1.0.1.tgz#702789a2067bb8bda8c2bc21a7a904e81e443c71"
+  integrity sha512-i39ZhtnB4CHomqdtC0grpQ2G+zV0eE2WSEOVE1JmyqJMdQw3GE/2pDuVidrtDKGr/4hr/gVqjRVJQIiWn2Qk6w==
+  dependencies:
+    "@origam/plugin-interfaces" "^1.0.0"
+    "@origam/styles" "^1.0.0"
+    "@origam/utils" "^1.0.0"
+    "@types/classnames" "^2.3.1"
+    chart.js "^3.6.0"
+    mobx "5"
+    mobx-react "6"
+    moment "^2.29.1"
+    node-sass "5"
+    postcss "^8.3.11"
+    react-chartjs-2 "^3.3.0"
+    rollup-plugin-postcss "^4.0.1"
+
 "@origam/plugin-filter@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/plugin-filter/-/plugin-filter-1.0.0.tgz#ce0defa0e833fd3018744868e36c620e5b16ea79"
@@ -1648,24 +1666,6 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.2.0.tgz#990e216034e84a05950c2323288ea6bdd0267aea"
   integrity sha512-ZHaWRskYiVtl3ngyLGNxgS+LWbvqXd9MbEIhbpIsp1XKuoP0G9j7Fns12SRNLBwiCRaYlzKw8gbqrWVTQU3gog==
-
-"@origam/plugin-radar-chart@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-radar-chart/-/plugin-radar-chart-1.0.0.tgz#fb9d08a7258bcd0e7c14fb4d6b978f2e9d864d04"
-  integrity sha512-3FeTD37vnOmtlnAmo/sjPTTVIX05uDuG0WGG8tRfkxOyhheypK7HPbaVB06KJe+ye51P6kXXqmjhHF6vNIMjxg==
-  dependencies:
-    "@origam/plugin-interfaces" "^1.0.0"
-    "@origam/styles" "^1.0.0"
-    "@origam/utils" "^1.0.0"
-    "@types/classnames" "^2.3.1"
-    chart.js "^3.6.0"
-    mobx "5"
-    mobx-react "6"
-    moment "^2.29.1"
-    node-sass "5"
-    postcss "^8.3.11"
-    react-chartjs-2 "^3.3.0"
-    rollup-plugin-postcss "^4.0.1"
 
 "@origam/styles@^1.0.0":
   version "1.0.0"
@@ -2049,10 +2049,10 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/jsonwebtoken@^8.5.5":
-  version "8.5.5"
-  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.5.tgz#da5f2f4baee88f052ef3e4db4c1a0afb46cff22c"
-  integrity sha512-OGqtHQ7N5/Ap/TUwO6IgHDuLiAoTmHhGpNvgkCm/F4N6pKzx/RBSfr2OXZSwC6vkfnsEdb6+7DNZVtiXiwdwFw==
+"@types/jsonwebtoken@^8.5.6":
+  version "8.5.6"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.6.tgz#1913e5a61e70a192c5a444623da4901a7b1a9d42"
+  integrity sha512-+P3O/xC7nzVizIi5VbF34YtqSonFsdnbXBnWUCYRiKOi1f9gA4sEFvXkrGr/QVV23IbMYvcoerI7nnhDUiWXRQ==
   dependencies:
     "@types/node" "*"
 
@@ -6588,10 +6588,10 @@ immer@8.0.1:
   resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
   integrity sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==
 
-immer@^9.0.6:
-  version "9.0.6"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
-  integrity sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==
+immer@^9.0.7:
+  version "9.0.7"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.7.tgz#b6156bd7db55db7abc73fd2fdadf4e579a701075"
+  integrity sha512-KGllzpbamZDvOIxnmJ0jI840g7Oikx58lBPWV0hUh7dtAyZpFqqrBZdKka5GlTwMTZ1Tjc/bKKW4VSFAt6BqMA==
 
 immutable@^4.0.0:
   version "4.0.0"
