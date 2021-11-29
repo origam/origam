@@ -3330,6 +3330,10 @@ namespace Origam.Rule
 							t = t.ParentRelations[0].ParentTable;
 							path = t.TableName + "/" + path;
 						}
+						else
+						{
+							break;
+						}
 					}
 
 					path = "/" + data.DataSet.DataSetName + "/" + path;
