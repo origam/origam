@@ -3300,26 +3300,7 @@ namespace Origam.Rule
 					{
 						throw new NullReferenceException("Rule has IsPathRelative set but no XmlDataDocument has been provided. Cannot evaluate rule.");
 					}
-
-					// HERE WE HAVE TO USE THE SLICE, BECAUSE IF WE USED THE ORIGINA XML DOCUMENT (E.G. FROM THE FORM)
-					// WE WOULD NOT GET THE ACTUAL VALUES, SINCE THEY WERE NOT COMMITED TO THE XML, YET
-
-					// if the xml propagation would work, we would use
-					//XPathNavigator nav = data.GetElementFromRow(rowChanged).CreateNavigator();
-					//iterator = nav.Select(".");
-					//xmlSlice = data;
-
-					// get the path to the current row
-
-// DOES NOT WORK FOR NEW ROWS NOT APPENDED TO THE DATATABLE
-//					XPathNavigator nav = data.GetElementFromRow(rowChanged).CreateNavigator();
-//					string path = nav.Name;
-//
-//					while(nav.MoveToParent())
-//					{
-//						path = nav.Name + "/" + path;
-//					}
-
+					
 					string path = rowChanged.Table.TableName;
 					DataTable t = rowChanged.Table;
 
