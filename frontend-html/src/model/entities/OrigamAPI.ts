@@ -533,7 +533,11 @@ export class OrigamAPI implements IApi {
     Entity: string;
     Ids: string[];
   }): Promise<any> {
-    return (await this.axiosInstance.post(`/UIService/RowStates`, data)).data;
+    let states = (await this.axiosInstance.post(`/UIService/RowStates`, data)).data;
+    for (const state of states) {
+      state.id = state.id.toString();
+    }
+    return states;
   }
 
   async saveFavorites(data: {
