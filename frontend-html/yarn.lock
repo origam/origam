@@ -1598,10 +1598,12 @@
   resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.0.0.tgz#5c551ef5a1778018fbb5118d39114f74af5f183e"
   integrity sha512-mP1kjUQIW6WHbafBRSvUSzaQyU5kHzoGodT9rNnedgbAGsmw0I1DTnF9rcyOwev0m98cO56VhtMwBEDXtNWc1Q==
 
-"@origam/components@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.0.1.tgz#7682bbc1a9c98ff9de1f7bc3fbdb0f83bc90c56a"
-  integrity sha512-24l9BGo/MiQbc4od0OLvDPdqrSuIp7betsHfD8Q9wbrtzF1oGFjDp4naVLbdhkvyq04HriOIBKNHfm2nT1xDLw==
+"@origam/components@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.2.3.tgz#61f5c835012fa088b42cb12276cf93c655e409a6"
+  integrity sha512-voJapGy51qigsDBGKO3yHXntNdobnwDX6YSF5t+eOmYAuTtd8456ToOnSmpxEb+mZFaNIx80cov1y1gdCe0Djg==
+  dependencies:
+    react-inlinesvg "^2.3.0"
 
 "@origam/plugin-audit@^1.0.0":
   version "1.0.0"
@@ -1619,7 +1621,7 @@
     react-chartjs-2 "^3.3.0"
     rollup-plugin-postcss "^4.0.1"
 
-"@origam/plugin-chart@^1.0.1":
+"@origam/plugin-chart@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-1.0.1.tgz#702789a2067bb8bda8c2bc21a7a904e81e443c71"
   integrity sha512-i39ZhtnB4CHomqdtC0grpQ2G+zV0eE2WSEOVE1JmyqJMdQw3GE/2pDuVidrtDKGr/4hr/gVqjRVJQIiWn2Qk6w==
@@ -1660,10 +1662,20 @@
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.0.0.tgz#f393a21243051559eacc6793dc77c2e43bcfb07a"
   integrity sha512-ttaWDJr4Xc5MiKCpsP/8gMBoiVr+1ptCb9dMRAejZaTB7OweDtxKD85Fk1GMHoI3onm4pC0kEAM7pl8t+7fidg==
 
+"@origam/plugin-interfaces@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.2.0.tgz#990e216034e84a05950c2323288ea6bdd0267aea"
+  integrity sha512-ZHaWRskYiVtl3ngyLGNxgS+LWbvqXd9MbEIhbpIsp1XKuoP0G9j7Fns12SRNLBwiCRaYlzKw8gbqrWVTQU3gog==
+
 "@origam/styles@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-1.0.0.tgz#86f710ddd2294e2e45c2aa9ead5247e9d68ec4b8"
   integrity sha512-3rHnSKIkApTZlnlP0BDQDEoCXfSWGD/NwQP8vKgB/oBzVj6iNTwK2UpHPL5XTRjcDQSqCjsh1KEWy8XQbNSnqA==
+
+"@origam/styles@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.0.tgz#be7baab72421a04f1bff17e5ba8a7a9a106b96a1"
+  integrity sha512-hTr10Kz0KPkkJCkmTwpWheu2y/KUFs4mAEFObMmE5yXTXIa6sf+WCNP+rzSrrowxM8g/Gl0i9X0Gneu2HeIHZg==
 
 "@origam/utils@^1.0.0":
   version "1.0.0"

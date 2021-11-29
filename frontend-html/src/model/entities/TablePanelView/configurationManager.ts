@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IConfigurationManager, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
-import { TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
+import { ICustomConfiguration, TableConfiguration } from "model/entities/TablePanelView/tableConfiguration";
 import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { observable } from "mobx";
@@ -35,12 +35,16 @@ export class ConfigurationManager implements IConfigurationManager {
   @observable.shallow
   defaultTableConfiguration: TableConfiguration;
 
+  customConfigurationsMap: Map<string, string>;
+
   constructor(
     customTableConfigurations: TableConfiguration[],
-    defaultTableConfiguration: TableConfiguration
+    defaultTableConfiguration: TableConfiguration,
+    customConfigurations: ICustomConfiguration[]
   ) {
     this.defaultTableConfiguration = defaultTableConfiguration;
     this.customTableConfigurations = customTableConfigurations;
+    this.customConfigurationsMap = new Map(customConfigurations.map(i => [i.name, i.value]));
   }
 
   get allTableConfigurations() {
@@ -94,6 +98,14 @@ export class ConfigurationManager implements IConfigurationManager {
     newConfig.id = uuidv4();
     this.customTableConfigurations.push(newConfig);
     this.activeTableConfiguration = newConfig;
+  }
+
+  getCustomConfiguration(configName: string) {
+    return this.customConfigurationsMap.get(configName);
+  }
+
+  setCustomConfiguration(configName: string, configuration: string){
+    this.customConfigurationsMap.set(configName, configuration);
   }
 
   async deleteActiveTableConfiguration(): Promise<any> {

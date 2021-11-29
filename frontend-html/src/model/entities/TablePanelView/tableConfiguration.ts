@@ -24,6 +24,11 @@ import { TableColumnConfiguration } from "model/entities/TablePanelView/tableCol
 import { IProperty } from "../types/IProperty";
 import { observable } from "mobx";
 
+export interface ICustomConfiguration{
+  name: string;
+  value: string
+}
+
 export class TableConfiguration implements ITableConfiguration {
 
   public static DefaultConfigId = "default";

@@ -483,7 +483,7 @@ export function*interpretScreenXml(
       instance2XmlNode.set(dataViewInstance, dataView);
 
       const gridConfigurationNodes = configuration.filter(
-        (node) => node?.parent?.attributes?.Type === "Grid"
+        (node) => node?.parent?.attributes?.Type === "Grid" || node?.parent?.attributes?.Type === "SectionLevelPlugin"
       );
       const configurationNode =
         gridConfigurationNodes.length === 1 ? gridConfigurationNodes[0] : undefined;

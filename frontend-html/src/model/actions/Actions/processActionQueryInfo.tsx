@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import { action } from "mobx";
 import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
-import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { ModalWindow } from "@origam/components";
 import { T } from "utils/translation";
 import S from "./processActionQueryResult.module.scss";
 import { Icon } from "gui/Components/Icon/Icon";
