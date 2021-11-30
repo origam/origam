@@ -1,18 +1,18 @@
-name: "CodeQL javascript"
+name: "CodeQL Backend 2021.1"
 
 on:
   push:
-    branches: [ master, 20* ]
+    branches: [ 2021.1 ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master, 20* ]
+    branches: [ 2021.1 ]
   schedule:
-    - cron: '32 7 * * 2'
+    - cron: '40 23 * * 2'
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       actions: read
       contents: read
@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript' ]
+        language: [ 'csharp']
 
     steps:
     - name: Checkout repository
@@ -33,8 +33,19 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    - name: Setup .NET Core SDK 3.1.x
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: 3.1.x
+
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: NuGet Restore
+      run: nuget restore backend/Origam.sln
+    
+    - run: |
+       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
