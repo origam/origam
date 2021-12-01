@@ -154,14 +154,14 @@ namespace Origam.ServerCore.Controller
             return RunWithErrorHandler(() =>
             {
                 var ruleExceptionData = sessionObjects.UIService.SaveDataQuery(sessionFormIdentifier);
-                if (ruleExceptionData.Count > 0)
+                var errors = ruleExceptionData
+                    .Cast<RuleExceptionData>()
+                    .Where(data => data.Severity == RuleExceptionSeverity.High)
+                    .Select(data =>$"Entity: {data.EntityName}, Field: {data.FieldName}, Message: {data.Message}, Severity: {data.Severity}")
+                    .ToList();
+                if (errors.Count > 0)
                 {
-                    string errorMessage = string.Join(
-                        "\n", 
-                        ruleExceptionData
-                            .Cast<RuleExceptionData>()
-                            .Select(data =>$"Entity: {data.EntityName}, Field: {data.FieldName}, Message: {data.Message}, Severity: {data.Severity}"));
-                    return StatusCode(409, errorMessage);
+                    return StatusCode(409, string.Join("\n", errors));
                 }
                 return Ok(sessionObjects.UIService.SaveData(
                     sessionFormIdentifier));
