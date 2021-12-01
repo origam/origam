@@ -10,7 +10,10 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
 import selectors from "model/selectors-tree";
-import {processCRUDResult} from "../../actions/DataLoading/processCRUDResult";
+import { processCRUDResult } from "../../actions/DataLoading/processCRUDResult";
+import { processActionQueryInfo } from "model/actions/Actions/processActionQueryInfo";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
 export function questionSaveDataAfterRecordChange(ctx: any) {
   return new Promise(
@@ -46,17 +49,30 @@ export async function handleUserInputOnChangingRow(dataView: IDataView) {
   const api = getApi(dataView);
   const openedScreen = getOpenedScreen(dataView);
   const sessionId = getSessionId(openedScreen.content.formScreen);
+  const formScreen = getFormScreen(dataView);
 
   if (isInfiniteScrollingActive(dataView)) {
     switch (await questionSaveDataAfterRecordChange(dataView)) {
       case IQuestionChangeRecordAnswer.Cancel:
         return false;
-      case IQuestionChangeRecordAnswer.Yes:
-        await api.saveSessionQuery(sessionId);
-        const result = await api.saveSession(sessionId);
-        await flow(() => processCRUDResult(dataView, result));
-        return true;
-      case IQuestionChangeRecordAnswer.No:
+      case IQuestionChangeRecordAnswer.Yes: // eslint-disable-line @typescript-eslint/no-use-before-define
+        return runGeneratorInFlowWithHandler({
+          ctx: dataView,
+          generator: function*(): Generator<any> {
+            const queryResult = yield api.saveSessionQuery(sessionId);
+            const processQueryInfoResult = yield*processActionQueryInfo(dataView)(
+              queryResult as any[],
+              formScreen.title
+            );
+            if (!processQueryInfoResult.canContinue) {
+              return false;
+            }
+            const saveResult = yield api.saveSession(sessionId);
+            yield*processCRUDResult(dataView, saveResult as any);
+            return true;
+          }()
+        });
+      case IQuestionChangeRecordAnswer.No: // eslint-disable-line @typescript-eslint/no-use-before-define
         await flow(() =>
           getFormScreenLifecycle(dataView).throwChangesAway(dataView)
         )();
