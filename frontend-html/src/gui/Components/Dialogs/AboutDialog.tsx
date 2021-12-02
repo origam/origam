@@ -60,7 +60,7 @@ export class AboutDialog extends React.Component<{
           </div>
           <br/>
           <div>
-            <a href={"/Attributions.txt"} target="_blank">Copyright attributions</a>
+            <a href={"/Attributions.txt"} target="_blank" rel="noreferrer">Copyright attributions</a>
           </div>
           <br/>
           <div>Copyright 2020 Advantage Solutions, s. r. o.</div>
