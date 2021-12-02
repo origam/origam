@@ -59,6 +59,10 @@ export class AboutDialog extends React.Component<{
             <div>Commit Date: {commitDate}</div>
           </div>
           <br/>
+          <div>
+            <a href={"/Attributions.txt"} target="_blank">Copyright attributions</a>
+          </div>
+          <br/>
           <div>Copyright 2020 Advantage Solutions, s. r. o.</div>
           <br/>
         </div>
