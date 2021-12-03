@@ -1677,10 +1677,10 @@
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.0.tgz#be7baab72421a04f1bff17e5ba8a7a9a106b96a1"
   integrity sha512-hTr10Kz0KPkkJCkmTwpWheu2y/KUFs4mAEFObMmE5yXTXIa6sf+WCNP+rzSrrowxM8g/Gl0i9X0Gneu2HeIHZg==
 
-"@origam/utils@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.0.0.tgz#a3aac0e270cd8d1dd3675cfd3d67fb98c5e60c15"
-  integrity sha512-NdrMJF/T2McXQ9e0cdcmwvfA7E2YFPEp1eq9MAxDsFr3MrHqav5S7BLQ3wg4uytrV42T5gXgJgYqhbc+y4vJPA==
+"@origam/utils@^1.0.0", "@origam/utils@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.0.1.tgz#70d9588f01c18b193a09794292807c21d6eca21b"
+  integrity sha512-yuxFuDmdMYJZCZv1Dn5w/7Q8KsKxpICZ/1W6ZntLre4iRZDBRA15NI7jazAX9kCpm6TTZWWyhSWi46dbtO7HhQ==
   dependencies:
     moment "^2.29.1"
 
