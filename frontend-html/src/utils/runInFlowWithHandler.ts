@@ -19,7 +19,7 @@ export function runInFlowWithHandler(args:{ctx: any, action: (()=> Promise<any>)
 export function runGeneratorInFlowWithHandler(args:{ctx: any, generator: Generator}) {
   return flow(function* runWithHandler() {
     try {
-      yield* args.generator;
+      return yield*args.generator;
     } catch (e) {
       yield* handleError(args.ctx)(e);
       throw e;
