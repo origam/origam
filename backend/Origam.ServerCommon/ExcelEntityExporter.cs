@@ -65,17 +65,17 @@ namespace Origam.ServerCommon
             ISheet sheet = workbook.CreateSheet("Data");
             SetupSheetHeader(sheet, info);
             
-            int rowNumber = 0;
+            int rowIndex = 0;
             foreach (var row in rows)
             {
                 if (!isExportUnlimited && (settings.ExportRecordsLimit > -1)
-                                       && (rowNumber > settings.ExportRecordsLimit))
+                                       && (rowIndex + 1 > settings.ExportRecordsLimit))
                 {
-                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    FillExportLimitExceeded(workbook, sheet, rowIndex);
                     break;
                 }
-                rowNumber++;
-                AddRowToSheet(info, workbook, sheet, rowNumber, row.ToList());
+                rowIndex++;
+                AddRowToSheet(info, workbook, sheet, rowIndex, row.ToList());
             }
             return workbook;
         }
