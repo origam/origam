@@ -413,6 +413,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Content Include="App.ico" />
+    <Content Include="Attributions.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="build.xml" />
     <EmbeddedResource Include="ModelUpgradeForm.resx">
       <DependentUpon>ModelUpgradeForm.cs</DependentUpon>
