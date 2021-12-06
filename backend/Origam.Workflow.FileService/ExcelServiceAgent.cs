@@ -28,6 +28,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using Origam.DA;
 using Origam.Excel;
+using Origam.Service.Core;
 
 namespace Origam.Workflow.FileService
 {

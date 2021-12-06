@@ -32,6 +32,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 using System.IO;
 using System.Xml.XPath;
+using Origam.Service.Core;
 
 namespace Origam.Rule
 {

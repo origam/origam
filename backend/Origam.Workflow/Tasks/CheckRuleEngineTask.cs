@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using Origam.Schema.WorkflowModel;
+using Origam.Service.Core;
 
 namespace Origam.Workflow.Tasks
 {
@@ -46,7 +47,7 @@ namespace Origam.Workflow.Tasks
 			{
 				this.Engine.EvaluateEndRule(task);
 			}
-			catch(Rule.RuleException ruleException)
+			catch(RuleException ruleException)
 			{
 				if(ruleException.IsSeverityHigh) throw ruleException;
 			}

@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Xml;
-
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow.WorkQueue

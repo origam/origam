@@ -27,6 +27,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using System.Globalization;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {

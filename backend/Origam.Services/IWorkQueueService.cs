@@ -24,6 +24,7 @@ using System.Xml;
 using System.Data;
 
 using Origam.Schema;
+using Origam.Service.Core;
 
 namespace Origam.Workbench.Services
 {

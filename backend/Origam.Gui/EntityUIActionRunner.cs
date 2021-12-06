@@ -30,6 +30,7 @@ using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 using Origam.Workflow;
 

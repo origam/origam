@@ -32,6 +32,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.Xml;
 using Microsoft.AspNetCore.StaticFiles;
+using Origam.Service.Core;
 
 namespace Origam
 {

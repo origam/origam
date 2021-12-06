@@ -39,6 +39,7 @@ using Origam.Server;
 using Origam.Workbench.Services;
 using System.Linq;
 using System.Web;
+using Origam.Service.Core;
 
 namespace Origam.ServerCommon.Pages
 {

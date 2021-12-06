@@ -25,6 +25,7 @@ using System.Collections;
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
 using System.Collections.Generic;
+using Origam.Workflow;
 
 namespace Origam.Workbench.Services
 {

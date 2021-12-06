@@ -1999,7 +1999,7 @@ namespace OrigamArchitect
 		/// </summary>
 		private void InitializeConnectedServices()
 		{
-			ServiceManager.Services.AddService(new ServiceAgentFactory());
+			ServiceManager.Services.AddService(new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent)));
 			ServiceManager.Services.AddService(new StateMachineService());
 			ServiceManager.Services.AddService(OrigamEngine.CreateDocumentationService());
 			ServiceManager.Services.AddService(new TracingService());
