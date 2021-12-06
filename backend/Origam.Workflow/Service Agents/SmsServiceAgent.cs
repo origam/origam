@@ -45,7 +45,7 @@ namespace Origam.Workflow
                     _result = CreateSmsService().SendSms(
                         GetParameter<string>("from"),
                         GetParameter<string>("to"),
-                        GetParameter<string>("to"));
+                        GetParameter<string>("body"));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(
