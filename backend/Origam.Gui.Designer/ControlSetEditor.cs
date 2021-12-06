@@ -951,6 +951,10 @@ namespace Origam.Gui.Designer
 						{
 							FDToolboxItem fd_item = new FDToolboxItem();
 							fd_item.Type =item.ControlType + ","  + item.ControlNamespace;
+							if (item.PanelControlSet == null)
+							{
+								throw new Exception($"Item {item.Name}, Id: {item.Id} cannot be displayed because its control set is null. Please make sure the item is valid.");
+							}
 							fd_item.Name = item.PanelControlSet.Name;
 							fd_item.IsComplexType = true;
 							fd_item.PanelSetItem  = item.PanelControlSet;
