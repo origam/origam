@@ -227,8 +227,6 @@ jobs:
        condition: succeededOrFailed()
   - job: build_html
     displayName: Build html
-    dependsOn: 
-    - build_source
     pool:
       vmImage: windows-2019
     steps:
