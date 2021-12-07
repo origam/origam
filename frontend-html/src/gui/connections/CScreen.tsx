@@ -62,7 +62,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   useEffect(() => {
     const frameWindow = refIFrame.current;
     const contentDocument = frameWindow?.contentDocument;
-    const headNode = contentDocument.querySelector("head");
+    const headNode = contentDocument?.querySelector("head");
 
     if (contentDocument && headNode) {
       const mo = new MutationObserver(() => {
