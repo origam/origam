@@ -56,6 +56,7 @@ using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model.Search;
 using Origam.ServerCore.Resources;
+using Origam.Service.Core;
 
 namespace Origam.ServerCore.Controller
 {
