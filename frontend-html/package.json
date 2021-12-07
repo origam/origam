@@ -13,7 +13,7 @@
     "@origam/plugin-interfaces": "^1.2.0",
     "@origam/styles": "^2.0.0",
     "@origam/utils": "^1.0.1",
-    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/classnames": "^2.3.1",
