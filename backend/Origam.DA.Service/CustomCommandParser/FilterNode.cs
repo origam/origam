@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.Schema;
@@ -135,13 +136,13 @@ namespace Origam.DA.Service.CustomCommandParser
                     }
                     return intValue;
                 case OrigamDataType.Currency:
-                    if (!decimal.TryParse(value, out var decimalValue))
+                    if (!decimal.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var decimalValue))
                     {
                         throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to decimal");
                     }
                     return decimalValue;
                 case OrigamDataType.Float:
-                    if (!float.TryParse(value, out var floatValue))
+                    if (!float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var floatValue))
                     {
                         throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to float");
                     }
