@@ -81,11 +81,6 @@ namespace Origam.DA.Service.CustomCommandParser
                 if (Column.DataType == OrigamDataType.Array)
                 {
                     return OrigamDataType.String;
-                }  
-                
-                if (Column.DataType == OrigamDataType.Integer) 
-                {
-                    return OrigamDataType.Float;
                 }
 
                 if (Column.DataType == OrigamDataType.UniqueIdentifier &&
