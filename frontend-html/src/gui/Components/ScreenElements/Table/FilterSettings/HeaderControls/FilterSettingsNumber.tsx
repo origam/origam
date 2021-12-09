@@ -74,6 +74,7 @@ const OpCombo: React.FC<{
 class OpEditors extends React.Component<{
   setting?: any;
   onBlur?: (event: any) => void;
+  allowDecimalSeparator: boolean;
   currentValue1: any;
   currentValue2: any;
   onCurrentValue1Changed: ((value1: any) => void);
@@ -99,7 +100,7 @@ class OpEditors extends React.Component<{
   }
 
   private removeInvalidCharacters(event: any) {
-    const invalidChars = new RegExp("[^\\d\\-" + getCurrentDecimalSeparator() + "]", "g");
+    const invalidChars = new RegExp("[^\\d\\-" + (this.props.allowDecimalSeparator ? getCurrentDecimalSeparator() : "") + "]", "g");
     return (event.target.value || "").replace(invalidChars, "");
   }
 
@@ -163,6 +164,7 @@ class OpEditors extends React.Component<{
 @observer
 export class FilterSettingsNumber extends React.Component<{
   setting?: any;
+  allowDecimalSeparator: boolean;
   autoFocus: boolean;
   onChange: ()=>void;
   id: string;
@@ -276,6 +278,7 @@ export class FilterSettingsNumber extends React.Component<{
           currentValue2={this.currentValue2}
           onCurrentValue1Changed={val1 => this.onCurrentValue1Changed(val1)}
           onCurrentValue2Changed={val2 => this.onCurrentValue2Changed(val2)}
+          allowDecimalSeparator={this.props.allowDecimalSeparator}
           autoFocus={this.props.autoFocus}
         />
       </>
