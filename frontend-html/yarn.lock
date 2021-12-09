@@ -10934,6 +10934,11 @@ react-scripts@4.0.3:
   optionalDependencies:
     fsevents "^2.1.3"
 
+react-socks@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-socks/-/react-socks-2.2.0.tgz#8b3884a5a735f21119ad44244f7e754afe9d98fe"
+  integrity sha512-JHK7WM4nA8M28CJ/PXlJI/yjg61TlhdsM8BAD5tvWDEO0uT9iFpU671SGl43TEcdPmlytB7nc95PzWIFYTI4/w==
+
 react-virtualized@^9.22.3:
   version "9.22.3"
   resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.22.3.tgz#f430f16beb0a42db420dbd4d340403c0de334421"

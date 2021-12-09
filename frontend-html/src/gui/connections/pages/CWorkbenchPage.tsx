@@ -72,17 +72,6 @@ export class CWorkbenchPage extends React.Component {
                   <CScreenContent/>
                 </Fullscreen>
                 <CDialogContent/>
-                {/*<ScreenTabbedViewHandleRow>
-                <ScreenTabbedViewHandle isActive={false} hasCloseBtn={true}>
-                  Cubehór
-                </ScreenTabbedViewHandle>
-                <ScreenTabbedViewHandle isActive={true} hasCloseBtn={true}>
-                  Mýtobjekte
-                </ScreenTabbedViewHandle>
-                <ScreenTabbedViewHandle isActive={false} hasCloseBtn={true}>
-                  Mýtobjektgrúpn
-                </ScreenTabbedViewHandle>
-              </ScreenTabbedViewHandleRow>*/}
               </ScreenTabsArea>
             </MainBar>
           }
