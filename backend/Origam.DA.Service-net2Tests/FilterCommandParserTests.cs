@@ -226,6 +226,26 @@ namespace Origam.DA.ServiceTests
                         dataType: OrigamDataType.String
                     )
                 }
+            },            
+            new object[] {
+                "[\"cash\",\"between\",[18.4, 80]]",
+                "[cash] BETWEEN @cash_between_0 AND @cash_between_1",
+                new List<ParameterData> {
+                    new ParameterData
+                    (
+                        columnName: "cash", 
+                        parameterName: "cash_between_0", 
+                        value: 18.4,
+                        dataType: OrigamDataType.String
+                    ),                    
+                    new ParameterData
+                    (
+                        columnName: "cash", 
+                        parameterName: "cash_between_1", 
+                        value: 80,
+                        dataType: OrigamDataType.String
+                    )
+                }
             },
             new object[] {
                 "[\"age\",\"nbetween\",[18, 80]]",
@@ -435,6 +455,7 @@ namespace Origam.DA.ServiceTests
                     new ColumnInfo{Name = "name", DataType = OrigamDataType.String},
                     new ColumnInfo{Name = "Timestamp", DataType = OrigamDataType.Date},
                     new ColumnInfo{Name = "age", DataType = OrigamDataType.Integer},
+                    new ColumnInfo{Name = "cash", DataType = OrigamDataType.Currency},
                     new ColumnInfo{Name = "city_name", DataType = OrigamDataType.String},
                     new ColumnInfo{Name = "Name", DataType = OrigamDataType.String},
                     new ColumnInfo{Name = "id", DataType = OrigamDataType.String},

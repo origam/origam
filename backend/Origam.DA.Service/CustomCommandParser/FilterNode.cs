@@ -36,7 +36,7 @@ namespace Origam.DA.Service.CustomCommandParser
         
         private bool ContainsNumbersOnly(string value)
         {
-            return Regex.Match(value, "^[\\d,\\s]+$").Success;
+            return Regex.Match(value, "^[\\d,\\s\\.]+$").Success;
         }
 
         private string[] SplitValue
