@@ -13,7 +13,7 @@
     "@origam/plugin-interfaces": "^1.2.0",
     "@origam/styles": "^2.0.0",
     "@origam/utils": "^1.0.1",
-    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/classnames": "^2.3.1",
@@ -24,7 +24,7 @@
     "@types/leaflet-draw": "^1.0.5",
     "@types/lodash": "^4.14.177",
     "@types/mapbox__geojson-area": "^0.2.1",
-    "@types/node": "^16.11.11",
+    "@types/node": "^16.11.12",
     "@types/numeral": "^2.0.2",
     "@types/react": "^17.0.37",
     "@types/react-color": "^3.0.6",
@@ -38,7 +38,7 @@
     "@xstate/inspect": "^0.5.2",
     "axios": "^0.24.0",
     "bind-decorator": "^1.0.11",
-    "chart.js": "^3.6.1",
+    "chart.js": "^3.6.2",
     "classnames": "^2.3.1",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
@@ -75,7 +75,7 @@
     "web-vitals": "^2.1.2",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
-    "xstate": "^4.26.0"
+    "xstate": "^4.26.1"
   },
   "homepage": "./",
   "scripts": {
