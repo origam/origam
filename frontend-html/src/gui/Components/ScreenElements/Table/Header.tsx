@@ -102,11 +102,15 @@ export class Header extends React.Component<{
         {...provided?.dragHandleProps}
         className={S.header}
         style={this.makeHeaderStyle()}
-        onClick={(event) => this.props.onClick && this.props.onClick(event, this.props.id)}
         title={this.props.label}
       >
         <div className={S.inHeaderRow}>
-          <div className={S.label}>{this.props.label}</div>
+          <div
+            className={S.label}
+            onClick={(event) => this.props.onClick && this.props.onClick(event, this.props.id)}
+          >
+            {this.props.label}
+          </div>
           {this.props.orderingDirection !== IOrderByDirection.NONE && (
             <div className={S.order}>
               {this.props.orderingOrder > 0 && <span>{this.props.orderingOrder}</span>}
