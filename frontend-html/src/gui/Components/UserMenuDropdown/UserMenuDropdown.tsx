@@ -32,7 +32,8 @@ import { IAboutInfo } from "model/entities/types/IAboutInfo";
 export const UserMenuDropdown: React.FC<{
   handleLogoutClick: (event: any) => void,
   avatarLink: string | undefined,
-  userName: string | undefined,
+  userName?: string,
+  hideLabel?: boolean,
   ctx: any,
   aboutInfo: IAboutInfo,
   helpUrl: string | undefined
@@ -67,7 +68,7 @@ export const UserMenuDropdown: React.FC<{
                 <img className={cx(S.avatar, S.clickableAvatar)} src={props.avatarLink} alt=""/>
               </div>
             </div>
-            <div className={S.userNameLabel}>{props.userName}</div>
+            {!props.hideLabel && <div className={S.userNameLabel}>{props.userName}</div>}
           </div>
         </div>
       )}
@@ -78,9 +79,6 @@ export const UserMenuDropdown: React.FC<{
             avatarLink={props.avatarLink}
             actionItems={
               <>
-                {/* <DropdownItem isDisabled={true}>
-                  {T("My profile", "my_profile")}
-                </DropdownItem> */}
                 {props.helpUrl && props.helpUrl.trim() !== "" &&
                 <DropdownItem
                   onClick={() => {

@@ -54,6 +54,8 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getApi } from "model/selectors/getApi";
 import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
+import { getAbout } from "model/selectors/getAbout";
+import { About } from "model/entities/AboutInfo";
 
 function isSaveShortcut(event: any) {
   return event.key === "s" && (event.ctrlKey || event.metaKey);
@@ -75,19 +77,12 @@ export class CScreenToolbar extends React.Component<{}> {
     return this.context.application;
   }
 
-  @observable
-  aboutInfo: IAboutInfo = {
-    serverVersion: "",
-  };
+  get about(): About {
+    return getAbout(this.application);
+  }
 
   componentDidMount() {
-    runInFlowWithHandler({
-      ctx: this.application,
-      action: async () => {
-        const api = getApi(this.application);
-        this.aboutInfo = await api.getAboutInfo();
-      },
-    });
+    this.about.update();
   }
 
   @action.bound
@@ -283,7 +278,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.aboutInfo}
+          aboutInfo={this.about.info}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
@@ -315,7 +310,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.aboutInfo}
+          aboutInfo={this.about.info}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
@@ -341,7 +336,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.aboutInfo}
+          aboutInfo={this.about.info}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>

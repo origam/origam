@@ -22,11 +22,45 @@ import S from "./MobileToolBar.module.scss";
 import { MobileState } from "model/entities/MobileState";
 import { MobileTabs } from "gui/connections/MobileComponents/MobileTabs";
 import { Icon } from "@origam/components";
+import { getHelpUrl } from "model/selectors/User/getHelpUrl";
+import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
+import { MobXProviderContext } from "mobx-react";
+import { IApplication } from "model/entities/types/IApplication";
+import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
+import { action, observable } from "mobx";
+import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
+import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getApi } from "model/selectors/getApi";
+import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { About } from "model/entities/AboutInfo";
+import { getAbout } from "model/selectors/getAbout";
 
 export class MobileToolBar extends React.Component<{
   mobileState: MobileState
 }> {
+  static contextType = MobXProviderContext;
+
+  get application(): IApplication {
+    return this.context.application;
+  }
+
+  @action.bound
+  handleLogoutClick(event: any) {
+    onScreenToolbarLogoutClick(this.application)(event);
+  }
+
+  get about(): About {
+    return getAbout(this.application);
+  }
+
+  componentDidMount() {
+    this.about.update();
+  }
+
   render() {
+    const avatarLink = getUserAvatarLink(this.application);
+    const userName = getLoggedUserName(this.application);
     return (
       <div className={S.root}>
         <div
@@ -38,6 +72,15 @@ export class MobileToolBar extends React.Component<{
           />
         </div>
         <MobileTabs mobileState={this.props.mobileState}/>
+        <UserMenuDropdown
+          avatarLink={avatarLink}
+          handleLogoutClick={(event) => this.handleLogoutClick(event)}
+          userName={userName}
+          hideLabel={true}
+          ctx={this.application}
+          aboutInfo={this.about.info}
+          helpUrl={getHelpUrl(this.application)}
+        />
       </div>
     );
   }

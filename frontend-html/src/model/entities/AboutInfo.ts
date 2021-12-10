@@ -17,14 +17,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IWorkbench } from "../entities/types/IWorkbench";
-import { getApplication } from "./getApplication";
+import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { observable } from "mobx";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getApi } from "model/selectors/getApi";
 
-export function getWorkbench(ctx: any): IWorkbench {
-  const workbench = getApplication(ctx).workbench;
-  if (!workbench) {
-    throw new Error("No workbench in Application.");
+export class About {
+  @observable
+  info: IAboutInfo = {serverVersion: ""};
+
+  update(): Promise<void> {
+    return runInFlowWithHandler({
+      ctx: this.parent,
+      action: async () => {
+        const api = getApi(this.parent);
+        this.info = await api.getAboutInfo();
+      },
+    });
   }
-  return workbench;
-}
 
+  parent: any;
+}
