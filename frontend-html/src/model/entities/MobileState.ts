@@ -1,10 +1,10 @@
-import { IMobileState } from "model/entities/types/IMobileState";
 import { observable } from "mobx";
+import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
 
-export class MobileState implements IMobileState {
-  @observable
-  showMenu: boolean = false;
-
+export class MobileState {
   @observable
   tabsDroppedDown: boolean = false;
+
+  @observable
+  mainPageContents = MainPageContents.Screen
 }

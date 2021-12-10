@@ -17,36 +17,33 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IApi } from "./IApi";
-import { IApplicationLifecycle } from "./IApplicationLifecycle";
-import { IDialogStack } from "./IDialogStack";
-import { IWorkbench } from "./IWorkbench";
-import { IErrorDialogController } from "./IErrorDialog";
+import React from "react";
+import { AboutView } from "gui/Components/Dialogs/AboutView";
+import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { MobileState } from "model/entities/MobileState";
+import S from "./MobileAboutView.module.scss";
+import { Icon } from "@origam/components";
+import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
 
-export interface IApplicationData {
-  api: IApi;
-  applicationLifecycle: IApplicationLifecycle;
-  dialogStack: IDialogStack;
-  errorDialogController: IErrorDialogController;
-}
-
-export interface IApplication extends IApplicationData {
-  $type_IApplication: 1;
-
-  workbench?: IWorkbench;
-
+export class MobileAboutView extends React.Component<{
+  aboutInfo: IAboutInfo;
   mobileState: MobileState;
+}> {
 
-  parent?: any;
-
-  resetWorkbench(): void;
-
-  setWorkbench(workbench: IWorkbench): void;
-
-  run(): Generator;
+  render() {
+    return (
+      <div className={S.root}>
+        <AboutView aboutInfo={this.props.aboutInfo}/>
+        <div onClick={() => this.props.mobileState.mainPageContents = MainPageContents.Screen}>
+          <Icon
+            src={"./icons/noun-close-996783.svg"}
+            className={S.closeIcon}
+          />
+        </div>
+      </div>
+    );
+  }
 }
 
-export const isIApplication = (o: any): o is IApplication =>
-  o.$type_IApplication;
+
 

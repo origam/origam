@@ -24,7 +24,7 @@ import { ScreenToolbarPusher } from "gui/Components/ScreenToolbar/ScreenToolbarP
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
-import { action, observable } from "mobx";
+import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { openSearchWindow } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 import { ScreenToolbarActionGroup } from "gui/Components/ScreenToolbar/ScreenToolbarActionGroup";
@@ -49,13 +49,12 @@ import { T } from "utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { IAboutInfo } from "model/entities/types/IAboutInfo";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { getApi } from "model/selectors/getApi";
 import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { getAbout } from "model/selectors/getAbout";
 import { About } from "model/entities/AboutInfo";
+import { getDialogStack } from "model/selectors/getDialogStack";
+import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
 
 function isSaveShortcut(event: any) {
   return event.key === "s" && (event.ctrlKey || event.metaKey);
@@ -83,6 +82,18 @@ export class CScreenToolbar extends React.Component<{}> {
 
   componentDidMount() {
     this.about.update();
+  }
+
+  onAboutClick() {
+    const closeDialog = getDialogStack(this.application).pushDialog(
+      "",
+      <AboutDialog
+        aboutInfo={this.about.info}
+        onOkClick={() => {
+          closeDialog();
+        }}
+      />
+    );
   }
 
   @action.bound
@@ -278,7 +289,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.about.info}
+          onAboutClick={() => this.onAboutClick()}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
@@ -310,7 +321,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.about.info}
+          onAboutClick={() => this.onAboutClick()}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
@@ -336,7 +347,7 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
-          aboutInfo={this.about.info}
+          onAboutClick={() => this.onAboutClick()}
           helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>

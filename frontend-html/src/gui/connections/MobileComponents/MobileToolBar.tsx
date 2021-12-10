@@ -27,14 +27,10 @@ import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdo
 import { MobXProviderContext } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
-import { action, observable } from "mobx";
+import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { getApi } from "model/selectors/getApi";
-import { IAboutInfo } from "model/entities/types/IAboutInfo";
-import { About } from "model/entities/AboutInfo";
-import { getAbout } from "model/selectors/getAbout";
+import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
 
 export class MobileToolBar extends React.Component<{
   mobileState: MobileState
@@ -50,12 +46,13 @@ export class MobileToolBar extends React.Component<{
     onScreenToolbarLogoutClick(this.application)(event);
   }
 
-  get about(): About {
-    return getAbout(this.application);
-  }
-
-  componentDidMount() {
-    this.about.update();
+  onHamburgerClick(){
+    let mobileState = this.props.mobileState;
+    if(mobileState.mainPageContents === MainPageContents.Menu){
+      mobileState.mainPageContents = MainPageContents.Screen;
+    }else{
+      mobileState.mainPageContents = MainPageContents.Menu;
+    }
   }
 
   render() {
@@ -64,10 +61,10 @@ export class MobileToolBar extends React.Component<{
     return (
       <div className={S.root}>
         <div
-          onClick={() => this.props.mobileState.showMenu = !this.props.mobileState.showMenu}
+          onClick={() => this.onHamburgerClick()}
         >
           <Icon
-            src={"./icons/noun-hamburger.svg"}
+            src={"./icons/noun-hamburger-4238597.svg"}
             className={S.menuIcon}
           />
         </div>
@@ -78,7 +75,7 @@ export class MobileToolBar extends React.Component<{
           userName={userName}
           hideLabel={true}
           ctx={this.application}
-          aboutInfo={this.about.info}
+          onAboutClick={() => this.props.mobileState.mainPageContents = MainPageContents.About}
           helpUrl={getHelpUrl(this.application)}
         />
       </div>

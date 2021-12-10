@@ -24,6 +24,9 @@ import { CScreenContent } from "gui/connections/CScreenContent";
 import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState";
+import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
+import { About } from "model/entities/AboutInfo";
+import { getAbout } from "model/selectors/getAbout";
 
 
 @observer
@@ -35,17 +38,40 @@ export class MobileMain extends React.Component<{}> {
     return this.context.application.mobileState;
   }
 
+  get about(): About {
+    return getAbout(this.context.application);
+  }
+
+  componentDidMount() {
+    this.about.update();
+  }
+
+  renderMainPageContents(){
+    switch(this.mobileState.mainPageContents){
+      case MainPageContents.Menu:
+        return  <CSidebar/>;
+      case MainPageContents.Screen:
+        return <CScreenContent/>;
+      case MainPageContents.About:
+        return <MobileAboutView
+          aboutInfo={this.about.info}
+          mobileState={this.mobileState}
+        />
+    }
+  }
+
   render() {
     return (
         <div className={S.root}>
           <MobileToolBar mobileState={this.mobileState}/>
-          {this.mobileState.showMenu
-            ? <CSidebar/>
-            : <CScreenContent/>
-          }
+          {this.renderMainPageContents()}
         </div>
     );
   }
+}
+
+export enum MainPageContents {
+  Menu, Screen, About
 }
 
 

@@ -1,7 +1,7 @@
-import { IMobileState } from "model/entities/types/IMobileState";
 import { getApplication } from "model/selectors/getApplication";
+import { MobileState } from "model/entities/MobileState";
 
-export function getMobileState(ctx: any): IMobileState {
+export function getMobileState(ctx: any): MobileState {
   const mobileState = getApplication(ctx).mobileState;
   if (!mobileState) {
     throw new Error("No mobileState in Application.");
