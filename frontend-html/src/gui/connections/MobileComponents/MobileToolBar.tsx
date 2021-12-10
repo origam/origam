@@ -18,19 +18,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
-import { Splitter } from "gui/Components/Splitter/Splitter";
+import S from "./MobileToolBar.module.scss";
+import { MdDehaze } from "react-icons/md"
+import { MobileState } from "model/entities/MobileState";
 
-export const WorkbenchPage: React.FC<{
-  sidebar: React.ReactNode;
-  mainbar: React.ReactNode;
-}> = props => (
-    <Splitter
-      type="isHoriz"
-      STYLE={SSplitter}
-      panels={[
-        ["sidebar", 1, props.sidebar],
-        ["mainbar", 5, props.mainbar]
-      ]}
-    />
-);
+export class MobileToolBar extends React.Component<{
+  mobileState: MobileState
+}> {
+  render() {
+    return (
+      <div className={S.root}>
+        <MdDehaze
+          className={S.menuIcon}
+          onClick={() => this.props.mobileState.showMenu = !this.props.mobileState.showMenu}
+        />
+      </div>
+    );
+  }
+}
+
+
+

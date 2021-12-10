@@ -17,20 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
-import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
-import { Splitter } from "gui/Components/Splitter/Splitter";
+.root {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-export const WorkbenchPage: React.FC<{
-  sidebar: React.ReactNode;
-  mainbar: React.ReactNode;
-}> = props => (
-    <Splitter
-      type="isHoriz"
-      STYLE={SSplitter}
-      panels={[
-        ["sidebar", 1, props.sidebar],
-        ["mainbar", 5, props.mainbar]
-      ]}
-    />
-);
+.root :global(.sidebar){
+  height: unset;
+  flex-grow: 1;
+}
