@@ -21,6 +21,7 @@ import React from "react";
 import S from "./MobileToolBar.module.scss";
 import { MdDehaze } from "react-icons/md"
 import { MobileState } from "model/entities/MobileState";
+import { MobileTabs } from "gui/connections/MobileComponents/MobileTabs";
 
 export class MobileToolBar extends React.Component<{
   mobileState: MobileState
@@ -32,6 +33,7 @@ export class MobileToolBar extends React.Component<{
           className={S.menuIcon}
           onClick={() => this.props.mobileState.showMenu = !this.props.mobileState.showMenu}
         />
+        <MobileTabs mobileState={this.props.mobileState}/>
       </div>
     );
   }
