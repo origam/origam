@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "./MobileToolBar.module.scss";
-import { MdDehaze } from "react-icons/md"
 import { MobileState } from "model/entities/MobileState";
 import { MobileTabs } from "gui/connections/MobileComponents/MobileTabs";
+import { Icon } from "@origam/components";
 
 export class MobileToolBar extends React.Component<{
   mobileState: MobileState
@@ -29,10 +29,14 @@ export class MobileToolBar extends React.Component<{
   render() {
     return (
       <div className={S.root}>
-        <MdDehaze
-          className={S.menuIcon}
+        <div
           onClick={() => this.props.mobileState.showMenu = !this.props.mobileState.showMenu}
-        />
+        >
+          <Icon
+            src={"./icons/noun-hamburger.svg"}
+            className={S.menuIcon}
+          />
+        </div>
         <MobileTabs mobileState={this.props.mobileState}/>
       </div>
     );

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .root{
   height: 50px;
+  min-height: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
