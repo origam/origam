@@ -50,6 +50,8 @@ export interface IWorkbenchLifecycle {
   customAssetsRoute: string | undefined;
   portalSettings: IPortalSettings | undefined;
 
+  addMainMenuItemClickHandler(handler: ()=>void): void;
+
   openNewForm(
     id: string,
     type: IMainMenuItemType,

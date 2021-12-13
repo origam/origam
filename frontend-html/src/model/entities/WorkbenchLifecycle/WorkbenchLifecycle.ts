@@ -75,6 +75,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
+  menuItemHandlers: (()=>void)[] = [];
+
+  addMainMenuItemClickHandler(handler: ()=>void) {
+    this.menuItemHandlers.push(handler);
+  }
+
   *onMainMenuItemClick(args: {
     event: any;
     item: any;
@@ -93,6 +99,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     } = args.item.attributes;
     const {event} = args;
     const alwaysOpenNew = args.item.attributes.alwaysOpenNew === "true" || args.forceOpenNew;
+    this.menuItemHandlers.forEach(handler => handler());
 
     if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
