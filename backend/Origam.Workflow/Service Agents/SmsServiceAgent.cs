@@ -28,7 +28,6 @@ namespace Origam.Workflow
     {
         private object result;
         public override object Result => result;
-
         public override void Run()
         {
             switch (MethodName)
