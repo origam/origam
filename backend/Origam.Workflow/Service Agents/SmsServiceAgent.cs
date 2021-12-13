@@ -20,28 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using Origam.Sms;
 
 namespace Origam.Workflow
 {
     public class SmsServiceAdapter : AbstractServiceAgent
     {
-        private object _result;
-        public override object Result
-        {
-            get
-            {
-                var temp = _result;
-                _result = null;
-				
-                return temp;
-            }
-        }
+        private object result;
+        public override object Result => result;
+
         public override void Run()
         {
             switch (MethodName)
             {
                 case "SendSms":
-                    _result = CreateSmsService().SendSms(
+                    result = CreateSmsService().SendSms(
                         GetParameter<string>("from"),
                         GetParameter<string>("to"),
                         GetParameter<string>("body"));
