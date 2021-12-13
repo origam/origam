@@ -1,0 +1,32 @@
+.root {
+  //width: 500px;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 18px;
+  margin: 8px;
+}
+
+.input {
+  height: 28px;
+  border: none;
+  font-size: 16px;
+  flex-grow: 1;
+}
+
+.resultArea{
+  border-top: 1px solid var(--background5);
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 35vh;
+}
+
+.resultsContainer{
+  float: left;
+  min-width: 500px;
+}
