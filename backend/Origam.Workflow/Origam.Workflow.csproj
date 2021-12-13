@@ -51,9 +51,6 @@
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Origam-sms" Version="1.0.0" />
-  </ItemGroup>
 
 
  
