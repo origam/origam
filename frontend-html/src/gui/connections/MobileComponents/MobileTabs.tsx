@@ -56,6 +56,7 @@ export class MobileTabs extends React.Component<{
           <Dropdown>
             {openedScreens.map(openScreen =>
               <DropdownItem
+                key={openScreen.tabTitle}
                 onClick={(event: any) => {
                   setDropped(false);
                   onScreenTabHandleClick(openScreen)(event)
