@@ -31,6 +31,7 @@ import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
+import { MobileSearchButton } from "gui/connections/MobileComponents/MobileSearchButton";
 
 export class MobileToolBar extends React.Component<{
   mobileState: MobileState
@@ -47,7 +48,7 @@ export class MobileToolBar extends React.Component<{
   }
 
   onHamburgerClick(){
-    let mobileState = this.props.mobileState;
+    const mobileState = this.props.mobileState;
     if(mobileState.mainPageContents === MainPageContents.Menu){
       mobileState.mainPageContents = MainPageContents.Screen;
     }else{
@@ -69,6 +70,7 @@ export class MobileToolBar extends React.Component<{
           />
         </div>
         <MobileTabs mobileState={this.props.mobileState}/>
+        <MobileSearchButton mobileState={this.props.mobileState}/>
         <UserMenuDropdown
           avatarLink={avatarLink}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}

@@ -27,6 +27,7 @@ import { MobileState } from "model/entities/MobileState";
 import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
 import { About } from "model/entities/AboutInfo";
 import { getAbout } from "model/selectors/getAbout";
+import { MobileSearch } from "gui/connections/MobileComponents/MobileSearch";
 
 
 @observer
@@ -52,6 +53,8 @@ export class MobileMain extends React.Component<{}> {
         return  <CSidebar/>;
       case MainPageContents.Screen:
         return <CScreenContent/>;
+      case MainPageContents.Search:
+        return <MobileSearch/>
       case MainPageContents.About:
         return <MobileAboutView
           aboutInfo={this.about.info}
@@ -71,7 +74,10 @@ export class MobileMain extends React.Component<{}> {
 }
 
 export enum MainPageContents {
-  Menu, Screen, About
+  Menu,
+  Screen,
+  About,
+  Search,
 }
 
 

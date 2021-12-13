@@ -8,6 +8,7 @@ import { getSearcher } from "model/selectors/getSearcher";
 import { action, observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
+import { ISearcher } from "model/entities/types/ISearcher";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -27,7 +28,7 @@ export class SearchView extends React.Component<{
 
   render() {
     return (
-      <div className={S.root}>
+      <div className={"searchView"}>
         <div className={S.inputRow}>
           <Icon className={S.icon} src="./icons/search.svg"/>
           <input
@@ -62,26 +63,26 @@ export class SearchView extends React.Component<{
 
 
 export class SearchViewState {
-
-  constructor(
-    private ctx: any,
-    private onCloseClick: ()=>void)
-  {
-
-  }
-
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
   scrollDivRef: RefObject<HTMLDivElement> = React.createRef();
   resultElementMap: Map<string, RefObject<HTMLDivElement>> = new Map();
 
-  searcher = getSearcher(this.ctx);
+  searcher: ISearcher;
 
   @observable
   value = "";
 
   timeout: NodeJS.Timeout | undefined;
+
+  constructor(
+    private ctx: any,
+    private onCloseClick: ()=>void)
+  {
+    this.searcher = getSearcher(this.ctx);
+    this.searcher.clear();
+  }
 
   @action.bound
   onKeyDown(event: any) {
@@ -159,5 +160,9 @@ export class SearchViewState {
   onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     this.value = event.target.value;
     this.searcher.onSearchFieldChange(this.value);
+  }
+
+  clear() {
+    this.searcher.clear();
   }
 }
