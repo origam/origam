@@ -30,6 +30,8 @@
   white-space: nowrap;
   display: flex;
   align-items: center;
+  user-select: none;
+  margin-right: 10px;
 }
 
 .itemTitle {
