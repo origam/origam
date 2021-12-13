@@ -44,11 +44,11 @@ jobs:
       run: nuget restore backend/Origam.sln
     
     - name: Build Backend
-    - run: |
+      run: |
        msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
 
     - name: Build Architect
-    - run: |
+      run: |
        msbuild backend/Origam.sln 
        
     - name: Perform CodeQL Analysis
