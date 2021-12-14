@@ -28,6 +28,7 @@ import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutVie
 import { About } from "model/entities/AboutInfo";
 import { getAbout } from "model/selectors/getAbout";
 import { MobileSearch } from "gui/connections/MobileComponents/MobileSearch";
+import { MobileBottomBar } from "gui/connections/MobileComponents/MobileBottomBar";
 
 
 @observer
@@ -68,6 +69,7 @@ export class MobileMain extends React.Component<{}> {
         <div className={S.root}>
           <MobileToolBar mobileState={this.mobileState}/>
           {this.renderMainPageContents()}
+          <MobileBottomBar/>
         </div>
     );
   }

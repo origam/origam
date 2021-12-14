@@ -18,26 +18,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import { SearchView, SearchViewState } from "gui/Components/Search/SearchView";
-import { MobXProviderContext } from "mobx-react";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import S from "./MobileSearch.module.scss";
+import S from "./MobileBottomBar.module.scss";
+import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
 
-export class MobileSearch extends React.Component<{
-}> {
-
-  static contextType = MobXProviderContext;
-
-  get workbench(): IWorkbench {
-    return this.context.workbench;
-  }
-
-  searchViewState = new SearchViewState(this.workbench, ()=>{});
-
+export class MobileBottomBar extends React.Component<{}> {
   render() {
     return (
       <div className={S.root}>
-        <SearchView state={this.searchViewState}/>
+       <BottomIcon
+         iconPath={"./icons/noun-close-996783.svg"}
+         onClick={()=> {}}
+       />
+        <BottomIcon
+         iconPath={"./icons/noun-close-996783.svg"}
+         onClick={()=> {}}
+       />
+        <BottomIcon
+         iconPath={"./icons/noun-close-996783.svg"}
+         onClick={()=> {}}
+       />
+        <BottomIcon
+         iconPath={"./icons/noun-close-996783.svg"}
+         onClick={()=> {}}
+       />
       </div>
     );
   }
