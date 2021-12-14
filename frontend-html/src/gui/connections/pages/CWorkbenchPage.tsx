@@ -67,7 +67,7 @@ export class CWorkbenchPage extends React.Component {
           <Breakpoint small down className={S.mobileContainer}>
             <MobileMain/>
           </Breakpoint>
-          <Breakpoint small up className={S.root}>
+          <Breakpoint medium up className={S.root}>
             <WorkbenchPage
               sidebar={<CSidebar/>}
               mainbar={

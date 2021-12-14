@@ -48,6 +48,7 @@ import { SearchResults } from "gui/Components/Search/SearchResults";
 import { CFavorites } from "gui/connections/CFavorites";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { DragDropContext } from 'react-beautiful-dnd';
+import { Breakpoint } from "react-socks";
 
 @observer
 export class CSidebar extends React.Component {
@@ -236,24 +237,26 @@ export class CSidebar extends React.Component {
               <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
             </SidebarSectionBody>
           </SidebarSection>
-          <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
-            <SidebarSectionDivider/>
-            <SidebarSectionHeader
-              isActive={this.sidebarState.activeSection === "Search"}
-              icon={
-                <Icon
-                  src="./icons/search.svg"
-                  tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
-                />
-              }
-              label={T("Search", "search_result", this.sidebarState.resultCount)}
-              onClick={() => (this.sidebarState.activeSection = "Search")}
-            />
-            <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
-              <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
-            </SidebarSectionBody>
-            <SidebarSectionDivider/>
-          </SidebarSection>
+          <Breakpoint medium up>
+            <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
+              <SidebarSectionDivider/>
+              <SidebarSectionHeader
+                isActive={this.sidebarState.activeSection === "Search"}
+                icon={
+                  <Icon
+                    src="./icons/search.svg"
+                    tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
+                  />
+                }
+                label={T("Search", "search_result", this.sidebarState.resultCount)}
+                onClick={() => (this.sidebarState.activeSection = "Search")}
+              />
+              <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
+                <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
+              </SidebarSectionBody>
+              <SidebarSectionDivider/>
+            </SidebarSection>
+          </Breakpoint>
         </DragDropContext>
       </Sidebar>
     );
