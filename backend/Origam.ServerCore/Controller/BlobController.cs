@@ -348,12 +348,12 @@ namespace Origam.ServerCore.Controller
             }
             var destWidth = (int)(sourceWidth * percent);
             var destHeight = (int)(sourceHeight * percent);
-            var backgroudImage = new MagickImage(MagickColors.Black, width, height);
-            backgroudImage.Resize(width, height);
+            var backgroundImage = new MagickImage(MagickColors.Black, width, height);
+            backgroundImage.Resize(width, height);
             var pictureBitmap = new MagickImage(byteArrayImage);
             pictureBitmap.Resize(destWidth,destHeight);
-            backgroudImage.Composite(pictureBitmap, destX,destY);
-            return backgroudImage.ToByteArray(imageInfo.Format);
+            backgroundImage.Composite(pictureBitmap, destX, destY);
+            return backgroundImage.ToByteArray(imageInfo.Format);
         }
     }
 }
