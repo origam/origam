@@ -38,7 +38,8 @@
         "http://localhost:3000/#origamClientCallback/",
         "https://localhost:3000/#origamClientCallbackRenew/"
       ],
-      "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
+      "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ],
+      "AllowedCorsOrigins": ["https://someOrigion"]
     },
     "MobileClient": {
       "RedirectUris": [ "http://localhost/xamarincallback" ],
