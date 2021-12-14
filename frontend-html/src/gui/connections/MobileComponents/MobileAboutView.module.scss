@@ -18,16 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   margin: 10px;
   background-color: var(--background2);
   height: 100%;
   padding: 10px;
-}
-
-.closeIcon {
-  width: 30px;
-  height: 30px;
 }

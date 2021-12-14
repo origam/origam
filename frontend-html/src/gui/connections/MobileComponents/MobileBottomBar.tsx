@@ -20,14 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./MobileBottomBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
+import { MobileState } from "model/entities/MobileState";
 
-export class MobileBottomBar extends React.Component<{}> {
+export class MobileBottomBar extends React.Component<{
+  mobileState: MobileState
+}> {
   render() {
     return (
       <div className={S.root}>
        <BottomIcon
          iconPath={"./icons/noun-close-996783.svg"}
-         onClick={()=> {}}
+         onClick={()=> {this.props.mobileState.close()}}
        />
         <BottomIcon
          iconPath={"./icons/noun-close-996783.svg"}

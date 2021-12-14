@@ -7,6 +7,8 @@ export class MobileState {
   @observable
   tabsDroppedDown: boolean = false;
 
+  previousMainPageContents: undefined | MainPageContents;
+
   @observable
   mainPageContents = MainPageContents.Screen
 
@@ -15,5 +17,9 @@ export class MobileState {
     workbenchLifecycle.addMainMenuItemClickHandler(
       () => this.mainPageContents = MainPageContents.Screen
     );
+  }
+
+  close() {
+    this.mainPageContents = MainPageContents.Screen;
   }
 }

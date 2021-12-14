@@ -34,12 +34,6 @@ export class MobileAboutView extends React.Component<{
     return (
       <div className={S.root}>
         <AboutView aboutInfo={this.props.aboutInfo}/>
-        <div onClick={() => this.props.mobileState.mainPageContents = MainPageContents.Screen}>
-          <Icon
-            src={"./icons/noun-close-996783.svg"}
-            className={S.closeIcon}
-          />
-        </div>
       </div>
     );
   }
