@@ -21,6 +21,12 @@ import React from "react";
 import S from "./MobileBottomBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
 import { MobileState } from "model/entities/MobileState";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
+import { Dropdown } from "gui/Components/Dropdown/Dropdown";
+import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
+import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
+import { Icon } from "@origam/components";
 
 export class MobileBottomBar extends React.Component<{
   mobileState: MobileState
@@ -29,19 +35,45 @@ export class MobileBottomBar extends React.Component<{
     return (
       <div className={S.root}>
        <BottomIcon
-         iconPath={"./icons/noun-close-996783.svg"}
+         iconPath={"./icons/noun-close-25798.svg"}
          onClick={()=> {this.props.mobileState.close()}}
        />
+        {/*<Dropdowner*/}
+        {/*  trigger={({refTrigger, setDropped}) => (*/}
+        {/*    <DataViewHeaderAction*/}
+        {/*      refDom={refTrigger}*/}
+        {/*      onMouseDown={() => setDropped(true)}*/}
+        {/*      isActive={false}*/}
+        {/*    >*/}
+        {/*     <Icon src={"./icons/noun-right-1784045.svg"} />*/}
+        {/*    </DataViewHeaderAction>*/}
+        {/*  )}*/}
+        {/*  content={({setDropped}) => (*/}
+        {/*    <Dropdown>*/}
+        {/*      {openedScreens.map(openScreen =>*/}
+        {/*        <DropdownItem*/}
+        {/*          key={openScreen.tabTitle}*/}
+        {/*          onClick={(event: any) => {*/}
+        {/*            setDropped(false);*/}
+        {/*            onScreenTabHandleClick(openScreen)(event)*/}
+        {/*          }}*/}
+        {/*        >*/}
+        {/*          {openScreen.tabTitle}*/}
+        {/*        </DropdownItem>*/}
+        {/*      )}*/}
+        {/*    </Dropdown>*/}
+        {/*  )}*/}
+        {/*/>*/}
         <BottomIcon
-         iconPath={"./icons/noun-close-996783.svg"}
+         iconPath={"./icons/noun-right-1784045.svg"}
          onClick={()=> {}}
        />
         <BottomIcon
-         iconPath={"./icons/noun-close-996783.svg"}
+         iconPath={"./icons/noun-loading-1780489.svg"}
          onClick={()=> {}}
        />
         <BottomIcon
-         iconPath={"./icons/noun-close-996783.svg"}
+         iconPath={"./icons/noun-save-1014816.svg"}
          onClick={()=> {}}
        />
       </div>
