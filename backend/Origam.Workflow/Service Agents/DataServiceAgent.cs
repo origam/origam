@@ -33,6 +33,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 

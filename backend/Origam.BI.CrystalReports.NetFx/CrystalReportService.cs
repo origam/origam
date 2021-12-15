@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Xml;
 using System.Collections;
@@ -28,6 +29,7 @@ using Origam.Schema.GuiModel;
 using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using System.Drawing.Printing;
+using Origam.Service.Core;
 
 namespace Origam.BI.CrystalReports
 {

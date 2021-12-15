@@ -47,6 +47,7 @@ using DiffPlex.DiffBuilder;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using Origam.Service.Core;
 
 namespace Origam.Rule
 {
@@ -2694,7 +2695,7 @@ namespace Origam.Rule
 					}
 					else
 					{
-						result = new Origam.XmlContainer(resultDoc);
+						result = new XmlContainer(resultDoc);
 					}
 				}
 			}
@@ -3329,6 +3330,10 @@ namespace Origam.Rule
 						{
 							t = t.ParentRelations[0].ParentTable;
 							path = t.TableName + "/" + path;
+						}
+						else
+						{
+							break;
 						}
 					}
 
@@ -4171,7 +4176,7 @@ namespace Origam.Rule
                 log.ErrorFormat("GetXmlDocumentFromData called with System.Xml.XmlDataDocuement." +
                     "This isn't expected. Refactor code to be called with IXmlContainer. (documentElement:{0})",
                     xmlDoc.DocumentElement.Name);
-                return new Origam.XmlContainer(xmlDoc);
+                return new XmlContainer(xmlDoc);
             }            
 			
 			if(data is int)

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Windows.Forms;
 using System.Xml;
@@ -26,6 +27,7 @@ using Origam.DA;
 using Origam.Gui.Win;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {
@@ -143,7 +145,7 @@ namespace Origam.Workflow
 					this.WorkflowEngine.EvaluateEndRule(this.EndRule, this.NextData);
 				}
 			}
-			catch(Rule.RuleException ruleEx)
+			catch(RuleException ruleEx)
 			{
                 bool shouldReturn = FormGenerator.DisplayRuleException(this, ruleEx);
                 if (shouldReturn)

@@ -27,6 +27,7 @@ using Origam.Schema;
 using Origam.DA;
 using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 

@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using Origam.Workflow;
 using Origam;
 using Origam.Extensions;
+using Origam.Service.Core;
 
 namespace Origam.Gui.Win
 {

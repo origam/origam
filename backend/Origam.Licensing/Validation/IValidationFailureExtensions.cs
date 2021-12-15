@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Linq;
 using Origam.Rule;
 using System.Xml.Linq;
+using Origam.Service.Core;
 
 namespace Origam.Licensing.Validation
 {

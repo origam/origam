@@ -27,6 +27,7 @@ using Origam.Schema;
 using Origam.Services;
 using Origam.Workbench.Services;
 using System.Data;
+using Origam.Service.Core;
 
 namespace Origam.Workflow
 {
@@ -109,19 +110,19 @@ namespace Origam.Workflow
             {
                 case "GenerateSimpleModel":
                     _result = GenerateSimpleModel(
-                        GetParameter<IDataDocument>("Data"));
+                        Parameters.Get<IDataDocument>("Data"));
                     break;
 
                 case "ElementAttribute":
                     _result = ElementAttribute(
-                        GetParameter<Guid>("Id"),
-                        GetParameter<string>("AttributeName"));
+                        Parameters.Get<Guid>("Id"),
+                        Parameters.Get<string>("AttributeName"));
                     break;
 
                 case "ElementListByParent":
                     _result = ElementList(
-                        GetParameter<Guid>("ParentId"),
-                        GetParameter<string>("ItemType"));
+                        Parameters.Get<Guid>("ParentId"),
+                        Parameters.Get<string>("ItemType"));
                     break;
 
                 default:

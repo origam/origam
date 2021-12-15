@@ -33,7 +33,7 @@ import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 import { IDialogStack } from "model/entities/types/IDialogStack";
-import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { ModalWindow } from "@origam/components";
 import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { handleError } from "model/actions/handleError";

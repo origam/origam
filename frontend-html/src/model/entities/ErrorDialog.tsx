@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import bind from "bind-decorator";
-import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { ModalWindow } from "@origam/components";
 import _ from "lodash";
 import { action, computed, observable } from "mobx";
 import { observer, Observer } from "mobx-react";

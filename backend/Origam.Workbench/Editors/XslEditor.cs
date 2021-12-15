@@ -38,6 +38,7 @@ using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
+using Origam.Service.Core;
 using Origam.Services;
 using Origam.UI;
 using Origam.Workbench.BaseComponents;

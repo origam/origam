@@ -32,9 +32,6 @@ using System.Collections.Generic;
 
 namespace Origam.Workflow
 {
-	/// <summary>
-	/// Summary description for AbstractServiceAgent.
-	/// </summary>
 	public abstract class AbstractServiceAgent : IServiceAgent
 	{
 		public event EventHandler PersistenceProviderChanged;
@@ -69,53 +66,13 @@ namespace Origam.Workflow
             return data;
         }
 
-		public T TryGetParameter<T>(string parameterName)
-		{
-			if (Parameters.Contains(parameterName))
-			{
-				object value = Parameters[parameterName];
-				if (value is T t)
-				{
-					return t;
-				}
-			}
-			return default(T);
-		}
-
-		public T GetParameter<T>(string parameterName)
-        {
-            if (!Parameters.Contains(parameterName))
-            {
-				throw new ArgumentOutOfRangeException(
-					$"Missing parameter {parameterName}");
-            }
-			object value = Parameters[parameterName];
-            if (value is T t)
-            {
-				return t;
-            }
-            else
-            {
-				throw new ArgumentOutOfRangeException($"Parameter {parameterName} should be of type {typeof(T)}");
-            }
-        }
-
         #region IServiceAgent Members
-        public virtual string Info
-		{
-			get
-			{
-				return this.ToString();
-			}
-		}
+        public virtual string Info => this.ToString();
 
-		Origam.DA.ObjectPersistence.IPersistenceProvider _persistence;
+        Origam.DA.ObjectPersistence.IPersistenceProvider _persistence;
 		public Origam.DA.ObjectPersistence.IPersistenceProvider PersistenceProvider
 		{
-			get
-			{
-				return _persistence;
-			}
+			get => _persistence;
 			set
 			{
 				_persistence = value;
@@ -149,40 +106,11 @@ namespace Origam.Workflow
 			}
 		}
 
-		Hashtable _parameters = new Hashtable();
-		public System.Collections.Hashtable Parameters
-		{
-			get
-			{
-				return _parameters;
-			}
-		}
+		public virtual Hashtable Parameters { get; } = new Hashtable();
 
-		private string _methodName;
-		public string MethodName
-		{
-			get
-			{
-				return _methodName;
-			}
-			set
-			{
-				_methodName = value;
-			}
-		}
+		public virtual string MethodName { get; set; }
 
-		private string _transactionId = null;
-		public string TransactionId
-		{
-			get
-			{
-				return _transactionId;
-			}
-			set
-			{
-				_transactionId = value;
-			}
-		}
+		public virtual string TransactionId { get; set; } = null;
 
 		private AbstractDataStructure _outputStructure;
 		public ISchemaItem OutputStructure
@@ -197,84 +125,18 @@ namespace Origam.Workflow
 			}
 		}
 
-        private bool _disableOutputStructureConstraints;
-        public bool DisableOutputStructureConstraints
-        {
-            get
-            {
-                return _disableOutputStructureConstraints;
-            }
-            set
-            {
-                _disableOutputStructureConstraints = value;
-            }
-        }
+		public bool DisableOutputStructureConstraints { get; set; }
 
-        private ServiceOutputMethod _outputMethod;
-		public ServiceOutputMethod OutputMethod
-		{
-			get
-			{
-				return _outputMethod;
-			}
-			set
-			{
-				_outputMethod = value;
-			}
-		}
+		public ServiceOutputMethod OutputMethod { get; set; }
 
 
-		string _traceStepName;
-		public string TraceStepName
-		{
-			get
-			{
-				return _traceStepName;
-			}
-			set
-			{
-				_traceStepName = value;
-			}
-		}
-		
-		Guid _traceStepId;
-		public Guid TraceStepId
-		{
-			get
-			{
-				return _traceStepId;
-			}
-			set
-			{
-				_traceStepId = value;
-			}
-		}
+		public string TraceStepName { get; set; }
 
-		Guid _traceWorkflowId;
-		public Guid TraceWorkflowId
-		{
-			get
-			{
-				return _traceWorkflowId;
-			}
-			set
-			{
-				_traceWorkflowId = value;
-			}
-		}
+		public Guid TraceStepId { get; set; }
 
-		bool _trace;
-		public bool Trace
-		{
-			get
-			{
-				return _trace;
-			}
-			set
-			{
-				_trace = value;
-			}
-		}
+		public Guid TraceWorkflowId { get; set; }
+
+		public bool Trace { get; set; }
 
 		public virtual string ExecuteUpdate(string command, string transactionId)
 		{

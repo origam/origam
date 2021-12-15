@@ -24,6 +24,7 @@ using System.Data;
 using System.Xml;
 
 using Origam.DA;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 
 namespace Origam.Workflow

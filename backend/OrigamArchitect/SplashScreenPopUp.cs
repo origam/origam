@@ -88,7 +88,7 @@ namespace OrigamArchitect
             this.txtInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtInfo.Size = new System.Drawing.Size(724, 427);
             this.txtInfo.TabIndex = 6;
-            this.txtInfo.WordWrap = false;
+            this.txtInfo.WordWrap = true;
             // 
             // btnOK
             // 

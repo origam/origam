@@ -1228,9 +1228,15 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             }
             else // complex type = screen section
             {
-                if (table == null)
-                    throw new NullReferenceException("DataMember not set for a screen section inside a screen. Cannot render a screen section. " + control.Path);
-                if (table.PrimaryKey.Length == 0)
+	            if (table == null)
+	            {
+		            if (string.IsNullOrWhiteSpace(renderData.DataMember))
+		            {
+			            throw new NullReferenceException("DataMember not set for a screen section inside a screen. Cannot render a screen section. " + control.Path);
+		            }
+		            throw new Exception($"DataMember {renderData.DataMember} was not found in data source. Cannot render a screen section. {control.Path}");
+	            }
+	            if (table.PrimaryKey.Length == 0)
                     throw new Exception("Panel's data source has no primary key. Cannot render panel. " + control.Path);
                 // get list of valid actions and set the panel multi-select-checkbox column visibility
                 ArrayList validActions = new ArrayList();

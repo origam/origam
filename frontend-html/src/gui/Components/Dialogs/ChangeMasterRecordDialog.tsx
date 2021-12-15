@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { ModalWindow } from "../Dialog/Dialog";
+import { ModalWindow } from "@origam/components";
 import CS from "./DialogsCommon.module.css";
 import { T } from "../../../utils/translation";
 

@@ -70,6 +70,7 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
     case "Number":
       return <FilterSettingsNumber
         id={property.modelInstanceId}
+        allowDecimalSeparator={property.entity !== "Integer" && property.entity !== "Long"}
         setting={getSettings(FilterSettingsNumber.defaultSettings)}
         onChange={onFilterValueChange}
         autoFocus={props.autoFocus}/>;

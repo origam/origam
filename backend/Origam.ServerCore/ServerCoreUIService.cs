@@ -50,6 +50,7 @@ using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.ServerCore.Controller;
 using Origam.ServerCore.Resources;
+using Origam.Service.Core;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore

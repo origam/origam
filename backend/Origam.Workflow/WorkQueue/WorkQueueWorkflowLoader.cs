@@ -28,6 +28,7 @@ using System.Data;
 using Origam.Schema;
 using Origam.Workbench.Services;
 using Origam.Schema.WorkflowModel;
+using Origam.Service.Core;
 using core=Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workflow.WorkQueue

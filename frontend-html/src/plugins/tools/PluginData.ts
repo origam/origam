@@ -19,12 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IDataView } from "model/entities/types/IDataView";
 import { getProperties } from "model/selectors/DataView/getProperties";
-import {
-  IPluginData,
-  IPluginDataView,
-  IPluginProperty,
-  IPluginTableRow,
-} from "@origam/plugin-interfaces";
+import { IGuiHelper, IPluginData, IPluginDataView, IPluginProperty, IPluginTableRow, } from "@origam/plugin-interfaces";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { getApi } from "model/selectors/getApi";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
+import { runGeneratorInFlowWithHandler, runInFlowWithHandler, wrapInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 
 
 export function createPluginData(dataView: IDataView): IPluginData | undefined {
@@ -32,7 +33,30 @@ export function createPluginData(dataView: IDataView): IPluginData | undefined {
     return undefined;
   }
   return {
-    dataView: new PluginDataView(dataView)
+    dataView: new PluginDataView(dataView),
+    guiHelper: new GuiHelper(dataView)
+  }
+}
+
+class GuiHelper implements IGuiHelper {
+
+  constructor(private ctx: any) {
+  }
+
+  askYesNoQuestion(title: string, question: string){
+    return askYesNoQuestion(this.ctx, title, question);
+  }
+
+  runGeneratorInFlowWithHandler(generator: Generator): Promise<void> {
+    return runGeneratorInFlowWithHandler({ctx: this.ctx, generator: generator});
+  }
+
+  runInFlowWithHandler(action: (() => Promise<any>) | (() => void)) {
+    return runInFlowWithHandler({ctx: this.ctx, action: action});
+  }
+
+  wrapInFlowWithHandler(action: (() => Promise<any>) | (() => void)) {
+    return wrapInFlowWithHandler({ctx:this.ctx, action: action});
   }
 }
 
@@ -55,6 +79,26 @@ class PluginDataView implements IPluginDataView {
           momentFormatterPattern: property.formatterPattern
         }
       });
+  }
+
+  async saveConfiguration(pluginName: string, configuration: string): Promise<void> {
+    const configurationManager = getConfigurationManager(this.dataView);
+    configurationManager.setCustomConfiguration(pluginName, configuration);
+    const customConfigurations: {[key:string]: string} = {};
+    customConfigurations[pluginName] = configuration;
+
+    await getApi(this.dataView).saveObjectConfiguration({
+      sessionFormIdentifier: getSessionId(this.dataView),
+      instanceId: this.dataView.modelInstanceId,
+      tableConfigurations: configurationManager.allTableConfigurations,
+      customConfigurations: customConfigurations,
+      defaultView: getActivePanelView(this.dataView),
+    });
+  }
+
+  getConfiguration(pluginName: string){
+    const configurationManager = getConfigurationManager(this.dataView);
+    return configurationManager.getCustomConfiguration(pluginName)
   }
 
   getCellText(row: any[], propertyId: string): any {

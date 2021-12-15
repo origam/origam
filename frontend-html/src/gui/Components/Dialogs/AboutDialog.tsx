@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { ModalWindow } from "@origam/components";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/AboutDialog.module.scss";
@@ -57,6 +57,10 @@ export class AboutDialog extends React.Component<{
               <a href={"https://github.com/origam/origam-html/commit/" + commitId}>{commitId}</a>
             </div>
             <div>Commit Date: {commitDate}</div>
+          </div>
+          <br/>
+          <div>
+            <a href={"/Attributions.txt"} target="_blank" rel="noreferrer">Copyright attributions</a>
           </div>
           <br/>
           <div>Copyright 2020 Advantage Solutions, s. r. o.</div>

@@ -949,8 +949,8 @@ namespace Origam.DA.Service
                         relatedColumns
                         );
                     fkConstraint.AcceptRejectRule = AcceptRejectRule.None;
-                    fkConstraint.UpdateRule = Rule.Cascade;
-                    fkConstraint.DeleteRule = Rule.Cascade;
+                    fkConstraint.UpdateRule = System.Data.Rule.Cascade;
+                    fkConstraint.DeleteRule = System.Data.Rule.Cascade;
                     dataset.Tables[relatedEntityName].Constraints.Add(fkConstraint);
                 }
                 catch

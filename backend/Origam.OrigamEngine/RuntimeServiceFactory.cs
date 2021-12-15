@@ -23,6 +23,7 @@ using Origam.DA;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Rule;
 using Origam.Workbench.Services;
+using Origam.Workflow;
 
 namespace Origam.OrigamEngine
 {
@@ -46,7 +47,7 @@ namespace Origam.OrigamEngine
             {
                 ServiceManager.Services.AddService(new SchemaService());
             }
-            ServiceManager.Services.AddService(new Origam.Workbench.Services.ServiceAgentFactory());
+            ServiceManager.Services.AddService(new ServiceAgentFactory(externalAgent => new ExternalAgentWrapper(externalAgent)));
             ServiceManager.Services.AddService(CreateDocumentationService());
             ServiceManager.Services.AddService(new TracingService());
             ServiceManager.Services.AddService(new DataLookupService());

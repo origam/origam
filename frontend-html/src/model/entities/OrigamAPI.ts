@@ -533,7 +533,11 @@ export class OrigamAPI implements IApi {
     Entity: string;
     Ids: string[];
   }): Promise<any> {
-    return (await this.axiosInstance.post(`/UIService/RowStates`, data)).data;
+    let states = (await this.axiosInstance.post(`/UIService/RowStates`, data)).data;
+    for (const state of states) {
+      state.id = state.id.toString();
+    }
+    return states;
   }
 
   async saveFavorites(data: {
@@ -555,8 +559,22 @@ export class OrigamAPI implements IApi {
     sessionFormIdentifier: string;
     instanceId: string;
     tableConfigurations: ITableConfiguration[];
+    customConfigurations?: {[nodeName: string] : string};
     defaultView: string;
   }): Promise<any> {
+    let customConfigurationXml = "";
+    if(data.customConfigurations){
+      const customConfigurations = Object.entries(data.customConfigurations)
+        .filter(entry => entry[0] && entry[1])
+        .map(entry => {
+          const encodedConfig = window.btoa(unescape(encodeURIComponent(entry[1])))
+          return `<${entry[0]}Configuration>\n${encodedConfig}\n</${entry[0]}Configuration>`
+        });
+      if(customConfigurations.length > 0) {
+        customConfigurationXml = `<CustomConfigurations>\n${customConfigurations.join("\n")}\n</CustomConfigurations>`
+      }
+    }
+
     const tableConfigurationsXml = data.tableConfigurations.map(tableConfig => {
       return "<TableConfiguration" +
         ` name="${tableConfig.name ?? ""}"` +
@@ -581,6 +599,7 @@ export class OrigamAPI implements IApi {
       ObjectInstanceId: data.instanceId,
       SectionNameAndData: {
         tableConfigurations: tableConfigurationsXml.join("\n"),
+        customConfigurations: customConfigurationXml,
         defaultView: `<view id="${data.defaultView}" />`,
       }
     });

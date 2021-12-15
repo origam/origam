@@ -49,12 +49,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Origam.Extensions;
+using Origam.Rule;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
 using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model.Search;
 using Origam.ServerCore.Resources;
+using Origam.Service.Core;
 
 namespace Origam.ServerCore.Controller
 {
@@ -159,9 +161,21 @@ namespace Origam.ServerCore.Controller
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult SaveData(Guid sessionFormIdentifier)
         {
-            return RunWithErrorHandler(() 
-                => Ok(sessionObjects.UIService.SaveData(
-                    sessionFormIdentifier)));
+            return RunWithErrorHandler(() =>
+            {
+                var ruleExceptionData = sessionObjects.UIService.SaveDataQuery(sessionFormIdentifier);
+                var errors = ruleExceptionData
+                    .Cast<RuleExceptionData>()
+                    .Where(data => data.Severity == RuleExceptionSeverity.High)
+                    .Select(data =>$"Entity: {data.EntityName}, Field: {data.FieldName}, Message: {data.Message}, Severity: {data.Severity}")
+                    .ToList();
+                if (errors.Count > 0)
+                {
+                    return StatusCode(409, string.Join("\n", errors));
+                }
+                return Ok(sessionObjects.UIService.SaveData(
+                    sessionFormIdentifier));
+            });
         }
         [HttpPost("[action]")]
         public IActionResult RevertChanges([FromBody]RevertChangesInput input)
