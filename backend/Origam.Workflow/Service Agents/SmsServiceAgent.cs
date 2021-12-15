@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using Origam.Service.Core;
 using Origam.Sms;
 
 namespace Origam.Workflow
@@ -34,9 +35,9 @@ namespace Origam.Workflow
             {
                 case "SendSms":
                     result = CreateSmsService().SendSms(
-                        GetParameter<string>("from"),
-                        GetParameter<string>("to"),
-                        GetParameter<string>("body"));
+                        Parameters.Get<string>("from"),
+                        Parameters.Get<string>("to"),
+                        Parameters.Get<string>("body"));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(
