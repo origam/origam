@@ -8,7 +8,7 @@
     "@messageformat/core": "^3.0.0",
     "@origam/components": "^1.3.3",
     "@origam/plugin-audit": "^1.0.0",
-    "@origam/plugin-chart": "^1.0.0",
+    "@origam/plugin-chart": "^1.1.0",
     "@origam/plugin-filter": "^1.0.0",
     "@origam/plugin-interfaces": "^1.2.0",
     "@origam/styles": "^2.0.0",
