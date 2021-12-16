@@ -1,4 +1,8 @@
 
+.root{
+  height: 100%;
+}
+
 .root :global(.searchView){
   width: unset;
 }
