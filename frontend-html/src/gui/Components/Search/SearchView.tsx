@@ -40,7 +40,7 @@ export class SearchView extends React.Component<{
           />
         </div>
         {(this.viewState.searcher.resultGroups.length > 0) &&
-          <div className={S.resultArea} ref={this.viewState.scrollDivRef}>
+          <div className={"resultArea"} ref={this.viewState.scrollDivRef}>
             <div className={S.resultsContainer}>
               {this.viewState.searcher.resultGroups
                 .map(group =>

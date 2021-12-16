@@ -19,7 +19,7 @@
   flex-grow: 1;
 }
 
-.resultArea{
+:global(.resultArea){
   border-top: 1px solid var(--background5);
   overflow-x: auto;
   overflow-y: auto;
