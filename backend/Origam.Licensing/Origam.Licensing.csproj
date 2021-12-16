@@ -57,8 +57,9 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Origam.Service.Core, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Origam.Service.Core.1.0.2\lib\netstandard2.0\Origam.Service.Core.dll</HintPath>
+    <Reference Include="Origam.Service.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Origam.Service.Core.1.0.3\lib\netstandard2.0\Origam.Service.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
