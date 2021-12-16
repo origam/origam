@@ -49,6 +49,7 @@ export class CWorkQueues extends React.Component {
           const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
           return (
             <WorkQueuesItem
+              key={item.id}
               isEmphasized={item.countTotal > 0}
               isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}
