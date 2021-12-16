@@ -22,8 +22,6 @@ import { AboutView } from "gui/Components/Dialogs/AboutView";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { MobileState } from "model/entities/MobileState";
 import S from "./MobileAboutView.module.scss";
-import { Icon } from "@origam/components";
-import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
 
 export class MobileAboutView extends React.Component<{
   aboutInfo: IAboutInfo;
