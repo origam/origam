@@ -36,6 +36,7 @@ export class MobileBottomBar extends React.Component<{
           }}
         />
         <MobileActionDropUp/>
+        {/*<div style={{flexGrow:1}}></div>*/}
         <BottomIcon
           iconPath={"./icons/noun-loading-1780489.svg"}
           onClick={() => {

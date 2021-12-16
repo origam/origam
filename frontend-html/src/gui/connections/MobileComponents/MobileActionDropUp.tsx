@@ -21,47 +21,56 @@ import React from "react";
 import S from "./MobileActionDropUp.module.scss";
 import "./MobileActionDropUp.module.scss";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
 import { Icon } from "@origam/components";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { MobXProviderContext } from "mobx-react";
-import { About } from "model/entities/AboutInfo";
-import { getAbout } from "model/selectors/getAbout";
+import { MobXProviderContext, observer } from "mobx-react";
+import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
+import { IApplication } from "model/entities/types/IApplication";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
+import uiActions from "model/actions-ui-tree";
 
+@observer
 export class MobileActionDropUp extends React.Component<{}> {
 
   static contextType = MobXProviderContext;
 
-  get about(): About {
-    return getAbout(this.context.application);
+  get application(): IApplication {
+    return this.context.application;
   }
 
   render() {
+    let iActions = getActiveScreenActions(this.application)
+      .flatMap(actionGroup => actionGroup.actions);
+    const actions = iActions
+      .filter(action => getIsEnabledAction(action));
+
     return (
       <div className={S.root}>
         <Dropdowner
           trigger={({refTrigger, setDropped}) => (
-            <div>
-              <DataViewHeaderAction
-                refDom={refTrigger}
-                onMouseDown={() => setDropped(true)}
-                isActive={false}
-              >
+            <div
+              className={S.clickArea}
+              onMouseDown={() => setDropped(true)}
+            >
+              <div
+                ref={refTrigger}
+                className={S.iconContainer}>
                 <Icon src={"./icons/noun-right-1784045.svg"}/>
-              </DataViewHeaderAction>
+              </div>
             </div>
           )}
           content={({setDropped}) => (
             <Dropdown>
-              {["1","2"].map(openScreen =>
+              {actions.map(action =>
                 <DropdownItem
-                  key={openScreen}
+                  key={action.id}
                   onClick={(event: any) => {
                     setDropped(false);
-                  }}
+                    uiActions.actions.onActionClick(action)(event, action)}
+                  }
                 >
-                  {openScreen}
+                  {action.caption}
                 </DropdownItem>
               )}
             </Dropdown>
