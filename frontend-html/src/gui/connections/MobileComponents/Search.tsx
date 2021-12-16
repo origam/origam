@@ -18,22 +18,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./MobileSearchButton.module.scss";
-import { Icon } from "@origam/components";
-import { MobileState } from "model/entities/MobileState";
-import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
+import { SearchView, SearchViewState } from "gui/Components/Search/SearchView";
+import { MobXProviderContext } from "mobx-react";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import S from "./Search.module.scss";
 
-export const MobileSearchButton: React.FC<{
-  mobileState: MobileState
-}> = (props) => {
-  return (
-    <div
-      className={S.root}
-      onClick={() =>  props.mobileState.mainPageContents = MainPageContents.Search}
-    >
-      <Icon src="./icons/search.svg"/>
-    </div>
-  );
+export class Search extends React.Component<{
+}> {
+
+  static contextType = MobXProviderContext;
+
+  get workbench(): IWorkbench {
+    return this.context.workbench;
+  }
+
+  searchViewState = new SearchViewState(this.workbench, ()=>{});
+
+  render() {
+    return (
+      <div className={S.root}>
+        <SearchView state={this.searchViewState}/>
+      </div>
+    );
+  }
 }
 
 

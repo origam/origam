@@ -18,8 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./MobileActionDropUp.module.scss";
-import "./MobileActionDropUp.module.scss";
+import S from "./ActionDropUp.module.scss";
+import "./ActionDropUp.module.scss";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Icon } from "@origam/components";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
@@ -31,7 +31,7 @@ import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import uiActions from "model/actions-ui-tree";
 
 @observer
-export class MobileActionDropUp extends React.Component<{}> {
+export class ActionDropUp extends React.Component<{}> {
 
   static contextType = MobXProviderContext;
 

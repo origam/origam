@@ -18,12 +18,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./MobileBottomBar.module.scss";
+import S from "./BottomToolBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
 import { MobileState } from "model/entities/MobileState";
-import { MobileActionDropUp } from "gui/connections/MobileComponents/MobileActionDropUp";
+import { ActionDropUp } from "gui/connections/MobileComponents/ActionDropUp";
 
-export class MobileBottomBar extends React.Component<{
+export class BottomToolBar extends React.Component<{
   mobileState: MobileState
 }> {
   render() {
@@ -35,7 +35,7 @@ export class MobileBottomBar extends React.Component<{
             this.props.mobileState.close()
           }}
         />
-        <MobileActionDropUp/>
+        <ActionDropUp/>
         {/*<div style={{flexGrow:1}}></div>*/}
         <BottomIcon
           iconPath={"./icons/noun-loading-1780489.svg"}

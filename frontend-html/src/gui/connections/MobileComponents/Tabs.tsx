@@ -29,7 +29,7 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 
 @observer
-export class MobileTabs extends React.Component<{
+export class Tabs extends React.Component<{
   mobileState: MobileState
 }> {
   static contextType = MobXProviderContext;

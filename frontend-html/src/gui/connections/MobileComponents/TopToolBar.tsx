@@ -18,9 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./MobileToolBar.module.scss";
+import S from "./TopToolBar.module.scss";
 import { MobileState } from "model/entities/MobileState";
-import { MobileTabs } from "gui/connections/MobileComponents/MobileTabs";
 import { Icon } from "@origam/components";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
@@ -31,9 +30,10 @@ import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
-import { MobileSearchButton } from "gui/connections/MobileComponents/MobileSearchButton";
+import { Tabs } from "gui/connections/MobileComponents/Tabs";
+import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
 
-export class MobileToolBar extends React.Component<{
+export class TopToolBar extends React.Component<{
   mobileState: MobileState
 }> {
   static contextType = MobXProviderContext;
@@ -69,8 +69,8 @@ export class MobileToolBar extends React.Component<{
             className={S.menuIcon}
           />
         </div>
-        <MobileTabs mobileState={this.props.mobileState}/>
-        <MobileSearchButton mobileState={this.props.mobileState}/>
+        <Tabs mobileState={this.props.mobileState}/>
+        <SearchButton mobileState={this.props.mobileState}/>
         <UserMenuDropdown
           avatarLink={avatarLink}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}

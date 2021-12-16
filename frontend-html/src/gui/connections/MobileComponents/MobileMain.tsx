@@ -19,16 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "./MobileMain.module.scss";
-import { MobileToolBar } from "gui/connections/MobileComponents/MobileToolBar";
+import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar";
 import { CScreenContent } from "gui/connections/CScreenContent";
 import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState";
-import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
 import { About } from "model/entities/AboutInfo";
 import { getAbout } from "model/selectors/getAbout";
-import { MobileSearch } from "gui/connections/MobileComponents/MobileSearch";
-import { MobileBottomBar } from "gui/connections/MobileComponents/MobileBottomBar";
+import { Search } from "gui/connections/MobileComponents/Search";
+import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar";
+import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
+
 
 
 @observer
@@ -55,7 +56,7 @@ export class MobileMain extends React.Component<{}> {
       case MainPageContents.Screen:
         return <CScreenContent/>;
       case MainPageContents.Search:
-        return <MobileSearch/>
+        return <Search/>
       case MainPageContents.About:
         return <MobileAboutView
           aboutInfo={this.about.info}
@@ -67,9 +68,9 @@ export class MobileMain extends React.Component<{}> {
   render() {
     return (
         <div className={S.root}>
-          <MobileToolBar mobileState={this.mobileState}/>
+          <TopToolBar mobileState={this.mobileState}/>
           {this.renderMainPageContents()}
-          <MobileBottomBar mobileState={this.mobileState}/>
+          <BottomToolBar mobileState={this.mobileState}/>
         </div>
     );
   }
