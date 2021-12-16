@@ -22,8 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: center;
   display: flex;
   cursor: pointer;
+  padding-top: 5px; // the temporary icons are actually not centered! remove when correct icons are available
 }
 
 .icon {
-  width: 40px;
+  width: 30px;
 }
