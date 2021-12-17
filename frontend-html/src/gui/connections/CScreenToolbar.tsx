@@ -33,7 +33,6 @@ import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSession
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-
 import uiActions from "model/actions-ui-tree";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
@@ -41,15 +40,12 @@ import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { onReloadWebScreenClick } from "model/actions-ui/ScreenToolbar/onReloadWebScreen";
 import { isIFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { isIWebScreen } from "model/entities/types/IWebScreen";
-import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { IAction, IActionType } from "model/entities/types/IAction";
-
 import { T } from "utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { getAbout } from "model/selectors/getAbout";
 import { About } from "model/entities/AboutInfo";
