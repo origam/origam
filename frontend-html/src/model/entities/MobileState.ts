@@ -7,9 +7,6 @@ import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScr
 
 export class MobileState {
   @observable
-  tabsDroppedDown: boolean = false;
-
-  @observable
   actionDropUpHidden = false;
 
   @observable
@@ -19,8 +16,6 @@ export class MobileState {
   saveButtonHidden = false;
 
   _workbench: IWorkbench | undefined;
-
-  previousMainPageContents: undefined | MainPageContents;
 
   @observable
   _mainPageContents = MainPageContents.Screen
@@ -67,5 +62,56 @@ export class MobileState {
     }else{
       this.mainPageContents = MainPageContents.Screen;
     }
+  }
+}
+interface IMobileLayoutState{
+  actionDropUpHidden: boolean;
+  refreshButtonHidden: boolean;
+  saveButtonHidden: boolean;
+  close(ctx: any): Promise<IMobileLayoutState>;
+}
+
+class ShowMenuState implements IMobileLayoutState{
+  actionDropUpHidden = true;
+  refreshButtonHidden = true;
+  saveButtonHidden = true;
+
+  async close(ctx: any): Promise<IMobileLayoutState> {
+    return new ShowScreenState();
+  }
+}
+
+class ShowAboutState implements IMobileLayoutState{
+  actionDropUpHidden = true;
+  refreshButtonHidden = true;
+  saveButtonHidden = true;
+
+  async close(ctx: any): Promise<IMobileLayoutState> {
+    return new ShowScreenState();
+  }
+}
+
+class ShowSearchState implements IMobileLayoutState{
+  actionDropUpHidden = true;
+  refreshButtonHidden = true;
+  saveButtonHidden = true;
+
+  async close(ctx: any): Promise<IMobileLayoutState> {
+    return new ShowScreenState();
+  }
+}
+
+class ShowScreenState implements IMobileLayoutState{
+  actionDropUpHidden = false;
+  refreshButtonHidden = false;
+  saveButtonHidden = false;
+
+  async close(ctx: any): Promise<IMobileLayoutState> {
+    const activeScreen = getOpenedNonDialogScreenItems(ctx)
+      .find(screen => screen.isActive);
+    if(activeScreen){
+      await onScreenTabCloseClick(activeScreen)(null);
+    }
+    return this;
   }
 }
