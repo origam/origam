@@ -26,6 +26,8 @@ import { observer } from "mobx-react";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
+import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -35,6 +37,9 @@ export class BottomToolBar extends React.Component<{
   render() {
 
     const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
+    const actions = getActiveScreenActions(this.props.ctx)
+      .flatMap(actionGroup => actionGroup.actions)
+      .filter(action => getIsEnabledAction(action));
 
     return (
       <div className={S.root}>
@@ -46,6 +51,7 @@ export class BottomToolBar extends React.Component<{
         />
         <ActionDropUp
           hidden={this.props.mobileState.layoutState.actionDropUpHidden}
+          actions={actions}
         />
         <BottomIcon
           iconPath={"./icons/noun-loading-1780489.svg"}

@@ -69,6 +69,8 @@ import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuAction
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
+import { Breakpoint } from "react-socks";
+import { ActionDropUp } from "gui/connections/MobileComponents/ActionDropUp";
 
 function isAddRecordShortcut(event: any) {
   return (
@@ -242,7 +244,12 @@ export class CDataViewHeaderInner extends React.Component<{
                   (this.isActionsOnly ? (
                     <DataViewHeaderGroup grovable={true} noDivider={true}>
                       {this.props.extension.render("actions")}
-                      <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                      <Breakpoint small down>
+                        <ActionDropUp actions={this.relevantActions}/>
+                      </Breakpoint>
+                      <Breakpoint medium up>
+                        <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                      </Breakpoint>
                     </DataViewHeaderGroup>
                   ) : (
                     <>
@@ -316,7 +323,13 @@ export class CDataViewHeaderInner extends React.Component<{
 
                         <DataViewHeaderGroup grovable={true}>
                           {this.props.extension.render("actions")}
-                          <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                          <Breakpoint small down>
+                            {/*<div>BLA</div>*/}
+                            <ActionDropUp actions={this.relevantActions}/>
+                          </Breakpoint>
+                          <Breakpoint medium up>
+                            <DataViewHeaderButtonGroup actions={this.relevantActions}/>
+                          </Breakpoint>
                         </DataViewHeaderGroup>
 
                         {!isBreak640 && (

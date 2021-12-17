@@ -24,31 +24,18 @@ import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Icon } from "@origam/components";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
-import { MobXProviderContext, observer } from "mobx-react";
-import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
-import { IApplication } from "model/entities/types/IApplication";
-import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import uiActions from "model/actions-ui-tree";
+import { IAction } from "model/entities/types/IAction";
 
-@observer
 export class ActionDropUp extends React.Component<{
-  hidden: boolean
+  hidden?: boolean;
+  actions: IAction[]
 }> {
 
-  static contextType = MobXProviderContext;
-
-  get application(): IApplication {
-    return this.context.application;
-  }
-
   render() {
-    const actions = getActiveScreenActions(this.application)
-      .flatMap(actionGroup => actionGroup.actions)
-      .filter(action => getIsEnabledAction(action));
-
     return (
       <div className={S.root}>
-        {!this.props.hidden && actions.length > 0
+        {!this.props.hidden && this.props.actions.length > 0
           ?<Dropdowner
             trigger={({refTrigger, setDropped}) => (
               <div
@@ -64,7 +51,7 @@ export class ActionDropUp extends React.Component<{
             )}
             content={({setDropped}) => (
               <Dropdown>
-                {actions.map(action =>
+                {this.props.actions.map(action =>
                   <DropdownItem
                     key={action.id}
                     onClick={(event: any) => {
