@@ -31,6 +31,8 @@ import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScr
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { Tabs } from "gui/connections/MobileComponents/Tabs";
 import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
+import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
+import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
 
 export class TopToolBar extends React.Component<{
   mobileState: MobileState
@@ -49,6 +51,7 @@ export class TopToolBar extends React.Component<{
   render() {
     const avatarLink = getUserAvatarLink(this.application);
     const userName = getLoggedUserName(this.application);
+    const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.application);
     return (
       <div className={S.root}>
         <div
@@ -58,6 +61,9 @@ export class TopToolBar extends React.Component<{
             src={"./icons/noun-hamburger-4238597.svg"}
             className={S.menuIcon}
           />
+          {workQueuesItemsCount > 0 && (
+            <SidebarAlertCounter>{workQueuesItemsCount}</SidebarAlertCounter>
+          )}
         </div>
         <Tabs mobileState={this.props.mobileState}/>
         <SearchButton mobileState={this.props.mobileState}/>
