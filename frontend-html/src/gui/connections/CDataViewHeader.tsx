@@ -22,9 +22,7 @@ import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { CtxDataViewHeaderExtension, DataViewHeaderExtension, } from "gui/Components/ScreenElements/DataView";
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
-import { DataViewHeaderButton } from "gui/Components/DataViewHeader/DataViewHeaderButton";
 import { DataViewHeaderButtonGroup } from "gui/Components/DataViewHeader/DataViewHeaderButtonGroup";
-import { DataViewHeaderDropDownItem } from "gui/Components/DataViewHeader/DataViewHeaderDropDownItem";
 import { DataViewHeaderGroup } from "gui/Components/DataViewHeader/DataViewHeaderGroup";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
@@ -44,7 +42,7 @@ import { onMoveRowUpClick } from "model/actions-ui/DataView/onMoveRowUpClick";
 import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
-import { IAction, IActionMode, IActionPlacement, IActionType } from "model/entities/types/IAction";
+import { IAction, IActionMode, IActionPlacement } from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getExpandedGroupRowCount } from "model/selectors/DataView/getExpandedGroupRowCount";
@@ -69,8 +67,8 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
-import { getTrueSelectedRowIndex } from "../../model/selectors/DataView/getTrueSelectedRowIndex";
-import { getAreCrudButtonsEnabled } from "../../model/selectors/DataView/getAreCrudButtonsEnabled";
+import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
+import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
 
 function isAddRecordShortcut(event: any) {
   return (
@@ -140,69 +138,6 @@ export class CDataViewHeaderInner extends React.Component<{
         </DropdownItem>
       );
     });
-  }
-
-  renderActions() {
-    return this.relevantActions.map((action, idx) =>
-      this.renderAction(action, this.relevantActions)
-    );
-  }
-
-  renderAction(action: IAction, actionsToRender: IAction[]) {
-    if (action.type === IActionType.Dropdown) {
-      const childActions = actionsToRender.filter(
-        (otherAction) => otherAction.groupId === action.id
-      );
-      return (
-        <Dropdowner
-          style={{width: "auto"}}
-          trigger={({refTrigger, setDropped}) => (
-            <Observer key={action.id}>
-              {() => (
-                <DataViewHeaderButton
-                  title={action.caption}
-                  disabled={!getIsEnabledAction(action)}
-                  onClick={() => setDropped(true)}
-                  domRef={refTrigger}
-                >
-                  {action.caption}
-                </DataViewHeaderButton>
-              )}
-            </Observer>
-          )}
-          content={() => (
-            <Dropdown>
-              {childActions.map((action) => (
-                <Observer key={action.id}>
-                  {() => (
-                    <DropdownItem isDisabled={!getIsEnabledAction(action)}>
-                      <DataViewHeaderDropDownItem
-                        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-                      >
-                        {action.caption}
-                      </DataViewHeaderDropDownItem>
-                    </DropdownItem>
-                  )}
-                </Observer>
-              ))}
-            </Dropdown>
-          )}
-        />
-      );
-    }
-    return (
-      <Observer key={action.id}>
-        {() => (
-          <DataViewHeaderButton
-            title={action.caption}
-            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-            disabled={!getIsEnabledAction(action)}
-          >
-            {action.caption}
-          </DataViewHeaderButton>
-        )}
-      </Observer>
-    );
   }
 
   renderRowCount() {
@@ -307,9 +242,7 @@ export class CDataViewHeaderInner extends React.Component<{
                   (this.isActionsOnly ? (
                     <DataViewHeaderGroup grovable={true} noDivider={true}>
                       {this.props.extension.render("actions")}
-                      <DataViewHeaderButtonGroup>
-                        {this.renderActions()}
-                      </DataViewHeaderButtonGroup>
+                      <DataViewHeaderButtonGroup actions={this.relevantActions}/>
                     </DataViewHeaderGroup>
                   ) : (
                     <>
@@ -383,9 +316,7 @@ export class CDataViewHeaderInner extends React.Component<{
 
                         <DataViewHeaderGroup grovable={true}>
                           {this.props.extension.render("actions")}
-                          <DataViewHeaderButtonGroup>
-                            {this.renderActions()}
-                          </DataViewHeaderButtonGroup>
+                          <DataViewHeaderButtonGroup actions={this.relevantActions}/>
                         </DataViewHeaderGroup>
 
                         {!isBreak640 && (
