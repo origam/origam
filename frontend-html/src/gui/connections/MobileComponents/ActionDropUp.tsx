@@ -42,14 +42,13 @@ export class ActionDropUp extends React.Component<{
   }
 
   render() {
-    let iActions = getActiveScreenActions(this.application)
-      .flatMap(actionGroup => actionGroup.actions);
-    const actions = iActions
+    const actions = getActiveScreenActions(this.application)
+      .flatMap(actionGroup => actionGroup.actions)
       .filter(action => getIsEnabledAction(action));
 
     return (
       <div className={S.root}>
-        {!this.props.hidden
+        {!this.props.hidden && actions.length > 0
           ?<Dropdowner
             trigger={({refTrigger, setDropped}) => (
               <div
