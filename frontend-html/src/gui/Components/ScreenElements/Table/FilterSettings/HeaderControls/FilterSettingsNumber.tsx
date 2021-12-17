@@ -28,6 +28,7 @@ import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "./Operator";
+import { getCurrentDecimalSeparator } from "model/entities/NumberFormating";
 
 const OPERATORS =
   [
@@ -73,6 +74,7 @@ const OpCombo: React.FC<{
 class OpEditors extends React.Component<{
   setting?: any;
   onBlur?: (event: any) => void;
+  allowDecimalSeparator: boolean;
   currentValue1: any;
   currentValue2: any;
   onCurrentValue1Changed: ((value1: any) => void);
@@ -92,6 +94,16 @@ class OpEditors extends React.Component<{
     }
   }
 
+  onChange(event: any){
+    const value = this.removeInvalidCharacters(event);
+    this.props.onCurrentValue1Changed(value)
+  }
+
+  private removeInvalidCharacters(event: any) {
+    const invalidChars = new RegExp("[^\\d\\-" + (this.props.allowDecimalSeparator ? getCurrentDecimalSeparator() : "") + "]", "g");
+    return (event.target.value || "").replace(invalidChars, "");
+  }
+
   render() {
     switch (this.props.setting.type) {
       case "eq":
@@ -103,10 +115,12 @@ class OpEditors extends React.Component<{
         return (
           <input
             id={this.props.id}
-            type="number"
             className={CS.input}
             value={this.props.currentValue1 ?? ""}
-            onChange={(event: any) => this.props.onCurrentValue1Changed(event.target.value)}
+            onChange={(event: any) => {
+              const value = this.removeInvalidCharacters(event);
+              this.props.onCurrentValue1Changed(value);
+            }}
             onBlur={this.props.onBlur}
             ref={this.inputRef}
           />
@@ -118,19 +132,23 @@ class OpEditors extends React.Component<{
           <>
             <input
               id={"from_" + this.props.id}
-              type="number"
               className={CS.input}
               value={this.props.currentValue1 ?? ""}
-              onChange={(event: any) => this.props.onCurrentValue1Changed(event.target.value)}
+              onChange={(event: any) => {
+                const value = this.removeInvalidCharacters(event);
+                this.props.onCurrentValue1Changed(value);
+              }}
               onBlur={this.props.onBlur}
               ref={this.inputRef}
             />
             <input
               id={"to_" + this.props.id}
-              type="number"
               className={CS.input}
               value={this.props.currentValue2 ?? ""}
-              onChange={(event: any) => this.props.onCurrentValue2Changed(event.target.value)}
+              onChange={(event: any) => {
+                const value = this.removeInvalidCharacters(event);
+                this.props.onCurrentValue2Changed(value);
+              }}
               onBlur={this.props.onBlur}
             />
           </>
@@ -146,6 +164,7 @@ class OpEditors extends React.Component<{
 @observer
 export class FilterSettingsNumber extends React.Component<{
   setting?: any;
+  allowDecimalSeparator: boolean;
   autoFocus: boolean;
   onChange: ()=>void;
   id: string;
@@ -215,7 +234,9 @@ export class FilterSettingsNumber extends React.Component<{
 
     const timeOutId = setTimeout(() => {
       runInAction(() => {
-        this.props.setting.val1 = this.currentValue1 === "" ? undefined : this.currentValue1;
+        this.props.setting.val1 = this.currentValue1 === ""
+          ? undefined
+          : parseFloat(this.currentValue1.replace(getCurrentDecimalSeparator(), "."));
         this.handleSettingChange();
         this.props.onChange();
       })
@@ -230,7 +251,9 @@ export class FilterSettingsNumber extends React.Component<{
 
     const timeOutId = setTimeout(() => {
       runInAction(() => {
-        this.props.setting.val2 = this.currentValue2 === "" ? undefined : this.currentValue2;
+        this.props.setting.val2 = this.currentValue2 === ""
+          ? undefined
+          : parseFloat(this.currentValue2.replace(getCurrentDecimalSeparator(), "."));
         this.handleSettingChange();
       })
     }, EDITOR_DALEY_MS);
@@ -255,6 +278,7 @@ export class FilterSettingsNumber extends React.Component<{
           currentValue2={this.currentValue2}
           onCurrentValue1Changed={val1 => this.onCurrentValue1Changed(val1)}
           onCurrentValue2Changed={val2 => this.onCurrentValue2Changed(val2)}
+          allowDecimalSeparator={this.props.allowDecimalSeparator}
           autoFocus={this.props.autoFocus}
         />
       </>
