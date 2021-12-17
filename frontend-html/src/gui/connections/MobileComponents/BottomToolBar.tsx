@@ -31,12 +31,11 @@ export class BottomToolBar extends React.Component<{
       <div className={S.root}>
         <BottomIcon
           iconPath={"./icons/noun-close-25798.svg"}
-          onClick={() => {
-            this.props.mobileState.close()
+          onClick={async () => {
+            await this.props.mobileState.close()
           }}
         />
         <ActionDropUp/>
-        {/*<div style={{flexGrow:1}}></div>*/}
         <BottomIcon
           iconPath={"./icons/noun-loading-1780489.svg"}
           onClick={() => {
