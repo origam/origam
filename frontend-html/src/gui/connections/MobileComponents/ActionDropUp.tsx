@@ -31,7 +31,9 @@ import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import uiActions from "model/actions-ui-tree";
 
 @observer
-export class ActionDropUp extends React.Component<{}> {
+export class ActionDropUp extends React.Component<{
+  hidden: boolean
+}> {
 
   static contextType = MobXProviderContext;
 
@@ -47,35 +49,38 @@ export class ActionDropUp extends React.Component<{}> {
 
     return (
       <div className={S.root}>
-        <Dropdowner
-          trigger={({refTrigger, setDropped}) => (
-            <div
-              className={S.clickArea}
-              onMouseDown={() => setDropped(true)}
-            >
+        {!this.props.hidden
+          ?<Dropdowner
+            trigger={({refTrigger, setDropped}) => (
               <div
-                ref={refTrigger}
-                className={S.iconContainer}>
-                <Icon src={"./icons/noun-right-1784045.svg"}/>
+                className={S.clickArea}
+                onMouseDown={() => setDropped(true)}
+              >
+                <div
+                  ref={refTrigger}
+                  className={S.iconContainer}>
+                  <Icon src={"./icons/noun-right-1784045.svg"}/>
+                </div>
               </div>
-            </div>
-          )}
-          content={({setDropped}) => (
-            <Dropdown>
-              {actions.map(action =>
-                <DropdownItem
-                  key={action.id}
-                  onClick={(event: any) => {
-                    setDropped(false);
-                    uiActions.actions.onActionClick(action)(event, action)}
-                  }
-                >
-                  {action.caption}
-                </DropdownItem>
-              )}
-            </Dropdown>
-          )}
-        />
+            )}
+            content={({setDropped}) => (
+              <Dropdown>
+                {actions.map(action =>
+                  <DropdownItem
+                    key={action.id}
+                    onClick={(event: any) => {
+                      setDropped(false);
+                      uiActions.actions.onActionClick(action)(event, action)}
+                    }
+                  >
+                    {action.caption}
+                  </DropdownItem>
+                )}
+              </Dropdown>
+            )}
+          />
+          :<div className={S.placeholder}/>
+        }
       </div>
     );
   }

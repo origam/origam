@@ -22,7 +22,9 @@ import S from "./BottomToolBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
 import { MobileState } from "model/entities/MobileState";
 import { ActionDropUp } from "gui/connections/MobileComponents/ActionDropUp";
+import { observer } from "mobx-react";
 
+@observer
 export class BottomToolBar extends React.Component<{
   mobileState: MobileState
 }> {
@@ -35,14 +37,18 @@ export class BottomToolBar extends React.Component<{
             await this.props.mobileState.close()
           }}
         />
-        <ActionDropUp/>
+        <ActionDropUp
+          hidden={this.props.mobileState.saveButtonHidden}
+        />
         <BottomIcon
           iconPath={"./icons/noun-loading-1780489.svg"}
+          hidden={this.props.mobileState.refreshButtonHidden}
           onClick={() => {
           }}
         />
         <BottomIcon
           iconPath={"./icons/noun-save-1014816.svg"}
+          hidden={this.props.mobileState.saveButtonHidden}
           onClick={() => {
           }}
         />

@@ -20,20 +20,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/connections/MobileComponents/BottomIcon.module.scss";
 import { Icon } from "@origam/components";
+import cx from "classnames";
 
 export const BottomIcon: React.FC<{
   iconPath: string;
   onClick: ()=>void;
+  hidden?: boolean;
 }> = (props) => {
   return (
     <div
       className={S.root}
       onClick={props.onClick}
     >
-      <Icon
-        src={props.iconPath}
-        className={S.icon}
-      />
+      <div className={S.icon}>
+        <Icon
+          src={props.iconPath}
+          className={props.hidden ? S.hidden : ""}
+        />
+      </div>
     </div>
   );
 }

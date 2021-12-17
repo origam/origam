@@ -62,6 +62,8 @@ export class MobileMain extends React.Component<{}> {
           aboutInfo={this.about.info}
           mobileState={this.mobileState}
         />
+      default:
+        throw new Error(this.mobileState.mainPageContents + " not implemented");
     }
   }
 
