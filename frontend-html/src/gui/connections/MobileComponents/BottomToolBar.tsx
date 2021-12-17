@@ -38,17 +38,17 @@ export class BottomToolBar extends React.Component<{
           }}
         />
         <ActionDropUp
-          hidden={this.props.mobileState.saveButtonHidden}
+          hidden={this.props.mobileState.layoutState.actionDropUpHidden}
         />
         <BottomIcon
           iconPath={"./icons/noun-loading-1780489.svg"}
-          hidden={this.props.mobileState.refreshButtonHidden}
+          hidden={this.props.mobileState.layoutState.refreshButtonHidden}
           onClick={() => {
           }}
         />
         <BottomIcon
           iconPath={"./icons/noun-save-1014816.svg"}
-          hidden={this.props.mobileState.saveButtonHidden}
+          hidden={this.props.mobileState.layoutState.saveButtonHidden}
           onClick={() => {
           }}
         />

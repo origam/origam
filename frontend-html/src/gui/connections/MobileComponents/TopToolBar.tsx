@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "./TopToolBar.module.scss";
-import { MobileState } from "model/entities/MobileState";
+import { AboutLayoutState, MobileState } from "model/entities/MobileState";
 import { Icon } from "@origam/components";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
@@ -29,7 +29,6 @@ import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
-import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
 import { Tabs } from "gui/connections/MobileComponents/Tabs";
 import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
 
@@ -47,22 +46,13 @@ export class TopToolBar extends React.Component<{
     onScreenToolbarLogoutClick(this.application)(event);
   }
 
-  onHamburgerClick(){
-    const mobileState = this.props.mobileState;
-    if(mobileState.mainPageContents === MainPageContents.Menu){
-      mobileState.mainPageContents = MainPageContents.Screen;
-    }else{
-      mobileState.mainPageContents = MainPageContents.Menu;
-    }
-  }
-
   render() {
     const avatarLink = getUserAvatarLink(this.application);
     const userName = getLoggedUserName(this.application);
     return (
       <div className={S.root}>
         <div
-          onClick={() => this.onHamburgerClick()}
+          onClick={() => this.props.mobileState.hamburgerClick()}
         >
           <Icon
             src={"./icons/noun-hamburger-4238597.svg"}
@@ -77,7 +67,7 @@ export class TopToolBar extends React.Component<{
           userName={userName}
           hideLabel={true}
           ctx={this.application}
-          onAboutClick={() => this.props.mobileState.mainPageContents = MainPageContents.About}
+          onAboutClick={() => this.props.mobileState.layoutState = new AboutLayoutState()}
           helpUrl={getHelpUrl(this.application)}
         />
       </div>

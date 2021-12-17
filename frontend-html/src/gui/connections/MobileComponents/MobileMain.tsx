@@ -23,13 +23,18 @@ import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar";
 import { CScreenContent } from "gui/connections/CScreenContent";
 import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
-import { MobileState } from "model/entities/MobileState";
+import {
+  AboutLayoutState,
+  MenuLayoutState,
+  MobileState,
+  ScreenLayoutState,
+  SearchLayoutState
+} from "model/entities/MobileState";
 import { About } from "model/entities/AboutInfo";
 import { getAbout } from "model/selectors/getAbout";
 import { Search } from "gui/connections/MobileComponents/Search";
 import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar";
 import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
-
 
 
 @observer
@@ -50,21 +55,22 @@ export class MobileMain extends React.Component<{}> {
   }
 
   renderMainPageContents(){
-    switch(this.mobileState.mainPageContents){
-      case MainPageContents.Menu:
-        return  <CSidebar/>;
-      case MainPageContents.Screen:
-        return <CScreenContent/>;
-      case MainPageContents.Search:
-        return <Search/>
-      case MainPageContents.About:
-        return <MobileAboutView
-          aboutInfo={this.about.info}
-          mobileState={this.mobileState}
-        />
-      default:
-        throw new Error(this.mobileState.mainPageContents + " not implemented");
+    if(this.mobileState.layoutState instanceof MenuLayoutState){
+      return  <CSidebar/>;
     }
+    if(this.mobileState.layoutState instanceof ScreenLayoutState){
+      return <CScreenContent/>;
+    }
+    if(this.mobileState.layoutState instanceof SearchLayoutState){
+      return <Search/>
+    }
+    if(this.mobileState.layoutState instanceof AboutLayoutState){
+      return <MobileAboutView
+        aboutInfo={this.about.info}
+        mobileState={this.mobileState}
+      />
+    }
+    throw new Error(this.mobileState.layoutState + " not implemented");
   }
 
   render() {
@@ -77,13 +83,5 @@ export class MobileMain extends React.Component<{}> {
     );
   }
 }
-
-export enum MainPageContents {
-  Menu,
-  Screen,
-  About,
-  Search,
-}
-
 
 

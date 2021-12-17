@@ -1,107 +1,84 @@
 import { observable } from "mobx";
-import { MainPageContents } from "gui/connections/MobileComponents/MobileMain";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 
 export class MobileState {
-  @observable
-  actionDropUpHidden = false;
-
-  @observable
-  refreshButtonHidden = false;
-
-  @observable
-  saveButtonHidden = false;
-
   _workbench: IWorkbench | undefined;
 
   @observable
-  _mainPageContents = MainPageContents.Screen
-
-  set mainPageContents(value: MainPageContents){
-    this._mainPageContents = value;
-    switch (this._mainPageContents){
-      case MainPageContents.About:
-      case MainPageContents.Menu:
-      case MainPageContents.Search:
-        this.actionDropUpHidden = true;
-        this.refreshButtonHidden = true;
-        this.saveButtonHidden = true;
-        break;
-      case MainPageContents.Screen:
-        this.actionDropUpHidden = false;
-        this.refreshButtonHidden = false;
-        this.saveButtonHidden = false;
-        break;
-      default:
-        throw new Error(+this._mainPageContents + " not implemented")
-    }
-  }
-
-  get mainPageContents(){
-    return this._mainPageContents;
-  }
+  layoutState: IMobileLayoutState = new ScreenLayoutState()
 
   set workbench(workbench: IWorkbench){
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);
     workbenchLifecycle.addMainMenuItemClickHandler(
-      () => this.mainPageContents = MainPageContents.Screen
+      () => this.layoutState = new ScreenLayoutState()
     );
     this._workbench = workbench;
   }
 
   async close() {
-    if(this._mainPageContents === MainPageContents.Screen){
-      const activeScreen = getOpenedNonDialogScreenItems(this._workbench)
-        .find(screen => screen.isActive);
-      if(activeScreen){
-        await onScreenTabCloseClick(activeScreen)(null);
-      }
-    }else{
-      this.mainPageContents = MainPageContents.Screen;
-    }
+    this.layoutState = await this.layoutState.close(this._workbench);
+  }
+
+  hamburgerClick() {
+    this.layoutState = this.layoutState.hamburgerClick();
   }
 }
+
+
 interface IMobileLayoutState{
   actionDropUpHidden: boolean;
   refreshButtonHidden: boolean;
   saveButtonHidden: boolean;
+  hamburgerClick(): IMobileLayoutState;
   close(ctx: any): Promise<IMobileLayoutState>;
 }
 
-class ShowMenuState implements IMobileLayoutState{
+export class MenuLayoutState implements IMobileLayoutState{
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
 
   async close(ctx: any): Promise<IMobileLayoutState> {
-    return new ShowScreenState();
+    return new ScreenLayoutState();
+  }
+
+  hamburgerClick(): IMobileLayoutState {
+    return new ScreenLayoutState();
   }
 }
 
-class ShowAboutState implements IMobileLayoutState{
+export class AboutLayoutState implements IMobileLayoutState{
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
 
   async close(ctx: any): Promise<IMobileLayoutState> {
-    return new ShowScreenState();
+    return new ScreenLayoutState();
+  }
+
+  hamburgerClick(): IMobileLayoutState {
+    return new MenuLayoutState();
   }
 }
 
-class ShowSearchState implements IMobileLayoutState{
+export class SearchLayoutState implements IMobileLayoutState{
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
 
   async close(ctx: any): Promise<IMobileLayoutState> {
-    return new ShowScreenState();
+    return new ScreenLayoutState();
+  }
+
+  hamburgerClick(): IMobileLayoutState {
+    return new MenuLayoutState();
   }
 }
 
-class ShowScreenState implements IMobileLayoutState{
+export class ScreenLayoutState implements IMobileLayoutState{
   actionDropUpHidden = false;
   refreshButtonHidden = false;
   saveButtonHidden = false;
@@ -113,5 +90,9 @@ class ShowScreenState implements IMobileLayoutState{
       await onScreenTabCloseClick(activeScreen)(null);
     }
     return this;
+  }
+
+  hamburgerClick(): IMobileLayoutState {
+    return new MenuLayoutState();
   }
 }
