@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/connections/MobileComponents/BottomIcon.module.scss";
 import { Icon } from "@origam/components";
-import cx from "classnames";
 
 export const BottomIcon: React.FC<{
   iconPath: string;
