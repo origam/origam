@@ -25,6 +25,7 @@ export const BottomIcon: React.FC<{
   iconPath: string;
   onClick: ()=>void;
   hidden?: boolean;
+  className?: string;
 }> = (props) => {
   return (
     <div
@@ -34,7 +35,7 @@ export const BottomIcon: React.FC<{
       <div className={S.icon}>
         <Icon
           src={props.iconPath}
-          className={props.hidden ? S.hidden : ""}
+          className={props.className + " " + (props.hidden ? S.hidden : "")}
         />
       </div>
     </div>

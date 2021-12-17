@@ -55,6 +55,7 @@ import { getAbout } from "model/selectors/getAbout";
 import { About } from "model/entities/AboutInfo";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
+import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
 
 function isSaveShortcut(event: any) {
   return event.key === "s" && (event.ctrlKey || event.metaKey);
@@ -203,40 +204,39 @@ export class CScreenToolbar extends React.Component<{}> {
   }
 
   renderForFormScreen() {
-    const activeScreen = getActiveScreen(this.application);
-    if (activeScreen && !activeScreen.content) return null;
-    const formScreen =
-      activeScreen && !activeScreen.content.isLoading ? activeScreen.content.formScreen : undefined;
-    const isDirty = formScreen && formScreen.isDirty;
+    const actionButtonsState = geScreenActionButtonsState(this.application);
+    if(!actionButtonsState){
+      return null;
+    }
     const toolbarActions = getActiveScreenActions(this.application);
     const userName = getLoggedUserName(this.application);
     const avatarLink = getUserAvatarLink(this.application);
     return (
       <ScreenToolbar>
-        {formScreen ? (
+        {actionButtonsState.actionButtonsVisible ? (
           <>
             <ScreenToolbarActionGroup>
-              {!getIsSuppressSave(formScreen) && (
+              {actionButtonsState.isSaveButtonVisible && (
                 <ScreenToolbarAction
-                  className={isDirty ? "isRed isHoverGreen" : ""}
-                  onClick={onSaveSessionClick(formScreen)}
-                  onShortcut={onSaveSessionClick(formScreen)}
+                  className={actionButtonsState.isDirty ? "isRed isHoverGreen" : ""}
+                  onClick={onSaveSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={onSaveSessionClick(actionButtonsState.formScreen)}
                   id={"saveButton"}
                   shortcutPredicate={isSaveShortcut}
                   icon={
                     <Icon
                       src="./icons/save.svg"
-                      className={isDirty ? "isRed isHoverGreen" : ""}
+                      className={actionButtonsState.isDirty ? "isRed isHoverGreen" : ""}
                       tooltip={T("Save", "save_tool_tip")}
                     />
                   }
                   label={T("Save", "save_tool_tip")}
                 />
               )}
-              {!getIsSuppressRefresh(formScreen) && (
+              {actionButtonsState.isRefreshButtonVisible && (
                 <ScreenToolbarAction
-                  onClick={onRefreshSessionClick(formScreen)}
-                  onShortcut={onRefreshSessionClick(formScreen)}
+                  onClick={onRefreshSessionClick(actionButtonsState.formScreen)}
+                  onShortcut={onRefreshSessionClick(actionButtonsState.formScreen)}
                   id={"refreshButton"}
                   shortcutPredicate={isRefreshShortcut}
                   icon={

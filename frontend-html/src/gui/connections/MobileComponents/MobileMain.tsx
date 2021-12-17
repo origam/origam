@@ -78,7 +78,10 @@ export class MobileMain extends React.Component<{}> {
         <div className={S.root}>
           <TopToolBar mobileState={this.mobileState}/>
           {this.renderMainPageContents()}
-          <BottomToolBar mobileState={this.mobileState}/>
+          <BottomToolBar
+            mobileState={this.mobileState}
+            ctx={this.context.application}
+          />
         </div>
     );
   }

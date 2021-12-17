@@ -23,12 +23,19 @@ import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
 import { MobileState } from "model/entities/MobileState";
 import { ActionDropUp } from "gui/connections/MobileComponents/ActionDropUp";
 import { observer } from "mobx-react";
+import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
+import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
+import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 
 @observer
 export class BottomToolBar extends React.Component<{
-  mobileState: MobileState
+  mobileState: MobileState,
+  ctx: any
 }> {
   render() {
+
+    const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
+
     return (
       <div className={S.root}>
         <BottomIcon
@@ -42,15 +49,14 @@ export class BottomToolBar extends React.Component<{
         />
         <BottomIcon
           iconPath={"./icons/noun-loading-1780489.svg"}
-          hidden={this.props.mobileState.layoutState.refreshButtonHidden}
-          onClick={() => {
-          }}
+          hidden={this.props.mobileState.layoutState.refreshButtonHidden || !actionButtonsState?.isSaveButtonVisible}
+          onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
         />
         <BottomIcon
+          className={actionButtonsState?.isDirty ? S.isRed : ""}
           iconPath={"./icons/noun-save-1014816.svg"}
-          hidden={this.props.mobileState.layoutState.saveButtonHidden}
-          onClick={() => {
-          }}
+          hidden={this.props.mobileState.layoutState.saveButtonHidden || !actionButtonsState?.isRefreshButtonVisible}
+          onClick={onSaveSessionClick(actionButtonsState?.formScreen)}
         />
       </div>
     );
