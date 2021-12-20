@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./TopToolBar.module.scss";
 import { AboutLayoutState, MobileState } from "model/entities/MobileState";
-import { Icon } from "@origam/components";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
 import { MobXProviderContext } from "mobx-react";

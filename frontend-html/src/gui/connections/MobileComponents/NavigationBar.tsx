@@ -28,6 +28,7 @@ import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import S from "gui/connections/MobileComponents/NavigationBar.module.scss"
+import { Icon } from "@origam/components";
 
 @observer
 export class NavigationBar extends React.Component<{
@@ -41,10 +42,11 @@ export class NavigationBar extends React.Component<{
 
   render() {
     if(!this.props.mobileState.layoutState.showOpeTabCombo){
-      return <div className={S.heading}></div>
+      return <div className={S.heading}/>
     }
 
     const openedScreens = getOpenedNonDialogScreenItems(this.workbench);
+    const someScreenIsDirty = openedScreens.some(screen => screen.content.formScreen?.isDirty)
     const activeItem = openedScreens.find(item => item.isActive);
     return (
       <Dropdowner
@@ -54,13 +56,24 @@ export class NavigationBar extends React.Component<{
             onMouseDown={() => setDropped(true)}
             isActive={false}
           >
-            <div>{activeItem?.tabTitle}</div>
+            <div className={S.titleContainer}>
+              <div className={activeItem?.content?.formScreen?.isDirty ? S.dirtyScreenName: ""}>
+                {activeItem?.tabTitle}
+              </div>
+              {openedScreens.length > 1 &&
+                <Icon
+                  className={S.icon + " " + (someScreenIsDirty ? S.dirtyIcon : "")}
+                  src={"./icons/noun-arrow-89829.svg"}
+                />
+              }
+            </div>
           </DataViewHeaderAction>
         )}
         content={({setDropped}) => (
           <Dropdown>
             {openedScreens.map(openScreen =>
               <DropdownItem
+                className={openScreen.content.formScreen?.isDirty ? S.dirtyDropDownItem : ""}
                 key={openScreen.tabTitle}
                 onClick={(event: any) => {
                   setDropped(false);

@@ -20,3 +20,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .heading{
   width: 100%;
 }
+
+.titleContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center
+}
+
+.icon{
+  height: 25px;
+  margin-left: 5px;
+  margin-top: 4px;
+}
+
+.dirtyIcon{
+  fill: var(--error1);
+}
+
+.dirtyDropDownItem{
+  color: var(--error1);
+}
+
+.dirtyScreenName{
+  color: var(--error1);
+}
