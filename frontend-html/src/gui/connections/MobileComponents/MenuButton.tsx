@@ -22,15 +22,16 @@ import S from "gui/connections/MobileComponents/MenuButton.module.scss";
 import { Icon } from "@origam/components";
 import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
 import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
-import { MobXProviderContext } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 
-export const MenuButton: React.FC<{}> = (props) => {
+export const MenuButton: React.FC<{}> = observer((props) => {
 
   const context = useContext(MobXProviderContext)
 
   const workQueuesItemsCount = getWorkQueuesTotalItemsCount(context.application);
   return (
     <div
+      className={S.root}
       onClick={() => context.application.mobileState.hamburgerClick()}
     >
       <Icon
@@ -42,4 +43,4 @@ export const MenuButton: React.FC<{}> = (props) => {
       )}
     </div>
   );
-}
+});

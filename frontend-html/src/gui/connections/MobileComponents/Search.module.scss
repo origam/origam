@@ -30,4 +30,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   :global(.resultArea){
     max-height: unset;
   }
+  > :first-child{
+    margin-left: 15px;
+  }
+}
+
+:global(.resultArea) > div > div > div > div{
+  padding-left: 20px;
 }
