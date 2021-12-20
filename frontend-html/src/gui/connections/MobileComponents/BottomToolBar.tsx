@@ -49,21 +49,24 @@ export class BottomToolBar extends React.Component<{
             await this.props.mobileState.close()
           }}
         />
-        <ActionDropUp
-          hidden={this.props.mobileState.layoutState.actionDropUpHidden}
-          actions={actions}
-        />
-        <BottomIcon
-          iconPath={"./icons/noun-loading-1780489.svg"}
-          hidden={this.props.mobileState.layoutState.refreshButtonHidden || !actionButtonsState?.isSaveButtonVisible}
-          onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
-        />
-        <BottomIcon
-          className={actionButtonsState?.isDirty ? S.isRed : ""}
-          iconPath={"./icons/noun-save-1014816.svg"}
-          hidden={this.props.mobileState.layoutState.saveButtonHidden || !actionButtonsState?.isRefreshButtonVisible}
-          onClick={onSaveSessionClick(actionButtonsState?.formScreen)}
-        />
+        {actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden &&
+          <ActionDropUp
+            actions={actions}
+          />
+        }
+        {!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isSaveButtonVisible &&
+          <BottomIcon
+            iconPath={"./icons/noun-loading-1780489.svg"}
+            onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
+          />
+        }
+        {!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isRefreshButtonVisible &&
+          <BottomIcon
+            className={actionButtonsState?.isDirty ? S.isRed : ""}
+            iconPath={"./icons/noun-save-1014816.svg"}
+            onClick={onSaveSessionClick(actionButtonsState?.formScreen)}
+          />
+        }
       </div>
     );
   }
