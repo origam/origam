@@ -61,7 +61,10 @@ namespace Origam.ServerCore.Configuration
                         .GetStringArrayOrThrow(),
                     RedirectUris = webClientSection
                         .GetSectionOrThrow("RedirectUris")
-                        .GetStringArrayOrThrow()
+                        .GetStringArrayOrThrow(),
+                    AllowedCorsOrigins = webClientSection
+                        .GetSection("AllowedCorsOrigins")
+                        ?.Get<string[]>()
                 };
             }
             
@@ -103,6 +106,7 @@ namespace Origam.ServerCore.Configuration
     {
         public string[] RedirectUris { get; set; }
         public string[] PostLogoutRedirectUris { get; set; }
+        public string[] AllowedCorsOrigins { get; set; }  
     }
     
     public class MobileClient
