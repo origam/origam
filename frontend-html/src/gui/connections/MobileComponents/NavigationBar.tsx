@@ -27,9 +27,10 @@ import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHead
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
+import S from "gui/connections/MobileComponents/NavigationBar.module.scss"
 
 @observer
-export class Tabs extends React.Component<{
+export class NavigationBar extends React.Component<{
   mobileState: MobileState
 }> {
   static contextType = MobXProviderContext;
@@ -39,6 +40,10 @@ export class Tabs extends React.Component<{
   }
 
   render() {
+    if(!this.props.mobileState.layoutState.showOpeTabCombo){
+      return <div className={S.heading}></div>
+    }
+
     const openedScreens = getOpenedNonDialogScreenItems(this.workbench);
     const activeItem = openedScreens.find(item => item.isActive);
     return (

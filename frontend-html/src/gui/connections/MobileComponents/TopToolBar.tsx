@@ -29,10 +29,9 @@ import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
-import { Tabs } from "gui/connections/MobileComponents/Tabs";
+import { NavigationBar } from "gui/connections/MobileComponents/NavigationBar";
 import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
-import { SidebarAlertCounter } from "gui/Components/Sidebar/AlertCounter";
-import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
+import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 
 export class TopToolBar extends React.Component<{
   mobileState: MobileState
@@ -43,6 +42,10 @@ export class TopToolBar extends React.Component<{
     return this.context.application;
   }
 
+  get layoutState(){
+    return this.props.mobileState.layoutState;
+  }
+
   @action.bound
   handleLogoutClick(event: any) {
     onScreenToolbarLogoutClick(this.application)(event);
@@ -51,22 +54,11 @@ export class TopToolBar extends React.Component<{
   render() {
     const avatarLink = getUserAvatarLink(this.application);
     const userName = getLoggedUserName(this.application);
-    const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.application);
     return (
       <div className={S.root}>
-        <div
-          onClick={() => this.props.mobileState.hamburgerClick()}
-        >
-          <Icon
-            src={"./icons/noun-hamburger-4238597.svg"}
-            className={S.menuIcon}
-          />
-          {workQueuesItemsCount > 0 && (
-            <SidebarAlertCounter>{workQueuesItemsCount}</SidebarAlertCounter>
-          )}
-        </div>
-        <Tabs mobileState={this.props.mobileState}/>
-        <SearchButton mobileState={this.props.mobileState}/>
+        <MenuButton/>
+        <NavigationBar mobileState={this.props.mobileState}/>
+        {this.layoutState.showSearchButton && <SearchButton mobileState={this.props.mobileState}/>}
         <UserMenuDropdown
           avatarLink={avatarLink}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
