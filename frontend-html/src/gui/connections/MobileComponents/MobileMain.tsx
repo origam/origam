@@ -35,6 +35,8 @@ import { getAbout } from "model/selectors/getAbout";
 import { Search } from "gui/connections/MobileComponents/Search";
 import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar";
 import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
+import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
+import { IWorkbench } from "model/entities/types/IWorkbench";
 
 
 @observer
@@ -44,6 +46,10 @@ export class MobileMain extends React.Component<{}> {
 
   get mobileState(): MobileState {
     return this.context.application.mobileState;
+  }
+
+  get workbench(): IWorkbench {
+    return this.context.workbench;
   }
 
   get about(): About {
@@ -56,10 +62,13 @@ export class MobileMain extends React.Component<{}> {
 
   renderMainPageContents(){
     if(this.mobileState.layoutState instanceof MenuLayoutState){
-      return  <CSidebar/>;
+      return <CSidebar/>;
     }
     if(this.mobileState.layoutState instanceof ScreenLayoutState){
-      return <CScreenContent/>;
+      const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
+      return openedScreenItems.length > 0
+        ? <CScreenContent/>
+        : <CSidebar/>;
     }
     if(this.mobileState.layoutState instanceof SearchLayoutState){
       return <Search/>
