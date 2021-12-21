@@ -57,7 +57,7 @@ export class NavigationBar extends React.Component<{
             isActive={false}
           >
             <div className={S.titleContainer}>
-              <div className={activeItem?.content?.formScreen?.isDirty ? S.dirtyScreenName: ""}>
+              <div className={S.screenName + " " + (activeItem?.content?.formScreen?.isDirty ? S.dirtyScreenName : "")}>
                 {activeItem?.tabTitle}
               </div>
               {openedScreens.length > 1 &&
