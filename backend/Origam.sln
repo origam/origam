@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Workbench.Services", "Origam.Workbench.Services\Origam.Workbench.Services.csproj", "{ECA06542-5635-455E-B513-07F60222CA7D}"
 EndProject
@@ -93,17 +93,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.PrintIt", "Origam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.ProjectAutomation", "Origam.ProjectAutomation\Origam.ProjectAutomation.csproj", "{F2F5CD17-B2A5-4B5F-9868-628BB76A1959}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workflow.FileService", "Origam.Workflow.FileService\Origam.Workflow.FileService.csproj", "{27826CC4-81AD-4C2A-88EA-6102F119FFA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Workflow.FileService", "Origam.Workflow.FileService\Origam.Workflow.FileService.csproj", "{27826CC4-81AD-4C2A-88EA-6102F119FFA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.Excel", "Origam.BI.Excel\Origam.BI.Excel.csproj", "{2380E7B2-C993-4167-ABCA-22FF07A91B2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Windows.Editor", "Origam.Windows.Editor\Origam.Windows.Editor.csproj", "{76A9B204-B2FD-4393-9084-420CEC16E95F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Licensing", "Origam.Licensing\Origam.Licensing.csproj", "{4B1412B7-3287-4E64-A0FA-AB0AEFA8B4E7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.LicensingTests", "Origam.LicensingTests\Origam.LicensingTests.csproj", "{DEF9A2DA-A949-4659-992E-FA554689CEC8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Licensing.Service", "Origam.Licensing.Service\Origam.Licensing.Service.csproj", "{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Gui", "Origam.Gui\Origam.Gui.csproj", "{FB138BF6-AF03-4F04-BFFE-EF28D95EFEB8}"
 EndProject
@@ -884,38 +880,6 @@ Global
 		{4B1412B7-3287-4E64-A0FA-AB0AEFA8B4E7}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{4B1412B7-3287-4E64-A0FA-AB0AEFA8B4E7}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{4B1412B7-3287-4E64-A0FA-AB0AEFA8B4E7}.Release|Any CPU.Build.0 = Release Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug|Any CPU.ActiveCfg = Debug Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Debug|Any CPU.Build.0 = Debug Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release Architect|Any CPU.ActiveCfg = Release Architect|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release Architect|Any CPU.Build.0 = Release Architect|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release Client|Any CPU.ActiveCfg = Release Client|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release Client|Any CPU.Build.0 = Release Client|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release Server|Any CPU.ActiveCfg = Release Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8}.Release|Any CPU.Build.0 = Release Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug Server|Any CPU.Build.0 = Debug Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug|Any CPU.ActiveCfg = Debug Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Debug|Any CPU.Build.0 = Debug Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release Architect|Any CPU.ActiveCfg = Release Architect|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release Architect|Any CPU.Build.0 = Release Architect|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release Client|Any CPU.ActiveCfg = Release Client|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release Client|Any CPU.Build.0 = Release Client|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release Server|Any CPU.ActiveCfg = Release Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7}.Release|Any CPU.Build.0 = Release Server|Any CPU
 		{FB138BF6-AF03-4F04-BFFE-EF28D95EFEB8}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
 		{FB138BF6-AF03-4F04-BFFE-EF28D95EFEB8}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
 		{FB138BF6-AF03-4F04-BFFE-EF28D95EFEB8}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
@@ -1393,8 +1357,6 @@ Global
 		{27826CC4-81AD-4C2A-88EA-6102F119FFA6} = {0029C8FC-A94D-4C3D-8952-31A703FD54C8}
 		{2380E7B2-C993-4167-ABCA-22FF07A91B2A} = {3A6D8686-1687-4091-B3EC-1A6703402F53}
 		{4B1412B7-3287-4E64-A0FA-AB0AEFA8B4E7} = {0D24B540-7F03-4F82-A665-ECB7E736093E}
-		{DEF9A2DA-A949-4659-992E-FA554689CEC8} = {0D24B540-7F03-4F82-A665-ECB7E736093E}
-		{13BCFBFC-56F2-4FC6-9EE2-ADB9A718CBC7} = {0D24B540-7F03-4F82-A665-ECB7E736093E}
 		{FB138BF6-AF03-4F04-BFFE-EF28D95EFEB8} = {B842C91A-E5F8-4377-BAE3-BAED36417630}
 		{CC15F0B0-CDB5-4A5F-82E6-20B48D8CAB40} = {B842C91A-E5F8-4377-BAE3-BAED36417630}
 		{D66DE820-264D-4CFA-8778-A8B9B6F5BBFB} = {4E45BA87-8B3D-4D1C-BE4B-934977F6A922}
