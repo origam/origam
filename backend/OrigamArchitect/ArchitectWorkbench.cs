@@ -49,7 +49,6 @@ using Origam.Extensions;
 using Origam.Gui.UI;
 using Origam.Gui.Win;
 using Origam.Gui.Win.Commands;
-using Origam.Licensing;
 using Origam.OrigamEngine;
 using Origam.Rule;
 using Origam.Schema;
@@ -428,10 +427,6 @@ namespace OrigamArchitect
             this.searchComboBox.TabStop = false;
 		    this.searchComboBox.KeyDown += searchBox_KeyDown;
             this.searchComboBox.Text = "Search";
-            // 
-            // LicenseBackgroudExtender
-            // 
-            this.LicenseBackgroudExtender.DoWork += new System.ComponentModel.DoWorkEventHandler(this.LicenseBackgroudExtender_DoWork);
             // 
             // AutoUpdateBackgroudFinder
             // 
@@ -2603,111 +2598,6 @@ namespace OrigamArchitect
 			}
 		}
 
-		private static string ExtendAndSaveLicense(string licenseString)
-		{
-			//prepare the request
-			Cursor.Current = Cursors.WaitCursor;
-			JObject jobj = new JObject(
-				new JProperty("Releases_ClientLicense_API",
-					new JObject(
-						new JProperty("LicenseXmlString", licenseString)
-					)
-				)
-			);
-
-			string output = null;
-			try
-			{
-				using (WebResponse webResponse = HttpTools.GetResponse(
-				string.Format("{0}public/ExtendClientLicense", ORIGAM_COM_API_BASEURL),
-				"POST", jobj.ToString(), "application/json",
-				new Hashtable()
-				{ { "Accept-Encoding", "gzip,deflate"} }
-				, null, null, null, 10000, null,
-				IgnoreHTTPSErrors))
-				{
-					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
-					if (httpWebResponse.StatusCode == HttpStatusCode.OK)
-					{
-						JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
-						Origam.Licensing.License license = Origam.Licensing.License.Load(
-							jResult["ROOT"]["Releases_ClientLicense_API"][0]["LicenseXmlString"].ToString());
-
-						OrigamLicenseHelper.StoreLicenseToRegistry(license.ToString());
-
-						// success
-						return null;
-					}
-				}
-			}
-			catch (WebException wex)
-			{
-				if (wex.Status == WebExceptionStatus.Timeout || wex.Status == WebExceptionStatus.ConnectFailure)
-				{
-					// http error
-					return wex.Message;
-				}
-				string errorInfo = null;
-				using (HttpWebResponse httpWebResponse = wex.Response as HttpWebResponse)
-				{
-					if (httpWebResponse != null && httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
-					{
-						errorInfo = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
-						try
-						{
-							JObject jResult = (JObject)JsonConvert.DeserializeObject(errorInfo);
-							if (jResult["Message"] != null)
-							{
-								return jResult["Message"].ToString();
-							}
-						}
-						catch
-						{ }
-					}
-				}
-				return string.Format(strings.RegisterLoginForm_UnexpectedErrorWithMessage_Message,
-					wex.Message);
-			}
-			return string.Format(strings.RegisterLoginForm_UnexpectedError_Message);
-		}
-
-		private void LicenseBackgroudExtender_DoWork(object sender, DoWorkEventArgs e)
-		{
-			BackgroundWorker bw = sender as BackgroundWorker;
-
-			string extensionFailureReason = null;
-			string licenseString = (string)e.Argument;
-
-			Origam.Licensing.License license = Origam.Licensing.License.Load(licenseString);
-			
-			extensionFailureReason = ExtendAndSaveLicense(licenseString);
-			if (!string.IsNullOrEmpty(extensionFailureReason))
-			{
-				if ((license.Expiration - DateTime.Now).Days < 7)
-				{
-					// license hasn't been extended			
-					// license still valid, but warn
-					MessageBox.Show(String.Format(
-						strings.LicenseWillExpire_Message,
-							(license.Expiration - DateTime.Now).Days,
-							license.Expiration,
-							extensionFailureReason
-						),
-						strings.LicenseWillExpire_Label,
-						MessageBoxButtons.OK,
-						MessageBoxIcon.Warning);
-				}
-			}
-			e.Result = true;
-
-			// If the operation was canceled by the user, 
-			// set the DoWorkEventArgs.Cancel property to true.
-			if (bw.CancellationPending)
-			{
-				e.Cancel = true;
-			}
-		}
 		
 		private void AutoUpdateBackgroundFinder_DoWork(object sender, DoWorkEventArgs e)
 		{

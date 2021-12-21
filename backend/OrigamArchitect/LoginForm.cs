@@ -28,8 +28,6 @@ using Origam;
 using Origam.UI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Origam.Licensing;
-
 
 namespace OrigamArchitect
 {
@@ -53,12 +51,6 @@ namespace OrigamArchitect
 		{
 			InitializeComponent();
 			LoginSuccessfull = false;
-			try
-			{
-				txtUsername.Text = Origam.Licensing.License.Load(
-					OrigamLicenseHelper.GetLicenseFromRegistry()).Customer.Email;
-			}
-			catch { }
 		}
 
 		private void button1_Click_1(object sender, EventArgs e)
@@ -90,11 +82,8 @@ namespace OrigamArchitect
 				, new JProperty("password", txtPassword.Text.Trim())
 			);
 
-			string s = jobj.ToString();
-
-			string output = null;
-			try
-			{
+            try
+            {
 				using (WebResponse webResponse = HttpTools.GetResponse(
 					url: string.Format("{0}AjaxLogin", frmMain.ORIGAM_COM_API_BASEURL),
 					method: "POST",
@@ -109,21 +98,11 @@ namespace OrigamArchitect
 					ignoreHTTPSErrors: frmMain.IgnoreHTTPSErrors))
 				{
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+                    string output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 
-					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
+                    JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 					if (httpWebResponse.StatusCode == HttpStatusCode.OK && (int)jResult["Status"] == 200)
 					{
-
-						// success
-						LoginCookies = httpWebResponse.Cookies;
-						DialogResult res = GetAndStoreLicense(LoginCookies);
-						if (res == DialogResult.OK
-							|| this.DialogResult == DialogResult.Abort)
-						{
-							this.DialogResult = res;
-							this.Close();
-						}
 						return;
 					}
 					else
@@ -151,76 +130,6 @@ namespace OrigamArchitect
 					strings.LoginForm_Error_Label, wex);
 			}
 		}
-
-		private DialogResult GetAndStoreLicense(CookieCollection loginCookies)
-		{
-			StringBuilder queryStringSb = new StringBuilder();
-			queryStringSb.AppendFormat("machineId={0}",
-				MyUri.EscapeUriString(
-					OrigamLicenseHelper.GetComputerUUID().ToString()
-				)
-			);
-
-			string output = null;
-			try
-			{
-				using (WebResponse webResponse = HttpTools.GetResponse(
-					string.Format("{0}private/CreateClientLicense", frmMain.ORIGAM_COM_API_BASEURL),
-				"POST", queryStringSb.ToString(), "application/x-www-form-urlencoded",
-				new Hashtable()
-				{ { "Accept-Encoding", "gzip,deflate"} }
-				, null, null, null, 10000,
-				loginCookies, frmMain.IgnoreHTTPSErrors))
-				{
-					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
-					if (httpWebResponse.StatusCode == HttpStatusCode.OK)
-					{
-						// check license
-						JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
-                        Origam.Licensing.License license = Origam.Licensing.License.Load(
-							jResult["ROOT"]["Releases_ClientLicense_API"][0]["LicenseXmlString"].ToString());
-						/* List<IValidationFailure> failures =
-							license.Validate().Signature()
-								.And().ExpirationDate()
-							.AssertValidLicense().ToList();
-							*/
-
-						OrigamLicenseHelper.StoreLicenseToRegistry(license.ToString());
-						return DialogResult.OK;
-					}
-				}
-			}
-			catch (System.Net.WebException wex)
-			{
-				if (wex.Status == WebExceptionStatus.Timeout || wex.Status == WebExceptionStatus.ConnectFailure)
-				{
-					AsMessageBox.ShowError(null,
-						string.Format(strings.RegisterAndLoginForm_TemporaryHttpError,
-						wex.Message),
-						strings.LoginForm_ErrorGettingLicense_Label, wex);
-					return DialogResult.Retry;
-				}
-				string errorInfo = null;
-				using (HttpWebResponse httpWebResponse = wex.Response as HttpWebResponse)
-				{
-					if (httpWebResponse != null && httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
-					{
-						errorInfo = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
-						JObject jResult = (JObject)JsonConvert.DeserializeObject(errorInfo);
-						AsMessageBox.ShowError(null,
-							string.Format(
-								strings.LoginForm_ErrorGettingLicense_Message,
-								jResult["Message"].ToString()),
-							strings.LoginForm_ErrorGettingLicense_Label, wex);
-						return DialogResult.Abort;
-					}
-				}
-				throw wex;
-			}
-			return DialogResult.Abort;
-		}
-
 		private void button2_Click(object sender, EventArgs e)
 		{
 			//this.Close();	
