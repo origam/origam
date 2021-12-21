@@ -19,12 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { ModalWindow } from "@origam/components";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/AboutDialog.module.scss";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { AboutView } from "gui/Components/Dialogs/AboutView";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class AboutDialog extends React.Component<{
@@ -33,7 +33,7 @@ export class AboutDialog extends React.Component<{
 }> {
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("About", "about_application")}
         titleButtons={null}
         buttonsCenter={
@@ -49,7 +49,7 @@ export class AboutDialog extends React.Component<{
         <div className={CS.dialogContent + " " + S.contentArea}>
          <AboutView aboutInfo={this.props.aboutInfo}/>
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

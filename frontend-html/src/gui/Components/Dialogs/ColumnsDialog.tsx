@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
-import { CloseButton, ModalWindow } from "@origam/components";
+import { CloseButton } from "@origam/components";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { action, observable } from "mobx";
@@ -32,6 +32,7 @@ import { IColumnConfiguration, ITableConfiguration } from "model/entities/TableP
 import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
 import { IOption, SimpleDropdown } from "@origam/components";
 import { compareStrings } from "utils/string";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class ColumnsDialog extends React.Component<{
@@ -107,7 +108,7 @@ export class ColumnsDialog extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("Columns", "column_config_title")}
         titleButtons={<CloseButton onClick={this.props.onCloseClick}/>}
         buttonsCenter={
@@ -165,7 +166,7 @@ export class ColumnsDialog extends React.Component<{
             onChange={this.handleFixedColumnsCountChange}
           />
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 

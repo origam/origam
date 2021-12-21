@@ -23,7 +23,7 @@ import { WorkbenchPage } from "gui/Components/WorkbenchPage/WorkbenchPage";
 import { MobXProviderContext, observer } from "mobx-react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbench } from "model/selectors/getWorkbench";
-import React from "react";
+import React, { useContext } from "react";
 import { CScreenTabbedViewHandleRow } from "gui/connections/CScreenTabbedViewHandleRow";
 import { CScreenToolbar } from "gui/connections/CScreenToolbar";
 import { CSidebar } from "gui/connections/CSidebar";
@@ -34,7 +34,7 @@ import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentSc
 import { Fullscreen } from "gui/Components/Fullscreen/Fullscreen";
 import { onRootElementClick } from "model/actions/Global/onRootElementClick";
 import { action } from "mobx";
-import { Breakpoint } from "react-socks";
+import { Breakpoint, useCurrentBreakpointName, useCurrentWidth } from "react-socks";
 import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
 import { MobileMain } from "gui/connections/MobileComponents/MobileMain";
 
@@ -85,8 +85,26 @@ export class CWorkbenchPage extends React.Component {
               }
             />
           </Breakpoint>
+          <BreakpointProvider/>
         </>
       // </Provider>
     );
   }
 }
+
+export const BreakpointProvider: React.FC<{}> = (props) => {
+  const breakpoint = useCurrentBreakpointName();
+  const width = useCurrentWidth()
+  const application = useContext(MobXProviderContext).application
+
+  application.breakpoint = breakpoint;
+  console.log();
+  console.log("breakpoint: "+breakpoint);
+  console.log("width: "+width);
+
+  return (
+    <>
+    </>
+  );
+}
+

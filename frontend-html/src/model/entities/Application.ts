@@ -25,6 +25,7 @@ import { IDialogStack } from "./types/IDialogStack";
 import { IErrorDialogController } from "./types/IErrorDialog";
 import { IWorkbench } from "./types/IWorkbench";
 import { MobileState } from "model/entities/MobileState";
+import { observable } from "mobx";
 
 export class Application implements IApplication {
 
@@ -65,4 +66,7 @@ export class Application implements IApplication {
   }
 
   parent?: any;
+
+  @observable
+  breakpoint: string | undefined;
 }

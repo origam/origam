@@ -19,8 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { ModalWindow } from "@origam/components";
 import { SearchView, SearchViewState } from "gui/Components/Search/SearchView";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class SearchDialog extends React.Component<{
@@ -32,7 +32,7 @@ export class SearchDialog extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={null}
         titleButtons={null}
         buttonsCenter={null}
@@ -42,7 +42,7 @@ export class SearchDialog extends React.Component<{
         topPosiotionProc={30}
       >
         <SearchView state={this.searchViewState}/>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }
