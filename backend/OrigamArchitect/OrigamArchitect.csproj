@@ -293,10 +293,6 @@
       <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>
       <Name>Origam.Gui</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.Licensing\Origam.Licensing.csproj">
-      <Project>{4b1412b7-3287-4e64-a0fa-ab0aefa8b4e7}</Project>
-      <Name>Origam.Licensing</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.ProjectAutomation\Origam.ProjectAutomation.csproj">
       <Project>{f2f5cd17-b2a5-4b5f-9868-628bb76a1959}</Project>
       <Name>Origam.ProjectAutomation</Name>
