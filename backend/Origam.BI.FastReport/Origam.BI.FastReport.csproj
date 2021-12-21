@@ -51,7 +51,7 @@
 
   <ItemGroup>
     <PackageReference Include="FastReport.OpenSource.Export.PdfSimple" Version="2021.4.0" />
-    <PackageReference Include="Origam.Service.Core" Version="1.0.2" />
+    <PackageReference Include="Origam.Service.Core" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>

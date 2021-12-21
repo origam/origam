@@ -100,8 +100,21 @@ class OpEditors extends React.Component<{
   }
 
   private removeInvalidCharacters(event: any) {
-    const invalidChars = new RegExp("[^\\d\\-" + (this.props.allowDecimalSeparator ? getCurrentDecimalSeparator() : "") + "]", "g");
-    return (event.target.value || "").replace(invalidChars, "");
+    let separator = getCurrentDecimalSeparator();
+    const invalidChars = new RegExp("[^\\d\\-" + (this.props.allowDecimalSeparator ? separator : "") + "]", "g");
+    let clearedValue = (event.target.value || "").replace(invalidChars, "");
+    let firstSeparatorIndex = clearedValue.indexOf(separator);
+    if(firstSeparatorIndex > -1){
+      let lastSeparatorIndex = clearedValue.lastIndexOf(separator);
+      for (let i = 0; i < 1000; i++) {
+        if (firstSeparatorIndex === lastSeparatorIndex) break;
+        clearedValue = clearedValue.slice(0, lastSeparatorIndex) + clearedValue.slice(lastSeparatorIndex + 1);
+      }
+    }
+    if(clearedValue === separator){
+      clearedValue = "0" + separator
+    }
+    return isNaN(parseFloat(clearedValue)) ? "" : clearedValue;
   }
 
   render() {
