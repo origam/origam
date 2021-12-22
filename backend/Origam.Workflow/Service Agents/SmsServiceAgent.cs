@@ -41,8 +41,12 @@ namespace Origam.Workflow
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(
-                        "MethodName", this.MethodName,
+                        "MethodName", MethodName,
                         ResourceUtils.GetString("InvalidMethodName"));
+            }
+            if (result == null) {
+                throw new NullReferenceException
+                    ("Couldn't invoke object as create SmsService.SendSms.");
             }
         }
 
@@ -56,7 +60,7 @@ namespace Origam.Workflow
                 .Split(",".ToCharArray())[1].Trim();
             return Reflector.InvokeObject(
                 assembly,
-                classname) as ISmsService;;
+                classname) as ISmsService; 
         }
     }
 }
