@@ -271,7 +271,7 @@ namespace Origam
         public bool CheckFileHashesAfterModelLoad { get; set; } = true;
         
         [Category("SmsService")] 
-        public string SmsService { get; set; } = "Origam.Sms.DebugSmsService, Origam.Sms";
+        public string SmsService { get; set; } = "Origam.Sms.FileSystemSmsService, Origam.Sms";
 
         public string ReportsFolder()
 		{
