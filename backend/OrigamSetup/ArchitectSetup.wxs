@@ -328,10 +328,6 @@
               <File Id="ORIGAM.WINDOWS.EDITOR.DLL" Name="Origam.Windows.Editor.dll" Source="source\Origam.Windows.Editor.dll">
               </File>
             </Component>
-            <Component Id="ORIGAM.LICENSING.DLL" Guid="54f4b95a-aa00-4b37-bc65-c65f1e696156" DiskId="1">
-              <File Id="ORIGAM.LICENSING" Name="Origam.Licensing.dll" Source="source\Origam.Licensing.dll">
-              </File>
-            </Component>
             <Component Id="ORIGAM.GUI.DLL" Guid="451f23c1-b8df-42f9-89bb-278fcb0a65f1" DiskId="1">
               <File Id="ORIGAM.GUI" Name="Origam.Gui.dll" Source="source\Origam.Gui.dll">
               </File>
@@ -890,8 +886,6 @@
       <ComponentRef Id="MICROSOFT.MSAGL.GRAPHVIEWERGDI.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.WINDOWS.EDITOR.DLL">
-      </ComponentRef>
-      <ComponentRef Id="ORIGAM.LICENSING.DLL">
       </ComponentRef>
       <ComponentRef Id="MORELINQ.DLL">
       </ComponentRef>
