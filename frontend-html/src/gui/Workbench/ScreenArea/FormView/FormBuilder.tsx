@@ -42,6 +42,8 @@ import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowR
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { IProperty } from "model/entities/types/IProperty";
+import { DimensionsFactory } from "gui/Components/Form/FieldDimensions";
 
 
 @inject(({dataView}) => {
@@ -79,6 +81,7 @@ export class FormBuilder extends React.Component<{
   }
 
   buildForm() {
+    const dimensionFactory = new DimensionsFactory(this.props.dataView)
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -105,10 +108,7 @@ export class FormBuilder extends React.Component<{
         return (
           <FormSection
             key={xfo.$iid}
-            width={parseInt(xfo.attributes.Width, 10)}
-            height={parseInt(xfo.attributes.Height, 10)}
-            left={parseInt(xfo.attributes.X, 10)}
-            top={parseInt(xfo.attributes.Y, 10)}
+            fieldDimensions={dimensionFactory.fromXmlNode(xfo)}
             title={xfo.attributes.Title}
             backgroundColor={backgroundColor}
             foreGroundColor={foreGroundColor}
@@ -121,10 +121,7 @@ export class FormBuilder extends React.Component<{
           <FormLabel
             key={xfo.$iid}
             title={xfo.attributes.Title}
-            left={+xfo.attributes.X}
-            top={+xfo.attributes.Y}
-            width={+xfo.attributes.Width}
-            height={+xfo.attributes.Height}
+            fieldDimensions={dimensionFactory.fromXmlNode(xfo)}
             foregroundColor={foreGroundColor}
           />
         );
@@ -139,10 +136,7 @@ export class FormBuilder extends React.Component<{
           <RadioButton
             key={xfo.$iid}
             caption={xfo.attributes.Name}
-            left={+xfo.attributes.X}
-            top={+xfo.attributes.Y}
-            width={+xfo.attributes.Width}
-            height={+xfo.attributes.Height}
+            fieldDimensions={dimensionFactory.fromXmlNode(xfo)}
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
@@ -195,6 +189,7 @@ export class FormBuilder extends React.Component<{
                   return (
                     <Provider property={property}>
                       <CheckBox
+                        fieldDimensions={dimensionFactory.fromProperty(property)}
                         isHidden={isHidden}
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
@@ -219,10 +214,7 @@ export class FormBuilder extends React.Component<{
                       captionPosition={property.captionPosition}
                       captionColor={foreGroundColor}
                       dock={property.dock}
-                      height={property.height}
-                      width={property.width}
-                      left={property.x}
-                      top={property.y}
+                      fieldDimensions={dimensionFactory.fromProperty(property)}
                       toolTip={property.toolTip}
                       value={value}
                       isRichText={property.isRichText}

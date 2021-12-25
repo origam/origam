@@ -26,6 +26,7 @@ import React from "react";
 import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
 import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
 import { observable } from "mobx";
+import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -49,10 +50,7 @@ export class FormField extends React.Component<{
   captionPosition?: ICaptionPosition;
   captionLength: number;
   dock?: IDockType;
-  left: number;
-  top: number;
-  width: number;
-  height: number;
+  fieldDimensions: FieldDimensions;
   isCheckbox?: boolean;
   isHidden?: boolean;
   hideCaption?: boolean;
@@ -68,7 +66,14 @@ export class FormField extends React.Component<{
   @observable
   toolTip: string | undefined | null;
 
+  get dimensions(){
+    return this.props.fieldDimensions;
+  }
+
   get captionStyle() {
+    if(this.dimensions.isEmpty){
+      return this.dimensions.asStyle();
+    }
     if (this.props.isHidden) {
       return {
         display: "none",
@@ -78,28 +83,31 @@ export class FormField extends React.Component<{
       default:
       case ICaptionPosition.Left:
         return {
-          top: this.props.top,
-          left: this.props.left - this.props.captionLength,
+          top: this.dimensions.top,
+          left: this.dimensions.left! - this.props.captionLength,
           color: this.props.captionColor,
         };
       case ICaptionPosition.Right:
         // 20 is expected checkbox width, might be needed to be set dynamically
         // if there is some difference in chekbox sizes between various platforms.
         return {
-          top: this.props.top,
-          left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width + 4,
+          top: this.dimensions.top,
+          left: this.props.isCheckbox ? this.dimensions.left! + 20 : this.dimensions.left! + this.dimensions.width! + 4,
           color: this.props.captionColor,
         };
       case ICaptionPosition.Top:
         return {
-          top: this.props.top - 20, // TODO: Move this constant somewhere else...
-          left: this.props.left,
+          top: this.dimensions.top! - 20, // TODO: Move this constant somewhere else...
+          left: this.dimensions.left,
           color: this.props.captionColor,
         };
     }
   }
 
   get formFieldStyle() {
+    if(this.dimensions.isEmpty){
+      return this.dimensions.asStyle();
+    }
     if (this.props.isHidden) {
       return {
         display: "none",
@@ -114,10 +122,10 @@ export class FormField extends React.Component<{
       };
     }
     return {
-      left: this.props.left,
-      top: this.props.top,
-      width: this.props.width,
-      height: this.props.height,
+      left: this.dimensions.left,
+      top: this.dimensions.top,
+      width: this.dimensions.width,
+      height: this.dimensions.height,
     };
   }
 
@@ -159,3 +167,4 @@ export class FormField extends React.Component<{
     );
   }
 }
+

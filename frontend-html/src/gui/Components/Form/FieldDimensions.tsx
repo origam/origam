@@ -1,0 +1,80 @@
+import React from "react";
+import { IProperty } from "model/entities/types/IProperty";
+import { getApplication } from "model/selectors/getApplication";
+
+export class FieldDimensions {
+
+  top: number | undefined;
+  left: number | undefined;
+  width: number | undefined;
+  height: number | undefined;
+
+  constructor(args?:{
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  }){
+    if(args) {
+      this.top = args.top;
+      this.left = args.left;
+      this.width = args.width;
+      this.height = args.height;
+    }
+  }
+  get isEmpty(){
+    return !this.top || !this.left || !this.width || !this.height
+  }
+
+  asStyle(){
+    if(this.isEmpty){
+      return {
+        top: "unset",
+        left: "unset",
+        height: "unset",
+        width: "unset",
+        position: "relative"
+      } as React.CSSProperties
+    }
+    else{
+      return {
+        top: this.top,
+        left: this.left,
+        height: this.height,
+        width: this.width,
+      } as React.CSSProperties
+    }
+  }
+}
+
+export class DimensionsFactory{
+  breakpoint = "";
+
+  constructor(private ctx: any){
+    this.breakpoint = getApplication(ctx).breakpoint;
+  }
+
+  fromXmlNode(xmlNode: any) {
+    if (this.breakpoint.includes("small")) {
+      return new FieldDimensions();
+    }
+    return new FieldDimensions({
+      left: parseInt(xmlNode.attributes.X, 10),
+      top: parseInt(xmlNode.attributes.Y, 10),
+      width: parseInt(xmlNode.attributes.Width, 10),
+      height: parseInt(xmlNode.attributes.Height, 10)
+    });
+  }
+
+  fromProperty(property: IProperty){
+    if (this.breakpoint.includes("small")) {
+      return new FieldDimensions();
+    }
+    return new FieldDimensions({
+      height: property.height,
+      width: property.width,
+      left: property.x,
+      top: property.y
+    });
+  }
+}

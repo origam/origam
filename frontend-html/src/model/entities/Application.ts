@@ -68,5 +68,5 @@ export class Application implements IApplication {
   parent?: any;
 
   @observable
-  breakpoint: string | undefined;
+  breakpoint = "";
 }

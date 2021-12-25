@@ -40,7 +40,7 @@ export interface IApplication extends IApplicationData {
 
   parent?: any;
 
-  breakpoint: string | undefined;
+  breakpoint: string;
 
   resetWorkbench(): void;
 
