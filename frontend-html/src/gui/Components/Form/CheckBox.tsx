@@ -86,7 +86,7 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
-    if(!props.fieldDimensions){
+    if(props.fieldDimensions.isEmpty){
       return {
         top: "unset",
         left: "unset",
@@ -116,7 +116,7 @@ export const CheckBox: React.FC<{
   }
 
   return (
-    <div>
+    <div className={props.fieldDimensions.isEmpty ?  S.reversedRows : ""}>
       <div className={S.editor} style={formFieldStyle()}>
         <BoolEditor
           id={props.property!.modelInstanceId}
