@@ -23,7 +23,10 @@ import { observer } from "mobx-react";
 import { action } from "mobx";
 
 @observer
-export class FormRoot extends React.Component<{ style?: any }> {
+export class FormRoot extends React.Component<{
+  mobileLayoutActive: boolean;
+  style?: any
+}> {
   componentDidMount() {
     window.addEventListener("click", this.handleWindowClick);
   }
@@ -42,7 +45,11 @@ export class FormRoot extends React.Component<{ style?: any }> {
 
   render() {
     return (
-      <div ref={this.refFormRoot} className={S.formRoot} onClick={undefined} style={this.props.style}>
+      <div
+        ref={this.refFormRoot}
+        className={this.props.mobileLayoutActive ? S.formRootMobile : S.formRoot}
+        style={this.props.style}
+      >
         {this.props.children}
       </div>
     );

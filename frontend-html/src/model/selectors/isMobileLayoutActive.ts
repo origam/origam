@@ -17,15 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.formRoot {
-  position: relative;
-  flex-grow: 1;
-  overflow: auto;
-  background-color: transparent;
-}
+import { getApplication } from "model/selectors/getApplication";
 
-.formRootMobile {
-  @extend .formRoot;
-  padding-left: 1em;
-  padding-right: 1em;
+export function isMobileLayoutActive(ctx: any) {
+  const breakpoint = getApplication(ctx).breakpoint;
+  return breakpoint.includes("small");
 }

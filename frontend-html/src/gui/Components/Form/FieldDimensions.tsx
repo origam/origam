@@ -1,6 +1,5 @@
 import React from "react";
 import { IProperty } from "model/entities/types/IProperty";
-import { getApplication } from "model/selectors/getApplication";
 
 export class FieldDimensions {
 
@@ -48,14 +47,12 @@ export class FieldDimensions {
 }
 
 export class DimensionsFactory{
-  breakpoint = "";
 
-  constructor(private ctx: any){
-    this.breakpoint = getApplication(ctx).breakpoint;
+  constructor(private mobileLayoutActive: any){
   }
 
   fromXmlNode(xmlNode: any) {
-    if (this.breakpoint.includes("small")) {
+    if (this.mobileLayoutActive) {
       return new FieldDimensions();
     }
     return new FieldDimensions({
@@ -67,7 +64,7 @@ export class DimensionsFactory{
   }
 
   fromProperty(property: IProperty){
-    if (this.breakpoint.includes("small")) {
+    if (this.mobileLayoutActive) {
       return new FieldDimensions();
     }
     return new FieldDimensions({

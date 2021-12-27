@@ -27,12 +27,15 @@ export const FormSection: React.FC<{
   title?: string;
   backgroundColor: string | undefined;
   foreGroundColor: string | undefined;
-  fieldDimensions: FieldDimensions;
+  dimensions: FieldDimensions;
 }> = (props) => {
 
   function getStyle(){
-    const style = props.fieldDimensions.asStyle();
+    const style = props.dimensions.asStyle();
     style["backgroundColor"] = props.backgroundColor;
+    if(props.dimensions.isEmpty){
+      style["padding"] = "1em";
+    }
     return style;
   }
   const hasTitle = !!props.title;

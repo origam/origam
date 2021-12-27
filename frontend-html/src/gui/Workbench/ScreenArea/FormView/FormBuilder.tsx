@@ -42,8 +42,9 @@ import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowR
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { IProperty } from "model/entities/types/IProperty";
 import { DimensionsFactory } from "gui/Components/Form/FieldDimensions";
+import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 
 @inject(({dataView}) => {
@@ -81,7 +82,8 @@ export class FormBuilder extends React.Component<{
   }
 
   buildForm() {
-    const dimensionFactory = new DimensionsFactory(this.props.dataView)
+    const mobileLayoutActive = isMobileLayoutActive(this.props.dataView);
+    const dimensionFactory = new DimensionsFactory(mobileLayoutActive)
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -97,34 +99,50 @@ export class FormBuilder extends React.Component<{
     }
     const focusManager = self.props.dataView!.formFocusManager;
 
-    function recursive(xfo: any) {
+    function recursive(xfo: any, indexInParent: number): FormItem[] {
       if (xfo.name === "FormRoot") {
-        return (
-          <FormRoot key={xfo.$iid} style={{backgroundColor}}>
-            {xfo.elements.map((child: any) => recursive(child))}
+        return [new FormItem("-1",
+          <FormRoot
+            key={xfo.$iid}
+            style={{backgroundColor}}
+            mobileLayoutActive={mobileLayoutActive}
+          >
+            {
+              xfo.elements
+                .flatMap((child: any, index: number) => recursive(child, index))
+                .flat()
+                .sort(compareTabIndexOwners)
+                .map((item: FormItem) => item.element)
+            }
           </FormRoot>
-        );
+        )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
-        return (
+        return [new FormItem((-100-indexInParent).toString(),
           <FormSection
             key={xfo.$iid}
-            fieldDimensions={dimensionFactory.fromXmlNode(xfo)}
+            dimensions={dimensionFactory.fromXmlNode(xfo)}
             title={xfo.attributes.Title}
             backgroundColor={backgroundColor}
             foreGroundColor={foreGroundColor}
           >
-            {xfo.elements.map((child: any) => recursive(child))}
+            {
+              xfo.elements
+                .flatMap((child: any, index: number) => recursive(child, index))
+                .flat()
+                .sort(compareTabIndexOwners)
+                .map((item: FormItem) => item.element)
+            }
           </FormSection>
-        );
+        )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "Label") {
-        return (
+        return [new FormItem("-1",
           <FormLabel
             key={xfo.$iid}
             title={xfo.attributes.Title}
             fieldDimensions={dimensionFactory.fromXmlNode(xfo)}
             foregroundColor={foreGroundColor}
           />
-        );
+        )];
       } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
         const sourceField = getDataSourceFieldByName(self.props.dataView, xfo.attributes.Id);
 
@@ -132,7 +150,7 @@ export class FormBuilder extends React.Component<{
           ? String(dataTable.getCellValueByDataSourceField(row, sourceField!)) === xfo.attributes.Value
           : false;
 
-        return (
+        return [new FormItem(xfo.attributes.TabIndex,
           <RadioButton
             key={xfo.$iid}
             caption={xfo.attributes.Name}
@@ -158,82 +176,89 @@ export class FormBuilder extends React.Component<{
               })();
             }}
           />
-        );
+        )];
       } else if (xfo.name === "PropertyNames") {
         const propertyNames = findStrings(xfo);
-        return propertyNames.map((propertyId) => {
-          return (
-            <Observer key={propertyId}>
-              {() => {
-                let property = getDataViewPropertyById(self.props.dataView, propertyId);
-                if (row && property?.column === "Polymorph") {
-                  property = property.getPolymophicProperty(row);
-                }
-                let value;
-                let textualValue = value;
-                if (row && property) {
-                  value = dataTable.getCellValue(row, property);
-                  if (property.isLookup) {
-                    textualValue = dataTable.getCellText(row, property);
+        return propertyNames
+          .map(propertyId => {
+            let property = getDataViewPropertyById(self.props.dataView, propertyId);
+            if (row && property?.column === "Polymorph") {
+              property = property.getPolymophicProperty(row);
+            }
+            return property;
+          })
+          .map((property) => {
+            return (new FormItem(property!.tabIndex,
+              <Observer key={property!.id}>
+                {() => {
+                  let value;
+                  let textualValue = value;
+                  if (row && property) {
+                    value = dataTable.getCellValue(row, property);
+                    if (property.isLookup) {
+                      textualValue = dataTable.getCellText(row, property);
+                    }
                   }
-                }
-                if (!property) {
-                  return <></>;
-                }
+                  if (!property) {
+                    return <></>;
+                  }
 
-                const isHidden =
-                  (!getRowStateAllowRead(property, rowId || "", property.id) ||
-                    getRowStateMayCauseFlicker(property)) && !!row;
+                  const isHidden =
+                    (!getRowStateAllowRead(property, rowId || "", property.id) ||
+                      getRowStateMayCauseFlicker(property)) && !!row;
 
-                if (property.column === "CheckBox") {
+                  if (property.column === "CheckBox") {
+                    return (
+                      <Provider property={property}>
+                        <CheckBox
+                          fieldDimensions={dimensionFactory.fromProperty(property)}
+                          isHidden={isHidden}
+                          checked={value}
+                          readOnly={!row || isReadOnly(property, rowId)}
+                          onKeyDown={(event) => self.onKeyDown(event)}
+                          subscribeToFocusManager={(radioInput) =>
+                            focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
+                          }
+                          onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
+                          labelColor={foreGroundColor}
+                        />
+                      </Provider>
+                    );
+                  }
+
                   return (
-                    <Provider property={property}>
-                      <CheckBox
-                        fieldDimensions={dimensionFactory.fromProperty(property)}
+                    <Provider property={property} key={property.id}>
+                      <FormField
                         isHidden={isHidden}
-                        checked={value}
-                        readOnly={!row || isReadOnly(property, rowId)}
-                        onKeyDown={(event) => self.onKeyDown(event)}
-                        subscribeToFocusManager={(radioInput) =>
-                          focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
-                        }
-                        onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
-                        labelColor={foreGroundColor}
+                        caption={property.name}
+                        hideCaption={property.column === "Image"}
+                        captionLength={property.captionLength}
+                        captionPosition={property.captionPosition}
+                        captionColor={foreGroundColor}
+                        dock={property.dock}
+                        fieldDimensions={dimensionFactory.fromProperty(property)}
+                        toolTip={property.toolTip}
+                        value={value}
+                        isRichText={property.isRichText}
+                        textualValue={textualValue}
+                        xmlNode={property.xmlNode}
+                        backgroundColor={backgroundColor}
                       />
                     </Provider>
                   );
-                }
-
-                return (
-                  <Provider property={property} key={property.id}>
-                    <FormField
-                      isHidden={isHidden}
-                      caption={property.name}
-                      hideCaption={property.column === "Image"}
-                      captionLength={property.captionLength}
-                      captionPosition={property.captionPosition}
-                      captionColor={foreGroundColor}
-                      dock={property.dock}
-                      fieldDimensions={dimensionFactory.fromProperty(property)}
-                      toolTip={property.toolTip}
-                      value={value}
-                      isRichText={property.isRichText}
-                      textualValue={textualValue}
-                      xmlNode={property.xmlNode}
-                      backgroundColor={backgroundColor}
-                    />
-                  </Provider>
-                );
-              }}
-            </Observer>
-          );
-        });
+                }}
+              </Observer>
+            ));
+          });
       } else {
-        return xfo.elements.map((child: any) => recursive(child));
+        return xfo.elements.map((child: any, index: number) => recursive(child, index));
       }
     }
 
-    const form = recursive(this.props.xmlFormRootObject);
+    const form = recursive(this.props.xmlFormRootObject, 0)
+      .sort(compareTabIndexOwners)
+      .map(item => item.element);
+
     if (this.props.dataView?.isFirst && this.context.isVisible) {
       focusManager.autoFocus();
     }
@@ -242,5 +267,12 @@ export class FormBuilder extends React.Component<{
 
   render() {
     return this.buildForm();
+  }
+}
+
+class FormItem implements ITabIndexOwner{
+  constructor(
+    public tabIndex:  string | undefined,
+    public element: JSX.Element) {
   }
 }
