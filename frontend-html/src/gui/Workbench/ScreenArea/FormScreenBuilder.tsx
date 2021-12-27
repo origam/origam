@@ -22,7 +22,7 @@ import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedVi
 import { MobXProviderContext, observer } from "mobx-react";
 import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
 import { IFormScreen } from "model/entities/types/IFormScreen";
-import React from "react";
+import React, { ReactNode } from "react";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
 import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
 import { Box } from "../../Components/ScreenElements/Box";
@@ -38,6 +38,8 @@ import { serverValueToPanelSizeRatio } from "../../../model/actions-ui/Splitter/
 import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
 import { getSessionId } from "../../../model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
+import { DetailNavigator, NavigationNode } from "gui/connections/MobileComponents/DetailNavigator";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -92,13 +94,48 @@ export class FormScreenBuilder extends React.Component<{
         case "HSplit": {
           const serverStoredValue = self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId);
           const panelPositionRatio = serverValueToPanelSizeRatio(serverStoredValue);
-          const panels: IPanelData[] = findUIChildren(xso).map((child, idx) => {
+
+          const panels: IInternalPanelData[] = findUIChildren(xso).map((child, idx) => {
+            const element = recursive(child);
             return{
               id: idx,
+              modelInstanceId: (element as any).props.modelInstanceId,
               positionRatio: idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
-              element: recursive(child)
+              element: element,
             }
           });
+          if(isMobileLayoutActive(self.formScreen)){
+
+            const panelMap = panels.reduce((panelMap: {[key: string]: ReactNode}, panel) => {
+              panelMap[panel.modelInstanceId] = panel.element;
+              return panelMap;
+            }, {})
+
+            const {masterPanel, bindings, modelInstanceId} = panels
+              .map(panel => {
+                return {
+                  masterPanel: panel,
+                  modelInstanceId: panel.modelInstanceId,
+                  bindings: self.formScreen.getBindingsByParentId(panel.modelInstanceId)}
+              })
+              .find((x: any) => x.bindings.length > 0)
+              ?? {};
+
+            // debugger;
+            if(masterPanel){
+              const masterDataView = self.formScreen.getDataViewByModelInstanceId(modelInstanceId!)!;
+              // const mobileState = getMobileState( self.formScreen);
+              // const detailPanels = bindings!
+              //   .map(binding => panels.find(panel => (panel.element as any).props.modelInstanceId === binding.childDataView.modelInstanceId))
+              //   .filter(panel => panel)
+              //   .map(panel => panel!.element);
+              return(
+                <DetailNavigator
+                  rootNode={ new NavigationNode(masterDataView, panelMap)
+                  }
+                />);
+            }
+          }
           return (
             <Splitter
               key={xso.$iid}
@@ -231,4 +268,8 @@ export class FormScreenBuilder extends React.Component<{
   render() {
     return this.buildScreen();
   }
+}
+
+interface IInternalPanelData extends IPanelData{
+  modelInstanceId: string;
 }
