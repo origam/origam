@@ -37,6 +37,7 @@ import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 import { serverValueToPanelSizeRatio } from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
 import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
 import { getSessionId } from "../../../model/selectors/getSessionId";
+import { IPanelData } from "gui/Components/Splitter/IPanelData";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -91,11 +92,13 @@ export class FormScreenBuilder extends React.Component<{
         case "HSplit": {
           const serverStoredValue = self.formScreen.getPanelPosition(xso.attributes.ModelInstanceId);
           const panelPositionRatio = serverValueToPanelSizeRatio(serverStoredValue);
-          const panels = findUIChildren(xso).map((child, idx) => [
-            idx,
-            idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
-            recursive(child),
-          ]);
+          const panels: IPanelData[] = findUIChildren(xso).map((child, idx) => {
+            return{
+              id: idx,
+              positionRatio: idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
+              element: recursive(child)
+            }
+          });
           return (
             <Splitter
               key={xso.$iid}
@@ -108,20 +111,20 @@ export class FormScreenBuilder extends React.Component<{
                 panel1SizeRatio: number,
                 panel2SizeRatio: number
               ) => {
-                if (panelId1 === panels[0][0]) {
+                if (panelId1 === panels[0].id) {
                   onSplitterPositionChangeFinished(self.formScreen)(
                     xso.attributes.ModelInstanceId,
                     panel1SizeRatio
                   );
                 }
-                if (panelId2 === panels[0][0]) {
+                if (panelId2 === panels[0].id) {
                   onSplitterPositionChangeFinished(self.formScreen)(
                     xso.attributes.ModelInstanceId,
                     panel2SizeRatio
                   );
                 }
               }}
-              panels={panels as any[]}
+              panels={panels}
             />
           );
         }
