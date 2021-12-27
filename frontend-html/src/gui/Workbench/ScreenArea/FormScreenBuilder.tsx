@@ -111,18 +111,12 @@ export class FormScreenBuilder extends React.Component<{
               return panelMap;
             }, {})
 
-            const {masterPanel, bindings, modelInstanceId} = panels
-              .map(panel => {
-                return {
-                  masterPanel: panel,
-                  modelInstanceId: panel.modelInstanceId,
-                  bindings: self.formScreen.getBindingsByParentId(panel.modelInstanceId)}
-              })
-              .find((x: any) => x.bindings.length > 0)
-              ?? {};
+            const masterDataView = panels
+              .map(panel => self.formScreen.getBindingsByParentId(panel.modelInstanceId))
+              .find(bindings => bindings.length > 0)
+              ?.[0].parentDataView;
 
-            if(masterPanel){
-              const masterDataView = self.formScreen.getDataViewByModelInstanceId(modelInstanceId!)!;
+            if(masterDataView){
               return(
                 <DetailNavigator
                   rootNode={ new NavigationNode(masterDataView, panelMap)
