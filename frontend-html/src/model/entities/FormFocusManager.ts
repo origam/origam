@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { isGlobalAutoFocusDisabled } from "model/actions-ui/ScreenToolbar/openSearchWindow";
+import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
 
 export class FormFocusManager {
   autoFocusDisabled = false;
@@ -49,7 +50,7 @@ export class FormFocusManager {
       this.focusAbleContainers.remove(existingContainer);
     }
     this.focusAbleContainers.push(focusAbleContainer);
-    this.focusAbleContainers = this.focusAbleContainers.sort(FocusAbleObjectContainer.compare);
+    this.focusAbleContainers = this.focusAbleContainers.sort(compareTabIndexOwners);
   }
 
   focus(name: string) {
@@ -128,64 +129,18 @@ export class FormFocusManager {
   }
 }
 
-export interface IFocusAbleObjectContainer {
+export interface IFocusAbleObjectContainer extends ITabIndexOwner{
   name: string | undefined;
-  tabIndexFractions: number[];
   focusable: IFocusable;
-
-  has(fractionIndex: number): boolean;
+  tabIndex: string | undefined;
 }
 
 export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
-  get tabIndexFractions(): number[] {
-    if (this.tabIndexNullable) {
-      return this.tabIndexNullable
-        .split(".")
-        .filter((x) => x !== "")
-        .map((x) => parseInt(x));
-    }
-    return [1e6];
-  }
-
   constructor(
     public focusable: IFocusable,
     public name: string | undefined,
-    private tabIndexNullable: string | undefined
+    public tabIndex: string | undefined
   ) {
-  }
-
-  // TabIndex is a string separated by decimal points for example: 13, 14.0, 14.2, 14.15
-  // The "fractions" have to be compared separately because 14.15 is greater than 14.2
-  // Comparison as numbers would give different results
-  static compare(x: IFocusAbleObjectContainer, y: IFocusAbleObjectContainer) {
-    return FocusAbleObjectContainer.compareFraction(x, y, 0);
-  }
-
-  static compareFraction(
-    x: IFocusAbleObjectContainer,
-    y: IFocusAbleObjectContainer,
-    fractionIndex: number
-  ): number {
-    if (x.has(fractionIndex) && !y.has(fractionIndex)) {
-      return 1;
-    }
-    if (!x.has(fractionIndex) && y.has(fractionIndex)) {
-      return -1;
-    }
-    if (!x.has(fractionIndex) && !y.has(fractionIndex)) {
-      return 0;
-    }
-
-    const fraction = x.tabIndexFractions[fractionIndex] - y.tabIndexFractions[fractionIndex];
-    if (fraction !== 0) {
-      return fraction;
-    }
-
-    return FocusAbleObjectContainer.compareFraction(x, y, fractionIndex + 1);
-  }
-
-  has(fractionIndex: number) {
-    return this.tabIndexFractions.length - 1 >= fractionIndex;
   }
 }
 
