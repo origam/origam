@@ -34,7 +34,7 @@ import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentSc
 import { Fullscreen } from "gui/Components/Fullscreen/Fullscreen";
 import { onRootElementClick } from "model/actions/Global/onRootElementClick";
 import { action } from "mobx";
-import { Breakpoint, useCurrentBreakpointName, useCurrentWidth } from "react-socks";
+import { Breakpoint, useCurrentBreakpointName } from "react-socks";
 import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
 import { MobileMain } from "gui/connections/MobileComponents/MobileMain";
 
