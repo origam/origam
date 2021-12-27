@@ -92,15 +92,10 @@ export class CWorkbenchPage extends React.Component {
   }
 }
 
-export const BreakpointProvider: React.FC<{}> = (props) => {
+const BreakpointProvider: React.FC<{}> = (props) => {
   const breakpoint = useCurrentBreakpointName();
-  const width = useCurrentWidth()
   const application = useContext(MobXProviderContext).application
-
   application.breakpoint = breakpoint;
-  console.log();
-  console.log("breakpoint: "+breakpoint);
-  console.log("width: "+width);
 
   return (
     <>
