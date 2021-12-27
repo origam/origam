@@ -473,14 +473,15 @@ namespace Origam.DA
 							// And we overwrite them with the current values, thus making the row exactly
 							// same state as the source row (original values, current values and state = modified)
 							drTarget.BeginEdit();
-							CopyRecordValues(drSource, DataRowVersion.Current, drTarget);
+							CopyRecordValues(drSource, DataRowVersion.Current, 
+								drTarget, false);
 						}
 						else
 						{
 							// For any other states, we import the values
 							drTarget.BeginEdit();
-							CopyRecordValues(drSource, DataRowVersion.Current, drTarget);
-
+							CopyRecordValues(drSource, DataRowVersion.Current, 
+								drTarget, false);
 							// And we add the row to the table
 							try
 							{
@@ -686,51 +687,59 @@ namespace Origam.DA
         private static void CopyOriginalRecordVersion(DataTable inout_dtTarget, DataRow drSource, DataRow drTarget)
         {
             drTarget.BeginEdit();
-            CopyRecordValues(drSource, DataRowVersion.Original, drTarget);
+            CopyRecordValues(drSource, DataRowVersion.Original, drTarget, 
+	            false);
             drTarget.EndEdit();
             inout_dtTarget.Rows.Add(drTarget);
             drTarget.AcceptChanges();
         }
 
-        public static bool CopyRecordValues(DataRow sourceRow, DataRowVersion sourceVersion, DataRow destinationRow)
+        public static bool CopyRecordValues(
+	        DataRow sourceRow, 
+	        DataRowVersion sourceVersion, 
+	        DataRow destinationRow,
+	        bool enforceNullValues)
 		{
-			bool changed = false;
-			Hashtable changes = new Hashtable();
-
-			for (int iCol = 0 ; destinationRow.Table.Columns.Count > iCol ; ++iCol)
+			var changed = false;
+			var changes = new Hashtable();
+			for(var i = 0; destinationRow.Table.Columns.Count > i; ++i)
 			{
-				if(destinationRow.Table.Columns[iCol].Expression == "")
+				if(destinationRow.Table.Columns[i].Expression != "")
 				{
-					DataColumn col = destinationRow.Table.Columns[iCol];
-					string colName = col.ColumnName;
-						
-					if(sourceRow.Table.Columns.Contains(colName))
-					{
-						// Skip all columns that have AllowNulls=false and are null in the source.
-						// This may be the case when the destination has a default value for such a column.
-						// Therefore we skip assigning null, because we would fail anyway.
-						// Since this is a new row, the default value will be used.
-                        
-						if(! ((destinationRow.RowState == DataRowState.Added
-                               || destinationRow.RowState == DataRowState.Detached)
-                            && sourceRow[colName, sourceVersion] == DBNull.Value
-                            && sourceRow.Table.Columns[colName].AllowDBNull == false))
-						{
-							if(! destinationRow[colName].Equals(sourceRow[colName, sourceVersion]))
-							{
-								changes[colName] = ConvertValue(sourceRow[colName, sourceVersion], col.DataType);
-								changed = true;
-							}
-						}
-					}
+					continue;
 				}
+				var column = destinationRow.Table.Columns[i];
+				var columnName = column.ColumnName;
+				if(!sourceRow.Table.Columns.Contains(columnName))
+				{
+					continue;
+				}
+				// Unless we're enforcing null values
+				// Skip all columns that have AllowNulls=false and are null in the source.
+				// This may be the case when the destination has a default value for such a column.
+				// Therefore we skip assigning null, because we would fail anyway.
+				// Since this is a new row, the default value will be used.
+				if(((destinationRow.RowState == DataRowState.Added)
+				|| (destinationRow.RowState == DataRowState.Detached))
+			    && (sourceRow[columnName, sourceVersion] == DBNull.Value)
+			    && (sourceRow.Table.Columns[columnName].AllowDBNull == false)
+			    && (enforceNullValues == false))
+				{
+					continue;
+				}
+				if(destinationRow[columnName]
+				   .Equals(sourceRow[columnName, sourceVersion]))
+				{
+					continue;
+				}
+				changes[columnName] = ConvertValue(
+					sourceRow[columnName, sourceVersion], column.DataType);
+				changed = true;
 			}
-
 			foreach(DictionaryEntry entry in changes)
 			{
 				destinationRow[(string)entry.Key] = entry.Value;
 			}
-
 			return changed;
 		}
 
@@ -1102,17 +1111,20 @@ namespace Origam.DA
 				DataRow importedRow = table.NewRow();
 				if(row.RowState == DataRowState.Modified)
 				{
-					CopyRecordValues(row, DataRowVersion.Original, importedRow);
+					CopyRecordValues(row, DataRowVersion.Original, importedRow,
+						false);
 					table.Rows.Add(importedRow);
 					importedRow.AcceptChanges();
 					importedRow.BeginEdit();
-					CopyRecordValues(row, DataRowVersion.Default, importedRow);
+					CopyRecordValues(row, DataRowVersion.Default, importedRow,
+						false);
 					importedRow.EndEdit();
 				}
 				else
 				{
 					importedRow.BeginEdit();
-					CopyRecordValues(row, DataRowVersion.Default, importedRow);
+					CopyRecordValues(row, DataRowVersion.Default, importedRow,
+						false);
 					table.Rows.Add(importedRow);
 					importedRow.EndEdit();
 				}
