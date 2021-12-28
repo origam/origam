@@ -5,7 +5,9 @@ import { ReactNode } from "react";
 export class NavigationNode {
 
   get name() {
-    return this.dataView.name;
+    return this.dataView.name
+      ? this.dataView.name
+      : this.dataView.id;
   }
 
   get children() {

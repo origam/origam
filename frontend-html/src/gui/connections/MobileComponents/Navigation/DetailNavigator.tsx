@@ -56,7 +56,7 @@ export class DetailNavigator extends React.Component<{
             this.node.parentChain
               .flatMap((parent, i) => i === 0
                 ? [this.makeBreadcrumb(parent)]
-                : [<div className={S.pathSeparator}>/</div>,
+                : [<div key={parent.name+"Sep"} className={S.pathSeparator}>/</div>,
                   this.makeBreadcrumb(parent)
                 ]
               )
@@ -108,6 +108,7 @@ export const NavigationButtonList: React.FC<{
       <div className={S.navigationButtonContainer}>
         {props.nodes?.map(node =>
           <NavigationButton
+            key={node.name}
             label={node.name}
             onClick={() => props.onClick(node)}
           />
@@ -134,6 +135,7 @@ export const NavigationButtonList: React.FC<{
           {open &&
             props.nodes.map(node =>
               <NavigationButton
+                key={node.name}
                 label={node.name}
                 onClick={() => props.onClick(node)}
               />)
