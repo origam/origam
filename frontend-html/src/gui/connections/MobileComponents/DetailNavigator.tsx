@@ -56,7 +56,7 @@ export class DetailNavigator extends React.Component<{
             this.node.parentChain
             .flatMap((parent, i) => i === 0
               ? [this.makeBreadcrumb(parent)]
-              : [<Icon key={parent.name+"I"} src={"./icons/noun-chevron-933251.svg"} className={S.navigationIcon}/>,
+              : [<div className={S.pathSeparator}>/</div> ,
                 this.makeBreadcrumb(parent)
               ]
             )
