@@ -1,8 +1,21 @@
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { IDataView } from "model/entities/types/IDataView";
 import { ReactNode } from "react";
+import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 
-export class NavigationNode {
+export interface INavigationNode {
+  readonly name: string;
+  readonly children: INavigationNode[];
+  readonly parent: INavigationNode | undefined;
+  readonly parentChain: INavigationNode[];
+  readonly showDetailLinks: boolean;
+  readonly element: ReactNode;
+  readonly id: string;
+
+  equals(other: INavigationNode): boolean;
+}
+
+export class NavigationNode implements INavigationNode {
 
   get name() {
     return this.dataView.name
@@ -16,7 +29,7 @@ export class NavigationNode {
       .map(binding => new NavigationNode(binding.childDataView, this.panelMap));
   }
 
-  get parent(): NavigationNode | undefined {
+  get parent(): INavigationNode | undefined {
     let bindings = getFormScreen(this.dataView)
       .getBindingsByChildId(this.dataView.modelInstanceId);
     if (bindings.length === 0) {
@@ -30,7 +43,7 @@ export class NavigationNode {
 
   get parentChain() {
     let parent = this.parent;
-    const chain: NavigationNode[] = [this];
+    const chain: INavigationNode[] = [this];
     while (parent) {
       chain.push(parent);
       parent = parent.parent;
@@ -42,8 +55,12 @@ export class NavigationNode {
     return this.dataView.isFormViewActive();
   }
 
-  get element() {
+  get element(): ReactNode {
     return this.panelMap[this.dataView.modelInstanceId];
+  }
+
+  get id() {
+    return this.dataView.id
   }
 
   constructor(
@@ -51,7 +68,7 @@ export class NavigationNode {
     private panelMap: { [key: string]: ReactNode }) {
   }
 
-  equals(other: NavigationNode) {
-    return this.dataView.id === other.dataView.id;
+  equals(other: INavigationNode) {
+    return this.id === other.id;
   }
 }

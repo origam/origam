@@ -19,11 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useState } from "react";
 import S from "gui/connections/MobileComponents/Navigation/DetailNavigator.module.scss";
+import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
 import { observer } from "mobx-react";
 import { Icon } from "@origam/components";
 import { observable } from "mobx";
-import { NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { INavigationNode, NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
+import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 
 
 @observer
@@ -32,9 +34,9 @@ export class DetailNavigator extends React.Component<{
 }> {
 
   @observable
-  node: NavigationNode = this.props.rootNode;
+  node: INavigationNode = this.props.rootNode;
 
-  makeBreadcrumb(node: NavigationNode) {
+  makeBreadcrumb(node: INavigationNode) {
     return <a
       className={this.node.equals(node) ? "" : S.breadcrumb}
       key={node.name}
@@ -76,29 +78,9 @@ export class DetailNavigator extends React.Component<{
   }
 }
 
-export const NavigationButton: React.FC<{
-  label: string;
-  onClick: () => void;
-}> = (props) => {
-  return (
-    <div
-      className={S.navigationButton}
-      onClick={props.onClick}
-    >
-      <div>
-        {props.label}
-      </div>
-      <Icon
-        src={"./icons/noun-chevron-933251.svg"}
-        className={S.navigationIcon}
-      />
-    </div>
-  );
-};
-
 export const NavigationButtonList: React.FC<{
-  nodes: NavigationNode[];
-  onClick: (node: NavigationNode) => void;
+  nodes: INavigationNode[];
+  onClick: (node: INavigationNode) => void;
 }> = observer((props) => {
 
   const [open, setOpen] = useState(false);
@@ -121,13 +103,13 @@ export const NavigationButtonList: React.FC<{
       className={cx(open ? S.navigatorButtonListRoot : "", S.navigationButtonContainer)}
       onClick={() => setOpen(!open)}
     >
-      <div className={S.navigationButton}>
+      <div className={"navigationButton"}>
         <div>
           {"Details"}
         </div>
         <Icon
           src={open ? "./icons/noun-chevron-933246.svg" : "./icons/noun-chevron-933254.svg"}
-          className={S.navigationIcon}
+          className={SN.navigationIcon}
         />
       </div>
       <div className={S.navigationButtonList}>
