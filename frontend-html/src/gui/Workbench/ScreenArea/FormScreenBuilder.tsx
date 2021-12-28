@@ -38,8 +38,9 @@ import { serverValueToPanelSizeRatio } from "../../../model/actions-ui/Splitter/
 import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
 import { getSessionId } from "../../../model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
-import { DetailNavigator, NavigationNode } from "gui/connections/MobileComponents/DetailNavigator";
+import { DetailNavigator} from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
