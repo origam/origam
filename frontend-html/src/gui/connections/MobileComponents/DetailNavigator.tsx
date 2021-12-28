@@ -52,7 +52,8 @@ export class DetailNavigator extends React.Component<{
     return (
       <div className={S.root}>
         <div className={S.navigationBar}>
-          {this.node.parentChain
+          {this.node.parentChain.length > 1 &&
+            this.node.parentChain
             .flatMap((parent, i) => i === 0
               ? [this.makeBreadcrumb(parent)]
               : [<Icon key={parent.name+"I"} src={"./icons/noun-chevron-933251.svg"} className={S.navigationIcon}/>,
@@ -63,7 +64,7 @@ export class DetailNavigator extends React.Component<{
         </div>
         {this.node.element}
         <div>
-          {
+          { this.node.showDetailLinks &&
             this.node.children?.map(node =>
               <NavigationButton
                 label={node.name}
@@ -129,6 +130,10 @@ export class NavigationNode {
       parent = parent.parent;
     }
     return chain.reverse();
+  }
+
+  get showDetailLinks(){
+    return this.dataView.isFormViewActive();
   }
 
   get element() {
