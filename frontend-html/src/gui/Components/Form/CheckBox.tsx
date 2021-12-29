@@ -38,7 +38,6 @@ export const CheckBox: React.FC<{
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onClick: () => void;
   labelColor?: string;
-  className?: string;
   fieldDimensions: FieldDimensions;
 }> = inject(({property, formPanelView}) => {
   const row = getSelectedRow(formPanelView)!;
@@ -101,7 +100,7 @@ export const CheckBox: React.FC<{
   }
 
   return (
-    <div className={props.fieldDimensions.isUnset ?  S.reversedRows : ""}>
+    <div>
       <div className={S.editor} style={formFieldStyle()}>
         <BoolEditor
           id={props.property!.modelInstanceId}

@@ -44,6 +44,7 @@ import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
 import { findPropertiesInPropertyNode } from "gui/Workbench/ScreenArea/FormView/FormBuilder";
 import { MobileFormField } from "gui/connections/MobileComponents/Form/MobileFormField";
 import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileFormSection";
+import { MobileCheckBox } from "gui/connections/MobileComponents/Form/CheckBox";
 
 
 @inject(({dataView}) => {
@@ -198,9 +199,7 @@ export class MobileFormBuilder extends React.Component<{
                   if (property.column === "CheckBox") {
                     return (
                       <Provider property={property}>
-                        <CheckBox
-                          fieldDimensions={new FieldDimensions()}
-                          className={"formItem"}
+                        <MobileCheckBox
                           isHidden={isHidden}
                           checked={value}
                           readOnly={!row || isReadOnly(property, rowId)}
