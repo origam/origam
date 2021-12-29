@@ -38,11 +38,10 @@ import { serverValueToPanelSizeRatio } from "../../../model/actions-ui/Splitter/
 import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
 import { getSessionId } from "../../../model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
-import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
+import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { NavigationNode, TabNavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
-import { getMobileState } from "model/selectors/getMobileState";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -69,7 +68,7 @@ export class FormScreenBuilder extends React.Component<{
     const panelMap: { [key: string]: ReactNode } = {};
 
     function mobileRecursiveBuilder(xso: any, parentIsNavigator?: boolean) {
-      if(xso.attributes.Type === "VSplit" || xso.attributes.Type === "HSplit"){
+      if (xso.attributes.Type === "VSplit" || xso.attributes.Type === "HSplit") {
         const panels = findUIChildren(xso).map((child, idx) => {
           const element = recursive(child, true);
           return {
@@ -87,11 +86,11 @@ export class FormScreenBuilder extends React.Component<{
           if (parentIsNavigator) {
             return panels.find(panel => panel.modelInstanceId === masterDataView.modelInstanceId)!.element;
           }
-          return <DetailNavigator node={new NavigationNode(masterDataView, panelMap)}/>;
+          return <StandaloneDetailNavigator node={new NavigationNode(masterDataView, panelMap)}/>;
         }
       }
 
-      if(xso.attributes.Type === "Tab"){
+      if (xso.attributes.Type === "Tab") {
         const nodes = findBoxes(xso).map(box => {
           let panels = findUIChildren(box).map((child, idx) => {
             const element = recursive(child, true);
@@ -247,7 +246,7 @@ export class FormScreenBuilder extends React.Component<{
     }
 
     function recursive(xso: any, parentIsNavigator?: boolean) {
-      const element: any =isMobileLayoutActive(self.formScreen)
+      const element: any = isMobileLayoutActive(self.formScreen)
         ? mobileRecursiveBuilder(xso, parentIsNavigator)
         : desktopRecursiveBuilder(xso);
       panelMap[xso.attributes.ModelInstanceId] = element;

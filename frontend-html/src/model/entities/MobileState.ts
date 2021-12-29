@@ -26,9 +26,6 @@ export class MobileState {
   hamburgerClick() {
     this.layoutState = this.layoutState.hamburgerClick();
   }
-
-  @observable
-  node: INavigationNode | undefined;
 }
 
 

@@ -22,9 +22,8 @@ import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.mod
 import { INavigationNode, TabNavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
-import { MobXProviderContext, observer } from "mobx-react";
-import { MobileState } from "model/entities/MobileState";
-
+import { observer } from "mobx-react";
+import { observable } from "mobx";
 
 @observer
 export class TabNavigator extends React.Component<{
@@ -32,21 +31,14 @@ export class TabNavigator extends React.Component<{
   nodes: TabNavigationNode[];
 }> {
 
-  static contextType = MobXProviderContext;
-
-  get mobileState(): MobileState {
-    return this.context.application.mobileState;
-  }
-
-  componentDidMount() {
-    this.mobileState.node = new RootNavigationNode({name: this.props.name, children: this.props.nodes});
-  }
+  @observable
+  currentNode: INavigationNode = new RootNavigationNode({name: this.props.name, children: this.props.nodes});
 
   render() {
-    if(!this.mobileState.node){
+    if(!this.currentNode){
       return null;
     }
-    if (isRootNavigationNode(this.mobileState.node)) {
+    if (isRootNavigationNode(this.currentNode)) {
       return (
         <div className={SN.navigationButtonContainer}>
           {this.props.nodes.map(node =>
@@ -54,7 +46,7 @@ export class TabNavigator extends React.Component<{
               key={node.name}
               label={node.name}
               onClick={() => {
-                return this.mobileState.node = node
+                this.currentNode = node
               }
               }
             />)
@@ -62,7 +54,7 @@ export class TabNavigator extends React.Component<{
         </div>
       );
     } else {
-      return <DetailNavigator/>
+      return <DetailNavigator node={this.currentNode} onNodeClick={node => this.currentNode = node}/>
     }
   }
 }

@@ -20,41 +20,38 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useState } from "react";
 import S from "gui/connections/MobileComponents/Navigation/DetailNavigator.module.scss";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
-import { MobXProviderContext, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { Icon } from "@origam/components";
 import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
-
+import { observable } from "mobx";
 
 @observer
-export class DetailNavigator extends React.Component<{
-  node?: INavigationNode;
+export class StandaloneDetailNavigator extends React.Component<{
+  node: INavigationNode;
 }> {
+  @observable
+  currentNode: INavigationNode = this.props.node;
 
-  static contextType = MobXProviderContext;
-
-  get node(): INavigationNode {
-    return this.context.application.mobileState.node;
+  render(){
+    return <DetailNavigator node={this.currentNode} onNodeClick={node => this.currentNode = node}/>
   }
+}
 
-  set node(value: INavigationNode){
-    this.context.application.mobileState.node = value;
-  }
-
-  componentDidMount() {
-    if(this.props.node){
-      this.node = this.props.node;
-    }
-  }
+export class DetailNavigator extends React.Component<{
+  node: INavigationNode;
+  onNodeClick: (node: INavigationNode) => void;
+}> {
 
   makeBreadcrumb(node: INavigationNode) {
     return <a
-      className={this.node.equals(node) ? "" : S.breadcrumb}
+      className={this.props.node.equals(node) ? "" : S.breadcrumb}
       key={node.name}
       onClick={() => {
-        if (!this.node.equals(node)) {
-          this.node = node
+        if (!this.props.node.equals(node)) {
+          // this.node = node
+          this.props.onNodeClick(node);
         }
       }}
     >
@@ -63,14 +60,14 @@ export class DetailNavigator extends React.Component<{
   }
 
   render() {
-    if(!this.node){
+    if(!this.props.node){
       return <div/>;
     }
     return (
       <div className={S.root}>
         <div className={S.navigationBar}>
-          {this.node.parentChain.length > 1 &&
-            this.node.parentChain
+          {this.props.node.parentChain.length > 1 &&
+            this.props.node.parentChain
               .flatMap((parent, i) => i === 0
                 ? [this.makeBreadcrumb(parent)]
                 : [<div key={parent.name+"Sep"} className={S.pathSeparator}>/</div>,
@@ -79,11 +76,11 @@ export class DetailNavigator extends React.Component<{
               )
           }
         </div>
-        {this.node.element}
-        {this.node.showDetailLinks &&
+        {this.props.node.element}
+        {this.props.node.showDetailLinks &&
           <NavigationButtonList
-            onClick={(node) => this.node = node}
-            nodes={this.node.children}
+            onClick={(node) => this.props.onNodeClick(node)}
+            nodes={this.props.node.children}
             // nodes={[...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children]}
             // nodes={[...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children]}
           />
