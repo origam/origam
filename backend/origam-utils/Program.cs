@@ -31,6 +31,7 @@ using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
 using System;
 using System.Collections;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -513,7 +514,37 @@ namespace Origam.Utils
         // Select 1 returns something.
         // SQL must return some result, then return true.
         // if not false.
+
+        private static void TestDatabase(int tries, int delay, string sqlCommand)
+        {
+            OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+            string connString = settings.DataConnectionString;
+            SqlConnection cnn;
+            cnn = new SqlConnection(connString);
+            cnn.Open();
+
+            for (int i = 0; i < tries; i++)
+            {
+                using (SqlConnection connection = new SqlConnection(connString))
+                {
+                    connection.Open();       
+
+                    String sql = sqlCommand;
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Console.WriteLine("{0} {1}", reader.GetString(0),
+                                    reader.GetString(1));
+                            }
+                        }
+                    }                    
+                }
+                Thread.Sleep(delay);
+            }
+        }
     }
-
-
 }
