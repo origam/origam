@@ -71,7 +71,7 @@ export class FormField extends React.Component<{
   }
 
   get captionStyle() {
-    if(this.dimensions.isEmpty){
+    if(this.dimensions.isUnset){
       return this.dimensions.asStyle();
     }
     if (this.props.isHidden) {
@@ -105,7 +105,7 @@ export class FormField extends React.Component<{
   }
 
   get formFieldStyle() {
-    if(this.dimensions.isEmpty){
+    if(this.dimensions.isUnset){
       return this.dimensions.asStyle();
     }
     if (this.props.isHidden) {

@@ -17,12 +17,19 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-:global(.formSection) {
-  position: absolute;
-  background-color: var(--background1);
-  padding: 1.5em;
+import React from "react";
+import S from "gui/Components/Form/FormLabel.module.scss";
+import cx from "classnames";
 
-  &:global(.hasTitle) {
-    padding-top: 0;
-  }
-}
+export const FormLabel: React.FC<{
+  title: string;
+  foregroundColor: string | undefined;
+}> = props => {
+
+  return <div
+    className={cx(S.root, "formItem")}
+    style={{color: props.foregroundColor}}
+  >
+    {props.title}
+  </div>
+};

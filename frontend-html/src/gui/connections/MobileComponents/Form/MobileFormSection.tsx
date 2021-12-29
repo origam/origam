@@ -18,35 +18,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import "gui/Components/Form/FormSection.module.scss";
-import cx from "classnames";
-import { FormSectionHeader } from "gui/Components/Form/FormSectionHeader";
+import "gui/connections/MobileComponents/Form/MobileFormSection.module.scss";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
+import { FormSection } from "gui/Components/Form/FormSection";
 
-export const FormSection: React.FC<{
+export const MobileFormSection: React.FC<{
   title?: string;
   backgroundColor: string | undefined;
   foreGroundColor: string | undefined;
-  dimensions: FieldDimensions;
 }> = (props) => {
 
-  function getStyle(){
-    const style = props.dimensions.asStyle();
-    style["backgroundColor"] = props.backgroundColor;
-    return style;
-  }
-  const hasTitle = !!props.title;
   return (
-    <div
-      className={cx("formSection", {hasTitle})}
-      style={getStyle()}
-    >
-      {hasTitle && (
-        <FormSectionHeader foreGroundColor={props.foreGroundColor} tooltip={props.title}>
-          {props.title}
-        </FormSectionHeader>
-      )}
-      {props.children}
+    <div className={"mobileFormSection"}>
+      <FormSection
+        title={props.title}
+        backgroundColor={props.backgroundColor}
+        foreGroundColor={props.foreGroundColor}
+        dimensions={new FieldDimensions()}
+      >
+        {props.children}
+      </FormSection>
     </div>
   );
 };

@@ -38,6 +38,7 @@ export const CheckBox: React.FC<{
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onClick: () => void;
   labelColor?: string;
+  className?: string;
   fieldDimensions: FieldDimensions;
 }> = inject(({property, formPanelView}) => {
   const row = getSelectedRow(formPanelView)!;
@@ -55,8 +56,6 @@ export const CheckBox: React.FC<{
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const label = props.property!.name;
-  const height = props.fieldDimensions?.height;
-  const width = props.fieldDimensions?.width;
   const left = props.fieldDimensions?.left;
   const top = props.fieldDimensions?.top;
 
@@ -66,7 +65,7 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
-    if(props.fieldDimensions.isEmpty){
+    if(props.fieldDimensions.isUnset){
       const style = props.fieldDimensions.asStyle();
       style["color"] = props.labelColor;
       return style;
@@ -86,21 +85,7 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
-    if(props.fieldDimensions.isEmpty){
-      return {
-        top: "unset",
-        left: "unset",
-        width: "unset",
-        height: "unset",
-        position: "relative",
-      } as React.CSSProperties;
-    }
-    return {
-      left: left,
-      top: top,
-      width: width,
-      height: height,
-    };
+    return props.fieldDimensions.asStyle();
   }
 
   function onChange(event: any, state: boolean) {
@@ -116,7 +101,7 @@ export const CheckBox: React.FC<{
   }
 
   return (
-    <div className={props.fieldDimensions.isEmpty ?  S.reversedRows : ""}>
+    <div className={props.fieldDimensions.isUnset ?  S.reversedRows : ""}>
       <div className={S.editor} style={formFieldStyle()}>
         <BoolEditor
           id={props.property!.modelInstanceId}

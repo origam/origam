@@ -22,6 +22,7 @@ import S from "gui/Components/Form/RadioButton.module.scss";
 import { IFocusable } from "model/entities/FormFocusManager";
 import { v4 as uuidv4 } from 'uuid';
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
+import cx from "classnames";
 
 
 export class RadioButton extends React.Component<{
@@ -35,6 +36,7 @@ export class RadioButton extends React.Component<{
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onClick: () => void;
   labelColor?: string;
+  className?: string;
 }> {
   inputId = uuidv4();
   elmInput: HTMLInputElement | null = null;
@@ -57,7 +59,7 @@ export class RadioButton extends React.Component<{
   render() {
     return (
       <div
-        className={S.root}
+        className={cx(S.root, this.props.className)}
         style={this.props.fieldDimensions.asStyle()}
       >
         <input

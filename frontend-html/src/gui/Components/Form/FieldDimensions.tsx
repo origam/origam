@@ -21,12 +21,12 @@ export class FieldDimensions {
       this.height = args.height;
     }
   }
-  get isEmpty(){
+  get isUnset(){
     return !this.top || !this.left || !this.width || !this.height
   }
 
   asStyle(){
-    if(this.isEmpty){
+    if(this.isUnset){
       return {
         top: "unset",
         left: "unset",

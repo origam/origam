@@ -21,16 +21,10 @@ import { inject, observer, Observer, Provider } from "mobx-react";
 import React from "react";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { findStrings } from "xmlInterpreters/screenXml";
-
-import { FormRoot } from "./FormRoot";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { FormField } from "gui/Components/Form/FormField";
 import { FormSection } from "gui/Components/Form/FormSection";
-import { FormLabel } from "gui/Components/Form/FormLabel";
 import { RadioButton } from "gui/Components/Form/RadioButton";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
@@ -42,16 +36,21 @@ import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowR
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { DimensionsFactory } from "gui/Components/Form/FieldDimensions";
+import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
-import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { FormRoot } from "gui/Workbench/ScreenArea/FormView/FormRoot";
+import { FormLabel } from "gui/connections/MobileComponents/Form/FormLabel";
+import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
+import { findPropertiesInPropertyNode } from "gui/Workbench/ScreenArea/FormView/FormBuilder";
+import { MobileFormField } from "gui/connections/MobileComponents/Form/MobileFormField";
+import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileFormSection";
 
 
 @inject(({dataView}) => {
   return {dataView, xmlFormRootObject: dataView.formViewUI};
 })
 @observer
-export class FormBuilder extends React.Component<{
+export class MobileFormBuilder extends React.Component<{
   xmlFormRootObject?: any;
   dataView?: IDataView;
 }> {
@@ -82,8 +81,6 @@ export class FormBuilder extends React.Component<{
   }
 
   buildForm() {
-    const mobileLayoutActive = isMobileLayoutActive(this.props.dataView);
-    const dimensionFactory = new DimensionsFactory(mobileLayoutActive)
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -105,6 +102,7 @@ export class FormBuilder extends React.Component<{
           <FormRoot
             key={xfo.$iid}
             style={{backgroundColor}}
+            className={"formRootMobile"}
           >
             {
               xfo.elements
@@ -117,9 +115,8 @@ export class FormBuilder extends React.Component<{
         )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
         return [new FormItem((-100-indexInParent).toString(),
-          <FormSection
+          <MobileFormSection
             key={xfo.$iid}
-            dimensions={dimensionFactory.fromXmlNode(xfo)}
             title={xfo.attributes.Title}
             backgroundColor={backgroundColor}
             foreGroundColor={foreGroundColor}
@@ -131,14 +128,13 @@ export class FormBuilder extends React.Component<{
                 .sort(compareTabIndexOwners)
                 .map((item: FormItem) => item.element)
             }
-          </FormSection>
+          </MobileFormSection>
         )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "Label") {
         return [new FormItem("-1",
           <FormLabel
             key={xfo.$iid}
             title={xfo.attributes.Title}
-            fieldDimensions={dimensionFactory.fromXmlNode(xfo)}
             foregroundColor={foreGroundColor}
           />
         )];
@@ -153,7 +149,8 @@ export class FormBuilder extends React.Component<{
           <RadioButton
             key={xfo.$iid}
             caption={xfo.attributes.Name}
-            fieldDimensions={dimensionFactory.fromXmlNode(xfo)}
+            className={"formItem"}
+            fieldDimensions={new FieldDimensions()}
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
@@ -202,7 +199,8 @@ export class FormBuilder extends React.Component<{
                     return (
                       <Provider property={property}>
                         <CheckBox
-                          fieldDimensions={dimensionFactory.fromProperty(property)}
+                          fieldDimensions={new FieldDimensions()}
+                          className={"formItem"}
                           isHidden={isHidden}
                           checked={value}
                           readOnly={!row || isReadOnly(property, rowId)}
@@ -219,7 +217,7 @@ export class FormBuilder extends React.Component<{
 
                   return (
                     <Provider property={property} key={property.id}>
-                      <FormField
+                      <MobileFormField
                         isHidden={isHidden}
                         caption={property.name}
                         hideCaption={property.column === "Image"}
@@ -227,7 +225,6 @@ export class FormBuilder extends React.Component<{
                         captionPosition={property.captionPosition}
                         captionColor={foreGroundColor}
                         dock={property.dock}
-                        fieldDimensions={dimensionFactory.fromProperty(property)}
                         toolTip={property.toolTip}
                         value={value}
                         isRichText={property.isRichText}
@@ -266,23 +263,4 @@ class FormItem implements ITabIndexOwner{
     public tabIndex:  string | undefined,
     public element: JSX.Element) {
   }
-}
-
-export function findPropertiesInPropertyNode(xfo: any, dataView: IDataView | undefined){
-  if(xfo.name !== "PropertyNames"){
-    throw new Error("Nor a property node")
-  }
-  if(!dataView){
-    return [];
-  }
-  const row = getSelectedRow(dataView);
-  const propertyNames = findStrings(xfo);
-  return propertyNames
-    .map(propertyId => {
-      let property = getDataViewPropertyById(dataView, propertyId);
-      if (row && property?.column === "Polymorph") {
-        property = property.getPolymophicProperty(row);
-      }
-      return property;
-    })
 }

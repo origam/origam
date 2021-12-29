@@ -21,10 +21,11 @@ import S from "./FormRoot.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { action } from "mobx";
+import cx from "classnames";
 
 @observer
 export class FormRoot extends React.Component<{
-  mobileLayoutActive: boolean;
+  className?: string;
   style?: any
 }> {
   componentDidMount() {
@@ -47,7 +48,7 @@ export class FormRoot extends React.Component<{
     return (
       <div
         ref={this.refFormRoot}
-        className={this.props.mobileLayoutActive ? S.formRootMobile : S.formRoot}
+        className={cx(this.props.className, S.formRoot)}
         style={this.props.style}
       >
         {this.props.children}
