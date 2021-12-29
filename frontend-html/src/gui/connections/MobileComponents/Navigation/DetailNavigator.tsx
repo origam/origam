@@ -28,7 +28,9 @@ import { NavigationButton } from "gui/connections/MobileComponents/Navigation/Na
 
 
 @observer
-export class DetailNavigator extends React.Component<{}> {
+export class DetailNavigator extends React.Component<{
+  node?: INavigationNode;
+}> {
 
   static contextType = MobXProviderContext;
 
@@ -38,6 +40,12 @@ export class DetailNavigator extends React.Component<{}> {
 
   set node(value: INavigationNode){
     this.context.application.mobileState.node = value;
+  }
+
+  componentDidMount() {
+    if(this.props.node){
+      this.node = this.props.node;
+    }
   }
 
   makeBreadcrumb(node: INavigationNode) {
@@ -55,6 +63,9 @@ export class DetailNavigator extends React.Component<{}> {
   }
 
   render() {
+    if(!this.node){
+      return <div/>;
+    }
     return (
       <div className={S.root}>
         <div className={S.navigationBar}>

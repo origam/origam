@@ -87,8 +87,7 @@ export class FormScreenBuilder extends React.Component<{
           if (parentIsNavigator) {
             return panels.find(panel => panel.modelInstanceId === masterDataView.modelInstanceId)!.element;
           }
-          getMobileState(self.formScreen).node = new NavigationNode(masterDataView, panelMap);
-          return <DetailNavigator/>;
+          return <DetailNavigator node={new NavigationNode(masterDataView, panelMap)}/>;
         }
       }
 

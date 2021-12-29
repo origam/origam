@@ -124,6 +124,9 @@ export class DataViewInner extends React.Component<IDataViewProps> {
   }
 
   render() {
+    if(!this.props.dataView){
+      return null;
+    }
     // TODO: Move styling to stylesheet
     const isWorkingDelayed = getIsDataViewOrFormScreenWorkingDelayed(this.props.dataView);
 
