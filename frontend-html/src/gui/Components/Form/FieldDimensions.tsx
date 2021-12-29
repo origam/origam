@@ -46,32 +46,20 @@ export class FieldDimensions {
   }
 }
 
-export class DimensionsFactory{
+export function dimensionsFromXmlNode(xmlNode: any) {
+  return new FieldDimensions({
+    left: parseInt(xmlNode.attributes.X, 10),
+    top: parseInt(xmlNode.attributes.Y, 10),
+    width: parseInt(xmlNode.attributes.Width, 10),
+    height: parseInt(xmlNode.attributes.Height, 10)
+  });
+}
 
-  constructor(private mobileLayoutActive: any){
-  }
-
-  fromXmlNode(xmlNode: any) {
-    if (this.mobileLayoutActive) {
-      return new FieldDimensions();
-    }
-    return new FieldDimensions({
-      left: parseInt(xmlNode.attributes.X, 10),
-      top: parseInt(xmlNode.attributes.Y, 10),
-      width: parseInt(xmlNode.attributes.Width, 10),
-      height: parseInt(xmlNode.attributes.Height, 10)
-    });
-  }
-
-  fromProperty(property: IProperty){
-    if (this.mobileLayoutActive) {
-      return new FieldDimensions();
-    }
-    return new FieldDimensions({
-      height: property.height,
-      width: property.width,
-      left: property.x,
-      top: property.y
-    });
-  }
+export function dimensionsFromProperty(property: IProperty){
+  return new FieldDimensions({
+    height: property.height,
+    width: property.width,
+    left: property.x,
+    top: property.y
+  });
 }

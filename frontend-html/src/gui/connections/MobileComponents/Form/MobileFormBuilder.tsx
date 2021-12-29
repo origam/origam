@@ -24,12 +24,10 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { FormSection } from "gui/Components/Form/FormSection";
 import { RadioButton } from "gui/Components/Form/RadioButton";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { flow } from "mobx";
-import { CheckBox } from "gui/Components/Form/CheckBox";
 import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { DomEvent } from "leaflet";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
@@ -41,10 +39,11 @@ import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOw
 import { FormRoot } from "gui/Workbench/ScreenArea/FormView/FormRoot";
 import { FormLabel } from "gui/connections/MobileComponents/Form/FormLabel";
 import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
-import { findPropertiesInPropertyNode } from "gui/Workbench/ScreenArea/FormView/FormBuilder";
 import { MobileFormField } from "gui/connections/MobileComponents/Form/MobileFormField";
 import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileFormSection";
 import { MobileCheckBox } from "gui/connections/MobileComponents/Form/CheckBox";
+import { findStrings } from "xmlInterpreters/screenXml";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 
 
 @inject(({dataView}) => {
@@ -115,7 +114,7 @@ export class MobileFormBuilder extends React.Component<{
           </FormRoot>
         )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
-        return [new FormItem((-100-indexInParent).toString(),
+        return [new FormItem((-100 - indexInParent).toString(),
           <MobileFormSection
             key={xfo.$iid}
             title={xfo.attributes.Title}
@@ -257,9 +256,28 @@ export class MobileFormBuilder extends React.Component<{
   }
 }
 
-class FormItem implements ITabIndexOwner{
+class FormItem implements ITabIndexOwner {
   constructor(
-    public tabIndex:  string | undefined,
+    public tabIndex: string | undefined,
     public element: JSX.Element) {
   }
+}
+
+function findPropertiesInPropertyNode(xfo: any, dataView: IDataView | undefined) {
+  if (xfo.name !== "PropertyNames") {
+    throw new Error("Nor a property node")
+  }
+  if (!dataView) {
+    return [];
+  }
+  const row = getSelectedRow(dataView);
+  const propertyNames = findStrings(xfo);
+  return propertyNames
+    .map(propertyId => {
+      let property = getDataViewPropertyById(dataView, propertyId);
+      if (row && property?.column === "Polymorph") {
+        property = property.getPolymophicProperty(row);
+      }
+      return property;
+    })
 }

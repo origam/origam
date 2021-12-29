@@ -3,7 +3,6 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
-import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
