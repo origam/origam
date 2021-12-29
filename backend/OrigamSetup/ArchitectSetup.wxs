@@ -189,6 +189,10 @@
               <File Id="ORIGAM.SERVICES.NETFX.DLL" Name="Origam.Services.NetFx.dll" Source="source\Origam.Services.NetFx.dll">
               </File>
             </Component>
+			<Component Id="ORIGAM.SERVICE.CORE.DLL" DiskId="1" Guid="3d4b3fa1-bf7d-4c9b-a4cf-03ec576a47f8">
+              <File Id="ORIGAM.SERVICE.CORE.DLL" Name="Origam.Service.Core.dll" Source="source\Origam.Service.Core.dll">
+              </File>
+            </Component>
             <Component Id="ORIGAM.UI.COMMON.DLL" DiskId="1" Guid="8FC297E5-344B-4F0F-8A30-509775DDA0A4">
               <File Id="ORIGAM.UI.COMMON.DLL" Name="Origam.UI.Common.dll" Source="source\Origam.UI.Common.dll">
               </File>
@@ -708,6 +712,8 @@
       <ComponentRef Id="ORIGAM.SERVICES.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.SERVICES.NETFX.DLL">
+      </ComponentRef>
+	  <ComponentRef Id="ORIGAM.SERVICE.CORE.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.UI.COMMON.DLL">
       </ComponentRef>
