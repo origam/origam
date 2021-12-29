@@ -38,9 +38,11 @@ import { serverValueToPanelSizeRatio } from "../../../model/actions-ui/Splitter/
 import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
 import { getSessionId } from "../../../model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
-import { DetailNavigator} from "gui/connections/MobileComponents/Navigation/DetailNavigator";
+import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { NavigationNode, TabNavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
+import { getMobileState } from "model/selectors/getMobileState";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -64,8 +66,15 @@ export class FormScreenBuilder extends React.Component<{
       return dataView;
     }
 
+    const panelMap: { [key: string]: ReactNode } = {};
 
-    function recursive(xso: any) {
+    function recursive(xso: any, parentIsNavigator?: boolean) {
+      const element: any = recursiveInner(xso, parentIsNavigator)
+      panelMap[xso.attributes.ModelInstanceId] = element;
+      return element;
+    }
+
+    function recursiveInner(xso: any, parentIsNavigator?: boolean) {
       if (xso.attributes.Type === "ScreenLevelPlugin" ||
         xso.attributes.Type === "SectionLevelPlugin") {
         let dataView = getDataView(xso);
@@ -98,32 +107,26 @@ export class FormScreenBuilder extends React.Component<{
           const panelPositionRatio = serverValueToPanelSizeRatio(serverStoredValue);
 
           const panels: IInternalPanelData[] = findUIChildren(xso).map((child, idx) => {
-            const element = recursive(child);
-            return{
+            const element = recursive(child, true);
+            return {
               id: idx,
               modelInstanceId: (element as any).props.modelInstanceId,
               positionRatio: idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
               element: element,
             }
           });
-          if(isMobileLayoutActive(self.formScreen)){
-
-            const panelMap = panels.reduce((panelMap: {[key: string]: ReactNode}, panel) => {
-              panelMap[panel.modelInstanceId] = panel.element;
-              return panelMap;
-            }, {})
-
+          if (isMobileLayoutActive(self.formScreen)) {
             const masterDataView = panels
               .map(panel => self.formScreen.getBindingsByParentId(panel.modelInstanceId))
               .find(bindings => bindings.length > 0)
               ?.[0].parentDataView;
 
-            if(masterDataView){
-              return(
-                <DetailNavigator
-                  rootNode={ new NavigationNode(masterDataView, panelMap)
-                  }
-                />);
+            if (masterDataView) {
+              if (parentIsNavigator) {
+                return panels.find(panel => panel.modelInstanceId === masterDataView.modelInstanceId)!.element;
+              }
+              getMobileState(self.formScreen).node = new NavigationNode(masterDataView, panelMap);
+              return <DetailNavigator/>;
             }
           }
           return (
@@ -198,10 +201,37 @@ export class FormScreenBuilder extends React.Component<{
             />
           );
         case "Tab":
+          const boxes = findBoxes(xso);
+          if (isMobileLayoutActive(self.formScreen)) {
+            const nodes = boxes.map(box => {
+
+              let panels = findUIChildren(box).map((child, idx) => {
+                const element = recursive(child, true);
+                let modelInstanceId = (element as any).props.modelInstanceId;
+                return {
+                  modelInstanceId: modelInstanceId,
+                  element: element,
+                  masterDataView: self.formScreen.getBindingsByParentId(modelInstanceId)?.[0]?.parentDataView
+                }
+              });
+              const masterPanel = panels.find(panel => panel.masterDataView);
+
+              return new TabNavigationNode({
+                  name: box.attributes.Name,
+                  id: masterPanel?.masterDataView?.id ?? box.attributes.Id,
+                  dataView: masterPanel?.masterDataView,
+                  ctx: self.formScreen,
+                  element: panels.map(panel => panel.element),
+                  panelMap: panelMap
+                }
+              )
+            });
+            return <TabNavigator name={xso.attributes.Id} nodes={nodes}/>
+          }
           return (
             <CScreenSectionTabbedView
               key={xso.$iid}
-              boxes={findBoxes(xso)}
+              boxes={boxes}
               nextNode={recursive}
               dataViewMap={dataViewMap}
             />
@@ -215,7 +245,7 @@ export class FormScreenBuilder extends React.Component<{
     }
 
     const uiRoot = findUIRoot(this.props.xmlWindowObject);
-    return recursive(uiRoot);
+    return recursiveInner(uiRoot);
   }
 
   render() {
@@ -223,6 +253,6 @@ export class FormScreenBuilder extends React.Component<{
   }
 }
 
-interface IInternalPanelData extends IPanelData{
+interface IInternalPanelData extends IPanelData {
   modelInstanceId: string;
 }

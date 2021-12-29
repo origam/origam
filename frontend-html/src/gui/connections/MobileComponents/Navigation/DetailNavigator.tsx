@@ -20,21 +20,25 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useState } from "react";
 import S from "gui/connections/MobileComponents/Navigation/DetailNavigator.module.scss";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
-import { observer } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { Icon } from "@origam/components";
-import { observable } from "mobx";
-import { INavigationNode, NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 
 
 @observer
-export class DetailNavigator extends React.Component<{
-  rootNode: NavigationNode;
-}> {
+export class DetailNavigator extends React.Component<{}> {
 
-  @observable
-  node: INavigationNode = this.props.rootNode;
+  static contextType = MobXProviderContext;
+
+  get node(): INavigationNode {
+    return this.context.application.mobileState.node;
+  }
+
+  set node(value: INavigationNode){
+    this.context.application.mobileState.node = value;
+  }
 
   makeBreadcrumb(node: INavigationNode) {
     return <a
@@ -87,7 +91,7 @@ export const NavigationButtonList: React.FC<{
 
   if (props.nodes.length <= 3) {
     return (
-      <div className={S.navigationButtonContainer}>
+      <div className={SN.navigationButtonContainer}>
         {props.nodes?.map(node =>
           <NavigationButton
             key={node.name}
@@ -103,7 +107,7 @@ export const NavigationButtonList: React.FC<{
       className={cx(open ? S.navigatorButtonListRoot : "", S.navigationButtonContainer)}
       onClick={() => setOpen(!open)}
     >
-      <div className={"navigationButton"}>
+      <div className={SN.navigationButton}>
         <div>
           {"Details"}
         </div>
@@ -113,7 +117,7 @@ export const NavigationButtonList: React.FC<{
         />
       </div>
       <div className={S.navigationButtonList}>
-        <div className={S.navigationButtonContainer}>
+        <div className={SN.navigationButtonContainer}>
           {open &&
             props.nodes.map(node =>
               <NavigationButton

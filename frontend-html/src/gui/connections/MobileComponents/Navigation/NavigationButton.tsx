@@ -28,7 +28,7 @@ export const NavigationButton: React.FC<{
 }> = (props) => {
   return (
     <div
-      className={"navigationButton"}
+      className={S.navigationButton}
       onClick={props.onClick}
     >
       <div>

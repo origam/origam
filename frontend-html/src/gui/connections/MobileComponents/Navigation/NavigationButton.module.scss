@@ -18,7 +18,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-:global(.navigationButton) {
+.navigationButtonContainer  div.navigationButton {
+  border-style: solid;
+  border-color: var(--background3) !important;
+  border-width: 0 0 1px 0;
+  background-color: var(--background1);
+}
+
+.navigationButtonContainer  > div.navigationButton:first-child {
+  border-width:  1px 0 1px 0;
+}
+
+.navigationButton {
   height: 30px;
   display: flex;
   justify-content: space-between;
