@@ -24,19 +24,19 @@ import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSp
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
-import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
-import { Box } from "../../Components/ScreenElements/Box";
-import { DataView } from "../../Components/ScreenElements/DataView";
-import { Label } from "../../Components/ScreenElements/Label";
-import { VBox } from "../../Components/ScreenElements/VBox";
+import { findBoxes, findUIChildren, findUIRoot } from "xmlInterpreters/screenXml";
+import { Box } from "gui/Components/ScreenElements/Box";
+import { DataView } from "gui/Components/ScreenElements/DataView";
+import { Label } from "gui/Components/ScreenElements/Label";
+import { VBox } from "gui/Components/ScreenElements/VBox";
 import { WorkflowFinishedPanel } from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel";
 import actions from "model/actions-ui-tree";
 import { HBox } from "gui/Components/ScreenElements/HBox";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
-import { serverValueToPanelSizeRatio } from "../../../model/actions-ui/Splitter/splitterPositionToServerValue";
-import { pluginLibrary } from "../../../plugins/tools/PluginLibrary";
-import { getSessionId } from "../../../model/selectors/getSessionId";
+import { serverValueToPanelSizeRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
+import { pluginLibrary } from "plugins/tools/PluginLibrary";
+import { getSessionId } from "model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
 import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
@@ -148,20 +148,19 @@ export class FormScreenBuilder extends React.Component<{
     }
 
     function desktopRecursiveBuilder(xso: any, parentIsNavigator?: boolean) {
-      if (xso.attributes.Type === "ScreenLevelPlugin" ||
-        xso.attributes.Type === "SectionLevelPlugin") {
-        let dataView = getDataView(xso);
-        let sessionId = getSessionId(self.formScreen);
-        return pluginLibrary.getComponent(
-          {
-            name: xso.attributes.Name,
-            modelInstanceId: xso.attributes.ModelInstanceId,
-            sessionId: sessionId,
-            ctx: dataView
-          });
-      }
-
       switch (xso.attributes.Type) {
+        case "ScreenLevelPlugin":
+        case "SectionLevelPlugin": {
+          let dataView = getDataView(xso);
+          let sessionId = getSessionId(self.formScreen);
+          return pluginLibrary.getComponent(
+            {
+              name: xso.attributes.Name,
+              modelInstanceId: xso.attributes.ModelInstanceId,
+              sessionId: sessionId,
+              ctx: dataView
+            });
+        }
         case "WorkflowFinishedPanel": {
           return (
             <WorkflowFinishedPanel
