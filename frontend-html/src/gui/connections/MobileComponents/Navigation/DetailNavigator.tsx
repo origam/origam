@@ -39,6 +39,7 @@ export class StandaloneDetailNavigator extends React.Component<{
   }
 }
 
+@observer
 export class DetailNavigator extends React.Component<{
   node: INavigationNode;
   onNodeClick: (node: INavigationNode) => void;
@@ -76,7 +77,7 @@ export class DetailNavigator extends React.Component<{
           }
         </div>
         {this.props.node.element}
-        {this.props.node.showDetailLinks &&
+        {this.props.node.showDetailLinks() &&
           <NavigationButtonList
             onClick={(node) => this.props.onNodeClick(node)}
             nodes={this.props.node.children}

@@ -95,14 +95,10 @@ export class FormScreenBuilder extends React.Component<{
         if(!masterElement){
           throw new Error ("Master element cannot be null");
         }
-        masterNode.element = masterElement;
-        masterNode.id = masterXmlNode.attributes.Id;
-        masterNode.name = getNavigationNodeName(masterXmlNode, xso);
+        assignNavigationNodeProperties(masterNode, masterElement, masterXmlNode, xso);
 
         if(detailElement){
-          detailNode.element = detailElement;
-          detailNode.id = detailXmlNode.attributes.Id;
-          detailNode.name = detailXmlNode.attributes.Name;
+          assignNavigationNodeProperties(detailNode, detailElement, detailXmlNode, xso);
         }
 
         if (isRootLevelNavigationNode) {
@@ -132,6 +128,10 @@ export class FormScreenBuilder extends React.Component<{
             tabNode.name = childXmlNode.attributes.Name === ""
               ? box.attributes.Name
               : childXmlNode.attributes.Name;
+            const detailDataView = self.formScreen.getDataViewByModelInstanceId(childXmlNode.attributes.ModelInstanceId)
+            if(detailDataView){
+              tabNode.showDetailLinks = detailDataView.isFormViewActive
+            }
           }
         }
         if(isRootLevelNavigationNode){
@@ -287,8 +287,19 @@ export class FormScreenBuilder extends React.Component<{
         : desktopRecursiveBuilder(xso);
     }
 
+    function assignNavigationNodeProperties(navigationNode: NavigationNode2, element: any, xmlNode: any, parentXmlElement: any) {
+      navigationNode.element = element;
+      navigationNode.id = xmlNode.attributes.Id;
+      navigationNode.name = getNavigationNodeName(xmlNode, parentXmlElement);
+      const dataView = self.formScreen.getDataViewByModelInstanceId(xmlNode.attributes.ModelInstanceId)
+      if (dataView) {
+        navigationNode.showDetailLinks = dataView.isFormViewActive
+      }
+    }
+
     return recursive(uiRoot);
   }
+
 
   render() {
     return this.buildScreen();

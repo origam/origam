@@ -24,7 +24,7 @@ export interface INavigationNode {
   readonly children: INavigationNode[];
   parent: INavigationNode | undefined;
   readonly parentChain: INavigationNode[];
-  readonly showDetailLinks: boolean;
+  showDetailLinks: ()=>boolean;
   readonly element: ReactNode;
   readonly id: string;
 
@@ -39,7 +39,7 @@ export class NavigationNode2 implements INavigationNode {
   private _name: string = "";
 
   parent: NavigationNode2 | undefined;
-  readonly showDetailLinks = true;
+  showDetailLinks = () => true;
 
   public id: string = "";
   public element: ReactNode = null as any;
@@ -84,6 +84,7 @@ export class NavigationNode2 implements INavigationNode {
     }
     this.id = other.id;
     this._name = other._name;
+    this.showDetailLinks = other.showDetailLinks;
   }
 
   equals(other: INavigationNode): boolean {
