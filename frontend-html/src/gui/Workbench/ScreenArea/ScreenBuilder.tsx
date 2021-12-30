@@ -36,6 +36,7 @@ export class DialogScreenBuilder extends React.Component<{
           {!content.isLoading && (
             <>
               <FormScreenBuilder
+                title={content.formScreen!.title}
                 xmlWindowObject={content.formScreen!.screenUI}
               />
             </>

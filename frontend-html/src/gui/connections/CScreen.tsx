@@ -163,7 +163,10 @@ class CScreenInner extends React.Component<{
         <CtxPanelVisibility.Provider
           value={{isVisible: getIsTopmostNonDialogScreen(openedScreen)}}
         >
-          <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI}/>
+          <FormScreenBuilder
+            title={formScreen.formScreen!.title}
+            xmlWindowObject={formScreen.formScreen!.screenUI}
+          />
         </CtxPanelVisibility.Provider>
       </Screen>
     );

@@ -45,6 +45,7 @@ import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNav
 
 @observer
 export class FormScreenBuilder extends React.Component<{
+  title: string;
   xmlWindowObject: any;
 }> {
   static contextType = MobXProviderContext;
@@ -56,6 +57,7 @@ export class FormScreenBuilder extends React.Component<{
   buildScreen() {
     const self = this;
     const dataViewMap = new Map<string, IDataView>();
+    const uiRoot = findUIRoot(this.props.xmlWindowObject);
 
     function getDataView(xso: any) {
       const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
@@ -63,6 +65,12 @@ export class FormScreenBuilder extends React.Component<{
         dataViewMap.set(xso.attributes.Id, dataView);
       }
       return dataView;
+    }
+
+    function getNavigationNodeName(xmlNode: any, xmlParentNode?: any){
+      return !xmlNode.attributes.Name && (xmlNode === uiRoot || xmlParentNode === uiRoot)
+        ? self.props.title
+        : xmlNode.attributes.Name;
     }
 
     function mobileRecursiveBuilder(xso: any, currentNavigationNode: INavigationNode | undefined): any {
@@ -89,7 +97,7 @@ export class FormScreenBuilder extends React.Component<{
         }
         masterNode.element = masterElement;
         masterNode.id = masterXmlNode.attributes.Id;
-        masterNode.name = masterXmlNode.attributes.Name;
+        masterNode.name = getNavigationNodeName(masterXmlNode, xso);
 
         if(detailElement){
           detailNode.element = detailElement;
@@ -109,8 +117,8 @@ export class FormScreenBuilder extends React.Component<{
       if (xso.attributes.Type === "Tab") {
         const boxes = findBoxes(xso);
         const masterNode = new NavigationNode2();
-        masterNode.id=xso.attributes.Id;
-        masterNode.name = xso.attributes.Name;
+        masterNode.id = xso.attributes.Id;
+        masterNode.name = getNavigationNodeName(xso);
 
         for (const box of boxes) {
           const childXmlNode = findUIChildren(box)[0];
@@ -279,7 +287,6 @@ export class FormScreenBuilder extends React.Component<{
         : desktopRecursiveBuilder(xso);
     }
 
-    const uiRoot = findUIRoot(this.props.xmlWindowObject);
     return recursive(uiRoot);
   }
 
