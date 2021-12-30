@@ -40,8 +40,11 @@ import { getSessionId } from "../../../model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
 import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { NavigationNode, TabNavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
-import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
+import {
+  INavigationNode,
+  TabNavigationNode
+} from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { RootNavigationNode, TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -65,54 +68,120 @@ export class FormScreenBuilder extends React.Component<{
       return dataView;
     }
 
+    let currentNavigationNode: NavigationNode2 | undefined;
     const panelMap: { [key: string]: ReactNode } = {};
 
-    function mobileRecursiveBuilder(xso: any, parentIsNavigator?: boolean) {
-      if (xso.attributes.Type === "VSplit" || xso.attributes.Type === "HSplit") {
-        const panels = findUIChildren(xso).map((child, idx) => {
-          const element = recursive(child, true);
-          return {
-            modelInstanceId: (element as any).props.modelInstanceId,
-            element: element,
-          }
-        });
+    function mobileRecursiveBuilder(xso: any): any {
+      const isRootLevelNavigationNode = !currentNavigationNode;
+      debugger;
+      if (xso.attributes.Type === "VSplit" ||
+          xso.attributes.Type === "HSplit" ||
+          xso.attributes.Type === "VBox"||
+          xso.attributes.Type === "HBox") {
 
-        const masterDataView = panels
-          .map(panel => self.formScreen.getBindingsByParentId(panel.modelInstanceId))
-          .find(bindings => bindings.length > 0)
-          ?.[0].parentDataView;
+        let masterNode = new NavigationNode2();
+        let detailNode = new NavigationNode2();
 
-        if (masterDataView) {
-          if (parentIsNavigator) {
-            return panels.find(panel => panel.modelInstanceId === masterDataView.modelInstanceId)!.element;
-          }
-          return <StandaloneDetailNavigator node={new NavigationNode(masterDataView, panelMap)}/>;
+        masterNode.addChild(detailNode);
+        if (isRootLevelNavigationNode) {
+          currentNavigationNode = detailNode;
         }
+
+        const [masterXmlNode, detailXmlNode] = findUIChildren(xso);
+        const masterElement = mobileRecursiveBuilder(masterXmlNode);
+        const detailElement = mobileRecursiveBuilder(detailXmlNode);
+
+        if(!masterElement){
+          throw new Error ("Master element cannot be null");
+        }
+        masterNode.element = masterElement;
+        masterNode.id = masterXmlNode.attributes.Id;
+        masterNode.name = masterXmlNode.attributes.Name;
+
+        if(detailElement){
+          detailNode.element = detailElement;
+          detailNode.id = detailXmlNode.attributes.Id;
+          detailNode.name = detailXmlNode.attributes.Name;
+        }
+
+        if (isRootLevelNavigationNode) {
+          return <StandaloneDetailNavigator node={masterNode}/>;
+        }
+        else {
+          currentNavigationNode!.merge(masterNode);
+          return undefined;
+        }
+
+        //
+        // const panels = findUIChildren(xso).map((child, idx) => {
+        //   const element = mobileRecursiveBuilder(child, true);
+        //   return {
+        //     modelInstanceId: (element as any).props.modelInstanceId,
+        //     element: element,
+        //   }
+        // });
+        //
+        // const masterDataView = panels
+        //   .map(panel => self.formScreen.getBindingsByParentId(panel.modelInstanceId))
+        //   .find(bindings => bindings.length > 0)
+        //   ?.[0].parentDataView;
+        //
+        // if (masterDataView) {
+        //   if (parentIsNavigator) {
+        //     return panels.find(panel => panel.modelInstanceId === masterDataView.modelInstanceId)!.element;
+        //   }
+        //   return <StandaloneDetailNavigator node={new NavigationNode(masterDataView, panelMap)}/>;
+        // }
       }
 
       if (xso.attributes.Type === "Tab") {
-        const nodes = findBoxes(xso).map(box => {
-          let panels = findUIChildren(box).map((child, idx) => {
-            const element = recursive(child, true);
-            let modelInstanceId = (element as any).props.modelInstanceId;
-            return {
-              element: element,
-              masterDataView: self.formScreen.getBindingsByParentId(modelInstanceId)?.[0]?.parentDataView
-            }
-          });
-          const masterPanel = panels.find(panel => panel.masterDataView);
+        const boxes = findBoxes(xso);
+        const masterNode = isRootLevelNavigationNode
+          ? new RootNavigationNode(xso.attributes.Id)
+          : currentNavigationNode!;
 
-          return new TabNavigationNode({
-              name: box.attributes.Name,
-              id: masterPanel?.masterDataView?.id ?? box.attributes.Id,
-              dataView: masterPanel?.masterDataView,
-              ctx: self.formScreen,
-              element: panels.map(panel => panel.element),
-              panelMap: panelMap
-            }
-          )
-        });
-        return <TabNavigator name={xso.attributes.Id} nodes={nodes}/>
+        for (const box of boxes) {
+          const childXmlNode = findUIChildren(box)[0];
+          let tabNode = new NavigationNode2();
+          masterNode.addChild(tabNode)
+
+          currentNavigationNode = tabNode;
+          const element = mobileRecursiveBuilder(childXmlNode);
+          if(element){
+            tabNode.element = element;
+            tabNode.id = childXmlNode.attributes.Id;
+            tabNode.name = childXmlNode.attributes.Name;
+          }
+        }
+        if(isRootLevelNavigationNode){
+          return <TabNavigator rootNode={masterNode}/>
+        }else{
+          return undefined;
+        }
+
+        //
+        // const nodes = findBoxes(xso).map(box => {
+        //   let panels = findUIChildren(box).map(child  => {
+        //     const element = mobileRecursiveBuilder(child);
+        //     let modelInstanceId = (element as any).props.modelInstanceId;
+        //     return {
+        //       element: element,
+        //       masterDataView: self.formScreen.getBindingsByParentId(modelInstanceId)?.[0]?.parentDataView
+        //     }
+        //   });
+        //   const masterPanel = panels.find(panel => panel.masterDataView);
+        //
+        //   return new TabNavigationNode({
+        //       name: box.attributes.Name,
+        //       id: masterPanel?.masterDataView?.id ?? box.attributes.Id,
+        //       dataView: masterPanel?.masterDataView,
+        //       ctx: self.formScreen,
+        //       element: panels.map(panel => panel.element),
+        //       panelMap: panelMap
+        //     }
+        //   )
+        // });
+        // return <TabNavigator name={xso.attributes.Id} nodes={nodes}/>
       }
 
       return desktopRecursiveBuilder(xso);
@@ -154,7 +223,7 @@ export class FormScreenBuilder extends React.Component<{
             return {
               id: idx,
               positionRatio: idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
-              element: recursive(child, true),
+              element: recursive(child),
             }
           });
           return (
@@ -245,9 +314,9 @@ export class FormScreenBuilder extends React.Component<{
       }
     }
 
-    function recursive(xso: any, parentIsNavigator?: boolean) {
+    function recursive(xso: any) {
       const element: any = isMobileLayoutActive(self.formScreen)
-        ? mobileRecursiveBuilder(xso, parentIsNavigator)
+        ? mobileRecursiveBuilder(xso)
         : desktopRecursiveBuilder(xso);
       panelMap[xso.attributes.ModelInstanceId] = element;
       return element;
@@ -259,5 +328,54 @@ export class FormScreenBuilder extends React.Component<{
 
   render() {
     return this.buildScreen();
+  }
+}
+
+class NavigationNode2 implements INavigationNode {
+  _children: NavigationNode2[] = [];
+
+  parent: NavigationNode2 | undefined;
+  readonly showDetailLinks = true;
+
+  public id: string = "";
+  public name: string = "";
+  public element: ReactNode = null as any;
+
+  get children() {
+    return this._children;
+  }
+
+  get parentChain() {
+    let parent = this.parent;
+    const chain: INavigationNode[] = [this];
+    while (parent) {
+      chain.push(parent);
+      parent = parent.parent;
+    }
+    return chain.reverse();
+  }
+
+  addChild(node: NavigationNode2) {
+    this._children.push(node);
+    node.parent = this;
+  }
+
+  removeChild(node: NavigationNode2) {
+    this._children.remove(node);
+    node.parent = undefined;
+  }
+
+  merge(other: NavigationNode2) {
+    this.element = other.element;
+    for (const child of [...other.children]) {
+      other.removeChild(child);
+      this.addChild(child);
+    }
+    this.id = other.id;
+    this.name = other.name;
+  }
+
+  equals(other: INavigationNode): boolean {
+    return this.id === other.id;
   }
 }

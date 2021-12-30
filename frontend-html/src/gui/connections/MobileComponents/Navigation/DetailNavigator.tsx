@@ -50,7 +50,6 @@ export class DetailNavigator extends React.Component<{
       key={node.name}
       onClick={() => {
         if (!this.props.node.equals(node)) {
-          // this.node = node
           this.props.onNodeClick(node);
         }
       }}
@@ -139,6 +138,4 @@ export const NavigationButtonList: React.FC<{
     </div>
   );
 });
-
-
 

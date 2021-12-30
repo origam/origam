@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 export interface INavigationNode {
   readonly name: string;
   readonly children: INavigationNode[];
-  readonly parent: INavigationNode | undefined;
+  parent: INavigationNode | undefined;
   readonly parentChain: INavigationNode[];
   readonly showDetailLinks: boolean;
   readonly element: ReactNode;

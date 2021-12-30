@@ -27,12 +27,13 @@ import { observable } from "mobx";
 
 @observer
 export class TabNavigator extends React.Component<{
-  name: string;
-  nodes: TabNavigationNode[];
+  // name: string;
+  // nodes: TabNavigationNode[];
+  rootNode: INavigationNode;
 }> {
 
   @observable
-  currentNode: INavigationNode = new RootNavigationNode({name: this.props.name, children: this.props.nodes});
+  currentNode: INavigationNode = this.props.rootNode;// new RootNavigationNode({name: this.props.name, children: this.props.nodes});
 
   render() {
     if(!this.currentNode){
@@ -41,9 +42,9 @@ export class TabNavigator extends React.Component<{
     if (isRootNavigationNode(this.currentNode)) {
       return (
         <div className={SN.navigationButtonContainer}>
-          {this.props.nodes.map(node =>
+          {this.currentNode.children.map(node =>
             <NavigationButton
-              key={node.name}
+              key={node.id}
               label={node.name}
               onClick={() => {
                 this.currentNode = node
@@ -59,9 +60,9 @@ export class TabNavigator extends React.Component<{
   }
 }
 
-class RootNavigationNode implements INavigationNode {
+export class RootNavigationNode implements INavigationNode {
   $type_RootNavigationNode: 1 = 1;
-  readonly children: INavigationNode[];
+  private readonly _children: INavigationNode[] = [];
   readonly element: React.ReactNode;
   readonly id: string = "RootTabNode";
   readonly name: string;
@@ -69,13 +70,22 @@ class RootNavigationNode implements INavigationNode {
   readonly parentChain: INavigationNode[] = [];
   readonly showDetailLinks: boolean = true;
 
+  get children() {
+    return this._children;
+  }
 
-  constructor(args:{name: string, children: TabNavigationNode[]}) {
-    this.name = args.name;
-    for (const child of args.children) {
-      child.parent = this;
-    }
-    this.children = args.children;
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  addChild(node: INavigationNode) {
+    this._children.push(node);
+    node.parent = this;
+  }
+
+  removeChild(node: INavigationNode) {
+    this._children.remove(node);
+    node.parent = undefined;
   }
 
   equals(other: INavigationNode): boolean {
