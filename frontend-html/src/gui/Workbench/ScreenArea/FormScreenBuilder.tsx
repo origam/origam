@@ -40,7 +40,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
 import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { INavigationNode, NavigationNode2 } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { INavigationNode, NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
 
 @observer
@@ -80,8 +80,8 @@ export class FormScreenBuilder extends React.Component<{
           xso.attributes.Type === "VBox"||
           xso.attributes.Type === "HBox") {
 
-        let masterNode = new NavigationNode2();
-        let detailNode = new NavigationNode2();
+        let masterNode = new NavigationNode();
+        let detailNode = new NavigationNode();
 
         masterNode.addChild(detailNode);
         if (isRootLevelNavigationNode) {
@@ -112,13 +112,13 @@ export class FormScreenBuilder extends React.Component<{
 
       if (xso.attributes.Type === "Tab") {
         const boxes = findBoxes(xso);
-        const masterNode = new NavigationNode2();
+        const masterNode = new NavigationNode();
         masterNode.id = xso.attributes.Id;
         masterNode.name = getNavigationNodeName(xso);
 
         for (const box of boxes) {
           const childXmlNode = findUIChildren(box)[0];
-          let tabNode = new NavigationNode2();
+          let tabNode = new NavigationNode();
           masterNode.addChild(tabNode)
 
           const element = mobileRecursiveBuilder(childXmlNode, tabNode);
@@ -287,7 +287,7 @@ export class FormScreenBuilder extends React.Component<{
         : desktopRecursiveBuilder(xso);
     }
 
-    function assignNavigationNodeProperties(navigationNode: NavigationNode2, element: any, xmlNode: any, parentXmlElement: any) {
+    function assignNavigationNodeProperties(navigationNode: NavigationNode, element: any, xmlNode: any, parentXmlElement: any) {
       navigationNode.element = element;
       navigationNode.id = xmlNode.attributes.Id;
       navigationNode.name = getNavigationNodeName(xmlNode, parentXmlElement);

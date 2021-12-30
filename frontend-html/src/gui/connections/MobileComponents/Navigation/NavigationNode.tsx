@@ -34,11 +34,11 @@ export interface INavigationNode {
   merge(other: INavigationNode): void;
 }
 
-export class NavigationNode2 implements INavigationNode {
-  _children: NavigationNode2[] = [];
+export class NavigationNode implements INavigationNode {
+  _children: NavigationNode[] = [];
   private _name: string = "";
 
-  parent: NavigationNode2 | undefined;
+  parent: NavigationNode | undefined;
   showDetailLinks = () => true;
 
   public id: string = "";
@@ -66,17 +66,17 @@ export class NavigationNode2 implements INavigationNode {
     return chain.reverse();
   }
 
-  addChild(node: NavigationNode2) {
+  addChild(node: NavigationNode) {
     this._children.push(node);
     node.parent = this;
   }
 
-  removeChild(node: NavigationNode2) {
+  removeChild(node: NavigationNode) {
     this._children.remove(node);
     node.parent = undefined;
   }
 
-  merge(other: NavigationNode2) {
+  merge(other: NavigationNode) {
     this.element = other.element;
     for (const child of [...other.children]) {
       other.removeChild(child);
