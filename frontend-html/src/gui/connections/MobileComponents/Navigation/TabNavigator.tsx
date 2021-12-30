@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
-import { INavigationNode, TabNavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { observer } from "mobx-react";
@@ -27,19 +27,17 @@ import { observable } from "mobx";
 
 @observer
 export class TabNavigator extends React.Component<{
-  // name: string;
-  // nodes: TabNavigationNode[];
   rootNode: INavigationNode;
 }> {
 
   @observable
-  currentNode: INavigationNode = this.props.rootNode;// new RootNavigationNode({name: this.props.name, children: this.props.nodes});
+  currentNode: INavigationNode = this.props.rootNode;
 
   render() {
     if(!this.currentNode){
       return null;
     }
-    if (isRootNavigationNode(this.currentNode)) {
+    if (!this.currentNode.parent) {
       return (
         <div className={SN.navigationButtonContainer}>
           {this.currentNode.children.map(node =>
@@ -59,38 +57,3 @@ export class TabNavigator extends React.Component<{
     }
   }
 }
-
-export class RootNavigationNode implements INavigationNode {
-  $type_RootNavigationNode: 1 = 1;
-  private readonly _children: INavigationNode[] = [];
-  readonly element: React.ReactNode;
-  readonly id: string = "RootTabNode";
-  readonly name: string;
-  readonly parent: INavigationNode | undefined;
-  readonly parentChain: INavigationNode[] = [];
-  readonly showDetailLinks: boolean = true;
-
-  get children() {
-    return this._children;
-  }
-
-  constructor(name: string) {
-    this.name = name;
-  }
-
-  addChild(node: INavigationNode) {
-    this._children.push(node);
-    node.parent = this;
-  }
-
-  removeChild(node: INavigationNode) {
-    this._children.remove(node);
-    node.parent = undefined;
-  }
-
-  equals(other: INavigationNode): boolean {
-    return false;
-  }
-}
-
-const isRootNavigationNode = (o: any): o is RootNavigationNode => o.$type_RootNavigationNode;

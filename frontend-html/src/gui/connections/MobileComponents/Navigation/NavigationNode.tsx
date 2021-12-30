@@ -1,6 +1,23 @@
-import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
-import { IDataView } from "model/entities/types/IDataView";
-import { ReactNode } from "react";
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+import React, { ReactNode } from "react";
 
 export interface INavigationNode {
   readonly name: string;
@@ -12,35 +29,31 @@ export interface INavigationNode {
   readonly id: string;
 
   equals(other: INavigationNode): boolean;
+  addChild(node: INavigationNode): void;
+  removeChild(node: INavigationNode): void;
+  merge(other: INavigationNode): void;
 }
 
-export class NavigationNode implements INavigationNode {
+export class NavigationNode2 implements INavigationNode {
+  _children: NavigationNode2[] = [];
+  private _name: string = "";
 
-  get name() {
-    return this.dataView.name
-      ? this.dataView.name
-      : this.dataView.id;
+  parent: NavigationNode2 | undefined;
+  readonly showDetailLinks = true;
+
+  public id: string = "";
+  public element: ReactNode = null as any;
+
+  get name(): string {
+    return !this._name ? this.id : this._name;
+  }
+
+  set name(value: string) {
+    this._name = value;
   }
 
   get children() {
-    return getFormScreen(this.dataView)
-      .getBindingsByParentId(this.dataView.modelInstanceId)
-      .map(binding => new NavigationNode(binding.childDataView, this.panelMap));
-  }
-
-  get parent(): INavigationNode | undefined {
-    if(this.parentNode){
-      return this.parentNode;
-    }
-    const bindings = getFormScreen(this.dataView)
-      .getBindingsByChildId(this.dataView.modelInstanceId);
-    if (bindings.length === 0) {
-      return undefined;
-    }
-    if (bindings.length > 1) {
-      throw new Error(`More than one master of detail ${this.name} was found`)
-    }
-    return new NavigationNode(bindings[0].parentDataView, this.panelMap);
+    return this._children;
   }
 
   get parentChain() {
@@ -53,58 +66,24 @@ export class NavigationNode implements INavigationNode {
     return chain.reverse();
   }
 
-  get showDetailLinks() {
-    return this.dataView.isFormViewActive();
+  addChild(node: NavigationNode2) {
+    this._children.push(node);
+    node.parent = this;
   }
 
-  get element(): ReactNode {
-    return this.panelMap[this.dataView.modelInstanceId];
+  removeChild(node: NavigationNode2) {
+    this._children.remove(node);
+    node.parent = undefined;
   }
 
-  get id() {
-    return this.dataView.id
-  }
-
-  constructor(
-    private dataView: IDataView,
-    private panelMap: { [key: string]: ReactNode },
-    private parentNode?: INavigationNode
-  ) {
-  }
-
-  equals(other: INavigationNode) {
-    return this.id === other.id;
-  }
-}
-
-export class TabNavigationNode implements INavigationNode {
-  readonly element: React.ReactNode;
-  readonly id: string;
-  readonly name: string;
-  parent: INavigationNode | undefined;
-  get parentChain(): INavigationNode[]{
-    return [this.parent!, this];
-  }
-  readonly showDetailLinks: boolean = true;
-  readonly panelMap: { [key: string]: ReactNode };
-
-  get children(): INavigationNode[] {
-    if(!this.dataView){
-      return [];
+  merge(other: NavigationNode2) {
+    this.element = other.element;
+    for (const child of [...other.children]) {
+      other.removeChild(child);
+      this.addChild(child);
     }
-    return getFormScreen(this.dataView)
-      .getBindingsByParentId(this.dataView.modelInstanceId)
-      .map(binding => new NavigationNode(binding.childDataView, this.panelMap, this));
-  }
-
-  dataView: IDataView | undefined;
-
-  constructor(args:{name: string, id: string, dataView: IDataView | undefined, ctx: any, element: ReactNode, panelMap: { [key: string]: ReactNode }}) {
-    this.dataView = args.dataView
-    this.id = args.id;
-    this.name = args.name;
-    this.element = args.element;
-    this.panelMap = args.panelMap;
+    this.id = other.id;
+    this._name = other._name;
   }
 
   equals(other: INavigationNode): boolean {

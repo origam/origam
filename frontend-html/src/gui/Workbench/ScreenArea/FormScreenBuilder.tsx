@@ -22,7 +22,7 @@ import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedVi
 import { MobXProviderContext, observer } from "mobx-react";
 import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
 import { IFormScreen } from "model/entities/types/IFormScreen";
-import React, { ReactNode } from "react";
+import React from "react";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
 import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
 import { Box } from "../../Components/ScreenElements/Box";
@@ -40,11 +40,8 @@ import { getSessionId } from "../../../model/selectors/getSessionId";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
 import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import {
-  INavigationNode,
-  TabNavigationNode
-} from "gui/connections/MobileComponents/Navigation/NavigationNode";
-import { RootNavigationNode, TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
+import { INavigationNode, NavigationNode2 } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -68,12 +65,8 @@ export class FormScreenBuilder extends React.Component<{
       return dataView;
     }
 
-    let currentNavigationNode: NavigationNode2 | undefined;
-    const panelMap: { [key: string]: ReactNode } = {};
-
-    function mobileRecursiveBuilder(xso: any): any {
+    function mobileRecursiveBuilder(xso: any, currentNavigationNode: INavigationNode | undefined): any {
       const isRootLevelNavigationNode = !currentNavigationNode;
-      debugger;
       if (xso.attributes.Type === "VSplit" ||
           xso.attributes.Type === "HSplit" ||
           xso.attributes.Type === "VBox"||
@@ -88,8 +81,8 @@ export class FormScreenBuilder extends React.Component<{
         }
 
         const [masterXmlNode, detailXmlNode] = findUIChildren(xso);
-        const masterElement = mobileRecursiveBuilder(masterXmlNode);
-        const detailElement = mobileRecursiveBuilder(detailXmlNode);
+        const masterElement = mobileRecursiveBuilder(masterXmlNode, currentNavigationNode);
+        const detailElement = mobileRecursiveBuilder(detailXmlNode, currentNavigationNode);
 
         if(!masterElement){
           throw new Error ("Master element cannot be null");
@@ -111,77 +104,44 @@ export class FormScreenBuilder extends React.Component<{
           currentNavigationNode!.merge(masterNode);
           return undefined;
         }
-
-        //
-        // const panels = findUIChildren(xso).map((child, idx) => {
-        //   const element = mobileRecursiveBuilder(child, true);
-        //   return {
-        //     modelInstanceId: (element as any).props.modelInstanceId,
-        //     element: element,
-        //   }
-        // });
-        //
-        // const masterDataView = panels
-        //   .map(panel => self.formScreen.getBindingsByParentId(panel.modelInstanceId))
-        //   .find(bindings => bindings.length > 0)
-        //   ?.[0].parentDataView;
-        //
-        // if (masterDataView) {
-        //   if (parentIsNavigator) {
-        //     return panels.find(panel => panel.modelInstanceId === masterDataView.modelInstanceId)!.element;
-        //   }
-        //   return <StandaloneDetailNavigator node={new NavigationNode(masterDataView, panelMap)}/>;
-        // }
       }
 
       if (xso.attributes.Type === "Tab") {
         const boxes = findBoxes(xso);
-        const masterNode = isRootLevelNavigationNode
-          ? new RootNavigationNode(xso.attributes.Id)
-          : currentNavigationNode!;
+        const masterNode = new NavigationNode2();
+        masterNode.id=xso.attributes.Id;
+        masterNode.name = xso.attributes.Name;
 
         for (const box of boxes) {
           const childXmlNode = findUIChildren(box)[0];
           let tabNode = new NavigationNode2();
           masterNode.addChild(tabNode)
 
-          currentNavigationNode = tabNode;
-          const element = mobileRecursiveBuilder(childXmlNode);
+          const element = mobileRecursiveBuilder(childXmlNode, tabNode);
           if(element){
             tabNode.element = element;
             tabNode.id = childXmlNode.attributes.Id;
-            tabNode.name = childXmlNode.attributes.Name;
+            tabNode.name = childXmlNode.attributes.Name === ""
+              ? box.attributes.Name
+              : childXmlNode.attributes.Name;
           }
         }
         if(isRootLevelNavigationNode){
           return <TabNavigator rootNode={masterNode}/>
         }else{
+          currentNavigationNode?.merge(masterNode);
           return undefined;
         }
-
-        //
-        // const nodes = findBoxes(xso).map(box => {
-        //   let panels = findUIChildren(box).map(child  => {
-        //     const element = mobileRecursiveBuilder(child);
-        //     let modelInstanceId = (element as any).props.modelInstanceId;
-        //     return {
-        //       element: element,
-        //       masterDataView: self.formScreen.getBindingsByParentId(modelInstanceId)?.[0]?.parentDataView
-        //     }
-        //   });
-        //   const masterPanel = panels.find(panel => panel.masterDataView);
-        //
-        //   return new TabNavigationNode({
-        //       name: box.attributes.Name,
-        //       id: masterPanel?.masterDataView?.id ?? box.attributes.Id,
-        //       dataView: masterPanel?.masterDataView,
-        //       ctx: self.formScreen,
-        //       element: panels.map(panel => panel.element),
-        //       panelMap: panelMap
-        //     }
-        //   )
-        // });
-        // return <TabNavigator name={xso.attributes.Id} nodes={nodes}/>
+      }
+      if(xso.attributes.Type === "TreePanel" || xso.attributes.Type === "Grid"){
+        return (
+          <DataView
+            key={xso.$iid}
+            id={xso.attributes.Id}
+            modelInstanceId={xso.attributes.ModelInstanceId}
+            isHeadless={xso.attributes.IsHeadless === "true"}
+          />
+        );
       }
 
       return desktopRecursiveBuilder(xso);
@@ -315,11 +275,9 @@ export class FormScreenBuilder extends React.Component<{
     }
 
     function recursive(xso: any) {
-      const element: any = isMobileLayoutActive(self.formScreen)
-        ? mobileRecursiveBuilder(xso)
+      return isMobileLayoutActive(self.formScreen)
+        ? mobileRecursiveBuilder(xso, undefined)
         : desktopRecursiveBuilder(xso);
-      panelMap[xso.attributes.ModelInstanceId] = element;
-      return element;
     }
 
     const uiRoot = findUIRoot(this.props.xmlWindowObject);
@@ -328,54 +286,5 @@ export class FormScreenBuilder extends React.Component<{
 
   render() {
     return this.buildScreen();
-  }
-}
-
-class NavigationNode2 implements INavigationNode {
-  _children: NavigationNode2[] = [];
-
-  parent: NavigationNode2 | undefined;
-  readonly showDetailLinks = true;
-
-  public id: string = "";
-  public name: string = "";
-  public element: ReactNode = null as any;
-
-  get children() {
-    return this._children;
-  }
-
-  get parentChain() {
-    let parent = this.parent;
-    const chain: INavigationNode[] = [this];
-    while (parent) {
-      chain.push(parent);
-      parent = parent.parent;
-    }
-    return chain.reverse();
-  }
-
-  addChild(node: NavigationNode2) {
-    this._children.push(node);
-    node.parent = this;
-  }
-
-  removeChild(node: NavigationNode2) {
-    this._children.remove(node);
-    node.parent = undefined;
-  }
-
-  merge(other: NavigationNode2) {
-    this.element = other.element;
-    for (const child of [...other.children]) {
-      other.removeChild(child);
-      this.addChild(child);
-    }
-    this.id = other.id;
-    this.name = other.name;
-  }
-
-  equals(other: INavigationNode): boolean {
-    return this.id === other.id;
   }
 }
