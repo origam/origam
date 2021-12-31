@@ -163,27 +163,20 @@ export class DataViewHeaderInner extends React.Component<{
     const onMoveRowDownClickEvt = onMoveRowDownClick(dataView);
     const onCopyRowClickEvt = onCopyRowClick(dataView);
     const onFilterButtonClickEvt = onFilterButtonClick(dataView);
-    const onFirstRowClickEvt = onFirstRowClick(dataView);
     const onPrevRowClickEvt = onPrevRowClick(dataView);
     const onNextRowClickEvt = onNextRowClick(dataView);
-    const onLastRowClickEvt = onLastRowClick(dataView);
 
     const isMoveRowMenuVisible = getIsMoveRowMenuVisible(dataView);
+
+    const selectedRow = getSelectedRow(dataView);
 
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
+    const showCrudButtons =  isAddButton || (isDelButton && !!selectedRow) || (isCopyButton && !!selectedRow)
     const crudButtonsEnabled = getAreCrudButtonsEnabled(dataView);
 
-    const $cont = scopeFor(dataView);
-    const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
-    const selectedRow = getSelectedRow(dataView);
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
-
-    const goToFirstRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping;
-    const goToLastRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping;
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
@@ -191,7 +184,6 @@ export class DataViewHeaderInner extends React.Component<{
       <Measure bounds={true}>
         {({measureRef, contentRect}) => {
           const containerWidth = contentRect.bounds?.width || 0;
-          const isBreak640 = containerWidth < 640;
           return (
             <Observer>
               {() => (
@@ -223,17 +215,17 @@ export class DataViewHeaderInner extends React.Component<{
                             </DataViewHeaderAction>
                           </DataViewHeaderGroup>
                         ) : null}
-
+                        { showCrudButtons &&
                           <DataViewHeaderGroup noShrink={true}>
                             {isAddButton && (
                               <DataViewHeaderAction
-                                className={"addRow "+(crudButtonsEnabled ? "isGreenHover" : "")}
+                                className={"addRow " + (crudButtonsEnabled ? "isGreenHover" : "")}
                                 onClick={onCreateRowClickEvt}
                                 onShortcut={onCreateRowClickEvt}
                                 isDisabled={!crudButtonsEnabled}
                                 shortcutPredicate={isAddRecordShortcut}
                               >
-                                <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
+                                <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")}/>
                               </DataViewHeaderAction>
                             )}
 
@@ -265,51 +257,34 @@ export class DataViewHeaderInner extends React.Component<{
                               </DataViewHeaderAction>
                             )}
                           </DataViewHeaderGroup>
+                        }
 
-                        {!isBreak640 && (
-                          <>
-                            <DataViewHeaderGroup noShrink={true}>
-                              <DataViewHeaderAction
-                                onMouseDown={onFirstRowClickEvt}
-                                isDisabled={goToFirstRowDisabled}
-                              >
-                                <Icon
-                                  src="./icons/list-arrow-first.svg"
-                                  tooltip={T("First", "move_first_tool_tip")}
-                                />
-                              </DataViewHeaderAction>
-                              <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
-                                <Icon
-                                  src="./icons/list-arrow-previous.svg"
-                                  tooltip={T("Previous", "move_prev_tool_tip")}
-                                />
-                              </DataViewHeaderAction>
-                              <DataViewHeaderAction onMouseDown={onNextRowClickEvt}>
-                                <Icon
-                                  src="./icons/list-arrow-next.svg"
-                                  tooltip={T("Next", "move_next_tool_tip")}
-                                />
-                              </DataViewHeaderAction>
-                              <DataViewHeaderAction
-                                onMouseDown={onLastRowClickEvt}
-                                isDisabled={goToLastRowDisabled}
-                              >
-                                <Icon
-                                  src="./icons/list-arrow-last.svg"
-                                  tooltip={T("Last", "move_last_tool_tip")}
-                                />
-                              </DataViewHeaderAction>
-                            </DataViewHeaderGroup>
-
-                              <DataViewHeaderGroup noShrink={true} className={"rowCount"}>
-                                {this.renderRowCount()}
-                              </DataViewHeaderGroup>
-                            </>
-                          )}
-
-                        <DataViewHeaderGroup noShrink={true}>
-                          {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
+                        <DataViewHeaderGroup grovable={true}>
+                          <DataViewHeaderAction
+                            onMouseDown={() => dataView.activateTableView()}
+                            isDisabled={dataView.isTableViewActive()}
+                          >
+                            <Icon
+                              src="./icons/table-view.svg"
+                              tooltip={T("First", "move_first_tool_tip")}
+                            />
+                          </DataViewHeaderAction>
                         </DataViewHeaderGroup>
+
+                          <DataViewHeaderGroup noShrink={true}>
+                            <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
+                              <Icon
+                                src="./icons/list-arrow-previous.svg"
+                                tooltip={T("Previous", "move_prev_tool_tip")}
+                              />
+                            </DataViewHeaderAction>
+                            <DataViewHeaderAction onMouseDown={onNextRowClickEvt}>
+                              <Icon
+                                src="./icons/list-arrow-next.svg"
+                                tooltip={T("Next", "move_next_tool_tip")}
+                              />
+                            </DataViewHeaderAction>
+                          </DataViewHeaderGroup>
 
                         <DataViewHeaderGroup noShrink={true}>
                           <DataViewHeaderAction

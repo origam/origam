@@ -26,6 +26,7 @@ export class Icon extends React.Component<{
   src: string;
   className?: string;
   tooltip?: string
+  style?: {[key: string]: string}
 }> {
   render() {
     if (!this.props.src) {
@@ -34,6 +35,7 @@ export class Icon extends React.Component<{
     if (this.props.src.toLowerCase().endsWith("svg")) {
       return (
         <Svg
+          style={this.props.style}
           title={this.props.tooltip}
           src={this.props.src}
           className={cx(S.root, "icon", this.props.className)}
