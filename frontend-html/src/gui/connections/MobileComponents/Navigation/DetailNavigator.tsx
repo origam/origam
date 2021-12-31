@@ -27,6 +27,7 @@ import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { observable } from "mobx";
 import { MobileState } from "model/entities/MobileState";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 @observer
 export class StandaloneDetailNavigator extends React.Component<{
@@ -44,11 +45,28 @@ export class StandaloneDetailNavigator extends React.Component<{
 
   onNodeClick(node: INavigationNode){
     this.currentNode = node;
-    this.mobileState.activeDatViewId = node.dataView?.id;
+    this.mobileState.activeDataViewId = node.dataView?.id;
+  }
+
+  onScreenActivation(){
+    this.mobileState.activeDataViewId = this.props.node.dataView?.id
   }
 
   componentDidMount() {
-    this.mobileState.activeDatViewId = this.props.node.dataView?.id;
+    if(this.props.node.dataView){
+      getOpenedScreen(this.props.node.dataView)
+        .activationHandler
+        .add(() => this.onScreenActivation());
+      this.onScreenActivation();
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.props.node.dataView){
+      getOpenedScreen(this.props.node.dataView)
+        .activationHandler
+        .remove(() => this.onScreenActivation());
+    }
   }
 
   render(){

@@ -22,16 +22,50 @@ import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.mod
 import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
-import { observer } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { observable } from "mobx";
+import { MobileState } from "model/entities/MobileState";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 @observer
 export class TabNavigator extends React.Component<{
   rootNode: INavigationNode;
 }> {
 
+  static contextType = MobXProviderContext;
+
+  get mobileState(): MobileState {
+    return this.context.application.mobileState;
+  }
+
   @observable
   currentNode: INavigationNode = this.props.rootNode;
+
+  onNodeClick(node: INavigationNode){
+    this.currentNode = node;
+    this.mobileState.activeDataViewId = node.dataView?.id;
+  }
+
+  onScreenActivation(){
+    this.mobileState.activeDataViewId = this.props.rootNode.dataView?.id
+  }
+
+  componentDidMount() {
+    if(this.props.rootNode.dataView){
+      getOpenedScreen(this.props.rootNode.dataView)
+        .activationHandler
+        .add(() => this.onScreenActivation());
+      this.onScreenActivation();
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.props.rootNode.dataView){
+      getOpenedScreen(this.props.rootNode.dataView)
+        .activationHandler
+        .remove(() => this.onScreenActivation());
+    }
+  }
 
   render() {
     if(!this.currentNode){
@@ -44,10 +78,7 @@ export class TabNavigator extends React.Component<{
             <NavigationButton
               key={node.id}
               label={node.name}
-              onClick={() => {
-                this.currentNode = node
-              }
-              }
+              onClick={() => this.onNodeClick(node)}
             />)
           }
         </div>

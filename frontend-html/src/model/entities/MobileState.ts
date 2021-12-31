@@ -10,7 +10,8 @@ export class MobileState {
   @observable
   layoutState: IMobileLayoutState = new ScreenLayoutState()
 
-  activeDatViewId: string | undefined;
+  @observable
+  activeDataViewId: string | undefined;
 
   set workbench(workbench: IWorkbench){
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);

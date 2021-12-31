@@ -46,7 +46,7 @@ export class BottomToolBar extends React.Component<{
   }
 
   getActions(){
-    const screenACtions = getActiveScreenActions(this.props.ctx)
+    const screenActions = getActiveScreenActions(this.props.ctx)
       .flatMap(actionGroup => actionGroup.actions)
       .filter(action => getIsEnabledAction(action));
 
@@ -54,23 +54,25 @@ export class BottomToolBar extends React.Component<{
     const activeScreen = openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
     const dataViews = activeScreen?.content?.formScreen?.dataViews;
     if(!dataViews || dataViews.length === 0){
-      return screenACtions;
+      return screenActions;
     }
 
     let dataView;
     if( dataViews.length === 1){
       dataView = dataViews[0];
     }
-    if(!this.mobileState.activeDatViewId){
-      return screenACtions;
+    if(!this.mobileState.activeDataViewId){
+      return screenActions;
     }
-    dataView = dataViews.find(dataView => dataView.id === this.mobileState.activeDatViewId);
-
+    dataView = dataViews.find(dataView => dataView.id === this.mobileState.activeDataViewId);
+    if(!dataView){
+      return screenActions;
+    }
     const sectionActions = getPanelViewActions(dataView)
       .filter((action) => !action.groupId)
       .filter((action) => getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord);
 
-    return screenACtions.concat(sectionActions);
+    return screenActions.concat(sectionActions);
   }
 
   render() {
