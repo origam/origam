@@ -89,7 +89,8 @@ namespace Origam.ServerCore
                     },
                     AllowOfflineAccess = true,
                     AllowAccessTokensViaBrowser = true,
-                    AccessTokenType = AccessTokenType.Reference
+                    AccessTokenType = AccessTokenType.Reference,
+                    AllowedCorsOrigins = identityServerConfig.WebClient.AllowedCorsOrigins,
                 };
                 clients.Add( webClient);
             }

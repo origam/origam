@@ -189,6 +189,10 @@
               <File Id="ORIGAM.SERVICES.NETFX.DLL" Name="Origam.Services.NetFx.dll" Source="source\Origam.Services.NetFx.dll">
               </File>
             </Component>
+			<Component Id="ORIGAM.SERVICE.CORE.DLL" DiskId="1" Guid="3d4b3fa1-bf7d-4c9b-a4cf-03ec576a47f8">
+              <File Id="ORIGAM.SERVICE.CORE.DLL" Name="Origam.Service.Core.dll" Source="source\Origam.Service.Core.dll">
+              </File>
+            </Component>
             <Component Id="ORIGAM.UI.COMMON.DLL" DiskId="1" Guid="8FC297E5-344B-4F0F-8A30-509775DDA0A4">
               <File Id="ORIGAM.UI.COMMON.DLL" Name="Origam.UI.Common.dll" Source="source\Origam.UI.Common.dll">
               </File>
@@ -326,10 +330,6 @@
             </Component>
             <Component Id="ORIGAM.WINDOWS.EDITOR.DLL" DiskId="1" Guid="9A1F5AAB-E7AD-4316-8896-6A6A6F063F97">
               <File Id="ORIGAM.WINDOWS.EDITOR.DLL" Name="Origam.Windows.Editor.dll" Source="source\Origam.Windows.Editor.dll">
-              </File>
-            </Component>
-            <Component Id="ORIGAM.LICENSING.DLL" Guid="54f4b95a-aa00-4b37-bc65-c65f1e696156" DiskId="1">
-              <File Id="ORIGAM.LICENSING" Name="Origam.Licensing.dll" Source="source\Origam.Licensing.dll">
               </File>
             </Component>
             <Component Id="ORIGAM.GUI.DLL" Guid="451f23c1-b8df-42f9-89bb-278fcb0a65f1" DiskId="1">
@@ -713,6 +713,8 @@
       </ComponentRef>
       <ComponentRef Id="ORIGAM.SERVICES.NETFX.DLL">
       </ComponentRef>
+	  <ComponentRef Id="ORIGAM.SERVICE.CORE.DLL">
+      </ComponentRef>
       <ComponentRef Id="ORIGAM.UI.COMMON.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.UI.COMMON.NETFX.DLL">
@@ -890,8 +892,6 @@
       <ComponentRef Id="MICROSOFT.MSAGL.GRAPHVIEWERGDI.DLL">
       </ComponentRef>
       <ComponentRef Id="ORIGAM.WINDOWS.EDITOR.DLL">
-      </ComponentRef>
-      <ComponentRef Id="ORIGAM.LICENSING.DLL">
       </ComponentRef>
       <ComponentRef Id="MORELINQ.DLL">
       </ComponentRef>
