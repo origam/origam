@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { scopeFor } from "dic/Container";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { CtxDataViewHeaderExtension, DataViewHeaderExtension, } from "gui/Components/ScreenElements/DataView";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
@@ -51,14 +50,9 @@ import { getIsMoveRowMenuVisible } from "model/selectors/DataView/getIsMoveRowMe
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
-import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
-import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import React, { useContext } from "react";
 import Measure from "react-measure";
-import { onFirstRowClick } from "model/actions-ui/DataView/onFirstRowClick";
-import { onLastRowClick } from "model/actions-ui/DataView/onLastRowClick";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { computed } from "mobx";
@@ -183,7 +177,6 @@ export class DataViewHeaderInner extends React.Component<{
     return (
       <Measure bounds={true}>
         {({measureRef, contentRect}) => {
-          const containerWidth = contentRect.bounds?.width || 0;
           return (
             <Observer>
               {() => (

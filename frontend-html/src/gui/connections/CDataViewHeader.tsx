@@ -190,15 +190,16 @@ export class CDataViewHeaderInner extends React.Component<{
     const onLastRowClickEvt = onLastRowClick(dataView);
 
     const isMoveRowMenuVisible = getIsMoveRowMenuVisible(dataView);
+    const selectedRow = getSelectedRow(dataView);
 
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
+    const showCrudButtons =  isAddButton || (isDelButton && !!selectedRow) || (isCopyButton && !!selectedRow)
     const crudButtonsEnabled = getAreCrudButtonsEnabled(dataView);
 
     const $cont = scopeFor(dataView);
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
-    const selectedRow = getSelectedRow(dataView);
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
     const goToFirstRowDisabled =
@@ -250,17 +251,17 @@ export class CDataViewHeaderInner extends React.Component<{
                             </DataViewHeaderAction>
                           </DataViewHeaderGroup>
                         ) : null}
-
+                        {showCrudButtons &&
                           <DataViewHeaderGroup noShrink={true}>
                             {isAddButton && (
                               <DataViewHeaderAction
-                                className={"addRow "+(crudButtonsEnabled ? "isGreenHover" : "")}
+                                className={"addRow " + (crudButtonsEnabled ? "isGreenHover" : "")}
                                 onClick={onCreateRowClickEvt}
                                 onShortcut={onCreateRowClickEvt}
                                 isDisabled={!crudButtonsEnabled}
                                 shortcutPredicate={isAddRecordShortcut}
                               >
-                                <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
+                                <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")}/>
                               </DataViewHeaderAction>
                             )}
 
@@ -292,6 +293,7 @@ export class CDataViewHeaderInner extends React.Component<{
                               </DataViewHeaderAction>
                             )}
                           </DataViewHeaderGroup>
+                        }
 
                         <DataViewHeaderGroup grovable={true}>
                           {this.props.extension.render("actions")}
