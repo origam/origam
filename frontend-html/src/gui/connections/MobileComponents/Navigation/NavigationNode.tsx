@@ -18,15 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ReactNode } from "react";
+import { IDataView } from "model/entities/types/IDataView";
 
 export interface INavigationNode {
   readonly name: string;
   readonly children: INavigationNode[];
   parent: INavigationNode | undefined;
   readonly parentChain: INavigationNode[];
-  showDetailLinks: ()=>boolean;
+  showDetailLinks(): boolean;
   readonly element: ReactNode;
   readonly id: string;
+  dataView: IDataView | undefined;
 
   equals(other: INavigationNode): boolean;
   addChild(node: INavigationNode): void;
@@ -35,11 +37,18 @@ export interface INavigationNode {
 }
 
 export class NavigationNode implements INavigationNode {
-  _children: NavigationNode[] = [];
+  private _children: NavigationNode[] = [];
   private _name: string = "";
+  dataView: IDataView | undefined;
 
   parent: NavigationNode | undefined;
-  showDetailLinks = () => true;
+
+  showDetailLinks(){
+    if(!this.dataView){
+      return true;
+    }
+    return this.dataView.isFormViewActive();
+  }
 
   public id: string = "";
   public element: ReactNode = null as any;

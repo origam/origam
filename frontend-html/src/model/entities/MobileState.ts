@@ -10,6 +10,8 @@ export class MobileState {
   @observable
   layoutState: IMobileLayoutState = new ScreenLayoutState()
 
+  activeDatViewId: string | undefined;
+
   set workbench(workbench: IWorkbench){
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);
     workbenchLifecycle.addMainMenuItemClickHandler(

@@ -20,22 +20,39 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useState } from "react";
 import S from "gui/connections/MobileComponents/Navigation/DetailNavigator.module.scss";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
-import { observer } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { Icon } from "@origam/components";
 import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { observable } from "mobx";
+import { MobileState } from "model/entities/MobileState";
 
 @observer
 export class StandaloneDetailNavigator extends React.Component<{
   node: INavigationNode;
 }> {
+
+  static contextType = MobXProviderContext;
+
+  get mobileState(): MobileState {
+    return this.context.application.mobileState;
+  }
+
   @observable
   currentNode: INavigationNode = this.props.node;
 
+  onNodeClick(node: INavigationNode){
+    this.currentNode = node;
+    this.mobileState.activeDatViewId = node.dataView?.id;
+  }
+
+  componentDidMount() {
+    this.mobileState.activeDatViewId = this.props.node.dataView?.id;
+  }
+
   render(){
-    return <DetailNavigator node={this.currentNode} onNodeClick={node => this.currentNode = node}/>
+    return <DetailNavigator node={this.currentNode} onNodeClick={node => this.onNodeClick(node)}/>
   }
 }
 

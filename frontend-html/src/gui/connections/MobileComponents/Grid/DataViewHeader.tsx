@@ -20,9 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { scopeFor } from "dic/Container";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { CtxDataViewHeaderExtension, DataViewHeaderExtension, } from "gui/Components/ScreenElements/DataView";
-import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
-import { DataViewHeaderButtonGroup } from "gui/Components/DataViewHeader/DataViewHeaderButtonGroup";
 import { DataViewHeaderGroup } from "gui/Components/DataViewHeader/DataViewHeaderGroup";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
@@ -42,7 +40,7 @@ import { onMoveRowUpClick } from "model/actions-ui/DataView/onMoveRowUpClick";
 import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
-import { IAction, IActionMode, IActionPlacement } from "model/entities/types/IAction";
+import { IAction, IActionMode } from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getExpandedGroupRowCount } from "model/selectors/DataView/getExpandedGroupRowCount";
@@ -50,7 +48,6 @@ import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVi
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsMoveRowMenuVisible } from "model/selectors/DataView/getIsMoveRowMenuVisible";
-import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
@@ -69,9 +66,16 @@ import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuAction
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
+import {
+  isAddRecordShortcut,
+  isDeleteRecordShortcut,
+  isDuplicateRecordShortcut, isFilterRecordShortcut
+} from "gui/connections/CDataViewHeader";
+import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
+
 
 @observer
-export class CDataViewHeaderInner extends React.Component<{
+export class DataViewHeaderInner extends React.Component<{
   isVisible: boolean;
   extension: DataViewHeaderExtension;
 }> {
@@ -87,13 +91,6 @@ export class CDataViewHeaderInner extends React.Component<{
 
   shouldBeShown(action: IAction) {
     return getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord;
-  }
-
-  @computed
-  get relevantActions() {
-    return this.allActions
-      .filter((action) => !action.groupId)
-      .filter((action) => this.shouldBeShown(action));
   }
 
   @computed
@@ -145,25 +142,7 @@ export class CDataViewHeaderInner extends React.Component<{
 
   @computed
   get isBarVisible() {
-    return this.props.isVisible || this.hasSomeRelevantActions;
-  }
-
-  @computed
-  get isActionsOnly() {
-    return !this.props.isVisible && this.hasSomeRelevantActions;
-  }
-
-  @computed
-  get hasSomeRelevantActions() {
-    return (
-      this.relevantActions.filter((action) => action.placement !== IActionPlacement.PanelMenu)
-        .length > 0
-    );
-  }
-
-  @computed
-  get allActions() {
-    return getPanelViewActions(this.dataView);
+    return this.props.isVisible;// || this.hasSomeRelevantActions;
   }
 
   @computed
@@ -202,9 +181,9 @@ export class CDataViewHeaderInner extends React.Component<{
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
     const goToFirstRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping; // || isInfiniteScrollingActive(dataView);
+      getGroupingConfiguration(dataView).isGrouping;
     const goToLastRowDisabled =
-      getGroupingConfiguration(dataView).isGrouping; // || isInfiniteScrollingActive(dataView);
+      getGroupingConfiguration(dataView).isGrouping;
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
@@ -218,12 +197,6 @@ export class CDataViewHeaderInner extends React.Component<{
               {() => (
                 <DataViewHeader domRef={measureRef} isVisible={this.isBarVisible}>
                   {this.isBarVisible &&
-                  (this.isActionsOnly ? (
-                    <DataViewHeaderGroup grovable={true} noDivider={true}>
-                      {this.props.extension.render("actions")}
-                      <DataViewHeaderButtonGroup actions={this.relevantActions}/>
-                    </DataViewHeaderGroup>
-                  ) : (
                     <>
                       <h2 title={label}>{label}</h2>
 
@@ -292,11 +265,6 @@ export class CDataViewHeaderInner extends React.Component<{
                               </DataViewHeaderAction>
                             )}
                           </DataViewHeaderGroup>
-
-                        <DataViewHeaderGroup grovable={true}>
-                          {this.props.extension.render("actions")}
-                          <DataViewHeaderButtonGroup actions={this.relevantActions}/>
-                        </DataViewHeaderGroup>
 
                         {!isBreak640 && (
                           <>
@@ -463,7 +431,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           />
                         </DataViewHeaderGroup>
                       </>
-                    ))}
+                    }
                 </DataViewHeader>
               )}
             </Observer>
@@ -474,28 +442,7 @@ export class CDataViewHeaderInner extends React.Component<{
   }
 }
 
-export function CDataViewHeader(props: { isVisible: boolean }) {
+export function MobileDataViewHeader(props: { isVisible: boolean }) {
   const extension = useContext(CtxDataViewHeaderExtension);
-  return <CDataViewHeaderInner isVisible={props.isVisible} extension={extension}/>;
-}
-
-export function isAddRecordShortcut(event: any) {
-  return (
-    ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "i") ||
-    ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "j")
-  );
-}
-
-export function isDeleteRecordShortcut(event: any) {
-  return (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "Delete";
-}
-
-export function isDuplicateRecordShortcut(event: any) {
-  return (
-    (event.ctrlKey || event.metaKey) && !event.shiftKey && (event.key === "d" || event.key === "k")
-  );
-}
-
-export function isFilterRecordShortcut(event: any) {
-  return (event.ctrlKey || event.metaKey) && event.key === "f";
+  return <DataViewHeaderInner isVisible={props.isVisible} extension={extension}/>;
 }

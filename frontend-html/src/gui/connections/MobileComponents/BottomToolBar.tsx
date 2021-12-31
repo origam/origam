@@ -22,24 +22,61 @@ import S from "./BottomToolBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
 import { MobileState } from "model/entities/MobileState";
 import { ActionDropUp } from "gui/connections/MobileComponents/ActionDropUp";
-import { observer } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
 import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
+import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
+import { IActionMode } from "model/entities/types/IAction";
+import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
+import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
 
 @observer
 export class BottomToolBar extends React.Component<{
   mobileState: MobileState,
   ctx: any
 }> {
-  render() {
 
-    const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
-    const actions = getActiveScreenActions(this.props.ctx)
+  static contextType = MobXProviderContext;
+
+  get mobileState(): MobileState {
+    return this.context.application.mobileState;
+  }
+
+  getActions(){
+    const screenACtions = getActiveScreenActions(this.props.ctx)
       .flatMap(actionGroup => actionGroup.actions)
       .filter(action => getIsEnabledAction(action));
+
+    const openedScreenItems = getOpenedNonDialogScreenItems(this.props.ctx);
+    const activeScreen = openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
+    const dataViews = activeScreen?.content?.formScreen?.dataViews;
+    if(!dataViews || dataViews.length === 0){
+      return screenACtions;
+    }
+
+    let dataView;
+    if( dataViews.length === 1){
+      dataView = dataViews[0];
+    }
+    if(!this.mobileState.activeDatViewId){
+      return screenACtions;
+    }
+    dataView = dataViews.find(dataView => dataView.id === this.mobileState.activeDatViewId);
+
+    const sectionActions = getPanelViewActions(dataView)
+      .filter((action) => !action.groupId)
+      .filter((action) => getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord);
+
+    return screenACtions.concat(sectionActions);
+  }
+
+  render() {
+    const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
+
+    const actions = this.getActions();
 
     return (
       <div className={S.root}>

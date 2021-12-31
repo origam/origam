@@ -128,10 +128,7 @@ export class FormScreenBuilder extends React.Component<{
             tabNode.name = childXmlNode.attributes.Name === ""
               ? box.attributes.Name
               : childXmlNode.attributes.Name;
-            const detailDataView = self.formScreen.getDataViewByModelInstanceId(childXmlNode.attributes.ModelInstanceId)
-            if(detailDataView){
-              tabNode.showDetailLinks = detailDataView.isFormViewActive
-            }
+            tabNode.dataView = self.formScreen.getDataViewByModelInstanceId(childXmlNode.attributes.ModelInstanceId)
           }
         }
         if(isRootLevelNavigationNode){
@@ -291,10 +288,7 @@ export class FormScreenBuilder extends React.Component<{
       navigationNode.element = element;
       navigationNode.id = xmlNode.attributes.Id;
       navigationNode.name = getNavigationNodeName(xmlNode, parentXmlElement);
-      const dataView = self.formScreen.getDataViewByModelInstanceId(xmlNode.attributes.ModelInstanceId)
-      if (dataView) {
-        navigationNode.showDetailLinks = dataView.isFormViewActive
-      }
+      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(xmlNode.attributes.ModelInstanceId);
     }
 
     return recursive(uiRoot);
