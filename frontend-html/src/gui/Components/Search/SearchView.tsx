@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import React, { RefObject } from "react";
 import S from "gui/Components/Search/SearchView.module.scss";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { T } from "utils/translation";
 import { ResultGroup } from "gui/Components/Search/ResultGroup";
 import { getSearcher } from "model/selectors/getSearcher";

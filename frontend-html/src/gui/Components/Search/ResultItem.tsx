@@ -3,7 +3,7 @@ import React, { RefObject } from "react";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { action, observable } from "mobx";
 import S from "gui/Components/Search/ResultItem.module.scss";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 
 @observer
 export class ResultItem extends React.Component<{

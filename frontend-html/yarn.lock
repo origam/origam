@@ -1600,10 +1600,10 @@
   dependencies:
     react-inlinesvg "^2.3.0"
 
-"@origam/components@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.4.1.tgz#cd5937b3d14f827615cbf228134d32d231b14bce"
-  integrity sha512-Tr34vJSEcD7egAdzsE00ShtPz4j1X7ufqYZlXizxeIZmsxibFYR4D3v9XS9UXQ5iFJIYAvi/92850AwSAtXMgA==
+"@origam/components@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.4.2.tgz#a62adb76fe667b667d69f0790675014fa0d64446"
+  integrity sha512-Q+xyI7sO9AnEOTXAYFbzvOo5oEFoalYpgMS4uukDI0+ctK90AjsY071ndbk/lmp9OdioBoaZaEd/K07o1TZlyw==
   dependencies:
     react-inlinesvg "^2.3.0"
 

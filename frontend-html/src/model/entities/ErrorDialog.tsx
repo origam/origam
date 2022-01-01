@@ -27,7 +27,7 @@ import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
 import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 function NewExternalPromise<T>() {
