@@ -38,6 +38,8 @@ import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
 import { getMomentFormat } from "../../../xmlInterpreters/getMomentFormat";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -81,6 +83,7 @@ export function DropdownEditor(props: {
   customStyle?: any;
 }) {
   const beh = useContext(CtxDropdownEditor).behavior;
+  const workbench = useContext(MobXProviderContext).workbench as IWorkbench;
   return (
     <Observer>
       {() => (
@@ -100,7 +103,12 @@ export function DropdownEditor(props: {
               />
             )
           }
-          renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody/>} minSideMargin={50}/>}
+          renderDropdown={() =>
+            <DropdownLayoutBody
+              render={() => <DropdownEditorBody/>}
+              minSideMargin={isMobileLayoutActive(workbench) ? 20 : 50}
+            />
+          }
         />
       )}
     </Observer>
