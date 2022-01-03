@@ -140,9 +140,9 @@ export class TextEditor extends React.Component<{
 
   getMultilineDivClass() {
     if (this.props.wrapText) {
-      return S.input + " " + S.wrapText;
+      return S.readonlyDiv + " " + S.input + " " + S.wrapText;
     }
-    return S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
+    return S.readonlyDiv + " " + S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
   }
 
   private renderValueTag() {
