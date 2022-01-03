@@ -59,6 +59,8 @@ export class FormScreenBuilder extends React.Component<{
     const dataViewMap = new Map<string, IDataView>();
     const uiRoot = findUIRoot(this.props.xmlWindowObject);
 
+    // debugger;
+
     function getDataView(xso: any) {
       const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
       if (dataView) {
@@ -90,6 +92,9 @@ export class FormScreenBuilder extends React.Component<{
 
         const [masterXmlNode, detailXmlNode] = findUIChildren(xso);
         const masterElement = mobileRecursiveBuilder(masterXmlNode, currentNavigationNode);
+        if(!detailXmlNode){
+          return masterElement;
+        }
         const detailElement = mobileRecursiveBuilder(detailXmlNode, currentNavigationNode);
 
         if(!masterElement){
