@@ -223,6 +223,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *onWorkQueueListItemClick(event: any, item: any) {
     const openedScreens = getOpenedScreens(this);
 
+    this.menuItemHandlers.forEach(handler => handler());
     const id = item.id;
     const type = IMainMenuItemType.WorkQueue;
     const label = item.name;
