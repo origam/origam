@@ -15,7 +15,7 @@ export class MobileState {
 
   set workbench(workbench: IWorkbench){
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);
-    workbenchLifecycle.addMainMenuItemClickHandler(
+    workbenchLifecycle.mainMenuItemClickHandler.add(
       () => this.layoutState = new ScreenLayoutState()
     );
     this._workbench = workbench;
