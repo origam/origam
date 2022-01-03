@@ -37,6 +37,7 @@ import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar";
 import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { IWorkbench } from "model/entities/types/IWorkbench";
+import { CDialogContent } from "gui/connections/CDialogContent";
 
 
 @observer
@@ -87,6 +88,7 @@ export class MobileMain extends React.Component<{}> {
         <div className={S.root}>
           <TopToolBar mobileState={this.mobileState}/>
           {this.renderMainPageContents()}
+          <CDialogContent/>
           <BottomToolBar
             mobileState={this.mobileState}
             ctx={this.context.application}
