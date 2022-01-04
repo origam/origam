@@ -263,7 +263,7 @@ export class DataViewHeaderInner extends React.Component<{
                             />
                           </DataViewHeaderAction>
                         </DataViewHeaderGroup>
-
+                        {dataView.isFormViewActive() &&
                           <DataViewHeaderGroup noShrink={true}>
                             <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
                               <Icon
@@ -278,22 +278,24 @@ export class DataViewHeaderInner extends React.Component<{
                               />
                             </DataViewHeaderAction>
                           </DataViewHeaderGroup>
-
-                        <DataViewHeaderGroup noShrink={true}>
-                          <DataViewHeaderAction
-                            onMouseDown={onFilterButtonClickEvt}
-                            onShortcut={onFilterButtonClickEvt}
-                            shortcutPredicate={isFilterRecordShortcut}
-                            isActive={isFilterSettingsVisible}
-                            className={"test-filter-button"}
-                          >
-                            <Icon
-                              src="./icons/search-filter.svg"
-                              tooltip={T("Filter", "filter_tool_tip")}
-                            />
-                          </DataViewHeaderAction>
-                          <FilterDropDown ctx={dataView}/>
-                        </DataViewHeaderGroup>
+                        }
+                        {dataView.isTableViewActive() &&
+                          <DataViewHeaderGroup noShrink={true}>
+                            <DataViewHeaderAction
+                              onMouseDown={onFilterButtonClickEvt}
+                              onShortcut={onFilterButtonClickEvt}
+                              shortcutPredicate={isFilterRecordShortcut}
+                              isActive={isFilterSettingsVisible}
+                              className={"test-filter-button"}
+                            >
+                              <Icon
+                                src="./icons/search-filter.svg"
+                                tooltip={T("Filter", "filter_tool_tip")}
+                              />
+                            </DataViewHeaderAction>
+                            <FilterDropDown ctx={dataView}/>
+                          </DataViewHeaderGroup>
+                        }
                       </div>
 
                         <DataViewHeaderGroup noShrink={true}>
