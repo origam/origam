@@ -151,11 +151,11 @@ export class DataViewHeaderInner extends React.Component<{
     const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
     const onExportToExcelClickEvt = onExportToExcelClick(dataView);
     const onDeleteRowClickEvt = onDeleteRowClick(dataView);
-    const onCreateRowClickEvt = onCreateRowClick(dataView);
+    const onCreateRowClickEvt = onCreateRowClick(dataView, true);
     const onMoveRowUpClickEvt = onMoveRowUpClick(dataView);
     const isRowMovingDisabled = getIsRowMovingDisabled(dataView);
     const onMoveRowDownClickEvt = onMoveRowDownClick(dataView);
-    const onCopyRowClickEvt = onCopyRowClick(dataView);
+    const onCopyRowClickEvt = onCopyRowClick(dataView, true);
     const onFilterButtonClickEvt = onFilterButtonClick(dataView);
     const onPrevRowClickEvt = onPrevRowClick(dataView);
     const onNextRowClickEvt = onNextRowClick(dataView);
