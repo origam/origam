@@ -133,9 +133,13 @@ namespace Origam.Utils
         public class DBTestArguments
         {
             [Option('t', "tries", Required = true,
-                HelpText = "How many time to try database readiness.")]
+                HelpText = "How many times to run test.")]
             public int tries { get; set; }
+            [Option('d', "delay", Required = true,
+                HelpText = "How long to wait till next try.")]
             public int delay { get; set; }
+            [Option('c', "sql-command", Required = true,
+                HelpText = "What sql-command to run.")]
             public string sqlCommand { get; set; }
         }
 
@@ -180,6 +184,9 @@ namespace Origam.Utils
                 HelpText =
                     "Generate hash of supplied password. The hash can be inserted into column Password in OrigamUser table as development password reset.")]
             public GeneratePassHashOptions GeneratePassHashOptions { get; set; }
+            
+            [VerbOption("test-db", HelpText = "Try to connect to database and run a sql command.")]
+            public DBTestArguments DbTestArguments { get; set; }
 #if !NETCORE2_1
             [VerbOption("process-queue",
                 HelpText = "Process a queue.")]
@@ -574,9 +581,17 @@ namespace Origam.Utils
             }
         }
 
-        private static int TestDatabase(DBTestArguments arguments) {
-            OrigamSettings settings =
-                ConfigurationManager.GetActiveConfiguration();
+        private static int TestDatabase(DBTestArguments arguments)
+        {
+            OrigamSettingsCollection configurations =
+                ConfigurationManager.GetAllConfigurations();
+            if (configurations.Count != 1)
+            {
+                throw new ArgumentException("OrigamSettings.config does not contain exactly one configuration.");
+            }
+
+            OrigamSettings settings = configurations[0];
+            
             string connString = settings.DataConnectionString;
             int result = 0;
 
@@ -603,7 +618,6 @@ namespace Origam.Utils
                                      $"Result:{info}");
                             break;
                         }
-                        continue;
                     }
                 }
                 catch (Exception ex)
