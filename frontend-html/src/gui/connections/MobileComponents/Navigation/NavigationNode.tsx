@@ -137,14 +137,6 @@ export class NavigatorState{
     this.currentNode = node;
   }
 
-  addDetailBreadCrumbNode(){
-    this.mobileState.breadCrumbList.push({
-      caption: "Detail",
-      isVisible: () => this.currentNode.dataView?.isFormViewActive()!,
-      onClick: () => {}
-    })
-  }
-
   @action
   onNodeClick(node: INavigationNode){
     if(this.currentNode === node){
@@ -155,7 +147,8 @@ export class NavigatorState{
     }
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
-    this.mobileState.breadCrumbList = this.currentNode.parentChain.map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
-    this.addDetailBreadCrumbNode();
+    this.mobileState.breadCrumbsState.breadCrumbList = this.currentNode.parentChain
+      .map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
+    this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
   }
 }

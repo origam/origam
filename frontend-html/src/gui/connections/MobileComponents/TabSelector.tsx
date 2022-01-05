@@ -45,7 +45,7 @@ export class TabSelector extends React.Component<{
   @action
   onItemClick(openScreen: IOpenedScreen, event: any){
     onScreenTabHandleClick(openScreen)(event)
-    this.props.mobileState.resetBreadCrumbs();
+    this.props.mobileState.breadCrumbsState.resetBreadCrumbs();
   }
 
   render() {

@@ -20,11 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useContext } from "react";
 import S from "./BreadCrumbs.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
-import { MobileState } from "model/entities/MobileState";
+import { BreadCrumbsState } from "model/entities/MobileState";
 
 export const BreadCrumbs: React.FC<{}> = observer((props) => {
-  const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
-  const breadCrumbList = mobileState.breadCrumbList.filter(node => node.isVisible());
+  const breadCrumbsState = useContext(MobXProviderContext).application.mobileState.breadCrumbsState as BreadCrumbsState;
+  const breadCrumbList = breadCrumbsState.breadCrumbList.filter(node => node.isVisible());
 
   function makeBreadcrumb(node: IBreadCrumbNode, index: number) {
     return (

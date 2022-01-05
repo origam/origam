@@ -25,7 +25,7 @@ import { Icon } from "@origam/components";
 import { INavigationNode, NavigatorState } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
-import { MobileState } from "model/entities/MobileState";
+import { BreadCrumbsState, MobileState } from "model/entities/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 @observer
@@ -75,13 +75,13 @@ export class DetailNavigator extends React.Component<{
 
   static contextType = MobXProviderContext;
 
-  get mobileState(): MobileState {
-    return this.context.application.mobileState;
+  get breadCrumbsState(): BreadCrumbsState {
+    return this.context.application.mobileState.breadCrumbsState;
   }
 
   componentDidMount() {
     if(this.props.node.dataView?.isTableViewActive && !this.props.node.parent){
-      this.mobileState.addDetailBreadCrumbNode(this.props.node.dataView);
+      this.breadCrumbsState.addDetailBreadCrumbNodeToRoot(this.props.node.dataView);
     }
   }
 

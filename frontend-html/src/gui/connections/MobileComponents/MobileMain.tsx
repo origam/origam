@@ -68,7 +68,7 @@ export class MobileMain extends React.Component<{}> {
     if(this.mobileState.layoutState instanceof ScreenLayoutState){
       const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
       if (openedScreenItems.length > 0) {
-        this.mobileState.resetBreadCrumbs();
+        this.mobileState.breadCrumbsState.resetBreadCrumbs();
         return <ScreenContent/>;
       } else {
         return <CSidebar/>;

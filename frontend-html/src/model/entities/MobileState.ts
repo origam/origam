@@ -18,36 +18,7 @@ export class MobileState {
   @observable
   activeDataViewId: string | undefined;
 
-  @action
-  resetBreadCrumbs(){
-    const breadCrumbCaption = () => this._workbench
-      ? getOpenedNonDialogScreenItems(this._workbench).find(item => item.isActive)?.tabTitle ?? ""
-      : "";
-    this.breadCrumbList.length = 0;
-    const activeScreen = getOpenedNonDialogScreenItems(this._workbench).find(item => item.isActive);
-
-    this.breadCrumbList.push(new RootBreadCrumbNode(breadCrumbCaption));
-    if((activeScreen?.content?.formScreen?.rootDataViews?.length ?? 0) > 0){
-      const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
-      this.addDetailBreadCrumbNode(dataView);
-    }
-  }
-
-  addDetailBreadCrumbNode(dataView: IDataView){
-    if(this.breadCrumbList.length === 1){
-
-      this.breadCrumbList[0].onClick = ()=> dataView.activateTableView?.();
-
-      this.breadCrumbList.push({
-        caption: "Detail",
-        isVisible: () => dataView?.isFormViewActive()!,
-        onClick: () => {}
-      });
-    }
-  }
-
-  @observable
-  breadCrumbList: IBreadCrumbNode[] = [];
+  breadCrumbsState = new BreadCrumbsState()
 
   set workbench(workbench: IWorkbench){
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);
@@ -55,6 +26,7 @@ export class MobileState {
       () => this.layoutState = new ScreenLayoutState()
     );
     this._workbench = workbench;
+    this.breadCrumbsState.workbench = workbench;
   }
 
   async close() {
@@ -66,6 +38,46 @@ export class MobileState {
   }
 }
 
+
+export class BreadCrumbsState{
+
+  workbench: IWorkbench |undefined;
+
+  @action
+  resetBreadCrumbs(){
+    const breadCrumbCaption = () => this.workbench
+      ? getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive)?.tabTitle ?? ""
+      : "";
+    this.breadCrumbList.length = 0;
+    const activeScreen = getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive);
+
+    this.breadCrumbList.push(new RootBreadCrumbNode(breadCrumbCaption));
+    if((activeScreen?.content?.formScreen?.rootDataViews?.length ?? 0) > 0){
+      const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
+      this.addDetailBreadCrumbNodeToRoot(dataView);
+    }
+  }
+
+  @action
+  addDetailBreadCrumbNodeToRoot(dataView: IDataView){
+    if(this.breadCrumbList.length === 1){
+      this.breadCrumbList[0].onClick = ()=> dataView.activateTableView?.();
+      this.addDetailBreadCrumbNode(dataView);
+    }
+  }
+
+  @action
+  addDetailBreadCrumbNode(dataView: IDataView){
+    this.breadCrumbList.push({
+      caption: "Detail",
+      isVisible: () => dataView?.isFormViewActive()!,
+      onClick: () => {}
+    });
+  }
+
+  @observable
+  breadCrumbList: IBreadCrumbNode[] = [];
+}
 
 interface IMobileLayoutState{
   actionDropUpHidden: boolean;
