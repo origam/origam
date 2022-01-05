@@ -19,14 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
-import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { INavigationNode, NavigatorState } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { MobXProviderContext, observer } from "mobx-react";
-import { action, observable } from "mobx";
 import { MobileState } from "model/entities/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
-import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 
 @observer
 export class TabNavigator extends React.Component<{
@@ -39,18 +37,7 @@ export class TabNavigator extends React.Component<{
     return this.context.application.mobileState;
   }
 
-  @observable
-  currentNode: INavigationNode = this.props.rootNode;
-
-  @action
-  onNodeClick(node: INavigationNode){
-    if(this.currentNode === node){
-      return;
-    }
-    this.currentNode = node;
-    this.mobileState.activeDataViewId = node.dataView?.id;
-    this.mobileState.breadCrumbList = this.currentNode.parentChain.map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
-  }
+  navigatorState = new NavigatorState(this.mobileState, this.props.rootNode);
 
   onScreenActivation(){
     this.mobileState.activeDataViewId = this.props.rootNode.dataView?.id
@@ -74,23 +61,23 @@ export class TabNavigator extends React.Component<{
   }
 
   render() {
-    if(!this.currentNode){
+    if(!this.navigatorState.currentNode){
       return null;
     }
-    if (!this.currentNode.parent) {
+    if (!this.navigatorState.currentNode.parent) {
       return (
         <div className={SN.navigationButtonContainer}>
-          {this.currentNode.children.map(node =>
+          {this.navigatorState.currentNode.children.map(node =>
             <NavigationButton
               key={node.id}
               label={node.name}
-              onClick={() => this.onNodeClick(node)}
+              onClick={() => this.navigatorState.onNodeClick(node)}
             />)
           }
         </div>
       );
     } else {
-      return <DetailNavigator node={this.currentNode} onNodeClick={node => this.onNodeClick(node)}/>
+      return <DetailNavigator node={this.navigatorState.currentNode} onNodeClick={node => this.navigatorState.onNodeClick(node)}/>
     }
   }
 }

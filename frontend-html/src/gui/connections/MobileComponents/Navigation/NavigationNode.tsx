@@ -19,6 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ReactNode } from "react";
 import { IDataView } from "model/entities/types/IDataView";
+import { action, observable } from "mobx";
+import { MobileState } from "model/entities/MobileState";
+import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 
 export interface INavigationNode {
   readonly name: string;
@@ -94,9 +97,39 @@ export class NavigationNode implements INavigationNode {
     this.id = other.id;
     this._name = other._name;
     this.showDetailLinks = other.showDetailLinks;
+    this.dataView = other.dataView;
   }
 
   equals(other: INavigationNode): boolean {
     return this.id === other.id;
+  }
+}
+
+export class NavigatorState{
+
+  @observable
+  currentNode: INavigationNode;
+
+  constructor(private mobileState: MobileState, node: INavigationNode) {
+    this.currentNode = node;
+  }
+
+
+  @action
+  onNodeClick(node: INavigationNode){
+    if(this.currentNode === node){
+      if(this.currentNode.dataView?.isFormViewActive()){
+        this.currentNode.dataView?.activateTableView?.();
+      }
+      return;
+    }
+    this.currentNode = node;
+    this.mobileState.activeDataViewId = node.dataView?.id;
+    this.mobileState.breadCrumbList = this.currentNode.parentChain.map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
+    this.mobileState.breadCrumbList.push({
+      caption: "Detail",
+      isVisible: () => this.currentNode.dataView?.isFormViewActive()!,
+      onClick: () => {}
+    })
   }
 }

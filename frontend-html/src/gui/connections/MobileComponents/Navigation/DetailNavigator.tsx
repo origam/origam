@@ -22,13 +22,11 @@ import S from "gui/connections/MobileComponents/Navigation/DetailNavigator.modul
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { Icon } from "@origam/components";
-import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
+import { INavigationNode, NavigatorState } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
-import { action, observable } from "mobx";
 import { MobileState } from "model/entities/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
-import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 
 @observer
 export class StandaloneDetailNavigator extends React.Component<{
@@ -41,18 +39,7 @@ export class StandaloneDetailNavigator extends React.Component<{
     return this.context.application.mobileState;
   }
 
-  @observable
-  currentNode: INavigationNode = this.props.node;
-
-  @action
-  onNodeClick(node: INavigationNode){
-    if(this.currentNode === node){
-      return;
-    }
-    this.currentNode = node;
-    this.mobileState.activeDataViewId = node.dataView?.id;
-    this.mobileState.breadCrumbList = this.currentNode.parentChain.map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
-  }
+  navigatorState = new NavigatorState(this.mobileState, this.props.node);
 
   onScreenActivation(){
     this.mobileState.activeDataViewId = this.props.node.dataView?.id
@@ -76,7 +63,7 @@ export class StandaloneDetailNavigator extends React.Component<{
   }
 
   render(){
-    return <DetailNavigator node={this.currentNode} onNodeClick={node => this.onNodeClick(node)}/>
+    return <DetailNavigator node={this.navigatorState.currentNode} onNodeClick={node => this.navigatorState.onNodeClick(node)}/>
   }
 }
 

@@ -24,10 +24,11 @@ import { MobileState } from "model/entities/MobileState";
 
 export const BreadCrumbs: React.FC<{}> = observer((props) => {
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
+  const breadCrumbList = mobileState.breadCrumbList.filter(node => node.isVisible());
 
   function makeBreadcrumb(node: IBreadCrumbNode, index: number) {
     return <a
-      className={index === mobileState.breadCrumbList.length-1 ? "" : S.breadcrumb}
+      className={index === breadCrumbList.length-1 ? "" : S.breadcrumb}
       key={node.caption}
       onClick={node.onClick}
     >
@@ -37,8 +38,8 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
 
   return(
     <div className={S.navigationBar}>
-      {mobileState.breadCrumbList.length > 0 &&
-        mobileState.breadCrumbList
+      {breadCrumbList.length > 0 &&
+        breadCrumbList
           .flatMap((node, i) => i === 0
             ? [makeBreadcrumb(node, i)]
             : [<div key={node.caption+"Sep"} className={S.pathSeparator}>/</div>,
@@ -52,10 +53,13 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
 
 export interface IBreadCrumbNode{
   caption: string,
+  isVisible: ()=>boolean;
   onClick: ()=>void
 }
 
-export class BreadCrumbNode {
+export class BreadCrumbNode implements IBreadCrumbNode {
+  isVisible = ()=>true;
+
   constructor(
     public caption: string,
     public onClick: ()=>void
@@ -65,6 +69,7 @@ export class BreadCrumbNode {
 
 export class PassiveBreadCrumbNode implements IBreadCrumbNode{
   onClick = ()=>{};
+  isVisible = ()=>true;
 
   constructor(
     public caption: string,
