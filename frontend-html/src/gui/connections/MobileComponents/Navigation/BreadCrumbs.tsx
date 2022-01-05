@@ -27,22 +27,23 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
   const breadCrumbList = mobileState.breadCrumbList.filter(node => node.isVisible());
 
   function makeBreadcrumb(node: IBreadCrumbNode, index: number) {
-    return <a
-      className={index === breadCrumbList.length-1 ? "" : S.breadcrumb}
-      key={node.caption}
-      onClick={node.onClick}
-    >
-      {node.caption}
-    </a>
+    return (
+      <div
+        className={index === breadCrumbList.length - 1 ? "" : S.breadcrumb}
+        key={node.caption}
+        onClick={node.onClick}
+      >
+        {node.caption}
+      </div>);
   }
 
-  return(
+  return (
     <div className={S.navigationBar}>
       {breadCrumbList.length > 0 &&
         breadCrumbList
           .flatMap((node, i) => i === 0
             ? [makeBreadcrumb(node, i)]
-            : [<div key={node.caption+"Sep"} className={S.pathSeparator}>/</div>,
+            : [<div key={node.caption + "Sep"} className={S.pathSeparator}>/</div>,
               makeBreadcrumb(node, i)
             ]
           )
@@ -51,25 +52,26 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
   );
 });
 
-export interface IBreadCrumbNode{
+export interface IBreadCrumbNode {
   caption: string,
-  isVisible: ()=>boolean;
-  onClick: ()=>void
+  isVisible: () => boolean;
+  onClick: () => void
 }
 
 export class BreadCrumbNode implements IBreadCrumbNode {
-  isVisible = ()=>true;
+  isVisible = () => true;
 
   constructor(
     public caption: string,
-    public onClick: ()=>void
+    public onClick: () => void
   ) {
   }
 }
 
-export class PassiveBreadCrumbNode implements IBreadCrumbNode{
-  onClick = ()=>{};
-  isVisible = ()=>true;
+export class PassiveBreadCrumbNode implements IBreadCrumbNode {
+  onClick = () => {
+  };
+  isVisible = () => true;
 
   constructor(
     public caption: string,
