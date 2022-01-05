@@ -120,6 +120,7 @@ export class FormScreenBuilder extends React.Component<{
         const masterNode = new NavigationNode();
         masterNode.id = xso.attributes.Id;
         masterNode.name = getNavigationNodeName(xso);
+        masterNode.formScreen = self.formScreen;
 
         for (const box of boxes) {
           const childXmlNode = findUIChildren(box)[0];
@@ -293,6 +294,7 @@ export class FormScreenBuilder extends React.Component<{
       navigationNode.element = element;
       navigationNode.id = xmlNode.attributes.Id;
       navigationNode.name = getNavigationNodeName(xmlNode, parentXmlElement);
+      navigationNode.formScreen = self.formScreen;
       navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(xmlNode.attributes.ModelInstanceId);
     }
 

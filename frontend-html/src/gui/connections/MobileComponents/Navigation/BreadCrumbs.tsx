@@ -69,12 +69,17 @@ export class BreadCrumbNode implements IBreadCrumbNode {
 }
 
 export class PassiveBreadCrumbNode implements IBreadCrumbNode {
+  constructor(
+    public getCaption: () => string,
+  ) {
+  }
+
   onClick = () => {
   };
+
   isVisible = () => true;
 
-  constructor(
-    public caption: string,
-  ) {
+  get caption(){
+    return this.getCaption();
   }
 }

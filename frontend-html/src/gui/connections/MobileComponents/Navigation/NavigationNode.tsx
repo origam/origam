@@ -22,6 +22,8 @@ import { IDataView } from "model/entities/types/IDataView";
 import { action, observable } from "mobx";
 import { MobileState } from "model/entities/MobileState";
 import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
+import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
+import { IFormScreen } from "model/entities/types/IFormScreen";
 
 export interface INavigationNode {
   readonly name: string;
@@ -32,6 +34,7 @@ export interface INavigationNode {
   readonly element: ReactNode;
   readonly id: string;
   dataView: IDataView | undefined;
+  formScreen: IFormScreen | undefined;
 
   equals(other: INavigationNode): boolean;
   addChild(node: INavigationNode): void;
@@ -43,7 +46,7 @@ export class NavigationNode implements INavigationNode {
   private _children: NavigationNode[] = [];
   private _name: string = "";
   dataView: IDataView | undefined;
-
+  formScreen: IFormScreen | undefined;
   parent: NavigationNode | undefined;
 
   showDetailLinks(){
@@ -57,7 +60,14 @@ export class NavigationNode implements INavigationNode {
   public element: ReactNode = null as any;
 
   get name(): string {
-    return !this._name ? this.id : this._name;
+    let finalName = !this._name ? this.id : this._name;
+    if(!this.parent && this.formScreen){
+      finalName = getOpenedNonDialogScreenItems(this.formScreen)
+        .find(item => item.isActive)
+        ?.tabTitle
+        ?? finalName;
+    }
+    return finalName
   }
 
   set name(value: string) {

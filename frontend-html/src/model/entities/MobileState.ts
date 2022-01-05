@@ -16,10 +16,9 @@ export class MobileState {
 
   @action
   resetBreadCrumbs(){
-    const breadCrumbCaption = this._workbench
+    const breadCrumbCaption = () => this._workbench
       ? getOpenedNonDialogScreenItems(this._workbench).find(item => item.isActive)?.tabTitle ?? ""
       : "";
-
     this.breadCrumbList.length = 0;
     this.breadCrumbList.push(new PassiveBreadCrumbNode(breadCrumbCaption));
   }
