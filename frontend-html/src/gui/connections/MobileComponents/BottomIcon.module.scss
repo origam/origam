@@ -20,14 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .root {
   flex-grow: 1;
   justify-content: center;
+  align-items: center;
   display: flex;
   cursor: pointer;
-  padding-top: 5px; // the temporary icons are actually not centered! remove when correct icons are available
-  //width: 30px;
 }
 
 .icon {
   width: 30px;
+  padding-top: 4px; // the temporary icons are actually not centered! remove when correct icons are available
 }
 
 .hidden{
