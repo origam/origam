@@ -608,7 +608,7 @@ namespace Origam.Utils
                 }
                 catch (Exception ex)
                 {
-                    log.Info("Failure: {0}", ex);
+                    log.Info("Failure:", ex);
                 }
                 Thread.Sleep(arguments.delay);
             }
