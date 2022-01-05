@@ -35,6 +35,7 @@ import { T } from "../../../utils/translation";
 import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
@@ -74,12 +75,7 @@ export const DialogScreen: React.FC<{
       <Observer>
         {() => (
           <ModalDialog
-            title={
-              /*!props.openedScreen.content.isLoading
-                ? props.openedScreen.content.formScreen!.title
-                : */ props
-                .openedScreen.tabTitle
-            }
+            title={props.openedScreen.tabTitle}
             titleIsWorking={
               props.openedScreen.content.isLoading ||
               getIsScreenOrAnyDataViewWorking(props.openedScreen.content.formScreen!) ||
@@ -126,8 +122,8 @@ export const DialogScreen: React.FC<{
               {() => (
                 <div
                   style={{
-                    width: props.openedScreen.dialogInfo!.width,
-                    height: props.openedScreen.dialogInfo!.height,
+                    width:  isMobileLayoutActive(props.openedScreen) ? "unset" : props.openedScreen.dialogInfo!.width,
+                    height: isMobileLayoutActive(props.openedScreen) ? "80vh" : props.openedScreen.dialogInfo!.height ,
                     display: "flex",
                     flexDirection: "column",
                   }}
