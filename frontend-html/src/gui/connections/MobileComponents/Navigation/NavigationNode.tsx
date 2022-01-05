@@ -45,15 +45,28 @@ export interface INavigationNode {
 export class NavigationNode implements INavigationNode {
   private _children: NavigationNode[] = [];
   private _name: string = "";
-  dataView: IDataView | undefined;
+  private _dataView: IDataView | undefined;
   formScreen: IFormScreen | undefined;
   parent: NavigationNode | undefined;
 
+  get dataView(): IDataView | undefined {
+    if(this._dataView){
+      return this._dataView;
+    }
+    if(!this.parent && (this.formScreen?.rootDataViews?.length ?? 0) > 0){
+      return this.formScreen!.rootDataViews[0]!
+    }
+      return undefined;
+  }
+
+  set dataView(value: IDataView | undefined) {
+    this._dataView = value;
+  }
   showDetailLinks(){
-    if(!this.dataView){
+    if(!this._dataView){
       return true;
     }
-    return this.dataView.isFormViewActive();
+    return this._dataView.isFormViewActive();
   }
 
   public id: string = "";
@@ -107,7 +120,7 @@ export class NavigationNode implements INavigationNode {
     this.id = other.id;
     this._name = other._name;
     this.showDetailLinks = other.showDetailLinks;
-    this.dataView = other.dataView;
+    this._dataView = other._dataView;
   }
 
   equals(other: INavigationNode): boolean {
@@ -124,6 +137,13 @@ export class NavigatorState{
     this.currentNode = node;
   }
 
+  addDetailBreadCrumbNode(){
+    this.mobileState.breadCrumbList.push({
+      caption: "Detail",
+      isVisible: () => this.currentNode.dataView?.isFormViewActive()!,
+      onClick: () => {}
+    })
+  }
 
   @action
   onNodeClick(node: INavigationNode){
@@ -136,10 +156,6 @@ export class NavigatorState{
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
     this.mobileState.breadCrumbList = this.currentNode.parentChain.map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
-    this.mobileState.breadCrumbList.push({
-      caption: "Detail",
-      isVisible: () => this.currentNode.dataView?.isFormViewActive()!,
-      onClick: () => {}
-    })
+    this.addDetailBreadCrumbNode();
   }
 }

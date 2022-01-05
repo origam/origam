@@ -3,7 +3,11 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
-import { IBreadCrumbNode, PassiveBreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
+import {
+  IBreadCrumbNode,
+  RootBreadCrumbNode
+} from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
+import { IDataView } from "model/entities/types/IDataView";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -20,7 +24,26 @@ export class MobileState {
       ? getOpenedNonDialogScreenItems(this._workbench).find(item => item.isActive)?.tabTitle ?? ""
       : "";
     this.breadCrumbList.length = 0;
-    this.breadCrumbList.push(new PassiveBreadCrumbNode(breadCrumbCaption));
+    const activeScreen = getOpenedNonDialogScreenItems(this._workbench).find(item => item.isActive);
+
+    this.breadCrumbList.push(new RootBreadCrumbNode(breadCrumbCaption));
+    if((activeScreen?.content?.formScreen?.rootDataViews?.length ?? 0) > 0){
+      const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
+      this.addDetailBreadCrumbNode(dataView);
+    }
+  }
+
+  addDetailBreadCrumbNode(dataView: IDataView){
+    if(this.breadCrumbList.length === 1){
+
+      this.breadCrumbList[0].onClick = ()=> dataView.activateTableView?.();
+
+      this.breadCrumbList.push({
+        caption: "Detail",
+        isVisible: () => dataView?.isFormViewActive()!,
+        onClick: () => {}
+      });
+    }
   }
 
   @observable

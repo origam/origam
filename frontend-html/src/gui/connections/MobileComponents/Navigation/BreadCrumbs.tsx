@@ -68,7 +68,7 @@ export class BreadCrumbNode implements IBreadCrumbNode {
   }
 }
 
-export class PassiveBreadCrumbNode implements IBreadCrumbNode {
+export class RootBreadCrumbNode implements IBreadCrumbNode {
   constructor(
     public getCaption: () => string,
   ) {

@@ -42,7 +42,7 @@ export class StandaloneDetailNavigator extends React.Component<{
   navigatorState = new NavigatorState(this.mobileState, this.props.node);
 
   onScreenActivation(){
-    this.mobileState.activeDataViewId = this.props.node.dataView?.id
+    this.mobileState.activeDataViewId = this.props.node.dataView?.id;
   }
 
   componentDidMount() {
@@ -72,6 +72,18 @@ export class DetailNavigator extends React.Component<{
   node: INavigationNode;
   onNodeClick: (node: INavigationNode) => void;
 }> {
+
+  static contextType = MobXProviderContext;
+
+  get mobileState(): MobileState {
+    return this.context.application.mobileState;
+  }
+
+  componentDidMount() {
+    if(this.props.node.dataView?.isTableViewActive && !this.props.node.parent){
+      this.mobileState.addDetailBreadCrumbNode(this.props.node.dataView);
+    }
+  }
 
   render() {
     if(!this.props.node){
