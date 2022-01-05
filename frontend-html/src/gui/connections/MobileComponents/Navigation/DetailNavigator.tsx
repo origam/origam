@@ -27,6 +27,7 @@ import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { BreadCrumbsState, MobileState } from "model/entities/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { T } from "utils/translation";
 
 @observer
 export class StandaloneDetailNavigator extends React.Component<{
@@ -130,7 +131,7 @@ export const NavigationButtonList: React.FC<{
     >
       <div className={SN.navigationButton}>
         <div>
-          {"Details"}
+          {T("Details", "mobile_details_dropdown")}
         </div>
         <Icon
           src={open ? "./icons/noun-chevron-933246.svg" : "./icons/noun-chevron-933254.svg"}

@@ -8,6 +8,7 @@ import {
   RootBreadCrumbNode
 } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { IDataView } from "model/entities/types/IDataView";
+import { T } from "utils/translation";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -69,7 +70,7 @@ export class BreadCrumbsState{
   @action
   addDetailBreadCrumbNode(dataView: IDataView){
     this.breadCrumbList.push({
-      caption: "Detail",
+      caption: T("Detail", "mobile_detail_navigation"),
       isVisible: () => dataView?.isFormViewActive()!,
       onClick: () => {}
     });

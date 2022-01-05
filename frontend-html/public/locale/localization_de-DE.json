@@ -406,5 +406,7 @@
   "my_profile": "My Profile",
   "action_error": "Fehler",
   "there_has_been_a_problem": "Es ist ein Problem aufgetreten:",
-  "request_no_longer_authorized": " Ihre Anfrage ist nicht mehr autorisiert, Sie waren entweder abgemeldet or Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
+  "request_no_longer_authorized": " Ihre Anfrage ist nicht mehr autorisiert, Sie waren entweder abgemeldet or Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+  "mobile_detail_navigation": "Detail",
+  "mobile_details_dropdown": "Details"
 }
