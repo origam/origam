@@ -502,18 +502,6 @@ namespace Origam.Utils
                 }
             }
         }
-        private static void CheckDatabaseServer(int tries, float delay, string command)
-        {
-            
-        }
-        
-        // Bash runs Origam.Utils.Dll with parameters
-        // Parameters How many tries and how often it tries.
-        // SQL command parameter
-        // return true or false.
-        // Select 1 returns something.
-        // SQL must return some result, then return true.
-        // if not false.
 
         private static void TestDatabase(int tries, int delay, string sqlCommand)
         {
