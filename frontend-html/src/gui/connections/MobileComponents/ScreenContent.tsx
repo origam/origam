@@ -17,25 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+import React from "react";
+import S from "./ScreenContent.module.scss";
+import { BreadCrumbs } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
+import { CScreenContent } from "gui/connections/CScreenContent";
 
-.navigationButtonList{
-  overflow-y: auto;
-  height: 100%;
-}
-
-.navigatorButtonListRoot{
-  max-height: 50%;
-}
-
-.pathSeparator{
-  margin-left: 3px;
-  margin-right: 3px;
-  display: flex;
-  align-items: center;
-  font-size: 15px;
+export const ScreenContent: React.FC<{}> = (props) => {
+  return (
+    <>
+      <BreadCrumbs/>
+      <CScreenContent/>
+    </>
+  );
 }

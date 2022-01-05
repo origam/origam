@@ -27,17 +27,25 @@ import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHead
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
-import S from "gui/connections/MobileComponents/NavigationBar.module.scss"
+import S from "gui/connections/MobileComponents/TabSelector.module.scss"
 import { Icon } from "@origam/components";
+import { action } from "mobx";
+import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 
 @observer
-export class NavigationBar extends React.Component<{
+export class TabSelector extends React.Component<{
   mobileState: MobileState
 }> {
   static contextType = MobXProviderContext;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
+  }
+
+  @action
+  onItemClick(openScreen: IOpenedScreen, event: any){
+    onScreenTabHandleClick(openScreen)(event)
+    this.props.mobileState.resetBreadCrumbs();
   }
 
   render() {
@@ -77,7 +85,7 @@ export class NavigationBar extends React.Component<{
                 key={openScreen.tabTitle}
                 onClick={(event: any) => {
                   setDropped(false);
-                  onScreenTabHandleClick(openScreen)(event)
+                  this.onItemClick(openScreen, event);
                 }}
               >
                 {openScreen.tabTitle}

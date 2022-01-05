@@ -1,8 +1,9 @@
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { IBreadCrumbNode, PassiveBreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -12,6 +13,19 @@ export class MobileState {
 
   @observable
   activeDataViewId: string | undefined;
+
+  @action
+  resetBreadCrumbs(){
+    const breadCrumbCaption = this._workbench
+      ? getOpenedNonDialogScreenItems(this._workbench).find(item => item.isActive)?.tabTitle ?? ""
+      : "";
+
+    this.breadCrumbList.length = 0;
+    this.breadCrumbList.push(new PassiveBreadCrumbNode(breadCrumbCaption));
+  }
+
+  @observable
+  breadCrumbList: IBreadCrumbNode[] = [];
 
   set workbench(workbench: IWorkbench){
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);

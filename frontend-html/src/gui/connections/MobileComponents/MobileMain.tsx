@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./MobileMain.module.scss";
 import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar";
-import { CScreenContent } from "gui/connections/CScreenContent";
 import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
 import {
@@ -38,6 +37,7 @@ import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutVie
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { CDialogContent } from "gui/connections/CDialogContent";
+import { ScreenContent } from "gui/connections/MobileComponents/ScreenContent";
 
 
 @observer
@@ -67,9 +67,12 @@ export class MobileMain extends React.Component<{}> {
     }
     if(this.mobileState.layoutState instanceof ScreenLayoutState){
       const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
-      return openedScreenItems.length > 0
-        ? <CScreenContent/>
-        : <CSidebar/>;
+      if (openedScreenItems.length > 0) {
+        this.mobileState.resetBreadCrumbs();
+        return <ScreenContent/>;
+      } else {
+        return <CSidebar/>;
+      }
     }
     if(this.mobileState.layoutState instanceof SearchLayoutState){
       return <Search/>

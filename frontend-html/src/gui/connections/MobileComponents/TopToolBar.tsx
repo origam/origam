@@ -28,7 +28,7 @@ import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
-import { NavigationBar } from "gui/connections/MobileComponents/NavigationBar";
+import { TabSelector } from "gui/connections/MobileComponents/TabSelector";
 import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
 import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 
@@ -56,7 +56,7 @@ export class TopToolBar extends React.Component<{
     return (
       <div className={S.root}>
         <MenuButton/>
-        <NavigationBar mobileState={this.props.mobileState}/>
+        <TabSelector mobileState={this.props.mobileState}/>
         {this.layoutState.showSearchButton && <SearchButton mobileState={this.props.mobileState}/>}
         <UserMenuDropdown
           avatarLink={avatarLink}

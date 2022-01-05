@@ -183,8 +183,6 @@ export class DataViewHeaderInner extends React.Component<{
                 <DataViewHeader domRef={measureRef} isVisible={this.isBarVisible}>
                   {this.isBarVisible &&
                     <>
-                      <h2 title={label}>{label}</h2>
-
                       <div className="fullspaceBlock">
                         {isMoveRowMenuVisible ? (
                           <DataViewHeaderGroup isHidden={false} noShrink={true}>

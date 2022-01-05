@@ -25,9 +25,10 @@ import { Icon } from "@origam/components";
 import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import { MobileState } from "model/entities/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 
 @observer
 export class StandaloneDetailNavigator extends React.Component<{
@@ -43,9 +44,14 @@ export class StandaloneDetailNavigator extends React.Component<{
   @observable
   currentNode: INavigationNode = this.props.node;
 
+  @action
   onNodeClick(node: INavigationNode){
+    if(this.currentNode === node){
+      return;
+    }
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
+    this.mobileState.breadCrumbList = this.currentNode.parentChain.map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
   }
 
   onScreenActivation(){
@@ -80,45 +86,18 @@ export class DetailNavigator extends React.Component<{
   onNodeClick: (node: INavigationNode) => void;
 }> {
 
-  makeBreadcrumb(node: INavigationNode) {
-    return <a
-      className={this.props.node.equals(node) ? "" : S.breadcrumb}
-      key={node.name}
-      onClick={() => {
-        if (!this.props.node.equals(node)) {
-          this.props.onNodeClick(node);
-        }
-      }}
-    >
-      {node.name}
-    </a>
-  }
-
   render() {
     if(!this.props.node){
       return <div/>;
     }
     return (
       <div className={S.root}>
-        <div className={S.navigationBar}>
-          {this.props.node.parentChain.length > 1 &&
-            this.props.node.parentChain
-              .flatMap((parent, i) => i === 0
-                ? [this.makeBreadcrumb(parent)]
-                : [<div key={parent.name+"Sep"} className={S.pathSeparator}>/</div>,
-                  this.makeBreadcrumb(parent)
-                ]
-              )
-          }
-        </div>
         {this.props.node.element}
         {this.props.node.showDetailLinks() &&
           <NavigationButtonList
             onClick={(node) => this.props.onNodeClick(node)}
             nodes={this.props.node.children}
-            // nodes={[...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children]}
-            // nodes={[...this.node.children, ...this.node.children, ...this.node.children, ...this.node.children]}
-          />
+           />
         }
       </div>
     );

@@ -23,9 +23,10 @@ import { INavigationNode } from "gui/connections/MobileComponents/Navigation/Nav
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { MobXProviderContext, observer } from "mobx-react";
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import { MobileState } from "model/entities/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 
 @observer
 export class TabNavigator extends React.Component<{
@@ -41,9 +42,14 @@ export class TabNavigator extends React.Component<{
   @observable
   currentNode: INavigationNode = this.props.rootNode;
 
+  @action
   onNodeClick(node: INavigationNode){
+    if(this.currentNode === node){
+      return;
+    }
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
+    this.mobileState.breadCrumbList = this.currentNode.parentChain.map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
   }
 
   onScreenActivation(){
@@ -84,7 +90,7 @@ export class TabNavigator extends React.Component<{
         </div>
       );
     } else {
-      return <DetailNavigator node={this.currentNode} onNodeClick={node => this.currentNode = node}/>
+      return <DetailNavigator node={this.currentNode} onNodeClick={node => this.onNodeClick(node)}/>
     }
   }
 }
