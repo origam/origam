@@ -519,29 +519,30 @@ namespace Origam.Utils
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             string connString = settings.DataConnectionString;
-            SqlConnection cnn;
-            cnn = new SqlConnection(connString);
-            cnn.Open();
 
             for (int i = 0; i < tries; i++)
             {
-                using (SqlConnection connection = new SqlConnection(connString))
+                try
                 {
-                    connection.Open();       
-
-                    String sql = sqlCommand;
-
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    Console.WriteLine("Connecting to: {0}", connString);
+                    using (var connection = new SqlConnection(connString))
                     {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                Console.WriteLine("{0} {1}", reader.GetString(0),
-                                    reader.GetString(1));
-                            }
-                        }
-                    }                    
+                        var query = sqlCommand;
+                        log.Info($"Executing: {query}");
+
+                        var command = new SqlCommand(query, connection);
+
+                        connection.Open();
+                        log.Info("SQL Connection successful.");
+
+                        var info = command.ExecuteScalar().ToString();
+                        log.Info(
+                            $"SQL Query execution successful.Result:{info}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Info("Failure: {0}",ex);
                 }
                 Thread.Sleep(delay);
             }
