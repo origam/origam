@@ -241,6 +241,7 @@ export function*interpretScreenXml(
   panelConfigurationsRaw: any,
   lookupMenuMappings: any,
   sessionId: string,
+  workflowTaskId: string | null,
   isLazyLoading: boolean
 ) {
   const workbench = getWorkbench(formScreenLifecycle);
@@ -341,6 +342,7 @@ export function*interpretScreenXml(
     autoSaveOnListRecordChange: windowXml.attributes.AutoSaveOnListRecordChange === "true",
     requestSaveAfterUpdate: windowXml.attributes.RequestSaveAfterUpdate === "true",
     screenUI: screenDoc,
+    workflowTaskId: workflowTaskId,
     panelConfigurations,
     formScreenLifecycle,
     // isSessioned: windowXml.attributes.UseSession,

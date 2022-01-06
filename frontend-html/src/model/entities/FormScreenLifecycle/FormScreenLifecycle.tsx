@@ -540,6 +540,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       args.initUIResult.panelConfigurations,
       args.initUIResult.lookupMenuMappings,
       args.initUIResult.sessionId,
+      args.initUIResult.workflowTaskId,
       openedScreen.lazyLoading
     );
     const api = getApi(openedScreen);
@@ -1296,7 +1297,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *applyData(data: any): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
-      // debugger;
       for (let dataView of dataViews) {
         yield dataView.setRecords((entityValue as any).data);
         dataView.setRowCount(dataView.dataTable.rows.length);

@@ -37,7 +37,9 @@ import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutVie
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { CDialogContent } from "gui/connections/CDialogContent";
-import { ScreenContent } from "gui/connections/MobileComponents/ScreenContent";
+import { BreadCrumbs } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
+import { CScreenContent } from "gui/connections/CScreenContent";
+import { ScreenHeader } from "gui/connections/MobileComponents/ScreenHeader";
 
 
 @observer
@@ -61,23 +63,29 @@ export class MobileMain extends React.Component<{}> {
     this.about.update();
   }
 
-  renderMainPageContents(){
-    if(this.mobileState.layoutState instanceof MenuLayoutState){
+  renderMainPageContents() {
+    if (this.mobileState.layoutState instanceof MenuLayoutState) {
       return <CSidebar/>;
     }
-    if(this.mobileState.layoutState instanceof ScreenLayoutState){
+    if (this.mobileState.layoutState instanceof ScreenLayoutState) {
       const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
       if (openedScreenItems.length > 0) {
         this.mobileState.breadCrumbsState.resetBreadCrumbs();
-        return <ScreenContent/>;
+        return (
+          <>
+            <BreadCrumbs/>
+            <ScreenHeader/>
+            <CScreenContent/>
+          </>
+        );
       } else {
         return <CSidebar/>;
       }
     }
-    if(this.mobileState.layoutState instanceof SearchLayoutState){
+    if (this.mobileState.layoutState instanceof SearchLayoutState) {
       return <Search/>
     }
-    if(this.mobileState.layoutState instanceof AboutLayoutState){
+    if (this.mobileState.layoutState instanceof AboutLayoutState) {
       return <MobileAboutView
         aboutInfo={this.about.info}
         mobileState={this.mobileState}
@@ -88,15 +96,15 @@ export class MobileMain extends React.Component<{}> {
 
   render() {
     return (
-        <div className={S.root}>
-          <TopToolBar mobileState={this.mobileState}/>
-          {this.renderMainPageContents()}
-          <CDialogContent/>
-          <BottomToolBar
-            mobileState={this.mobileState}
-            ctx={this.context.application}
-          />
-        </div>
+      <div className={S.root}>
+        <TopToolBar mobileState={this.mobileState}/>
+        {this.renderMainPageContents()}
+        <CDialogContent/>
+        <BottomToolBar
+          mobileState={this.mobileState}
+          ctx={this.context.application}
+        />
+      </div>
     );
   }
 }

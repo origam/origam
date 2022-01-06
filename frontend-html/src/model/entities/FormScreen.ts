@@ -71,6 +71,7 @@ export class FormScreen implements IFormScreen {
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
   autoWorkflowNext: boolean = null as any;
+  workflowTaskId: string | null = null;
 
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];

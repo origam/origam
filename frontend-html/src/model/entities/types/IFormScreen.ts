@@ -133,6 +133,7 @@ export interface IFormScreenData {
   panelConfigurations: Map<string, IPanelConfiguration>;
   formScreenLifecycle: IFormScreenLifecycle02;
   sessionId: string;
+  workflowTaskId: string | null;
 }
 
 export interface IFormScreen extends IFormScreenData {
