@@ -136,6 +136,6 @@ export async function initLocaleCookie(ctx: any) {
 
   const newCookieValue = unescape(getCookie("origamCurrentLocale"));
   if (!isValidLocalizationCookie(newCookieValue)) {
-    throw new Error("Could not parse localization cookie: " + newCookieValue);
+    throw new Error("Could not parse localization cookie: \"" + newCookieValue + "\"");
   }
 }
