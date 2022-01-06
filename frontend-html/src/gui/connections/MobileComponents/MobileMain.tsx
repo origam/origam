@@ -34,7 +34,6 @@ import { getAbout } from "model/selectors/getAbout";
 import { Search } from "gui/connections/MobileComponents/Search";
 import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar";
 import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { CDialogContent } from "gui/connections/CDialogContent";
 import { BreadCrumbs } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
@@ -68,9 +67,6 @@ export class MobileMain extends React.Component<{}> {
       return <CSidebar/>;
     }
     if (this.mobileState.layoutState instanceof ScreenLayoutState) {
-      const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
-      if (openedScreenItems.length > 0) {
-        this.mobileState.breadCrumbsState.resetBreadCrumbs();
         return (
           <>
             <BreadCrumbs/>
@@ -78,9 +74,6 @@ export class MobileMain extends React.Component<{}> {
             <CScreenContent/>
           </>
         );
-      } else {
-        return <CSidebar/>;
-      }
     }
     if (this.mobileState.layoutState instanceof SearchLayoutState) {
       return <Search/>

@@ -96,12 +96,13 @@ export class BottomToolBar extends React.Component<{
 
     return (
       <div className={S.root}>
-        <BottomIcon
+        {this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen) &&
+          <BottomIcon
           iconPath={"./icons/noun-close-25798.svg"}
           onClick={async () => {
             await this.props.mobileState.close()
           }}
-        />
+        />}
         {actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden &&
           <ActionDropUp
             actions={actions}

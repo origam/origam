@@ -3,10 +3,7 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
-import {
-  IBreadCrumbNode,
-  RootBreadCrumbNode
-} from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
+import { IBreadCrumbNode, RootBreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { IDataView } from "model/entities/types/IDataView";
 import { T } from "utils/translation";
 
@@ -21,13 +18,20 @@ export class MobileState {
 
   breadCrumbsState = new BreadCrumbsState()
 
-  set workbench(workbench: IWorkbench){
+  set workbench(workbench: IWorkbench) {
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);
     workbenchLifecycle.mainMenuItemClickHandler.add(
       () => this.layoutState = new ScreenLayoutState()
     );
     this._workbench = workbench;
     this.breadCrumbsState.workbench = workbench;
+
+    const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
+    if (openedScreenItems.length > 0) {
+      this.breadCrumbsState.resetBreadCrumbs();
+    } else {
+      this.layoutState = new MenuLayoutState();
+    }
   }
 
   async close() {
@@ -40,49 +44,50 @@ export class MobileState {
 }
 
 
-export class BreadCrumbsState{
+export class BreadCrumbsState {
 
   workbench: IWorkbench | undefined;
 
   @action
-  resetBreadCrumbs(){
+  resetBreadCrumbs() {
     const breadCrumbCaption = () => this.workbench
       ? getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive)?.tabTitle ?? ""
       : "";
     this.breadCrumbList.length = 0;
     const activeScreen = getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive);
-    if(!activeScreen){
+    if (!activeScreen) {
       return;
     }
     this.breadCrumbList.push(new RootBreadCrumbNode(breadCrumbCaption));
 
     const reactionDisposer = reaction(
-        () => activeScreen.content.formScreen,
-        (formScreen) => {
-          if((formScreen?.rootDataViews?.length ?? 0) > 0){
-            const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
-            this.addDetailBreadCrumbNodeToRoot(dataView);
-            reactionDisposer();
-          }
-        },
-        {fireImmediately: true}
-      )
+      () => activeScreen.content.formScreen,
+      (formScreen) => {
+        if ((formScreen?.rootDataViews?.length ?? 0) > 0) {
+          const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
+          this.addDetailBreadCrumbNodeToRoot(dataView);
+          reactionDisposer();
+        }
+      },
+      {fireImmediately: true}
+    )
   }
 
   @action
-  addDetailBreadCrumbNodeToRoot(dataView: IDataView){
-    if(this.breadCrumbList.length === 1){
-      this.breadCrumbList[0].onClick = ()=> dataView.activateTableView?.();
+  addDetailBreadCrumbNodeToRoot(dataView: IDataView) {
+    if (this.breadCrumbList.length === 1) {
+      this.breadCrumbList[0].onClick = () => dataView.activateTableView?.();
       this.addDetailBreadCrumbNode(dataView);
     }
   }
 
   @action
-  addDetailBreadCrumbNode(dataView: IDataView){
+  addDetailBreadCrumbNode(dataView: IDataView) {
     this.breadCrumbList.push({
       caption: T("Detail", "mobile_detail_navigation"),
       isVisible: () => dataView?.isFormViewActive()!,
-      onClick: () => {}
+      onClick: () => {
+      }
     });
   }
 
@@ -90,18 +95,22 @@ export class BreadCrumbsState{
   breadCrumbList: IBreadCrumbNode[] = [];
 }
 
-interface IMobileLayoutState{
+interface IMobileLayoutState {
   actionDropUpHidden: boolean;
   refreshButtonHidden: boolean;
   saveButtonHidden: boolean;
   showOpenTabCombo: boolean;
   showSearchButton: boolean;
   showHamburgerMenuButton: boolean;
+
+  showCloseButton(someScreensAreOpen: boolean): boolean;
+
   hamburgerClick(): IMobileLayoutState;
+
   close(ctx: any): Promise<IMobileLayoutState>;
 }
 
-export class MenuLayoutState implements IMobileLayoutState{
+export class MenuLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
@@ -109,6 +118,10 @@ export class MenuLayoutState implements IMobileLayoutState{
   showSearchButton = true;
   showHamburgerMenuButton = false;
 
+  showCloseButton(someScreensAreOpen: boolean) {
+    return someScreensAreOpen;
+  }
+
   async close(ctx: any): Promise<IMobileLayoutState> {
     return new ScreenLayoutState();
   }
@@ -118,13 +131,17 @@ export class MenuLayoutState implements IMobileLayoutState{
   }
 }
 
-export class AboutLayoutState implements IMobileLayoutState{
+export class AboutLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
   showOpenTabCombo = false;
   showSearchButton = true;
   showHamburgerMenuButton = true;
+
+  showCloseButton(someScreensAreOpen: boolean) {
+    return true;
+  }
 
   async close(ctx: any): Promise<IMobileLayoutState> {
     return new ScreenLayoutState();
@@ -135,7 +152,7 @@ export class AboutLayoutState implements IMobileLayoutState{
   }
 }
 
-export class SearchLayoutState implements IMobileLayoutState{
+export class SearchLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
@@ -143,6 +160,10 @@ export class SearchLayoutState implements IMobileLayoutState{
   showSearchButton = false;
   showHamburgerMenuButton = true;
 
+  showCloseButton(someScreensAreOpen: boolean) {
+    return true;
+  }
+
   async close(ctx: any): Promise<IMobileLayoutState> {
     return new ScreenLayoutState();
   }
@@ -152,7 +173,7 @@ export class SearchLayoutState implements IMobileLayoutState{
   }
 }
 
-export class ScreenLayoutState implements IMobileLayoutState{
+export class ScreenLayoutState implements IMobileLayoutState {
   actionDropUpHidden = false;
   refreshButtonHidden = false;
   saveButtonHidden = false;
@@ -160,11 +181,19 @@ export class ScreenLayoutState implements IMobileLayoutState{
   showSearchButton = true;
   showHamburgerMenuButton = true;
 
+  showCloseButton(someScreensAreOpen: boolean) {
+    return true;
+  }
+
   async close(ctx: any): Promise<IMobileLayoutState> {
     const activeScreen = getOpenedNonDialogScreenItems(ctx)
       .find(screen => screen.isActive);
-    if(activeScreen){
+    if (activeScreen) {
       await onScreenTabCloseClick(activeScreen)(null);
+      const stillOpenScreens = getOpenedNonDialogScreenItems(ctx);
+      if (stillOpenScreens.length === 0) {
+        return new MenuLayoutState();
+      }
     }
     return this;
   }

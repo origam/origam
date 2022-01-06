@@ -22,7 +22,7 @@ import S from "./TopToolBar.module.scss";
 import { AboutLayoutState, MobileState } from "model/entities/MobileState";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
-import { MobXProviderContext } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { action } from "mobx";
@@ -32,6 +32,7 @@ import { TabSelector } from "gui/connections/MobileComponents/TabSelector";
 import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
 import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 
+@observer
 export class TopToolBar extends React.Component<{
   mobileState: MobileState
 }> {
