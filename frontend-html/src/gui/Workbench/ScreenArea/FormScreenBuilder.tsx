@@ -81,35 +81,31 @@ export class FormScreenBuilder extends React.Component<{
           xso.attributes.Type === "VBox"||
           xso.attributes.Type === "HBox") {
 
-        let masterNode = new NavigationNode();
-        let detailNode = new NavigationNode();
-
-        masterNode.addChild(detailNode);
-        if (isRootLevelNavigationNode) {
-          currentNavigationNode = detailNode;
-        }
+        let masterNavigationNode = new NavigationNode();
+        let detailNavigationNode = new NavigationNode();
+        masterNavigationNode.addChild(detailNavigationNode);
 
         const [masterXmlNode, detailXmlNode] = findUIChildren(xso);
-        const masterElement = mobileRecursiveBuilder(masterXmlNode, currentNavigationNode);
+        const masterReactElement = mobileRecursiveBuilder(masterXmlNode, masterNavigationNode);
         if(!detailXmlNode){
-          return masterElement;
+          return masterReactElement;
         }
-        const detailElement = mobileRecursiveBuilder(detailXmlNode, currentNavigationNode);
+        const detailReactElement = mobileRecursiveBuilder(detailXmlNode, detailNavigationNode);
 
-        if(!masterElement){
+        if(!masterReactElement){
           throw new Error ("Master element cannot be null");
         }
-        assignMasterNavigationNodeProperties(masterNode, masterElement, masterXmlNode, xso);
-        if(detailElement){
-          assignDetailNavigationNodeProperties(detailNode, detailElement, detailXmlNode, xso);
+        assignMasterNavigationNodeProperties(masterNavigationNode, masterReactElement, masterXmlNode, xso);
+        if(detailReactElement){
+          assignDetailNavigationNodeProperties(detailNavigationNode, detailReactElement, detailXmlNode, xso);
         }
 
         if (isRootLevelNavigationNode) {
-          return <StandaloneDetailNavigator node={masterNode}/>;
+          return <StandaloneDetailNavigator node={masterNavigationNode}/>;
         }
         else {
-          currentNavigationNode!.merge(masterNode);
-          return undefined;
+          currentNavigationNode!.merge(masterNavigationNode);
+          return masterReactElement;
         }
       }
 
@@ -292,7 +288,7 @@ export class FormScreenBuilder extends React.Component<{
       navigationNode.element = element;
       navigationNode.id = xmlNode.attributes.Id;
       navigationNode.formScreen = self.formScreen;
-      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(element.props.modelInstanceId);
+      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(element.props?.modelInstanceId);
       navigationNode.name = getMasterNavigationNodeName(xmlNode, parentXmlElement);
     }
 
@@ -300,7 +296,7 @@ export class FormScreenBuilder extends React.Component<{
       navigationNode.element = element;
       navigationNode.id = xmlNode.attributes.Id;
       navigationNode.formScreen = self.formScreen;
-      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(element.props.modelInstanceId);
+      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(element.props?.modelInstanceId);
       navigationNode.name = getDataViewLabel(navigationNode.dataView) ?? element.attributes.Name;
     }
 
