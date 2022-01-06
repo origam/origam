@@ -55,7 +55,7 @@ export class TopToolBar extends React.Component<{
     const userName = getLoggedUserName(this.application);
     return (
       <div className={S.root}>
-        <MenuButton/>
+        {this.layoutState.showHamburgerMenuButton && <MenuButton/>}
         <TabSelector mobileState={this.props.mobileState}/>
         {this.layoutState.showSearchButton && <SearchButton mobileState={this.props.mobileState}/>}
         <UserMenuDropdown

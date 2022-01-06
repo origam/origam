@@ -49,7 +49,7 @@ export class TabSelector extends React.Component<{
   }
 
   render() {
-    if(!this.props.mobileState.layoutState.showOpeTabCombo){
+    if(!this.props.mobileState.layoutState.showOpenTabCombo){
       return <div className={S.heading}/>
     }
 

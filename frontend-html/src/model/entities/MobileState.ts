@@ -94,8 +94,9 @@ interface IMobileLayoutState{
   actionDropUpHidden: boolean;
   refreshButtonHidden: boolean;
   saveButtonHidden: boolean;
-  showOpeTabCombo: boolean;
+  showOpenTabCombo: boolean;
   showSearchButton: boolean;
+  showHamburgerMenuButton: boolean;
   hamburgerClick(): IMobileLayoutState;
   close(ctx: any): Promise<IMobileLayoutState>;
 }
@@ -104,8 +105,9 @@ export class MenuLayoutState implements IMobileLayoutState{
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpeTabCombo = false;
+  showOpenTabCombo = false;
   showSearchButton = true;
+  showHamburgerMenuButton = false;
 
   async close(ctx: any): Promise<IMobileLayoutState> {
     return new ScreenLayoutState();
@@ -120,8 +122,9 @@ export class AboutLayoutState implements IMobileLayoutState{
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpeTabCombo = false;
+  showOpenTabCombo = false;
   showSearchButton = true;
+  showHamburgerMenuButton = true;
 
   async close(ctx: any): Promise<IMobileLayoutState> {
     return new ScreenLayoutState();
@@ -136,8 +139,9 @@ export class SearchLayoutState implements IMobileLayoutState{
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;
-  showOpeTabCombo = false;
+  showOpenTabCombo = false;
   showSearchButton = false;
+  showHamburgerMenuButton = true;
 
   async close(ctx: any): Promise<IMobileLayoutState> {
     return new ScreenLayoutState();
@@ -152,8 +156,9 @@ export class ScreenLayoutState implements IMobileLayoutState{
   actionDropUpHidden = false;
   refreshButtonHidden = false;
   saveButtonHidden = false;
-  showOpeTabCombo = true;
+  showOpenTabCombo = true;
   showSearchButton = true;
+  showHamburgerMenuButton = true;
 
   async close(ctx: any): Promise<IMobileLayoutState> {
     const activeScreen = getOpenedNonDialogScreenItems(ctx)
