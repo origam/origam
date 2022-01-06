@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, observable, reaction } from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
@@ -42,7 +42,7 @@ export class MobileState {
 
 export class BreadCrumbsState{
 
-  workbench: IWorkbench |undefined;
+  workbench: IWorkbench | undefined;
 
   @action
   resetBreadCrumbs(){
@@ -51,12 +51,22 @@ export class BreadCrumbsState{
       : "";
     this.breadCrumbList.length = 0;
     const activeScreen = getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive);
-
-    this.breadCrumbList.push(new RootBreadCrumbNode(breadCrumbCaption));
-    if((activeScreen?.content?.formScreen?.rootDataViews?.length ?? 0) > 0){
-      const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
-      this.addDetailBreadCrumbNodeToRoot(dataView);
+    if(!activeScreen){
+      return;
     }
+    this.breadCrumbList.push(new RootBreadCrumbNode(breadCrumbCaption));
+
+    const reactionDisposer = reaction(
+        () => activeScreen.content.formScreen,
+        (formScreen) => {
+          if((formScreen?.rootDataViews?.length ?? 0) > 0){
+            const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
+            this.addDetailBreadCrumbNodeToRoot(dataView);
+            reactionDisposer();
+          }
+        },
+        {fireImmediately: true}
+      )
   }
 
   @action
