@@ -93,13 +93,13 @@ export class BottomToolBar extends React.Component<{
             actions={actions}
           />
         }
-        {!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isSaveButtonVisible &&
+        {!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible &&
           <BottomIcon
             iconPath={"./icons/noun-loading-1780489.svg"}
             onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
           />
         }
-        {!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isRefreshButtonVisible &&
+        {!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible  &&
           <BottomIcon
             className={actionButtonsState?.isDirty ? S.isRed : ""}
             iconPath={"./icons/noun-save-1014816.svg"}
