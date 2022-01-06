@@ -32,6 +32,8 @@ import { getPanelViewActions } from "model/selectors/DataView/getPanelViewAction
 import { IActionMode } from "model/entities/types/IAction";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
+import { computed } from "mobx";
+import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -45,14 +47,19 @@ export class BottomToolBar extends React.Component<{
     return this.context.application.mobileState;
   }
 
+  @computed
+  get activeScreen(){
+    const openedScreenItems = getOpenedNonDialogScreenItems(this.props.ctx);
+    return openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
+  }
+
   getActions(){
     const screenActions = getActiveScreenActions(this.props.ctx)
       .flatMap(actionGroup => actionGroup.actions)
       .filter(action => getIsEnabledAction(action));
 
-    const openedScreenItems = getOpenedNonDialogScreenItems(this.props.ctx);
-    const activeScreen = openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
-    const dataViews = activeScreen?.content?.formScreen?.dataViews;
+
+    const dataViews = this.activeScreen?.content?.formScreen?.dataViews;
     if(!dataViews || dataViews.length === 0){
       return screenActions;
     }
@@ -73,6 +80,13 @@ export class BottomToolBar extends React.Component<{
       .filter((action) => getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord);
 
     return screenActions.concat(sectionActions);
+  }
+
+  showNextButton(){
+    if(!this.activeScreen?.content){
+      return false;
+    }
+    return this.activeScreen.content.formScreen && this.activeScreen.content.formScreen.showWorkflowNextButton;
   }
 
   render() {
@@ -104,6 +118,12 @@ export class BottomToolBar extends React.Component<{
             className={actionButtonsState?.isDirty ? S.isRed : ""}
             iconPath={"./icons/noun-save-1014816.svg"}
             onClick={onSaveSessionClick(actionButtonsState?.formScreen)}
+          />
+        }
+        {this.showNextButton() &&
+          <BottomIcon
+            iconPath={"./icons/list-arrow-next.svg"}
+            onClick={() => onWorkflowNextClick(this.activeScreen!.content.formScreen!)(null)}
           />
         }
       </div>
