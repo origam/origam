@@ -123,7 +123,7 @@ export const DialogScreen: React.FC<{
                 <div
                   style={{
                     width:  isMobileLayoutActive(props.openedScreen) ? "unset" : props.openedScreen.dialogInfo!.width,
-                    height: isMobileLayoutActive(props.openedScreen) ? "80vh" : props.openedScreen.dialogInfo!.height ,
+                    height: isMobileLayoutActive(props.openedScreen) ? "60vh" : props.openedScreen.dialogInfo!.height ,
                     display: "flex",
                     flexDirection: "column",
                   }}
