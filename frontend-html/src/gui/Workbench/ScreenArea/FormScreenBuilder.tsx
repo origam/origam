@@ -42,6 +42,7 @@ import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navi
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { INavigationNode, NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
+import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 
 @observer
 export class FormScreenBuilder extends React.Component<{
@@ -59,8 +60,6 @@ export class FormScreenBuilder extends React.Component<{
     const dataViewMap = new Map<string, IDataView>();
     const uiRoot = findUIRoot(this.props.xmlWindowObject);
 
-    // debugger;
-
     function getDataView(xso: any) {
       const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
       if (dataView) {
@@ -69,7 +68,7 @@ export class FormScreenBuilder extends React.Component<{
       return dataView;
     }
 
-    function getNavigationNodeName(xmlNode: any, xmlParentNode?: any){
+    function getMasterNavigationNodeName(xmlNode: any, xmlParentNode?: any){
       return !xmlNode.attributes.Name && (xmlNode === uiRoot || xmlParentNode === uiRoot)
         ? self.props.title
         : xmlNode.attributes.Name;
@@ -100,10 +99,9 @@ export class FormScreenBuilder extends React.Component<{
         if(!masterElement){
           throw new Error ("Master element cannot be null");
         }
-        assignNavigationNodeProperties(masterNode, masterElement, masterXmlNode, xso);
-
+        assignMasterNavigationNodeProperties(masterNode, masterElement, masterXmlNode, xso);
         if(detailElement){
-          assignNavigationNodeProperties(detailNode, detailElement, detailXmlNode, xso);
+          assignDetailNavigationNodeProperties(detailNode, detailElement, detailXmlNode, xso);
         }
 
         if (isRootLevelNavigationNode) {
@@ -119,7 +117,7 @@ export class FormScreenBuilder extends React.Component<{
         const boxes = findBoxes(xso);
         const masterNode = new NavigationNode();
         masterNode.id = xso.attributes.Id;
-        masterNode.name = getNavigationNodeName(xso);
+        masterNode.name = getMasterNavigationNodeName(xso);
         masterNode.formScreen = self.formScreen;
 
         for (const box of boxes) {
@@ -290,12 +288,20 @@ export class FormScreenBuilder extends React.Component<{
         : desktopRecursiveBuilder(xso);
     }
 
-    function assignNavigationNodeProperties(navigationNode: NavigationNode, element: any, xmlNode: any, parentXmlElement: any) {
+    function assignMasterNavigationNodeProperties(navigationNode: NavigationNode, element: any, xmlNode: any, parentXmlElement: any) {
       navigationNode.element = element;
       navigationNode.id = xmlNode.attributes.Id;
-      navigationNode.name = getNavigationNodeName(xmlNode, parentXmlElement);
       navigationNode.formScreen = self.formScreen;
-      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(xmlNode.attributes.ModelInstanceId);
+      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(element.props.modelInstanceId);
+      navigationNode.name = getMasterNavigationNodeName(xmlNode, parentXmlElement);
+    }
+
+    function assignDetailNavigationNodeProperties(navigationNode: NavigationNode, element: any, xmlNode: any, parentXmlElement: any) {
+      navigationNode.element = element;
+      navigationNode.id = xmlNode.attributes.Id;
+      navigationNode.formScreen = self.formScreen;
+      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(element.props.modelInstanceId);
+      navigationNode.name = getDataViewLabel(navigationNode.dataView) ?? element.attributes.Name;
     }
 
     return recursive(uiRoot);
