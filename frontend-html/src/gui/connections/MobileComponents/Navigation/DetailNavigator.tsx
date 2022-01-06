@@ -130,7 +130,7 @@ export const NavigationButtonList: React.FC<{
       onClick={() => setOpen(!open)}
     >
       <div className={SN.navigationButton}>
-        <div>
+        <div className={SN.label}>
           {T("Details", "mobile_details_dropdown")}
         </div>
         <Icon

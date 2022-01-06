@@ -31,7 +31,7 @@ export const NavigationButton: React.FC<{
       className={S.navigationButton}
       onClick={props.onClick}
     >
-      <div>
+      <div className={S.label}>
         {props.label}
       </div>
       <Icon

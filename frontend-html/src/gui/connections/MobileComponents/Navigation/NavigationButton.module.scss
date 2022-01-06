@@ -30,7 +30,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .navigationButton {
-  height: 30px;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,7 +39,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow: hidden;
 }
 
-.navigationIcon {
+svg.navigationIcon {
   width: 20px;
-  height: 25px;
+  height: 35px;
+}
+
+.label{
+  font-size: 15px;
 }
