@@ -24,7 +24,7 @@ import { BreadCrumbsState } from "model/entities/MobileState";
 
 export const BreadCrumbs: React.FC<{}> = observer((props) => {
   const breadCrumbsState = useContext(MobXProviderContext).application.mobileState.breadCrumbsState as BreadCrumbsState;
-  const breadCrumbList = breadCrumbsState.breadCrumbList.filter(node => node.isVisible());
+  const breadCrumbList = breadCrumbsState.activeBreadCrumbList?.filter(node => node.isVisible()) ?? [];
 
   function makeBreadcrumb(node: IBreadCrumbNode, index: number) {
     return (

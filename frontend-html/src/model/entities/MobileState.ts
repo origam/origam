@@ -1,4 +1,4 @@
-import { action, observable, reaction } from "mobx";
+import { action, computed, observable, reaction } from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
@@ -7,6 +7,9 @@ import { IBreadCrumbNode, RootBreadCrumbNode } from "gui/connections/MobileCompo
 import { IDataView } from "model/entities/types/IDataView";
 import { T } from "utils/translation";
 import { getDialogStack } from "model/selectors/getDialogStack";
+import { IFormScreen } from "model/entities/types/IFormScreen";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -33,9 +36,9 @@ export class MobileState {
   start() {
     reaction(() => {
         const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
-        return openedScreenItems.find(item => item.isActive);
+        return openedScreenItems.find(item => item.isActive)?.content?.formScreen;
       },
-      () => this.breadCrumbsState.resetBreadCrumbs(),
+      (activeFormScreen) => this.breadCrumbsState.updateBreadCrumbs(activeFormScreen),
       {fireImmediately: true}
     );
 
@@ -74,51 +77,82 @@ export class BreadCrumbsState {
 
   workbench: IWorkbench | undefined;
 
+  lastFormScreen:  IFormScreen | undefined;
+
+  @observable
+  openScreenBreadCrumbs = new Map<IFormScreen, IBreadCrumbNode[]>();
+
+  @observable
+  _activeBreadCrumbList: IBreadCrumbNode[] = [];
+
+  setActiveBreadCrumbList(nodes: IBreadCrumbNode[], ctx: any){
+    this.lastFormScreen = getFormScreen(ctx);
+    this.openScreenBreadCrumbs.set(this.lastFormScreen, nodes);
+    this._activeBreadCrumbList.length = 0;
+    nodes.forEach(node => this._activeBreadCrumbList.push(node));
+  }
+
+  @computed
+  get activeBreadCrumbList(){
+    return this._activeBreadCrumbList;
+  }
+
   @action
-  resetBreadCrumbs() {
+  updateBreadCrumbs(activeFormScreen: IFormScreen | undefined) {
+    this.lastFormScreen = activeFormScreen;
+
+    this._activeBreadCrumbList.length = 0;
+    const bla = activeFormScreen? this.openScreenBreadCrumbs.get(activeFormScreen) ?? [] : [];
+    bla.forEach(screen => this._activeBreadCrumbList.push(screen));
+
+    if(!activeFormScreen || this.openScreenBreadCrumbs.has(activeFormScreen)){
+      return;
+    }
+    this.resetBreadCrumbs(activeFormScreen);
+  }
+
+  private resetBreadCrumbs(activeFormScreen: IFormScreen){
     const breadCrumbCaption = () => this.workbench
       ? getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive)?.tabTitle ?? ""
       : "";
-    this.breadCrumbList.length = 0;
+    this.openScreenBreadCrumbs.set(activeFormScreen, []);
     const activeScreen = getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive);
     if (!activeScreen) {
       return;
     }
-    this.breadCrumbList.push(new RootBreadCrumbNode(breadCrumbCaption));
+    const rootBreadCrumbNode = new RootBreadCrumbNode(breadCrumbCaption);
+    this.openScreenBreadCrumbs
+      .get(activeFormScreen)!
+      .push(rootBreadCrumbNode);
+    this.activeBreadCrumbList.push(rootBreadCrumbNode);
 
-    const reactionDisposer = reaction(
-      () => activeScreen.content.formScreen,
-      (formScreen) => {
-        if ((formScreen?.rootDataViews?.length ?? 0) > 0 && formScreen?.uiRootType !== "Tab") {
-          const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
-          this.addDetailBreadCrumbNodeToRoot(dataView);
-          reactionDisposer();
-        }
-      },
-      {fireImmediately: true}
-    )
+    if ((activeFormScreen?.rootDataViews?.length ?? 0) > 0 && activeFormScreen?.uiRootType !== "Tab") {
+      const dataView = activeFormScreen?.rootDataViews[0]!;
+      this.addDetailBreadCrumbNodeToRoot(dataView);
+    }
   }
 
   @action
   addDetailBreadCrumbNodeToRoot(dataView: IDataView) {
-    if (this.breadCrumbList.length === 1) {
-      this.breadCrumbList[0].onClick = () => dataView.activateTableView?.();
+    if (this.activeBreadCrumbList?.length === 1) {
+      this.activeBreadCrumbList[0].onClick = () => dataView.activateTableView?.();
       this.addDetailBreadCrumbNode(dataView);
     }
   }
 
   @action
   addDetailBreadCrumbNode(dataView: IDataView) {
-    this.breadCrumbList.push({
+    const node = {
       caption: T("Detail", "mobile_detail_navigation"),
       isVisible: () => dataView?.isFormViewActive()!,
       onClick: () => {
       }
-    });
+    };
+    this.activeBreadCrumbList?.push(node);
+    this.openScreenBreadCrumbs
+      .get(this.lastFormScreen!)!
+      .push(node);
   }
-
-  @observable
-  breadCrumbList: IBreadCrumbNode[] = [];
 }
 
 interface IMobileLayoutState {

@@ -147,8 +147,9 @@ export class NavigatorState{
     }
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
-    this.mobileState.breadCrumbsState.breadCrumbList = this.currentNode.parentChain
+    const nodes = this.currentNode.parentChain
       .map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
+    this.mobileState.breadCrumbsState.setActiveBreadCrumbList(nodes, node.dataView);
     this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
   }
 }
