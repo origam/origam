@@ -67,13 +67,13 @@ export class MobileMain extends React.Component<{}> {
       return <CSidebar/>;
     }
     if (this.mobileState.layoutState instanceof ScreenLayoutState) {
-        return (
-          <>
-            <BreadCrumbs/>
-            <ScreenHeader/>
-            <CScreenContent/>
-          </>
-        );
+      return (
+        <>
+          <BreadCrumbs/>
+          <ScreenHeader/>
+          <CScreenContent/>
+        </>
+      );
     }
     if (this.mobileState.layoutState instanceof SearchLayoutState) {
       return <Search/>

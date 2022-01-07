@@ -6,6 +6,7 @@ import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScr
 import { IBreadCrumbNode, RootBreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { IDataView } from "model/entities/types/IDataView";
 import { T } from "utils/translation";
+import { getDialogStack } from "model/selectors/getDialogStack";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -29,9 +30,25 @@ export class MobileState {
     const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
     if (openedScreenItems.length > 0) {
       this.breadCrumbsState.resetBreadCrumbs();
-    } else {
-      this.layoutState = new MenuLayoutState();
     }
+
+    reaction(
+      () => {
+        const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
+        return {activeScreen: !!openedScreenItems.find(item => item.isActive),
+                dialogOpen: getDialogStack(this._workbench).isAnyDialogShown};
+      },
+      (args) => {
+        if (!args.activeScreen && this.layoutState instanceof ScreenLayoutState) {
+          this.layoutState = new MenuLayoutState();
+          return;
+        }
+        if(args.activeScreen && !args.dialogOpen && this.layoutState instanceof MenuLayoutState){
+          this.layoutState = new ScreenLayoutState();
+        }
+      },
+      {fireImmediately: true}
+    );
   }
 
   async close() {
