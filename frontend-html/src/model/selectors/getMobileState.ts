@@ -1,5 +1,5 @@
 import { getApplication } from "model/selectors/getApplication";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 
 export function getMobileState(ctx: any): MobileState {
   const mobileState = getApplication(ctx).mobileState;

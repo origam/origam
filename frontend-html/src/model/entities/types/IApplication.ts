@@ -22,7 +22,7 @@ import { IApplicationLifecycle } from "./IApplicationLifecycle";
 import { IDialogStack } from "./IDialogStack";
 import { IWorkbench } from "./IWorkbench";
 import { IErrorDialogController } from "./IErrorDialog";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 
 export interface IApplicationData {
   api: IApi;

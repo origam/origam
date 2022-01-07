@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./BottomToolBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 import { ActionDropUp } from "gui/connections/MobileComponents/ActionDropUp";
 import { MobXProviderContext, observer } from "mobx-react";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";

@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { ReactNode } from "react";
 import { IDataView } from "model/entities/types/IDataView";
 import { action, observable } from "mobx";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { IFormScreen } from "model/entities/types/IFormScreen";

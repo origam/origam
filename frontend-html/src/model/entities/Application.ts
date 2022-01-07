@@ -24,7 +24,7 @@ import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
 import { IDialogStack } from "./types/IDialogStack";
 import { IErrorDialogController } from "./types/IErrorDialog";
 import { IWorkbench } from "./types/IWorkbench";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 import { observable } from "mobx";
 
 export class Application implements IApplication {

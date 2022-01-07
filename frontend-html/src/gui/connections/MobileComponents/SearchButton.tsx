@@ -20,7 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "./SearchButton.module.scss";
 import { Icon } from "@origam/components";
-import { MobileState, SearchLayoutState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
+import { SearchLayoutState } from "model/entities/MobileState/MobileLayoutState";
 
 export const SearchButton: React.FC<{
   mobileState: MobileState

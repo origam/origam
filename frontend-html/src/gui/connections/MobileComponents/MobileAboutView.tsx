@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 import S from "./MobileAboutView.module.scss";
 import { AboutView } from "gui/Components/Dialogs/AboutView";
 

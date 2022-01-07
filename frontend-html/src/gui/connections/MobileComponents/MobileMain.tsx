@@ -22,13 +22,7 @@ import S from "./MobileMain.module.scss";
 import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar";
 import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
-import {
-  AboutLayoutState,
-  MenuLayoutState,
-  MobileState,
-  ScreenLayoutState,
-  SearchLayoutState
-} from "model/entities/MobileState";
+import { MobileState, } from "model/entities/MobileState/MobileState";
 import { About } from "model/entities/AboutInfo";
 import { getAbout } from "model/selectors/getAbout";
 import { Search } from "gui/connections/MobileComponents/Search";
@@ -39,6 +33,12 @@ import { CDialogContent } from "gui/connections/CDialogContent";
 import { BreadCrumbs } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { CScreenContent } from "gui/connections/CScreenContent";
 import { ScreenHeader } from "gui/connections/MobileComponents/ScreenHeader";
+import {
+  AboutLayoutState,
+  MenuLayoutState,
+  ScreenLayoutState,
+  SearchLayoutState
+} from "model/entities/MobileState/MobileLayoutState";
 
 
 @observer

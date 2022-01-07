@@ -21,7 +21,7 @@ import React from "react";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 import { MobXProviderContext, observer } from "mobx-react";
 import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
@@ -29,8 +29,6 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import S from "gui/connections/MobileComponents/TabSelector.module.scss"
 import { Icon } from "@origam/components";
-import { action } from "mobx";
-import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 
 @observer
 export class TabSelector extends React.Component<{

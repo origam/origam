@@ -25,9 +25,10 @@ import { Icon } from "@origam/components";
 import { INavigationNode, NavigatorState } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
-import { BreadCrumbsState, MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { T } from "utils/translation";
+import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 
 @observer
 export class StandaloneDetailNavigator extends React.Component<{

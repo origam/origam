@@ -23,7 +23,7 @@ import { INavigationNode, NavigatorState } from "gui/connections/MobileComponent
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { DetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { MobXProviderContext, observer } from "mobx-react";
-import { MobileState } from "model/entities/MobileState";
+import { MobileState } from "model/entities/MobileState/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 @observer

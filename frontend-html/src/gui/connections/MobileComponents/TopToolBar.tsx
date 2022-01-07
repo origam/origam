@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "./TopToolBar.module.scss";
-import { AboutLayoutState, MobileState } from "model/entities/MobileState";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
 import { MobXProviderContext, observer } from "mobx-react";
@@ -31,6 +30,8 @@ import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { TabSelector } from "gui/connections/MobileComponents/TabSelector";
 import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
 import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
+import { MobileState } from "model/entities/MobileState/MobileState";
+import { AboutLayoutState } from "model/entities/MobileState/MobileLayoutState";
 
 @observer
 export class TopToolBar extends React.Component<{
