@@ -8,8 +8,6 @@ import { IDataView } from "model/entities/types/IDataView";
 import { T } from "utils/translation";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { IFormScreen } from "model/entities/types/IFormScreen";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -29,19 +27,12 @@ export class MobileState {
     );
     this._workbench = workbench;
     this.breadCrumbsState.workbench = workbench;
+    this.breadCrumbsState.updateBreadCrumbs();
     this.start();
   }
 
   // It is ok for these reactions to run indefinitely because the MobileState is never disposed. Hence, no disposers here.
   start() {
-    reaction(() => {
-        const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
-        return openedScreenItems.find(item => item.isActive)?.content?.formScreen;
-      },
-      (activeFormScreen) => this.breadCrumbsState.updateBreadCrumbs(activeFormScreen),
-      {fireImmediately: true}
-    );
-
     reaction(
       () => {
         const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
@@ -77,44 +68,42 @@ export class BreadCrumbsState {
 
   workbench: IWorkbench | undefined;
 
-  @observable
-  activeFormScreen:  IFormScreen | undefined;
+  @computed
+  get activeFormScreen(){
+    const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
+    return openedScreenItems.find(item => item.isActive)?.content?.formScreen;
+  }
 
   @observable
   openScreenBreadCrumbs = new Map<IFormScreen, IBreadCrumbNode[]>();
 
-  setActiveBreadCrumbList(nodes: IBreadCrumbNode[], ctx: any){
-    this.activeFormScreen = getFormScreen(ctx);
-    this.openScreenBreadCrumbs.set(this.activeFormScreen, nodes);
+  setActiveBreadCrumbList(nodes: IBreadCrumbNode[]){
+    this.openScreenBreadCrumbs.set(this.activeFormScreen!, nodes);
   }
 
-  @computed
   get activeBreadCrumbList(){
-    return this.activeFormScreen ? this.openScreenBreadCrumbs.get(this.activeFormScreen) ?? [] : [];
+    if(!this.activeFormScreen){
+      return undefined;
+    }
+    if(!this.openScreenBreadCrumbs.has(this.activeFormScreen)){
+      this.updateBreadCrumbs();
+    }
+    return this.openScreenBreadCrumbs.get(this.activeFormScreen)
   }
 
   @action
-  updateBreadCrumbs(activeFormScreen: IFormScreen | undefined) {
-    this.activeFormScreen = activeFormScreen;
-    if(!activeFormScreen || this.openScreenBreadCrumbs.has(activeFormScreen)){
+  updateBreadCrumbs() {
+    if(!this.activeFormScreen || this.openScreenBreadCrumbs.has(this.activeFormScreen)){
       return;
     }
-    this.resetBreadCrumbs(activeFormScreen);
+    this.resetBreadCrumbs(this.activeFormScreen);
   }
 
   private resetBreadCrumbs(activeFormScreen: IFormScreen){
     const breadCrumbCaption = () => this.workbench
       ? getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive)?.tabTitle ?? ""
       : "";
-    this.openScreenBreadCrumbs.set(activeFormScreen, []);
-    const activeScreen = getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive);
-    if (!activeScreen) {
-      return;
-    }
-    const rootBreadCrumbNode = new RootBreadCrumbNode(breadCrumbCaption);
-    this.openScreenBreadCrumbs
-      .get(activeFormScreen)!
-      .push(rootBreadCrumbNode);
+    this.openScreenBreadCrumbs.set(activeFormScreen, [new RootBreadCrumbNode(breadCrumbCaption)]);
 
     if ((activeFormScreen?.rootDataViews?.length ?? 0) > 0 && activeFormScreen?.uiRootType !== "Tab") {
       const dataView = activeFormScreen?.rootDataViews[0]!;
@@ -132,16 +121,12 @@ export class BreadCrumbsState {
 
   @action
   addDetailBreadCrumbNode(dataView: IDataView) {
-    const node = {
+    this.activeBreadCrumbList?.push({
       caption: T("Detail", "mobile_detail_navigation"),
       isVisible: () => dataView?.isFormViewActive()!,
       onClick: () => {
       }
-    };
-    // this.activeBreadCrumbList?.push(node);
-    this.openScreenBreadCrumbs
-      .get(this.activeFormScreen!)!
-      .push(node);
+    });
   }
 }
 
