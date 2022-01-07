@@ -24,7 +24,7 @@ import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSp
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
-import { findBoxes, findUIChildren, findUIRoot } from "xmlInterpreters/screenXml";
+import { findBoxes, findFormRoot, findUIChildren, findUIRoot } from "xmlInterpreters/screenXml";
 import { Box } from "gui/Components/ScreenElements/Box";
 import { DataView } from "gui/Components/ScreenElements/DataView";
 import { Label } from "gui/Components/ScreenElements/Label";
@@ -128,7 +128,7 @@ export class FormScreenBuilder extends React.Component<{
             tabNode.name = !childXmlNode.attributes.Name
               ? box.attributes.Name
               : childXmlNode.attributes.Name;
-            tabNode.dataView = self.formScreen.getDataViewByModelInstanceId(childXmlNode.attributes.ModelInstanceId)
+            tabNode.dataView = getDataViewById(self.formScreen, element.props.id);
           }
         }
         if(isRootLevelNavigationNode){
