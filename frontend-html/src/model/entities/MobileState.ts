@@ -102,6 +102,7 @@ interface IMobileLayoutState {
   showOpenTabCombo: boolean;
   showSearchButton: boolean;
   showHamburgerMenuButton: boolean;
+  heading: string;
 
   showCloseButton(someScreensAreOpen: boolean): boolean;
 
@@ -117,6 +118,7 @@ export class MenuLayoutState implements IMobileLayoutState {
   showOpenTabCombo = false;
   showSearchButton = true;
   showHamburgerMenuButton = false;
+  heading = T("Menu", "menu");
 
   showCloseButton(someScreensAreOpen: boolean) {
     return someScreensAreOpen;
@@ -138,6 +140,7 @@ export class AboutLayoutState implements IMobileLayoutState {
   showOpenTabCombo = false;
   showSearchButton = true;
   showHamburgerMenuButton = true;
+  heading = T("About", "about_application");
 
   showCloseButton(someScreensAreOpen: boolean) {
     return true;
@@ -159,6 +162,7 @@ export class SearchLayoutState implements IMobileLayoutState {
   showOpenTabCombo = false;
   showSearchButton = false;
   showHamburgerMenuButton = true;
+  heading = T("Search", "mobile_search_title");
 
   showCloseButton(someScreensAreOpen: boolean) {
     return true;
@@ -180,6 +184,7 @@ export class ScreenLayoutState implements IMobileLayoutState {
   showOpenTabCombo = true;
   showSearchButton = true;
   showHamburgerMenuButton = true;
+  heading = "";
 
   showCloseButton(someScreensAreOpen: boolean) {
     return true;
