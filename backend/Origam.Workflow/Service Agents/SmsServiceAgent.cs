@@ -34,7 +34,7 @@ namespace Origam.Workflow
             switch (MethodName)
             {
                 case "SendSms":
-                    result = CreateSmsService().SendSms(
+                    CreateSmsService().SendSms(
                         Parameters.Get<string>("from"),
                         Parameters.Get<string>("to"),
                         Parameters.Get<string>("body"));
