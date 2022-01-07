@@ -24,7 +24,7 @@ import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSp
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
-import { findBoxes, findFormRoot, findUIChildren, findUIRoot } from "xmlInterpreters/screenXml";
+import { findBoxes, findUIChildren, findUIRoot } from "xmlInterpreters/screenXml";
 import { Box } from "gui/Components/ScreenElements/Box";
 import { DataView } from "gui/Components/ScreenElements/DataView";
 import { Label } from "gui/Components/ScreenElements/Label";
@@ -110,17 +110,9 @@ export class FormScreenBuilder extends React.Component<{
       }
 
       if (xso.attributes.Type === "Tab") {
-        const boxes = findBoxes(xso);
-        const masterNode = new NavigationNode();
-        masterNode.id = xso.attributes.Id;
-        masterNode.name = getMasterNavigationNodeName(xso);
-        masterNode.formScreen = self.formScreen;
-
-        for (const box of boxes) {
+        const tabNodes = findBoxes(xso).map(box => {
           const childXmlNode = findUIChildren(box)[0];
-          let tabNode = new NavigationNode();
-          masterNode.addChild(tabNode)
-
+          const tabNode = new NavigationNode();
           const element = mobileRecursiveBuilder(childXmlNode, tabNode);
           if(element){
             tabNode.element = element;
@@ -130,11 +122,17 @@ export class FormScreenBuilder extends React.Component<{
               : childXmlNode.attributes.Name;
             tabNode.dataView = getDataViewById(self.formScreen, element.props.id);
           }
-        }
+          return tabNode;
+        });
         if(isRootLevelNavigationNode){
+          const masterNode = new NavigationNode();
+          masterNode.id = xso.attributes.Id;
+          masterNode.name = getMasterNavigationNodeName(xso);
+          masterNode.formScreen = self.formScreen;
+          tabNodes.forEach(tabNode => masterNode.addChild(tabNode));
           return <TabNavigator rootNode={masterNode}/>
         }else{
-          currentNavigationNode?.merge(masterNode);
+          mergeNodesToParentView(currentNavigationNode, tabNodes);
           return undefined;
         }
       }
@@ -150,6 +148,12 @@ export class FormScreenBuilder extends React.Component<{
       }
 
       return desktopRecursiveBuilder(xso);
+    }
+
+    function mergeNodesToParentView(currentNavigationNode: INavigationNode, tabNodes: INavigationNode[]){
+      const parent = currentNavigationNode!.parent!;
+      parent.removeChild(currentNavigationNode);
+      tabNodes.forEach(tabNode => parent.addChild(tabNode));
     }
 
     function desktopRecursiveBuilder(xso: any, parentIsNavigator?: boolean) {
