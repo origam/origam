@@ -61,6 +61,13 @@ export class MobileState {
   hamburgerClick() {
     this.layoutState = this.layoutState.hamburgerClick();
   }
+
+  onFormClose(formScreen: IFormScreen | undefined) {
+    if(!formScreen){
+      return;
+    }
+    this.breadCrumbsState.onFormClose(formScreen);
+  }
 }
 
 
@@ -127,6 +134,10 @@ export class BreadCrumbsState {
       onClick: () => {
       }
     });
+  }
+
+  onFormClose(formScreen: IFormScreen) {
+    this.openScreenBreadCrumbs.delete(formScreen);
   }
 }
 
