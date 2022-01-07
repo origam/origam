@@ -77,34 +77,25 @@ export class BreadCrumbsState {
 
   workbench: IWorkbench | undefined;
 
-  lastFormScreen:  IFormScreen | undefined;
+  @observable
+  activeFormScreen:  IFormScreen | undefined;
 
   @observable
   openScreenBreadCrumbs = new Map<IFormScreen, IBreadCrumbNode[]>();
 
-  @observable
-  _activeBreadCrumbList: IBreadCrumbNode[] = [];
-
   setActiveBreadCrumbList(nodes: IBreadCrumbNode[], ctx: any){
-    this.lastFormScreen = getFormScreen(ctx);
-    this.openScreenBreadCrumbs.set(this.lastFormScreen, nodes);
-    this._activeBreadCrumbList.length = 0;
-    nodes.forEach(node => this._activeBreadCrumbList.push(node));
+    this.activeFormScreen = getFormScreen(ctx);
+    this.openScreenBreadCrumbs.set(this.activeFormScreen, nodes);
   }
 
   @computed
   get activeBreadCrumbList(){
-    return this._activeBreadCrumbList;
+    return this.activeFormScreen ? this.openScreenBreadCrumbs.get(this.activeFormScreen) ?? [] : [];
   }
 
   @action
   updateBreadCrumbs(activeFormScreen: IFormScreen | undefined) {
-    this.lastFormScreen = activeFormScreen;
-
-    this._activeBreadCrumbList.length = 0;
-    const bla = activeFormScreen? this.openScreenBreadCrumbs.get(activeFormScreen) ?? [] : [];
-    bla.forEach(screen => this._activeBreadCrumbList.push(screen));
-
+    this.activeFormScreen = activeFormScreen;
     if(!activeFormScreen || this.openScreenBreadCrumbs.has(activeFormScreen)){
       return;
     }
@@ -124,7 +115,6 @@ export class BreadCrumbsState {
     this.openScreenBreadCrumbs
       .get(activeFormScreen)!
       .push(rootBreadCrumbNode);
-    this.activeBreadCrumbList.push(rootBreadCrumbNode);
 
     if ((activeFormScreen?.rootDataViews?.length ?? 0) > 0 && activeFormScreen?.uiRootType !== "Tab") {
       const dataView = activeFormScreen?.rootDataViews[0]!;
@@ -148,9 +138,9 @@ export class BreadCrumbsState {
       onClick: () => {
       }
     };
-    this.activeBreadCrumbList?.push(node);
+    // this.activeBreadCrumbList?.push(node);
     this.openScreenBreadCrumbs
-      .get(this.lastFormScreen!)!
+      .get(this.activeFormScreen!)!
       .push(node);
   }
 }
