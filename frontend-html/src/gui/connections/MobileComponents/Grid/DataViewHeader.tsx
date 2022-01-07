@@ -183,6 +183,9 @@ export class DataViewHeaderInner extends React.Component<{
                   {this.isBarVisible &&
                     <>
                       <div className="fullspaceBlock">
+                        <DataViewHeaderGroup noShrink={true} className={"rowCount"} noDivider={true}>
+                          {this.renderRowCount()}
+                        </DataViewHeaderGroup>
                         {isMoveRowMenuVisible ? (
                           <DataViewHeaderGroup isHidden={false} noShrink={true} className={"noDivider"}>
                             <DataViewHeaderAction
@@ -265,9 +268,6 @@ export class DataViewHeaderInner extends React.Component<{
                           </DataViewHeaderAction>
                         </DataViewHeaderGroup>
                       }
-                      <DataViewHeaderGroup noShrink={true} className={"rowCount"}>
-                        {this.renderRowCount()}
-                      </DataViewHeaderGroup>
                       {dataView.isTableViewActive() &&
                         <DataViewHeaderGroup noShrink={true}>
                           <DataViewHeaderAction
