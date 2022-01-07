@@ -89,7 +89,7 @@ export class BreadCrumbsState {
     const reactionDisposer = reaction(
       () => activeScreen.content.formScreen,
       (formScreen) => {
-        if ((formScreen?.rootDataViews?.length ?? 0) > 0) {
+        if ((formScreen?.rootDataViews?.length ?? 0) > 0 && formScreen?.uiRootType !== "Tab") {
           const dataView = activeScreen?.content?.formScreen?.rootDataViews[0]!;
           this.addDetailBreadCrumbNodeToRoot(dataView);
           reactionDisposer();

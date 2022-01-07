@@ -323,9 +323,11 @@ export function*interpretScreenXml(
   }
 
   const foundLookupIds = new Set<string>();
+  const uiRoot = findUIRoot(windowXml);
 
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
+    uiRootType: uiRoot.attributes.Type,
     menuId: windowXml.attributes.MenuId,
     dynamicTitleSource: screenDoc.elements[0].attributes.DynamicFormLabelSource,
     sessionId,

@@ -134,6 +134,7 @@ export interface IFormScreenData {
   formScreenLifecycle: IFormScreenLifecycle02;
   sessionId: string;
   workflowTaskId: string | null;
+  uiRootType: string;
 }
 
 export interface IFormScreen extends IFormScreenData {

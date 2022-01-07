@@ -50,6 +50,7 @@ export class FormScreen implements IFormScreen {
   dataViewCache = new DataViewCache(this);
 
   @observable isDirty: boolean = false;
+  uiRootType = "";
   dynamicTitleSource: string | undefined;
   sessionId: string = "";
   @observable title: string = "";
