@@ -19,31 +19,40 @@ export class MobileState {
 
   breadCrumbsState = new BreadCrumbsState()
 
-  set workbench(workbench: IWorkbench) {
+  initialize(workbench: IWorkbench) {
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);
     workbenchLifecycle.mainMenuItemClickHandler.add(
       () => this.layoutState = new ScreenLayoutState()
     );
     this._workbench = workbench;
     this.breadCrumbsState.workbench = workbench;
+    this.start();
+  }
 
-    const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
-    if (openedScreenItems.length > 0) {
-      this.breadCrumbsState.resetBreadCrumbs();
-    }
+  // It is ok for these reactions to run indefinitely because the MobileState is never disposed. Hence, no disposers here.
+  start() {
+    reaction(() => {
+        const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
+        return openedScreenItems.find(item => item.isActive);
+      },
+      () => this.breadCrumbsState.resetBreadCrumbs(),
+      {fireImmediately: true}
+    );
 
     reaction(
       () => {
         const openedScreenItems = getOpenedNonDialogScreenItems(this._workbench);
-        return {activeScreen: !!openedScreenItems.find(item => item.isActive),
-                dialogOpen: getDialogStack(this._workbench).isAnyDialogShown};
+        return {
+          activeScreen: !!openedScreenItems.find(item => item.isActive),
+          dialogOpen: getDialogStack(this._workbench).isAnyDialogShown
+        };
       },
       (args) => {
         if (!args.activeScreen && this.layoutState instanceof ScreenLayoutState) {
           this.layoutState = new MenuLayoutState();
           return;
         }
-        if(args.activeScreen && !args.dialogOpen && this.layoutState instanceof MenuLayoutState){
+        if (args.activeScreen && !args.dialogOpen && this.layoutState instanceof MenuLayoutState) {
           this.layoutState = new ScreenLayoutState();
         }
       },

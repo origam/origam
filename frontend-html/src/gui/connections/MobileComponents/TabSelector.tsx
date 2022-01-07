@@ -42,12 +42,6 @@ export class TabSelector extends React.Component<{
     return this.context.workbench;
   }
 
-  @action
-  onItemClick(openScreen: IOpenedScreen, event: any){
-    onScreenTabHandleClick(openScreen)(event)
-    this.props.mobileState.breadCrumbsState.resetBreadCrumbs();
-  }
-
   render() {
     if(!this.props.mobileState.layoutState.showOpenTabCombo) {
       return (
@@ -89,7 +83,7 @@ export class TabSelector extends React.Component<{
                 key={openScreen.tabTitle}
                 onClick={(event: any) => {
                   setDropped(false);
-                  this.onItemClick(openScreen, event);
+                  onScreenTabHandleClick(openScreen)(event)
                 }}
               >
                 {openScreen.tabTitle}
