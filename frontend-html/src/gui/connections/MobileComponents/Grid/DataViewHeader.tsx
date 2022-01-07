@@ -63,7 +63,8 @@ import {
   isAddRecordShortcut,
   isDeleteRecordShortcut,
   isDuplicateRecordShortcut,
-  isFilterRecordShortcut
+  isFilterRecordShortcut,
+  renderRowCount
 } from "gui/connections/CDataViewHeader";
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
 import "gui/connections/MobileComponents/Grid/DataViewHeader.module.scss"
@@ -108,30 +109,6 @@ export class DataViewHeaderInner extends React.Component<{
         </DropdownItem>
       );
     });
-  }
-
-  renderRowCount() {
-    const selectedRowIndex = getTrueSelectedRowIndex(this.dataView);
-    const totalRowCount = getTotalRowCount(this.dataView);
-    const groupRowCount = getExpandedGroupRowCount(this.dataView);
-    if (groupRowCount) {
-      return (
-        <>
-          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-          &nbsp;/&nbsp;
-          {groupRowCount}
-          {totalRowCount ? " (" + totalRowCount + ")" : ""}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-          &nbsp;/&nbsp;
-          {totalRowCount}
-        </>
-      );
-    }
   }
 
   @computed
@@ -184,7 +161,7 @@ export class DataViewHeaderInner extends React.Component<{
                     <>
                       <div className="fullspaceBlock">
                         <DataViewHeaderGroup noShrink={true} className={"rowCount"} noDivider={true}>
-                          {this.renderRowCount()}
+                          {renderRowCount(this.dataView)}
                         </DataViewHeaderGroup>
                         {isMoveRowMenuVisible ? (
                           <DataViewHeaderGroup isHidden={false} noShrink={true} className={"noDivider"}>

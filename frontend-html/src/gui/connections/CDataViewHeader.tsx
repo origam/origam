@@ -69,6 +69,7 @@ import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuAction
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
+import { IDataView } from "model/entities/types/IDataView";
 
 @observer
 export class CDataViewHeaderInner extends React.Component<{
@@ -117,30 +118,6 @@ export class CDataViewHeaderInner extends React.Component<{
         </DropdownItem>
       );
     });
-  }
-
-  renderRowCount() {
-    const selectedRowIndex = getTrueSelectedRowIndex(this.dataView);
-    const totalRowCount = getTotalRowCount(this.dataView);
-    const groupRowCount = getExpandedGroupRowCount(this.dataView);
-    if (groupRowCount) {
-      return (
-        <>
-          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-          &nbsp;/&nbsp;
-          {groupRowCount}
-          {totalRowCount ? " (" + totalRowCount + ")" : ""}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-          &nbsp;/&nbsp;
-          {totalRowCount}
-        </>
-      );
-    }
   }
 
   @computed
@@ -336,7 +313,7 @@ export class CDataViewHeaderInner extends React.Component<{
                             </DataViewHeaderGroup>
 
                               <DataViewHeaderGroup noShrink={true} className={"rowCount"}>
-                                {this.renderRowCount()}
+                                {renderRowCount(this.dataView)}
                               </DataViewHeaderGroup>
                             </>
                           )}
@@ -472,6 +449,30 @@ export class CDataViewHeaderInner extends React.Component<{
           );
         }}
       </Measure>
+    );
+  }
+}
+
+export function renderRowCount(dataView: IDataView) {
+  const selectedRowIndex = getTrueSelectedRowIndex(dataView);
+  const totalRowCount = getTotalRowCount(dataView);
+  const groupRowCount = getExpandedGroupRowCount(dataView);
+  if (groupRowCount) {
+    return (
+      <>
+        {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
+        &nbsp;/&nbsp;
+        {groupRowCount}
+        {totalRowCount ? " (" + totalRowCount + ")" : ""}
+      </>
+    );
+  } else {
+    return (
+      <>
+        {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
+        &nbsp;/&nbsp;
+        {totalRowCount}
+      </>
     );
   }
 }
