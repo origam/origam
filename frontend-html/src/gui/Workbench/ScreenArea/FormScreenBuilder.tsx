@@ -125,7 +125,7 @@ export class FormScreenBuilder extends React.Component<{
           if(element){
             tabNode.element = element;
             tabNode.id = childXmlNode.attributes.Id;
-            tabNode.name = childXmlNode.attributes.Name === ""
+            tabNode.name = !childXmlNode.attributes.Name
               ? box.attributes.Name
               : childXmlNode.attributes.Name;
             tabNode.dataView = self.formScreen.getDataViewByModelInstanceId(childXmlNode.attributes.ModelInstanceId)
