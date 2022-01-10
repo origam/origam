@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./TopToolBar.module.scss";
+import S from "gui/connections/MobileComponents/TopToolBar/TopToolBar.module.scss";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { UserMenuDropdown } from "gui/Components/UserMenuDropdown/UserMenuDropdown";
 import { MobXProviderContext, observer } from "mobx-react";
@@ -27,8 +27,8 @@ import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { action } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
-import { TabSelector } from "gui/connections/MobileComponents/TabSelector";
-import { SearchButton } from "gui/connections/MobileComponents/SearchButton";
+import { TabSelector } from "gui/connections/MobileComponents/TopToolBar/TabSelector";
+import { SearchButton } from "gui/connections/MobileComponents/TopToolBar/SearchButton";
 import { MenuButton } from "gui/connections/MobileComponents/MenuButton";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { AboutLayoutState } from "model/entities/MobileState/MobileLayoutState";

@@ -18,10 +18,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./BottomToolBar.module.scss";
-import { BottomIcon } from "gui/connections/MobileComponents/BottomIcon";
+import S from "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.module.scss";
+import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { ActionDropUp } from "gui/connections/MobileComponents/ActionDropUp";
+import { ActionDropUp } from "gui/connections/MobileComponents/BottomToolBar/ActionDropUp";
 import { MobXProviderContext, observer } from "mobx-react";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";

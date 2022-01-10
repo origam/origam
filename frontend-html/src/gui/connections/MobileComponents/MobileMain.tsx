@@ -19,14 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "./MobileMain.module.scss";
-import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar";
+import { TopToolBar } from "gui/connections/MobileComponents/TopToolBar/TopToolBar";
 import { CSidebar } from "gui/connections/CSidebar";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState, } from "model/entities/MobileState/MobileState";
 import { About } from "model/entities/AboutInfo";
 import { getAbout } from "model/selectors/getAbout";
 import { Search } from "gui/connections/MobileComponents/Search";
-import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar";
+import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar/BottomToolBar";
 import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { CDialogContent } from "gui/connections/CDialogContent";

@@ -18,8 +18,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./ActionDropUp.module.scss";
-import "./ActionDropUp.module.scss";
+import S from "gui/connections/MobileComponents/BottomToolBar/ActionDropUp.module.scss";
+import "gui/connections/MobileComponents/BottomToolBar/ActionDropUp.module.scss";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Icon } from "@origam/components";
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";

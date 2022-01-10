@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "./SearchButton.module.scss";
+import S from "gui/connections/MobileComponents/TopToolBar/SearchButton.module.scss";
 import { Icon } from "@origam/components";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { SearchLayoutState } from "model/entities/MobileState/MobileLayoutState";
