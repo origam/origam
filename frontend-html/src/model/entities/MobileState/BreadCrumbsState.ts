@@ -1,10 +1,10 @@
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { action, computed, observable } from "mobx";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { IBreadCrumbNode, RootBreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { IDataView } from "model/entities/types/IDataView";
 import { T } from "utils/translation";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 export class BreadCrumbsState {
 
@@ -12,8 +12,7 @@ export class BreadCrumbsState {
 
   @computed
   get activeFormScreen() {
-    const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
-    return openedScreenItems.find(item => item.isActive)?.content?.formScreen;
+    return getActiveScreen(this.workbench)?.content?.formScreen;
   }
 
   @observable
@@ -43,7 +42,7 @@ export class BreadCrumbsState {
 
   private resetBreadCrumbs(activeFormScreen: IFormScreen) {
     const breadCrumbCaption = () => this.workbench
-      ? getOpenedNonDialogScreenItems(this.workbench).find(item => item.isActive)?.tabTitle ?? ""
+      ? getActiveScreen(this.workbench)?.tabTitle ?? ""
       : "";
     this.openScreenBreadCrumbs.set(activeFormScreen, [new RootBreadCrumbNode(breadCrumbCaption)]);
 

@@ -1,6 +1,7 @@
 import { T } from "utils/translation";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 export interface IMobileLayoutState {
   actionDropUpHidden: boolean;
@@ -98,8 +99,7 @@ export class ScreenLayoutState implements IMobileLayoutState {
   }
 
   async close(ctx: any): Promise<IMobileLayoutState> {
-    const activeScreen = getOpenedNonDialogScreenItems(ctx)
-      .find(screen => screen.isActive);
+    const activeScreen = getActiveScreen(ctx);
     if (activeScreen) {
       await onScreenTabCloseClick(activeScreen)(null);
       const stillOpenScreens = getOpenedNonDialogScreenItems(ctx);

@@ -20,14 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useContext } from "react";
 import S from "./ScreenHeader.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
-import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 export const ScreenHeader: React.FC<{}> = observer((props) => {
 
   const application = useContext(MobXProviderContext).application;
-  const openedScreenItems = getOpenedNonDialogScreenItems(application);
-  const activeScreen =  openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
+  const activeScreen = getActiveScreen(application);
 
   if(!activeScreen || !activeScreen.content.formScreen?.workflowTaskId){
     return null;

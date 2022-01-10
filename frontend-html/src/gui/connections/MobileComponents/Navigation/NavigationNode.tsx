@@ -22,8 +22,8 @@ import { IDataView } from "model/entities/types/IDataView";
 import { action, observable } from "mobx";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { IFormScreen } from "model/entities/types/IFormScreen";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 export interface INavigationNode {
   readonly name: string;
@@ -75,8 +75,7 @@ export class NavigationNode implements INavigationNode {
   get name(): string {
     let finalName = !this._name ? this.id : this._name;
     if(!this.parent && this.formScreen){
-      finalName = getOpenedNonDialogScreenItems(this.formScreen)
-        .find(item => item.isActive)
+      finalName = getActiveScreen(this.formScreen)
         ?.tabTitle
         ?? finalName;
     }

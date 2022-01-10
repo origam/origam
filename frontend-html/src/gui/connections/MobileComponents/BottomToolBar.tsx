@@ -30,10 +30,9 @@ import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { IActionMode } from "model/entities/types/IAction";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
-import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
 import { computed } from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -49,8 +48,7 @@ export class BottomToolBar extends React.Component<{
 
   @computed
   get activeScreen(){
-    const openedScreenItems = getOpenedNonDialogScreenItems(this.props.ctx);
-    return openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
+    return getActiveScreen(this.props.ctx)?.content?.formScreen;
   }
 
   getActions(){
@@ -59,7 +57,7 @@ export class BottomToolBar extends React.Component<{
       .filter(action => getIsEnabledAction(action));
 
 
-    const dataViews = this.activeScreen?.content?.formScreen?.dataViews;
+    const dataViews = this.activeScreen?.dataViews;
     if(!dataViews || dataViews.length === 0){
       return screenActions;
     }
@@ -83,10 +81,7 @@ export class BottomToolBar extends React.Component<{
   }
 
   showNextButton(){
-    if(!this.activeScreen?.content){
-      return false;
-    }
-    return this.activeScreen.content.formScreen && this.activeScreen.content.formScreen.showWorkflowNextButton;
+    return this.activeScreen && this.activeScreen.showWorkflowNextButton;
   }
 
   render() {
@@ -124,7 +119,7 @@ export class BottomToolBar extends React.Component<{
         {this.showNextButton() &&
           <BottomIcon
             iconPath={"./icons/list-arrow-next.svg"}
-            onClick={() => onWorkflowNextClick(this.activeScreen!.content.formScreen!)(null)}
+            onClick={() => onWorkflowNextClick(this.activeScreen!)(null)}
           />
         }
       </div>
