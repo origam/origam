@@ -19,15 +19,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ReactNode } from "react";
 import { IDataView } from "model/entities/types/IDataView";
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 
 export interface INavigationNode {
   readonly name: string;
   readonly children: INavigationNode[];
+  readonly allChildren: INavigationNode[];
   parent: INavigationNode | undefined;
   readonly parentChain: INavigationNode[];
   showDetailLinks(): boolean;
@@ -40,6 +42,7 @@ export interface INavigationNode {
   addChild(node: INavigationNode): void;
   removeChild(node: INavigationNode): void;
   merge(other: INavigationNode): void;
+  readonly navigationDisabled: boolean;
 }
 
 export class NavigationNode implements INavigationNode {
@@ -90,6 +93,10 @@ export class NavigationNode implements INavigationNode {
     return this._children;
   }
 
+  get allChildren() {
+    return this._children.flatMap(child => child.children);
+  }
+
   get parentChain() {
     let parent = this.parent;
     const chain: INavigationNode[] = [this];
@@ -98,6 +105,15 @@ export class NavigationNode implements INavigationNode {
       parent = parent.parent;
     }
     return chain.reverse();
+  }
+
+  @computed
+  get navigationDisabled(){
+    if(!this.dataView?.selectedRow){
+      return false;
+    }
+    return this.dataView.properties
+      .some(prop => getFieldErrorMessage(prop!)(this.dataView!.selectedRow!, prop!))
   }
 
   addChild(node: NavigationNode) {
@@ -136,8 +152,18 @@ export class NavigatorState{
     this.currentNode = node;
   }
 
+  @computed
+  get navigationDisabled(){
+    return this.currentNode.parentChain
+      .concat(this.currentNode.allChildren)
+      .some(node => node.navigationDisabled);
+  }
+
   @action
   onNodeClick(node: INavigationNode){
+    if(this.navigationDisabled){
+      return;
+    }
     if(this.currentNode === node){
       if(this.currentNode.dataView?.isFormViewActive()){
         this.currentNode.dataView?.activateTableView?.();
