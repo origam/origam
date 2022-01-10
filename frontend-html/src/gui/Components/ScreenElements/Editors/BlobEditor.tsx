@@ -81,9 +81,7 @@ export class BlobEditor extends React.Component<{
   SessionFormIdentifier?: string;
   parameters?: any;
   subscribeToFocusManager?: (obj: IFocusable) => void;
-  isInvalid: boolean;
   canUpload: boolean;
-  invalidMessage?: string;
   onKeyDown?(event: any): void;
   onChange?(event: any, value: string): void;
   onEditorBlur?(event: any): void;
@@ -265,11 +263,6 @@ export class BlobEditor extends React.Component<{
     return (
       <div className={S.editorContainer}>
         {this.renderInput()}
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }

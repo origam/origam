@@ -31,8 +31,6 @@ export class NumberEditor extends React.Component<{
   value: string | null;
   isReadOnly: boolean;
   isPassword?: boolean;
-  isInvalid: boolean;
-  invalidMessage?: string;
   property?: IProperty;
   backgroundColor?: string;
   foregroundColor?: string;
@@ -194,11 +192,6 @@ export class NumberEditor extends React.Component<{
           onBlur={this.handleBlur}
           onFocus={this.handleFocus}
         />
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }

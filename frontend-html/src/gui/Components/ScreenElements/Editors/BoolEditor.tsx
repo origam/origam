@@ -22,7 +22,6 @@ import { observer } from "mobx-react";
 import S from "./BoolEditor.module.scss";
 import cx from "classnames";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
-import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 
 @observer
 export class BoolEditor extends React.Component<{
@@ -34,8 +33,6 @@ export class BoolEditor extends React.Component<{
   onClick?(event: any): void;
   onBlur?: () => void;
   onFocus?: () => void;
-  isInvalid: boolean;
-  invalidMessage?: string;
   id?: string;
   forceTakeFocus?: boolean;
   subscribeToFocusManager?: (obj: IFocusable) => void;
@@ -76,11 +73,6 @@ export class BoolEditor extends React.Component<{
           ref={this.refInput}
           tabIndex={0}
         />
-        {this.props.isInvalid && (
-          <div className={CS.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }

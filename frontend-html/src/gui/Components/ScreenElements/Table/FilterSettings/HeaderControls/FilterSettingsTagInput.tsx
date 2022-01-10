@@ -291,7 +291,6 @@ export function FilterBuildDropdownEditor(props: {
             customInputClass={S.tagInput}
             value={value}
             isReadOnly={false}
-            isInvalid={false}
             autoFocus={props.autoFocus}
             onClick={undefined}
           />

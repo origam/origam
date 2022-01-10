@@ -105,7 +105,6 @@ export const CheckBox: React.FC<{
         <BoolEditor
           id={props.property!.modelInstanceId}
           value={props.checked}
-          isInvalid={false}
           isReadOnly={props.readOnly}
           onBlur={onInputBlur}
           onFocus={onInputFocus}

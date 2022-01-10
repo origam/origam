@@ -105,7 +105,6 @@ export class TableViewEditor extends React.Component<{
           <NumberEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
-            isInvalid={false}
             isPassword={this.props.property!.isPassword}
             maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
@@ -128,7 +127,6 @@ export class TableViewEditor extends React.Component<{
             id={"editor_" + this.props.property?.modelInstanceId}
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
-            isInvalid={false}
             isPassword={this.props.property!.isPassword}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
@@ -173,7 +171,6 @@ export class TableViewEditor extends React.Component<{
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
             readOnlyNoGrey={true}
-            isInvalid={false}
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={this.props.onEditorKeyDown}
@@ -231,7 +228,6 @@ export class TableViewEditor extends React.Component<{
                 <TagInputEditor
                   value={this.props.getCellValue!()}
                   isReadOnly={readOnly}
-                  isInvalid={false}
                   backgroundColor={backgroundColor}
                   foregroundColor={foregroundColor}
                   onChange={this.props.onChange}
@@ -249,7 +245,6 @@ export class TableViewEditor extends React.Component<{
           <BlobEditor
             isReadOnly={readOnly}
             value={this.props.getCellValue!()}
-            isInvalid={false}
             canUpload={true}
             onChange={this.props.onChange}
             onEditorBlur={this.props.onEditorBlur}

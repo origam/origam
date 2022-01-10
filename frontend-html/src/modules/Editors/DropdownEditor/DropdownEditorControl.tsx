@@ -100,8 +100,6 @@ class TriggerContextMenuState {
 }
 
 export function DropdownEditorControl(props: {
-  isInvalid?: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   customStyle?: any;
@@ -137,12 +135,6 @@ export function DropdownEditorControl(props: {
           </div>
 
           <TriggerContextMenu state={triggerContextMenu}/>
-
-          {props.isInvalid && (
-            <div className={CS.notification} title={props.invalidMessage}>
-              <i className="fas fa-exclamation-circle red"/>
-            </div>
-          )}
         </div>
       )}
     </Observer>

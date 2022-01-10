@@ -40,8 +40,6 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
       value: string[];
       textualValues?: string[];
       isReadOnly: boolean;
-      isInvalid: boolean;
-      invalidMessage?: string;
       backgroundColor?: string;
       foregroundColor?: string;
       customStyle?: any;
@@ -163,11 +161,6 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               size={1}
             />
           </TagInput>
-          {props.isInvalid && (
-            <div className={CS.notification} title={props.invalidMessage}>
-              <i className="fas fa-exclamation-circle red"/>
-            </div>
-          )}
         </div>
       );
     }

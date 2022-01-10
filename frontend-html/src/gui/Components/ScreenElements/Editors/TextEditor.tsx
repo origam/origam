@@ -40,8 +40,6 @@ export class TextEditor extends React.Component<{
   isMultiline?: boolean;
   isReadOnly: boolean;
   isPassword?: boolean;
-  isInvalid: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   maxLength?: number;
@@ -129,11 +127,6 @@ export class TextEditor extends React.Component<{
     return (
       <div className={S.editorContainer}>
         {this.renderValueTag()}
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }

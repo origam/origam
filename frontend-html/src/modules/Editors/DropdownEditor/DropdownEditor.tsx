@@ -76,8 +76,6 @@ export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
 
 export function DropdownEditor(props: {
   editor?: JSX.Element;
-  isInvalid?: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   customStyle?: any;
@@ -95,8 +93,6 @@ export function DropdownEditor(props: {
               props.editor
             ) : (
               <DropdownEditorControl
-                isInvalid={props.isInvalid}
-                invalidMessage={props.invalidMessage}
                 backgroundColor={props.backgroundColor}
                 foregroundColor={props.foregroundColor}
                 customStyle={props.customStyle}
@@ -118,8 +114,6 @@ export function DropdownEditor(props: {
 export function XmlBuildDropdownEditor(props: {
   xmlNode: any;
   isReadOnly: boolean;
-  isInvalid?: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   customStyle?: any;
@@ -295,8 +289,6 @@ export function XmlBuildDropdownEditor(props: {
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       <DropdownEditor
         editor={props.tagEditor}
-        isInvalid={props.isInvalid}
-        invalidMessage={props.invalidMessage}
         backgroundColor={props.backgroundColor}
         foregroundColor={props.foregroundColor}
         customStyle={props.customStyle}
