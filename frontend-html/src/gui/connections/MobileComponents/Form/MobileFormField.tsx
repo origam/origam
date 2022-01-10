@@ -56,6 +56,7 @@ export class MobileFormField extends React.Component<{
           xmlNode={this.props.xmlNode}
           backgroundColor={this.props.backgroundColor}
           fieldDimensions={new FieldDimensions()}
+          linkInForm={true}
         />
       </div>
     );

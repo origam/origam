@@ -37,6 +37,7 @@ import { action } from "mobx";
 import { Breakpoint, useCurrentBreakpointName } from "react-socks";
 import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
 import { MobileMain } from "gui/connections/MobileComponents/MobileMain";
+import { MobileStyleSheetLoader } from "gui/connections/MobileComponents/MobileStyleSheetLoader";
 
 @observer
 export class CWorkbenchPage extends React.Component {
@@ -62,7 +63,6 @@ export class CWorkbenchPage extends React.Component {
   render() {
     const isFullscreen = getIsCurrentScreenFull(this.workbench);
     return (
-      // <Provider workbench={this.workbench}>
         <>
           <Breakpoint small down className={S.mobileContainer}>
             <MobileMain/>
@@ -86,8 +86,8 @@ export class CWorkbenchPage extends React.Component {
             />
           </Breakpoint>
           <BreakpointProvider/>
+          <MobileStyleSheetLoader/>
         </>
-      // </Provider>
     );
   }
 }

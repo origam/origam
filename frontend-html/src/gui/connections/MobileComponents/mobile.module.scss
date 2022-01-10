@@ -17,31 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/EditorsCommon.module";
-
-.root {
-  position: absolute;
+// A dummy class needed to locate this stylesheet using javascript
+.mobileStyleSheetIdentifier{
+  height: 100px;
 }
 
-.caption {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  overflow: hidden;
-  padding: 0 0.5em 0 0;
-  white-space: pre-wrap;
-  word-wrap: normal;
+input{
+  height: 25px;
 }
 
-.editor {
+div:global(.inputBtn) {
+  align-items: center;
+  justify-content: center;
   display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-
-.notification {
-  @include notification;
+  min-width: 45px;
 }

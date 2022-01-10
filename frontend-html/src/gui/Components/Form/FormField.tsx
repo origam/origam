@@ -27,8 +27,9 @@ import { formatTooltipPlaintext } from "../ToolTip/FormatTooltipText";
 import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
 import { observable } from "mobx";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
-import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { MobileLink } from "gui/connections/MobileComponents/MobileLink";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -64,6 +65,7 @@ export class FormField extends React.Component<{
   textualValue?: any;
   isRichText: boolean;
   backgroundColor?: string;
+  linkInForm?: boolean;
   property?: IProperty;
 }> {
 
@@ -176,6 +178,9 @@ export class FormField extends React.Component<{
               <i className="fas fa-exclamation-circle red"/>
             </div>
           )}
+          {this.props.linkInForm && this.props.property?.isLink && row &&
+            <MobileLink property={this.props.property} row={row}/>
+          }
         </div>
       </>
     );

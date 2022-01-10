@@ -17,31 +17,29 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/EditorsCommon.module";
-
 .root {
-  position: absolute;
+  border-radius: 2px;
+  transition: all 300ms linear;
+  border: 1px solid var(--background5);
+  min-width: 25px;
+  max-width: 25px;
+  height: 25px;
 }
 
-.caption {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  overflow: hidden;
-  padding: 0 0.5em 0 0;
-  white-space: pre-wrap;
-  word-wrap: normal;
+svg.linkIcon {
+  position: relative;
+  top: -6px;
+  left: 8px;
+  transform: rotate(-135deg);
+  margin-left: -15px;
+  fill: var(--foreground1);
+  width: 30px;
+  height: 30px;
 }
 
-.editor {
-  display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-
-.notification {
-  @include notification;
+div.disabledLink {
+  background: var(--background3);
+  svg.linkIcon{
+    fill: var(--background5);
+  }
 }
