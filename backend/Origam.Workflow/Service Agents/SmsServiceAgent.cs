@@ -27,8 +27,7 @@ namespace Origam.Workflow
 {
     public class SmsServiceAdapter : AbstractServiceAgent
     {
-        private object result;
-        public override object Result => result;
+        public override object Result { get; }
         public override void Run()
         {
             switch (MethodName)
@@ -48,14 +47,13 @@ namespace Origam.Workflow
 
         private static ISmsService CreateSmsService()
         {
-            OrigamSettings settings = 
-                ConfigurationManager.GetActiveConfiguration();
-            string assembly = settings.DataDataService
+            var settings = ConfigurationManager.GetActiveConfiguration();
+            var assembly = settings.DataDataService
                 .Split(",".ToCharArray())[0].Trim();
-            string classname = settings.DataDataService
+            var classname = settings.DataDataService
                 .Split(",".ToCharArray())[1].Trim();
-            ISmsService service = Reflector.InvokeObject(classname, assembly) as ISmsService;
-            if (service == null) {
+            if (!(Reflector.InvokeObject(classname, assembly) 
+                is ISmsService service)) {
                 throw new NullReferenceException
                     ($"Couldn't invoke object as {classname}, and {assembly}.");
             }
