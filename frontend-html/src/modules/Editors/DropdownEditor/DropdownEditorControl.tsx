@@ -119,10 +119,6 @@ export function DropdownEditorControl(props: {
             foregroundColor={props.foregroundColor}
             customStyle={props.customStyle}
           />
-          {/*<button className={"inputBtn"} disabled={beh.isReadOnly}>*/}
-          {/*  <i className="fas fa-ellipsis-h"></i>*/}
-          {/*</button>*/}
-
           <div
             className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
             tabIndex={-1}
@@ -134,9 +130,9 @@ export function DropdownEditorControl(props: {
             onMouseDown={!beh.isReadOnly ? beh.handleControlMouseDown : undefined}
           >
             {!beh.isWorking ? (
-              <i className="fas fa-caret-down"></i>
+              <i className="fas fa-caret-down"/>
             ) : (
-              <i className="fas fa-spinner fa-spin"></i>
+              <i className="fas fa-spinner fa-spin"/>
             )}
           </div>
 
