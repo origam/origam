@@ -29,6 +29,7 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
 import S from "gui/connections/MobileComponents/TopToolBar/TabSelector.module.scss"
 import { Icon } from "@origam/components";
+import { getLabel } from "gui/connections/CScreenTabbedViewHandleRow";
 
 @observer
 export class TabSelector extends React.Component<{
@@ -41,7 +42,7 @@ export class TabSelector extends React.Component<{
   }
 
   render() {
-    if(!this.props.mobileState.layoutState.showOpenTabCombo) {
+    if (!this.props.mobileState.layoutState.showOpenTabCombo) {
       return (
         <div className={S.heading}>
           {this.props.mobileState.layoutState.heading}
@@ -62,7 +63,7 @@ export class TabSelector extends React.Component<{
           >
             <div className={S.titleContainer}>
               <div className={S.screenName + " " + (activeItem?.content?.formScreen?.isDirty ? S.dirtyScreenName : "")}>
-                {activeItem?.tabTitle}
+                {getLabel(activeItem)}
               </div>
               {openedScreens.length > 1 &&
                 <Icon
@@ -73,26 +74,26 @@ export class TabSelector extends React.Component<{
             </div>
           </DataViewHeaderAction>
         )}
-        content={({setDropped}) => (
+        content={({setDropped}) =>
           <Dropdown>
-            {openedScreens.map(openScreen =>
-              <DropdownItem
-                className={openScreen.content.formScreen?.isDirty ? S.dirtyDropDownItem : ""}
-                key={openScreen.tabTitle}
-                onClick={(event: any) => {
-                  setDropped(false);
-                  onScreenTabHandleClick(openScreen)(event)
-                }}
-              >
-                {openScreen.tabTitle}
-              </DropdownItem>
+            {openedScreens.map(openScreen => {
+                const label = getLabel(openScreen);
+                return <DropdownItem
+                  className={openScreen.content.formScreen?.isDirty ? S.dirtyDropDownItem : ""}
+                  key={label}
+                  onClick={(event: any) => {
+                    setDropped(false);
+                    onScreenTabHandleClick(openScreen)(event)
+                  }}
+                >
+                  {label}
+                </DropdownItem>;
+              }
             )}
           </Dropdown>
-        )}
+        }
       />
     );
   }
 }
-
-
 
