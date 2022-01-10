@@ -41,13 +41,11 @@ import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
 import { IAction, IActionMode } from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-import { getExpandedGroupRowCount } from "model/selectors/DataView/getExpandedGroupRowCount";
 import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsMoveRowMenuVisible } from "model/selectors/DataView/getIsMoveRowMenuVisible";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import React, { useContext } from "react";
@@ -57,7 +55,6 @@ import { getConfigurationManager } from "model/selectors/TablePanelView/getConfi
 import { computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
-import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
 import {
   isAddRecordShortcut,

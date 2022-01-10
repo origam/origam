@@ -41,6 +41,7 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import { action, observable } from "mobx";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
 import { PinButton } from "gui/connections/MenuComponents/PinButton";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class CFavorites extends React.Component<{
@@ -100,6 +101,13 @@ export class CFavorites extends React.Component<{
         onCancelClick={() => closeDialog()}
       />
     );
+  }
+
+  onMouseEnter() {
+    this.mouseInHeader = true;
+    if (isMobileLayoutActive(this.props.ctx)) {
+      this.props.onHeaderClick?.();
+    }
   }
 
   @action
@@ -192,7 +200,7 @@ export class CFavorites extends React.Component<{
                 className={S.favoritesFolderHeader}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                onMouseEnter={() => this.mouseInHeader = true}
+                onMouseEnter={() => this.onMouseEnter()}
                 onMouseLeave={() => this.mouseInHeader = false}
               >
                 <SidebarSectionHeader
