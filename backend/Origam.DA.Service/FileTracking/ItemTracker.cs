@@ -178,9 +178,8 @@ namespace Origam.DA.Service
         {
             LogTreeIndexState("KeepOnly method running");
 
-            HashSet<string> relativePathsToKeep = filesToKeep
-                .Select(fileInfo => pathFactory.Create(fileInfo).Relative)
-                .ToHashSet();
+            HashSet<string> relativePathsToKeep = new HashSet<string>(filesToKeep
+                .Select(fileInfo => pathFactory.Create(fileInfo).Relative));
 
             fileHashIndex.RemoveValuesWhere(origamFile =>
                 !relativePathsToKeep.Contains(origamFile.Path.Relative));

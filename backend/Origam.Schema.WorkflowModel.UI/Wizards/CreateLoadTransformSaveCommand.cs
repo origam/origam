@@ -24,10 +24,10 @@ using Origam.UI;
 
 namespace Origam.Schema.WorkflowModel.UI
 {
-	/// <summary>
-	/// Summary description for CreateDataStructureFromEntityCommand.
-	/// </summary>
-	public class CreateLoadTransformSaveCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateDataStructureFromEntityCommand.
+    /// </summary>
+    public class CreateLoadTransformSaveCommand : AbstractMenuCommand
 	{
 		public override bool IsEnabled
 		{

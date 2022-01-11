@@ -43,14 +43,10 @@ jobs:
   - job: build_source
     displayName: Build source
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
-     - task: UseDotNet@2
-       inputs:
-         packageType: 'sdk'
-         version: '6.0.x'
      - task: NuGetToolInstaller@0
        displayName: 'Use NuGet 5.8'
        inputs:

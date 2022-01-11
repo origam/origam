@@ -42,9 +42,8 @@ namespace Origam.Common_net2Tests
             
             var testDictionary = GenerateRandomDictionary(distSize);
 
-            HashSet<ReferenceTypeInt> valuesToKeep = testDictionary.Values
-                .Take(itemsToKeep)
-                .ToHashSet();   
+            HashSet<ReferenceTypeInt> valuesToKeep = new HashSet<ReferenceTypeInt>(testDictionary.Values
+                .Take(itemsToKeep));   
 
             testDictionary
                 .RemoveByValueSelector(value => !valuesToKeep.Contains(value));

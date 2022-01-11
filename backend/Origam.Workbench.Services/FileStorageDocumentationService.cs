@@ -315,7 +315,7 @@ namespace Origam.Workbench.Services
         
         public void RemoveOutDatedNodes(List<XmlNode> newNodes, Guid refItemId)
         {
-            HashSet<Guid> newNodeIds = newNodes.Select(GetId).ToHashSet();
+            HashSet<Guid> newNodeIds = new HashSet<Guid>(newNodes.Select(GetId));
             GetNodesFor(refItemId)
                 .Where(node => !newNodeIds.Contains(GetId(node)))
                 .ForEach(node => FirstChild.RemoveChild(node));
