@@ -270,7 +270,7 @@ namespace Origam
         [Category("Model Connection")]
         public bool CheckFileHashesAfterModelLoad { get; set; } = true;
         
-        [Category("SmsService")] 
+        [Category("SMS Service")] 
         public string SmsService { get; set; }
 
         public string ReportsFolder()
