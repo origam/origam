@@ -408,6 +408,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				memoElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
 				memoElement.SetAttribute("ParentId", queueId.ToString());
 				memoElement.SetAttribute("ParentEntityName", "WorkQueueEntry");
+				memoElement.SetAttribute("PanelTitle", memoColumn.Caption);
 
 				XmlElement filterExpressionsElement = doc.CreateElement("FilterExpressions");
 				memoElement.AppendChild(filterExpressionsElement);
