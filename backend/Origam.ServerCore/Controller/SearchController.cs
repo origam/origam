@@ -21,9 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System.Collections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Origam.ServerCore.Attributes;
 
 namespace Origam.ServerCore.Controller
 {
@@ -42,6 +42,7 @@ namespace Origam.ServerCore.Controller
         // .NetCore 3.1 cannot stream data, looks like this will be possible in .Net 5.0.0
         // https://github.com/dotnet/runtime/issues/1570
         [HttpGet("{searchTerm}")]
+        [DecodeQueryParameter("searchTerm")]
         public IActionResult Get(string searchTerm)
         {
             return RunWithErrorHandler(() => Ok(searchHandler.Search(searchTerm)));
