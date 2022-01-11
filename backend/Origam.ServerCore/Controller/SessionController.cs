@@ -36,6 +36,7 @@ using Origam.Schema.GuiModel;
 using Origam.Security.Identity;
 using Origam.Server;
 using Origam.ServerCommon;
+using Origam.ServerCore.Attributes;
 using Origam.ServerCore.Model;
 using Origam.ServerCore.Model.Session;
 

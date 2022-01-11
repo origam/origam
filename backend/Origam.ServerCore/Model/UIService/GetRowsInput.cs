@@ -26,6 +26,7 @@ using System.Linq;
 using Origam.Extensions;
 using Origam.Server;
 using Origam.ServerCommon;
+using Origam.ServerCore.Attributes;
 
 namespace Origam.ServerCore.Model.UIService
 
