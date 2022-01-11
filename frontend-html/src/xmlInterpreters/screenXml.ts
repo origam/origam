@@ -440,6 +440,7 @@ export function*interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
+        hideNavigationPanel: dataView.attributes.HideNavigationPanel,
         dataTable:
           dataView.attributes.Type === "TreePanel"
             ? new TreeDataTable(

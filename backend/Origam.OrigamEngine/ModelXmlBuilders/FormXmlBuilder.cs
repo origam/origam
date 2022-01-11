@@ -401,6 +401,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					table, dataSources, table.PrimaryKey[0].ColumnName, false, Guid.Empty, false);
 
 				memoElement.SetAttribute("Id", "memoPanel");
+				memoElement.SetAttribute("HideNavigationPanel", XmlConvert.ToString(true));
 				memoElement.SetAttribute("ModelInstanceId", "65DF44F9-C050-4554-AD9A-896445314279");
 				memoElement.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
 				memoElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
