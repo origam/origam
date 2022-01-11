@@ -72,7 +72,8 @@ namespace Origam
 			bool traceEnabled,
 			string authorizationProvider,
 			string profileProvider,
-			string pathToRuntimeModelConfig)
+			string pathToRuntimeModelConfig,
+			string pathToSmsHandler)
 		{
 			
 			this.Name = name;
@@ -104,6 +105,7 @@ namespace Origam
 		    this.AuthorizationProvider = authorizationProvider;
 		    this.ProfileProvider = profileProvider;
 		    this.PathToRuntimeModelConfig = pathToRuntimeModelConfig;
+		    this.SmsService = pathToSmsHandler;
 		}
 
 		public override string ToString()
@@ -216,7 +218,7 @@ namespace Origam
 
         [Category("Data Connection"), DefaultValue(2000)]
 		public int DataServiceExecuteProcedureTimeout { get; set; } = 2000;
-
+		
 		[Category("Data Connection"), DefaultValue(false)]
 		public bool UseProgressiveCaching { get; set; } = false;
 
@@ -267,6 +269,9 @@ namespace Origam
 
         [Category("Model Connection")]
         public bool CheckFileHashesAfterModelLoad { get; set; } = true;
+        
+        [Category("SMS Service")] 
+        public string SmsService { get; set; }
 
         public string ReportsFolder()
 		{
@@ -325,7 +330,8 @@ namespace Origam
 				this.TraceEnabled,
                 this.AuthorizationProvider,
                 this.ProfileProvider,
-				this.PathToRuntimeModelConfig
+				this.PathToRuntimeModelConfig,
+				this.SmsService
 				);
 		}
 
