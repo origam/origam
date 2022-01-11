@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Origam.ServerCore.Model
+namespace Origam.ServerCore.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
     public class RequiredNonDefaultAttribute : ValidationAttribute

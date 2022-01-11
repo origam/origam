@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Origam.ServerCore.Attributes;
 
 namespace Origam.ServerCore.Model.UIService
 
