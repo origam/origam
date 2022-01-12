@@ -37,7 +37,6 @@ import { getRowStateForegroundColor } from "model/selectors/RowState/getRowState
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
 import { FormRoot } from "gui/Workbench/ScreenArea/FormView/FormRoot";
-import { FormLabel } from "gui/connections/MobileComponents/Form/FormLabel";
 import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
 import { MobileFormField } from "gui/connections/MobileComponents/Form/MobileFormField";
 import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileFormSection";
@@ -96,7 +95,7 @@ export class MobileFormBuilder extends React.Component<{
     }
     const focusManager = self.props.dataView!.formFocusManager;
 
-    function recursive(xfo: any, indexInParent: number): FormItem[] {
+    function recursive(xfo: any, indexInParent: number): FormItem[] | undefined {
       if (xfo.name === "FormRoot") {
         return [new FormItem("-1",
           <FormRoot
@@ -108,6 +107,7 @@ export class MobileFormBuilder extends React.Component<{
               xfo.elements
                 .flatMap((child: any, index: number) => recursive(child, index))
                 .flat()
+                .filter((item: any) => item)
                 .sort(compareTabIndexOwners)
                 .map((item: FormItem) => item.element)
             }
@@ -125,19 +125,14 @@ export class MobileFormBuilder extends React.Component<{
               xfo.elements
                 .flatMap((child: any, index: number) => recursive(child, index))
                 .flat()
+                .filter((item: any) => item)
                 .sort(compareTabIndexOwners)
                 .map((item: FormItem) => item.element)
             }
           </MobileFormSection>
         )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "Label") {
-        return [new FormItem("-1",
-          <FormLabel
-            key={xfo.$iid}
-            title={xfo.attributes.Title}
-            foregroundColor={foreGroundColor}
-          />
-        )];
+        return undefined;
       } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
         const sourceField = getDataSourceFieldByName(self.props.dataView, xfo.attributes.Id);
 
@@ -220,7 +215,6 @@ export class MobileFormBuilder extends React.Component<{
                         caption={property.name}
                         hideCaption={property.column === "Image"}
                         captionLength={property.captionLength}
-                        captionPosition={property.captionPosition}
                         captionColor={foreGroundColor}
                         dock={property.dock}
                         toolTip={property.toolTip}
@@ -241,7 +235,8 @@ export class MobileFormBuilder extends React.Component<{
       }
     }
 
-    const form = recursive(this.props.xmlFormRootObject, 0)
+    const form = recursive(this.props.xmlFormRootObject, 0)!
+      .filter(item => item)
       .sort(compareTabIndexOwners)
       .map(item => item.element);
 

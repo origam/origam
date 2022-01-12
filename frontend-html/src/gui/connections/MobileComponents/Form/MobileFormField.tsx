@@ -28,7 +28,6 @@ export class MobileFormField extends React.Component<{
   caption: React.ReactNode;
   hideCaption?: boolean;
   captionLength: number;
-  captionPosition?: ICaptionPosition;
   captionColor?: string;
   dock?: IDockType;
   toolTip?: string;
@@ -46,7 +45,7 @@ export class MobileFormField extends React.Component<{
           caption={this.props.caption}
           hideCaption={this.props.hideCaption}
           captionLength={this.props.captionLength}
-          captionPosition={this.props.captionPosition}
+          captionPosition={ICaptionPosition.Left}
           captionColor={this.props.captionColor}
           dock={this.props.dock}
           toolTip={this.props.toolTip}
