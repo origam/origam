@@ -114,7 +114,7 @@ export class MobileFormBuilder extends React.Component<{
           </FormRoot>
         )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
-        return [new FormItem((-100 - indexInParent).toString(),
+        return [new FormItem((xfo.attributes.TabIndex).toString(),
           <MobileFormSection
             key={xfo.$iid}
             title={xfo.attributes.Title}

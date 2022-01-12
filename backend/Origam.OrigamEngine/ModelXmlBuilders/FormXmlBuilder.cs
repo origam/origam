@@ -1647,6 +1647,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 						formElement.SetAttribute("Type", "FormSection");
 						formElement.SetAttribute("Title", text);
+						formElement.SetAttribute("TabIndex", tabIndex);
 
 						formElement.SetAttribute("X", XmlConvert.ToString(left));
 						formElement.SetAttribute("Y", XmlConvert.ToString(top));
