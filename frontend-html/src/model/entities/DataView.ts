@@ -203,7 +203,6 @@ export class DataView implements IDataView {
   actions: IAction[] = [];
   defaultActions: IAction[] = [];
   type: string = "";
-  hideNavigationPanel: boolean = false;
 
   @observable tableViewProperties: IProperty[] = [];
   dataTable: IDataTable = null as any;

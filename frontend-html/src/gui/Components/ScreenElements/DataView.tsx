@@ -114,9 +114,7 @@ export class DataViewInner extends React.Component<IDataViewProps> {
     return (
       <>
         <div className={S.overlayContainer}>
-          { !this.props.dataView?.hideNavigationPanel &&
-            <CDataViewHeader isVisible={!this.props.isHeadless}/>
-          }
+          <CDataViewHeader isVisible={!this.props.isHeadless}/>
           {isWorking && <DataViewLoading/>}
         </div>
         <div className={S.dataViewContentContainer}>{uiBody && uiBody.render()}</div>

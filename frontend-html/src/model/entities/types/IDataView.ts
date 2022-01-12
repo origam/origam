@@ -79,7 +79,6 @@ export interface IDataViewData {
   clientSideGrouper: ClientSideGrouper;
   isFirst: boolean;
   newRecordView: string | undefined;
-  hideNavigationPanel: boolean;
 
   dataViewRowCursor: RowCursor;
   dataViewApi: DataViewAPI;

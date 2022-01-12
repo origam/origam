@@ -397,18 +397,18 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 				UIElementRenderData memoRenderData = new UIElementRenderData();
 				memoRenderData.DataMember = "WorkQueueEntry";
+				memoRenderData.HideNavigationPanel = true;
+				memoRenderData.PanelTitle = memoColumn.Caption;
 				AsPanelBuilder.Build(memoElement, memoRenderData, queueId.ToString(), "memoPanel1",
 					table, dataSources, table.PrimaryKey[0].ColumnName, false, Guid.Empty, false);
 
 				memoElement.SetAttribute("Id", "memoPanel");
-				memoElement.SetAttribute("HideNavigationPanel", XmlConvert.ToString(true));
 				memoElement.SetAttribute("ModelInstanceId", "65DF44F9-C050-4554-AD9A-896445314279");
 				memoElement.SetAttribute("IsRootGrid", XmlConvert.ToString(false));
 				memoElement.SetAttribute("IsRootEntity", XmlConvert.ToString(true));
 				memoElement.SetAttribute("IsPreloaded", XmlConvert.ToString(true));
 				memoElement.SetAttribute("ParentId", queueId.ToString());
 				memoElement.SetAttribute("ParentEntityName", "WorkQueueEntry");
-				memoElement.SetAttribute("PanelTitle", memoColumn.Caption);
 
 				XmlElement filterExpressionsElement = doc.CreateElement("FilterExpressions");
 				memoElement.AppendChild(filterExpressionsElement);
