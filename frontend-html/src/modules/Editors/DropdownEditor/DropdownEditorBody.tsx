@@ -80,8 +80,9 @@ export class DropdownEditorTable extends  React.Component<{
   scrollbarSize = { horiz: 0, vert: 0 };
   hasHeader: boolean;
   hoveredRowIndex= - 1;
-  width = 0;
   columnCount = 0;
+  readonly cellPadding = 20;
+  readonly maxHeight = 150;
 
   get rowCount(){
     return this.props.dataTable.rowCount + (this.hasHeader ? 1 : 0);
@@ -92,11 +93,8 @@ export class DropdownEditorTable extends  React.Component<{
     for (let i = 0; i < this.rowCount; i++) {
       height = height + rowHeight;
     }
-    return Math.min(height, 300) + this.scrollbarSize.horiz;
+    return Math.min(height, this.maxHeight) + this.scrollbarSize.horiz;
   }
-
-  @observable
-  widths: Array<number> = [];
 
   constructor(props: any) {
     super(props);
@@ -115,34 +113,6 @@ export class DropdownEditorTable extends  React.Component<{
     };
   }
 
-  componentDidMount() {
-    let columnWidthSum = 0;
-    for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex++) {
-      let cellWidth = 100;
-      for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
-        const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
-        const currentCellWidth = Math.round(getTextWidth(cellText, getCanvasFontSize()));
-        if(currentCellWidth > cellWidth){
-          cellWidth = currentCellWidth;
-        }
-      }
-
-      this.width = this.width + cellWidth;
-      this.widths.push(cellWidth);
-      columnWidthSum = columnWidthSum + cellWidth;
-      if (this.width >= window.innerWidth - 100) {
-        this.width = window.innerWidth - 100;
-        break;
-      }
-    }
-
-    this.width = Math.max(this.width + this.scrollbarSize.vert, this.props.rectCtrl.width!);
-    let columnGrowFactor = 1;
-    if (columnWidthSum > 0 && columnWidthSum < this.props.rectCtrl.width!) {
-      columnGrowFactor = (this.width - this.scrollbarSize.vert) / columnWidthSum;
-    }
-    this.widths = this.widths.map((w) => w * columnGrowFactor);
-  }
 
   renderTableCell({columnIndex, key, parent, rowIndex, style}: GridCellProps) {
     const Prov = CtxCell.Provider as any;
@@ -185,7 +155,36 @@ export class DropdownEditorTable extends  React.Component<{
   }
 
   render(){
-    if(this.width === 0){
+    let columnWidthSum = 0;
+    let width = 0;
+    let widths: number[] = [];
+    for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex++) {
+      let cellWidth = 100;
+      for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
+        const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
+        const currentCellWidth = Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding;
+        if(currentCellWidth > cellWidth){
+          cellWidth = currentCellWidth;
+        }
+      }
+
+      width = width + cellWidth;
+      widths.push(cellWidth);
+      columnWidthSum = columnWidthSum + cellWidth;
+      if (width >= window.innerWidth - 100) {
+        width = window.innerWidth - 100;
+        break;
+      }
+    }
+
+    width = Math.max(width + this.scrollbarSize.vert, this.props.rectCtrl.width!);
+    let columnGrowFactor = 1;
+    if (columnWidthSum > 0 && columnWidthSum < this.props.rectCtrl.width!) {
+      columnGrowFactor = (width - this.scrollbarSize.vert) / columnWidthSum;
+    }
+    widths = widths.map((w) => w * columnGrowFactor);
+
+    if(width === 0){
       return null;
     }
 
@@ -199,11 +198,11 @@ export class DropdownEditorTable extends  React.Component<{
         classNameBottomRightGrid={S.table}
         columnCount={this.columnCount}
         rowCount={this.rowCount}
-        columnWidth={({ index }) => this.widths[index]}
+        columnWidth={({ index }) => widths[index]}
         rowHeight={rowHeight}
         fixedRowCount={this.hasHeader ? 1 : 0}
         height={this.height}
-        width={this.width}
+        width={width}
         cellRenderer={args => this.renderTableCell(args)}
         onScroll={this.props.beh.handleScroll}
       />
