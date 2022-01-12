@@ -53,6 +53,7 @@ export class StandaloneDetailNavigator extends React.Component<{
         .activationHandler
         .add(() => this.onScreenActivation());
       this.onScreenActivation();
+      this.props.node.dataView.activateTableView?.();
     }
   }
 

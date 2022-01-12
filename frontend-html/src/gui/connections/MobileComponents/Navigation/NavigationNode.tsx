@@ -176,5 +176,6 @@ export class NavigatorState{
       .map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
     this.mobileState.breadCrumbsState.setActiveBreadCrumbList(nodes);
     this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
+    this.currentNode.dataView?.activateTableView?.();
   }
 }
