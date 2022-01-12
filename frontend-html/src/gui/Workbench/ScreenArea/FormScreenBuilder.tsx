@@ -83,13 +83,17 @@ export class FormScreenBuilder extends React.Component<{
 
         let masterNavigationNode = new NavigationNode();
         let detailNavigationNode = new NavigationNode();
-        masterNavigationNode.addChild(detailNavigationNode);
 
         const [masterXmlNode, detailXmlNode] = findUIChildren(xso);
         const masterReactElement = mobileRecursiveBuilder(masterXmlNode, masterNavigationNode);
         if(!detailXmlNode){
-          return masterReactElement;
+          if(masterReactElement){
+            return masterReactElement;
+          }else{
+            return <StandaloneDetailNavigator node={masterNavigationNode}/>;
+          }
         }
+        masterNavigationNode.addChild(detailNavigationNode);
         const detailReactElement = mobileRecursiveBuilder(detailXmlNode, detailNavigationNode);
 
         if(!masterReactElement){
@@ -117,22 +121,23 @@ export class FormScreenBuilder extends React.Component<{
           if(element){
             tabNode.element = element;
             tabNode.id = childXmlNode.attributes.Id;
-            tabNode.name = !childXmlNode.attributes.Name
+            tabNode.name = box.attributes.Name
               ? box.attributes.Name
               : childXmlNode.attributes.Name;
             tabNode.dataView = getDataViewById(self.formScreen, element.props.id);
           }
           return tabNode;
         });
+
+        const masterNode = new NavigationNode();
+        masterNode.id = xso.attributes.Id;
+        masterNode.name = getMasterNavigationNodeName(xso);
+        masterNode.formScreen = self.formScreen;
+        tabNodes.forEach(tabNode => masterNode.addChild(tabNode));
         if(isRootLevelNavigationNode){
-          const masterNode = new NavigationNode();
-          masterNode.id = xso.attributes.Id;
-          masterNode.name = getMasterNavigationNodeName(xso);
-          masterNode.formScreen = self.formScreen;
-          tabNodes.forEach(tabNode => masterNode.addChild(tabNode));
           return <TabNavigator rootNode={masterNode}/>
         }else{
-          mergeNodesToParentView(currentNavigationNode, tabNodes);
+          mergeNodesToParentView(currentNavigationNode, masterNode, tabNodes);
           return undefined;
         }
       }
@@ -150,10 +155,14 @@ export class FormScreenBuilder extends React.Component<{
       return desktopRecursiveBuilder(xso);
     }
 
-    function mergeNodesToParentView(currentNavigationNode: INavigationNode, tabNodes: INavigationNode[]){
-      const parent = currentNavigationNode!.parent!;
-      parent.removeChild(currentNavigationNode);
-      tabNodes.forEach(tabNode => parent.addChild(tabNode));
+    function mergeNodesToParentView(currentNavigationNode: INavigationNode, masterNode: INavigationNode, tabNodes: INavigationNode[]){
+      const parent = currentNavigationNode.parent;
+      if(parent){
+        parent.removeChild(currentNavigationNode);
+        tabNodes.forEach(tabNode => parent.addChild(tabNode));
+      }else{ //
+        currentNavigationNode.merge(masterNode);
+      }
     }
 
     function desktopRecursiveBuilder(xso: any, parentIsNavigator?: boolean) {
