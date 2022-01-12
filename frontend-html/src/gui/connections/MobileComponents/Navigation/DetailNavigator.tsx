@@ -93,7 +93,10 @@ export class DetailNavigator extends React.Component<{
     }
     return (
       <div className={S.root}>
-        {this.props.node.element}
+        {this.props.node.element
+          ? this.props.node.element
+          : <div className={S.contentPlaceholder}/>
+        }
         {this.props.node.showDetailLinks() &&
           <NavigationButtonList
             onClick={(node) => this.props.onNodeClick(node)}
