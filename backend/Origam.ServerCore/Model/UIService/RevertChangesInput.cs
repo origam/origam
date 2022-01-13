@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using Origam.ServerCore.Attributes;
 
 namespace Origam.ServerCore.Model.UIService
 {
