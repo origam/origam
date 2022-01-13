@@ -21,8 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Drawing.Design;
+#if !NETSTANDARD
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+#endif
 
 namespace Origam.Schema.RuleModel
 {

@@ -1276,12 +1276,7 @@ namespace Origam.Server
             {
                 row = GetListRow(entity, id);
             }
-#if !NETSTANDARD
-            if (row == null )
-            {
-                throw new ArgumentOutOfRangeException("id", id, Resources.ErrorRecordNotFound);
-            }
-#endif
+
             return row;
         }
 

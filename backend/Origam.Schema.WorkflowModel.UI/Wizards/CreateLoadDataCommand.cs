@@ -46,7 +46,7 @@ namespace Origam.Schema.WorkflowModel.UI
 		{
 			ContextStore context = Owner as ContextStore;
 
-			WorkflowHelper.CreateDataServiceLoadDataTask(context, true);
+            WorkflowHelper.CreateDataServiceLoadDataTask(context, true);
 		}
 	}
 }

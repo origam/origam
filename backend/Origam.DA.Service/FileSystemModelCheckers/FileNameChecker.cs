@@ -50,10 +50,9 @@ namespace Origam.DA.Service
                 .RetrieveList<IFilePersistent>()
                 .ToArray();
 
-            HashSet<Guid> allChildrenIds = allPersistedObjects
+            HashSet<Guid> allChildrenIds = new HashSet<Guid>(allPersistedObjects
                 .OfType<AbstractSchemaItem>()
-                .SelectMany(GetChildrenIds)
-                .ToHashSet();
+                .SelectMany(GetChildrenIds));
 
             List<ErrorMessage> errors = allPersistedObjects
                 .Where(instance => !(instance is SchemaItemAncestor))

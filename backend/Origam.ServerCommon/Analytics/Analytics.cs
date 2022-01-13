@@ -58,11 +58,7 @@ namespace Origam.Server
 
         public void SetProperty(string propertyName, object value)
         {
-#if NETSTANDARD
             log4net.ThreadContext.Properties[propertyName] = new NullPropertyProvider();
-#else
-            log4net.ThreadContext.Properties[propertyName] = new AdaptivePropertyProvider(propertyName, value);
-#endif
         }
 
         public void Log(string message)
