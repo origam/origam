@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -19,25 +19,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.ComponentModel.DataAnnotations;
+using System.Net;
+using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Origam.ServerCore.Model
+namespace Origam.ServerCore.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-    public class RequiredNonDefaultAttribute : ValidationAttribute
+    public class DecodeQueryParameterAttribute : ActionFilterAttribute
     {
-        public RequiredNonDefaultAttribute()
-            : base("The {0} field requires a non-default value.")
+        private readonly string parameterName;
+
+        public DecodeQueryParameterAttribute(string parameterName)
         {
+            this.parameterName = parameterName;
         }
 
-        public override bool IsValid(object value)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (value is null)
-                return false; 
-            var type = value.GetType();
-            return !Equals(value, Activator.CreateInstance(Nullable.GetUnderlyingType(type) ?? type));
+            if (!context.ActionArguments.ContainsKey(parameterName))
+            {
+                return;
+            }
+
+            string param = context.ActionArguments[parameterName] as string;
+            context.ActionArguments[parameterName] = WebUtility.UrlDecode(param);
+            base.OnActionExecuting(context);
         }
     }
 }
+
