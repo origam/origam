@@ -6,10 +6,8 @@ variables:
   value: $(Pipeline.Workspace)/.nuget/packages
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
-- name: BRANCHCHAT # branch to be used
-  value: master
 - name: BRANCH # branch to be used
-  value: upgradeframework
+  value: master
 - name: VERSION_NUMBER # version number of the build
   value: 2021.2.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
@@ -32,7 +30,7 @@ resources:
      type: github
      endpoint: https://github.com/origam/
      name: origam/origam-html-chat
-     ref: $(BRANCHCHAT)
+     ref: $(BRANCH)
    - repository: origam
      type: github
      endpoint: https://github.com/origam/
