@@ -101,7 +101,7 @@ export class FormScreenBuilder extends React.Component<{
         }
         assignMasterNavigationNodeProperties(masterNavigationNode, masterReactElement, masterXmlNode, xso);
         if(detailReactElement){
-          assignDetailNavigationNodeProperties(detailNavigationNode, detailReactElement, detailXmlNode, xso);
+          assignDetailNavigationNodeProperties(detailNavigationNode, detailReactElement, detailXmlNode);
         }
 
         if (isRootLevelNavigationNode) {
@@ -305,12 +305,12 @@ export class FormScreenBuilder extends React.Component<{
       navigationNode.name = getMasterNavigationNodeName(xmlNode, parentXmlElement);
     }
 
-    function assignDetailNavigationNodeProperties(navigationNode: NavigationNode, element: any, xmlNode: any, parentXmlElement: any) {
-      navigationNode.element = element;
+    function assignDetailNavigationNodeProperties(navigationNode: NavigationNode, reactElement: any, xmlNode: any) {
+      navigationNode.element = reactElement;
       navigationNode.id = xmlNode.attributes.Id;
       navigationNode.formScreen = self.formScreen;
-      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(element.props?.modelInstanceId);
-      navigationNode.name = getDataViewLabel(navigationNode.dataView) ?? element.attributes.Name;
+      navigationNode.dataView =  self.formScreen.getDataViewByModelInstanceId(reactElement.props?.modelInstanceId);
+      navigationNode.name = navigationNode.dataView ? getDataViewLabel(navigationNode.dataView) : xmlNode.attributes.Name;
     }
 
     return recursive(uiRoot);
