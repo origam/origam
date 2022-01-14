@@ -17,15 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FocusAbleObjectContainer, IFocusable } from "../model/entities/FormFocusManager";
+import { compareTabIndexOwners } from "model/entities/TabIndexOwner";
 
-class DummyFocusable implements IFocusable {
-  disabled: boolean = false;
-  tabIndex: number = 0;
-
-  focus(): void {
-  }
-}
 
 test.each([
   [["1", "5"], -1],
@@ -43,12 +36,12 @@ test.each([
   [[undefined, "1"], 1],
   [["1", undefined], -1],
 ])('Compare %s to: %s', (values, expectedNormalizedResult) => {
-  const val1 = new FocusAbleObjectContainer(new DummyFocusable(), "", values[0])
-  const val2 = new FocusAbleObjectContainer(new DummyFocusable(), "", values[1])
-  const comparisonResult = FocusAbleObjectContainer.compare(val1, val2)
+  const val1 = {tabIndex: values[0]}
+  const val2 = {tabIndex: values[1]}
+  const comparisonResult = compareTabIndexOwners(val1, val2)
 
   const sign = Math.sign(comparisonResult);
-  const normalizedResult = sign != 0
+  const normalizedResult = sign !== 0
     ? comparisonResult / comparisonResult * sign
     : comparisonResult;
 
