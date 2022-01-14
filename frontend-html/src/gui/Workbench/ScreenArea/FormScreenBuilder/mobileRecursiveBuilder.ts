@@ -108,8 +108,7 @@ export function mobileRecursiveBuilder(args:{
           isHeadless: xso.attributes.IsHeadless === "true"
         });
     }
-
-    return args.desktopRecursiveBuilder(xso, args.formScreen);
+    return args.desktopRecursiveBuilder(args.formScreen, xso);
   }
 
   function getMasterNavigationNodeName(xmlNode: any, xmlParentNode?: any) {
