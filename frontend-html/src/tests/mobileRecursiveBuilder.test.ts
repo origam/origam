@@ -68,26 +68,29 @@ Array.prototype.remove = function (item) {
   return this;
 }
 
-
-test('Should parse screen with tab panel inside of split panel', () => {
-
-  const mockOpenScreen = {
-    $type_IOpenedScreen: 1,
-    content:{
-      formScreen:{
-        dataViews: []
-      }
+const mockOpenScreen = {
+  $type_IOpenedScreen: 1,
+  content:{
+    formScreen:{
+      dataViews: []
     }
-  };
-  const mockFormScreen = new MockFormScreen();
-  mockFormScreen.parent = mockOpenScreen;
+  }
+};
+const mockFormScreen = new MockFormScreen();
+mockFormScreen.parent = mockOpenScreen;
 
-  const xmlString = readFile("testFiles/screen_with_tab_panel_in_split_panel.xml")
+function getUiRoot(relativeTestFilePath: string){
+  const xmlString = readFile(relativeTestFilePath);
   const xmlWindowObject = xmlJs.xml2js(xmlString, {
     addParent: true,
     alwaysChildren: true,
   });
-  const uiRoot = findUIRoot(xmlWindowObject);
+  return findUIRoot(xmlWindowObject);
+}
+
+test('Should parse screen with tab panel inside of split panel', () => {
+
+  const uiRoot = getUiRoot("testFiles/screen_with_tab_panel_in_split_panel.xml");
 
   const resultNode = mobileRecursiveBuilder({
     uiRoot: uiRoot,
