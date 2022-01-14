@@ -19,10 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { INavigationNode, NavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
-import { findBoxes, findUIChildren } from "xmlInterpreters/screenXml";
 import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
-import { IComponentFactory } from "gui/Workbench/ScreenArea/FormScreenBuilder/ComponentFactory";
+import { IComponentFactory } from "gui/Workbench/ScreenArea/FormScreenBuilder/IComponentFactory";
+import { findBoxes, findUIChildren } from "xmlInterpreters/xmlUtils";
 
 
 export function mobileRecursiveBuilder(args:{

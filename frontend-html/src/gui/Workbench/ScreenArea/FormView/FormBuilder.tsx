@@ -23,8 +23,6 @@ import { IDataView } from "model/entities/types/IDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { findStrings } from "xmlInterpreters/screenXml";
-
 import { FormRoot } from "./FormRoot";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
@@ -43,6 +41,7 @@ import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowState
 import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { dimensionsFromProperty, dimensionsFromXmlNode } from "gui/Components/Form/FieldDimensions";
+import { findStrings } from "xmlInterpreters/xmlUtils";
 
 
 @inject(({dataView}) => {

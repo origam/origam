@@ -20,11 +20,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { MobXProviderContext, observer } from "mobx-react";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
-import { findUIRoot } from "xmlInterpreters/screenXml";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { desktopRecursiveBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder/DesktopRecursiveBuilder";
-import { mobileRecursiveBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder/MobileRecursiveBuilder";
+import { desktopRecursiveBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder/desktopRecursiveBuilder";
+import { mobileRecursiveBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder/mobileRecursiveBuilder";
 import { ComponentFactory } from "gui/Workbench/ScreenArea/FormScreenBuilder/ComponentFactory";
+import { findUIRoot } from "xmlInterpreters/xmlUtils";
 
 @observer
 export class FormScreenBuilder extends React.Component<{

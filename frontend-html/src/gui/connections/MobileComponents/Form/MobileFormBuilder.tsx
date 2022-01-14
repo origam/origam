@@ -41,8 +41,8 @@ import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
 import { MobileFormField } from "gui/connections/MobileComponents/Form/MobileFormField";
 import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileFormSection";
 import { MobileCheckBox } from "gui/connections/MobileComponents/Form/CheckBox";
-import { findStrings } from "xmlInterpreters/screenXml";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { findStrings } from "xmlInterpreters/xmlUtils";
 
 
 @inject(({dataView}) => {

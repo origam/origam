@@ -25,7 +25,6 @@ import { WorkflowFinishedPanel } from "gui/Components/WorkflowFinishedPanel/Work
 import actions from "model/actions-ui-tree";
 import { serverValueToPanelSizeRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
 import { IPanelData } from "gui/Components/Splitter/IPanelData";
-import { findBoxes, findUIChildren } from "xmlInterpreters/screenXml";
 import { Splitter } from "gui/Components/Splitter/Splitter";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
 import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
@@ -37,6 +36,7 @@ import { DataView } from "gui/Components/ScreenElements/DataView";
 import { CScreenSectionTabbedView } from "gui/connections/CScreenSectionTabbedView";
 import { Box } from "gui/Components/ScreenElements/Box";
 import React from "react";
+import { findBoxes, findUIChildren } from "xmlInterpreters/xmlUtils";
 
 export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
 

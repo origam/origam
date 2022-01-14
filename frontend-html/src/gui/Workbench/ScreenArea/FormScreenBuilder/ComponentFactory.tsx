@@ -17,18 +17,13 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { ReactNode } from "react";
+import React from "react";
 import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
 import { DataView } from "gui/Components/ScreenElements/DataView";
+import { IComponentFactory } from "gui/Workbench/ScreenArea/FormScreenBuilder/IComponentFactory";
 
-
-export interface IComponentFactory {
-  getDetailNavigator(masterNavigationNode: INavigationNode): ReactNode;
-  getTabNavigator(masterNode: INavigationNode): ReactNode;
-  getDataView(args: { key: string, id: string, modelInstanceId: string, isHeadless: boolean }): ReactNode;
-}
 
 export class ComponentFactory implements IComponentFactory {
 
