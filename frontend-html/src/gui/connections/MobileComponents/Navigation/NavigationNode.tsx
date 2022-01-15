@@ -160,7 +160,27 @@ export class NavigatorState{
   }
 
   @action
-  onNodeClick(node: INavigationNode){
+  onLinkClick(node: INavigationNode) {
+    if(this.navigationDisabled){
+      return;
+    }
+    this.onNodeClick(node);
+    this.currentNode.dataView?.activateTableView?.();
+  }
+
+  @action
+  private onNodeClick(node: INavigationNode){
+
+    this.currentNode = node;
+    this.mobileState.activeDataViewId = node.dataView?.id;
+    const nodes = this.currentNode.parentChain
+      .map(navNode => new BreadCrumbNode(navNode.name, () => this.onBreadCrumbClick(navNode)));
+    this.mobileState.breadCrumbsState.setActiveBreadCrumbList(nodes);
+    this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
+  }
+
+  @action
+  onBreadCrumbClick(node: INavigationNode){
     if(this.navigationDisabled){
       return;
     }
@@ -170,12 +190,7 @@ export class NavigatorState{
       }
       return;
     }
-    this.currentNode = node;
-    this.mobileState.activeDataViewId = node.dataView?.id;
-    const nodes = this.currentNode.parentChain
-      .map(navNode => new BreadCrumbNode(navNode.name, () => this.onNodeClick(navNode)));
-    this.mobileState.breadCrumbsState.setActiveBreadCrumbList(nodes);
-    this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
-    this.currentNode.dataView?.activateTableView?.();
+    this.onNodeClick(node);
+    this.currentNode.dataView?.activateFormView?.();
   }
 }

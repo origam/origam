@@ -71,13 +71,13 @@ export class TabNavigator extends React.Component<{
             <NavigationButton
               key={node.id}
               label={node.name}
-              onClick={() => this.navigatorState.onNodeClick(node)}
+              onClick={() => this.navigatorState.onLinkClick(node)}
             />)
           }
         </div>
       );
     } else {
-      return <DetailNavigator node={this.navigatorState.currentNode} onNodeClick={node => this.navigatorState.onNodeClick(node)}/>
+      return <DetailNavigator node={this.navigatorState.currentNode} onNodeClick={node => this.navigatorState.onLinkClick(node)}/>
     }
   }
 }

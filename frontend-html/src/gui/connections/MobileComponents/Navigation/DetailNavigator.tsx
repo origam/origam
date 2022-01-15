@@ -66,7 +66,7 @@ export class StandaloneDetailNavigator extends React.Component<{
   }
 
   render(){
-    return <DetailNavigator node={this.navigatorState.currentNode} onNodeClick={node => this.navigatorState.onNodeClick(node)}/>
+    return <DetailNavigator node={this.navigatorState.currentNode} onNodeClick={node => this.navigatorState.onLinkClick(node)}/>
   }
 }
 
