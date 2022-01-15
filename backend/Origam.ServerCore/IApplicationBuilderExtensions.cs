@@ -37,7 +37,6 @@ namespace Origam.ServerCore
             app.MapWhen(
                 context => IsPublicUserApiRoute(startUpConfiguration, context),
                 apiBranch => {
-                    apiBranch.UseResponseBuffering();
                     apiBranch.UseMiddleware<UserApiMiddleWare>();
                 });
             app.MapWhen(
@@ -56,7 +55,6 @@ namespace Origam.ServerCore
                     }
                     await next.Invoke();
                 });
-                apiBranch.UseResponseBuffering();
                 apiBranch.UseMiddleware<UserApiMiddleWare>();
             });
         } 

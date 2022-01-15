@@ -21,17 +21,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using Origam.ServerCore.Attributes;
 
-namespace Origam.ServerCore.Model.Session
+namespace Origam.ServerCore.Attributes
 {
-    public class ChangeMasterRecordData
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
+    public class RequiredNonDefaultAttribute : ValidationAttribute
     {
-        [RequiredNonDefault]
-        public Guid SessionFormIdentifier { get; set; }
-        [Required]
-        public string Entity { get; set; }
-        [Required]
-        public object RowId { get; set; }
+        public RequiredNonDefaultAttribute()
+            : base("The {0} field requires a non-default value.")
+        {
+        }
+
+        public override bool IsValid(object value)
+        {
+            if (value is null)
+                return false; 
+            var type = value.GetType();
+            return !Equals(value, Activator.CreateInstance(Nullable.GetUnderlyingType(type) ?? type));
+        }
     }
 }

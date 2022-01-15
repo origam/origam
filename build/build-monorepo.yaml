@@ -43,14 +43,10 @@ jobs:
   - job: build_source
     displayName: Build source
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
-     - task: UseDotNet@2
-       inputs:
-         packageType: 'sdk'
-         version: '6.0.x'
      - task: NuGetToolInstaller@0
        displayName: 'Use NuGet 5.8'
        inputs:
@@ -211,8 +207,8 @@ jobs:
        displayName: 'origam-setup clean up'
      - script: |
         set MsBuildEmitSolution=1
-        "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /pp -v:m
-        "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /pp -v:m
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
        displayName: 'Build HTML Server'
      - task: CopyFiles@2
        displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
@@ -232,7 +228,7 @@ jobs:
   - job: build_html
     displayName: Build html
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
@@ -284,7 +280,7 @@ jobs:
     - build_source
     - build_html
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
