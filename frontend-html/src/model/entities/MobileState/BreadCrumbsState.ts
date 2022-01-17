@@ -18,8 +18,15 @@ export class BreadCrumbsState {
   @observable
   openScreenBreadCrumbs = new Map<IFormScreen, IBreadCrumbNode[]>();
 
+  @action
   setActiveBreadCrumbList(nodes: IBreadCrumbNode[]) {
-    this.openScreenBreadCrumbs.set(this.activeFormScreen!, nodes);
+    if (this.openScreenBreadCrumbs.has(this.activeFormScreen!)){
+      const openNodes = this.openScreenBreadCrumbs.get(this.activeFormScreen!)!;
+      openNodes.length = 0;
+      nodes.forEach(node => openNodes.push(node));
+    } else {
+      this.openScreenBreadCrumbs.set(this.activeFormScreen!, nodes);
+    }
   }
 
   get activeBreadCrumbList() {
@@ -64,6 +71,7 @@ export class BreadCrumbsState {
   addDetailBreadCrumbNode(dataView: IDataView) {
     this.activeBreadCrumbList?.push({
       caption: T("Detail", "mobile_detail_navigation"),
+      id: "Detail",
       isVisible: () => dataView?.isFormViewActive()!,
       onClick: () => {
       }

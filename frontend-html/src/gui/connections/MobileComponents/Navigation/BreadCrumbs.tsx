@@ -30,7 +30,7 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
     return (
       <div
         className={index === breadCrumbList.length - 1 ? "" : S.breadcrumb}
-        key={node.caption}
+        key={node.id}
         onClick={node.onClick}
       >
         {node.caption}
@@ -43,7 +43,7 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
         breadCrumbList
           .flatMap((node, i) => i === 0
             ? [makeBreadcrumb(node, i)]
-            : [<div key={node.caption + "Sep"} className={S.pathSeparator}>/</div>,
+            : [<div key={node.id + "Sep"} className={S.pathSeparator}>/</div>,
               makeBreadcrumb(node, i)
             ]
           )
@@ -53,9 +53,10 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
 });
 
 export interface IBreadCrumbNode {
-  caption: string,
+  caption: string;
+  id: string;
   isVisible: () => boolean;
-  onClick: () => void
+  onClick: () => void;
 }
 
 export class BreadCrumbNode implements IBreadCrumbNode {
@@ -63,6 +64,7 @@ export class BreadCrumbNode implements IBreadCrumbNode {
 
   constructor(
     public caption: string,
+    public id: string,
     public onClick: () => void
   ) {
   }
@@ -73,6 +75,8 @@ export class RootBreadCrumbNode implements IBreadCrumbNode {
     public getCaption: () => string,
   ) {
   }
+
+  id = "root";
 
   onClick = () => {
   };
