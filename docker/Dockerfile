@@ -6,7 +6,7 @@
 # in FastReports. i.e. in czech language it doesn't display è located in the end
 # of string. Instead of Kè it printed just K.
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /tmp
 RUN apt-get update \
 && apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh \

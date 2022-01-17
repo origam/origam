@@ -1526,7 +1526,7 @@ namespace Origam.DA.Service
             i = 0;
             foreach (DataStructureColumn column in primaryKeys)
             {
-                if (i > 0) sqlExpression.Append(" AND");
+                if (i > 0) sqlExpression.Append(" AND ");
                 PrettyIndent(sqlExpression);
                 sqlExpression.Append(sqlRenderer.Array(
                     sqlRenderer.NameLeftBracket + entity.Name + sqlRenderer.NameRightBracket
@@ -2726,11 +2726,11 @@ namespace Origam.DA.Service
                 {
                     if (assoc.IsOR)
                     {
-                        relationBuilder.Append(" OR");
+                        relationBuilder.Append(" OR ");
                     }
                     else
                     {
-                        relationBuilder.Append(" AND");
+                        relationBuilder.Append(" AND ");
                     }
                 }
 

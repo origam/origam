@@ -279,7 +279,7 @@ export class TableViewEditor extends React.Component<{
   }
 }
 
-// Makes sure the the editor alignment will be the same as the table cell alignment.
+// Makes sure the editor alignment will be the same as the table cell alignment.
 // Needed on columns where the alignment can be set in the model.
 function resolveCellAlignment(customStyle: { [p: string]: string } | undefined, isFirsColumn: boolean, type: string){
   let cellAlignment = new CellAlignment(isFirsColumn, type, customStyle);

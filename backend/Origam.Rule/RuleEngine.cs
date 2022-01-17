@@ -3533,7 +3533,9 @@ namespace Origam.Rule
 
 						// copy the values into the source row
 						PauseRuleProcessing();
-						bool localChanged = DatasetTools.CopyRecordValues(resultRow, DataRowVersion.Current, rowChanged);
+						bool localChanged = DatasetTools.CopyRecordValues(
+							resultRow, DataRowVersion.Current, rowChanged, 
+							true);
 						ResumeRuleProcessing();
 
 						if(! changed) changed = localChanged;

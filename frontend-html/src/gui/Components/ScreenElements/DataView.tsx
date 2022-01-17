@@ -115,7 +115,6 @@ export class DataViewInner extends React.Component<IDataViewProps> {
     const isWorking = getIsDataViewOrFormScreenWorking(this.props.dataView);
     return (
       <>
-        {/* <div style={{position:"relative"}}> */}
         <div className={S.overlayContainer}>
           {isMobileLayoutActive(this.props.dataView)
             ? <MobileDataViewHeader isVisible={!this.props.isHeadless}/>
@@ -139,7 +138,7 @@ export class DataViewInner extends React.Component<IDataViewProps> {
     return (
       <CtxDataViewHeaderExtension.Provider value={this.dataViewHeaderExtension}>
         <Provider dataView={this.props.dataView}>
-          <div className={S.dataView} style={this.getDataViewStyle()} id={"dataView_"+this.props.modelInstanceId}>
+          <div className={S.dataView} style={this.getDataViewStyle()} id={"dataView_" + this.props.modelInstanceId}>
             {this.props.dataView?.type === "TreePanel" ? (
               <TreeView dataView={this.props.dataView}/>
             ) : (

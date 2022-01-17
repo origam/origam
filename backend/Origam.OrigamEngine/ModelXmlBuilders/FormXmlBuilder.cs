@@ -397,6 +397,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 				UIElementRenderData memoRenderData = new UIElementRenderData();
 				memoRenderData.DataMember = "WorkQueueEntry";
+				memoRenderData.HideNavigationPanel = true;
+				memoRenderData.PanelTitle = memoColumn.Caption;
 				AsPanelBuilder.Build(memoElement, memoRenderData, queueId.ToString(), "memoPanel1",
 					table, dataSources, table.PrimaryKey[0].ColumnName, false, Guid.Empty, false);
 
