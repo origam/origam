@@ -32,7 +32,6 @@ export interface INavigationNode {
   readonly allChildren: INavigationNode[];
   parent: INavigationNode | undefined;
   readonly parentChain: INavigationNode[];
-  showDetailLinks(): boolean;
   readonly element: ReactNode;
   readonly id: string;
   dataView: IDataView | undefined;
@@ -64,12 +63,6 @@ export class NavigationNode implements INavigationNode {
 
   set dataView(value: IDataView | undefined) {
     this._dataView = value;
-  }
-  showDetailLinks(){
-    if(!this._dataView){
-      return true;
-    }
-    return this._dataView.isFormViewActive() || this._dataView.tableRows.length === 0;
   }
 
   public id: string = "";
@@ -134,7 +127,6 @@ export class NavigationNode implements INavigationNode {
     }
     this.id = other.id;
     this._name = other._name;
-    this.showDetailLinks = other.showDetailLinks;
     this._dataView = other._dataView;
   }
 
