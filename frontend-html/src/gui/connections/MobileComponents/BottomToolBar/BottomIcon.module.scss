@@ -26,7 +26,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .icon {
-  width: 30px;
+  width: var(--mobileBottomToolbarIconSize);
   padding-top: 4px; // the temporary icons are actually not centered! remove when correct icons are available
 }
 

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import S from "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.module.scss";
+import "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { ActionDropUp } from "gui/connections/MobileComponents/BottomToolBar/ActionDropUp";

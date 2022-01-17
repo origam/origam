@@ -22,8 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .root div div div svg {
-  width: 30px;
-  height: 30px;
+  width: var(--mobileBottomToolbarIconSize);
+  height: var(--mobileBottomToolbarIconSize);
 }
 
 .clickArea {

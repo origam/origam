@@ -1,5 +1,5 @@
-.root{
-  min-height: 50px;
+.root {
+  min-height: var(--mobileBottomToolbarHeight);
   display: flex;
   flex-direction: row;
 }
