@@ -69,7 +69,7 @@ export class NavigationNode implements INavigationNode {
     if(!this._dataView){
       return true;
     }
-    return this._dataView.isFormViewActive();
+    return this._dataView.isFormViewActive() || this._dataView.tableRows.length === 0;
   }
 
   public id: string = "";
