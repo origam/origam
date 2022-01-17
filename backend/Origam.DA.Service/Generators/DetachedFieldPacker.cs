@@ -74,7 +74,16 @@ namespace Origam.DA.Service
             {
                 return "";
             }
-            throw new NotImplementedException();
+            var relationPairItem = detachedField.ArrayRelation.ChildItems
+                                      .ToGeneric()
+                                      .OfType<EntityRelationColumnPairItem>()
+                                      .SingleOrDefault()
+                                  ?? throw new InvalidOperationException(
+                                      $"Relation {detachedField.ArrayRelation.Id} does not have exactly one {nameof(EntityRelationColumnPairItem)}");
+            return
+                $"(SELECT STRING_AGG(CAST(\"{detachedField.ArrayValueField.Name}\" as text), chr(1)) " +
+                $"FROM \"{detachedField.ArrayRelation.Name}\" " +
+                $"Where \"{relationPairItem.RelatedEntityField.Name}\" = \"{entity.Name}\".\"{relationPairItem.BaseEntityField.Name}\") ";
         }
     }
 
