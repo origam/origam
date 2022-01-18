@@ -87,6 +87,7 @@ import { isIScreenPlugin, isISectionPlugin } from "@origam/plugin-interfaces";
 import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 import {T} from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -1219,6 +1220,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
 
       yield * new_ProcessActionResult(action)(result);
+      const dataView = getDataView(action);
+      dataView?.formFocusManager?.refocusLast();
     } finally {
       this.monitor.inFlow--;
       this.actionRunning = false;
