@@ -102,36 +102,138 @@ test('Should parse screen with tab panel inside of split panel', () => {
 
   expect(resultNode.node.children.length).toBe(7);
 
-  const acceptedOffersNode = resultNode.node.children[0];
-  expect(acceptedOffersNode.name).toBe("Accepted Offers");
-  expect(acceptedOffersNode.children.length).toBe(1);
-  expect(acceptedOffersNode.children[0].id).toBe("AsPanel3_6");
+  const node1 = resultNode.node.children[0];
+  expect(node1.name).toBe("Accepted Offers");
+  expect(node1.children.length).toBe(1);
+  expect(node1.children[0].id).toBe("AsPanel3_6");
 
-  const paymentsNode = resultNode.node.children[1];
-  expect(paymentsNode.name).toBe("Payments");
-  expect(paymentsNode.children.length).toBe(0);
+  const node2 = resultNode.node.children[1];
+  expect(node2.name).toBe("Payments");
+  expect(node2.children.length).toBe(0);
 
-  const consumablesNode = resultNode.node.children[2];
-  expect(consumablesNode.name).toBe("Consumables");
-  expect(consumablesNode.children.length).toBe(1);
-  expect(consumablesNode.children[0].id).toBe("SplitPanel7_12");
+  const node3 = resultNode.node.children[2];
+  expect(node3.name).toBe("Consumables");
+  expect(node3.children.length).toBe(1);
+  expect(node3.children[0].id).toBe("SplitPanel7_12");
 
-  const accessoriesNode = resultNode.node.children[3];
-  expect(accessoriesNode.name).toBe("Accessories");
-  expect(accessoriesNode.children.length).toBe(1);
-  expect(accessoriesNode.children[0].id).toBe("AsPanel2_18");
+  const node4 = resultNode.node.children[3];
+  expect(node4.name).toBe("Accessories");
+  expect(node4.children.length).toBe(1);
+  expect(node4.children[0].id).toBe("AsPanel2_18");
 
-  const servicesNode = resultNode.node.children[4];
-  expect(servicesNode.name).toBe("Services");
-  expect(servicesNode.children.length).toBe(1);
-  expect(servicesNode.children[0].id).toBe("AsPanel3_22");
+  const node5 = resultNode.node.children[4];
+  expect(node5.name).toBe("Services");
+  expect(node5.children.length).toBe(1);
+  expect(node5.children[0].id).toBe("AsPanel3_22");
 
-  const extrasNode = resultNode.node.children[5];
-  expect(extrasNode.name).toBe("Extras");
-  expect(extrasNode.children.length).toBe(1);
-  expect(extrasNode.children[0].id).toBe("AsPanel15_26");
+  const node6 = resultNode.node.children[5];
+  expect(node6.name).toBe("Extras");
+  expect(node6.children.length).toBe(1);
+  expect(node6.children[0].id).toBe("AsPanel15_26");
 
-  const lessorNotesNode = resultNode.node.children[6];
-  expect(lessorNotesNode.name).toBe("Lessor Notes");
-  expect(lessorNotesNode.children.length).toBe(0);
+  const node7 = resultNode.node.children[6];
+  expect(node7.name).toBe("Lessor Notes");
+  expect(node7.children.length).toBe(0);
+});
+
+test('Should parse screen with split panel inside of tab panel', () => {
+
+  const uiRoot = getUiRoot("testFiles/screen_with_split_panel_in_tab_panel.xml");
+
+  const resultNode = mobileRecursiveBuilder({
+    uiRoot: uiRoot,
+    formScreen: mockFormScreen as any,
+    title: "Test Title",
+    desktopRecursiveBuilder: (formScreen: IFormScreen, xso: any) => {return {name: "MockReactNode"}} ,
+    componentFactory: new MockComponentFactory(),
+  });
+
+  expect(resultNode.node.children.length).toBe(10);
+
+  const node1 = resultNode.node.children[0];
+  expect(node1.name).toBe("TestTab1");
+  expect(node1.children.length).toBe(0);
+
+  const node2 = resultNode.node.children[1];
+  expect(node2.name).toBe("TestTab2");
+  expect(node2.children.length).toBe(0);
+
+  const node3 = resultNode.node.children[2];
+  expect(node3.name).toBe("TestTab3");
+  expect(node3.children.length).toBe(0);
+
+  const node4 = resultNode.node.children[3];
+  expect(node4.name).toBe("TestTab4");
+  expect(node4.children.length).toBe(0);
+
+  const node5 = resultNode.node.children[4];
+  expect(node5.name).toBe("TestTab5");
+  expect(node5.children.length).toBe(0);
+
+  const node6 = resultNode.node.children[5];
+  expect(node6.name).toBe("TestTab6");
+  expect(node6.children.length).toBe(0);
+
+  const node7 = resultNode.node.children[6];
+  expect(node7.name).toBe("TestTab7");
+  expect(node7.children.length).toBe(1);
+  expect(node7.children[0].name).toBe("Detail1");
+
+  const node8 = resultNode.node.children[7];
+  expect(node8.name).toBe("TestTab8");
+  expect(node8.children.length).toBe(0);
+
+  const node9 = resultNode.node.children[8];
+  expect(node9.name).toBe("TestTab9");
+  expect(node9.children.length).toBe(0);
+
+  const node10 = resultNode.node.children[9];
+  expect(node10.name).toBe("TestTab10");
+  expect(node10.children.length).toBe(0);
+});
+
+test('Should parse screen with split panel inside of split panel', () => {
+
+  const uiRoot = getUiRoot("testFiles/screen_with_split_panel_in_split_panel.xml");
+
+  const resultNode = mobileRecursiveBuilder({
+    uiRoot: uiRoot,
+    formScreen: mockFormScreen as any,
+    title: "Test Title",
+    desktopRecursiveBuilder: (formScreen: IFormScreen, xso: any) => {return {name: "MockReactNode"}} ,
+    componentFactory: new MockComponentFactory(),
+  });
+
+  expect(resultNode.node.children.length).toBe(1);
+
+  const node1 = resultNode.node;
+  expect(node1.id).toBe("AsPanel1_1");
+  expect(node1.children.length).toBe(1);
+
+  const node2 = node1.children[0];
+  expect(node2.name).toBe("Detail2");
+  expect(node2.children.length).toBe(0);
+});
+
+test('Should parse screen with nested split panels and binding that alter the split panel node relationships', () => {
+
+  const uiRoot = getUiRoot("testFiles/screen_with_nested_split_panels_and_bindings.xml");
+
+  const resultNode = mobileRecursiveBuilder({
+    uiRoot: uiRoot,
+    formScreen: mockFormScreen as any,
+    title: "Test Title",
+    desktopRecursiveBuilder: (formScreen: IFormScreen, xso: any) => {return {name: "MockReactNode"}} ,
+    componentFactory: new MockComponentFactory(),
+  });
+
+  expect(resultNode.node.children.length).toBe(1);
+  //
+  // const node1 = resultNode.node;
+  // expect(node1.id).toBe("AsPanel1_1");
+  // expect(node1.children.length).toBe(1);
+  //
+  // const node2 = node1.children[0];
+  // expect(node2.name).toBe("Detail2");
+  // expect(node2.children.length).toBe(0);
 });
