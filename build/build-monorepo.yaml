@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2021.2.0.$(Build.BuildId)
+  value: 2022.2.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 21.2.0.$(Build.BuildId)
+  value: 22.2.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2021.2-beta.2
+  value: 2022.2-beta.2
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2021.2-beta.1
+  value: 2022.1
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2021.2
+  value: 2022.2
 
 
 resources:
