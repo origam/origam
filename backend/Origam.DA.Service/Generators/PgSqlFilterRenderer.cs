@@ -31,7 +31,7 @@ namespace Origam.DA.Service.Generators
             return "ILIKE";
         }
 
-        protected override string ColumnArray(string columnName,string operand, string[] rightValues)
+        protected override string ColumnArray(string columnName, string operand, string[] rightValues)
         {
             return "\0" + columnName + " ::text " + operand + " (" + string.Join(", ", rightValues) + ")\0";
         }
