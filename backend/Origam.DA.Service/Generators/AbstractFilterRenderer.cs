@@ -99,7 +99,7 @@ namespace Origam.DA.Service
             }
         }
 
-        protected abstract string ColumnArray(string columnName,string operand, string[] rightValues);
+        protected abstract string ColumnArray(string columnName, string operand, string[] rightValues);
 
         public string BinaryOperator(string leftValue,
             string rightValue, string operatorName)
