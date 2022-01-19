@@ -315,19 +315,46 @@ a development server should be started at https://localhost:3000/ when you go to
 Make sure of these tasks complete.
 - [x] Running DB server (After MsSQL installation it runs in backround)
 - [x] Restored test database to demo-database 
+
+<details><summary>Show Example Image</summary>
+<p>
+	
 ![image](https://user-images.githubusercontent.com/32484607/138682182-280f7245-61dd-4c52-a81c-5a82936f4183.png)
+</p>
+	
+</details>
+
+
+
 
 - [x] Start a debug of Server.Core in Visual Studio or Rider 
 
+<details><summary>Show Example Image</summary>
+<p>
+	
+
 ![image](https://user-images.githubusercontent.com/32484607/138683171-ecb46caa-eda9-46e9-8419-bd8b38d84206.png)
+	
+</p>
+	
+</details>
+
 
 
 - [x] It should look like this after starting server.core.
 
+<details><summary>Show Example Image</summary>
+<p>
+	
 ![image](https://user-images.githubusercontent.com/32484607/138681887-264b622c-ca1d-4cf2-ab4a-ea6caccfd48d.png)
+	
+</p>
+	
+</details>
 
 
-# Common Problems.
+
+# :stop_sign: Common Problems.
 System.Exception: Could not find instance with id: f17329d6-3143-420a-a2e6-30e431eea51d
 This is caused by the wrong path to a demo-model.
 
