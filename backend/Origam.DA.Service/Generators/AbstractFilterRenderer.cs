@@ -75,14 +75,14 @@ namespace Origam.DA.Service
                 case "In":
                     if (isColumnArray)
                     {
-                        return ColumnArray(columnName,"IN", rightValues);     
+                        return ColumnArray(columnName, "IN", rightValues);     
                     }
                     else
                     {
                         return leftValue + " IN (" + string.Join(", ", rightValues) + ")";                
                     }
                 case "NotIn":
-                    if(isColumnArray)
+                    if (isColumnArray)
                     {
                         return ColumnArray(columnName, "NOT IN", rightValues);
                     }
