@@ -36,7 +36,8 @@ Find and choose these two.
 
 ## :rotating_light: Step 5. Install MsSQL Server and SQL Server Management Studio
 ```
-TODO: Create DB creation script or tool.
+First u need to instal MsSQL Server so u can run DB and after that instal SQL Server management Studio so u can work with databases.
+For adding demo account to DB u can use Origam.Utilities:
 ```
 
 ## :rotating_light: Step 6. Modify OrigamiSettings.config
