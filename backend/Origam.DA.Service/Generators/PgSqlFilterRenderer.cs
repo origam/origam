@@ -33,7 +33,7 @@ namespace Origam.DA.Service.Generators
 
         protected override string ColumnArray(string columnName,string operand, string[] rightValues)
         {
-            return "\0" + columnName + " ::text "+ operand + " (" + string.Join(", ", rightValues) + ")\0";
+            return "\0" + columnName + " ::text " + operand + " (" + string.Join(", ", rightValues) + ")\0";
         }
     }
 }
