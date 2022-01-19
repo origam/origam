@@ -161,7 +161,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Security.Common", "O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.BI.FastReport", "Origam.BI.FastReport\Origam.BI.FastReport.csproj", "{183E889E-77AB-46B0-8D4F-30BB68671907}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.ServerCore", "Origam.ServerCore\Origam.ServerCore.csproj", "{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Server", "Origam.Server\Origam.Server.csproj", "{0DE3B411-E9C8-44FC-AB77-4C93FC54C1A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Documentation", "Origam.Documentation\Origam.Documentation.csproj", "{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}"
 EndProject
