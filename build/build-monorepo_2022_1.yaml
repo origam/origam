@@ -13,9 +13,9 @@ variables:
 - name: PRODUCT_NUMBER # product number to be used in the installation file
   value: 22.1.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2022.1-stable
+  value: 2022.1.0
 - name: TAG_LATEST # tag to be used
-  value: 2022.1-latest
+  value: 2022.1.0
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2021.1
 - name: IS_PRERELASE
@@ -429,6 +429,8 @@ jobs:
            Docker image
            ```
            docker pull origam/server:$(TAG).$(Build.BuildId)
+           
+           docker pull origam/server:$(TAG)
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
@@ -502,3 +504,4 @@ jobs:
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
            $(TAG).$(Build.BuildId)
+           $(TAG)
