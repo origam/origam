@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { findStopping } from "xmlInterpreters/xmlUtils";
 import { BooleanCellDriver } from "./Cells/BooleanCellDriver";
 import { DefaultHeaderCellDriver } from "./Cells/HeaderCell";
@@ -127,8 +127,42 @@ export function XmlBuildDropdownEditor(props: {
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-  const dataView = mobxContext.dataView as IDataView;
-  const {dataViewRowCursor, dataViewApi, dataViewData} = dataView;
+  return(
+    <XmlBuildDropdownEditorInternal
+      {...props}
+      dataView={mobxContext.dataView as IDataView}
+      control={
+        <DropdownEditor
+          editor={props.tagEditor}
+          backgroundColor={props.backgroundColor}
+          foregroundColor={props.foregroundColor}
+          customStyle={props.customStyle}
+        />
+      }
+    />
+  );
+}
+
+
+export function XmlBuildDropdownEditorInternal(props: {
+  xmlNode: any;
+  isReadOnly: boolean;
+  backgroundColor?: string;
+  foregroundColor?: string;
+  customStyle?: any;
+  tagEditor?: JSX.Element;
+  isLink?: boolean;
+  autoSort?: boolean;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onDoubleClick?: (event: any) => void;
+  onClick?: (event: any) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
+  onKeyDown?(event: any): void;
+  dataView: IDataView
+  control: ReactNode
+}) {
+  const mobxContext = useContext(MobXProviderContext);
+  const {dataViewRowCursor, dataViewApi, dataViewData} = props.dataView;
   const workbench = mobxContext.workbench;
   const {lookupListCache} = workbench;
 
@@ -287,12 +321,8 @@ export function XmlBuildDropdownEditor(props: {
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      <DropdownEditor
-        editor={props.tagEditor}
-        backgroundColor={props.backgroundColor}
-        foregroundColor={props.foregroundColor}
-        customStyle={props.customStyle}
-      />
+      {props.control}
     </CtxDropdownEditor.Provider>
   );
 }
+

@@ -47,6 +47,8 @@ import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 import { onTextFieldAutoUpdate } from "model/actions-ui/DataView/OnTextFieldAutoUpdate";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ComboBox } from "gui/connections/MobileComponents/Form/ComboBox";
 
 
 @inject(({property, formPanelView}) => {
@@ -92,6 +94,31 @@ export class FormViewEditor extends React.Component<{
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
 
+    if (isMobileLayoutActive(this.props.property) && this.props.property!.column === "ComboBox") {
+      return <ComboBox
+        key={this.props.xmlNode.$iid}
+        onTextOverflowChanged={this.props.onTextOverflowChanged}
+        xmlNode={this.props.xmlNode}
+        isReadOnly={readOnly}
+        subscribeToFocusManager={(textEditor) =>
+          this.focusManager.subscribe(
+            textEditor,
+            this.props.property?.id,
+            this.props.property?.tabIndex
+          )
+        }
+        autoSort={this.props.property?.autoSort}
+        backgroundColor={backgroundColor}
+        foregroundColor={foregroundColor}
+        customStyle={this.props.property?.style}
+        isLink={this.props.property?.isLink}
+        onClick={(event) => {
+          onDropdownEditorClick(this.props.property)(event, this.props.property, row);
+        }}
+        onKeyDown={this.makeOnKeyDownCallBack()}
+        dataView={getDataView(this.props.property)}
+      />
+    }
 
     switch (this.props.property!.column) {
       case "Number":
@@ -342,9 +369,9 @@ export class FormViewEditor extends React.Component<{
   }
 }
 
-export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined){
+export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined) {
   let cellAlignment = new CellAlignment(false, "Number", customStyle);
-  const style = customStyle ?Object.assign({}, customStyle) :{};
+  const style = customStyle ? Object.assign({}, customStyle) : {};
   style["paddingLeft"] = cellAlignment.paddingLeft + "px";
   style["textAlign"] = cellAlignment.alignment;
   return style;

@@ -85,6 +85,31 @@ export class SearchLayoutState implements IMobileLayoutState {
   }
 }
 
+export class ComboEditLayoutState implements IMobileLayoutState {
+  actionDropUpHidden = true;
+  refreshButtonHidden = true;
+  saveButtonHidden = true;
+  showOpenTabCombo = false;
+  showSearchButton = false;
+  showHamburgerMenuButton = false;
+  heading = "";
+
+  constructor(public component: React.ReactNode) {
+  }
+
+  showCloseButton(someScreensAreOpen: boolean) {
+    return true;
+  }
+
+  async close(ctx: any): Promise<IMobileLayoutState> {
+    return new ScreenLayoutState();
+  }
+
+  hamburgerClick(): IMobileLayoutState {
+    return new MenuLayoutState();
+  }
+}
+
 export class ScreenLayoutState implements IMobileLayoutState {
   actionDropUpHidden = false;
   refreshButtonHidden = false;
