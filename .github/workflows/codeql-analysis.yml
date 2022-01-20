@@ -45,7 +45,7 @@ jobs:
     
     - name: Build Backend
       run: |
-       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
+       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
 
     - name: Build Architect
       run: |

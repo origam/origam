@@ -30,5 +30,10 @@ namespace Origam.DA.Service.Generators
             //for support case insensitive in PostgreSQL
             return "ILIKE";
         }
+
+        protected override string ColumnArray(string columnName, string operand, string[] rightValues)
+        {
+            return "\0" + columnName + " ::text " + operand + " (" + string.Join(", ", rightValues) + ")\0";
+        }
     }
 }
