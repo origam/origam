@@ -345,7 +345,6 @@ export class FormViewEditor extends React.Component<{
 export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined){
   let cellAlignment = new CellAlignment(false, "Number", customStyle);
   const style = customStyle ?Object.assign({}, customStyle) :{};
-  style["paddingRight"] = cellAlignment.paddingRight - 11 + "px";
   style["paddingLeft"] = cellAlignment.paddingLeft + "px";
   style["textAlign"] = cellAlignment.alignment;
   return style;
