@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { DropdownDataTable, IBodyCellDriver, } from "modules/Editors/DropdownEditor/DropdownTableModel";
-import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
+import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { bodyCellClass } from "modules/Editors/DropdownEditor/Cells/CellsCommon";
 import React from "react";
 import { TypeSymbol } from "dic/Container";
@@ -29,7 +29,7 @@ export class DateCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private behavior: DropdownEditorBehavior,
+    private behavior: IDropdownEditorBehavior,
     private formatterPattern: string
   ) {
   }

@@ -27,7 +27,7 @@ import { NumberCellDriver } from "./Cells/NumberCellDriver";
 import { TextCellDriver } from "./Cells/TextCellDriver";
 import { DropdownLayout, DropdownLayoutBody } from "@origam/components";
 import { DropdownEditorApi } from "./DropdownEditorApi";
-import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
+import { DropdownEditorBehavior, IBehaviorData, IDropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";
 import { DropdownEditorControl } from "./DropdownEditorControl";
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
@@ -42,7 +42,7 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 export interface IDropdownEditorContext {
-  behavior: DropdownEditorBehavior;
+  behavior: IDropdownEditorBehavior;
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
   columnDrivers: DropdownColumnDrivers;
@@ -139,6 +139,7 @@ export function XmlBuildDropdownEditor(props: {
           customStyle={props.customStyle}
         />
       }
+      makeBehavior={data => new DropdownEditorBehavior(data)}
     />
   );
 }
@@ -161,6 +162,7 @@ export function XmlBuildDropdownEditorInternal(props: {
   dataView: IDataView
   control: ReactNode,
   mobileBehavior?: boolean,
+  makeBehavior: (data: IBehaviorData)=> IDropdownEditorBehavior;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const {dataViewRowCursor, dataViewApi, dataViewData} = props.dataView;
@@ -186,21 +188,22 @@ export function XmlBuildDropdownEditorInternal(props: {
       () => dropdownEditorSetup,
       lookupListCache
     );
-    const dropdownEditorBehavior = new DropdownEditorBehavior(
-      dropdownEditorApi,
-      dropdownEditorData,
-      dropdownEditorDataTable,
-      () => dropdownEditorSetup,
-      dropdownEditorLookupListCache,
-      props.isReadOnly,
-      props.onDoubleClick,
-      props.onClick,
-      props.subscribeToFocusManager,
-      props.onKeyDown,
-      props.autoSort,
-      props.onTextOverflowChanged,
-      props.mobileBehavior
-    );
+
+    const dropdownEditorBehavior = props.makeBehavior({
+      api: dropdownEditorApi,
+      data: dropdownEditorData,
+      dataTable: dropdownEditorDataTable,
+      setup: () => dropdownEditorSetup,
+      cache: dropdownEditorLookupListCache,
+      isReadOnly: props.isReadOnly,
+      onDoubleClick: props.onDoubleClick,
+      onClick: props.onClick,
+      subscribeToFocusManager: props.subscribeToFocusManager,
+      onKeyDown: props.onKeyDown,
+      autoSort: props.autoSort,
+      onTextOverflowChanged: props.onTextOverflowChanged,
+    });
+
 
     const rat = props.xmlNode.attributes;
     const lookupId = rat.LookupId;

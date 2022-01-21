@@ -17,74 +17,28 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
+import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
+import { DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditor";
+import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
+import { IFocusable } from "model/entities/FormFocusManager";
+import { action, computed, flow, observable, reaction } from "mobx";
+import {
+  CancellablePromise,
+  EagerlyLoadedGrid,
+  LazilyLoadedGrid
+} from "modules/Editors/DropdownEditor/DropdownEditorCommon";
 import _ from "lodash";
-import { action, computed, decorate, flow, observable, reaction } from "mobx";
-import { DropdownEditorSetup } from "./DropdownEditor";
-import { IDropdownEditorApi } from "./DropdownEditorApi";
-import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
-import { IDropdownEditorData } from "./DropdownEditorData";
-import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
-import { DropdownDataTable } from "./DropdownTableModel";
-import { IFocusable } from "../../../model/entities/FormFocusManager";
-import { compareStrings } from "../../../utils/string";
+import {
+  compareLookUpItems,
+  dropdownPageSize,
+  IBehaviorData,
+  IDropdownEditorBehavior
+} from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 
-export const  dropdownPageSize = 100;
-
-export interface IDropdownEditorBehavior {
-  scrollToRowIndex: number | undefined;
-  cursorRowId: string;
-  willLoadPage: number;
-  chosenRowId: string | string[] | null;
-  inputValue: string;
-  isReadOnly: boolean;
-  isWorking: boolean;
-  onDoubleClick?: (event: any) => void;
-  onClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
-  isBodyDisplayed: boolean;
-  dropUp(): void;
-  makeFocused(): void;
-  handleInputFocus(event: any): void;
-  handleInputBlur(event: any): void
-  handleInputBtnClick(event: any): void;
-  handleInputKeyDown(event: any): void;
-  handleInputChange(event: any): void;
-  handleTableCellClicked(event: any, visibleRowIndex: any): void;
-  handleTriggerContextMenu(event: any): void;
-  handleControlMouseDown(event: any): void;
-  handleBodyMouseDown(event: any): void;
-  handleWindowMouseDown(event: any): void;
-  handleScroll(args: {
-    clientHeight: number;
-    clientWidth: number;
-    scrollHeight: number;
-    scrollLeft: number;
-    scrollTop: number;
-    scrollWidth: number;
-  }): void;
-  updateTextOverflowState(): void;
-  clearCache(): void;
-  refInputElement: (elm: any) => any;
-  refDropdownBody: (elm: any) => any;
-  elmInputElement: any;
-}
-
-export interface IBehaviorData {
-  api: IDropdownEditorApi,
-  data: IDropdownEditorData,
-  dataTable: DropdownDataTable,
-  setup: () => DropdownEditorSetup,
-  cache: DropdownEditorLookupListCache,
-  isReadOnly: boolean,
-  onDoubleClick?: (event: any) => void,
-  onClick?: (event: any) => void,
-  subscribeToFocusManager?: (obj: IFocusable) => void,
-  onKeyDown?: (event: any) => void,
-  autoSort?: boolean,
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
-}
-
-export class DropdownEditorBehavior implements IDropdownEditorBehavior{
+export class MobileDropdownBehavior implements IDropdownEditorBehavior{
 
   private api: IDropdownEditorApi;
   private data: IDropdownEditorData;
@@ -141,8 +95,8 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   dropUp() {
     if (this.isDropped) {
       this.ensureRequestCancelled();
-      this.userEnteredValue = undefined;
-      this.dataTable.clearData();
+      this.userEnteredValue = "";
+      this.dataTable.setFilterPhrase("");
       this.isDropped = false;
       this.willLoadPage = 1;
       this.willLoadNextPage = true;
@@ -214,8 +168,6 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   handleInputBlur(event: any) {
     if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
       this.data.chooseNewValue(this.cursorRowId);
-    } else if (this.userEnteredValue === "") {
-      this.data.chooseNewValue(null);
     }
     this.dropUp();
   }
@@ -499,20 +451,3 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
   elmDropdownBody: any;
 }
-
-export function compareLookUpItems(item1: any, item2: any) {
-  if (typeof item1 === 'number' && typeof item2 === 'number') {
-    if (item1 > item2) return 1;
-    if (item1 < item2) return -1;
-    return 0;
-  }
-  return compareStrings(item1, item2)
-}
-
-decorate(DropdownEditorBehavior, {
-  isReadOnly: observable,
-});
-
-// export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
-//   "IDropdownEditorBehavior"
-// );

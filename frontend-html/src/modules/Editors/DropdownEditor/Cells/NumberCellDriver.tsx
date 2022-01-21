@@ -22,14 +22,14 @@ import { bodyCellClass } from "./CellsCommon";
 import { DropdownDataTable, IBodyCellDriver } from "../DropdownTableModel";
 import cx from "classnames";
 import S from "./NumberCell.module.scss";
-import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
+import { IDropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { TypeSymbol } from "dic/Container";
 
 export class NumberCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private behavior: DropdownEditorBehavior
+    private behavior: IDropdownEditorBehavior
   ) {
   }
 

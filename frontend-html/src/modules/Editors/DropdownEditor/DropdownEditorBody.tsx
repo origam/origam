@@ -29,7 +29,7 @@ import cx from "classnames";
 import { getCanvasFontSize, getTextWidth } from "utils/textMeasurement";
 import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { BoundingRect } from "react-measure";
-import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
+import { IDropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { observable } from "mobx";
 
 export function DropdownEditorBody() {
@@ -75,7 +75,7 @@ export class DropdownEditorTable extends  React.Component<{
   drivers: DropdownColumnDrivers,
   dataTable: DropdownDataTable,
   rectCtrl: BoundingRect,
-  beh: DropdownEditorBehavior,
+  beh: IDropdownEditorBehavior,
   rowHeight: number
 }> {
   refMultiGrid = createRef<MultiGrid>();

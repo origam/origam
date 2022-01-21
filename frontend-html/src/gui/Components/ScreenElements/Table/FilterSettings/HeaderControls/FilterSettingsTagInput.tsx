@@ -227,13 +227,15 @@ export function FilterBuildDropdownEditor(props: {
       lookupListCache
     );
     const dropdownEditorBehavior = new DropdownEditorBehavior(
-      dropdownEditorApi,
-      dropdownEditorData,
-      dropdownEditorDataTable,
-      () => dropdownEditorSetup,
-      dropdownEditorLookupListCache,
-      false,
-      text => prepareForFilter(props.property, text)!
+      {
+        api: dropdownEditorApi,
+        data: dropdownEditorData,
+        dataTable: dropdownEditorDataTable,
+        setup: () => dropdownEditorSetup,
+        cache: dropdownEditorLookupListCache,
+        isReadOnly: false,
+        onDoubleClick: text => prepareForFilter(props.property, text)!,
+      }
     );
 
     const drivers = new DropdownColumnDrivers();

@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import cx from "classnames";
 import { TypeSymbol } from "dic/Container";
 import React from "react";
-import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
+import { IDropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { DropdownDataTable, IBodyCellDriver } from "../DropdownTableModel";
 import S from "./BooleanCell.module.scss";
 import { bodyCellClass } from "./CellsCommon";
@@ -29,7 +29,7 @@ export class BooleanCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private behavior: DropdownEditorBehavior
+    private behavior: IDropdownEditorBehavior
   ) {
   }
 

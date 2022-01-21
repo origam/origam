@@ -30,6 +30,7 @@ import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/Com
 import { IDataView } from "model/entities/types/IDataView";
 import { IProperty } from "model/entities/types/IProperty";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/MobileDropdownBehavior";
 
 
 export interface IComboBoxProps {
@@ -67,6 +68,7 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
               <ComboFullScreenEditor {...props}/>
             }
             mobileBehavior={true}
+            makeBehavior={data => new MobileDropdownBehavior(data)}
           />)
       }}
     >

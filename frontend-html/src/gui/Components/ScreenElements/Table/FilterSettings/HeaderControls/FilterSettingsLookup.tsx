@@ -290,14 +290,15 @@ export function FilterBuildDropdownEditor(props: {
       lookupListCache
     );
     const dropdownEditorBehavior = new DropdownEditorBehavior(
-      dropdownEditorApi,
-      dropdownEditorData,
-      dropdownEditorDataTable,
-      () => dropdownEditorSetup,
-      dropdownEditorLookupListCache,
-      false,
+      {
+        api: dropdownEditorApi,
+        data: dropdownEditorData,
+        dataTable: dropdownEditorDataTable,
+        setup: () => dropdownEditorSetup,
+        cache: dropdownEditorLookupListCache,
+        isReadOnly: false,
+      }
     );
-
 
     const drivers = new DropdownColumnDrivers();
 

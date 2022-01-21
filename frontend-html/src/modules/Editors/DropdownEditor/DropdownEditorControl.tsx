@@ -26,7 +26,7 @@ import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
 import { action, observable } from "mobx";
 import { createPortal } from "react-dom";
-import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
+import { IDropdownEditorBehavior } from "./DropdownEditorBehavior";
 
 export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
   return (
@@ -59,7 +59,7 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
 }
 
 class TriggerContextMenuState {
-  constructor(public behaviour: DropdownEditorBehavior) {
+  constructor(public behaviour: IDropdownEditorBehavior) {
   }
 
   @observable isDropped = false;
