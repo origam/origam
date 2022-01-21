@@ -199,5 +199,5 @@ export OrigamSettings_DbPassword
 ./updateEnvironment.sh
 sudo ./updateEnvironmentRoot.sh
 export ASPNETCORE_URLS="http://+:8080"
-dotnet Origam.ServerCore.dll
+dotnet Origam.Server.dll
 

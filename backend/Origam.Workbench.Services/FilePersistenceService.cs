@@ -193,9 +193,8 @@ namespace Origam.Workbench.Services
             {
                 throw new Exception("Shema: "+schemaExtensionId+" could not be found");  
             }
-            HashSet<Guid> loadedPackageIds = loadedSchema.IncludedPackages
-                .Select(package => package.Id)
-                .ToHashSet();
+            HashSet<Guid> loadedPackageIds = new HashSet<Guid>(loadedSchema.IncludedPackages
+                .Select(package => package.Id));
             loadedPackageIds.Add(loadedSchema.Id);
             schemaProvider.LoadedPackages = loadedPackageIds; 
             return loadedSchema;

@@ -817,7 +817,7 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   }
 
   async search(searchTerm: string) {
-    return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
+    return (await this.axiosInstance.get(`/Search/${encodeURIComponent(searchTerm)}`)).data;
   }
 
   async getAboutInfo() {

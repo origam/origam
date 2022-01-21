@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2021.2.0.$(Build.BuildId)
+  value: 2022.2.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 21.2.0.$(Build.BuildId)
+  value: 22.2.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2021.2-beta.2
+  value: 2022.2-alpha.1
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2021.2-beta.1
+  value: 2022.1
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2021.2
+  value: 2022.2
 
 
 resources:
@@ -43,7 +43,7 @@ jobs:
   - job: build_source
     displayName: Build source
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
@@ -72,7 +72,7 @@ jobs:
         $filename | %{
          (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
         }
-        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\Controller\AboutController.cs") -replace "Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
        displayName: 'Build Number'
      - task: VSBuild@1
        displayName: 'Build architect'
@@ -207,13 +207,13 @@ jobs:
        displayName: 'origam-setup clean up'
      - script: |
         set MsBuildEmitSolution=1
-        "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /pp -v:m
-        "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /pp -v:m
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        displayName: 'Build HTML Server'
      - task: CopyFiles@2
        displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\bin\Release\net5.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net6.0\publish\'
          Contents: |
            **\*.*
            !*.config
@@ -228,7 +228,7 @@ jobs:
   - job: build_html
     displayName: Build html
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1
@@ -280,7 +280,7 @@ jobs:
     - build_source
     - build_html
     pool:
-      vmImage: windows-2019
+      vmImage: windows-2022
     steps:
      - checkout: origam
        fetchDepth: 1

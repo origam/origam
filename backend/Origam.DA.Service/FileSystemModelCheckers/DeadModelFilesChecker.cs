@@ -66,9 +66,8 @@ namespace Origam.DA.Service.FileSystemModelCheckers
                 .SelectMany(origamFile => origamFile.ExternalFiles)
                 .Select(file => file.FullName);
             
-            HashSet<string> knownFilePaths = modelFilePaths
-                .Concat(externalFilePaths)
-                .ToHashSet();
+            HashSet<string> knownFilePaths = new HashSet<string>(modelFilePaths
+                .Concat(externalFilePaths));
           
             var unexpectedFiles = modelDirectoryFiles
                 .Where(file => !knownFilePaths.Contains(file.FullName))

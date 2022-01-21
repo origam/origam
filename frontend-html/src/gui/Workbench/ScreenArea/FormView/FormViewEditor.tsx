@@ -46,7 +46,8 @@ import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreen
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
-import { onTextFieldAutoUpdate } from "../../../../model/actions-ui/DataView/OnTextFieldAutoUpdate";
+import { onTextFieldAutoUpdate } from "model/actions-ui/DataView/OnTextFieldAutoUpdate";
+import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 
 
 @inject(({property, formPanelView}) => {
@@ -117,7 +118,7 @@ export class FormViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
-            customStyle={this.props.property?.style}
+            customStyle={resolveNumericCellAlignment(this.props.property?.style)}
             onChange={this.props.onChange}
             onKeyDown={this.makeOnKeyDownCallBack()}
             onEditorBlur={this.props.onEditorBlur}
@@ -366,4 +367,12 @@ export class FormViewEditor extends React.Component<{
   render() {
     return this.getEditor();
   }
+}
+
+export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined){
+  let cellAlignment = new CellAlignment(false, "Number", customStyle);
+  const style = customStyle ?Object.assign({}, customStyle) :{};
+  style["paddingLeft"] = cellAlignment.paddingLeft + "px";
+  style["textAlign"] = cellAlignment.alignment;
+  return style;
 }

@@ -32,10 +32,10 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Setup .NET Core SDK 5.0
-      uses: actions/setup-dotnet@v1.7.2
+    - name: Setup .NET Core SDK 6.0
+      uses: actions/setup-dotnet@v1.9.0
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
 
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
@@ -45,7 +45,7 @@ jobs:
     
     - name: Build Backend
       run: |
-       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
+       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
 
     - name: Build Architect
       run: |

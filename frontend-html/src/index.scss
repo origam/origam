@@ -31,14 +31,12 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* filter: blur(1px); */
 }
 
 input,
 textarea {
   font-family: "IBM Plex Sans", sans-serif;
-  font-weight: normal;
+  font-weight: 500;
   font-size: 12px;
 }
 

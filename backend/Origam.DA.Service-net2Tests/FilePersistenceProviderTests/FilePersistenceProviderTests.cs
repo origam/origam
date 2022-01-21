@@ -295,10 +295,9 @@ namespace Origam.DA.ServiceTests
             XmlDocument doc = new XmlDocument();
             string pathToTestFile = Path.Combine(TestFilesDir.FullName, "testFile.origam");
             doc.Load(pathToTestFile);
-            HashSet<string> attributeNames = doc.ChildNodes[1].FirstChild.Attributes
+            HashSet<string> attributeNames = new HashSet<string>(doc.ChildNodes[1].FirstChild.Attributes
                 .Cast<XmlAttribute>()
-                .Select(attr => attr.Name)
-                .ToHashSet();
+                .Select(attr => attr.Name));
             
             Assert.That(attributeNames.Contains("ti:testEmptyBool"));
             Assert.That(!attributeNames.Contains("ti:testEmptyInt"));
