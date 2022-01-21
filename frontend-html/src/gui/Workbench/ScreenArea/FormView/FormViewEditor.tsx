@@ -117,6 +117,7 @@ export class FormViewEditor extends React.Component<{
         }}
         onKeyDown={this.makeOnKeyDownCallBack()}
         dataView={getDataView(this.props.property)}
+        property={this.props.property!}
       />
     }
 

@@ -21,13 +21,15 @@ import React, { useContext } from "react";
 import S from "./ComboBox.module.scss";
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
-import { MobXProviderContext } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { ComboEditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { IFocusable } from "model/entities/FormFocusManager";
 import { XmlBuildDropdownEditorInternal } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboFullScreenEditor";
 import { IDataView } from "model/entities/types/IDataView";
+import { IProperty } from "model/entities/types/IProperty";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 
 
 export interface IComboBoxProps {
@@ -44,12 +46,15 @@ export interface IComboBoxProps {
   onClick?: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   dataView: IDataView;
+  property: IProperty;
   onKeyDown?(event: any): void;
 }
 
-export const ComboBox: React.FC<IComboBoxProps> = (props) => {
+export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
 
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
+  const row = getSelectedRow(props.property);
+  const currentValue = row && props.dataView.dataTable.getCellText(row, props.property);
 
   return (
     <div
@@ -65,13 +70,13 @@ export const ComboBox: React.FC<IComboBoxProps> = (props) => {
           />)
       }}
     >
-      <div className={"input " + S.input}>BLA</div>
+      <div className={"input " + S.input}>{currentValue}</div>
       <div className={cx("inputBtn", "lastOne")}>
         <i className="fas fa-caret-down"/>
       </div>
     </div>
   );
-};
+});
 
 
 
