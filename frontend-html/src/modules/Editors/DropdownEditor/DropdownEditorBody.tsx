@@ -49,7 +49,7 @@ export function DropdownEditorBody() {
     return () => window.removeEventListener("mousedown", beh.handleWindowMouseDown);
   }, [beh]);
 
-  const drivers = useContext(CtxDropdownEditor).columnDrivers;
+  const drivers = useContext(CtxDropdownEditor).setup.columnDrivers;
   const dataTable = useContext(CtxDropdownEditor).editorDataTable;
   const rectCtrl = useContext(CtxDropdownCtrlRect);
 

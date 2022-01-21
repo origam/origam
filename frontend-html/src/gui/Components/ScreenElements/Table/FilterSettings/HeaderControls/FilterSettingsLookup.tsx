@@ -335,13 +335,13 @@ export function FilterBuildDropdownEditor(props: {
       props.property.parameters,
       props.property.lookup?.dropDownType!,
       cached,
-      !props.property.lookup?.searchByFirstColumnOnly
+      !props.property.lookup?.searchByFirstColumnOnly,
+      drivers
     );
 
     return {
       behavior: dropdownEditorBehavior,
       editorData: dropdownEditorData,
-      columnDrivers: drivers,
       editorDataTable: dropdownEditorDataTable,
       setup: dropdownEditorSetup
     };

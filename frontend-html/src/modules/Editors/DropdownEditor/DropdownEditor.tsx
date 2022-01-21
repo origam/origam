@@ -45,7 +45,6 @@ export interface IDropdownEditorContext {
   behavior: IDropdownEditorBehavior;
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
-  columnDrivers: DropdownColumnDrivers;
   setup: DropdownEditorSetup;
 }
 
@@ -65,7 +64,8 @@ export class DropdownEditorSetup {
     public dropdownType: string,
     public cached: boolean,
     public searchByFirstColumnOnly: boolean,
-    public isLink?: boolean
+    public columnDrivers: DropdownColumnDrivers,
+    public isLink?: boolean,
   ) {
   }
 }
@@ -204,109 +204,12 @@ export function XmlBuildDropdownEditorInternal(props: {
       onTextOverflowChanged: props.onTextOverflowChanged,
     });
 
-
-    const rat = props.xmlNode.attributes;
-    const lookupId = rat.LookupId;
-    const propertyId = rat.Id;
-    const showUniqueValues = rat.DropDownShowUniqueValues === "true";
-    const identifier = rat.Identifier;
-    let identifierIndex = 0;
-    const dropdownType = rat.DropDownType;
-    const cached = rat.Cached === "true";
-    const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
-
-    const columnNames: string[] = [identifier];
-    const visibleColumnNames: string[] = [];
-    const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
-    let index = 0;
-    const drivers = new DropdownColumnDrivers();
-    if (rat.SuppressEmptyColumns === "true") {
-      drivers.driversFilter = (driver) => {
-        return dropdownEditorDataTable.columnIdsWithNoData.indexOf(driver.columnId) < 0;
-      };
-    }
-    for (let propertyXml of findStopping(props.xmlNode, (n) => n.name === "Property")) {
-      index++;
-      const attributes = propertyXml.attributes;
-      const id = attributes.Id;
-      columnNames.push(id);
-      columnNameToIndex.set(id, index);
-
-      const formatterPattern = attributes.FormatterPattern
-        ? getMomentFormat(propertyXml)
-        : "";
-      visibleColumnNames.push(id);
-      const name = attributes.Name;
-      const column = attributes.Column;
-
-      let bodyCellDriver;
-      switch (column) {
-        case "Text":
-          bodyCellDriver = new TextCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "Number":
-          bodyCellDriver = new NumberCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "CheckBox":
-          bodyCellDriver = new BooleanCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "Date":
-          bodyCellDriver = new DateCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior,
-            formatterPattern
-          );
-          break;
-        default:
-          throw new Error("Unknown column type " + column);
-      }
-
-      drivers.allDrivers.push({
-        columnId: id,
-        headerCellDriver: new DefaultHeaderCellDriver(name),
-        bodyCellDriver,
-      });
-    }
-
-    const parameters: { [k: string]: any } = {};
-
-    for (let ddp of findStopping(props.xmlNode, (n) => n.name === "ComboBoxParameterMapping")) {
-      const pat = ddp.attributes;
-      parameters[pat.ParameterName] = pat.FieldName;
-    }
-
-    const dropdownEditorSetup = new DropdownEditorSetup(
-      propertyId,
-      lookupId,
-      columnNames,
-      visibleColumnNames,
-      columnNameToIndex,
-      showUniqueValues,
-      identifier,
-      identifierIndex,
-      parameters,
-      dropdownType,
-      cached,
-      searchByFirstColumnOnly
-    );
+    const dropdownEditorSetup = getDropdownEditorSetup(props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior);
 
     return {
       behavior: dropdownEditorBehavior,
       editorData: dropdownEditorData,
-      columnDrivers: drivers,
+      columnDrivers: dropdownEditorSetup.columnDrivers,
       editorDataTable: dropdownEditorDataTable,
       setup: dropdownEditorSetup,
     };
@@ -328,6 +231,109 @@ export function XmlBuildDropdownEditorInternal(props: {
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       {props.control}
     </CtxDropdownEditor.Provider>
+  );
+}
+
+function getDropdownEditorSetup(
+  xmlNode: any,
+  dropdownEditorDataTable: DropdownDataTable,
+  dropdownEditorBehavior: IDropdownEditorBehavior
+): DropdownEditorSetup {
+  const rat = xmlNode.attributes;
+  const lookupId = rat.LookupId;
+  const propertyId = rat.Id;
+  const showUniqueValues = rat.DropDownShowUniqueValues === "true";
+  const identifier = rat.Identifier;
+  let identifierIndex = 0;
+  const dropdownType = rat.DropDownType;
+  const cached = rat.Cached === "true";
+  const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
+
+  const columnNames: string[] = [identifier];
+  const visibleColumnNames: string[] = [];
+  const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
+  let index = 0;
+  const drivers = new DropdownColumnDrivers();
+  if (rat.SuppressEmptyColumns === "true") {
+    drivers.driversFilter = (driver) => {
+      return dropdownEditorDataTable.columnIdsWithNoData.indexOf(driver.columnId) < 0;
+    };
+  }
+  for (let propertyXml of findStopping(xmlNode, (n) => n.name === "Property")) {
+    index++;
+    const attributes = propertyXml.attributes;
+    const id = attributes.Id;
+    columnNames.push(id);
+    columnNameToIndex.set(id, index);
+
+    const formatterPattern = attributes.FormatterPattern
+      ? getMomentFormat(propertyXml)
+      : "";
+    visibleColumnNames.push(id);
+    const name = attributes.Name;
+    const column = attributes.Column;
+
+    let bodyCellDriver;
+    switch (column) {
+      case "Text":
+        bodyCellDriver = new TextCellDriver(
+          index,
+          dropdownEditorDataTable,
+          dropdownEditorBehavior
+        );
+        break;
+      case "Number":
+        bodyCellDriver = new NumberCellDriver(
+          index,
+          dropdownEditorDataTable,
+          dropdownEditorBehavior
+        );
+        break;
+      case "CheckBox":
+        bodyCellDriver = new BooleanCellDriver(
+          index,
+          dropdownEditorDataTable,
+          dropdownEditorBehavior
+        );
+        break;
+      case "Date":
+        bodyCellDriver = new DateCellDriver(
+          index,
+          dropdownEditorDataTable,
+          dropdownEditorBehavior,
+          formatterPattern
+        );
+        break;
+      default:
+        throw new Error("Unknown column type " + column);
+    }
+
+    drivers.allDrivers.push({
+      columnId: id,
+      headerCellDriver: new DefaultHeaderCellDriver(name),
+      bodyCellDriver,
+    });
+  }
+  const parameters: { [k: string]: any } = {};
+
+  for (let ddp of findStopping(xmlNode, (n) => n.name === "ComboBoxParameterMapping")) {
+    const pat = ddp.attributes;
+    parameters[pat.ParameterName] = pat.FieldName;
+  }
+  return new DropdownEditorSetup(
+    propertyId,
+    lookupId,
+    columnNames,
+    visibleColumnNames,
+    columnNameToIndex,
+    showUniqueValues,
+    identifier,
+    identifierIndex,
+    parameters,
+    dropdownType,
+    cached,
+    searchByFirstColumnOnly,
+    drivers,
   );
 }
 

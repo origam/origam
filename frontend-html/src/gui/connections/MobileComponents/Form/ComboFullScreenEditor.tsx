@@ -31,7 +31,7 @@ export const ComboFullScreenEditor: React.FC<IComboBoxProps> = (props) => {
 
   const ref = useContext(CtxDropdownRefCtrl);
   const beh = useContext(CtxDropdownEditor).behavior;
-  const drivers = useContext(CtxDropdownEditor).columnDrivers;
+  const drivers = useContext(CtxDropdownEditor).setup.columnDrivers;
   const dataTable = useContext(CtxDropdownEditor).editorDataTable;
 
   useEffect(()=>{
