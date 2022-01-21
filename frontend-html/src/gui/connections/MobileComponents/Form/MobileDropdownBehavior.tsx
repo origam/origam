@@ -117,9 +117,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
       } else {
         this.ensureRequestRunning();
       }
-      if (!this.dataTable.getRowById(this.cursorRowId) && this.userEnteredValue) {
-        this.trySelectFirstRow();
-      }
+      this.trySelectFirstRow();
     } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
     }
@@ -195,7 +193,11 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
 
   @action.bound
   private trySelectFirstRow() {
-    if (this.dataTable.rows.length > 0) {
+    if (
+      !this.dataTable.getRowById(this.cursorRowId) &&
+      this.userEnteredValue &&
+      this.dataTable.rows.length > 0
+    ) {
       this.cursorRowId = this.dataTable.getRowIdentifierByIndex(0);
     }
   }
@@ -243,9 +245,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
           self.scrollToRowIndex = undefined;
           self.dataTable.appendData(items);
         }
-        if (!self.dataTable.getRowById(self.cursorRowId) && self.userEnteredValue) {
-          self.trySelectFirstRow();
-        }
+        self.trySelectFirstRow();
         self.scrollToChosenRowIfPossible();
         self.selectChosenRow();
       } finally {
