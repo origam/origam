@@ -21,7 +21,7 @@ import { bind } from "@decorize/bind";
 import { action, computed } from "mobx";
 import { DataViewData } from "modules/DataView/DataViewData";
 import { RowCursor } from "modules/DataView/TableCursor";
-import { DropdownEditorSetup } from "./DropdownEditor";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export interface IDropdownEditorData {
   idsInEditor: string[];

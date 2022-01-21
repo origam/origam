@@ -30,7 +30,6 @@ import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import {
   CtxDropdownEditor,
   DropdownEditor,
-  DropdownEditorSetup,
   IDropdownEditorContext,
 } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
@@ -45,6 +44,7 @@ import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { prepareForFilter } from "../../../../../../model/selectors/PortalSettings/getStringFilterConfig";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 const OPERATORS = [
   Operator.in,

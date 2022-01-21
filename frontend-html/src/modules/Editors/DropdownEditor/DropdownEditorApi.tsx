@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { bind } from "@decorize/bind";
 import { DataViewAPI } from "modules/DataView/DataViewAPI";
 import { RowCursor } from "modules/DataView/TableCursor";
-import { DropdownEditorSetup } from "./DropdownEditor";
 import { dropdownPageSize, IDropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { EagerlyLoadedGrid } from "./DropdownEditorCommon";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export interface IDropdownEditorApi {
   getLookupList(searchTerm: string): Generator;

@@ -20,11 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { findStopping } from "xmlInterpreters/xmlUtils";
-import { BooleanCellDriver } from "./Cells/BooleanCellDriver";
-import { DefaultHeaderCellDriver } from "./Cells/HeaderCell";
-import { NumberCellDriver } from "./Cells/NumberCellDriver";
-import { TextCellDriver } from "./Cells/TextCellDriver";
 import { DropdownLayout, DropdownLayoutBody } from "@origam/components";
 import { DropdownEditorApi } from "./DropdownEditorApi";
 import { DropdownEditorBehavior, IBehaviorData, IDropdownEditorBehavior } from "./DropdownEditorBehavior";
@@ -32,14 +27,13 @@ import { DropdownEditorBody } from "./DropdownEditorBody";
 import { DropdownEditorControl } from "./DropdownEditorControl";
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
-import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
+import { DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusable } from "../../../model/entities/FormFocusManager";
-import { DateCellDriver } from "./Cells/DateCellDriver";
-import { getMomentFormat } from "../../../xmlInterpreters/getMomentFormat";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export interface IDropdownEditorContext {
   behavior: IDropdownEditorBehavior;
@@ -49,26 +43,6 @@ export interface IDropdownEditorContext {
 }
 
 export const CtxDropdownEditor = createContext<IDropdownEditorContext>(null as any);
-
-export class DropdownEditorSetup {
-  constructor(
-    public propertyId: string,
-    public lookupId: string,
-    public columnNames: string[],
-    public visibleColumnNames: string[],
-    public columnNameToIndex: Map<string, number>,
-    public showUniqueValues: boolean,
-    public identifier: string,
-    public identifierIndex: number,
-    public parameters: { [key: string]: any },
-    public dropdownType: string,
-    public cached: boolean,
-    public searchByFirstColumnOnly: boolean,
-    public columnDrivers: DropdownColumnDrivers,
-    public isLink?: boolean,
-  ) {
-  }
-}
 
 export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
   "IGetDropdownEditorSetup"
@@ -144,7 +118,6 @@ export function XmlBuildDropdownEditor(props: {
   );
 }
 
-
 export function XmlBuildDropdownEditorInternal(props: {
   xmlNode: any;
   isReadOnly: boolean;
@@ -203,7 +176,7 @@ export function XmlBuildDropdownEditorInternal(props: {
       onTextOverflowChanged: props.onTextOverflowChanged,
     });
 
-    const dropdownEditorSetup = getDropdownEditorSetup(props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior);
+    const dropdownEditorSetup = DropdownEditorSetupFromXml(props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior);
 
     return {
       behavior: dropdownEditorBehavior,
@@ -232,107 +205,3 @@ export function XmlBuildDropdownEditorInternal(props: {
     </CtxDropdownEditor.Provider>
   );
 }
-
-function getDropdownEditorSetup(
-  xmlNode: any,
-  dropdownEditorDataTable: DropdownDataTable,
-  dropdownEditorBehavior: IDropdownEditorBehavior
-): DropdownEditorSetup {
-  const rat = xmlNode.attributes;
-  const lookupId = rat.LookupId;
-  const propertyId = rat.Id;
-  const showUniqueValues = rat.DropDownShowUniqueValues === "true";
-  const identifier = rat.Identifier;
-  let identifierIndex = 0;
-  const dropdownType = rat.DropDownType;
-  const cached = rat.Cached === "true";
-  const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
-
-  const columnNames: string[] = [identifier];
-  const visibleColumnNames: string[] = [];
-  const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
-  let index = 0;
-  const drivers = new DropdownColumnDrivers();
-  if (rat.SuppressEmptyColumns === "true") {
-    drivers.driversFilter = (driver) => {
-      return dropdownEditorDataTable.columnIdsWithNoData.indexOf(driver.columnId) < 0;
-    };
-  }
-  for (let propertyXml of findStopping(xmlNode, (n) => n.name === "Property")) {
-    index++;
-    const attributes = propertyXml.attributes;
-    const id = attributes.Id;
-    columnNames.push(id);
-    columnNameToIndex.set(id, index);
-
-    const formatterPattern = attributes.FormatterPattern
-      ? getMomentFormat(propertyXml)
-      : "";
-    visibleColumnNames.push(id);
-    const name = attributes.Name;
-    const column = attributes.Column;
-
-    let bodyCellDriver;
-    switch (column) {
-      case "Text":
-        bodyCellDriver = new TextCellDriver(
-          index,
-          dropdownEditorDataTable,
-          dropdownEditorBehavior
-        );
-        break;
-      case "Number":
-        bodyCellDriver = new NumberCellDriver(
-          index,
-          dropdownEditorDataTable,
-          dropdownEditorBehavior
-        );
-        break;
-      case "CheckBox":
-        bodyCellDriver = new BooleanCellDriver(
-          index,
-          dropdownEditorDataTable,
-          dropdownEditorBehavior
-        );
-        break;
-      case "Date":
-        bodyCellDriver = new DateCellDriver(
-          index,
-          dropdownEditorDataTable,
-          dropdownEditorBehavior,
-          formatterPattern
-        );
-        break;
-      default:
-        throw new Error("Unknown column type " + column);
-    }
-
-    drivers.allDrivers.push({
-      columnId: id,
-      headerCellDriver: new DefaultHeaderCellDriver(name),
-      bodyCellDriver,
-    });
-  }
-  const parameters: { [k: string]: any } = {};
-
-  for (let ddp of findStopping(xmlNode, (n) => n.name === "ComboBoxParameterMapping")) {
-    const pat = ddp.attributes;
-    parameters[pat.ParameterName] = pat.FieldName;
-  }
-  return new DropdownEditorSetup(
-    propertyId,
-    lookupId,
-    columnNames,
-    visibleColumnNames,
-    columnNameToIndex,
-    showUniqueValues,
-    identifier,
-    identifierIndex,
-    parameters,
-    dropdownType,
-    cached,
-    searchByFirstColumnOnly,
-    drivers,
-  );
-}
-

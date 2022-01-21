@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import _ from "lodash";
 import { action, computed, decorate, flow, observable, reaction } from "mobx";
-import { DropdownEditorSetup } from "./DropdownEditor";
 import { IDropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
 import { IDropdownEditorData } from "./DropdownEditorData";
@@ -27,10 +26,12 @@ import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
 import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { compareStrings } from "../../../utils/string";
+import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export const  dropdownPageSize = 100;
 
-export interface IDropdownEditorBehavior {
+export interface IDropdownEditorBehavior extends IDriverState{
   scrollToRowIndex: number | undefined;
   cursorRowId: string;
   willLoadPage: number;
