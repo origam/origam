@@ -33,28 +33,7 @@ export const  dropdownPageSize = 100;
 
 export interface IDropdownEditorBehavior extends IDriverState{
   scrollToRowIndex: number | undefined;
-  cursorRowId: string;
   willLoadPage: number;
-  chosenRowId: string | string[] | null;
-  inputValue: string;
-  isReadOnly: boolean;
-  isWorking: boolean;
-  onDoubleClick?: (event: any) => void;
-  onClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
-  isBodyDisplayed: boolean;
-  dropUp(): void;
-  makeFocused(): void;
-  handleInputFocus(event: any): void;
-  handleInputBlur(event: any): void
-  handleInputBtnClick(event: any): void;
-  handleInputKeyDown(event: any): void;
-  handleInputChange(event: any): void;
-  handleTableCellClicked(event: any, visibleRowIndex: any): void;
-  handleTriggerContextMenu(event: any): void;
-  handleControlMouseDown(event: any): void;
-  handleBodyMouseDown(event: any): void;
-  handleWindowMouseDown(event: any): void;
   handleScroll(args: {
     clientHeight: number;
     clientWidth: number;
@@ -63,11 +42,6 @@ export interface IDropdownEditorBehavior extends IDriverState{
     scrollTop: number;
     scrollWidth: number;
   }): void;
-  updateTextOverflowState(): void;
-  clearCache(): void;
-  refInputElement: (elm: any) => any;
-  refDropdownBody: (elm: any) => any;
-  elmInputElement: any;
 }
 
 export interface IBehaviorData {

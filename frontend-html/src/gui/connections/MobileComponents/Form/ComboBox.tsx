@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import S from "./ComboBox.module.scss";
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
@@ -25,12 +25,17 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { ComboEditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { IFocusable } from "model/entities/FormFocusManager";
-import { XmlBuildDropdownEditorInternal } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboFullScreenEditor";
 import { IDataView } from "model/entities/types/IDataView";
 import { IProperty } from "model/entities/types/IProperty";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/MobileDropdownBehavior";
+import { DropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
+import { DropdownEditorData, IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
+import { TagInputEditorData } from "modules/Editors/DropdownEditor/TagInputEditorData";
+import {  DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
+import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
+import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 
 export interface IComboBoxProps {
@@ -61,13 +66,12 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
     <div
       className={cx(CS.control, S.mobileInput)}
       onClick={() => {
+        if(props.isReadOnly){
+          return;
+        }
         mobileState.layoutState = new ComboEditLayoutState(
-          <XmlBuildDropdownEditorInternal
+          <XmlBuildDropdownEditor
             {...props}
-            control={
-              <ComboFullScreenEditor {...props}/>
-            }
-            makeBehavior={data => new MobileDropdownBehavior(data)}
           />)
       }}
     >
@@ -78,6 +82,91 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
     </div>
   );
 });
+
+export interface IDropdownContext {
+  behavior: MobileDropdownBehavior;
+  editorData: IDropdownEditorData;
+  editorDataTable: DropdownDataTable;
+  setup: DropdownEditorSetup;
+}
+
+function XmlBuildDropdownEditor(props: {
+  xmlNode: any;
+  isReadOnly: boolean;
+  backgroundColor?: string;
+  foregroundColor?: string;
+  customStyle?: any;
+  tagEditor?: JSX.Element;
+  isLink?: boolean;
+  autoSort?: boolean;
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  onDoubleClick?: (event: any) => void;
+  onClick?: (event: any) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
+  onKeyDown?(event: any): void;
+  dataView: IDataView,
+  property: IProperty;
+}) {
+  const mobxContext = useContext(MobXProviderContext);
+  const {dataViewRowCursor, dataViewApi, dataViewData} = props.dataView;
+  const workbench = mobxContext.workbench;
+  const {lookupListCache} = workbench;
+
+  const [dropdownEditorInfrastructure] = useState<IDropdownContext>(() => {
+    const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
+      () => dropdownEditorSetup,
+      dataViewRowCursor,
+      dataViewApi,
+      () => dropdownEditorBehavior
+    );
+    const dropdownEditorData: IDropdownEditorData = props.tagEditor
+      ? new TagInputEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
+      : new DropdownEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup);
+    const dropdownEditorDataTable = new DropdownDataTable(
+      () => dropdownEditorSetup,
+      dropdownEditorData
+    );
+
+    const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
+      () => dropdownEditorSetup,
+      lookupListCache
+    );
+
+    const dropdownEditorBehavior = new MobileDropdownBehavior({
+      api: dropdownEditorApi,
+      data: dropdownEditorData,
+      dataTable: dropdownEditorDataTable,
+      setup: () => dropdownEditorSetup,
+      cache: dropdownEditorLookupListCache,
+      onClick: props.onClick,
+      autoSort: props.autoSort,
+      onTextOverflowChanged: props.onTextOverflowChanged,
+    });
+
+    const dropdownEditorSetup = DropdownEditorSetupFromXml(
+      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, props.isLink);
+
+    return {
+      behavior: dropdownEditorBehavior,
+      editorData: dropdownEditorData,
+      columnDrivers: dropdownEditorSetup.columnDrivers,
+      editorDataTable: dropdownEditorDataTable,
+      setup: dropdownEditorSetup,
+    };
+  });
+
+  dropdownEditorInfrastructure.behavior.onClick = props.onClick;
+
+  return (
+      <ComboFullScreenEditor
+        {...props}
+        behavior={dropdownEditorInfrastructure.behavior}
+        dataTable={dropdownEditorInfrastructure.editorDataTable}
+        columnDrivers={dropdownEditorInfrastructure.setup.columnDrivers}
+        editorData={dropdownEditorInfrastructure.editorData}
+      />
+  );
+}
 
 
 

@@ -22,33 +22,43 @@ import S from "./ComboFullScreenEditor.module.scss";
 import { IComboBoxProps } from "gui/connections/MobileComponents/Form/ComboBox";
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
-import { CtxDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
-import { DropdownEditorInput } from "modules/Editors/DropdownEditor/DropdownEditorInput";
 import { CtxDropdownRefCtrl } from "@origam/components";
 import { DropdownEditorTable } from "modules/Editors/DropdownEditor/DropdownEditorBody";
+import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/MobileDropdownBehavior";
+import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
+import { MobileDropdownEditorInput } from "gui/connections/MobileComponents/Form/MobileDropdownEditorInput";
+import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 
-export const ComboFullScreenEditor: React.FC<IComboBoxProps> = (props) => {
+
+interface IComboFullScreenEditorProps extends IComboBoxProps{
+  behavior: MobileDropdownBehavior;
+  dataTable: DropdownDataTable;
+  columnDrivers: DropdownColumnDrivers
+  editorData: IDropdownEditorData
+}
+
+export const ComboFullScreenEditor: React.FC<IComboFullScreenEditorProps> = (props) => {
 
   const ref = useContext(CtxDropdownRefCtrl);
-  const beh = useContext(CtxDropdownEditor).behavior;
-  const drivers = useContext(CtxDropdownEditor).setup.columnDrivers;
-  const dataTable = useContext(CtxDropdownEditor).editorDataTable;
 
   useEffect(()=>{
-    beh.handleInputChange({target:{value:""}});
-    beh.makeFocused();
+    props.behavior.handleInputChange({target:{value:""}});
+    props.behavior.makeFocused();
   });
 
   return (
     <div className={cx(CS.control, S.root)} ref={ref}>
-      <DropdownEditorInput
+      <MobileDropdownEditorInput
         backgroundColor={props.backgroundColor}
         foregroundColor={props.foregroundColor}
         customStyle={props.customStyle}
+        isLink={props.isLink}
+        behavior={props.behavior}
+        editorData={props.editorData}
       />
       <DropdownEditorTable
-        drivers={drivers}
-        dataTable={dataTable}
+        drivers={props.columnDrivers}
+        dataTable={props.dataTable}
         rectCtrl={{
           top: 0,
           left: 0,
@@ -57,7 +67,7 @@ export const ComboFullScreenEditor: React.FC<IComboBoxProps> = (props) => {
           bottom: 0,
           right: 0,
         }}
-        beh={beh}
+        beh={props.behavior}
         rowHeight={30}
       />
     </div>

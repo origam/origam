@@ -23,7 +23,7 @@ export class DropdownEditorSetup {
     public cached: boolean,
     public searchByFirstColumnOnly: boolean,
     public columnDrivers: DropdownColumnDrivers,
-    public isLink: boolean,
+    public isLink?: boolean,
   ) {
   }
 }
@@ -129,7 +129,7 @@ export function DropdownEditorSetupFromXml(
     cached,
     searchByFirstColumnOnly,
     drivers,
-    !!isLink
+    isLink
   );
 }
 

@@ -19,16 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { DropdownLayout, DropdownLayoutBody } from "@origam/components";
 import { DropdownEditorApi } from "./DropdownEditorApi";
-import { DropdownEditorBehavior, IBehaviorData, IDropdownEditorBehavior } from "./DropdownEditorBehavior";
+import { DropdownEditorBehavior} from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";
 import { DropdownEditorControl } from "./DropdownEditorControl";
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
-import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { IWorkbench } from "model/entities/types/IWorkbench";
@@ -36,7 +35,7 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export interface IDropdownEditorContext {
-  behavior: IDropdownEditorBehavior;
+  behavior: DropdownEditorBehavior;
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
   setup: DropdownEditorSetup;
@@ -101,43 +100,7 @@ export function XmlBuildDropdownEditor(props: {
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-  return (
-    <XmlBuildDropdownEditorInternal
-      {...props}
-      dataView={mobxContext.dataView as IDataView}
-      control={
-        <DropdownEditor
-          editor={props.tagEditor}
-          backgroundColor={props.backgroundColor}
-          foregroundColor={props.foregroundColor}
-          customStyle={props.customStyle}
-        />
-      }
-      makeBehavior={data => new DropdownEditorBehavior(data)}
-    />
-  );
-}
-
-export function XmlBuildDropdownEditorInternal(props: {
-  xmlNode: any;
-  isReadOnly: boolean;
-  backgroundColor?: string;
-  foregroundColor?: string;
-  customStyle?: any;
-  tagEditor?: JSX.Element;
-  isLink?: boolean;
-  autoSort?: boolean;
-  onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
-  onDoubleClick?: (event: any) => void;
-  onClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
-  onKeyDown?(event: any): void;
-  dataView: IDataView
-  control: ReactNode,
-  makeBehavior: (data: IBehaviorData) => IDropdownEditorBehavior;
-}) {
-  const mobxContext = useContext(MobXProviderContext);
-  const {dataViewRowCursor, dataViewApi, dataViewData} = props.dataView;
+  const {dataViewRowCursor, dataViewApi, dataViewData} = mobxContext.dataView;
   const workbench = mobxContext.workbench;
   const {lookupListCache} = workbench;
 
@@ -161,7 +124,7 @@ export function XmlBuildDropdownEditorInternal(props: {
       lookupListCache
     );
 
-    const dropdownEditorBehavior = props.makeBehavior({
+    const dropdownEditorBehavior = new DropdownEditorBehavior({
       api: dropdownEditorApi,
       data: dropdownEditorData,
       dataTable: dropdownEditorDataTable,
@@ -201,7 +164,12 @@ export function XmlBuildDropdownEditorInternal(props: {
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      {props.control}
+      <DropdownEditor
+        editor={props.tagEditor}
+        backgroundColor={props.backgroundColor}
+        foregroundColor={props.foregroundColor}
+        customStyle={props.customStyle}
+      />
     </CtxDropdownEditor.Provider>
   );
 }

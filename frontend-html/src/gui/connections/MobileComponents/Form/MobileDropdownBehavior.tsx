@@ -21,10 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 import { DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
-import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
-import { IFocusable } from "model/entities/FormFocusManager";
-import { action, computed, flow, observable, reaction } from "mobx";
+import { action, computed, flow, observable } from "mobx";
 import {
   CancellablePromise,
   EagerlyLoadedGrid,
@@ -34,9 +32,20 @@ import _ from "lodash";
 import {
   compareLookUpItems,
   dropdownPageSize,
-  IBehaviorData,
   IDropdownEditorBehavior
 } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
+
+export interface IMobileBehaviorData {
+  api: IDropdownEditorApi,
+  data: IDropdownEditorData,
+  dataTable: DropdownDataTable,
+  setup: () => DropdownEditorSetup,
+  cache: DropdownEditorLookupListCache,
+  onClick?: (event: any) => void,
+  autoSort?: boolean,
+  onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+}
 
 export class MobileDropdownBehavior implements IDropdownEditorBehavior{
 
@@ -45,30 +54,21 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   private dataTable: DropdownDataTable;
   private setup: () => DropdownEditorSetup;
   private cache: DropdownEditorLookupListCache;
-  public isReadOnly: boolean;
-  public onDoubleClick?: (event: any) => void;
   public onClick?: (event: any) => void;
-  public subscribeToFocusManager?: (obj:IFocusable) => void;
-  private onKeyDown?: (event: any) => void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 
-  constructor(args: IBehaviorData) {
+  constructor(args: IMobileBehaviorData) {
     this.api = args.api;
     this.data = args.data;
     this.dataTable = args.dataTable;
     this.setup = args.setup;
     this.cache = args.cache;
-    this.isReadOnly = args.isReadOnly;
-    this.onDoubleClick = args.onDoubleClick;
     this.onClick = args.onClick;
-    this.subscribeToFocusManager = args.subscribeToFocusManager;
-    this.onKeyDown = args.onKeyDown;
     this.autoSort = args.autoSort;
     this.onTextOverflowChanged = args.onTextOverflowChanged;
   }
 
-  @observable isDropped = false;
   @observable isWorking = false;
   @observable userEnteredValue: string | undefined = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
@@ -79,54 +79,12 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   willLoadPage = 1;
   willLoadNextPage = true;
 
-  @computed get isBodyDisplayed() {
-    return this.isDropped && this.dataTable.rowCount > 0;
-  }
-
   @computed get chosenRowId() {
     return this.data.value;
   }
 
   @computed get inputValue() {
-    return this.userEnteredValue !== undefined ? this.userEnteredValue : this.data.text;
-  }
-
-  @action.bound
-  dropUp() {
-    if (this.isDropped) {
-      this.ensureRequestCancelled();
-      this.userEnteredValue = "";
-      this.dataTable.setFilterPhrase("");
-      this.isDropped = false;
-      this.willLoadPage = 1;
-      this.willLoadNextPage = true;
-      this.scrollToRowIndex = 0;
-    }
-  }
-
-  @action.bound
-  private dropDown() {
-    const setup = this.setup();
-    if (!this.isDropped) {
-      if (setup.dropdownType === EagerlyLoadedGrid) {
-        this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-      }
-      if (
-        setup.dropdownType === EagerlyLoadedGrid &&
-        setup.cached &&
-        this.cache.hasCachedListRows()
-      ) {
-        this.dataTable.setData(this.cache.getCachedListRows());
-      } else {
-        this.ensureRequestRunning();
-      }
-      if (this.chosenRowId !== null && !Array.isArray(this.chosenRowId)) {
-        this.cursorRowId = this.chosenRowId;
-      }
-    }
-    this.isDropped = true;
-    this.scrollToChosenRowIfPossible();
-    this.makeFocused();
+    return this.userEnteredValue ?? "";
   }
 
   makeFocused() {
@@ -146,116 +104,11 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
     }
   }
 
-  @action.bound
-  private scrollToCursoredRowIfNeeded() {
-    const index = this.dataTable.getRowIndexById(this.cursorRowId);
-    if (index > -1) {
-      this.dontClearScrollToRow = true;
-      this.scrollToRowIndex = index + 1;
-    }
-  }
-
-  @action.bound
-  handleInputFocus(event: any) {
-    const {target} = event;
-    if (target) {
-      target.select();
-      target.scrollLeft = 0;
-    }
-  }
-
-  @action.bound
-  handleInputBlur(event: any) {
-    if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
-      this.data.chooseNewValue(this.cursorRowId);
-    }
-    this.dropUp();
-  }
-
-  @action.bound
-  handleInputBtnClick(event: any) {
-    if (!this.isDropped) {
-      this.dropDown();
-    } else {
-      this.dropUp();
-    }
-  }
-
-  @action.bound
-  handleInputKeyDown(event: any) {
-    switch (event.key) {
-      case "Escape":
-        this.dropUp();
-        this.userEnteredValue = undefined;
-        break;
-      case "Enter":
-        const wasDropped = this.isDropped;
-        if (this.isDropped && !this.isWorking && this.cursorRowId) {
-          this.data.chooseNewValue(this.cursorRowId);
-          this.dropUp();
-        }
-        if (wasDropped) {
-          event.stopPropagation();
-          event.preventDefault();
-          // Do not pass event to props.onKeyDown
-          return;
-        }
-        break;
-      case "Tab":
-        if (this.isDropped) {
-          if (this.cursorRowId) {
-            this.data.chooseNewValue(this.cursorRowId);
-          }
-        }
-        break;
-      case "Delete":
-        this.userEnteredValue = undefined;
-        this.cursorRowId = "";
-        this.data.chooseNewValue(null);
-        break;
-      case "ArrowUp":
-        if (this.isDropped) {
-          event.preventDefault();
-          if (!this.dataTable.getRowById(this.cursorRowId)) {
-            this.trySelectFirstRow();
-            this.selectChosenRow();
-          } else {
-            const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
-            if (prevRowId) {
-              this.cursorRowId = prevRowId;
-            }
-          }
-          this.scrollToCursoredRowIfNeeded();
-        }
-        break;
-      case "ArrowDown":
-        if (this.isDropped) {
-          event.preventDefault();
-          if (!this.dataTable.getRowById(this.cursorRowId)) {
-            this.trySelectFirstRow();
-            this.selectChosenRow();
-          } else {
-            const nextRowId = this.dataTable.getRowIdAfterId(this.cursorRowId);
-            if (nextRowId) {
-              this.cursorRowId = nextRowId;
-            }
-          }
-          this.scrollToCursoredRowIfNeeded();
-        } else if (event.ctrlKey || event.metaKey) {
-          this.dropDown();
-          this.trySelectFirstRow();
-        }
-        break;
-    }
-    this.onKeyDown && this.onKeyDown(event);
-  }
-
   handleInputChangeDeb = _.debounce(this.handleInputChangeImm, 300);
 
   @action.bound
   handleInputChange(event: any) {
     this.userEnteredValue = event.target.value;
-    this.isDropped = true;
 
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
@@ -288,38 +141,13 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   handleTableCellClicked(event: any, visibleRowIndex: any) {
     const id = this.dataTable.getRowIdentifierByIndex(visibleRowIndex);
     this.data.chooseNewValue(id);
-    this.dropUp();
-  }
 
-  @action.bound
-  handleTriggerContextMenu(event: any) {
-    this.dropUp();
-  }
-
-  @action.bound
-  handleControlMouseDown(event: any) {
-    if (this.isDropped) {
-      event.stopPropagation();
-      event.preventDefault();
-    }
-  }
-
-  @action.bound
-  handleBodyMouseDown(event: any) {
-    if (this.isDropped) {
-      event.stopPropagation();
-      event.preventDefault();
-    }
-  }
-
-  @action.bound
-  handleWindowMouseDown(event: any) {
-    if (this.userEnteredValue === "") {
-      this.data.chooseNewValue(null);
-    }
-    if (this.isDropped) {
-      this.dropUp();
-    }
+    this.ensureRequestCancelled();
+    this.userEnteredValue = "";
+    this.dataTable.setFilterPhrase("");
+    this.willLoadPage = 1;
+    this.willLoadNextPage = true;
+    this.scrollToRowIndex = 0;
   }
 
   @action.bound
@@ -427,27 +255,9 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
     })();
   }
 
-  @action.bound
-  handleUseEffect() {
-    return reaction(
-      () => this.data.value,
-      () => {
-        this.userEnteredValue = undefined;
-      }
-    );
-  }
-
-  @action.bound
-  clearCache() {
-    this.cache.clean();
-  }
-
-  _refInputDisposer: any;
   refInputElement = (elm: any) => {
     this.elmInputElement = elm;
   };
 
   elmInputElement: any;
-  refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
-  elmDropdownBody: any;
 }
