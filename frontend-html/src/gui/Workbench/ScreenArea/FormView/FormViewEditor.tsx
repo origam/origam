@@ -48,7 +48,7 @@ import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorForm
 import { onTextFieldAutoUpdate } from "model/actions-ui/DataView/OnTextFieldAutoUpdate";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
-import { ComboBox } from "gui/connections/MobileComponents/Form/ComboBox";
+import { ComboBox } from "gui/connections/MobileComponents/Form/ComboBox/ComboBox";
 
 
 @inject(({property, formPanelView}) => {

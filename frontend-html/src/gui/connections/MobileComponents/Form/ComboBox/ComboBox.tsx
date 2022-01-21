@@ -18,18 +18,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext, useState } from "react";
-import S from "./ComboBox.module.scss";
+import S from "gui/connections/MobileComponents/Form/ComboBox/ComboBox.module.scss";
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { ComboEditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { IFocusable } from "model/entities/FormFocusManager";
-import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboFullScreenEditor";
+import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
 import { IDataView } from "model/entities/types/IDataView";
 import { IProperty } from "model/entities/types/IProperty";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/MobileDropdownBehavior";
+import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownBehavior";
 import { DropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import { DropdownEditorData, IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 import { TagInputEditorData } from "modules/Editors/DropdownEditor/TagInputEditorData";

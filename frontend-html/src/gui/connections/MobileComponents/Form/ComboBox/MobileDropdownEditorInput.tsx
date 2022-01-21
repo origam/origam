@@ -21,7 +21,7 @@ import { Observer } from "mobx-react";
 import React, { useEffect, useMemo } from "react";
 import cx from 'classnames';
 import S from "@origam/components/src/components/Dropdown/Dropdown.module.scss"
-import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/MobileDropdownBehavior";
+import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownBehavior";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 
 export function MobileDropdownEditorInput(props: {

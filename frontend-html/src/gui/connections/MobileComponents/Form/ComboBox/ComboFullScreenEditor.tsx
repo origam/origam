@@ -18,15 +18,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext, useEffect } from "react";
-import S from "./ComboFullScreenEditor.module.scss";
-import { IComboBoxProps } from "gui/connections/MobileComponents/Form/ComboBox";
+import S from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor.module.scss";
+import { IComboBoxProps } from "gui/connections/MobileComponents/Form/ComboBox/ComboBox";
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
 import { CtxDropdownRefCtrl } from "@origam/components";
 import { DropdownEditorTable } from "modules/Editors/DropdownEditor/DropdownEditorBody";
-import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/MobileDropdownBehavior";
+import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownBehavior";
 import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
-import { MobileDropdownEditorInput } from "gui/connections/MobileComponents/Form/MobileDropdownEditorInput";
+import { MobileDropdownEditorInput } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownEditorInput";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 
 
