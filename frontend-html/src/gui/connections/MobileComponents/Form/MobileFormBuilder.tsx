@@ -223,6 +223,7 @@ export class MobileFormBuilder extends React.Component<{
                         textualValue={textualValue}
                         xmlNode={property.xmlNode}
                         backgroundColor={backgroundColor}
+                        fieldDimensions={new FieldDimensions()}
                       />
                     </Provider>
                   );

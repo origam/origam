@@ -48,9 +48,6 @@ export interface IComboBoxProps {
   isLink?: boolean;
   autoSort?: boolean;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
-  onDoubleClick?: (event: any) => void;
-  onClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
   dataView: IDataView;
   property: IProperty;
   onKeyDown?(event: any): void;

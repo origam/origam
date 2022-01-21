@@ -19,44 +19,78 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React from "react";
 import "gui/connections/MobileComponents/Form/MobileForm.module.scss";
-import { FormField, ICaptionPosition } from "gui/Components/Form/FormField";
-import { IDockType } from "model/entities/types/IProperty";
-import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
+import {
+  getCaptionStyle, getFormFieldStyle,
+  getToolTip,
+  ICaptionPosition,
+  IFormFieldProps
+} from "gui/Components/Form/FormField";
+import { inject, observer } from "mobx-react";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
+import { observable } from "mobx";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import S from "gui/Components/Form/FormField.module.scss";
+import { MobileLink } from "gui/connections/MobileComponents/MobileLink";
+import { MobileFormViewEditor } from "gui/connections/MobileComponents/Form/FormViewEditor";
 
-export class MobileFormField extends React.Component<{
-  isHidden?: boolean;
-  caption: React.ReactNode;
-  hideCaption?: boolean;
-  captionLength: number;
-  captionColor?: string;
-  dock?: IDockType;
-  toolTip?: string;
-  value?: any;
-  isRichText: boolean;
-  textualValue?: any;
-  xmlNode?: any;
-  backgroundColor?: string;
-}> {
+@inject(({property}, {caption}) => {
+  const rowId = getSelectedRowId(property);
+
+  const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
+
+  return {
+    caption: !!ovrCaption ? ovrCaption : caption,
+    property: property
+  };
+})
+@observer
+export class MobileFormField extends React.Component<IFormFieldProps> {
+
+  @observable
+  toolTip: string | undefined | null;
+
   render() {
+    const row = getSelectedRow(this.props.property);
+    const invalidMessage = row
+      ? getFieldErrorMessage(this.props.property!)(row, this.props.property!)
+      : undefined;
+
     return (
       <div className={"formItem"}>
-        <FormField
-          isHidden={this.props.isHidden}
-          caption={this.props.caption}
-          hideCaption={this.props.hideCaption}
-          captionLength={this.props.captionLength}
-          captionPosition={ICaptionPosition.Left}
-          captionColor={this.props.captionColor}
-          dock={this.props.dock}
-          toolTip={this.props.toolTip}
-          value={this.props.value}
-          isRichText={this.props.isRichText}
-          textualValue={this.props.textualValue}
-          xmlNode={this.props.xmlNode}
-          backgroundColor={this.props.backgroundColor}
-          fieldDimensions={new FieldDimensions()}
-          linkInForm={true}
-        />
+        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption &&
+          <label
+            className={S.caption}
+            style={getCaptionStyle(this.props)}
+            title={getToolTip(this.props, this.toolTip)}
+          >
+            {this.props.caption}
+          </label>
+        }
+        <div
+          className={S.editor}
+          style={getFormFieldStyle(this.props)}
+          title={getToolTip(this.props, this.toolTip)}
+        >
+          <MobileFormViewEditor
+            value={this.props.value}
+            isRichText={this.props.isRichText}
+            textualValue={this.props.textualValue}
+            xmlNode={this.props.xmlNode}
+            backgroundColor={this.props.backgroundColor}
+            onTextOverflowChanged={toolTip => this.toolTip = toolTip}
+            property={this.props.property!}
+          />
+          {invalidMessage && (
+            <div className={S.notification} title={invalidMessage}>
+              <i className="fas fa-exclamation-circle red"/>
+            </div>
+          )}
+          { this.props.property?.isLink && row &&
+            <MobileLink property={this.props.property} row={row}/>
+          }
+        </div>
       </div>
     );
   }

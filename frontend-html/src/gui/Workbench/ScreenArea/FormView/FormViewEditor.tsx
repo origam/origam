@@ -94,33 +94,6 @@ export class FormViewEditor extends React.Component<{
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
 
-    if (isMobileLayoutActive(this.props.property) && this.props.property!.column === "ComboBox") {
-      return <ComboBox
-        key={this.props.xmlNode.$iid}
-        onTextOverflowChanged={this.props.onTextOverflowChanged}
-        xmlNode={this.props.xmlNode}
-        isReadOnly={readOnly}
-        subscribeToFocusManager={(textEditor) =>
-          this.focusManager.subscribe(
-            textEditor,
-            this.props.property?.id,
-            this.props.property?.tabIndex
-          )
-        }
-        autoSort={this.props.property?.autoSort}
-        backgroundColor={backgroundColor}
-        foregroundColor={foregroundColor}
-        customStyle={this.props.property?.style}
-        isLink={this.props.property?.isLink}
-        onClick={(event) => {
-          onDropdownEditorClick(this.props.property)(event, this.props.property, row);
-        }}
-        onKeyDown={this.makeOnKeyDownCallBack()}
-        dataView={getDataView(this.props.property)}
-        property={this.props.property!}
-      />
-    }
-
     switch (this.props.property!.column) {
       case "Number":
         return (

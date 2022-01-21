@@ -29,7 +29,6 @@ import { observable } from "mobx";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { MobileLink } from "gui/connections/MobileComponents/MobileLink";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -38,7 +37,7 @@ export enum ICaptionPosition {
   None = "None",
 }
 
-interface IFormFieldProps {
+export interface IFormFieldProps {
   caption: React.ReactNode;
   captionPosition?: ICaptionPosition;
   captionLength: number;
@@ -54,7 +53,6 @@ interface IFormFieldProps {
   textualValue?: any;
   isRichText: boolean;
   backgroundColor?: string;
-  linkInForm?: boolean;
   property?: IProperty;
 }
 
@@ -109,16 +107,13 @@ export class FormField extends React.Component<IFormFieldProps> {
               <i className="fas fa-exclamation-circle red"/>
             </div>
           )}
-          {this.props.linkInForm && this.props.property?.isLink && row &&
-            <MobileLink property={this.props.property} row={row}/>
-          }
         </div>
       </>
     );
   }
 }
 
-function getCaptionStyle(props: IFormFieldProps) {
+export function getCaptionStyle(props: IFormFieldProps) {
   const dimensions = props.fieldDimensions;
   if(dimensions.isUnset){
     return dimensions.asStyle();
@@ -153,7 +148,7 @@ function getCaptionStyle(props: IFormFieldProps) {
   }
 }
 
-function getFormFieldStyle(props: IFormFieldProps) {
+export function getFormFieldStyle(props: IFormFieldProps) {
   const dimensions = props.fieldDimensions;
   if(dimensions.isUnset){
     return dimensions.asStyle();
@@ -179,7 +174,7 @@ function getFormFieldStyle(props: IFormFieldProps) {
   };
 }
 
-function getToolTip(props: IFormFieldProps, toolTip: string | undefined | null){
+export function getToolTip(props: IFormFieldProps, toolTip: string | undefined | null){
   let finalToolTip = props.toolTip ?? "";
   if (toolTip) {
     finalToolTip = toolTip + "\n\n" + finalToolTip;
