@@ -635,13 +635,9 @@ namespace Origam.Utils
                 }
                 Thread.Sleep(arguments.delay);
             }
-
-            if (result == 1)
-            {
-                Console.WriteLine("DB test result is True.");
-            }
-            else Console.WriteLine("DB test result is False.");
-            
+            Console.WriteLine(result == 1
+                ? "DB test result is True."
+                : "DB test result is False.");
             return result;
         }
     }
