@@ -61,6 +61,7 @@ export const ComboBox: React.FC<IComboBoxProps> = (props) => {
             control={
               <ComboFullScreenEditor {...props}/>
             }
+            mobileBehavior={true}
           />)
       }}
     >

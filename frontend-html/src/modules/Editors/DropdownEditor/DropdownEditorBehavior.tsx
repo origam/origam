@@ -42,13 +42,14 @@ export class DropdownEditorBehavior {
     public subscribeToFocusManager?: (obj: IFocusable) => void,
     private onKeyDown?: (event: any) => void,
     private autoSort?: boolean,
-    private onTextOverflowChanged?: (toolTip: string | null | undefined) => void
+    private onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
+    private mobileBehavior?: boolean,
   ) {
   }
 
   @observable isDropped = false;
   @observable isWorking = false;
-  @observable userEnteredValue = undefined;
+  @observable userEnteredValue: string | undefined = undefined;
   @observable scrollToRowIndex: number | undefined = undefined;
   dontClearScrollToRow = true;
 
@@ -73,8 +74,13 @@ export class DropdownEditorBehavior {
   @action.bound dropUp() {
     if (this.isDropped) {
       this.ensureRequestCancelled();
-      this.dataTable.clearData();
-      this.userEnteredValue = undefined;
+      if(this.mobileBehavior){
+        this.userEnteredValue = "";
+        this.dataTable.setFilterPhrase("");
+      }else{
+        this.userEnteredValue = undefined;
+        this.dataTable.clearData();
+      }
       this.isDropped = false;
       this.willLoadPage = 1;
       this.willLoadNextPage = true;

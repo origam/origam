@@ -26,3 +26,41 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 div.root input:global(.input) {
   max-height: 25px
 }
+
+div.root div:global(.cell) {
+  &:global(.selected){
+    &:global(.ord1){
+      background: var(--foreground1);
+      color: var(--background1);
+    }
+    &:global(.ord2){
+      background: var(--foreground1);
+      color: var(--background1);
+    }
+  }
+}
+.root :global(.cell) {
+  &:global(.withCursor){
+    &:global(.ord1){
+      background: var(--background2);
+      color: var(--background8);
+    }
+    &:global(.ord2){
+      background: var(--background1);
+      color: var(--background8);
+    }
+  }
+}
+
+.root :global(.isHoveredRow) div:global(.cell) {
+  &:global(.ord1){
+    background: var(--background2);
+    color: var(--background8);
+  }
+  &:global(.ord2){
+    background: var(--background1);
+    color: var(--background8);
+  }
+}
+
+

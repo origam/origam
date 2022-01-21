@@ -159,7 +159,8 @@ export function XmlBuildDropdownEditorInternal(props: {
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
   dataView: IDataView
-  control: ReactNode
+  control: ReactNode,
+  mobileBehavior?: boolean,
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const {dataViewRowCursor, dataViewApi, dataViewData} = props.dataView;
@@ -197,7 +198,8 @@ export function XmlBuildDropdownEditorInternal(props: {
       props.subscribeToFocusManager,
       props.onKeyDown,
       props.autoSort,
-      props.onTextOverflowChanged
+      props.onTextOverflowChanged,
+      props.mobileBehavior
     );
 
     const rat = props.xmlNode.attributes;
