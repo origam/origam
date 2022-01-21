@@ -61,7 +61,9 @@ export function DropdownEditorBody() {
             drivers={drivers}
             dataTable={dataTable}
             rectCtrl={rectCtrl}
-            beh={beh}/>
+            beh={beh}
+            rowHeight={rowHeight}
+          />
         </div>
       )}
     </Observer>
@@ -73,7 +75,8 @@ export class DropdownEditorTable extends  React.Component<{
   drivers: DropdownColumnDrivers,
   dataTable: DropdownDataTable,
   rectCtrl: BoundingRect,
-  beh: DropdownEditorBehavior
+  beh: DropdownEditorBehavior,
+  rowHeight: number
 }> {
   refMultiGrid = createRef<MultiGrid>();
   @observable
@@ -91,7 +94,7 @@ export class DropdownEditorTable extends  React.Component<{
   get height(){
     let height = 0;
     for (let i = 0; i < this.rowCount; i++) {
-      height = height + rowHeight;
+      height = height + this.props.rowHeight;
     }
     return Math.min(height, this.maxHeight) + this.scrollbarSize.horiz;
   }
@@ -199,7 +202,7 @@ export class DropdownEditorTable extends  React.Component<{
         columnCount={this.columnCount}
         rowCount={this.rowCount}
         columnWidth={({ index }) => widths[index]}
-        rowHeight={rowHeight}
+        rowHeight={this.props.rowHeight}
         fixedRowCount={this.hasHeader ? 1 : 0}
         height={this.height}
         width={width}

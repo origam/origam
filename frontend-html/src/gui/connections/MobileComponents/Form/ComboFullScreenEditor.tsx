@@ -58,6 +58,7 @@ export const ComboFullScreenEditor: React.FC<IComboBoxProps> = (props) => {
           right: 0,
         }}
         beh={beh}
+        rowHeight={30}
       />
     </div>
   );
