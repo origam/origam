@@ -127,7 +127,7 @@ export function XmlBuildDropdownEditor(props: {
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-  return(
+  return (
     <XmlBuildDropdownEditorInternal
       {...props}
       dataView={mobxContext.dataView as IDataView}
@@ -161,8 +161,7 @@ export function XmlBuildDropdownEditorInternal(props: {
   onKeyDown?(event: any): void;
   dataView: IDataView
   control: ReactNode,
-  mobileBehavior?: boolean,
-  makeBehavior: (data: IBehaviorData)=> IDropdownEditorBehavior;
+  makeBehavior: (data: IBehaviorData) => IDropdownEditorBehavior;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const {dataViewRowCursor, dataViewApi, dataViewData} = props.dataView;

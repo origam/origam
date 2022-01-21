@@ -67,7 +67,6 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
             control={
               <ComboFullScreenEditor {...props}/>
             }
-            mobileBehavior={true}
             makeBehavior={data => new MobileDropdownBehavior(data)}
           />)
       }}

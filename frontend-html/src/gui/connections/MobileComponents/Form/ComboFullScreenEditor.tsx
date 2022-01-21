@@ -40,7 +40,7 @@ export const ComboFullScreenEditor: React.FC<IComboBoxProps> = (props) => {
   });
 
   return (
-    <div className={cx(CS.control, S.root)} ref={ref} onMouseDown={beh.handleControlMouseDown}>
+    <div className={cx(CS.control, S.root)} ref={ref}>
       <DropdownEditorInput
         backgroundColor={props.backgroundColor}
         foregroundColor={props.foregroundColor}
