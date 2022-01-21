@@ -23,7 +23,7 @@ export class DropdownEditorSetup {
     public cached: boolean,
     public searchByFirstColumnOnly: boolean,
     public columnDrivers: DropdownColumnDrivers,
-    public isLink?: boolean,
+    public isLink: boolean,
   ) {
   }
 }
@@ -31,7 +31,8 @@ export class DropdownEditorSetup {
 export function DropdownEditorSetupFromXml(
   xmlNode: any,
   dropdownEditorDataTable: DropdownDataTable,
-  dropdownEditorBehavior: IDriverState
+  dropdownEditorBehavior: IDriverState,
+  isLink: boolean | undefined
 ): DropdownEditorSetup {
   const rat = xmlNode.attributes;
   const lookupId = rat.LookupId;
@@ -128,6 +129,7 @@ export function DropdownEditorSetupFromXml(
     cached,
     searchByFirstColumnOnly,
     drivers,
+    !!isLink
   );
 }
 

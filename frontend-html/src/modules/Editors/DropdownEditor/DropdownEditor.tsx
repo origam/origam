@@ -176,7 +176,8 @@ export function XmlBuildDropdownEditorInternal(props: {
       onTextOverflowChanged: props.onTextOverflowChanged,
     });
 
-    const dropdownEditorSetup = DropdownEditorSetupFromXml(props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior);
+    const dropdownEditorSetup = DropdownEditorSetupFromXml(
+      props.xmlNode, dropdownEditorDataTable, dropdownEditorBehavior, props.isLink);
 
     return {
       behavior: dropdownEditorBehavior,
@@ -197,7 +198,6 @@ export function XmlBuildDropdownEditorInternal(props: {
 
   dropdownEditorInfrastructure.behavior.onClick = props.onClick;
   dropdownEditorInfrastructure.behavior.onDoubleClick = props.onDoubleClick;
-  dropdownEditorInfrastructure.setup.isLink = props.isLink;
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
