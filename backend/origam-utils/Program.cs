@@ -34,6 +34,7 @@ using System.Collections;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using BrockAllen.IdentityReboot;
@@ -231,8 +232,6 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
-            Console.WriteLine(string.Format(Strings.ShortGnu,
-                System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
             string invokedVerb = "";
             object invokedVerbInstance = null;
             var options = new Options();
@@ -244,6 +243,16 @@ namespace Origam.Utils
                 }))
             {
                 return 1;
+            }
+
+            if (invokedVerb == "test-db")
+            {
+                Console.WriteLine("Starting testing the Database.");
+            }
+            else
+            {
+                Console.WriteLine(string.Format(Strings.ShortGnu,
+                    System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
             }
 
             switch (invokedVerb)
@@ -599,23 +608,23 @@ namespace Origam.Utils
             {
                 try
                 {
-                    log.Info($"Connecting to: {connString}");
+                    Console.WriteLine($"Connecting to: {connString}");
                     using (var connection = new SqlConnection(connString))
                     {
                         var query = arguments.sqlCommand;
-                        log.Info($"Executing: {query}");
+                        Console.WriteLine($"Executing: {query}");
 
                         var command = new SqlCommand(query, connection);
 
                         connection.Open();
-                        log.Info("SQL Connection successful.");
+                        Console.WriteLine($"SQL Connection successful.");
 
                         var info = command.ExecuteScalar().ToString();
                         if (info != null)
                         {
                             result = 1;
-                            log.Info($"SQL Query execution successful." +
-                                     $"Result:{info}");
+                            Console.WriteLine($"SQL Query execution successful." +
+                                              $"Result:{info}");
                             break;
                         }
                     }
@@ -626,6 +635,13 @@ namespace Origam.Utils
                 }
                 Thread.Sleep(arguments.delay);
             }
+
+            if (result == 1)
+            {
+                Console.WriteLine("DB test result is True.");
+            }
+            else Console.WriteLine("DB test result is False.");
+            
             return result;
         }
     }
