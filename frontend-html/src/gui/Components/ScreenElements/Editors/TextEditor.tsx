@@ -141,17 +141,11 @@ export class TextEditor extends React.Component<{
   }
 
   get richTextEditorStyle() {
-    if (this.props.dock === IDockType.Fill) {
       return {
-        minWidth: 800,
+        width: "100%",
         height: "100%",
       };
     }
-    return {
-      minWidth: 800, 
-      minHeight: 600
-    };
-  }
 
   getMultilineDivClass() {
     if (this.props.wrapText) {
