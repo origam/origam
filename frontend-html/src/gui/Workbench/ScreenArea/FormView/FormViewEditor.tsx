@@ -32,7 +32,7 @@ import { getRowStateForegroundColor } from "model/selectors/RowState/getRowState
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
 import uiActions from "model/actions-ui-tree";
-import { IProperty } from "model/entities/types/IProperty";
+import { IDockType, IProperty } from "model/entities/types/IProperty";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
@@ -76,6 +76,7 @@ export class FormViewEditor extends React.Component<{
   onEditorBlur?: (event: any) => Promise<any>;
   backgroundColor?: string;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  dock?: IDockType;
 }> {
   focusManager: FormFocusManager;
 
@@ -160,6 +161,7 @@ export class FormViewEditor extends React.Component<{
                 this.props.property?.tabIndex
               )
             }
+            dock={this.props.dock}
           />
         );
       case "Date":
