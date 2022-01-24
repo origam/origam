@@ -23,8 +23,7 @@ import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { ComboEditLayoutState } from "model/entities/MobileState/MobileLayoutState";
-import { IFocusable } from "model/entities/FormFocusManager";
+import { ComboEditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
 import { IDataView } from "model/entities/types/IDataView";
 import { IProperty } from "model/entities/types/IProperty";
@@ -73,6 +72,7 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
     mobileState.layoutState = new ComboEditLayoutState(
       <XmlBuildDropdownEditor
         {...props}
+        onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}
       />)
   }
 
@@ -111,8 +111,7 @@ export function XmlBuildDropdownEditor(props: {
   isLink?: boolean;
   autoSort?: boolean;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
-  onDoubleClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  onValueSelected: ()=> void;
   onKeyDown?(event: any): void;
   dataView: IDataView,
   property: IProperty;
@@ -150,6 +149,7 @@ export function XmlBuildDropdownEditor(props: {
       cache: dropdownEditorLookupListCache,
       autoSort: props.autoSort,
       onTextOverflowChanged: props.onTextOverflowChanged,
+      onValueSelected: props.onValueSelected
     });
 
     const dropdownEditorSetup = DropdownEditorSetupFromXml(

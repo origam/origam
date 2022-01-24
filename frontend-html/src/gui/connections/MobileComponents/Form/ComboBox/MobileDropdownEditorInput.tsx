@@ -60,7 +60,6 @@ export function MobileDropdownEditorInput(props: {
           ref={refInput}
           placeholder={props.editorData.isResolving ? "Loading..." : ""}
           onChange={props.behavior.handleInputChange}
-          onClick={props.behavior.onClick}
           value={props.behavior.inputValue || ""}
           style={getStyle()}
           autoComplete={"off"}

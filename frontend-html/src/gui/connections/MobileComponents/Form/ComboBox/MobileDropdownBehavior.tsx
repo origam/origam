@@ -42,7 +42,7 @@ export interface IMobileBehaviorData {
   dataTable: DropdownDataTable,
   setup: () => DropdownEditorSetup,
   cache: DropdownEditorLookupListCache,
-  onClick?: (event: any) => void,
+  onValueSelected: () => void,
   autoSort?: boolean,
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void,
 }
@@ -54,7 +54,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
   private dataTable: DropdownDataTable;
   private setup: () => DropdownEditorSetup;
   private cache: DropdownEditorLookupListCache;
-  public onClick?: (event: any) => void;
+  public onValueSelected: () => void;
   private autoSort?: boolean;
   private onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 
@@ -64,7 +64,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
     this.dataTable = args.dataTable;
     this.setup = args.setup;
     this.cache = args.cache;
-    this.onClick = args.onClick;
+    this.onValueSelected = args.onValueSelected;
     this.autoSort = args.autoSort;
     this.onTextOverflowChanged = args.onTextOverflowChanged;
   }
@@ -146,6 +146,8 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
     this.willLoadPage = 1;
     this.willLoadNextPage = true;
     this.scrollToRowIndex = 0;
+
+    this.onValueSelected();
   }
 
   @action.bound
