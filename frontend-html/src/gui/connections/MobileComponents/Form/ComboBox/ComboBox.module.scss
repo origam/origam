@@ -25,3 +25,7 @@ div.mobileInput > .input:read-only {
   background: var(--background2);
   border: 1px solid var(--background5);
 }
+
+.input {
+  min-height: 23px;
+}

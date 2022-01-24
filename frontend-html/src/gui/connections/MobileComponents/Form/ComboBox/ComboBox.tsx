@@ -72,7 +72,7 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
           />)
       }}
     >
-      <div className={"input " + S.input}>{currentValue}</div>
+      <div className={cx("input", S.input)}>{currentValue}</div>
       <div className={cx("inputBtn", "lastOne")}>
         <i className="fas fa-caret-down"/>
       </div>
