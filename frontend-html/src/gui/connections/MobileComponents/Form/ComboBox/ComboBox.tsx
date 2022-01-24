@@ -101,13 +101,13 @@ export interface IDropdownContext {
   setup: DropdownEditorSetup;
 }
 
-function XmlBuildDropdownEditor(props: {
+export function XmlBuildDropdownEditor(props: {
   xmlNode: any;
   isReadOnly: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
   customStyle?: any;
-  tagEditor?: JSX.Element;
+  editingTags?: boolean;
   isLink?: boolean;
   autoSort?: boolean;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
@@ -129,7 +129,7 @@ function XmlBuildDropdownEditor(props: {
       dataViewApi,
       () => dropdownEditorBehavior
     );
-    const dropdownEditorData: IDropdownEditorData = props.tagEditor
+    const dropdownEditorData: IDropdownEditorData = props.editingTags
       ? new TagInputEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
       : new DropdownEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup);
     const dropdownEditorDataTable = new DropdownDataTable(

@@ -27,6 +27,7 @@ import { ComboBox } from "gui/connections/MobileComponents/Form/ComboBox/ComboBo
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IProperty } from "model/entities/types/IProperty";
 import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor";
+import { TagInputEditor } from "gui/connections/MobileComponents/Form/ComboBox/TagInputEditor";
 
 export const MobileFormViewEditor: React.FC<{
   value?: any;
@@ -58,6 +59,19 @@ export const MobileFormViewEditor: React.FC<{
         foregroundColor={foregroundColor}
         customStyle={props.property?.style}
         isLink={props.property?.isLink}
+        dataView={getDataView(props.property)}
+        property={props.property!}
+      />);
+  }
+  if (props.property!.column === "TagInput") {
+    return (
+      <TagInputEditor
+        key={props.xmlNode.$iid}
+        xmlNode={props.xmlNode}
+        isReadOnly={readOnly}
+        backgroundColor={backgroundColor}
+        foregroundColor={foregroundColor}
+        customStyle={props.property?.style}
         dataView={getDataView(props.property)}
         property={props.property!}
       />);
