@@ -112,7 +112,6 @@ function XmlBuildDropdownEditor(props: {
   autoSort?: boolean;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   onDoubleClick?: (event: any) => void;
-  onClick?: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
   dataView: IDataView,
@@ -149,7 +148,6 @@ function XmlBuildDropdownEditor(props: {
       dataTable: dropdownEditorDataTable,
       setup: () => dropdownEditorSetup,
       cache: dropdownEditorLookupListCache,
-      onClick: props.onClick,
       autoSort: props.autoSort,
       onTextOverflowChanged: props.onTextOverflowChanged,
     });
@@ -165,8 +163,6 @@ function XmlBuildDropdownEditor(props: {
       setup: dropdownEditorSetup,
     };
   });
-
-  dropdownEditorInfrastructure.behavior.onClick = props.onClick;
 
   return (
       <ComboFullScreenEditor

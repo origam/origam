@@ -451,16 +451,6 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
   }
 
   @action.bound
-  handleUseEffect() {
-    return reaction(
-      () => this.data.value,
-      () => {
-        this.userEnteredValue = undefined;
-      }
-    );
-  }
-
-  @action.bound
   clearCache() {
     this.cache.clean();
   }
