@@ -36,6 +36,7 @@ import { TagInputEditorData } from "modules/Editors/DropdownEditor/TagInputEdito
 import {  DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
 import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
+import { onMobileLinkClick } from "model/actions/DropdownEditor/onMobileLinkClick";
 
 
 export interface IComboBoxProps {
@@ -59,21 +60,34 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
   const row = getSelectedRow(props.property);
   const currentValue = row && props.dataView.dataTable.getCellText(row, props.property);
 
+  function onTextClick(){
+    if(props.isLink){
+      onMobileLinkClick(props.property, row)
+    }
+  }
+
+  function onButtonClick(){
+    if(props.isReadOnly){
+      return;
+    }
+    mobileState.layoutState = new ComboEditLayoutState(
+      <XmlBuildDropdownEditor
+        {...props}
+      />)
+  }
+
   return (
-    <div
-      className={cx(CS.control, S.mobileInput)}
-      onClick={() => {
-        if(props.isReadOnly){
-          return;
-        }
-        mobileState.layoutState = new ComboEditLayoutState(
-          <XmlBuildDropdownEditor
-            {...props}
-          />)
-      }}
-    >
-      <div className={cx("input", S.input)}>{currentValue}</div>
-      <div className={cx("inputBtn", "lastOne")}>
+    <div className={cx(CS.control, S.mobileInput)}>
+      <div
+        className={cx("input", S.input, props.isLink ? S.link : "")}
+        onClick={onTextClick}
+      >
+        {currentValue}
+      </div>
+      <div
+        className={cx("inputBtn", "lastOne")}
+        onClick={onButtonClick}
+      >
         <i className="fas fa-caret-down"/>
       </div>
     </div>

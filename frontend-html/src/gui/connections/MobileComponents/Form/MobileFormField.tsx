@@ -32,7 +32,6 @@ import { observable } from "mobx";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import S from "gui/Components/Form/FormField.module.scss";
-import { MobileLink } from "gui/connections/MobileComponents/MobileLink";
 import { MobileFormViewEditor } from "gui/connections/MobileComponents/Form/FormViewEditor";
 
 @inject(({property}, {caption}) => {
@@ -87,9 +86,6 @@ export class MobileFormField extends React.Component<IFormFieldProps> {
               <i className="fas fa-exclamation-circle red"/>
             </div>
           )}
-          { this.props.property?.isLink && row &&
-            <MobileLink property={this.props.property} row={row}/>
-          }
         </div>
       </div>
     );

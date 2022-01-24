@@ -29,3 +29,10 @@ div.mobileInput > .input:read-only {
 .input {
   min-height: 23px;
 }
+
+div.mobileInput div.link{
+  color: var(--foreground1);
+  &:read-only{
+    color: var(--foreground1);
+  }
+}
