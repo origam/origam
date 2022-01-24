@@ -608,7 +608,6 @@ namespace Origam.Utils
             {
                 try
                 {
-                    Console.WriteLine($"Connecting to: {connString}");
                     using (var connection = new SqlConnection(connString))
                     {
                         var query = arguments.sqlCommand;
@@ -617,14 +616,12 @@ namespace Origam.Utils
                         var command = new SqlCommand(query, connection);
 
                         connection.Open();
-                        Console.WriteLine($"SQL Connection successful.");
 
                         var info = command.ExecuteScalar().ToString();
                         if (info != null)
                         {
                             result = 1;
-                            Console.WriteLine($"SQL Query execution successful." +
-                                              $"Result:{info}");
+                            
                             break;
                         }
                     }
@@ -636,8 +633,8 @@ namespace Origam.Utils
                 Thread.Sleep(arguments.delay);
             }
             Console.WriteLine(result == 1
-                ? "DB test result is True."
-                : "DB test result is False.");
+                ? "True."
+                : "False");
             return result;
         }
     }
