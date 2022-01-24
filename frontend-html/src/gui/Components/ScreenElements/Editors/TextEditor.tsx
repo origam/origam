@@ -72,7 +72,7 @@ export class TextEditor extends React.Component<{
   }
 
   private updateTextOverflowState() {
-    if (this.props.isMultiline) {
+    if (this.props.isMultiline || !this.elmInput) {
       return;
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
