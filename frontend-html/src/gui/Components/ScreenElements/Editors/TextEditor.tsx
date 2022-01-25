@@ -140,13 +140,6 @@ export class TextEditor extends React.Component<{
     );
   }
 
-  get richTextEditorStyle() {
-      return {
-        width: "100%",
-        height: "100%",
-      };
-    }
-
   getMultilineDivClass() {
     if (this.props.wrapText) {
       return S.input + " " + S.wrapText;
@@ -175,7 +168,7 @@ export class TextEditor extends React.Component<{
         );
       } else {
         return (
-          <div style={this.richTextEditorStyle} >
+          <div className={S.richTextWrappContainer} >
               <RichTextEditor 
                 value={this.props.value ?? ""}
                 onChange={(newValue: any) => {
@@ -301,23 +294,11 @@ function RichTextEditor(props: {
     }
   }, [props.value, internalEditorStateHtml]);
 
-  const wrapperExtendedStype: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-  }
-
-  const editorExtendedStype: React.CSSProperties = {
-    height: "unset",
-  }
-
   return (
         <Editor
-          editorStyle={editorExtendedStype}
-          wrapperStyle={wrapperExtendedStype}
           editorState={internalEditorState}
-          wrapperClassName="demo-wrapper"
-          editorClassName="demo-editor"
+          wrapperClassName={S.richTextWrappStyle}
+          editorClassName={S.richTextEditorStyle}
           onEditorStateChange={onEditorStateChange}
           onBlur={props.onBlur}
         />
