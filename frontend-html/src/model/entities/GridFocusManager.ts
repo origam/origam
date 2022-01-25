@@ -30,7 +30,6 @@ export class GridFocusManager {
   }
 
   focusEditor() {
-    console.log((this._activeEditor as any)?.value)
     this._activeEditor?.focus();
   }
 }
