@@ -233,8 +233,7 @@ export class TableViewEditor extends React.Component<{
                   backgroundColor={backgroundColor}
                   foregroundColor={foregroundColor}
                   onChange={this.props.onChange}
-                  onKeyDown={undefined}
-                  onClick={undefined}
+                  onKeyDown={this.props.onEditorKeyDown}
                   onDoubleClick={(event) => this.onDoubleClick(event)}
                   onEditorBlur={this.props.onEditorBlur}
                 />
