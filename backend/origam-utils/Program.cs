@@ -611,7 +611,6 @@ namespace Origam.Utils
                     using (var connection = new SqlConnection(connString))
                     {
                         var query = arguments.sqlCommand;
-                        Console.WriteLine($"Executing: {query}");
 
                         var command = new SqlCommand(query, connection);
 
