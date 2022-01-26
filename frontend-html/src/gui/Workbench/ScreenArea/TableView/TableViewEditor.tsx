@@ -194,7 +194,6 @@ export class TableViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
-            // subscribeToFocusManager={(input) => input.focus()} // will cause the editor to take focus after opening
             subscribeToFocusManager={(editor) =>
               focusManager.activeEditor = editor
             }
@@ -210,7 +209,6 @@ export class TableViewEditor extends React.Component<{
             onBlur={() => this.props.onEditorBlur?.(undefined)}
             onKeyDown={this.props.onEditorKeyDown}
             isReadOnly={readOnly}
-            // subscribeToFocusManager={(input) => input.focus()}
             subscribeToFocusManager={(editor) =>
               focusManager.activeEditor = editor
             }
@@ -235,8 +233,7 @@ export class TableViewEditor extends React.Component<{
                   backgroundColor={backgroundColor}
                   foregroundColor={foregroundColor}
                   onChange={this.props.onChange}
-                  onKeyDown={undefined}
-                  onClick={undefined}
+                  onKeyDown={this.props.onEditorKeyDown}
                   onDoubleClick={(event) => this.onDoubleClick(event)}
                   onEditorBlur={this.props.onEditorBlur}
                 />

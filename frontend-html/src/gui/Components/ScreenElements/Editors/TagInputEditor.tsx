@@ -127,6 +127,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
           removeItem(event, value[value.length - 1]);
         }
         beh.handleInputKeyDown(event);
+        props.onKeyDown?.(event);
       }
 
       return (
