@@ -33,7 +33,6 @@ import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
 import { onExportToExcelClick } from "model/actions-ui/DataView/onExportToExcelClick";
-import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
 import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick";
 import { onMoveRowUpClick } from "model/actions-ui/DataView/onMoveRowUpClick";
 import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
@@ -52,7 +51,7 @@ import React, { useContext } from "react";
 import Measure from "react-measure";
 import { T } from "utils/translation";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { computed } from "mobx";
+import { action, computed } from "mobx";
 import { getPanelMenuActions } from "model/selectors/DataView/getPanelMenuActions";
 import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
@@ -65,6 +64,9 @@ import {
 } from "gui/connections/CDataViewHeader";
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
 import "gui/connections/MobileComponents/Grid/DataViewHeader.module.scss"
+import { getMobileState } from "model/selectors/getMobileState";
+import { ComboEditLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor";
 
 @observer
 export class DataViewHeaderInner extends React.Component<{
@@ -108,6 +110,10 @@ export class DataViewHeaderInner extends React.Component<{
     });
   }
 
+  get mobileState(){
+    return getMobileState(this.dataView);
+  }
+
   @computed
   get isBarVisible() {
     return this.props.isVisible;
@@ -116,6 +122,11 @@ export class DataViewHeaderInner extends React.Component<{
   @computed
   get allMenuActions() {
     return getPanelMenuActions(this.dataView);
+  }
+
+  @action
+  onFilterButtonClick(){
+    this.mobileState.layoutState =  new ComboEditLayoutState(<FilterEditor dataView={this.dataView}/>);
   }
 
   render() {
@@ -129,7 +140,6 @@ export class DataViewHeaderInner extends React.Component<{
     const isRowMovingDisabled = getIsRowMovingDisabled(dataView);
     const onMoveRowDownClickEvt = onMoveRowDownClick(dataView);
     const onCopyRowClickEvt = onCopyRowClick(dataView, true);
-    const onFilterButtonClickEvt = onFilterButtonClick(dataView);
     const onPrevRowClickEvt = onPrevRowClick(dataView);
     const onNextRowClickEvt = onNextRowClick(dataView);
 
@@ -245,8 +255,7 @@ export class DataViewHeaderInner extends React.Component<{
                       {dataView.isTableViewActive() &&
                         <DataViewHeaderGroup noShrink={true}>
                           <DataViewHeaderAction
-                            onMouseDown={onFilterButtonClickEvt}
-                            onShortcut={onFilterButtonClickEvt}
+                            onMouseDown={() => this.onFilterButtonClick()}
                             shortcutPredicate={isFilterRecordShortcut}
                             isActive={isFilterSettingsVisible}
                             className={"test-filter-button"}
