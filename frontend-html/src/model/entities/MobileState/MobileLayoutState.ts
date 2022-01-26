@@ -85,7 +85,7 @@ export class SearchLayoutState implements IMobileLayoutState {
   }
 }
 
-export class ComboEditLayoutState implements IMobileLayoutState {
+export class EditLayoutState implements IMobileLayoutState {
   actionDropUpHidden = true;
   refreshButtonHidden = true;
   saveButtonHidden = true;

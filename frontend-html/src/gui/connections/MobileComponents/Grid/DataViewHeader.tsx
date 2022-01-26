@@ -65,7 +65,7 @@ import {
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
 import "gui/connections/MobileComponents/Grid/DataViewHeader.module.scss"
 import { getMobileState } from "model/selectors/getMobileState";
-import { ComboEditLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor";
 
 @observer
@@ -126,7 +126,7 @@ export class DataViewHeaderInner extends React.Component<{
 
   @action
   onFilterButtonClick(){
-    this.mobileState.layoutState =  new ComboEditLayoutState(<FilterEditor dataView={this.dataView}/>);
+    this.mobileState.layoutState =  new EditLayoutState(<FilterEditor dataView={this.dataView}/>);
   }
 
   render() {

@@ -23,7 +23,7 @@ import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { ComboEditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
 import { IDataView } from "model/entities/types/IDataView";
 import { IProperty } from "model/entities/types/IProperty";
@@ -69,7 +69,7 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
     if(props.isReadOnly){
       return;
     }
-    mobileState.layoutState = new ComboEditLayoutState(
+    mobileState.layoutState = new EditLayoutState(
       <XmlBuildDropdownEditor
         {...props}
         onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}

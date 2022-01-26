@@ -34,7 +34,7 @@ import { BreadCrumbs } from "gui/connections/MobileComponents/Navigation/BreadCr
 import { CScreenContent } from "gui/connections/CScreenContent";
 import { ScreenHeader } from "gui/connections/MobileComponents/ScreenHeader";
 import {
-  AboutLayoutState, ComboEditLayoutState,
+  AboutLayoutState, EditLayoutState,
   MenuLayoutState,
   ScreenLayoutState,
   SearchLayoutState
@@ -78,8 +78,8 @@ export class MobileMain extends React.Component<{}> {
     if (this.mobileState.layoutState instanceof SearchLayoutState) {
       return <Search/>
     }
-    if (this.mobileState.layoutState instanceof ComboEditLayoutState) {
-      return (this.mobileState.layoutState as ComboEditLayoutState).component
+    if (this.mobileState.layoutState instanceof EditLayoutState) {
+      return (this.mobileState.layoutState as EditLayoutState).component
     }
     if (this.mobileState.layoutState instanceof AboutLayoutState) {
       return <MobileAboutView

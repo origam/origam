@@ -28,7 +28,7 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import React, { useContext } from "react";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
-import { ComboEditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { XmlBuildDropdownEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboBox";
 import { IDataView } from "model/entities/types/IDataView";
@@ -95,7 +95,7 @@ export const TagInputEditor = (
         if(props.isReadOnly){
           return;
         }
-        mobileState.layoutState = new ComboEditLayoutState(
+        mobileState.layoutState = new EditLayoutState(
           <XmlBuildDropdownEditor
             {...props}
             editingTags={true}
