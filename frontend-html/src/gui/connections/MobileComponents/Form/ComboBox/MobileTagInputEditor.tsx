@@ -22,34 +22,25 @@ import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import S from "gui/Components/ScreenElements/Editors/TagInputEditor.module.css";
 
 import { TagInput, TagInputAdd, TagInputItem, TagInputItemDelete, } from "gui/Components/TagInput/TagInput";
-import { MobXProviderContext, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import React, { useContext } from "react";
+import React from "react";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
-import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
-import { MobileState } from "model/entities/MobileState/MobileState";
-import { XmlBuildDropdownEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboBox";
-import { IDataView } from "model/entities/types/IDataView";
 
-export const TagInputEditor = (
+export const MobileTagInputEditor = (
   observer(
     (props: {
-      xmlNode: any;
       isReadOnly: boolean;
       backgroundColor?: string;
       foregroundColor?: string;
       customStyle?: any;
       customInputClass?: string;
-      autoFocus?: boolean;
       id?: string;
       property: IProperty;
-      dataView: IDataView;
+      onPlusButtonClick: ()=> void;
     }) => {
-
-      const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
-
       const dataTable = getDataTable(props.property);
       const row = getSelectedRow(props.property);
       if(row === undefined){
@@ -95,12 +86,7 @@ export const TagInputEditor = (
         if(props.isReadOnly){
           return;
         }
-        mobileState.layoutState = new EditLayoutState(
-          <XmlBuildDropdownEditor
-            {...props}
-            editingTags={true}
-            onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}
-          />)
+        props.onPlusButtonClick();
       }
 
       return (

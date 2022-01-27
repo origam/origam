@@ -104,9 +104,6 @@ export interface IDropdownContext {
 export function XmlBuildDropdownEditor(props: {
   xmlNode: any;
   isReadOnly: boolean;
-  backgroundColor?: string;
-  foregroundColor?: string;
-  customStyle?: any;
   editingTags?: boolean;
   isLink?: boolean;
   autoSort?: boolean;
