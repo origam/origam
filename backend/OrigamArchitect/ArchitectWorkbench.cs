@@ -2183,7 +2183,20 @@ namespace OrigamArchitect
 #else
             ApplicationDataDisconnectedMode 
                 = !TestConnectionToApplicationDataDatabase();
-            if (ApplicationDataDisconnectedMode)
+			IParameterService parameterService =
+				ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+
+			try
+			{
+				parameterService.RefreshParameters();
+			}
+			catch (Exception ex)
+			{
+				// show the error but go on
+				// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages
+				AsMessageBox.ShowError(this, ex.Message, strings.ErrorWhileLoadingParameters_Message, ex);
+			}
+			if (ApplicationDataDisconnectedMode)
             {
                 UpdateTitle();
                 return;
@@ -2218,19 +2231,6 @@ namespace OrigamArchitect
             }
 
 #endif
-			IParameterService parameterService = 
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
-			try
-			{
-				parameterService.RefreshParameters();
-			}
-			catch(Exception ex)
-			{
-				// show the error but go on
-				// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages
-				AsMessageBox.ShowError(this, ex.Message, strings.ErrorWhileLoadingParameters_Message, ex);
-			}
 
 #if ! ORIGAM_CLIENT
             // we have to initialize the new user after parameter service gets loaded
