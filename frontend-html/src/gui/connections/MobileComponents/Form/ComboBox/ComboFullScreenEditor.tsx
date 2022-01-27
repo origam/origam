@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useContext, useEffect } from "react";
 import S from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor.module.scss";
-import { IComboBoxProps } from "gui/connections/MobileComponents/Form/ComboBox/ComboBox";
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
 import { CtxDropdownRefCtrl } from "@origam/components";
@@ -30,11 +29,15 @@ import { MobileDropdownEditorInput } from "gui/connections/MobileComponents/Form
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 
 
-interface IComboFullScreenEditorProps extends IComboBoxProps{
+interface IComboFullScreenEditorProps {
   behavior: MobileDropdownBehavior;
   dataTable: DropdownDataTable;
-  columnDrivers: DropdownColumnDrivers
-  editorData: IDropdownEditorData
+  columnDrivers: DropdownColumnDrivers;
+  editorData: IDropdownEditorData;
+  backgroundColor?: string;
+  foregroundColor?: string;
+  customStyle?: any;
+  isLink?: boolean,
 }
 
 export const ComboFullScreenEditor: React.FC<IComboFullScreenEditorProps> = (props) => {

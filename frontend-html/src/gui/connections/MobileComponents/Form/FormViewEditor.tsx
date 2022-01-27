@@ -31,6 +31,7 @@ import { MobileTagInputEditor } from "gui/connections/MobileComponents/Form/Comb
 import { MobXProviderContext } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 
 export const MobileFormViewEditor: React.FC<{
   value?: any;
@@ -50,6 +51,15 @@ export const MobileFormViewEditor: React.FC<{
   const backgroundColor = readOnly
     ? shadeHexColor(props.backgroundColor, -0.1)
     : props.backgroundColor;
+
+  function onChange(event: any, newValue: string[]){
+    onFieldChange(props.property)({
+      event: event,
+      row: row!,
+      property: props.property,
+      value: newValue,
+    });
+  }
 
   if (props.property!.column === "ComboBox") {
     return (
@@ -76,6 +86,7 @@ export const MobileFormViewEditor: React.FC<{
         foregroundColor={foregroundColor}
         customStyle={props.property?.style}
         property={props.property!}
+        onChange={onChange}
         onPlusButtonClick={() => {
           mobileState.layoutState = new EditLayoutState(
             <XmlBuildDropdownEditor

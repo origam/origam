@@ -27,7 +27,6 @@ import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import React from "react";
-import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 
 export const MobileTagInputEditor = (
   observer(
@@ -40,6 +39,8 @@ export const MobileTagInputEditor = (
       id?: string;
       property: IProperty;
       onPlusButtonClick: ()=> void;
+      onChange: (event: any, newValue: string[])=> void;
+      values?: any[];
     }) => {
       const dataTable = getDataTable(props.property);
       const row = getSelectedRow(props.property);
@@ -47,18 +48,8 @@ export const MobileTagInputEditor = (
         return <div/>;
       }
 
-      const cellValue = dataTable.getCellValue(row, props.property);
-      const value = (Array.isArray(cellValue) ? [...cellValue] : cellValue) as any[];
-      const textValues = value?.map((valueItem: any) => dataTable.resolveCellText(props.property, valueItem));
-
-      function onChange(event: any, newValue: string[]){
-        onFieldChange(props.property)({
-          event: event,
-          row: row!,
-          property: props.property,
-          value: newValue,
-        });
-      }
+      const values = props.values ?? getTagInputValues(props.property);
+      const textValues = values.map((valueItem: any) => dataTable.resolveCellText(props.property, valueItem));
 
       function getStyle() {
         if (props.customStyle) {
@@ -75,10 +66,10 @@ export const MobileTagInputEditor = (
         if (props.isReadOnly) {
           return;
         }
-        const index = value.indexOf(item);
+        const index = values.indexOf(item);
         if (index > -1) {
-          value.remove(item);
-          onChange(event, value);
+          values.remove(item);
+          props.onChange(event, values);
         }
       }
 
@@ -92,7 +83,7 @@ export const MobileTagInputEditor = (
       return (
         <div className={CS.editorContainer}>
           <TagInput className={S.tagInput}>
-            {value.map((valueItem, idx) => (
+            {values.map((valueItem, idx) => (
                 <TagInputItem key={valueItem}>
                   <TagInputItemDelete
                     onClick={(event) => {
@@ -119,3 +110,12 @@ export const MobileTagInputEditor = (
     }
   )
 );
+
+export function getTagInputValues(property: IProperty): any[]{
+  const dataTable = getDataTable(property);
+  const row = getSelectedRow(property);
+
+
+  const cellValue = dataTable.getCellValue(row!, property);
+  return (Array.isArray(cellValue) ? [...cellValue] : cellValue) as any[];
+}

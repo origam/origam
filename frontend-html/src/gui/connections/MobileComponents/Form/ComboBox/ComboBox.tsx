@@ -94,7 +94,7 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
   );
 });
 
-export interface IDropdownContext {
+export interface IMobileDropdownContext {
   behavior: MobileDropdownBehavior;
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
@@ -118,7 +118,7 @@ export function XmlBuildDropdownEditor(props: {
   const workbench = mobxContext.workbench;
   const {lookupListCache} = workbench;
 
-  const [dropdownEditorInfrastructure] = useState<IDropdownContext>(() => {
+  const [dropdownEditorInfrastructure] = useState<IMobileDropdownContext>(() => {
     const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
       () => dropdownEditorSetup,
       dataViewRowCursor,
