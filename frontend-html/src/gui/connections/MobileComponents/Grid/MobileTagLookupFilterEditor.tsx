@@ -34,7 +34,8 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
 import {
-  FilterDropDownApi, FilterEditorData
+  FilterDropDownApi,
+  FilterEditorData
 } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
 import { MobileTagInputEditor } from "gui/connections/MobileComponents/Form/ComboBox/MobileTagInputEditor";
 import { getMobileState } from "model/selectors/getMobileState";
@@ -73,12 +74,12 @@ export const MobileTagLookupFilterEditor: React.FC<{
             }}
             values={props.setting.val1 ?? []}
             autoFocus={props.autoFocus}
-          />
+          />,
+          layoutBeforeEditing
         )
       }}
     />);
 });
-
 
 
 export function MobileFilterBuildDropdownEditor(props: {

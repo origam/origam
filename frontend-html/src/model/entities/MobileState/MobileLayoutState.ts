@@ -94,7 +94,9 @@ export class EditLayoutState implements IMobileLayoutState {
   showHamburgerMenuButton = false;
   heading = "";
 
-  constructor(public component: React.ReactNode) {
+  constructor(
+    public component: React.ReactNode,
+    public layoutAfterClose?: IMobileLayoutState) {
   }
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -102,7 +104,7 @@ export class EditLayoutState implements IMobileLayoutState {
   }
 
   async close(ctx: any): Promise<IMobileLayoutState> {
-    return new ScreenLayoutState();
+    return this.layoutAfterClose ?? new ScreenLayoutState();
   }
 
   hamburgerClick(): IMobileLayoutState {
