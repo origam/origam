@@ -22,6 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   margin-top: 10px;
   display: flex;
   flex-direction: column;
+  flex: auto;
+  overflow-y: clip;
 }
 
 .filterRow{
@@ -37,6 +39,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   justify-content: center;
   display: flex;
   font-size: 16px;
+  margin-top: 5px;
 }
 
 .rowContainer{
