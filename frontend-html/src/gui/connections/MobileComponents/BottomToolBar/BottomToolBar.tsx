@@ -48,30 +48,30 @@ export class BottomToolBar extends React.Component<{
   }
 
   @computed
-  get activeScreen(){
+  get activeScreen() {
     return getActiveScreen(this.props.ctx)?.content?.formScreen;
   }
 
-  getActions(){
+  getActions() {
     const screenActions = getActiveScreenActions(this.props.ctx)
       .flatMap(actionGroup => actionGroup.actions)
       .filter(action => getIsEnabledAction(action));
 
 
     const dataViews = this.activeScreen?.dataViews;
-    if(!dataViews || dataViews.length === 0){
+    if (!dataViews || dataViews.length === 0) {
       return screenActions;
     }
 
     let dataView;
-    if( dataViews.length === 1){
+    if (dataViews.length === 1) {
       dataView = dataViews[0];
     }
-    if(!this.mobileState.activeDataViewId){
+    if (!this.mobileState.activeDataViewId) {
       return screenActions;
     }
     dataView = dataViews.find(dataView => dataView.id === this.mobileState.activeDataViewId);
-    if(!dataView){
+    if (!dataView) {
       return screenActions;
     }
     const sectionActions = getPanelViewActions(dataView)
@@ -81,7 +81,7 @@ export class BottomToolBar extends React.Component<{
     return screenActions.concat(sectionActions);
   }
 
-  showNextButton(){
+  showNextButton() {
     return this.activeScreen && this.activeScreen.showWorkflowNextButton;
   }
 
@@ -94,11 +94,18 @@ export class BottomToolBar extends React.Component<{
       <div className={S.root}>
         {this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen) &&
           <BottomIcon
-          iconPath={"./icons/noun-close-25798.svg"}
-          onClick={async () => {
-            await this.props.mobileState.close()
-          }}
-        />}
+            iconPath={"./icons/noun-close-25798.svg"}
+            onClick={async () => {
+              await this.props.mobileState.close()
+            }}
+          />}
+        {this.props.mobileState.layoutState.showOkButton &&
+          <BottomIcon
+            caption={"Ok"}
+            onClick={async () => {
+              await this.props.mobileState.close()
+            }}
+          />}
         {actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden &&
           <ActionDropUp
             actions={actions}
@@ -110,7 +117,7 @@ export class BottomToolBar extends React.Component<{
             onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
           />
         }
-        {!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible  &&
+        {!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible &&
           <BottomIcon
             className={actionButtonsState?.isDirty ? S.isRed : ""}
             iconPath={"./icons/noun-save-1014816.svg"}

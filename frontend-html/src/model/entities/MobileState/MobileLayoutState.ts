@@ -11,6 +11,7 @@ export interface IMobileLayoutState {
   showSearchButton: boolean;
   showHamburgerMenuButton: boolean;
   heading: string;
+  showOkButton: boolean;
 
   showCloseButton(someScreensAreOpen: boolean): boolean;
 
@@ -26,6 +27,7 @@ export class MenuLayoutState implements IMobileLayoutState {
   showOpenTabCombo = false;
   showSearchButton = true;
   showHamburgerMenuButton = false;
+  showOkButton = false;
   heading = T("Menu", "menu");
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -48,6 +50,7 @@ export class AboutLayoutState implements IMobileLayoutState {
   showOpenTabCombo = false;
   showSearchButton = true;
   showHamburgerMenuButton = true;
+  showOkButton = false;
   heading = T("About", "about_application");
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -70,6 +73,7 @@ export class SearchLayoutState implements IMobileLayoutState {
   showOpenTabCombo = false;
   showSearchButton = false;
   showHamburgerMenuButton = true;
+  showOkButton = false;
   heading = T("Search", "mobile_search_title");
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -92,6 +96,7 @@ export class EditLayoutState implements IMobileLayoutState {
   showOpenTabCombo = false;
   showSearchButton = false;
   showHamburgerMenuButton = false;
+  showOkButton = true;
   heading = "";
 
   constructor(
@@ -100,7 +105,7 @@ export class EditLayoutState implements IMobileLayoutState {
   }
 
   showCloseButton(someScreensAreOpen: boolean) {
-    return true;
+    return false;
   }
 
   async close(ctx: any): Promise<IMobileLayoutState> {
@@ -119,6 +124,7 @@ export class ScreenLayoutState implements IMobileLayoutState {
   showOpenTabCombo = true;
   showSearchButton = true;
   showHamburgerMenuButton = true;
+  showOkButton = false;
   heading = "";
 
   showCloseButton(someScreensAreOpen: boolean) {

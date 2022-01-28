@@ -22,21 +22,25 @@ import S from "gui/connections/MobileComponents/BottomToolBar/BottomIcon.module.
 import { Icon } from "@origam/components";
 
 export const BottomIcon: React.FC<{
-  iconPath: string;
+  iconPath?: string;
   onClick: ()=>void;
   hidden?: boolean;
   className?: string;
+  caption?: string;
 }> = (props) => {
   return (
     <div
       className={S.root}
       onClick={props.onClick}
     >
-      <div className={S.icon}>
+      {props.iconPath && <div className={S.icon}>
         <Icon
           src={props.iconPath}
           className={props.className + " " + (props.hidden ? S.hidden : "")}
         />
+      </div>}
+      <div className={S.caption}>
+        {props.caption}
       </div>
     </div>
   );
