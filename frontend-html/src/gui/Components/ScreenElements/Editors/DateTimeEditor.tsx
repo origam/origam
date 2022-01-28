@@ -36,7 +36,20 @@ class CalendarWidget extends React.Component<{
   selectedDay?: moment.Moment;
   onDayClick?(event: any, day: moment.Moment): void;
 }> {
-  @observable.ref displayedMonth = moment(this.props.initialDisplayDate).startOf("month");
+  @observable.ref
+  displayedMonth = moment(this.props.initialDisplayDate).startOf("month");
+
+  componentDidUpdate(
+    prevProps: Readonly<{ initialDisplayDate?: moment.Moment; selectedDay?: moment.Moment; onDayClick?(event: any, day: moment.Moment): void }>,
+    prevState: Readonly<{}>,
+    snapshot?: any) {
+    if(
+      this.props.initialDisplayDate !== prevProps.initialDisplayDate &&
+      this.props.initialDisplayDate?.isValid()
+    ){
+      this.displayedMonth = moment(this.props.initialDisplayDate).startOf("month");
+    }
+  }
 
   getDayHeaders() {
     const result: any[] = [];
