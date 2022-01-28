@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root{
+.root {
   height: 100%;
   margin-top: 10px;
   display: flex;
@@ -26,23 +26,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow-y: clip;
 }
 
-.filterRow{
+.filterRow {
   padding-left: 5px;
+  margin-bottom: 5px;
   display: flex;
+  align-items: center;
+
   > * {
     width: 33%;
     margin-right: 5px;
   }
+
+  * {
+    &:last-of-type {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+  }
+
+  input {
+    margin-right: 5px;
+    margin-left: 0;
+  }
 }
 
-.rowCount{
+.rowCount {
   justify-content: center;
   display: flex;
   font-size: 16px;
   margin-top: 5px;
 }
 
-.rowContainer{
+.rowContainer {
   overflow-y: auto;
   height: 100%;
+}
+
+.label{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -40,7 +40,9 @@ export const FilterEditor: React.FC<{
           propertiesToDisplay.map(property =>
             <div className={S.filterRow}>
               <Provider property={property}>
-                <div>{property.name}</div>
+                <div className={S.label}>
+                  {property.name}
+                </div>
                 <FilterSettings
                   key={`filter-settings-${property.id}`}
                   autoFocus={false} ctx={props.dataView}/>
