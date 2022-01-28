@@ -25,7 +25,7 @@ import { action, computed, observable } from "mobx";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
 import moment, { Moment } from "moment";
-import SD from "gui/Components/ScreenElements/Editors/DateTimeEditor.module.scss";
+import SD from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor.module.scss";
 import S from "gui/connections/MobileComponents/Form/MobileDateTimeEditor.module.scss"
 import cx from "classnames";
 import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
@@ -34,7 +34,7 @@ import { toOrigamServerString } from "@origam/utils";
 import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { CalendarWidget } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { CalendarWidget } from "gui/Components/ScreenElements/Editors/DateTimeEditor/CalendarWidget";
 
 
 class DateEditorState {

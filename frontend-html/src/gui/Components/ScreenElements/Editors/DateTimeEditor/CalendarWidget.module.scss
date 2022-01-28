@@ -17,40 +17,27 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import "~@origam/styles/dist/styles/EditorsCommon.module";
-@import "~@origam/styles/dist/styles/commonStyles";
-@import "~@origam/styles/dist/styles/definitions";
+@import "../../../../../../node_modules/@origam/styles/dist/styles/EditorsCommon.module";
+@import "../../../../../../node_modules/@origam/styles/dist/styles/commonStyles";
+@import "../../../../../../node_modules/@origam/styles/dist/styles/definitions";
 
+.container {
 
-.droppedPanelContainer {
-  z-index: 1000;
-  background-color:var(--background1);
-  overflow: hidden;
-  @include popoverShadow;
-  width: 224px;
-
-  box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
-  border: 1px solid var(--background5);
-  @include border-radius(4px);
 }
 
-.calendarWidgetContainer {
-  
-}
-
-.calendarWidgetDayTable {
+.dayTable {
   display: flex;
   flex-direction: column;
 }
 
-.calendarWidgetRow {
+.row {
   display: flex;
   flex-direction: row;
   border: none;
   height: 30px;
 }
 
-.calendarWidgetCell {
+.cell {
   width: 14.3%;
   display: flex;
   align-items: center;
@@ -62,18 +49,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--background8);
 }
 
-.calendarWidgetCell:hover {
+.cell:hover {
   background-color: var(--background4);
 }
 
-.calendarWidgetSelectedDay {
+.selectedDay {
   background: var(--foreground1);
   color: var(--background1);
   font-weight: 700;
   @include border-radius(5em);
 }
 
-.calendarWidgetDayHeaderCell {
+.dayHeaderCell {
   width: 14.3%;
   display: flex;
   align-items: center;
@@ -86,12 +73,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   font-weight: 700;
 }
 
-.calendarWidgetNeighbourMonthCell {
-  //background-color: var(--background3);
+.neighbourMonthCell {
   color: var(--background5);
 }
 
-.calendarWidgetHeader {
+.header {
   flex-grow: 1;
   display: flex;
   flex-direction: row;
@@ -101,7 +87,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border-bottom: 1px solid var(--background5);
 }
 
-.calendarWidgetControlBtn {
+.controlBtn {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -126,48 +112,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 
-.calendarWidgetYearControls {
+.yearControls {
   flex-shrink: 0;
 }
 
-.calendarWidgetMonthControls {
+.monthControls {
   flex-shrink: 0;
 }
 
-.calendarWidgetTitle {
+.title {
   flex-grow: 1;
-  //display: flex;
-  //flex-direction: row;
   align-items: center;
   justify-content: center;
- white-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1.1em;
   font-weight: 700;
-}
-
-.dropdownSymbol {
-  @include dropdownSymbol;
-}
-
-.input {
-  @include input;
-}
-
-.notification {
-  @include notification;
-}
-
-.editorContainer {
-  @include editorContainer;
-}
-
-
-.formatHintTooltip {
-  padding: 5px;
-  position: fixed;
-  border: 1px solid var(--background8);
-  background-color:var(--background1);
-  z-index: 5000;
 }

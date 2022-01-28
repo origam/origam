@@ -31,7 +31,7 @@ import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
 import { getSelectedProperty } from "model/selectors/TablePanelView/getSelectedProperty";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
-import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor";
 import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
 import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";

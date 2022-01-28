@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";

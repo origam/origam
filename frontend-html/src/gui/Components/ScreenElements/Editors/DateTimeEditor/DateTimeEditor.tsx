@@ -17,166 +17,18 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import cx from "classnames";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { action, computed, observable, runInAction } from "mobx";
 import { observer, Observer } from "mobx-react";
 import moment, { Moment } from "moment";
 import * as React from "react";
 import { toOrigamServerString } from "@origam/utils";
-import { IFocusable } from "../../../../model/entities/FormFocusManager";
-import { getDefaultCsDateFormatDataFromCookie } from "../../../../utils/cookies";
-import DateCompleter from "./DateCompleter";
-import S from "./DateTimeEditor.module.scss";
+import { IFocusable } from "model/entities/FormFocusManager";
+import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
+import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
+import S from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor.module.scss";
 import { createPortal } from "react-dom";
-
-@observer
-export class CalendarWidget extends React.Component<{
-  initialDisplayDate?: moment.Moment;
-  selectedDay?: moment.Moment;
-  onDayClick?(event: any, day: moment.Moment): void;
-}> {
-  @observable.ref
-  displayedMonth = moment(this.props.initialDisplayDate).startOf("month");
-
-  componentDidUpdate(
-    prevProps: Readonly<{ initialDisplayDate?: moment.Moment; selectedDay?: moment.Moment; onDayClick?(event: any, day: moment.Moment): void }>,
-    prevState: Readonly<{}>,
-    snapshot?: any) {
-    if(
-      this.props.initialDisplayDate !== prevProps.initialDisplayDate &&
-      this.props.initialDisplayDate?.isValid()
-    ){
-      this.displayedMonth = moment(this.props.initialDisplayDate).startOf("month");
-    }
-  }
-
-  getDayHeaders() {
-    const result: any[] = [];
-    for (
-      let day = moment(this.displayedMonth).startOf("week"), i = 0;
-      i < 7;
-      day.add({days: 1}), i++
-    ) {
-      result.push(
-        <div
-          key={day.toISOString()}
-          className={S.calendarWidgetDayHeaderCell}
-          title={day.format("dddd")}
-        >
-          {day.format("dd")[0]}
-        </div>
-      );
-    }
-    return result;
-  }
-
-  getDates(weekInc: number) {
-    const result: any[] = [];
-    const today = moment();
-    for (
-      let day = moment(this.displayedMonth).startOf("week").add({weeks: weekInc}), i = 0;
-      i < 7;
-      day.add({days: 1}), i++
-    ) {
-      const isNeighbourMonth = day.month() !== this.displayedMonth.month();
-      const isSelectedDay = day.isSame(this.props.selectedDay, "day");
-      const isToday = day.isSame(today, "days");
-      const dayCopy = moment(day);
-      result.push(
-        <div
-          key={day.toISOString()}
-          className={cx(S.calendarWidgetCell, {
-            [S.calendarWidgetNeighbourMonthCell]: isNeighbourMonth,
-            [S.calendarWidgetSelectedDay]: isSelectedDay,
-            isToday,
-          })}
-          onClick={(event: any) => this.handleDayClick(event, dayCopy)}
-        >
-          {day.format("D")}
-        </div>
-      );
-    }
-    return result;
-  }
-
-  getDateRows() {
-    const result: any[] = [];
-    for (let i = 0; i < 6; i++) {
-      result.push(<div key={i} className={S.calendarWidgetRow}>{this.getDates(i)}</div>);
-    }
-    return result;
-  }
-
-  @action.bound
-  handleMonthDecClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).subtract({months: 1});
-  }
-
-  @action.bound
-  handleMonthIncClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).add({months: 1});
-  }
-
-  @action.bound
-  handleYearDecClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).subtract({years: 1});
-  }
-
-  @action.bound
-  handleYearIncClick(event: any) {
-    this.displayedMonth = moment(this.displayedMonth).add({years: 1});
-  }
-
-  @action.bound handleDayClick(event: any, day: moment.Moment) {
-    this.props.onDayClick && this.props.onDayClick(event, day);
-  }
-
-  render() {
-    return (
-      <div
-        className={S.calendarWidgetContainer}
-        onMouseDown={(e) => {
-          /* Prevent mousedown default action causong onblur being fired on the editors input
-              which triggered data update
-          */
-          e.preventDefault();
-        }}
-      >
-        <div className={S.calendarWidgetDayTable}>
-          <div className={S.calendarWidgetRow}>
-            <div className={S.calendarWidgetHeader}>
-              <div className={S.calendarWidgetMonthControls}>
-                <button className={S.calendarWidgetControlBtn} onClick={this.handleMonthDecClick}>
-                  <i className="fas fa-caret-left"/>
-                </button>
-                <button className={S.calendarWidgetControlBtn} onClick={this.handleMonthIncClick}>
-                  <i className="fas fa-caret-right"/>
-                </button>
-              </div>
-              <div
-                className={S.calendarWidgetTitle}
-                title={this.displayedMonth.format("YYYY MMMM")}
-              >
-                {this.displayedMonth.format("YYYY MMMM")}
-              </div>
-              <div className={S.calendarWidgetYearControls}>
-                <button className={S.calendarWidgetControlBtn} onClick={this.handleYearDecClick}>
-                  <i className="fas fa-caret-down"/>
-                </button>
-                <button className={S.calendarWidgetControlBtn} onClick={this.handleYearIncClick}>
-                  <i className="fas fa-caret-up"/>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className={S.calendarWidgetRow}>{this.getDayHeaders()}</div>
-          {this.getDateRows()}
-        </div>
-      </div>
-    );
-  }
-}
+import { CalendarWidget } from "gui/Components/ScreenElements/Editors/DateTimeEditor/CalendarWidget";
 
 @observer
 export class DateTimeEditor extends React.Component<{

@@ -36,7 +36,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
-import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor";
 import { FormFocusManager } from "model/entities/FormFocusManager";
 import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
