@@ -30,6 +30,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { IDockType } from "model/entities/types/IProperty";
 
 const autoUpdateUntervalMs = 60_000;
 
@@ -56,6 +57,7 @@ export class TextEditor extends React.Component<{
   onEditorBlur?(event: any): void;
   onAutoUpdate?(value: string): void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  dock?: IDockType;
 }> {
   disposers: any[] = [];
   currentValue = this.props.value;
@@ -166,16 +168,18 @@ export class TextEditor extends React.Component<{
         );
       } else {
         return (
-          <RichTextEditor
-            value={this.props.value ?? ""}
-            onChange={(newValue: any) => {
-              this.currentValue = newValue;
-              this.props.onChange?.(undefined, newValue);
-            }}
-            refInput={this.refInput}
-            onBlur={this.props.onEditorBlur}
-            onFocus={this.handleFocus}
-          />
+          <div className={S.richTextWrappContainer} >
+              <RichTextEditor 
+                value={this.props.value ?? ""}
+                onChange={(newValue: any) => {
+                  this.currentValue = newValue;
+                  this.props.onChange?.(undefined, newValue);
+                }}
+                refInput={this.refInput}
+                onBlur={this.props.onEditorBlur}
+                onFocus={this.handleFocus}
+              />
+          </div>
         );
       }
     }
@@ -291,16 +295,12 @@ function RichTextEditor(props: {
   }, [props.value, internalEditorStateHtml]);
 
   return (
-    <div style={{overflow: "auto", width: "100%", height: "100%"}}>
-      <div style={{minWidth: 800, minHeight: 600}}>
         <Editor
           editorState={internalEditorState}
-          wrapperClassName="demo-wrapper"
-          editorClassName="demo-editor"
+          wrapperClassName={S.richTextWrappStyle}
+          editorClassName={S.richTextEditorStyle}
           onEditorStateChange={onEditorStateChange}
           onBlur={props.onBlur}
         />
-      </div>
-    </div>
   );
 }
