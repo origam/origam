@@ -27,6 +27,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   background-color:var(--background1);
   overflow: hidden;
   @include popoverShadow;
+  width: 224px;
 
   box-shadow: 0 0.5em 1.5em 0 rgba(var(--background8-rgb), 0.25);
   border: 1px solid var(--background5);
@@ -50,7 +51,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .calendarWidgetCell {
-  width: 32px;
+  width: 14.3%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +74,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .calendarWidgetDayHeaderCell {
-  width: 32px;
+  width: 14.3%;
   display: flex;
   align-items: center;
   justify-content: center;
