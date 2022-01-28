@@ -32,6 +32,8 @@ import { MobXProviderContext } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { MobileDateTimeEditor } from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 
 export const MobileFormViewEditor: React.FC<{
   value?: any;
@@ -52,7 +54,10 @@ export const MobileFormViewEditor: React.FC<{
     ? shadeHexColor(props.backgroundColor, -0.1)
     : props.backgroundColor;
 
-  function onChange(event: any, newValue: string[]){
+  function onChange(event: any, newValue: any) {
+    if(!row){
+      return;
+    }
     onFieldChange(props.property)({
       event: event,
       row: row!,
@@ -60,6 +65,8 @@ export const MobileFormViewEditor: React.FC<{
       value: newValue,
     });
   }
+
+  const onEditorBlur = (event: any) => onFieldBlur(props.property)(event);
 
   if (props.property!.column === "ComboBox") {
     return (
@@ -99,6 +106,21 @@ export const MobileFormViewEditor: React.FC<{
             />)
         }}
       />);
+  }
+  if (props.property!.column === "Date") {
+    return (
+      <MobileDateTimeEditor
+        value={props.value}
+        property={props.property}
+        outputFormat={props.property!.formatterPattern}
+        outputFormatToShow={props.property!.modelFormatterPattern}
+        isReadOnly={readOnly}
+        backgroundColor={backgroundColor}
+        foregroundColor={foregroundColor}
+        onChange={onChange}
+        onEditorBlur={onEditorBlur}
+      />
+    );
   }
   return (
     <FormViewEditor

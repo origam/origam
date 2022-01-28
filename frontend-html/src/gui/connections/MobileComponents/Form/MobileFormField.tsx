@@ -32,7 +32,7 @@ import { observable } from "mobx";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import S from "gui/Components/Form/FormField.module.scss";
-import { MobileFormViewEditor } from "gui/connections/MobileComponents/Form/FormViewEditor";
+import { MobileFormViewEditor } from "gui/connections/MobileComponents/Form/MobileFormViewEditor";
 
 @inject(({property}, {caption}) => {
   const rowId = getSelectedRowId(property);

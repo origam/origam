@@ -31,7 +31,7 @@ import S from "./DateTimeEditor.module.scss";
 import { createPortal } from "react-dom";
 
 @observer
-class CalendarWidget extends React.Component<{
+export class CalendarWidget extends React.Component<{
   initialDisplayDate?: moment.Moment;
   selectedDay?: moment.Moment;
   onDayClick?(event: any, day: moment.Moment): void;
@@ -544,7 +544,7 @@ export class DateTimeEditor extends React.Component<{
   }
 }
 
-function FormatHintTooltip(props: { boundingRect?: any; line1?: string; line2?: string }) {
+export function FormatHintTooltip(props: { boundingRect?: any; line1?: string; line2?: string }) {
   const [tooltipHeight, setTooltipHeight] = React.useState(0);
 
   function refTooltip(elm: any) {
