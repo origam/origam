@@ -22,7 +22,6 @@ import { MobileTagInputEditor } from "gui/connections/MobileComponents/Form/Comb
 import { getMobileState } from "model/selectors/getMobileState";
 import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import {
-  DropDownApi,
   FilterEditorData,
 } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagFilterEditor";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
@@ -40,6 +39,9 @@ import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/He
 import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
+import {
+  FilterDropDownApi
+} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
 
 export const MobileTagFilterEditor: React.FC<{
   setting: IFilterSetting;
@@ -92,7 +94,7 @@ function FullScreenFilterTagEditor(props: {
   const {lookupListCache} = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IMobileDropdownContext>(() => {
-    const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
+    const dropdownEditorApi: IDropdownEditorApi = new FilterDropDownApi(props.getOptions);
     const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.setting, props.onChange);
 
     const dropdownEditorDataTable = new DropdownDataTable(

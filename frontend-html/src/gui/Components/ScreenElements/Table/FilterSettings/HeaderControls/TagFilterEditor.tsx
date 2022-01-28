@@ -21,6 +21,9 @@ import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEdit
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup.module.scss";
 import { action, computed } from "mobx";
+import {
+  FilterDropDownApi
+} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
 
 export function TagFilterEditor(props: {
   lookup: ILookup;
@@ -36,7 +39,7 @@ export function TagFilterEditor(props: {
   const {lookupListCache} = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
-    const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
+    const dropdownEditorApi: IDropdownEditorApi = new FilterDropDownApi(props.getOptions);
     const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.setting);
 
     const dropdownEditorDataTable = new DropdownDataTable(
@@ -183,11 +186,3 @@ export class FilterEditorData implements IDropdownEditorData {
   }
 }
 
-export class DropDownApi implements IDropdownEditorApi {
-  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {
-  }
-
-  *getLookupList(searchTerm: string): Generator {
-    return yield this.getOptions("");
-  }
-}
