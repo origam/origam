@@ -706,7 +706,7 @@ namespace Origam.Security.Identity
                     Resources.ErrorUserIdNotGuid);
             }
             Task<string> task = userManager
-                .GeneratePasswordResetTokenAsync1(
+                .GeneratePasswordResetTokenAsync(
                 Parameters["UserId"].ToString());
             if (task.IsFaulted)
             {
