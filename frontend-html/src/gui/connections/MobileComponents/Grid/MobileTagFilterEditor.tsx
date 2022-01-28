@@ -18,10 +18,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext, useState } from "react";
+import { MobileTagInputEditor } from "gui/connections/MobileComponents/Form/ComboBox/MobileTagInputEditor";
+import { getMobileState } from "model/selectors/getMobileState";
+import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import {
+  DropDownApi,
+  FilterEditorData,
+} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagFilterEditor";
+import { IFilterSetting } from "model/entities/types/IFilterSetting";
+import { CancellablePromise } from "mobx/lib/api/flow";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
-import { CancellablePromise } from "mobx/lib/api/flow";
-import { MobXProviderContext, observer } from "mobx-react";
+import { MobXProviderContext } from "mobx-react";
 import { IMobileDropdownContext } from "gui/connections/MobileComponents/Form/ComboBox/ComboBox";
 import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
@@ -30,77 +38,62 @@ import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/Dr
 import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownBehavior";
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
 import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
-import {
-  FilterDropDownApi,
-  FilterEditorData
-} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/TagLookupFilterEditor";
-import { MobileTagInputEditor } from "gui/connections/MobileComponents/Form/ComboBox/MobileTagInputEditor";
-import { getMobileState } from "model/selectors/getMobileState";
-import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
-import { IFilterSetting } from "model/entities/types/IFilterSetting";
 
-export const MobileTagLookupFilterEditor: React.FC<{
-  lookup: ILookup;
-  property: IProperty;
-  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
-  onChange(selectedItems: Array<any>): void;
-  values: Array<any>;
-  autoFocus: boolean;
+export const MobileTagFilterEditor: React.FC<{
   setting: IFilterSetting;
-  id?: string;
-}> = observer((props) => {
-  return (
-    <MobileTagInputEditor
-      key={props.id}
-      isReadOnly={false}
-      property={props.property}
-      values={props.setting.val1 ?? []}
-      onChange={(event, newValue) => props.onChange(newValue)}
-      onPlusButtonClick={() => {
-        let mobileState = getMobileState(props.property);
-        let layoutBeforeEditing = mobileState.layoutState;
-        mobileState.layoutState = new EditLayoutState(
-          <FullScreenFilterLookupTagEditor
-            id={props.id}
-            lookup={props.lookup}
-            property={props.property}
-            getOptions={props.getOptions}
-            onChange={(selectedItems) => {
-              props.onChange(selectedItems);
-              mobileState.layoutState = layoutBeforeEditing;
-            }}
-            values={props.setting.val1 ?? []}
-            autoFocus={props.autoFocus}
-          />,
-          layoutBeforeEditing
-        )
-      }}
-    />);
-});
+  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
+  lookup: ILookup;
+  property: IProperty;
+  autoFocus: boolean;
+  id: string;
+}> = (props) => {
+  return <MobileTagInputEditor
+    key={props.id}
+    isReadOnly={false}
+    property={props.property}
+    values={props.setting.val1 ?? []}
+    onPlusButtonClick={() => {
+      let mobileState = getMobileState(props.property);
+      let layoutBeforeEditing = mobileState.layoutState;
+      mobileState.layoutState = new EditLayoutState(
+        <FullScreenFilterTagEditor
+          id={props.id}
+          lookup={props.lookup}
+          property={props.property}
+          getOptions={props.getOptions}
+          onChange={() => {
+            mobileState.layoutState = layoutBeforeEditing;
+          }}
+          setting={props.setting}
+          values={props.setting.val1 ?? []}
+          autoFocus={props.autoFocus}
+        />,
+        layoutBeforeEditing
+      )
+    }}
+  />
+}
 
 
-function FullScreenFilterLookupTagEditor(props: {
+function FullScreenFilterTagEditor(props: {
   lookup: ILookup;
   property: IProperty;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
-  onChange(selectedItems: Array<any>): void;
   values: Array<any>;
+  onChange: () => void;
+  setting: IFilterSetting;
   autoFocus: boolean;
-  id?: string;
+  id: string;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-
-
   const workbench = mobxContext.workbench;
   const {lookupListCache} = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IMobileDropdownContext>(() => {
-    const dropdownEditorApi: IDropdownEditorApi = new FilterDropDownApi(props.getOptions);
-    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.onChange);
-    dropdownEditorData.setValue(props.values);
+    const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
+    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.setting, props.onChange);
 
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
@@ -138,10 +131,6 @@ function FullScreenFilterLookupTagEditor(props: {
 
     const showUniqueValues = true;
 
-    const cached = getGroupingConfiguration(props.property).isGrouping
-      ? false
-      : props.property.lookup?.cached!
-
     const dropdownEditorSetup = new DropdownEditorSetup(
       props.property.id,
       props.lookup.lookupId,
@@ -153,7 +142,7 @@ function FullScreenFilterLookupTagEditor(props: {
       identifierIndex,
       props.property.parameters,
       props.property.lookup?.dropDownType!,
-      cached,
+      props.property.lookup?.cached!,
       !props.property.lookup?.searchByFirstColumnOnly,
       drivers
     );
@@ -166,6 +155,8 @@ function FullScreenFilterLookupTagEditor(props: {
     };
   });
 
+  (dropdownEditorInfrastructure.editorData as FilterEditorData).setting = props.setting;
+
   return (
     <ComboFullScreenEditor
       {...props}
@@ -176,3 +167,4 @@ function FullScreenFilterLookupTagEditor(props: {
     />
   );
 }
+

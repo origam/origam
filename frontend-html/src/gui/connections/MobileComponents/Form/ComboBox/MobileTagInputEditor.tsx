@@ -39,7 +39,7 @@ export const MobileTagInputEditor = (
       id?: string;
       property: IProperty;
       onPlusButtonClick: ()=> void;
-      onChange: (event: any, newValue: string[])=> void;
+      onChange?: (event: any, newValue: string[])=> void;
       values?: any[];
     }) => {
       const dataTable = getDataTable(props.property);
@@ -69,7 +69,7 @@ export const MobileTagInputEditor = (
         const index = values.indexOf(item);
         if (index > -1) {
           values.remove(item);
-          props.onChange(event, values);
+          props.onChange?.(event, values);
         }
       }
 
