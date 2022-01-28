@@ -152,7 +152,6 @@ export class TableViewEditor extends React.Component<{
             outputFormat={this.props.property!.formatterPattern}
             outputFormatToShow={this.props.property!.modelFormatterPattern}
             isReadOnly={readOnly}
-            isInvalid={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}

@@ -172,8 +172,6 @@ export class DateTimeEditor extends React.Component<{
   outputFormat: string;
   outputFormatToShow: string;
   isReadOnly?: boolean;
-  isInvalid?: boolean;
-  invalidMessage?: string;
   autoFocus?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
@@ -468,11 +466,6 @@ export class DateTimeEditor extends React.Component<{
               )}
             </Observer>
 
-            {this.props.isInvalid && (
-              <div className={S.notification} title={this.props.invalidMessage}>
-                <i className="fas fa-exclamation-circle red"/>
-              </div>
-            )}
             {!this.props.isReadOnly && (
               <div
                 className={S.dropdownSymbol}
@@ -525,11 +518,6 @@ export class DateTimeEditor extends React.Component<{
           onDoubleClick={this.props.onDoubleClick}
           onKeyDown={this.handleKeyDown}
         />
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }
