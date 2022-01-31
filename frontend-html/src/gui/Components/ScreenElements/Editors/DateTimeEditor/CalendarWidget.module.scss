@@ -37,7 +37,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 30px;
 }
 
-.cell {
+:global(.calendarWidgetCell) {
   width: 14.3%;
   display: flex;
   align-items: center;

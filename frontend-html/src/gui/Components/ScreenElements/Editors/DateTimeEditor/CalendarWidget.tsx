@@ -61,7 +61,7 @@ export class CalendarWidget extends React.Component<{
       result.push(
         <div
           key={day.toISOString()}
-          className={cx(S.cell, {
+          className={cx("calendarWidgetCell", {
             [S.neighbourMonthCell]: isNeighbourMonth,
             [S.selectedDay]: isSelectedDay,
             isToday,
