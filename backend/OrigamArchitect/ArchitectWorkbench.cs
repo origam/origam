@@ -2151,6 +2151,8 @@ namespace OrigamArchitect
 			OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
                 = ServiceManager.Services.GetService<IDeploymentService>();
+			IParameterService parameterService =
+							ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
 #if ORIGAM_CLIENT
 			deployment.CanUpdate(_schema.ActiveExtension);
@@ -2181,24 +2183,12 @@ namespace OrigamArchitect
 				}
 			}
 #else
-            ApplicationDataDisconnectedMode 
+			ApplicationDataDisconnectedMode 
                 = !TestConnectionToApplicationDataDatabase();
-			IParameterService parameterService =
-				ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
-			try
-			{
-				parameterService.RefreshParameters();
-			}
-			catch (Exception ex)
-			{
-				// show the error but go on
-				// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages
-				AsMessageBox.ShowError(this, ex.Message, strings.ErrorWhileLoadingParameters_Message, ex);
-			}
 			if (ApplicationDataDisconnectedMode)
             {
-                UpdateTitle();
+				parameterService.PrepareParameters();
+				UpdateTitle();
                 return;
             }
             bool isEmpty = deployment.IsEmptyDatabase();
@@ -2231,11 +2221,20 @@ namespace OrigamArchitect
             }
 
 #endif
-
-#if ! ORIGAM_CLIENT
-            // we have to initialize the new user after parameter service gets loaded
-            // otherwise it would fail generating SQL statements
-            if (isEmpty)
+			try
+			{
+				parameterService.RefreshParameters();
+			}
+			catch (Exception ex)
+			{
+				// show the error but go on
+				// error can occur e.g. when duplicate constant name is loaded, e.g. due to incompatible packages
+				AsMessageBox.ShowError(this, ex.Message, strings.ErrorWhileLoadingParameters_Message, ex);
+			}
+#if !ORIGAM_CLIENT
+			// we have to initialize the new user after parameter service gets loaded
+			// otherwise it would fail generating SQL statements
+			if (isEmpty)
             {
                 string userName = SecurityManager.CurrentPrincipal.Identity.Name;
                 if (MessageBox.Show(string.Format(strings.AddUserToUserList_Question,
