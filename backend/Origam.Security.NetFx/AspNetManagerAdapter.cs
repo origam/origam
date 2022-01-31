@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNet.Identity;
@@ -134,7 +135,7 @@ namespace Origam.Security.Identity
                 .GetPasswordResetTokenFromEmailAsync(email);
         }
 
-        public async Task<string> GeneratePasswordResetTokenAsync1(string userId)
+        public async Task<string> GeneratePasswordResetTokenAsync(string userId)
         {
             return await aspNetUserManager.GeneratePasswordResetTokenAsync(
                 userId);
