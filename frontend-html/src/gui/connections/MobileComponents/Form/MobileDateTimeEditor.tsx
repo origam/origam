@@ -128,8 +128,14 @@ export const FullScreenDateTimeEditor: React.FC<{
           />
           <button
             className={S.autoCompleteButton}
+            onClick={(event)=> props.editorModel.onClearClick(event)}
           >
-            Auto complete
+            X
+          </button>
+          <button
+            className={S.autoCompleteButton}
+          >
+            Auto Complete
           </button>
         </div>
         <div className={S.fullScreenEditorInfoRow}>

@@ -60,6 +60,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .autoCompleteButton{
   white-space: nowrap;
+  border: 1px solid var(--background5);
+  border-radius: 0 2px 2px 0;
+  background-color: var(--background2);
 }
 
 .fullScreenEditorRoot :global(.calendarWidgetCell) {

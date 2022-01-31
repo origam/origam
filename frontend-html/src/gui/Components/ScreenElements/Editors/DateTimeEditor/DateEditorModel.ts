@@ -136,4 +136,9 @@ export class DateEditorModel {
     this.onChangeByCalendar && this.onChangeByCalendar(event, day.toISOString(true));
     this.onChange && this.onChange(event, toOrigamServerString(day));
   }
+
+  onClearClick(event: any){
+    this.dirtyTextualValue = undefined;
+    this.onChange && this.onChange(event, null);
+  }
 }
