@@ -20,15 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { action, computed, observable, runInAction } from "mobx";
 import { observer, Observer } from "mobx-react";
-import moment, { Moment } from "moment";
+import moment from "moment";
 import * as React from "react";
-import { toOrigamServerString } from "@origam/utils";
 import { IFocusable } from "model/entities/FormFocusManager";
-import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
-import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
 import S from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor.module.scss";
 import { createPortal } from "react-dom";
 import { CalendarWidget } from "gui/Components/ScreenElements/Editors/DateTimeEditor/CalendarWidget";
+import { DateEditorState } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorState";
 
 @observer
 export class DateTimeEditor extends React.Component<{
@@ -55,6 +53,15 @@ export class DateTimeEditor extends React.Component<{
 
   refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
   elmDropdowner: Dropdowner | null = null;
+
+  editorState = new DateEditorState(
+    this.props.value,
+    this.props.outputFormat,
+    this.props.onChange,
+    this.props.onClick,
+    this.props.onKeyDown,
+    this.props.onEditorBlur,
+    this.props.onChangeByCalendar);
 
   @action.bound handleDropperClick(event: any) {
     event.stopPropagation();
@@ -97,9 +104,10 @@ export class DateTimeEditor extends React.Component<{
   componentDidUpdate(prevProps: { value: string | null }) {
     runInAction(() => {
       if (prevProps.value !== null && this.props.value === null) {
-        this.dirtyTextualValue = "";
+        this.editorState.dirtyTextualValue = "";
       }
     });
+    this.editorState.value = this.props.value;
   }
 
   @action.bound
@@ -135,61 +143,14 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleInputBlur(event: any) {
     this.setShowFormatHint(false);
-    const dateCompleter = this.getDateCompleter();
-    const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
-    if (completedMoment) {
-      this.props.onChange?.(event, toOrigamServerString(completedMoment));
-    } else if (this.momentValue?.isValid()) {
-      this.props.onChange?.(event, toOrigamServerString(this.momentValue));
-    }
-
-    this.dirtyTextualValue = undefined;
-    this.props.onEditorBlur && this.props.onEditorBlur(event);
-  }
-
-  private get autoCompletedMoment() {
-    const dateCompleter = this.getDateCompleter();
-    return dateCompleter.autoComplete(this.dirtyTextualValue);
-  }
-
-  private get autocompletedText() {
-    const completedMoment = this.autoCompletedMoment;
-    if (completedMoment) {
-      if (this.autoCompletedMoment?.isValid()) {
-        return this.formatMomentValue(this.autoCompletedMoment);
-      } else return "?";
-    } else {
-      if (this.momentValue?.isValid()) {
-        return this.formatMomentValue(this.momentValue);
-      } else return "?";
-    }
+    this.editorState.handleInputBlur(event);
   }
 
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Enter" || event.key === "Tab") {
-      const completedMoment = this.autoCompletedMoment;
-      if (completedMoment) {
-        this.props.onChange?.(event, toOrigamServerString(completedMoment));
-      } else if (this.momentValue?.isValid()) {
-        this.props.onChange?.(event, toOrigamServerString(this.momentValue));
-      }
-      this.dirtyTextualValue = undefined;
-    } else if (event.key === "Escape") {
+    if (event.key === "Escape") {
       this.setShowFormatHint(false);
     }
-    this.props.onKeyDown?.(event);
-  }
-
-  @action.bound getDateCompleter() {
-    const formatData = getDefaultCsDateFormatDataFromCookie();
-    return new DateCompleter(
-      formatData.defaultDateSequence,
-      this.props.outputFormat,
-      formatData.defaultDateSeparator,
-      formatData.defaultTimeSeparator,
-      formatData.defaultDateTimeSeparator,
-      () => moment()
-    );
+    this.editorState.handleKeyDown(event);
   }
 
   @action.bound handleContainerMouseDown(event: any) {
@@ -215,56 +176,22 @@ export class DateTimeEditor extends React.Component<{
     }
   }
 
-  @observable dirtyTextualValue: string | undefined;
-
-  get momentValue() {
-    if (this.dirtyTextualValue) {
-      return moment(this.dirtyTextualValue, this.props.outputFormat);
-    }
-    return !!this.props.value ? moment(this.props.value) : null;
-  }
-
-  formatMomentValue(value: Moment | null | undefined) {
-    if (!value) return "";
-    // if (value.hour() === 0 && value.minute() === 0 && value.second() === 0) {
-    //   const expectedDateFormat = this.props.outputFormat.split(" ")[0];
-    //   return value.format(expectedDateFormat);
-    // }
-    return value.format(this.props.outputFormat);
-  }
-
-  get formattedMomentValue() {
-    return this.formatMomentValue(this.momentValue);
-  }
-
-  @computed get textfieldValue() {
-    return this.dirtyTextualValue !== undefined && this.dirtyTextualValue !== ""
-      ? this.dirtyTextualValue
-      : this.formattedMomentValue;
-  }
-
   @computed get isTooltipShown() {
     return (
-      this.textfieldValue !== undefined &&
-      (!moment(this.textfieldValue, this.props.outputFormat) ||
-        this.formattedMomentValue !== this.textfieldValue)
+      this.editorState.textFieldValue !== undefined &&
+      (!moment(this.editorState.textFieldValue, this.props.outputFormat) ||
+        this.editorState.formattedMomentValue !== this.editorState.textFieldValue)
     );
   }
 
-  @action.bound handleTextfieldChange(event: any) {
+  @action.bound handleTextFieldChange(event: any) {
     this.setShowFormatHint(true);
-    this.dirtyTextualValue = event.target.value;
-    if (this.dirtyTextualValue === "") {
-      this.props.onChange && this.props.onChange(event, null);
-      return;
-    }
+    this.editorState.handleTextFieldChange(event);
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
-    this.dirtyTextualValue = undefined;
-    this.props.onChangeByCalendar && this.props.onChangeByCalendar(event, day.toISOString(true));
-    this.props.onChange && this.props.onChange(event, toOrigamServerString(day));
+    this.editorState.handleDayClick(event, day);
   }
 
   @action.bound
@@ -302,13 +229,13 @@ export class DateTimeEditor extends React.Component<{
                   {this.isShowFormatHintTooltip && (
                     <FormatHintTooltip
                       boundingRect={this.inputRect}
-                      line1={this.autocompletedText}
+                      line1={this.editorState.autocompletedText}
                       line2={this.props.outputFormatToShow}
                     />
                   )}
                   <input
                     id={this.props.id}
-                    title={this.autocompletedText + '\n' + this.props.outputFormatToShow}
+                    title={this.editorState.autocompletedText + '\n' + this.props.outputFormatToShow}
                     style={{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
@@ -320,9 +247,9 @@ export class DateTimeEditor extends React.Component<{
                     ref={(elm) => {
                       this.refInput(elm);
                     }}
-                    value={this.textfieldValue}
+                    value={this.editorState.textFieldValue}
                     readOnly={this.props.isReadOnly}
-                    onChange={this.handleTextfieldChange}
+                    onChange={this.handleTextFieldChange}
                     onClick={this.props.onClick}
                     onDoubleClick={this.props.onDoubleClick}
                     onKeyDown={this.handleKeyDown}
@@ -346,8 +273,8 @@ export class DateTimeEditor extends React.Component<{
           <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}
-              initialDisplayDate={this.momentValue?.isValid() ? this.momentValue : moment()}
-              selectedDay={this.momentValue?.isValid() ? this.momentValue : moment()}
+              initialDisplayDate={this.editorState.momentValue?.isValid() ? this.editorState.momentValue : moment()}
+              selectedDay={this.editorState.momentValue?.isValid() ? this.editorState.momentValue : moment()}
             />
           </div>
         )}
@@ -370,15 +297,15 @@ export class DateTimeEditor extends React.Component<{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor,
           }}
-          title={this.autocompletedText + '\n' + this.props.outputFormat}
+          title={this.editorState.autocompletedText + '\n' + this.props.outputFormat}
           className={S.input}
           type="text"
           onBlur={this.handleInputBlur}
           onFocus={this.handleFocus}
           ref={this.refInput}
-          value={this.textfieldValue}
+          value={this.editorState.textFieldValue}
           readOnly={this.props.isReadOnly}
-          onChange={this.handleTextfieldChange}
+          onChange={this.handleTextFieldChange}
           onClick={this.props.onClick}
           onDoubleClick={this.props.onDoubleClick}
           onKeyDown={this.handleKeyDown}
