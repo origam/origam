@@ -52,14 +52,15 @@ export const MobileDateTimeEditor: React.FC<{
   onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onEditorBlur: (event: any) => void;
-  property: IProperty
+  property: IProperty;
+  editorState?: IEditorState;
 }> = observer((props) => {
 
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
 
-  const [editorState, setEditorState] = useState(
+  const [editorModel, setEditorModel] = useState(
     new DateEditorModel(
-      new MobileEditorState(props.property),
+      props.editorState ?? new MobileEditorState(props.property),
       props.outputFormat,
       props.onChange,
       props.onClick,
@@ -69,13 +70,15 @@ export const MobileDateTimeEditor: React.FC<{
   );
 
   function onClick() {
+    const previousLayout = mobileState.layoutState;
     mobileState.layoutState = new EditLayoutState(
       <FullScreenDateTimeEditor
         id={props.id}
-        editorState={editorState}
+        editorModel={editorModel}
         onClick={props.onClick}
         property={props.property}
-      />
+      />,
+      previousLayout
     )
   }
 
@@ -88,7 +91,7 @@ export const MobileDateTimeEditor: React.FC<{
           backgroundColor: props.backgroundColor,
         }}
       >
-        {editorState.textFieldValue}
+        {editorModel.textFieldValue}
       </div>
 
       {!props.isReadOnly && (
@@ -105,7 +108,7 @@ export const MobileDateTimeEditor: React.FC<{
 export const FullScreenDateTimeEditor: React.FC<{
   id?: string;
   onClick?: (event: any) => void;
-  editorState: DateEditorModel;
+  editorModel: DateEditorModel;
   property: IProperty
 }> = observer((props) => {
 
@@ -117,11 +120,11 @@ export const FullScreenDateTimeEditor: React.FC<{
             id={props.id}
             className={cx("input", S.input, S.fullScreenEditorInput)}
             type="text"
-            onBlur={props.editorState.handleInputBlur}
-            value={props.editorState.textFieldValue}
-            onChange={props.editorState.handleTextFieldChange}
+            onBlur={props.editorModel.handleInputBlur}
+            value={props.editorModel.textFieldValue}
+            onChange={props.editorModel.handleTextFieldChange}
             onClick={props.onClick}
-            onKeyDown={props.editorState.handleKeyDown}
+            onKeyDown={props.editorModel.handleKeyDown}
           />
           <button
             className={S.autoCompleteButton}
@@ -130,22 +133,22 @@ export const FullScreenDateTimeEditor: React.FC<{
           </button>
         </div>
         <div className={S.fullScreenEditorInfoRow}>
-          {"Format: " + props.editorState.outputFormat}
+          {"Format: " + props.editorModel.outputFormat}
         </div>
         <div className={S.fullScreenEditorInfoRow}>
-          {"Preview: " + props.editorState.autocompletedText}
+          {"Preview: " + props.editorModel.autocompletedText}
         </div>
       </div>
       <CalendarWidget
-        onDayClick={props.editorState.handleDayClick}
-        initialDisplayDate={props.editorState.momentValue?.isValid() ? props.editorState.momentValue : moment()}
-        selectedDay={props.editorState.momentValue?.isValid() ? props.editorState.momentValue : moment()}
+        onDayClick={props.editorModel.handleDayClick}
+        initialDisplayDate={props.editorModel.momentValue?.isValid() ? props.editorModel.momentValue : moment()}
+        selectedDay={props.editorModel.momentValue?.isValid() ? props.editorModel.momentValue : moment()}
       />
     </div>
   );
 });
 
-export class MobileEditorState implements IEditorState{
+export class MobileEditorState implements IEditorState {
 
   constructor(private property: IProperty) {
   }

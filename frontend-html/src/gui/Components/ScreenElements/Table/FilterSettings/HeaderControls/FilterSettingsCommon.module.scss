@@ -66,3 +66,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
+.mobileBetweenEditors{
+  display: flex;
+  flex-direction: column;
+  div:first-child{
+    margin-bottom: 5px;
+  }
+}
+
