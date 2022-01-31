@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Threading.Tasks;
 using System.Xml;
 using Origam.Security.Common;
@@ -43,7 +44,7 @@ namespace Origam.Security.Identity
         Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password);
         Task<string> GenerateEmailConfirmationTokenAsync(string userId);
         Task<TokenResult> GetPasswordResetTokenFromEmailAsync(string email);
-        Task<string> GeneratePasswordResetTokenAsync1(string userId);
+        Task<string> GeneratePasswordResetTokenAsync(string userId);
         Task<XmlDocument> GetPasswordAttributesAsync();
         IOrigamUser CreateUserObject(string userName);
     }

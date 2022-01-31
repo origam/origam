@@ -189,7 +189,7 @@ namespace Origam.ServerCore.Authorization
                     TokenValidityHours = 0};
             }
 
-            string token = await GenerateEmailConfirmationTokenAsync(user.BusinessPartnerId);
+            string token = await GeneratePasswordResetTokenAsync(user.BusinessPartnerId);
             
             return new TokenResult
             { Token = token,
@@ -197,9 +197,10 @@ namespace Origam.ServerCore.Authorization
                 TokenValidityHours = 24};
         }
 
-        public async Task<string> GeneratePasswordResetTokenAsync1(string userId)
+        public async Task<string> GeneratePasswordResetTokenAsync(string userId)
         {
-            return await GenerateEmailConfirmationTokenAsync(userId);
+            var user = await FindByIdAsync(userId);
+            return await coreUserManager.GeneratePasswordResetTokenAsync(user);
         }
 
         public Task<XmlDocument> GetPasswordAttributesAsync()
