@@ -80,14 +80,13 @@ export const MobileDateTimeEditor: React.FC<{
   }
 
   return (
-    <div className={SD.editorContainer}>
+    <div className={cx(S.input, SD.input)}>
       <div
         id={props.id}
         style={{
           color: props.foregroundColor,
           backgroundColor: props.backgroundColor,
         }}
-        className={cx(S.input, SD.input)}
       >
         {editorState.textFieldValue}
       </div>
@@ -95,7 +94,6 @@ export const MobileDateTimeEditor: React.FC<{
       {!props.isReadOnly && (
         <div
           onClick={onClick}
-          className={SD.dropdownSymbol}
         >
           <i className="far fa-calendar-alt"/>
         </div>
