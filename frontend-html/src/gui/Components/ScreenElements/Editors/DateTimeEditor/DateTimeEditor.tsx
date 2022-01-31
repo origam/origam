@@ -26,7 +26,20 @@ import { IFocusable } from "model/entities/FormFocusManager";
 import S from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor.module.scss";
 import { createPortal } from "react-dom";
 import { CalendarWidget } from "gui/Components/ScreenElements/Editors/DateTimeEditor/CalendarWidget";
-import { DateEditorState } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorState";
+import {
+  DateEditorModel,
+  IEditorState
+} from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
+
+
+class DesktopEditorState implements IEditorState{
+  constructor(value: string | null) {
+    this.value = value;
+  }
+
+  @observable
+  value : string | null;
+}
 
 @observer
 export class DateTimeEditor extends React.Component<{
@@ -54,8 +67,10 @@ export class DateTimeEditor extends React.Component<{
   refDropdowner = (elm: Dropdowner | null) => (this.elmDropdowner = elm);
   elmDropdowner: Dropdowner | null = null;
 
-  editorState = new DateEditorState(
-    this.props.value,
+  editorState = new DesktopEditorState(this.props.value);
+
+  editorModel = new DateEditorModel(
+    this.editorState,
     this.props.outputFormat,
     this.props.onChange,
     this.props.onClick,
@@ -104,7 +119,7 @@ export class DateTimeEditor extends React.Component<{
   componentDidUpdate(prevProps: { value: string | null }) {
     runInAction(() => {
       if (prevProps.value !== null && this.props.value === null) {
-        this.editorState.dirtyTextualValue = "";
+        this.editorModel.dirtyTextualValue = "";
       }
     });
     this.editorState.value = this.props.value;
@@ -143,14 +158,14 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleInputBlur(event: any) {
     this.setShowFormatHint(false);
-    this.editorState.handleInputBlur(event);
+    this.editorModel.handleInputBlur(event);
   }
 
   @action.bound handleKeyDown(event: any) {
     if (event.key === "Escape") {
       this.setShowFormatHint(false);
     }
-    this.editorState.handleKeyDown(event);
+    this.editorModel.handleKeyDown(event);
   }
 
   @action.bound handleContainerMouseDown(event: any) {
@@ -178,20 +193,20 @@ export class DateTimeEditor extends React.Component<{
 
   @computed get isTooltipShown() {
     return (
-      this.editorState.textFieldValue !== undefined &&
-      (!moment(this.editorState.textFieldValue, this.props.outputFormat) ||
-        this.editorState.formattedMomentValue !== this.editorState.textFieldValue)
+      this.editorModel.textFieldValue !== undefined &&
+      (!moment(this.editorModel.textFieldValue, this.props.outputFormat) ||
+        this.editorModel.formattedMomentValue !== this.editorModel.textFieldValue)
     );
   }
 
   @action.bound handleTextFieldChange(event: any) {
     this.setShowFormatHint(true);
-    this.editorState.handleTextFieldChange(event);
+    this.editorModel.handleTextFieldChange(event);
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
-    this.editorState.handleDayClick(event, day);
+    this.editorModel.handleDayClick(event, day);
   }
 
   @action.bound
@@ -229,13 +244,13 @@ export class DateTimeEditor extends React.Component<{
                   {this.isShowFormatHintTooltip && (
                     <FormatHintTooltip
                       boundingRect={this.inputRect}
-                      line1={this.editorState.autocompletedText}
+                      line1={this.editorModel.autocompletedText}
                       line2={this.props.outputFormatToShow}
                     />
                   )}
                   <input
                     id={this.props.id}
-                    title={this.editorState.autocompletedText + '\n' + this.props.outputFormatToShow}
+                    title={this.editorModel.autocompletedText + '\n' + this.props.outputFormatToShow}
                     style={{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
@@ -247,7 +262,7 @@ export class DateTimeEditor extends React.Component<{
                     ref={(elm) => {
                       this.refInput(elm);
                     }}
-                    value={this.editorState.textFieldValue}
+                    value={this.editorModel.textFieldValue}
                     readOnly={this.props.isReadOnly}
                     onChange={this.handleTextFieldChange}
                     onClick={this.props.onClick}
@@ -273,8 +288,8 @@ export class DateTimeEditor extends React.Component<{
           <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}
-              initialDisplayDate={this.editorState.momentValue?.isValid() ? this.editorState.momentValue : moment()}
-              selectedDay={this.editorState.momentValue?.isValid() ? this.editorState.momentValue : moment()}
+              initialDisplayDate={this.editorModel.momentValue?.isValid() ? this.editorModel.momentValue : moment()}
+              selectedDay={this.editorModel.momentValue?.isValid() ? this.editorModel.momentValue : moment()}
             />
           </div>
         )}
@@ -297,13 +312,13 @@ export class DateTimeEditor extends React.Component<{
             color: this.props.foregroundColor,
             backgroundColor: this.props.backgroundColor,
           }}
-          title={this.editorState.autocompletedText + '\n' + this.props.outputFormat}
+          title={this.editorModel.autocompletedText + '\n' + this.props.outputFormat}
           className={S.input}
           type="text"
           onBlur={this.handleInputBlur}
           onFocus={this.handleFocus}
           ref={this.refInput}
-          value={this.editorState.textFieldValue}
+          value={this.editorModel.textFieldValue}
           readOnly={this.props.isReadOnly}
           onChange={this.handleTextFieldChange}
           onClick={this.props.onClick}

@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { MobXProviderContext, observer } from "mobx-react";
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import moment from "moment";
 import SD from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor.module.scss";
 import S from "gui/connections/MobileComponents/Form/MobileDateTimeEditor.module.scss"
@@ -28,10 +28,13 @@ import cx from "classnames";
 import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { IProperty } from "model/entities/types/IProperty";
+import { CalendarWidget } from "gui/Components/ScreenElements/Editors/DateTimeEditor/CalendarWidget";
+import {
+  DateEditorModel,
+  IEditorState,
+} from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { CalendarWidget } from "gui/Components/ScreenElements/Editors/DateTimeEditor/CalendarWidget";
-import { DateEditorState } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorState";
 
 
 export const MobileDateTimeEditor: React.FC<{
@@ -55,8 +58,8 @@ export const MobileDateTimeEditor: React.FC<{
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
 
   const [editorState, setEditorState] = useState(
-    new DateEditorState(
-      props.value,
+    new DateEditorModel(
+      new MobileEditorState(props.property),
       props.outputFormat,
       props.onChange,
       props.onClick,
@@ -64,26 +67,6 @@ export const MobileDateTimeEditor: React.FC<{
       props.onEditorBlur,
       props.onChangeByCalendar)
   );
-
-  useEffect(() => {
-    setEditorState(
-      new DateEditorState(
-        props.value,
-        props.outputFormat,
-        props.onChange,
-        props.onClick,
-        props.onKeyDown,
-        props.onEditorBlur,
-        props.onChangeByCalendar));
-  }, [
-    props.value,
-    props.outputFormat,
-    props.onChange,
-    props.onClick,
-    props.onKeyDown,
-    props.onEditorBlur,
-    props.onChangeByCalendar
-  ]);
 
   function onClick() {
     mobileState.layoutState = new EditLayoutState(
@@ -124,13 +107,9 @@ export const MobileDateTimeEditor: React.FC<{
 export const FullScreenDateTimeEditor: React.FC<{
   id?: string;
   onClick?: (event: any) => void;
-  editorState: DateEditorState;
+  editorState: DateEditorModel;
   property: IProperty
 }> = observer((props) => {
-
-  const dataTable = getDataTable(props.property);
-  let row = getSelectedRow(props.property)!;
-  props.editorState.value = dataTable.getCellValue(row, props.property);
 
   return (
     <div className={S.fullScreenEditorRoot}>
@@ -167,3 +146,18 @@ export const FullScreenDateTimeEditor: React.FC<{
     </div>
   );
 });
+
+export class MobileEditorState implements IEditorState{
+
+  constructor(private property: IProperty) {
+  }
+
+  get value(){
+    const dataTable = getDataTable(this.property);
+    let row = getSelectedRow(this.property);
+    if(!row){
+      return null;
+    }
+    return dataTable.getCellValue(row, this.property);
+  }
+}

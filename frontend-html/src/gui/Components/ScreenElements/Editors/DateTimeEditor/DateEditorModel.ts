@@ -24,9 +24,13 @@ import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
 import moment, { Moment } from "moment";
 
-export class DateEditorState {
+export interface IEditorState{
+  value: string | null;
+}
+
+export class DateEditorModel {
   constructor(
-    value: string | null,
+    private editorState: IEditorState,
     public outputFormat: string,
     private onChange?: (event: any, isoDay: string | undefined | null) => void,
     private onClick?: (event: any) => void,
@@ -34,11 +38,7 @@ export class DateEditorState {
     private onEditorBlur?: (event: any) => void,
     private onChangeByCalendar?: (event: any, isoDay: string) => void
   ) {
-    this.value = value;
   }
-
-  @observable
-  value: string | null;
 
   @action.bound handleInputBlur(event: any) {
     const dateCompleter = this.getDateCompleter();
@@ -112,7 +112,7 @@ export class DateEditorState {
     if (this.dirtyTextualValue) {
       return moment(this.dirtyTextualValue, this.outputFormat);
     }
-    return !!this.value ? moment(this.value) : null;
+    return !!this.editorState.value ? moment(this.editorState.value) : null;
   }
 
   formatMomentValue(value: Moment | null | undefined) {
