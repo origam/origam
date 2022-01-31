@@ -245,11 +245,7 @@ namespace Origam.Utils
                 return 1;
             }
 
-            if (invokedVerb == "test-db")
-            {
-                Console.WriteLine("Starting testing the Database.");
-            }
-            else
+            if (invokedVerb != "test-db")
             {
                 Console.WriteLine(string.Format(Strings.ShortGnu,
                     System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
@@ -632,8 +628,8 @@ namespace Origam.Utils
                 Thread.Sleep(arguments.delay);
             }
             Console.WriteLine(result == 1
-                ? "True."
-                : "False");
+                ? "true"
+                : "false");
             return result;
         }
     }
