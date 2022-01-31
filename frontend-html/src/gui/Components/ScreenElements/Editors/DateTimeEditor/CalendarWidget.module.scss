@@ -95,9 +95,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   color: var(--foreground1);
   height: 1em;
   line-height: 0.8em;
-  margin: 0 0.25em;
-  padding: 0.5em;
-  width: 1em;
+  margin: 0;
+  padding: 0;
+  width: 14.3%;
   @extend %transition;
 
   &:hover {
@@ -109,15 +109,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     font-size: 1.25em;
     line-height: 0.8em;
   }
-}
-
-
-.yearControls {
-  flex-shrink: 0;
-}
-
-.monthControls {
-  flex-shrink: 0;
 }
 
 .title {

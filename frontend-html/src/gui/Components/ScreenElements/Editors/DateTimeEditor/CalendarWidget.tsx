@@ -121,28 +121,24 @@ export class CalendarWidget extends React.Component<{
         <div className={S.dayTable}>
           <div className={S.row}>
             <div className={S.header}>
-              <div className={S.monthControls}>
-                <button className={S.controlBtn} onClick={this.handleMonthDecClick}>
-                  <i className="fas fa-caret-left"/>
-                </button>
-                <button className={S.controlBtn} onClick={this.handleMonthIncClick}>
-                  <i className="fas fa-caret-right"/>
-                </button>
-              </div>
+              <button className={S.controlBtn} onClick={this.handleMonthDecClick}>
+                <i className="fas fa-caret-left"/>
+              </button>
+              <button className={S.controlBtn} onClick={this.handleMonthIncClick}>
+                <i className="fas fa-caret-right"/>
+              </button>
               <div
                 className={S.title}
                 title={this.displayedMonth.format("YYYY MMMM")}
               >
                 {this.displayedMonth.format("YYYY MMMM")}
               </div>
-              <div className={S.yearControls}>
-                <button className={S.controlBtn} onClick={this.handleYearDecClick}>
-                  <i className="fas fa-caret-down"/>
-                </button>
-                <button className={S.controlBtn} onClick={this.handleYearIncClick}>
-                  <i className="fas fa-caret-up"/>
-                </button>
-              </div>
+              <button className={S.controlBtn} onClick={this.handleYearDecClick}>
+                <i className="fas fa-caret-down"/>
+              </button>
+              <button className={S.controlBtn} onClick={this.handleYearIncClick}>
+                <i className="fas fa-caret-up"/>
+              </button>
             </div>
           </div>
           <div className={S.row}>{this.getDayHeaders()}</div>
