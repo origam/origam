@@ -85,7 +85,10 @@ export const MobileDateTimeEditor: React.FC<{
 
   return (
     <div className={S.root}>
-      <div className={cx(S.input, SD.input)}>
+      <div
+        className={cx(S.input, SD.input)}
+        onClick={onClick}
+      >
         <div
           id={props.id}
           style={{
@@ -97,11 +100,7 @@ export const MobileDateTimeEditor: React.FC<{
         </div>
 
         {!props.isReadOnly && (
-          <div
-            onClick={onClick}
-          >
-            <i className="far fa-calendar-alt"/>
-          </div>
+          <div><i className="far fa-calendar-alt"/></div>
         )}
       </div>
       <InputClearButton
