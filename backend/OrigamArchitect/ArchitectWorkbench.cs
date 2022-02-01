@@ -2151,8 +2151,8 @@ namespace OrigamArchitect
 			OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
                 = ServiceManager.Services.GetService<IDeploymentService>();
-			IParameterService parameterService =
-							ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+			IParameterService parameterService 
+				= ServiceManager.Services.GetService<IParameterService>();
 
 #if ORIGAM_CLIENT
 			deployment.CanUpdate(_schema.ActiveExtension);
