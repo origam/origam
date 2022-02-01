@@ -35,6 +35,7 @@ import {
 } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { InputClearButton } from "gui/connections/MobileComponents/Grid/InputClearButton";
 
 
 export const MobileDateTimeEditor: React.FC<{
@@ -83,24 +84,30 @@ export const MobileDateTimeEditor: React.FC<{
   }
 
   return (
-    <div className={cx(S.input, SD.input)}>
-      <div
-        id={props.id}
-        style={{
-          color: props.foregroundColor,
-          backgroundColor: props.backgroundColor,
-        }}
-      >
-        {editorModel.textFieldValue}
-      </div>
-
-      {!props.isReadOnly && (
+    <div className={S.root}>
+      <div className={cx(S.input, SD.input)}>
         <div
-          onClick={onClick}
+          id={props.id}
+          style={{
+            color: props.foregroundColor,
+            backgroundColor: props.backgroundColor,
+          }}
         >
-          <i className="far fa-calendar-alt"/>
+          {editorModel.textFieldValue}
         </div>
-      )}
+
+        {!props.isReadOnly && (
+          <div
+            onClick={onClick}
+          >
+            <i className="far fa-calendar-alt"/>
+          </div>
+        )}
+      </div>
+      <InputClearButton
+        visible={editorModel.textFieldValue !== ""}
+        onClick={(event) => editorModel.onClearClick(event)}
+      />
     </div>
   );
 });

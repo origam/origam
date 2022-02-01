@@ -31,12 +31,9 @@ import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import { csToMomentFormat } from "@origam/utils";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IProperty } from "model/entities/types/IProperty";
-import {
-  MobileDateTimeEditor
-} from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
+import { MobileDateTimeEditor } from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { IEditorState } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
-import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsCommon.module.scss"
 
 const OPERATORS = [
   Operator.equals,
@@ -96,7 +93,7 @@ const OpEditors: React.FC<{
     case "gt":
     case "lte":
     case "gte":
-      if(isMobileLayoutActive(props.property)){
+      if (isMobileLayoutActive(props.property)) {
         return (
           <MobileDateTimeEditor
             value={setting.val1 ?? ""}
@@ -110,11 +107,12 @@ const OpEditors: React.FC<{
               })
             }}
             autoFocus={props.autoFocus}
-            onEditorBlur={()=>{}}
+            onEditorBlur={() => {
+            }}
             onKeyDown={props.onKeyDown}
             editorState={new MobileFilterEditorStateVal1(setting)}
           />);
-      }else{
+      } else {
         return (
           <DateTimeEditor
             id={props.id}
@@ -135,9 +133,9 @@ const OpEditors: React.FC<{
       }
     case "between":
     case "nbetween":
-      if(isMobileLayoutActive(props.property)){
+      if (isMobileLayoutActive(props.property)) {
         return (
-          <div className={S.mobileBetweenEditors}>
+          <>
             <MobileDateTimeEditor
               value={setting.val1}
               property={props.property}
@@ -150,7 +148,8 @@ const OpEditors: React.FC<{
                 })
               }}
               autoFocus={props.autoFocus}
-              onEditorBlur={()=>{}}
+              onEditorBlur={() => {
+              }}
               onKeyDown={props.onKeyDown}
               editorState={new MobileFilterEditorStateVal1(setting)}
             />
@@ -166,17 +165,18 @@ const OpEditors: React.FC<{
                 })
               }}
               autoFocus={props.autoFocus}
-              onEditorBlur={()=>{}}
+              onEditorBlur={() => {
+              }}
               onKeyDown={props.onKeyDown}
               editorState={new MobileFilterEditorStateVal2(setting)}
             />
-          </div>
+          </>
         );
-      }else {
+      } else {
         return (
           <>
             <DateTimeEditor
-              id={"from_"+props.id}
+              id={"from_" + props.id}
               value={setting.val1}
               outputFormat={dateFormatMoment}
               outputFormatToShow={dateFormatCs}
@@ -191,7 +191,7 @@ const OpEditors: React.FC<{
               onKeyDown={props.onKeyDown}
             />
             <DateTimeEditor
-              id={"to_"+props.id}
+              id={"to_" + props.id}
               value={setting.val2}
               outputFormat={dateFormatMoment}
               outputFormatToShow={dateFormatCs}
@@ -285,7 +285,7 @@ class MobileFilterEditorStateVal1 implements IEditorState {
   constructor(private setting: IFilterSetting) {
   }
 
-  get value(){
+  get value() {
     return this.setting.val1;
   }
 }
@@ -295,7 +295,7 @@ class MobileFilterEditorStateVal2 implements IEditorState {
   constructor(private setting: IFilterSetting) {
   }
 
-  get value(){
+  get value() {
     return this.setting.val2;
   }
 }

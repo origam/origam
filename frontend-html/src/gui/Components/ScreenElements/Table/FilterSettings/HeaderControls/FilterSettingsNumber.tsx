@@ -29,6 +29,7 @@ import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "./Operator";
 import { getCurrentDecimalSeparator } from "model/entities/NumberFormating";
+import { ClearableInput } from "gui/connections/MobileComponents/Grid/ClearableInput";
 
 const OPERATORS =
   [
@@ -126,7 +127,7 @@ class OpEditors extends React.Component<{
       case "lte":
       case "gte":
         return (
-          <input
+          <ClearableInput
             id={this.props.id}
             className={CS.input}
             value={this.props.currentValue1 ?? ""}
@@ -143,7 +144,7 @@ class OpEditors extends React.Component<{
       case "nbetween":
         return (
           <>
-            <input
+            <ClearableInput
               id={"from_" + this.props.id}
               className={CS.input}
               value={this.props.currentValue1 ?? ""}
@@ -154,7 +155,7 @@ class OpEditors extends React.Component<{
               onBlur={this.props.onBlur}
               ref={this.inputRef}
             />
-            <input
+            <ClearableInput
               id={"to_" + this.props.id}
               className={CS.input}
               value={this.props.currentValue2 ?? ""}
