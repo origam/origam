@@ -577,7 +577,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		private void PrepareParameters()
+		public void PrepareParameters()
 		{
 			lock(_constantsById)
 			{
