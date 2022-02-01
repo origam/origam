@@ -26,7 +26,6 @@ export const BottomIcon: React.FC<{
   onClick: ()=>void;
   hidden?: boolean;
   className?: string;
-  caption?: string;
 }> = (props) => {
   return (
     <div
@@ -39,9 +38,6 @@ export const BottomIcon: React.FC<{
           className={props.className + " " + (props.hidden ? S.hidden : "")}
         />
       </div>}
-      <div className={S.caption}>
-        {props.caption}
-      </div>
     </div>
   );
 }

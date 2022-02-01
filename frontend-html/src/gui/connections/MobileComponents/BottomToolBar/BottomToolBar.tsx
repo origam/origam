@@ -34,6 +34,7 @@ import { IActionMode } from "model/entities/types/IAction";
 import { computed } from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { Button } from "@origam/components";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -100,12 +101,13 @@ export class BottomToolBar extends React.Component<{
             }}
           />}
         {this.props.mobileState.layoutState.showOkButton &&
-          <BottomIcon
-            caption={"Ok"}
+          <Button
+            label={"Ok"}
             onClick={async () => {
               await this.props.mobileState.close()
             }}
-          />}
+          />
+        }
         {actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden &&
           <ActionDropUp
             actions={actions}
