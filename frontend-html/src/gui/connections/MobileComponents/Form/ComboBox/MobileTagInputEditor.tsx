@@ -81,7 +81,7 @@ export const MobileTagInputEditor = (
       }
 
       return (
-        <div className={CS.editorContainer}>
+        <div className={CS.editorContainer + " tagEditorContainer"}>
           <TagInput className={S.tagInput}>
             {values.map((valueItem, idx) => (
                 <TagInputItem key={valueItem}>

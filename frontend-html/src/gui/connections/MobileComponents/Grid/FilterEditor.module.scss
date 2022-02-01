@@ -28,13 +28,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 .filterRow {
   padding-left: 5px;
-  margin-bottom: 5px;
+  padding-right: 5px;
+  margin-bottom: 10px;
   display: flex;
-  align-items: center;
 
-  > * {
-    width: 33%;
-    margin-right: 5px;
+  > div {
+    width: 50%;
   }
 
   * {
@@ -66,4 +65,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 .label{
   overflow: hidden;
   text-overflow: ellipsis;
+  height: var(--inputHeight);
+  display: flex;
+  align-items: center;
+}
+
+.filterSettingContainer {
+  > *:nth-child(1) {
+    margin-bottom: 5px;
+  }
+
+  > *:nth-child(2) {
+    width: 200%;
+    margin-left: -100%;
+    min-height: var(--inputHeight);
+  }
+
+  > *:nth-child(3) {
+    width: 200%;
+    margin-left: -100%;
+    min-height: var(--inputHeight);
+  }
+
+  > div:global(.tagEditorContainer){
+    height: 60px
+  }
 }

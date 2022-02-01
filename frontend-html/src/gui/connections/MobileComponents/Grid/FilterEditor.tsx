@@ -43,9 +43,11 @@ export const FilterEditor: React.FC<{
                 <div className={S.label}>
                   {property.name}
                 </div>
-                <FilterSettings
-                  key={`filter-settings-${property.id}`}
-                  autoFocus={false} ctx={props.dataView}/>
+                <div className={S.filterSettingContainer}>
+                  <FilterSettings
+                    key={`filter-settings-${property.id}`}
+                    autoFocus={false} ctx={props.dataView}/>
+                </div>
               </Provider>
             </div>
           )
