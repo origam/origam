@@ -43,10 +43,6 @@ export const MobileTagInputEditor = (
       values?: any[];
     }) => {
       const dataTable = getDataTable(props.property);
-      const row = getSelectedRow(props.property);
-      if(row === undefined){
-        return <div/>;
-      }
 
       const values = props.values ?? getTagInputValues(props.property);
       const textValues = values.map((valueItem: any) => dataTable.resolveCellText(props.property, valueItem));
