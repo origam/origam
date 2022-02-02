@@ -31,7 +31,7 @@ import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPro
 import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
-import { IColumnConfigurationDialog } from "model/entities/TablePanelView/types/IColumnConfigurationDialog";
+import { IColumnConfigurationModel } from "model/entities/TablePanelView/types/IColumnConfigurationModel";
 import {
   ITableCanvas,
   ITablePanelView,
@@ -64,7 +64,7 @@ export class TablePanelView implements ITablePanelView {
     this.groupingConfiguration.parent = this;
   }
 
-  columnConfigurationDialog: IColumnConfigurationDialog = null as any;
+  columnConfigurationDialog: IColumnConfigurationModel = null as any;
   configurationManager: IConfigurationManager = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   filterGroupManager: FilterGroupManager = null as any;

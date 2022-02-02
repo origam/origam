@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import { action, computed } from "mobx";
 import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
-import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { IColumnConfigurationModel } from "model/entities/TablePanelView/types/IColumnConfigurationModel";
 import { ColumnsDialog, } from "gui/Components/Dialogs/ColumnsDialog";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { ITableConfiguration } from "./types/IConfigurationManager";
@@ -30,6 +30,9 @@ import { NewConfigurationDialog } from "gui/Components/Dialogs/NewConfigurationD
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
+import { compareStrings } from "utils/string";
+import { GroupingUnit } from "model/entities/types/GroupingUnit";
+import { tryParseAggregationType } from "model/entities/types/AggregationType";
 
 export interface IColumnOptions {
   canGroup: boolean;
@@ -39,11 +42,12 @@ export interface IColumnOptions {
   modelInstanceId: string;
 }
 
-export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
+export class ColumnConfigurationModel implements IColumnConfigurationModel {
 
   tableConfigBeforeChanges: ITableConfiguration | undefined;
 
-  getColumnOptions() {
+  @computed
+  get columnOptions() {
     const groupingOnClient = !isLazyLoading(this);
     const activeTableConfiguration = this.configManager.activeTableConfiguration;
     const optionsMap = new Map<string, IColumnOptions>()
@@ -80,23 +84,28 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     getDialogStack(this).pushDialog(
       this.dialogKey,
       <ColumnsDialog
-        columnOptions={this.getColumnOptions()}
-        configuration={this.columnsConfiguration}
-        onCancelClick={this.onColumnConfCancel}
-        onSaveAsClick={this.onSaveAsClick}
-        onCloseClick={this.onColumnConfCancel}
-        onOkClick={this.onColumnConfigurationSubmit.bind(this)}
+        model={this}
       />
     );
   }
 
+  get sortedColumnConfigs(){
+    return [...this.columnsConfiguration.columnConfigurations].sort(
+      (a, b) => {
+        const optionA = this.columnOptions.get(a.propertyId)!;
+        const optionB = this.columnOptions.get(b.propertyId)!;
+        return compareStrings(optionA.name, optionB.name)
+      }
+    );
+  }
+
   @action.bound
-  onColumnConfigurationSubmit(configuration: ITableConfiguration) {
+  onColumnConfigurationSubmit() {
     const self = this;
     runGeneratorInFlowWithHandler({
       ctx: this,
       generator: function*() {
-        self.onColumnConfSubmit(configuration);
+        self.onColumnConfSubmit(self.columnsConfiguration);
         self.tableConfigBeforeChanges = undefined;
         yield*saveColumnConfigurations(self)();
       }()
@@ -125,7 +134,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
             action: () => {
               this.revertChanges();
               this.configManager.cloneAndActivate(configuration, name);
-              this.onColumnConfigurationSubmit(this.configManager.activeTableConfiguration);
+              this.onColumnConfigurationSubmit();
             }
           });
           closeDialog();
@@ -147,6 +156,50 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       getFormScreenLifecycle(this).loadInitialData();
     }
     getDialogStack(this).closeDialog(this.dialogKey);
+  }
+
+  @action.bound setVisible(rowIndex: number, state: boolean) {
+    this.sortedColumnConfigs[rowIndex].isVisible = state;
+  }
+
+  @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
+    if (entity === "Date") {
+      if (state) {
+        this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
+      } else {
+        this.setTimeGroupingUnit(rowIndex, undefined);
+      }
+    }
+
+    const columnConfCopy = [...this.sortedColumnConfigs];
+    columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
+    if (this.sortedColumnConfigs[rowIndex].groupingIndex === 0) {
+      this.sortedColumnConfigs[rowIndex].groupingIndex =
+        columnConfCopy[0].groupingIndex + 1;
+    } else {
+      this.sortedColumnConfigs[rowIndex].groupingIndex = 0;
+      let groupingIndex = 1;
+      columnConfCopy.reverse();
+      for (let columnConfItem of columnConfCopy) {
+        if (columnConfItem.groupingIndex > 0) {
+          columnConfItem.groupingIndex = groupingIndex++;
+        }
+      }
+    }
+  }
+
+  @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
+    this.sortedColumnConfigs[rowIndex].timeGroupingUnit = groupingUnit;
+  }
+
+  @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
+    this.sortedColumnConfigs[rowIndex].aggregationType = tryParseAggregationType(
+      selectedAggregation
+    );
+  }
+
+  @action.bound handleFixedColumnsCountChange(event: any) {
+    this.columnsConfiguration.fixedColumnCount = parseInt(event.target.value, 10);
   }
 
   @computed get tablePanelView() {

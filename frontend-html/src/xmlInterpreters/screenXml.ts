@@ -34,7 +34,7 @@ import { FormScreen } from "model/entities/FormScreen";
 import { Lookup } from "model/entities/Lookup";
 import { OrderingConfiguration } from "model/entities/OrderingConfiguration";
 import { Property } from "model/entities/Property";
-import { ColumnConfigurationDialog } from "model/entities/TablePanelView/ColumnConfigurationDialog";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 import { TablePanelView } from "model/entities/TablePanelView/TablePanelView";
 import { IComponentBinding } from "model/entities/types/IComponentBinding";
 import { IFormScreenLifecycle02 } from "model/entities/types/IFormScreenLifecycle";
@@ -435,7 +435,7 @@ export function*interpretScreenXml(
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
-          columnConfigurationDialog: new ColumnConfigurationDialog(),
+          columnConfigurationDialog: new ColumnConfigurationModel(),
           filterConfiguration: filterConfiguration,
           filterGroupManager: filterGroupManager,
           orderingConfiguration: orderingConfiguration,

@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { ITableConfiguration } from "./IConfigurationManager";
 
-export interface IColumnConfigurationDialog {
+export interface IColumnConfigurationModel {
   columnsConfiguration: ITableConfiguration;
 
   onColumnConfClick(event: any): void;
