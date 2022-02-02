@@ -144,7 +144,12 @@ namespace Origam.Workbench.Services
 		{
 			return Guid.Empty;
 		}
-	}
+
+        public void PrepareParameters()
+        {
+            
+        }
+    }
 
 	/// <summary>
 	/// Summary description for ParameterService.
@@ -577,7 +582,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		private void PrepareParameters()
+		public void PrepareParameters()
 		{
 			lock(_constantsById)
 			{

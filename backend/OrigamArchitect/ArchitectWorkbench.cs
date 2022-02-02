@@ -2145,7 +2145,8 @@ namespace OrigamArchitect
 			OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
                 = ServiceManager.Services.GetService<IDeploymentService>();
-
+			IParameterService parameterService 
+				= ServiceManager.Services.GetService<IParameterService>();
 #if ORIGAM_CLIENT
 			deployment.CanUpdate(_schema.ActiveExtension);
 			string modelVersion = _schema.ActiveExtension.Version;
@@ -2175,11 +2176,12 @@ namespace OrigamArchitect
 				}
 			}
 #else
-            ApplicationDataDisconnectedMode 
+			ApplicationDataDisconnectedMode 
                 = !TestConnectionToApplicationDataDatabase();
             if (ApplicationDataDisconnectedMode)
             {
-                UpdateTitle();
+				parameterService.PrepareParameters();
+				UpdateTitle();
                 return;
             }
             bool isEmpty = deployment.IsEmptyDatabase();
@@ -2212,9 +2214,6 @@ namespace OrigamArchitect
             }
 
 #endif
-			IParameterService parameterService = 
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
 			try
 			{
 				parameterService.RefreshParameters();
