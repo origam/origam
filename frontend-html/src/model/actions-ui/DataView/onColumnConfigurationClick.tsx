@@ -17,16 +17,27 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getColumnConfigurationDialog } from "model/selectors/getColumnConfigurationDialog";
+import { getColumnConfigurationModel } from "model/selectors/getColumnConfigurationModel";
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
+import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
+import { ColumnsDialog } from "gui/Components/Dialogs/ColumnsDialog";
+import React from "react";
+import { dialogKey } from "model/entities/TablePanelView/ColumnConfigurationModel";
 
 export function onColumnConfigurationClick(ctx: any) {
   return flow(function*onColumnConfigurationClick(event: any) {
     try {
       if (yield shouldProceedToChangeRow(ctx)) {
-        getColumnConfigurationDialog(ctx).onColumnConfClick(event);
+        const columnConfigModel = getColumnConfigurationModel(ctx);
+        columnConfigModel.reset();
+        getDialogStack(ctx).pushDialog(
+          dialogKey,
+          <ColumnsDialog
+            model={columnConfigModel}
+          />
+        );
       }
     } catch (e) {
       yield*handleError(ctx)(e);

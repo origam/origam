@@ -28,7 +28,6 @@ import { FilterDropDown } from "gui/connections/FilterDropDown";
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import uiActions from "model/actions-ui-tree";
 import { getIsRowMovingDisabled } from "model/actions-ui/DataView/getIsRowMovingDisabled";
-import { onColumnConfigurationClick } from "model/actions-ui/DataView/onColumnConfigurationClick";
 import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
 import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
@@ -68,6 +67,7 @@ import { getMobileState } from "model/selectors/getMobileState";
 import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor";
 import { ColumnConfiguration } from "gui/connections/MobileComponents/Grid/ColumnConfiguration";
+import { getColumnConfigurationModel } from "model/selectors/getColumnConfigurationModel";
 
 @observer
 export class DataViewHeaderInner extends React.Component<{
@@ -132,6 +132,8 @@ export class DataViewHeaderInner extends React.Component<{
 
   @action
   onColumnConfigurationClick(){
+    const configurationModel = getColumnConfigurationModel(this.dataView);
+    configurationModel.reset();
     this.mobileState.layoutState =  new EditLayoutState(
       <ColumnConfiguration dataView={this.dataView}/>,
       new ScreenLayoutState(),

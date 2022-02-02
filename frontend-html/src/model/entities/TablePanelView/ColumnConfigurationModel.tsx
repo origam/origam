@@ -20,8 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import { action, computed } from "mobx";
 import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
-import { IColumnConfigurationModel } from "model/entities/TablePanelView/types/IColumnConfigurationModel";
-import { ColumnsDialog, } from "gui/Components/Dialogs/ColumnsDialog";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { ITableConfiguration } from "./types/IConfigurationManager";
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler } from "utils/runInFlowWithHandler";
@@ -44,7 +42,9 @@ export interface IColumnOptions {
   modelInstanceId: string;
 }
 
-export class ColumnConfigurationModel implements IColumnConfigurationModel {
+export const dialogKey = "ColumnConfigurationDialog";
+
+export class ColumnConfigurationModel{
 
   tableConfigBeforeChanges: ITableConfiguration | undefined;
 
@@ -72,23 +72,12 @@ export class ColumnConfigurationModel implements IColumnConfigurationModel {
     return optionsMap;
   }
 
-  @computed get columnsConfiguration() {
-    this.tableConfigBeforeChanges = this.configManager.activeTableConfiguration.deepClone();
+  get columnsConfiguration() {
     return this.configManager.activeTableConfiguration;
   }
 
-  dialogKey = "";
-  dialogId = 0;
-
-  @action.bound
-  onColumnConfClick(event: any): void {
-    this.dialogKey = `ColumnConfigurationDialog@${this.dialogId++}`;
-    getDialogStack(this).pushDialog(
-      this.dialogKey,
-      <ColumnsDialog
-        model={this}
-      />
-    );
+  reset() {
+    this.tableConfigBeforeChanges = this.configManager.activeTableConfiguration.deepClone();
   }
 
   get sortedColumnConfigs(){
@@ -116,7 +105,7 @@ export class ColumnConfigurationModel implements IColumnConfigurationModel {
 
   @action.bound onColumnConfCancel(): void {
     this.revertChanges();
-    getDialogStack(this).closeDialog(this.dialogKey);
+    getDialogStack(this).closeDialog(dialogKey);
   }
 
   private revertChanges() {
@@ -157,7 +146,7 @@ export class ColumnConfigurationModel implements IColumnConfigurationModel {
     if (groupingWasOnBefore && groupingIsOffNow) {
       getFormScreenLifecycle(this).loadInitialData();
     }
-    getDialogStack(this).closeDialog(this.dialogKey);
+    getDialogStack(this).closeDialog(dialogKey);
   }
 
   @action.bound setVisible(rowIndex: number, state: boolean) {

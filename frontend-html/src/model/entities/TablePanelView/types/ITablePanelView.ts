@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IFilterConfiguration } from "../../types/IFilterConfiguration";
 import { IProperty } from "../../types/IProperty";
-import { IColumnConfigurationModel } from "model/entities/TablePanelView/types/IColumnConfigurationModel";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
 import { AggregationContainer } from "../TablePanelView";
@@ -27,10 +26,11 @@ import { ICellRectangle } from "./ICellRectangle";
 
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
-  columnConfigurationDialog: IColumnConfigurationModel;
+  columnConfigurationDialog: ColumnConfigurationModel;
   filterConfiguration: IFilterConfiguration;
   filterGroupManager: FilterGroupManager;
   orderingConfiguration: IOrderingConfiguration;

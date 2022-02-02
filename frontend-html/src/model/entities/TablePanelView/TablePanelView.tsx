@@ -31,7 +31,6 @@ import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPro
 import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
-import { IColumnConfigurationModel } from "model/entities/TablePanelView/types/IColumnConfigurationModel";
 import {
   ITableCanvas,
   ITablePanelView,
@@ -51,6 +50,7 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -64,7 +64,7 @@ export class TablePanelView implements ITablePanelView {
     this.groupingConfiguration.parent = this;
   }
 
-  columnConfigurationDialog: IColumnConfigurationModel = null as any;
+  columnConfigurationDialog: ColumnConfigurationModel = null as any;
   configurationManager: IConfigurationManager = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   filterGroupManager: FilterGroupManager = null as any;

@@ -20,12 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { useContext, useState } from "react";
 import S from "gui/connections/MobileComponents/Grid/ColumnConfiguration.module.scss";
 import { IDataView } from "model/entities/types/IDataView";
-import { getColumnConfigurationDialog } from "model/selectors/getColumnConfigurationDialog";
+import { getColumnConfigurationModel } from "model/selectors/getColumnConfigurationModel";
 import { IColumnConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import cx from "classnames";
 import { T } from "utils/translation";
-import { IColumnConfigurationModel } from "model/entities/TablePanelView/types/IColumnConfigurationModel";
-import { aggregationOptions, timeunitOptions } from "model/entities/TablePanelView/ColumnConfigurationModel";
+import {
+  aggregationOptions,
+  ColumnConfigurationModel,
+  timeunitOptions
+} from "model/entities/TablePanelView/ColumnConfigurationModel";
 import { Button, SimpleDropdown } from "@origam/components";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
@@ -35,7 +38,7 @@ export const ColumnConfiguration: React.FC<{
   dataView: IDataView
 }> = observer((props) => {
 
-  const configModel = getColumnConfigurationDialog(props.dataView);
+  const configModel = getColumnConfigurationModel(props.dataView);
 
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
 
@@ -89,7 +92,7 @@ export const ColumnConfiguration: React.FC<{
 export const ColumnConfig: React.FC<{
   config: IColumnConfiguration,
   index: number;
-  model: IColumnConfigurationModel;
+  model: ColumnConfigurationModel;
 }> = observer((props) => {
 
 
