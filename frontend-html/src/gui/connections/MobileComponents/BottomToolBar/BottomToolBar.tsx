@@ -91,49 +91,62 @@ export class BottomToolBar extends React.Component<{
 
     const actions = this.getActions();
 
-    return (
-      <div className={S.root}>
-        {this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen) &&
-          <BottomIcon
-            iconPath={"./icons/noun-close-25798.svg"}
-            onClick={async () => {
-              await this.props.mobileState.close()
-            }}
-          />}
-        {this.props.mobileState.layoutState.showOkButton &&
-          <Button
-            label={"Ok"}
-            onClick={async () => {
-              await this.props.mobileState.close()
-            }}
-          />
-        }
-        {actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden &&
-          <ActionDropUp
-            actions={actions}
-          />
-        }
-        {!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible &&
-          <BottomIcon
-            iconPath={"./icons/noun-loading-1780489.svg"}
-            onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
-          />
-        }
-        {!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible &&
-          <BottomIcon
-            className={actionButtonsState?.isDirty ? S.isRed : ""}
-            iconPath={"./icons/noun-save-1014816.svg"}
-            onClick={onSaveSessionClick(actionButtonsState?.formScreen)}
-          />
-        }
-        {this.showNextButton() &&
-          <BottomIcon
-            iconPath={"./icons/list-arrow-next.svg"}
-            onClick={() => onWorkflowNextClick(this.activeScreen!)(null)}
-          />
-        }
-      </div>
-    );
+    const buttons = [];
+    if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
+      buttons.push(
+        <BottomIcon
+          iconPath={"./icons/noun-close-25798.svg"}
+          onClick={async () => {
+            await this.props.mobileState.close()
+          }}
+        />
+      );
+    }
+    if (this.props.mobileState.layoutState.showOkButton) {
+      buttons.push(
+        <Button
+          label={"Ok"}
+          onClick={async () => {
+            await this.props.mobileState.close()
+          }}
+        />
+      );
+    }
+    if (actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden) {
+      buttons.push(
+        <ActionDropUp
+          actions={actions}
+        />
+      );
+    }
+    if (!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible) {
+      buttons.push(
+        <BottomIcon
+          iconPath={"./icons/noun-loading-1780489.svg"}
+          onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
+        />
+      );
+    }
+    if (!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible) {
+      buttons.push(
+        <BottomIcon
+          className={actionButtonsState?.isDirty ? S.isRed : ""}
+          iconPath={"./icons/noun-save-1014816.svg"}
+          onClick={onSaveSessionClick(actionButtonsState?.formScreen)}
+        />
+      );
+    }
+    if (this.showNextButton()) {
+      buttons.push(
+        <BottomIcon
+          iconPath={"./icons/list-arrow-next.svg"}
+          onClick={() => onWorkflowNextClick(this.activeScreen!)(null)}
+        />
+      );
+    }
+    return buttons.length !== 0
+      ? <div className={S.root}>{buttons}</div>
+      : null;
   }
 }
 

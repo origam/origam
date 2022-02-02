@@ -17,16 +17,38 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ITableConfiguration } from "./IConfigurationManager";
+import { IColumnConfiguration, ITableConfiguration } from "./IConfigurationManager";
+import { GroupingUnit } from "model/entities/types/GroupingUnit";
+import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationModel";
 
 export interface IColumnConfigurationModel {
   columnsConfiguration: ITableConfiguration;
 
   onColumnConfClick(event: any): void;
 
-  onColumnConfCancel(event: any): void;
+  onColumnConfCancel(): void;
 
   onColumnConfSubmit(event: any, configuration: ITableConfiguration): void;
+
+  sortedColumnConfigs: IColumnConfiguration[];
+
+  onColumnConfSubmit(configuration: ITableConfiguration): void
+
+  setVisible(rowIndex: number, state: boolean) :void;
+
+  setGrouping(rowIndex: number, state: boolean, entity: string): void;
+
+  setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined): void;
+
+  setAggregation(rowIndex: number, selectedAggregation: any): void;
+
+  handleFixedColumnsCountChange(event: any): void;
+
+  onColumnConfigurationSubmit(): void;
+
+  onSaveAsClick(): void;
+
+  columnOptions: Map<string, IColumnOptions>;
 
   parent?: any;
 }

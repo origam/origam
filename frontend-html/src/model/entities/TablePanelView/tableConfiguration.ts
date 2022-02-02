@@ -35,6 +35,7 @@ export class TableConfiguration implements ITableConfiguration {
   public name: string | undefined;
   @observable
   public fixedColumnCount: number = 0;
+  @observable
   public columnConfigurations: IColumnConfiguration[] = [];
   @observable
   public isActive: boolean = false;

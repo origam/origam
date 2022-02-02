@@ -31,8 +31,10 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { compareStrings } from "utils/string";
-import { GroupingUnit } from "model/entities/types/GroupingUnit";
-import { tryParseAggregationType } from "model/entities/types/AggregationType";
+import { GroupingUnit, groupingUnitToLabel } from "model/entities/types/GroupingUnit";
+import { AggregationType, tryParseAggregationType } from "model/entities/types/AggregationType";
+import { T } from "utils/translation";
+import { IOption } from "@origam/components";
 
 export interface IColumnOptions {
   canGroup: boolean;
@@ -112,7 +114,7 @@ export class ColumnConfigurationModel implements IColumnConfigurationModel {
     })
   }
 
-  @action.bound onColumnConfCancel(event: any): void {
+  @action.bound onColumnConfCancel(): void {
     this.revertChanges();
     getDialogStack(this).closeDialog(this.dialogKey);
   }
@@ -124,7 +126,7 @@ export class ColumnConfigurationModel implements IColumnConfigurationModel {
     this.configManager.activeTableConfiguration = this.tableConfigBeforeChanges;
   }
 
-  @action.bound onSaveAsClick(event: any, configuration: ITableConfiguration): void {
+  @action.bound onSaveAsClick(): void {
     const closeDialog = getDialogStack(this).pushDialog(
       "",
       <NewConfigurationDialog
@@ -133,7 +135,7 @@ export class ColumnConfigurationModel implements IColumnConfigurationModel {
             ctx: this,
             action: () => {
               this.revertChanges();
-              this.configManager.cloneAndActivate(configuration, name);
+              this.configManager.cloneAndActivate(this.columnsConfiguration, name);
               this.onColumnConfigurationSubmit();
             }
           });
@@ -212,3 +214,36 @@ export class ColumnConfigurationModel implements IColumnConfigurationModel {
 
   parent?: any;
 }
+
+export class AggregationOption implements IOption<AggregationType | undefined>{
+  constructor (
+    public label: string,
+    public value: AggregationType | undefined,
+  ){
+  }
+}
+
+export class TimeUnitOption implements IOption<GroupingUnit>{
+  constructor (
+    public label: string,
+    public value: GroupingUnit,
+  ){
+  }
+}
+
+
+export const aggregationOptions =  [
+  new AggregationOption("", undefined),
+  new AggregationOption(T("SUM", "aggregation_sum"), AggregationType.SUM),
+  new AggregationOption(T("AVG", "aggregation_avg"), AggregationType.AVG),
+  new AggregationOption(T("MIN", "aggregation_min"), AggregationType.MIN),
+  new AggregationOption(T("MAX", "aggregation_max"), AggregationType.MAX),
+];
+
+export const timeunitOptions =  [
+  new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Year), GroupingUnit.Year),
+  new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Month), GroupingUnit.Month),
+  new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Day), GroupingUnit.Day),
+  new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Hour), GroupingUnit.Hour),
+  new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Minute), GroupingUnit.Minute),
+];

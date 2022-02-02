@@ -1,0 +1,194 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+import React, { useContext, useState } from "react";
+import S from "gui/connections/MobileComponents/Grid/ColumnConfiguration.module.scss";
+import { IDataView } from "model/entities/types/IDataView";
+import { getColumnConfigurationDialog } from "model/selectors/getColumnConfigurationDialog";
+import { IColumnConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import cx from "classnames";
+import { T } from "utils/translation";
+import { IColumnConfigurationModel } from "model/entities/TablePanelView/types/IColumnConfigurationModel";
+import { aggregationOptions, timeunitOptions } from "model/entities/TablePanelView/ColumnConfigurationModel";
+import { Button, SimpleDropdown } from "@origam/components";
+import { MobXProviderContext, observer } from "mobx-react";
+import { MobileState } from "model/entities/MobileState/MobileState";
+import { ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
+
+export const ColumnConfiguration: React.FC<{
+  dataView: IDataView
+}> = observer((props) => {
+
+  const configModel = getColumnConfigurationDialog(props.dataView);
+
+  const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
+
+  return (
+    <div className={S.root}>
+      <div className={S.content}>
+        <div className={S.columnConfigs}>
+          {configModel.sortedColumnConfigs.map((config, i) =>
+            <ColumnConfig
+              index={i}
+              config={config}
+              model={configModel}
+            />
+          )}
+        </div>
+        <div className={S.lockedColumnsRow}>
+          {T("Locked columns count", "column_config_locked_columns_count")}
+          <input
+            className={S.lockedColumnsInput}
+            type="number"
+            min={0}
+            value={"" + configModel.columnsConfiguration.fixedColumnCount}
+            onChange={configModel.handleFixedColumnsCountChange}
+          />
+        </div>
+      </div>
+      <div className={S.buttonRow}>
+        <Button
+          label={T("OK", "button_ok")}
+          onClick={() => {
+            configModel.onColumnConfigurationSubmit();
+            mobileState.layoutState = new ScreenLayoutState();
+          }}
+        />
+        <Button
+          label={T("Save As...", "column_config_save_as")}
+          onClick={() => configModel.onSaveAsClick()}
+        />
+        <Button
+          label={T("Cancel", "button_cancel")}
+          onClick={() => {
+            configModel.onColumnConfCancel();
+            mobileState.layoutState = new ScreenLayoutState();
+          }}
+        />
+      </div>
+    </div>
+  );
+});
+
+export const ColumnConfig: React.FC<{
+  config: IColumnConfiguration,
+  index: number;
+  model: IColumnConfigurationModel;
+}> = observer((props) => {
+
+
+  const selectedAggregationOption = aggregationOptions.find(option => option.value === props.config.aggregationType)!;
+
+  const selectedTimeUnitOption = timeunitOptions.find(option => option.value === props.config.timeGroupingUnit)!;
+
+  const {
+    name,
+    entity,
+    canGroup,
+    canAggregate,
+    modelInstanceId
+  } = props.model.columnOptions.get(props.config.propertyId)!;
+
+  const isDefault = props.config.groupingIndex === 0 && props.config.isVisible && !props.config.aggregationType
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(!isDefault);
+
+  function renderContent() {
+    return (
+      <>
+        <div
+          key={props.config.propertyId}
+          className={S.row}>
+          <div className={S.label}>
+            {T("Visible", "column_config_visible")}
+          </div>
+          <input
+            type="checkbox"
+            onChange={(event: any) => props.model.setVisible(props.index, event.target.checked)}
+            checked={props.config.isVisible}
+          />
+        </div>
+        {canGroup &&
+          <div
+            key={props.config.propertyId}
+            className={S.row}>
+            <div className={S.label}>
+              {T("GroupBy", "column_config_group_by")}
+            </div>
+            <input
+              type="checkbox"
+              checked={props.config.groupingIndex > 0}
+              onChange={(event: any) => props.model.setGrouping(props.index, event.target.checked, entity)}
+              disabled={!canGroup}
+            />
+          </div>
+        }
+        {props.config.groupingIndex > 0 && entity === "Date" &&
+          <div
+            key={props.config.propertyId}
+            className={S.row}>
+            <div className={S.label}>
+              {T("Grouping Unit", "column_config_time_grouping_unit")}
+            </div>
+            <SimpleDropdown
+              width={"95px"}
+              options={timeunitOptions}
+              selectedOption={selectedTimeUnitOption}
+              onOptionClick={option => props.model.setTimeGroupingUnit(props.index, option.value)}
+            />
+          </div>
+        }
+        {(entity === "Currency" ||
+            entity === "Integer" ||
+            entity === "Float" ||
+            entity === "Long") &&
+          canAggregate &&
+          <div
+            key={props.config.propertyId}
+            className={S.row}>
+            <div className={S.label}>
+              {T("Aggregation", "column_config_aggregation")}
+            </div>
+            <SimpleDropdown
+              width={"95px"}
+              options={aggregationOptions}
+              selectedOption={selectedAggregationOption}
+              onOptionClick={option => props.model.setAggregation(props.index, option.value)}
+            />
+          </div>
+        }
+      </>
+    );
+  }
+
+  return (
+    <div>
+      <div
+        className={S.columnConfigHeader}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        {props.config.propertyId}
+        <div
+          className={cx({"fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded})}
+        />
+      </div>
+      {isExpanded && renderContent()}
+    </div>
+  );
+});

@@ -65,8 +65,9 @@ import {
 import { DataViewHeader } from "gui/Components/DataViewHeader/DataViewHeader";
 import "gui/connections/MobileComponents/Grid/DataViewHeader.module.scss"
 import { getMobileState } from "model/selectors/getMobileState";
-import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor";
+import { ColumnConfiguration } from "gui/connections/MobileComponents/Grid/ColumnConfiguration";
 
 @observer
 export class DataViewHeaderInner extends React.Component<{
@@ -129,10 +130,18 @@ export class DataViewHeaderInner extends React.Component<{
     this.mobileState.layoutState =  new EditLayoutState(<FilterEditor dataView={this.dataView}/>);
   }
 
+  @action
+  onColumnConfigurationClick(){
+    this.mobileState.layoutState =  new EditLayoutState(
+      <ColumnConfiguration dataView={this.dataView}/>,
+      new ScreenLayoutState(),
+      false,
+    );
+  }
+
   render() {
     const {dataView} = this;
     const isFilterSettingsVisible = getIsFilterControlsDisplayed(dataView);
-    const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
     const onExportToExcelClickEvt = onExportToExcelClick(dataView);
     const onDeleteRowClickEvt = onDeleteRowClick(dataView);
     const onCreateRowClickEvt = onCreateRowClick(dataView, true);
@@ -298,7 +307,7 @@ export class DataViewHeaderInner extends React.Component<{
                                 id={"columnConfigItem"}
                                 onClick={(event: any) => {
                                   setDropped(false);
-                                  onColumnConfigurationClickEvt(event);
+                                  this.onColumnConfigurationClick();
                                 }}
                               >
                                 {T("Column configuration", "column_config_tool_tip")}

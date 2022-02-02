@@ -24,13 +24,15 @@ import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
 import { observable } from "mobx";
 import { observer, Observer } from "mobx-react";
-import { AggregationType } from "model/entities/types/AggregationType";
 import { T } from "utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import { GroupingUnit, groupingUnitToLabel } from "model/entities/types/GroupingUnit";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
-import { ColumnConfigurationModel, IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationModel";
-import { IOption, SimpleDropdown } from "@origam/components";
+import {
+  aggregationOptions,
+  ColumnConfigurationModel,
+  IColumnOptions, timeunitOptions
+} from "model/entities/TablePanelView/ColumnConfigurationModel";
+import { SimpleDropdown } from "@origam/components";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
@@ -67,7 +69,7 @@ export class ColumnsDialog extends React.Component<{
             >
               {T("OK", "button_ok")}
             </button>
-            <button onClick={(event) => this.props.model.onSaveAsClick(event, this.configuration)}>
+            <button onClick={() => this.props.model.onSaveAsClick()}>
               {T("Save As...", "column_config_save_as")}
             </button>
             <button tabIndex={0} onClick={this.props.model.onColumnConfCancel}>
@@ -126,22 +128,8 @@ export class ColumnsDialog extends React.Component<{
 
     const { name, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
 
-    const aggregationOptions =  [
-      new AggregationOption("", undefined),
-      new AggregationOption(T("SUM", "aggregation_sum"), AggregationType.SUM),
-      new AggregationOption(T("AVG", "aggregation_avg"), AggregationType.AVG),
-      new AggregationOption(T("MIN", "aggregation_min"), AggregationType.MIN),
-      new AggregationOption(T("MAX", "aggregation_max"), AggregationType.MAX),
-    ];
     const selectedAggregationOption = aggregationOptions.find(option => option.value === aggregationType)!;
 
-    const timeunitOptions =  [
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Year), GroupingUnit.Year),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Month), GroupingUnit.Month),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Day), GroupingUnit.Day),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Hour), GroupingUnit.Hour),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Minute), GroupingUnit.Minute),
-    ];
     const selectedTimeUnitOption = timeunitOptions.find(option => option.value === timeGroupingUnit)!;
 
     switch (columnIndex) {
@@ -284,19 +272,4 @@ export class TableHeader extends React.Component<{
   }
 }
 
-class AggregationOption implements IOption<AggregationType | undefined>{
-  constructor (
-   public label: string,
-   public value: AggregationType | undefined,
-  ){
-  }
-}
-
-class TimeUnitOption implements IOption<GroupingUnit>{
-  constructor (
-   public label: string,
-   public value: GroupingUnit,
-  ){
-  }
-}
 
