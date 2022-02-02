@@ -55,6 +55,8 @@ export const MobileDateTimeEditor: React.FC<{
   onEditorBlur: (event: any) => void;
   property: IProperty;
   editorState?: IEditorState;
+  showClearButton?: boolean;
+  inputClass?: string
 }> = observer((props) => {
 
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
@@ -86,7 +88,7 @@ export const MobileDateTimeEditor: React.FC<{
   return (
     <div className={S.root}>
       <div
-        className={cx(S.input, SD.input)}
+        className={cx(S.input, SD.input, props.inputClass)}
         onClick={onClick}
       >
         <div
@@ -103,10 +105,12 @@ export const MobileDateTimeEditor: React.FC<{
           <div><i className="far fa-calendar-alt"/></div>
         )}
       </div>
-      <InputClearButton
-        visible={editorModel.textFieldValue !== ""}
-        onClick={(event) => editorModel.onClearClick(event)}
-      />
+      {props.showClearButton &&
+        <InputClearButton
+          visible={editorModel.textFieldValue !== ""}
+          onClick={(event) => editorModel.onClearClick(event)}
+        />
+      }
     </div>
   );
 });

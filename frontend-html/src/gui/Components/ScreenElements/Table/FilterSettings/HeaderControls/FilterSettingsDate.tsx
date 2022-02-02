@@ -34,6 +34,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { MobileDateTimeEditor } from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { IEditorState } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
+import S from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsCommon.module.scss";
 
 const OPERATORS = [
   Operator.equals,
@@ -111,6 +112,8 @@ const OpEditors: React.FC<{
             }}
             onKeyDown={props.onKeyDown}
             editorState={new MobileFilterEditorStateVal1(setting)}
+            showClearButton={true}
+            inputClass={S.dateTimeInput}
           />);
       } else {
         return (
@@ -152,6 +155,8 @@ const OpEditors: React.FC<{
               }}
               onKeyDown={props.onKeyDown}
               editorState={new MobileFilterEditorStateVal1(setting)}
+              showClearButton={true}
+              inputClass={S.dateTimeInput}
             />
             <MobileDateTimeEditor
               value={setting.val2}
@@ -169,6 +174,8 @@ const OpEditors: React.FC<{
               }}
               onKeyDown={props.onKeyDown}
               editorState={new MobileFilterEditorStateVal2(setting)}
+              showClearButton={true}
+              inputClass={S.dateTimeInput}
             />
           </>
         );

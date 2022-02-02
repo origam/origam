@@ -27,7 +27,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
- white-space: nowrap;
+  white-space: nowrap;
   word-wrap: normal;
   @include border-radius(2px);
   @extend %transition;
@@ -66,4 +66,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   }
 }
 
+div.dateTimeInput:read-only {
+  background-color:var(--background1);
+}
 
