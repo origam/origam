@@ -101,11 +101,11 @@ export const ColumnConfig: React.FC<{
   const selectedTimeUnitOption = timeunitOptions.find(option => option.value === props.config.timeGroupingUnit)!;
 
   const {
-    name,
+    name, // eslint-disable-line
     entity,
     canGroup,
     canAggregate,
-    modelInstanceId
+    modelInstanceId // eslint-disable-line
   } = props.model.columnOptions.get(props.config.propertyId)!;
 
   const isDefault = props.config.groupingIndex === 0 && props.config.isVisible && !props.config.aggregationType

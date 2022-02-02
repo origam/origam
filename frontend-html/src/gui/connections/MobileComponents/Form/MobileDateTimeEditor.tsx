@@ -61,6 +61,7 @@ export const MobileDateTimeEditor: React.FC<{
 
   const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
 
+  // eslint-disable-next-line
   const [editorModel, setEditorModel] = useState(
     new DateEditorModel(
       props.editorState ?? new MobileEditorState(props.property),
