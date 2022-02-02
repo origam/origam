@@ -131,6 +131,7 @@ const OpEditors: React.FC<{
             autoFocus={props.autoFocus}
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
+            className={S.dateTimeInput}
           />
         );
       }
@@ -196,6 +197,7 @@ const OpEditors: React.FC<{
               }}
               onEditorBlur={props.onBlur}
               onKeyDown={props.onKeyDown}
+              className={S.dateTimeInput}
             />
             <DateTimeEditor
               id={"to_" + props.id}
@@ -211,6 +213,7 @@ const OpEditors: React.FC<{
               }}
               onEditorBlur={props.onBlur}
               onKeyDown={props.onKeyDown}
+              className={S.dateTimeInput}
             />
           </>
         );
