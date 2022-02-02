@@ -93,6 +93,7 @@ import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
 import { getMomentFormat, replaceDefaultDateFormats } from "./getMomentFormat";
 import { getTablePanelView } from "../model/selectors/TablePanelView/getTablePanelView";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 
 function getPropertyParameters(node: any) {
@@ -565,7 +566,9 @@ export function*interpretScreenXml(
           new ViewConfiguration(
             function*(perspectiveTag) {
               dataView.activePanelView = perspectiveTag as any;
-              yield*saveColumnConfigurations(dataView)();
+              if(!isMobileLayoutActive(dataView)){
+                yield*saveColumnConfigurations(dataView)();
+              }
             },
             () => {
               if (
