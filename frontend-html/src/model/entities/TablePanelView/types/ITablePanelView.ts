@@ -30,7 +30,7 @@ import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnCo
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
-  columnConfigurationDialog: ColumnConfigurationModel;
+  columnConfigurationModel: ColumnConfigurationModel;
   filterConfiguration: IFilterConfiguration;
   filterGroupManager: FilterGroupManager;
   orderingConfiguration: IOrderingConfiguration;

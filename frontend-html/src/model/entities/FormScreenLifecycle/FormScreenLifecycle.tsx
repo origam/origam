@@ -89,7 +89,6 @@ import {T} from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
-import { getApplication } from "model/selectors/getApplication";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 enum IQuestionSaveDataAnswer {

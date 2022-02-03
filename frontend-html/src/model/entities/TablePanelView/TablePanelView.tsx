@@ -57,14 +57,14 @@ export class TablePanelView implements ITablePanelView {
 
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
-    this.columnConfigurationDialog.parent = this;
+    this.columnConfigurationModel.parent = this;
     this.filterConfiguration.parent = this;
     this.filterGroupManager.parent = this;
     this.orderingConfiguration.parent = this;
     this.groupingConfiguration.parent = this;
   }
 
-  columnConfigurationDialog: ColumnConfigurationModel = null as any;
+  columnConfigurationModel: ColumnConfigurationModel = null as any;
   configurationManager: IConfigurationManager = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   filterGroupManager: FilterGroupManager = null as any;

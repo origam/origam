@@ -435,7 +435,7 @@ export function*interpretScreenXml(
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
-          columnConfigurationDialog: new ColumnConfigurationModel(),
+          columnConfigurationModel: new ColumnConfigurationModel(),
           filterConfiguration: filterConfiguration,
           filterGroupManager: filterGroupManager,
           orderingConfiguration: orderingConfiguration,

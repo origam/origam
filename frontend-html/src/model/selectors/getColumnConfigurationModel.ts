@@ -20,5 +20,5 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { getTablePanelView } from "./TablePanelView/getTablePanelView";
 
 export function getColumnConfigurationModel(ctx: any) {
-  return getTablePanelView(ctx).columnConfigurationDialog;
+  return getTablePanelView(ctx).columnConfigurationModel;
 }
