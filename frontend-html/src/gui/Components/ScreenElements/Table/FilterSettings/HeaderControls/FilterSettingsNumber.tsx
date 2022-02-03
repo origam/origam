@@ -84,13 +84,12 @@ class OpEditors extends React.Component<{
   id: string;
 }> {
 
-  inputRef = (elm: any) => (this.inputTag = elm);
-  inputTag: any;
+  inputRef = React.createRef<HTMLInputElement>();
 
   componentDidMount() {
     if (this.props.autoFocus) {
       setTimeout(() => {
-        this.inputTag?.focus();
+        this.inputRef.current?.focus();
       });
     }
   }

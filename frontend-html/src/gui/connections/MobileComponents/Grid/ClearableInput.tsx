@@ -23,14 +23,16 @@ import { MobXProviderContext } from "mobx-react";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { InputClearButton } from "gui/connections/MobileComponents/Grid/InputClearButton";
 
-export const ClearableInput: React.FC<{
+interface IClearableInputData{
   id?: string;
   className?: string;
   value?: string;
   onChange?: (event: any) => void;
   onBlur?: (event: any) => void;
-  ref?: (elm: any) => void
-}> = (props) => {
+  autofocus?: boolean;
+}
+
+export const ClearableInput = React.forwardRef<HTMLInputElement, IClearableInputData>((props, ref) => {
 
   const application = useContext(MobXProviderContext).application;
 
@@ -41,7 +43,7 @@ export const ClearableInput: React.FC<{
       value={props.value}
       onChange={props.onChange}
       onBlur={props.onBlur}
-      ref={props.ref}
+      ref={ref}
     />
   }
 
@@ -58,7 +60,7 @@ export const ClearableInput: React.FC<{
         value={props.value}
         onChange={props.onChange}
         onBlur={props.onBlur}
-        ref={props.ref}
+        ref={ref}
       />
       <InputClearButton
         visible={props.value !== ""}
@@ -66,4 +68,4 @@ export const ClearableInput: React.FC<{
       />
     </div>
   );
-}
+});
