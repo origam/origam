@@ -567,7 +567,7 @@ export class OrigamAPI implements IApi {
       const customConfigurations = Object.entries(data.customConfigurations)
         .filter(entry => entry[0] && entry[1])
         .map(entry => {
-          const encodedConfig = window.btoa(unescape(encodeURIComponent(entry[1])))
+          const encodedConfig = window.btoa(decodeURIComponent(encodeURIComponent(entry[1])))
           return `<${entry[0]}Configuration>\n${encodedConfig}\n</${entry[0]}Configuration>`
         });
       if(customConfigurations.length > 0) {
