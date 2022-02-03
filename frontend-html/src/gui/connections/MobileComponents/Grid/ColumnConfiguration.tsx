@@ -188,7 +188,7 @@ export const ColumnConfig: React.FC<{
       >
         {props.config.propertyId}
         <div
-          className={cx({"fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded})}
+          className={cx(S.arrow, {"fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded})}
         />
       </div>
       {isExpanded && renderContent()}
