@@ -344,6 +344,7 @@ export class DataViewHeaderInner extends React.Component<{
                                 ...configurationManager.customTableConfigurations.map(
                                   (tableConfig) => (
                                     <DropdownItem
+                                      key={tableConfig.id}
                                       isDisabled={false}
                                       isSelected={tableConfig.isActive}
                                       onClick={async (event: any) => {

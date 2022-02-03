@@ -155,6 +155,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
             </DropdownItem>
             {filterGroups.map((filterGroup) => (
               <DropdownItem
+                key={filterGroup.id}
                 isDisabled={false}
                 isSelected={this.filterManager.selectedFilterGroup?.id === filterGroup.id}
                 onClick={(event: any) => {
