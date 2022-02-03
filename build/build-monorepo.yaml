@@ -227,6 +227,8 @@ jobs:
        condition: succeededOrFailed()
   - job: build_html
     displayName: Build html
+    dependsOn: 
+    - build_source
     pool:
       vmImage: windows-2022
     steps:
@@ -277,7 +279,6 @@ jobs:
   - job: build_release
     displayName: Build release
     dependsOn: 
-    - build_source
     - build_html
     pool:
       vmImage: windows-2022
