@@ -35,6 +35,7 @@ import { computed } from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { Button } from "@origam/components";
+import { T } from "utils/translation";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -107,7 +108,7 @@ export class BottomToolBar extends React.Component<{
       buttons.push(
         <Button
           key={"ok"}
-          label={"Ok"}
+          label={T("Ok", "button_ok")}
           onClick={async () => {
             await this.props.mobileState.close()
           }}
