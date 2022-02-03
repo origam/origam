@@ -95,6 +95,7 @@ export class BottomToolBar extends React.Component<{
     if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
       buttons.push(
         <BottomIcon
+          key={"close"}
           iconPath={"./icons/noun-close-25798.svg"}
           onClick={async () => {
             await this.props.mobileState.close()
@@ -105,6 +106,7 @@ export class BottomToolBar extends React.Component<{
     if (this.props.mobileState.layoutState.showOkButton) {
       buttons.push(
         <Button
+          key={"ok"}
           label={"Ok"}
           onClick={async () => {
             await this.props.mobileState.close()
@@ -115,6 +117,7 @@ export class BottomToolBar extends React.Component<{
     if (actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden) {
       buttons.push(
         <ActionDropUp
+          key={"actions"}
           actions={actions}
         />
       );
@@ -122,6 +125,7 @@ export class BottomToolBar extends React.Component<{
     if (!this.props.mobileState.layoutState.refreshButtonHidden && actionButtonsState?.isRefreshButtonVisible) {
       buttons.push(
         <BottomIcon
+          key={"refresh"}
           iconPath={"./icons/noun-loading-1780489.svg"}
           onClick={onRefreshSessionClick(actionButtonsState?.formScreen)}
         />
@@ -130,6 +134,7 @@ export class BottomToolBar extends React.Component<{
     if (!this.props.mobileState.layoutState.saveButtonHidden && actionButtonsState?.isSaveButtonVisible) {
       buttons.push(
         <BottomIcon
+          key={"save"}
           className={actionButtonsState?.isDirty ? S.isRed : ""}
           iconPath={"./icons/noun-save-1014816.svg"}
           onClick={onSaveSessionClick(actionButtonsState?.formScreen)}
@@ -139,6 +144,7 @@ export class BottomToolBar extends React.Component<{
     if (this.showNextButton()) {
       buttons.push(
         <BottomIcon
+          key={"next"}
           iconPath={"./icons/list-arrow-next.svg"}
           onClick={() => onWorkflowNextClick(this.activeScreen!)(null)}
         />
