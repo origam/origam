@@ -410,5 +410,9 @@
   "new_chat": "Nový chat",
   "mobile_detail_navigation": "Detail",
   "mobile_details_dropdown": "Detaily",
-  "mobile_search_title": "Hledat"
+  "mobile_search_title": "Hledat",
+  "auto_complete_date": "Auto Complete",
+  "preview": "Náhled",
+  "format": "Formát",
+  "row_count": "Řádky"
 }

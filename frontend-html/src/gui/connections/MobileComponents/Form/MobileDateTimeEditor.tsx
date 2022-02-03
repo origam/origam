@@ -36,6 +36,7 @@ import {
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { InputClearButton } from "gui/connections/MobileComponents/Grid/InputClearButton";
+import { T } from "utils/translation";
 
 
 export const MobileDateTimeEditor: React.FC<{
@@ -146,14 +147,14 @@ export const FullScreenDateTimeEditor: React.FC<{
           <button
             className={S.autoCompleteButton}
           >
-            Auto Complete
+            {T("Auto Complete", "auto_complete_date")}
           </button>
         </div>
         <div className={S.fullScreenEditorInfoRow}>
-          {"Format: " + props.editorModel.outputFormat}
+          {T("Format", "format") + ": " + props.editorModel.outputFormat}
         </div>
         <div className={S.fullScreenEditorInfoRow}>
-          {"Preview: " + props.editorModel.autocompletedText}
+          {T("Preview", "preview") + ": " + props.editorModel.autocompletedText}
         </div>
       </div>
       <CalendarWidget

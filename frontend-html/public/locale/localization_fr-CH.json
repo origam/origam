@@ -397,5 +397,9 @@
   "request_no_longer_authorized": "Your request is no longer authorized, which means that you were either logged out or your session expired. Please log in again.",
   "mobile_detail_navigation": "Détail",
   "mobile_details_dropdown": "Détails",
-  "mobile_search_title": "rechercher"
+  "mobile_search_title": "rechercher",
+  "auto_complete_date": "autocomplete",
+  "preview": "aperçu",
+  "format": "format",
+  "row_count": "les lignes"
 }

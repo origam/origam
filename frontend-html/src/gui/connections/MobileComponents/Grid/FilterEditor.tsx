@@ -24,6 +24,7 @@ import { IDataView } from "model/entities/types/IDataView";
 import { observer, Provider } from "mobx-react";
 import S from "./FilterEditor.module.scss";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
+import { T } from "utils/translation";
 
 export const FilterEditor: React.FC<{
   dataView: IDataView
@@ -54,7 +55,7 @@ export const FilterEditor: React.FC<{
         }
       </div>
       <div className={S.rowCount}>
-        {"Rows: " + totalRowCount}
+        {T("Rows", "row_count") + ": " + totalRowCount}
       </div>
     </div>
   );
