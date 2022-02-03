@@ -51,7 +51,7 @@ export interface ITableConfiguration {
   isActive: boolean;
   layout: Layout;
 
-  sortColumnConfiguartions(propertyIds: string[]): void;
+  sortColumnConfigurations(propertyIds: string[]): void;
 
   updateColumnWidth(propertyId: string, width: number): void;
 

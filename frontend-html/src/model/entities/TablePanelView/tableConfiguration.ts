@@ -81,14 +81,14 @@ export class TableConfiguration implements ITableConfiguration {
   }
 
   deepClone() {
-    const newinstance = new TableConfiguration();
-    newinstance.name = this.name;
-    newinstance.id = this.id;
-    newinstance.fixedColumnCount = this.fixedColumnCount;
-    newinstance.columnConfigurations = this.columnConfigurations
-      .map(columnConfifuration => columnConfifuration.deepClone());
-    newinstance.layout = this.layout;
-    return newinstance;
+    const newInstance = new TableConfiguration();
+    newInstance.name = this.name;
+    newInstance.id = this.id;
+    newInstance.fixedColumnCount = this.fixedColumnCount;
+    newInstance.columnConfigurations = this.columnConfigurations
+      .map(columnConfiguration => columnConfiguration.deepClone());
+    newInstance.layout = this.layout;
+    return newInstance;
   }
 
   apply(tablePanelView: ITablePanelView) {
@@ -129,10 +129,10 @@ export class TableConfiguration implements ITableConfiguration {
     }
   }
 
-  sortColumnConfiguartions(propertyIds: string[]) {
+  sortColumnConfigurations(propertyIds: string[]) {
     this.columnConfigurations
-      .sort((congigA, configB) => {
-        const columnIdxA = propertyIds.findIndex(id => id === congigA.propertyId);
+      .sort((configA, configB) => {
+        const columnIdxA = propertyIds.findIndex(id => id === configA.propertyId);
         if (columnIdxA === -1) return 0;
         const columnIdxB = propertyIds.findIndex(id => id === configB.propertyId);
         if (columnIdxB === -1) return 0;

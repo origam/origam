@@ -128,7 +128,7 @@ export class ConfigurationManager implements IConfigurationManager {
       return;
     }
     const tablePanelView = getTablePanelView(this);
-    this.activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
+    this.activeTableConfiguration.sortColumnConfigurations(tablePanelView.tablePropertyIds);
   }
 }
 

@@ -40,7 +40,7 @@ export function saveColumnConfigurations(ctx: any) {
     for (const property of getProperties(ctx)) {
       activeTableConfiguration.updateColumnWidth(property.id, property.columnWidth);
     }
-    activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
+    activeTableConfiguration.sortColumnConfigurations(tablePanelView.tablePropertyIds);
 
     yield getApi(ctx).saveObjectConfiguration({
       sessionFormIdentifier: getSessionId(ctx),
