@@ -123,8 +123,9 @@ export class ColumnConfigurationModel{
           runInFlowWithHandler({
             ctx: this,
             action: () => {
+              const newConfiguration = this.columnsConfiguration.deepClone();
               this.revertChanges();
-              this.configManager.cloneAndActivate(this.columnsConfiguration, name);
+              this.configManager.cloneAndActivate(newConfiguration, name);
               this.onColumnConfigurationSubmit();
             }
           });
