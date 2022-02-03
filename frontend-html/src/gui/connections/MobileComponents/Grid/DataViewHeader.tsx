@@ -68,6 +68,7 @@ import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/M
 import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor";
 import { ColumnConfiguration } from "gui/connections/MobileComponents/Grid/ColumnConfiguration";
 import { getColumnConfigurationModel } from "model/selectors/getColumnConfigurationModel";
+import { saveColumnConfigurationsAsync } from "model/actions/DataView/TableView/saveColumnConfigurations";
 
 @observer
 export class DataViewHeaderInner extends React.Component<{
@@ -335,7 +336,7 @@ export class DataViewHeaderInner extends React.Component<{
                                     setDropped(false);
                                     configurationManager.activeTableConfiguration =
                                       configurationManager.defaultTableConfiguration;
-                                    await configurationManager.saveTableConfigurations();
+                                    await saveColumnConfigurationsAsync(configurationManager);
                                   }}
                                 >
                                   {T("Default View", "default_grid_view_view")}
@@ -348,7 +349,7 @@ export class DataViewHeaderInner extends React.Component<{
                                       onClick={async (event: any) => {
                                         setDropped(false);
                                         configurationManager.activeTableConfiguration = tableConfig;
-                                        await configurationManager.saveTableConfigurations();
+                                        await saveColumnConfigurationsAsync(configurationManager);
                                       }}
                                     >
                                       {tableConfig.name}
@@ -359,7 +360,7 @@ export class DataViewHeaderInner extends React.Component<{
                                   isDisabled={false}
                                   onClick={async (event: any) => {
                                     setDropped(false);
-                                    await configurationManager.saveTableConfigurations();
+                                    await saveColumnConfigurationsAsync(configurationManager);
                                   }}
                                 >
                                   {T("Save View", "save_current_column_config")}

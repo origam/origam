@@ -70,6 +70,7 @@ import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 import { getTrueSelectedRowIndex } from "model/selectors/DataView/getTrueSelectedRowIndex";
 import { getAreCrudButtonsEnabled } from "model/selectors/DataView/getAreCrudButtonsEnabled";
 import { IDataView } from "model/entities/types/IDataView";
+import { saveColumnConfigurationsAsync } from "model/actions/DataView/TableView/saveColumnConfigurations";
 
 @observer
 export class CDataViewHeaderInner extends React.Component<{
@@ -394,7 +395,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                       setDropped(false);
                                       configurationManager.activeTableConfiguration =
                                         configurationManager.defaultTableConfiguration;
-                                      await configurationManager.saveTableConfigurations();
+                                      await saveColumnConfigurationsAsync(configurationManager);
                                     }}
                                   >
                                     {T("Default View", "default_grid_view_view")}
@@ -407,7 +408,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                         onClick={async (event: any) => {
                                           setDropped(false);
                                           configurationManager.activeTableConfiguration = tableConfig;
-                                          await configurationManager.saveTableConfigurations();
+                                          await saveColumnConfigurationsAsync(configurationManager);
                                         }}
                                       >
                                         {tableConfig.name}
@@ -418,7 +419,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                     isDisabled={false}
                                     onClick={async (event: any) => {
                                       setDropped(false);
-                                      await configurationManager.saveTableConfigurations();
+                                      await saveColumnConfigurationsAsync(configurationManager);
                                     }}
                                   >
                                     {T("Save View", "save_current_column_config")}

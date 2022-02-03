@@ -482,7 +482,6 @@ export function*interpretScreenXml(
         dataViewInstance.tablePanelView.tableProperties,
         isLazyLoading
       );
-      configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       configurationManager.parent = dataViewInstance.tablePanelView;
       properties

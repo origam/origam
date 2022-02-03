@@ -17,12 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getApplication } from "model/selectors/getApplication";
+export enum Layout {
+  Mobile, Desktop
+}
 
-export function isMobileLayoutActive(ctx: any) {
-  const breakpoint = getApplication(ctx).breakpoint;
-  if(!breakpoint){
-    return false;
+export function parseLayout(candidate?: string){
+  if(candidate === "Mobile"){
+    return Layout.Mobile;
   }
-  return breakpoint.includes("small");
+  return Layout.Desktop;
+}
+
+export function layoutToString(layout?: Layout){
+  if(layout === Layout.Mobile) {
+    return "Mobile";
+  }
+  return "Desktop";
 }

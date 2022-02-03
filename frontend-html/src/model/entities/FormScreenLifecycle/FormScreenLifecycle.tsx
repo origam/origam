@@ -88,6 +88,9 @@ import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 import {T} from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { getApplication } from "model/selectors/getApplication";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -1330,6 +1333,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
               ];
             },
             () => reloadAggregationsDebounced(),
+            {fireImmediately: true}
+          )
+        );
+        this.registerDisposer(
+          reaction(
+            () => isMobileLayoutActive(dataView),
+            () => {
+              const tablePanelView = getTablePanelView(dataView);
+              const configurationManager = getConfigurationManager(tablePanelView);
+              configurationManager.activeTableConfiguration.apply(tablePanelView);
+            },
             {fireImmediately: true}
           )
         );

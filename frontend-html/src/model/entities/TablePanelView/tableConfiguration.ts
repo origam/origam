@@ -23,6 +23,7 @@ import { getProperties } from "model/selectors/DataView/getProperties";
 import { TableColumnConfiguration } from "model/entities/TablePanelView/tableColumnConfiguration";
 import { IProperty } from "../types/IProperty";
 import { observable } from "mobx";
+import { Layout, parseLayout } from "model/entities/TablePanelView/layout";
 
 export interface ICustomConfiguration{
   name: string;
@@ -40,6 +41,7 @@ export class TableConfiguration implements ITableConfiguration {
   @observable
   public isActive: boolean = false;
   id: string = "";
+  layout = Layout.Desktop;
 
   private constructor() {
   }
@@ -50,7 +52,8 @@ export class TableConfiguration implements ITableConfiguration {
       isActive: boolean,
       id: string,
       fixedColumnCount: number,
-      columnConfigurations: IColumnConfiguration[]
+      columnConfigurations: IColumnConfiguration[],
+      layout?: string
     }
   ) {
     const newInstance = new TableConfiguration();
@@ -59,15 +62,17 @@ export class TableConfiguration implements ITableConfiguration {
     newInstance.isActive = args.isActive;
     newInstance.fixedColumnCount = args.fixedColumnCount ?? 0;
     newInstance.columnConfigurations = args.columnConfigurations;
+    newInstance.layout = parseLayout(args.layout);
     return newInstance;
   }
 
 
-  static createDefault(properties: IProperty[]) {
+  static createDefault(properties: IProperty[], layout: Layout) {
     const newInstance = new TableConfiguration();
     newInstance.id = this.DefaultConfigId
     newInstance.columnConfigurations = properties
       .map(property => new TableColumnConfiguration(property.id));
+    newInstance.layout = layout;
     return newInstance;
   }
 
@@ -82,6 +87,7 @@ export class TableConfiguration implements ITableConfiguration {
     newinstance.fixedColumnCount = this.fixedColumnCount;
     newinstance.columnConfigurations = this.columnConfigurations
       .map(columnConfifuration => columnConfifuration.deepClone());
+    newinstance.layout = this.layout;
     return newinstance;
   }
 
