@@ -153,6 +153,7 @@ export class FormField extends React.Component<{
             xmlNode={this.props.xmlNode}
             backgroundColor={this.props.backgroundColor}
             onTextOverflowChanged={toolTip => this.toolTip = toolTip}
+            dock={this.props.dock}
           />
         </div>
       </>

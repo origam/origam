@@ -85,6 +85,10 @@
       <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
       <Name>Origam.BI.CrystalReports.NetFx</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj">
+      <Project>{1d907319-08a1-4355-98ce-5e03eda31556}</Project>
+      <Name>Origam.BI.Excel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj">
       <Project>{183e889e-77ab-46b0-8d4f-30bb68671907}</Project>
       <Name>Origam.BI.FastReport</Name>
@@ -284,10 +288,6 @@
       <Name>Origam.Workflow</Name>
       <Project>{DF2A8DAD-6C59-4653-B3BB-DA50B14E3DE9}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj">
-      <Project>{2380e7b2-c993-4167-abca-22ff07a91b2a}</Project>
-      <Name>Origam.BI.Excel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Gui\Origam.Gui.csproj">
       <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>

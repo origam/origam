@@ -22,16 +22,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Collections;
-using Origam.Rule;
-using Origam.Schema.GuiModel;
-using Origam.Workflow.FileService;
 using System.IO;
-using Origam.Workbench.Services;
+using Origam.Service.Core;
+using Origam.Schema.GuiModel;
 using NPOI.SS.UserModel;
-using Origam.Excel;
+using Origam.Workflow.FileService;
+using Origam.Workbench.Services;
+using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
-using Origam.Service.Core;
+using Origam.Excel;
 
 namespace Origam.BI.Excel
 {
@@ -56,7 +56,7 @@ namespace Origam.BI.Excel
         public object GetReport(Guid reportId, IXmlContainer data, string format,
             Hashtable parameters, string dbTransaction)
         {
-            if(format != DataReportExportFormatType.MSExcel.ToString())
+            if (format != DataReportExportFormatType.MSExcel.ToString())
             {
                 throw new ArgumentOutOfRangeException("format", format,
                     Properties.Resources.FormatNotSupported);
@@ -68,7 +68,7 @@ namespace Origam.BI.Excel
                 ReportHelper.PopulateDefaultValues(report, parameters);
                 ReportHelper.ComputeXsltValueParameters(report, parameters);
                 OrigamSpreadsheet spreadsheetData = GetSpreadsheetData(report, data, parameters, dbTransaction);
-                if(spreadsheetData.Workbook.Rows.Count != 1)
+                if (spreadsheetData.Workbook.Rows.Count != 1)
                 {
                     throw new Exception("Source data expect to contain a single Workbook.");
                 }
@@ -76,14 +76,14 @@ namespace Origam.BI.Excel
                     as OrigamSpreadsheet.WorkbookRow;
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
                 FileInfo fi = new FileInfo(Path.Combine(settings.ReportsFolder(), report.ReportFileName));
-                if(fi.Exists)
+                if (fi.Exists)
                 {
                     Stream openStream = fi.Open(FileMode.Open);
                     IWorkbook wb = ExcelTools.GetWorkbook(
                         ExcelTools.StringToExcelFormat(
                             fi.Extension.Replace(".", "")),
                         openStream);
-                    foreach(OrigamSpreadsheet.SheetRow sourceSheet in
+                    foreach (OrigamSpreadsheet.SheetRow sourceSheet in
                         sourceWorkbook.GetSheetRows())
                     {
                         ProcessSheet(wb, sourceSheet);
@@ -102,7 +102,7 @@ namespace Origam.BI.Excel
 
         private static void SetWorkbookProperties(OrigamSpreadsheet.WorkbookRow sourceWorkbook, IWorkbook wb)
         {
-            if(!sourceWorkbook.IsActiveSheetIndexNull())
+            if (!sourceWorkbook.IsActiveSheetIndexNull())
             {
                 wb.SetActiveSheet(sourceWorkbook.ActiveSheetIndex);
             }
@@ -111,13 +111,13 @@ namespace Origam.BI.Excel
         private static void ProcessSheet(IWorkbook wb, OrigamSpreadsheet.SheetRow sourceSheet)
         {
             ISheet sheet = wb.GetSheet(sourceSheet.SheetName);
-            if(sheet == null)
+            if (sheet == null)
             {
                 // sheet does not exist, we create it
                 sheet = wb.CreateSheet(sourceSheet.SheetName);
             }
             SetSheetProperties(sourceSheet, sheet);
-            foreach(OrigamSpreadsheet.RowRow sourceRow in sourceSheet.GetRowRows())
+            foreach (OrigamSpreadsheet.RowRow sourceRow in sourceSheet.GetRowRows())
             {
                 ProcessRow(sheet, sourceRow);
             }
@@ -125,7 +125,7 @@ namespace Origam.BI.Excel
 
         private static void SetSheetProperties(OrigamSpreadsheet.SheetRow sourceSheet, ISheet sheet)
         {
-            if(!sourceSheet.IsTabColorIndexNull())
+            if (!sourceSheet.IsTabColorIndexNull())
             {
                 sheet.TabColorIndex = Convert.ToInt16(sourceSheet.TabColorIndex);
             }
@@ -134,12 +134,12 @@ namespace Origam.BI.Excel
         private static void ProcessRow(ISheet sheet, OrigamSpreadsheet.RowRow sourceRow)
         {
             IRow row = sheet.GetRow(sourceRow.Index);
-            if(row == null)
+            if (row == null)
             {
                 row = sheet.CreateRow(sourceRow.Index);
             }
             SetRowProperties(sourceRow, row);
-            foreach(OrigamSpreadsheet.CellRow sourceCell in sourceRow.GetCellRows())
+            foreach (OrigamSpreadsheet.CellRow sourceCell in sourceRow.GetCellRows())
             {
                 ProcessCell(row, sourceCell);
             }
@@ -152,7 +152,7 @@ namespace Origam.BI.Excel
         private static void ProcessCell(IRow row, OrigamSpreadsheet.CellRow sourceCell)
         {
             ICell cell = row.GetCell(sourceCell.Index);
-            if(cell == null)
+            if (cell == null)
             {
                 cell = row.CreateCell(sourceCell.Index);
             }
@@ -162,12 +162,12 @@ namespace Origam.BI.Excel
         private static void SetCellProperties(OrigamSpreadsheet.CellRow sourceCell, ICell cell)
         {
             string value = null;
-            if(!sourceCell.IsValueNull())
+            if (!sourceCell.IsValueNull())
             {
                 value = sourceCell.Value;
             }
             CellType newType = (CellType)Enum.ToObject(typeof(CellType), sourceCell.Type);
-            switch(newType)
+            switch (newType)
             {
                 case CellType.NUMERIC:
                     cell.SetCellType(NPOI.SS.UserModel.CellType.Numeric);
@@ -211,7 +211,7 @@ namespace Origam.BI.Excel
                 ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
             // optional xslt transformation
             OrigamSpreadsheet spreadsheetData = null;
-            if(report.Transformation != null)
+            if (report.Transformation != null)
             {
                 IPersistenceService persistence = ServiceManager.Services.GetService(
                     typeof(IPersistenceService)) as IPersistenceService;
@@ -229,7 +229,7 @@ namespace Origam.BI.Excel
             }
             else
             {
-                if(!(xmlDataDoc.DataSet is OrigamSpreadsheet))
+                if (!(xmlDataDoc.DataSet is OrigamSpreadsheet))
                 {
                     throw new InvalidCastException("Data source for ExcelReport must be OrigamSpreadsheet.");
                 }

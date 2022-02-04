@@ -119,10 +119,6 @@ export function DropdownEditorControl(props: {
             foregroundColor={props.foregroundColor}
             customStyle={props.customStyle}
           />
-          {/*<button className={"inputBtn"} disabled={beh.isReadOnly}>*/}
-          {/*  <i className="fas fa-ellipsis-h"></i>*/}
-          {/*</button>*/}
-
           <div
             className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
             tabIndex={-1}
