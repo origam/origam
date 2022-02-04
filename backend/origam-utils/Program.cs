@@ -588,17 +588,24 @@ namespace Origam.Utils
 
         private static int TestDatabase(DBTestArguments arguments)
         {
-            OrigamSettingsCollection configurations =
-                ConfigurationManager.GetAllConfigurations();
-            if (configurations.Count != 1)
+            OrigamSettingsCollection configurations;
+            try
             {
-                throw new ArgumentException("OrigamSettings.config does not contain exactly one configuration.");
+                configurations =
+                    ConfigurationManager.GetAllConfigurations();
+                if (configurations.Count != 1)
+                {
+                    return SetTestDatabaseReturn(false);
+                }
+            } catch
+            {
+                return SetTestDatabaseReturn(false);
             }
 
             OrigamSettings settings = configurations[0];
             
             string connString = settings.DataConnectionString;
-            int result = 0;
+            bool result = false;
 
             for (int i = 0; i < arguments.tries; i++)
             {
@@ -615,7 +622,7 @@ namespace Origam.Utils
                         var info = command.ExecuteScalar().ToString();
                         if (info != null)
                         {
-                            result = 1;
+                            result = true;
                             
                             break;
                         }
@@ -627,10 +634,13 @@ namespace Origam.Utils
                 }
                 Thread.Sleep(arguments.delay);
             }
-            Console.WriteLine(result == 1
-                ? "true"
-                : "false");
-            return result;
+            return SetTestDatabaseReturn(result);
+        }
+
+        private static int SetTestDatabaseReturn(bool bol)
+        {
+            Console.Write(bol);
+            return Convert.ToInt32(bol);
         }
     }
 }
