@@ -173,7 +173,6 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={this.props.onEditorKeyDown}
-            forceTakeFocus={false}
             subscribeToFocusManager={(editor) =>
               focusManager.activeEditor = editor
             }

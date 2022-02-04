@@ -34,7 +34,6 @@ export class BoolEditor extends React.Component<{
   onBlur?: () => void;
   onFocus?: () => void;
   id?: string;
-  forceTakeFocus?: boolean;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   elmInput: HTMLInputElement | null = null;
@@ -43,9 +42,6 @@ export class BoolEditor extends React.Component<{
   };
 
   componentDidMount() {
-    if (this.props.forceTakeFocus) {
-      this.elmInput?.focus();
-    }
     if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
     }
