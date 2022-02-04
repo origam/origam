@@ -180,8 +180,7 @@ export const ColumnConfig: React.FC<{
           key={"Width"}
           className={S.row}>
           <div className={S.label}>
-            {"Width"}
-            {/*{T("Width", "column_width")}*/}
+            {T("Width", "column_width")}
           </div>
           <input
             className={S.input}

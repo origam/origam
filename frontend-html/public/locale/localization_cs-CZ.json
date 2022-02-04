@@ -414,5 +414,6 @@
   "auto_complete_date": "Auto Complete",
   "preview": "Náhled",
   "format": "Formát",
-  "row_count": "Řádky"
+  "row_count": "Řádky",
+  "column_width": "Šířka"
 }

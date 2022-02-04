@@ -401,5 +401,6 @@
   "auto_complete_date": "autocomplete",
   "preview": "aperçu",
   "format": "format",
-  "row_count": "les lignes"
+  "row_count": "les lignes",
+  "column_width": "largeur"
 }

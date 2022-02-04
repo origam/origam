@@ -413,5 +413,6 @@
   "auto_complete_date": "Vervollständigung",
   "preview": "Vorschau",
   "format": "Format",
-  "row_count": "Reihen"
+  "row_count": "Reihen",
+  "column_width": "Breite"
 }

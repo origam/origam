@@ -417,5 +417,6 @@
   "auto_complete_date": "Auto Complete",
   "preview": "Preview",
   "format": "Format",
-  "row_count": "Rows"
+  "row_count": "Rows",
+  "column_width": "Width"
 }
