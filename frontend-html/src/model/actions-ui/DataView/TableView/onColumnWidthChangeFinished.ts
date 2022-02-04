@@ -17,18 +17,20 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { flow } from "mobx";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export function onColumnWidthChangeFinished(ctx: any) {
-  return flow(function*onColumnWidthChangeFinished(id: string, width: number) {
-    // TODO: Error handling
-    const prop = getDataViewPropertyById(ctx, id);
-    if (prop) {
-      yield*getTablePanelView(ctx).configurationManager.onColumnWidthChanged(id, width);
-
-      // TODO: Error handling
-    }
-  });
+  return async function onColumnWidthChangeFinished(id: string, width: number) {
+    await runGeneratorInFlowWithHandler({
+      ctx: ctx,
+      generator: function*(){
+        const prop = getDataViewPropertyById(ctx, id);
+        if (prop) {
+          yield*getTablePanelView(ctx).configurationManager.onColumnWidthChanged(id, width);
+        }
+      }()
+    });
+  }
 }
