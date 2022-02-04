@@ -164,10 +164,10 @@ export class ColumnsDialog extends React.Component<{
         if (groupingIndex > 0 && entity === "Date") {
           return (
               <SimpleDropdown
-                width={"72.5px"}
                 options={timeunitOptions}
                 selectedOption={selectedTimeUnitOption}
                 onOptionClick={option =>  this.props.model.setTimeGroupingUnit(rowIndex, option.value)}
+                className={S.dropdown}
               />
           );
         } else {
@@ -183,10 +183,10 @@ export class ColumnsDialog extends React.Component<{
         ) {
           return (
             <SimpleDropdown
-              width={"72.5px"}
               options={aggregationOptions}
               selectedOption={selectedAggregationOption}
               onOptionClick={option => this.props.model.setAggregation(rowIndex, option.value)}
+              className={S.dropdown}
             />
           );
         } else {

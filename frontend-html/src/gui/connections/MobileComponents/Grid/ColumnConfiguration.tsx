@@ -57,7 +57,7 @@ export const ColumnConfiguration: React.FC<{
         <div className={S.lockedColumnsRow}>
           {T("Locked columns count", "column_config_locked_columns_count")}
           <input
-            className={S.lockedColumnsInput}
+            className={S.input}
             type="number"
             min={0}
             value={"" + configModel.columnsConfiguration.fixedColumnCount}
@@ -116,7 +116,7 @@ export const ColumnConfig: React.FC<{
     return (
       <>
         <div
-          key={props.config.propertyId}
+          key={"Visible"}
           className={S.row}>
           <div className={S.label}>
             {T("Visible", "column_config_visible")}
@@ -129,7 +129,7 @@ export const ColumnConfig: React.FC<{
         </div>
         {canGroup &&
           <div
-            key={props.config.propertyId}
+            key={"GroupBy"}
             className={S.row}>
             <div className={S.label}>
               {T("GroupBy", "column_config_group_by")}
@@ -144,13 +144,13 @@ export const ColumnConfig: React.FC<{
         }
         {props.config.groupingIndex > 0 && entity === "Date" &&
           <div
-            key={props.config.propertyId}
+            key={"Grouping Unit"}
             className={S.row}>
             <div className={S.label}>
               {T("Grouping Unit", "column_config_time_grouping_unit")}
             </div>
             <SimpleDropdown
-              width={"95px"}
+              className={S.dropdown}
               options={timeunitOptions}
               selectedOption={selectedTimeUnitOption}
               onOptionClick={option => props.model.setTimeGroupingUnit(props.index, option.value)}
@@ -163,19 +163,33 @@ export const ColumnConfig: React.FC<{
             entity === "Long") &&
           canAggregate &&
           <div
-            key={props.config.propertyId}
+            key={"Aggregation"}
             className={S.row}>
             <div className={S.label}>
               {T("Aggregation", "column_config_aggregation")}
             </div>
             <SimpleDropdown
-              width={"95px"}
+              className={S.dropdown}
               options={aggregationOptions}
               selectedOption={selectedAggregationOption}
               onOptionClick={option => props.model.setAggregation(props.index, option.value)}
             />
           </div>
         }
+        <div
+          key={"Width"}
+          className={S.row}>
+          <div className={S.label}>
+            {"Width"}
+            {/*{T("Width", "column_width")}*/}
+          </div>
+          <input
+            className={S.input}
+            type="number"
+            onChange={(event: any) => props.model.setWidth(props.index, event.target.value)}
+            value={props.config.width}
+          />
+        </div>
       </>
     );
   }

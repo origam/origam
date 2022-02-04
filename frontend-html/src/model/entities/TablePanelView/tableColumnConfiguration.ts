@@ -37,6 +37,7 @@ export class TableColumnConfiguration implements IColumnConfiguration {
   isVisible: boolean = true;
   @observable
   timeGroupingUnit: GroupingUnit | undefined;
+  @observable
   width = 0;
 
   deepClone(): IColumnConfiguration {

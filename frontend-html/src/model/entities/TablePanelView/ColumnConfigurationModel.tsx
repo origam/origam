@@ -103,7 +103,8 @@ export class ColumnConfigurationModel{
     })
   }
 
-  @action.bound onColumnConfCancel(): void {
+  @action.bound
+  onColumnConfCancel(): void {
     this.revertChanges();
     getDialogStack(this).closeDialog(dialogKey);
   }
@@ -115,7 +116,8 @@ export class ColumnConfigurationModel{
     this.configManager.activeTableConfiguration = this.tableConfigBeforeChanges;
   }
 
-  @action.bound onSaveAsClick(): void {
+  @action.bound
+  onSaveAsClick(): void {
     const closeDialog = getDialogStack(this).pushDialog(
       "",
       <NewConfigurationDialog
@@ -139,7 +141,8 @@ export class ColumnConfigurationModel{
     );
   }
 
-  @action.bound onColumnConfSubmit(configuration: ITableConfiguration): void {
+  @action.bound
+  onColumnConfSubmit(configuration: ITableConfiguration): void {
     const groupingWasOnBefore = this.tablePanelView?.groupingConfiguration.isGrouping;
     configuration.apply(this.tablePanelView);
     const groupingIsOffNow = !this.tablePanelView?.groupingConfiguration.isGrouping;
@@ -150,11 +153,13 @@ export class ColumnConfigurationModel{
     getDialogStack(this).closeDialog(dialogKey);
   }
 
-  @action.bound setVisible(rowIndex: number, state: boolean) {
+  @action.bound
+  setVisible(rowIndex: number, state: boolean) {
     this.sortedColumnConfigs[rowIndex].isVisible = state;
   }
 
-  @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
+  @action.bound
+  setGrouping(rowIndex: number, state: boolean, entity: string) {
     if (entity === "Date") {
       if (state) {
         this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
@@ -180,17 +185,25 @@ export class ColumnConfigurationModel{
     }
   }
 
-  @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
+  @action.bound
+  setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
     this.sortedColumnConfigs[rowIndex].timeGroupingUnit = groupingUnit;
   }
 
-  @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
+  @action.bound
+  setAggregation(rowIndex: number, selectedAggregation: any) {
     this.sortedColumnConfigs[rowIndex].aggregationType = tryParseAggregationType(
       selectedAggregation
     );
   }
 
-  @action.bound handleFixedColumnsCountChange(event: any) {
+  @action.bound
+  setWidth(rowIndex: number, width: number) {
+    this.sortedColumnConfigs[rowIndex].width = width;
+  }
+
+  @action.bound
+  handleFixedColumnsCountChange(event: any) {
     this.columnsConfiguration.fixedColumnCount = parseInt(event.target.value, 10);
   }
 
