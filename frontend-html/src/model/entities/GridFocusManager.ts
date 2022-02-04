@@ -4,11 +4,11 @@ import { IFocusable } from "./FormFocusManager";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 
 export class GridFocusManager {
+  private _activeEditor: IFocusable | undefined;
+  public focusTableOnReload: boolean = true;
 
   constructor(public parent: any) {
   }
-
-  public focusTableOnReload: boolean = true;
 
   focusTableIfNeeded() {
     const filtersVisible = getFilterConfiguration(this.parent).isFilterControlsDisplayed;
@@ -20,10 +20,17 @@ export class GridFocusManager {
     }
   }
 
-  activeEditor: IFocusable | undefined;
+  get activeEditor(): IFocusable | undefined {
+    return this._activeEditor;
+  }
+
+  set activeEditor(value: IFocusable | undefined) {
+    this._activeEditor = value;
+    this.focusEditor();
+  }
 
   focusEditor() {
-    this.activeEditor?.focus();
+    this._activeEditor?.focus();
   }
 }
 

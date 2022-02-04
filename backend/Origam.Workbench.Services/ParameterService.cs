@@ -139,7 +139,10 @@ namespace Origam.Workbench.Services
 		{
 			
 		}
+		public void PrepareParameters()
+        {
 
+        }
 		public Guid ResolveLanguageId(string cultureString)
 		{
 			return Guid.Empty;
@@ -577,7 +580,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		private void PrepareParameters()
+		public void PrepareParameters()
 		{
 			lock(_constantsById)
 			{

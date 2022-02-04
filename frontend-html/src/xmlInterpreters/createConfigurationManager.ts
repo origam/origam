@@ -144,8 +144,8 @@ function parseCustomConfigurations(configurationNode: any): ICustomConfiguration
   return customConfigurationNodes
     .map((customConfigNode: any) => {
       const config = customConfigNode.elements[0]?.text ?? "";
-      const decodedConfig = decodeURIComponent(escape(window.atob(config)))
-      return {
+      const decodedConfig = decodeURIComponent(encodeURIComponent(window.atob(config)))
+      return{
         name: customConfigNode.name.replace("Configuration", ""),
         value: decodedConfig
       }

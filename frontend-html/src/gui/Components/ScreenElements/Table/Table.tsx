@@ -423,7 +423,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           fixedHoriz={true}
                           fixedVert={true}
                           width={this.fixedColumnsWidth}
-                          zIndex={100}
+                          zIndex={101}
                         >
                           <HeaderRow headerElements={this.fixedHeaders} zIndex={100}/>
                         </Scrollee>
@@ -431,7 +431,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                       <Scrollee
                         scrollOffsetSource={this.props.scrollState}
                         fixedVert={true}
-                        zIndex={101}
+                        zIndex={100}
                         width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
                       >
                         <DragDropContext onDragEnd={(result) => this.onColumnDragEnd(result)}>

@@ -60,5 +60,6 @@ namespace Origam.Workbench.Services
             decimal floatValue, decimal currencyValue, object dateValue, Guid? overridenProfileId);
         void RefreshParameters();
 		Guid ResolveLanguageId(String cultureString);
-	}
+        void PrepareParameters();
+    }
 }

@@ -101,6 +101,7 @@ export class FormField extends React.Component<IFormFieldProps> {
             xmlNode={this.props.xmlNode}
             backgroundColor={this.props.backgroundColor}
             onTextOverflowChanged={toolTip => this.toolTip = toolTip}
+            dock={this.props.dock}
           />
           {invalidMessage && (
             <div className={S.notification} title={invalidMessage}>
