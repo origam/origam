@@ -55,16 +55,16 @@ export const ColumnConfiguration: React.FC<{
             />
           )}
         </div>
-        <div className={S.lockedColumnsRow}>
-          {T("Locked columns count", "column_config_locked_columns_count")}
-          <input
-            className={S.input}
-            type="number"
-            min={0}
-            value={"" + configModel.columnsConfiguration.fixedColumnCount}
-            onChange={configModel.handleFixedColumnsCountChange}
-          />
-        </div>
+      </div>
+      <div className={S.lockedColumnsRow}>
+        {T("Locked columns count", "column_config_locked_columns_count")}
+        <input
+          className={S.input}
+          type="number"
+          min={0}
+          value={"" + configModel.columnsConfiguration.fixedColumnCount}
+          onChange={configModel.handleFixedColumnsCountChange}
+        />
       </div>
       <div className={S.buttonRow}>
         <Button
