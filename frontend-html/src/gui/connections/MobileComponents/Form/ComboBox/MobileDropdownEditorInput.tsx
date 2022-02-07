@@ -40,7 +40,7 @@ export function MobileDropdownEditorInput(props: {
 
   useEffect(() => {
     props.behavior.updateTextOverflowState();
-  }); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
   function getStyle() {
     if (props.customStyle) {
       return props.customStyle;

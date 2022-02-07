@@ -77,7 +77,7 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
   }
 
   return (
-    <div className={cx(CS.control, S.mobileInput)}>
+    <div className={cx(CS.control, S.mobileInput, props.isReadOnly ? S.readOnly : "")}>
       <div
         className={cx("input", S.input, props.isLink ? S.link : "")}
         onClick={onTextClick}

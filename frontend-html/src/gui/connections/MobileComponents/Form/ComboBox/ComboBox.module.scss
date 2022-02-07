@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root{
+.root {
   display: flex;
 }
 
@@ -30,9 +30,22 @@ div.mobileInput > .input:read-only {
   min-height: 23px;
 }
 
-div.mobileInput div.link{
+div.mobileInput div.link {
   color: var(--foreground1);
-  &:read-only{
+
+  &:read-only {
     color: var(--foreground1);
+  }
+}
+
+.readOnly{
+  div.input:read-only {
+    background: var(--background3);
+    border: 1px solid var(--background3);
+  }
+  div:global(.inputBtn):global(.lastOne){
+    background: var(--background3);
+    border: 1px solid var(--background3);
+    color: var(--background5);
   }
 }
