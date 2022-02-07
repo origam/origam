@@ -210,7 +210,8 @@ namespace Origam.Utils
                     "Compares schema with database. If no comparison switches are defined, no comparison is done. More than one switch can be enabled.")]
             public CompareSchemaOptions CompareSchemaVerb { get; set; }
 #endif
-            [ParserState] public IParserState LastParserState { get; set; }
+            [ParserState] 
+            public IParserState LastParserState { get; set; }
 
             [HelpVerbOption]
             public string GetUsage(string verb)
@@ -245,51 +246,53 @@ namespace Origam.Utils
                 return 1;
             }
 
-            if (invokedVerb != "test-db")
-            {
-                Console.WriteLine(string.Format(Strings.ShortGnu,
-                    System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
-            }
-
             switch (invokedVerb)
             {
                 case "process-checkrules":
                 {
-                    return ProcesRule(
+                        EntryAssembly();
+                        return ProcesRule(
                         (ProcessCheckRules)invokedVerbInstance);
                 }
                 case "process-docgenerator":
                 {
-                    return ProcesDocGenerator(
+                        EntryAssembly();
+                        return ProcesDocGenerator(
                         (ProcessDocGeneratorArgs)invokedVerbInstance);
                 }
                 case "generate-password-hash":
                 {
-                    return HashPassword(
+                        EntryAssembly();
+                        return HashPassword(
                         (GeneratePassHashOptions)invokedVerbInstance);
                 }
 #if !NETCORE2_1
                 case "process-queue":
                 {
-                    return ProcesQueue(
+                        EntryAssembly();
+                        return ProcesQueue(
                         (ProcessQueueOptions)invokedVerbInstance);
                 }
                 case "run-scripts":
                 {
-                    return RunUpdateScripts();
+                        EntryAssembly();
+                        return RunUpdateScripts();
                 }
                 case "restart-server":
                 {
-                    return RestartServer();
+                        EntryAssembly();
+                        return RestartServer();
                 }
                 case "create-hash-index":
                 {
-                    return CreateHashIndex(
+                        EntryAssembly();
+                        return CreateHashIndex(
                         (CreateHashIndexOptions)invokedVerbInstance);
                 }
                 case "compare-schema":
                 {
-                    return CompareSchema(
+                        EntryAssembly();
+                        return CompareSchema(
                         (CompareSchemaOptions)invokedVerbInstance);
                 }
                 case "test-db":
@@ -300,11 +303,18 @@ namespace Origam.Utils
 #endif
                 default:
                 {
-                    return 1;
+                        EntryAssembly();
+                        return 1;
                 }
             }
         }
-        
+
+        private static void EntryAssembly()
+        {
+            Console.WriteLine(string.Format(Strings.ShortGnu,
+                    System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
+        }
+
         private static int HashPassword(GeneratePassHashOptions options)
         {
             string hash =
@@ -457,8 +467,9 @@ namespace Origam.Utils
 
         private static int CompareSchema(CompareSchemaOptions options)
         {
-            if (!options.MissingInDB && !options.MissingInSchema
-                                     && !options.ExistingButDifferent)
+            if (!options.MissingInDB 
+                && !options.MissingInSchema
+                && !options.ExistingButDifferent)
             {
                 if (log.IsInfoEnabled)
                 {
@@ -601,12 +612,9 @@ namespace Origam.Utils
             {
                 return SetTestDatabaseReturn(false);
             }
-
             OrigamSettings settings = configurations[0];
-            
             string connString = settings.DataConnectionString;
             bool result = false;
-
             for (int i = 0; i < arguments.tries; i++)
             {
                 try
@@ -614,16 +622,12 @@ namespace Origam.Utils
                     using (var connection = new SqlConnection(connString))
                     {
                         var query = arguments.sqlCommand;
-
                         var command = new SqlCommand(query, connection);
-
                         connection.Open();
-
                         var info = command.ExecuteScalar().ToString();
                         if (info != null)
                         {
                             result = true;
-                            
                             break;
                         }
                     }
