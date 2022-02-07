@@ -31,6 +31,7 @@ export const FilterEditor: React.FC<{
 }> = observer((props) => {
 
   const propertiesToDisplay = getTableViewProperties(props.dataView)
+    .filter(prop => prop.column !== "Image");
   const totalRowCount = getTotalRowCount(props.dataView);
 
   return (
