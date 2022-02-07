@@ -128,7 +128,12 @@ export class DataViewHeaderInner extends React.Component<{
 
   @action
   onFilterButtonClick(){
-    this.mobileState.layoutState =  new EditLayoutState(<FilterEditor dataView={this.dataView}/>);
+    this.mobileState.layoutState =  new EditLayoutState(
+      <FilterEditor dataView={this.dataView}/>,
+      new ScreenLayoutState(),
+      true,
+      T("Filter", "filter_tool_tip")
+    );
   }
 
   @action
@@ -139,6 +144,9 @@ export class DataViewHeaderInner extends React.Component<{
       <ColumnConfiguration dataView={this.dataView}/>,
       new ScreenLayoutState(),
       false,
+      configurationModel.columnsConfiguration.name === ""
+        ?  T("Default View", "default_grid_view_view")
+        : configurationModel.columnsConfiguration.name
     );
   }
 

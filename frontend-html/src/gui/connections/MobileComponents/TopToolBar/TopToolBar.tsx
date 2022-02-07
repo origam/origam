@@ -52,15 +52,22 @@ export class TopToolBar extends React.Component<{
     onScreenToolbarLogoutClick(this.application)(event);
   }
 
+  getLeftElement(){
+    if(this.layoutState.showHamburgerMenuButton){
+      return <MenuButton/>
+    }
+    if(this.layoutState.showSearchButton){
+      return <div style={{minWidth: "90px"}}/>
+    }
+    return <div style={{minWidth: "67px"}}/>
+  }
+
   render() {
     const avatarLink = getUserAvatarLink(this.application);
     const userName = getLoggedUserName(this.application);
     return (
       <div className={S.root}>
-        {this.layoutState.showHamburgerMenuButton
-          ? <MenuButton/>
-          : <div style={{minWidth: "90px"}}/>
-        }
+        {this.getLeftElement()}
         <TabSelector mobileState={this.props.mobileState}/>
         {this.layoutState.showSearchButton && <SearchButton mobileState={this.props.mobileState}/>}
         <UserMenuDropdown

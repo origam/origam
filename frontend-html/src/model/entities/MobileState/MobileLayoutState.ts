@@ -97,13 +97,16 @@ export class EditLayoutState implements IMobileLayoutState {
   showSearchButton = false;
   showHamburgerMenuButton = false;
   showOkButton = true;
-  heading = "";
+  heading: string;
 
   constructor(
     public component: React.ReactNode,
     public layoutAfterClose?: IMobileLayoutState,
-    showOkButton?: boolean) {
+    showOkButton?: boolean,
+    heading?: string)
+  {
     this.showOkButton = showOkButton ?? true;
+    this.heading = heading ?? "";
   }
 
   showCloseButton(someScreensAreOpen: boolean) {
