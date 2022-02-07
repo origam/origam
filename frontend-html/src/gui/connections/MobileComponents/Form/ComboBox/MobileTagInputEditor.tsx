@@ -110,8 +110,10 @@ export const MobileTagInputEditor = (
 export function getTagInputValues(property: IProperty): any[]{
   const dataTable = getDataTable(property);
   const row = getSelectedRow(property);
+  if(!row){
+    return [];
+  }
 
-
-  const cellValue = dataTable.getCellValue(row!, property);
+  const cellValue = dataTable.getCellValue(row, property);
   return (Array.isArray(cellValue) ? [...cellValue] : cellValue) as any[];
 }
