@@ -102,7 +102,7 @@ export const ColumnConfig: React.FC<{
   const selectedTimeUnitOption = timeunitOptions.find(option => option.value === props.config.timeGroupingUnit)!;
 
   const {
-    name, // eslint-disable-line
+    name,
     entity,
     canGroup,
     canAggregate,
@@ -198,7 +198,7 @@ export const ColumnConfig: React.FC<{
         className={S.columnConfigHeader}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        {props.config.propertyId}
+        {name}
         <div
           className={cx(S.arrow, {"fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded})}
         />
