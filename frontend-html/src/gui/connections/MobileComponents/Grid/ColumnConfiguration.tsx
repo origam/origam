@@ -33,6 +33,7 @@ import { Button, SimpleDropdown } from "@origam/components";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/MobileBooleanInput";
 
 export const ColumnConfiguration: React.FC<{
   dataView: IDataView
@@ -121,8 +122,7 @@ export const ColumnConfig: React.FC<{
           <div className={S.label}>
             {T("Visible", "column_config_visible")}
           </div>
-          <input
-            type="checkbox"
+          <MobileBooleanInput
             onChange={(event: any) => props.model.setVisible(props.index, event.target.checked)}
             checked={props.config.isVisible}
           />
@@ -134,8 +134,7 @@ export const ColumnConfig: React.FC<{
             <div className={S.label}>
               {T("GroupBy", "column_config_group_by")}
             </div>
-            <input
-              type="checkbox"
+            <MobileBooleanInput
               checked={props.config.groupingIndex > 0}
               onChange={(event: any) => props.model.setGrouping(props.index, event.target.checked, entity)}
               disabled={!canGroup}
