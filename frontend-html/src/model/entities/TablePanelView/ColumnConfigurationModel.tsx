@@ -97,7 +97,7 @@ export class ColumnConfigurationModel{
       ctx: this,
       generator: function*() {
         self.onColumnConfSubmit(self.columnsConfiguration);
-        self.tableConfigBeforeChanges = undefined;
+        self.reset();
         yield*saveColumnConfigurations(self)();
       }()
     })
