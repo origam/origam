@@ -61,6 +61,7 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
       return <FilterSettingsBoolean
         id={property.modelInstanceId}
         setting={getSettings(FilterSettingsBoolean.defaultSettings)}
+        ctx={property}
       />;
     case "Date":
       return <FilterSettingsDate
