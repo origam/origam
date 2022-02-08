@@ -392,6 +392,20 @@ namespace Origam.Server
             }
             return sessionStore.GetRowData(
                 input.Entity, input.RowId, false);
+        } 
+        public ChangeInfo GetRow(MasterRecordInput input)
+        {
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore 
+                    = sessionManager.GetSession(input.SessionFormIdentifier);
+            }
+            catch
+            {
+                // ignored
+            }
+            return sessionStore?.GetRow(input.Entity, input.RowId);
         }
         public IDictionary GetParameters(Guid sessionFormIdentifier)
         {
