@@ -394,6 +394,20 @@ namespace Origam.ServerCommon
             return result;
         }
         
+        public override ChangeInfo GetRow(string entity, object id)
+        {
+            lock (_getRowDataLock)
+            {
+                if (id == null)
+                {
+                    CurrentRecordId = null;
+                    return null;
+                }
+                DataRow row = GetSessionRow(entity, id);
+                return GetChangeInfo(null, row, Operation.Update);
+            }
+        }
+
         public override void RevertChanges()
         {
             lock (_getRowDataLock)

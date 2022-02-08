@@ -18,13 +18,10 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import {getRowStates} from "model/selectors/RowState/getRowStates";
 import { ScreenPictureCache } from "./ScreenPictureCache";
-import { DataViewCache } from "./DataViewCache";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
-import { getSessionId } from "model/selectors/getSessionId";
-import { getEntity } from "model/selectors/DataView/getEntity";
+
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
-import { getApi } from "model/selectors/getApi";
 
 export class FormScreen implements IFormScreen {
   

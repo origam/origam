@@ -2147,6 +2147,10 @@ namespace Origam.Server
         {
             throw new Exception("GetRowData not available for " + this.GetType().Name);
         }
+        public virtual ChangeInfo GetRow(string entity, object id)
+        {
+            throw new Exception("GetRow not available for " + GetType().Name);
+        }
         #endregion
 
         private void AddChildDeletedItems(ArrayList deletedItems, DataRow deletedRow)
