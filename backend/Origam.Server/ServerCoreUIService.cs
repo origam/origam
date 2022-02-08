@@ -376,16 +376,7 @@ namespace Origam.Server
         }
         public ArrayList GetRowData(MasterRecordInput input)
         {
-            SessionStore sessionStore = null;
-            try
-            {
-                sessionStore 
-                    = sessionManager.GetSession(input.SessionFormIdentifier);
-            }
-            catch
-            {
-                // ignored
-            }
+            SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
             if(sessionStore == null)
             {
                 return new ArrayList();
@@ -395,17 +386,9 @@ namespace Origam.Server
         } 
         public ChangeInfo GetRow(MasterRecordInput input)
         {
-            SessionStore sessionStore = null;
-            try
-            {
-                sessionStore 
-                    = sessionManager.GetSession(input.SessionFormIdentifier);
-            }
-            catch
-            {
-                // ignored
-            }
-            return sessionStore?.GetRow(input.Entity, input.RowId);
+            return 
+                GetSessionStore(input.SessionFormIdentifier)
+                ?.GetRow(input.Entity, input.RowId);
         }
         public IDictionary GetParameters(Guid sessionFormIdentifier)
         {
@@ -413,30 +396,13 @@ namespace Origam.Server
             {
                 return new Hashtable();
             }
-            SessionStore sessionStore = null;
-            try
-            {
-                sessionStore = sessionManager.GetSession(sessionFormIdentifier);
-            }
-            catch
-            {
-                // ignored
-            }
+            SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
             return sessionStore == null 
                 ? new Hashtable() : sessionStore.Request.Parameters;
         }
         public ArrayList GetData(GetDataInput input)
         {
-            SessionStore sessionStore = null;
-            try
-            {
-                sessionStore 
-                    = sessionManager.GetSession(input.SessionFormIdentifier);
-            }
-            catch
-            {
-                // ignored
-            }
+            SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
             if(sessionStore == null)
             {
                 return new ArrayList();
@@ -446,6 +412,20 @@ namespace Origam.Server
                 input.ParentRecordId, 
                 input.RootRecordId);
         }
+
+        private SessionStore GetSessionStore(Guid sessionId)
+        {
+            try
+            {
+                return sessionManager.GetSession(sessionId);
+            }
+            catch (Exception ex)
+            {
+                log.Warn(ex.Message, ex);
+                return null;
+            }
+        }
+
         public IList RowStates(RowStatesInput input)
         {
 		    var sessionStore = sessionManager.GetSession(
@@ -536,16 +516,7 @@ namespace Origam.Server
             Guid sessionFormIdentifier, string entity, 
             DataStructureEntity dataStructureEntity, Guid rowId)
         {
-            SessionStore sessionStore = null;
-            try
-            {
-                sessionStore 
-                    = sessionManager.GetSession(sessionFormIdentifier);
-            }
-            catch
-            {
-                // ignored
-            }
+            SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
             switch(sessionStore)
             {
                 case null:
@@ -562,16 +533,7 @@ namespace Origam.Server
         public Result<Guid, IActionResult> GetEntityId(
             Guid sessionFormIdentifier, string entity)
         {
-            SessionStore sessionStore = null;
-            try
-            {
-                sessionStore 
-                    = sessionManager.GetSession(sessionFormIdentifier);
-            }
-            catch
-            {
-                // ignored
-            }
+            SessionStore sessionStore = GetSessionStore(sessionFormIdentifier);
             switch(sessionStore)
             {
                 case null:
@@ -640,16 +602,7 @@ namespace Origam.Server
         public int AttachmentCount(AttachmentCountInput input)
         {
             SecurityTools.CurrentUserProfile();
-            SessionStore sessionStore = null;
-            try
-            {
-                sessionStore = sessionManager.GetSession(
-                    input.SessionFormIdentifier);
-            }
-            catch
-            {
-                // ignored
-            }
+            SessionStore sessionStore = GetSessionStore(input.SessionFormIdentifier);
             if(sessionStore == null)
             {
                 return 0;
