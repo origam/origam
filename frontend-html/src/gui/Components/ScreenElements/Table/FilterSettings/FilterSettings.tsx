@@ -95,7 +95,8 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
                 (array) =>
                   array[1] &&
                   array[1].toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
-              );
+              )
+              .sort((x, y) => x[1] > y[1] ? 1 : -1);
           })}
         />
       );
