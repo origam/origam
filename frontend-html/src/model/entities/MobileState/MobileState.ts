@@ -1,7 +1,6 @@
 import { observable, reaction } from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
-import { getDialogStack } from "model/selectors/getDialogStack";
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 import { IMobileLayoutState, MenuLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
@@ -35,16 +34,12 @@ export class MobileState {
       () => {
         return {
           activeScreen: !!getActiveScreen(this._workbench),
-          dialogOpen: getDialogStack(this._workbench).isAnyDialogShown
+          layoutState: this.layoutState
         };
       },
       (args) => {
-        if (!args.activeScreen && this.layoutState instanceof ScreenLayoutState) {
+        if (!args.activeScreen && args.layoutState instanceof ScreenLayoutState) {
           this.layoutState = new MenuLayoutState();
-          return;
-        }
-        if (args.activeScreen && !args.dialogOpen && this.layoutState instanceof MenuLayoutState) {
-          this.layoutState = new ScreenLayoutState();
         }
       },
       {fireImmediately: true}

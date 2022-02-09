@@ -28,10 +28,6 @@ export class DialogStack implements IDialogStack {
   parent?: any;
   @observable.shallow stackedDialogs: Array<IDialogInfo> = [];
 
-  @computed get isAnyDialogShown() {
-    return this.stackedDialogs.length > 0;
-  }
-
   @action.bound pushDialog(
     key: string,
     component: React.ReactElement,
