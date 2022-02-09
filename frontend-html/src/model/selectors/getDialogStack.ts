@@ -30,8 +30,8 @@ export function getDialogStack(ctx: any) {
 
 export function showDialog(ctx: any, key: string, component: React.ReactElement) {
   if(isMobileLayoutActive(ctx)){
-    let layoutStateBefore = getMobileState(ctx).layoutState;
-    let dialogLayoutState = new DialogLayoutState(component, layoutStateBefore);
+    const layoutStateBefore = getMobileState(ctx).layoutState;
+    const dialogLayoutState = new DialogLayoutState(component, layoutStateBefore);
     const closeFunction = () => {
       runInFlowWithHandler({ctx: ctx, action: async ()=> {
           getMobileState(ctx).layoutState = await dialogLayoutState.close(ctx)

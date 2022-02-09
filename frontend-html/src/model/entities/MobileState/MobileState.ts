@@ -41,6 +41,9 @@ export class MobileState {
         if (!args.activeScreen && args.layoutState instanceof ScreenLayoutState) {
           this.layoutState = new MenuLayoutState();
         }
+        else if (args.activeScreen && args.layoutState instanceof MenuLayoutState) {
+          this.layoutState = new ScreenLayoutState();
+        }
       },
     );
   }
