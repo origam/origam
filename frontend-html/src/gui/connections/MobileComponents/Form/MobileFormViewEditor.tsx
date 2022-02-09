@@ -55,6 +55,7 @@ export const MobileFormViewEditor: React.FC<{
     : props.backgroundColor;
 
   function onChange(event: any, newValue: any) {
+    const row = getSelectedRow(props.property);
     if(!row){
       return;
     }
