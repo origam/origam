@@ -130,7 +130,8 @@ export class TableConfiguration implements ITableConfiguration {
   }
 
   sortColumnConfigurations(propertyIds: string[]) {
-    this.columnConfigurations
+    this.columnConfigurations = this.columnConfigurations
+      .slice()
       .sort((configA, configB) => {
         const columnIdxA = propertyIds.findIndex(id => id === configA.propertyId);
         if (columnIdxA === -1) return 0;
