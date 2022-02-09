@@ -21,8 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: var(--viewSideMargin);
+  margin-right: var(--viewSideMargin);
   margin-bottom: 5px;
   a {
     height: 30px;
