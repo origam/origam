@@ -435,7 +435,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
                       >
                         <DragDropContext onDragEnd={(result) => this.onColumnDragEnd(result)}>
-                          <Droppable droppableId="headers" direction="horizontal">
+                          <Droppable droppableId="headers" direction="horizontal" >
                             {(provided) => (
                               // width:"10000%" - when the table was horizontally scrolled to the right the drag
                               // and drop did not work on the headers that were outside of the originally visible area.

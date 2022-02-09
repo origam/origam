@@ -32,8 +32,10 @@ import {
 import { Button, SimpleDropdown } from "@origam/components";
 import { MobXProviderContext, observer } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/MobileBooleanInput";
+import { ColumnOrderEditor } from "gui/connections/MobileComponents/Grid/ColumnOrderEditor";
+import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 
 export const ColumnConfiguration: React.FC<{
   dataView: IDataView
@@ -79,8 +81,23 @@ export const ColumnConfiguration: React.FC<{
           onClick={() => configModel.onSaveAsClick()}
         />
         <Button
-          label={T("Cancel", "button_cancel")}
+          // label={T("Order", "button_cancel")}
+          label={"Order"}
           onClick={() => {
+            const previousLayout = mobileState.layoutState;
+            mobileState.layoutState = new EditLayoutState(
+              <ColumnOrderEditor dataView={props.dataView}/>,
+              previousLayout,
+              true,
+              "Order Columns"
+            // {T("Order", "button_cancel")}
+            );
+          }}
+        />
+        <BottomIcon
+          key={"close"}
+          iconPath={"./icons/noun-close-25798.svg"}
+          onClick={async () => {
             configModel.onColumnConfCancel();
             mobileState.layoutState = new ScreenLayoutState();
           }}
