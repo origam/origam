@@ -18,33 +18,73 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import { IFocusable } from "model/entities/FormFocusManager";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
-import { CheckBox } from "gui/Components/Form/CheckBox";
-import cx from "classnames";
-import S from "gui/connections/MobileComponents/Form/CheckBox.module.scss"
+import { IProperty } from "model/entities/types/IProperty";
+import { inject } from "mobx-react";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/MobileBooleanInput";
 
 export const MobileCheckBox: React.FC<{
   isHidden?: boolean;
   checked: boolean;
   readOnly: boolean;
-  onKeyDown: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
-  onClick: () => void;
+  onChange?: (event: any, value: any) => void;
   labelColor?: string;
-}> = (props) => {
+  property?: IProperty;
+}> = inject(({property, formPanelView}) => {
+  const row = getSelectedRow(formPanelView)!;
+  return {
+    property,
+    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
+    onChange: (event: any, value: any) => onFieldChange(formPanelView)({
+      event: event,
+      row: row,
+      property: property,
+      value: value,
+    }),
+  };
+})((props) => {
+  const label = props.property!.name;
+  const fieldDimensions = new FieldDimensions();
+
+  function captionStyle() {
+    if (props.isHidden) {
+      return {
+        display: "none",
+      };
+    }
+    const style = fieldDimensions.asStyle();
+    style["color"] = props.labelColor;
+    return style;
+  }
+
+  function formFieldStyle() {
+    if (props.isHidden) {
+      return {
+        display: "none",
+      };
+    }
+    return fieldDimensions.asStyle();
+  }
+
   return (
-    <div className={cx(S.root, "formItem")}>
-      <CheckBox
-        isHidden={props.isHidden}
-        checked={props.checked}
-        readOnly={props.readOnly}
-        onKeyDown={props.onKeyDown}
-        subscribeToFocusManager={props.subscribeToFocusManager}
-        onClick={props.onClick}
-        labelColor={props.labelColor}
-        fieldDimensions={new FieldDimensions()}
-      />
+    <div>
+      <label
+        htmlFor={props.property!.modelInstanceId}
+        style={captionStyle()}
+      >
+        {label}
+      </label>
+      <div style={formFieldStyle()}>
+        <MobileBooleanInput
+          checked={props.checked}
+          disabled={props.readOnly}
+          onChange={event => props.onChange?.(event, event.target.checked)}
+        />
+      </div>
     </div>
   );
-};
+});
+

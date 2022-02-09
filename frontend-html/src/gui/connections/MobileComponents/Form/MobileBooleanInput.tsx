@@ -27,7 +27,10 @@ export const MobileBooleanInput: React.FC<{
 
   function onClick(){
     if(!props.disabled){
-      props.onChange({target:{checked: !props.checked}})
+      props.onChange({
+        target: {checked: !props.checked},
+        type: "click"
+      })
     }
   }
 
@@ -54,7 +57,8 @@ export const MobileBooleanInput: React.FC<{
 }
 
 export interface IBooleanEvent {
-  target: IBooleanTarget
+  target: IBooleanTarget;
+  type: string
 }
 
 export interface IBooleanTarget {

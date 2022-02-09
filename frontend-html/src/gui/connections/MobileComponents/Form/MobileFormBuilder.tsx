@@ -197,11 +197,6 @@ export class MobileFormBuilder extends React.Component<{
                           isHidden={isHidden}
                           checked={value}
                           readOnly={!row || isReadOnly(property, rowId)}
-                          onKeyDown={(event) => self.onKeyDown(event)}
-                          subscribeToFocusManager={(radioInput) =>
-                            focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
-                          }
-                          onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
                           labelColor={foreGroundColor}
                         />
                       </Provider>
