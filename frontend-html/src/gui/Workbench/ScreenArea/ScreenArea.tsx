@@ -22,7 +22,7 @@ import { observer, Observer } from "mobx-react";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import React, { useEffect } from "react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
@@ -70,7 +70,7 @@ export const DialogScreen: React.FC<{
   }
 
   useEffect(() => {
-    getDialogStack(workbenchLifecycle).pushDialog(
+    const closeFunction = showDialog(workbenchLifecycle,
       key,
       <Observer>
         {() => (
@@ -143,7 +143,7 @@ export const DialogScreen: React.FC<{
         )}
       </Observer>
     );
-    return () => getDialogStack(workbenchLifecycle).closeDialog(key);
+    return closeFunction;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 });

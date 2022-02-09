@@ -21,7 +21,7 @@ import bind from "bind-decorator";
 import _ from "lodash";
 import { action, computed, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import React from "react";
 import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
@@ -125,7 +125,7 @@ export class ErrorDialogController implements IErrorDialogController {
     if (!this.isDialogDisplayed) {
       this.isDialogDisplayed = true;
       const previouslyFocusedElement = document.activeElement as HTMLElement;
-      const closeDialog = getDialogStack(this).pushDialog(
+      const closeDialog = showDialog(this,
         "",
         <Observer>
           {() => (

@@ -49,7 +49,7 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 import { getAbout } from "model/selectors/getAbout";
 import { About } from "model/entities/AboutInfo";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { AboutDialog } from "gui/Components/Dialogs/AboutDialog";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
 
@@ -82,7 +82,7 @@ export class CScreenToolbar extends React.Component<{}> {
   }
 
   onAboutClick() {
-    const closeDialog = getDialogStack(this.application).pushDialog(
+    const closeDialog = showDialog(this.application,
       "",
       <AboutDialog
         aboutInfo={this.about.info}

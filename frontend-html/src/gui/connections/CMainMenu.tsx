@@ -36,7 +36,7 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { ChooseFavoriteFolderDialog } from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
 import { getIconUrl } from "gui/getIconUrl";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
@@ -483,7 +483,7 @@ function onRemoveFromFavoritesClicked(ctx: any, menuId: string) {
 
 export function onAddToFavoritesClicked(ctx: any, menuId: string) {
   const favorites = getFavorites(ctx);
-  const closeDialog = getDialogStack(ctx).pushDialog(
+  const closeDialog = showDialog(ctx,
     "",
     <ChooseFavoriteFolderDialog
       onOkClick={(folderId: string) => {

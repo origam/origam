@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { action, flow } from "mobx";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import React from "react";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
@@ -37,7 +37,7 @@ import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 export function questionSaveDataAfterRecordChange(ctx: any) {
   return new Promise(
     action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
-      const closeDialog = getDialogStack(ctx).pushDialog(
+      const closeDialog = showDialog(ctx,
         "",
         <ChangeMasterRecordDialog
           screenTitle={getOpenedScreen(ctx).tabTitle}

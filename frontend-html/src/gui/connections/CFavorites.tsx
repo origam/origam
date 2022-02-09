@@ -28,7 +28,7 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import S from "gui/connections/CFavorites.module.scss";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { FavoriteFolderPropertiesDialog } from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
@@ -68,7 +68,7 @@ export class CFavorites extends React.Component<{
   }
 
   onCreateNewFolderClick() {
-    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
+    const closeDialog = showDialog(this.props.ctx,
       "",
       <FavoriteFolderPropertiesDialog
         title={T("New Favourites Folder", "new_group_title")}
@@ -85,7 +85,7 @@ export class CFavorites extends React.Component<{
   }
 
   onFolderPropertiesClick() {
-    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
+    const closeDialog = showDialog(this.props.ctx,
       "",
       <FavoriteFolderPropertiesDialog
         title={T("Favourites Folder Properties", "group_properties_title")}

@@ -18,7 +18,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getApplication } from './getApplication';
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import React from "react";
+import { getMobileState } from "model/selectors/getMobileState";
+import { DialogLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export function getDialogStack(ctx: any) {
   return getApplication(ctx).dialogStack;
 }
+
+export function showDialog(ctx: any, key: string, component: React.ReactElement) {
+  if(isMobileLayoutActive(ctx)){
+    let layoutStateBefore = getMobileState(ctx).layoutState;
+    let dialogLayoutState = new DialogLayoutState(component, layoutStateBefore);
+    const closeFunction = () => {
+      runInFlowWithHandler({ctx: ctx, action: async ()=> {
+          getMobileState(ctx).layoutState = await dialogLayoutState.close(ctx)
+        }
+      })
+    };
+    getMobileState(ctx).layoutState = dialogLayoutState;
+    return closeFunction;
+  }
+  return getDialogStack(ctx).pushDialog(key, component);
+}
+

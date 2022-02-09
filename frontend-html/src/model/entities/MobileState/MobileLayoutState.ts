@@ -2,6 +2,7 @@ import { T } from "utils/translation";
 import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import React from "react";
 
 export interface IMobileLayoutState {
   actionDropUpHidden: boolean;
@@ -106,6 +107,37 @@ export class EditLayoutState implements IMobileLayoutState {
     heading?: string)
   {
     this.showOkButton = showOkButton ?? true;
+    this.heading = heading ?? "";
+  }
+
+  showCloseButton(someScreensAreOpen: boolean) {
+    return false;
+  }
+
+  async close(ctx: any): Promise<IMobileLayoutState> {
+    return this.layoutAfterClose ?? new ScreenLayoutState();
+  }
+
+  hamburgerClick(): IMobileLayoutState {
+    return new MenuLayoutState();
+  }
+}
+
+export class DialogLayoutState implements IMobileLayoutState {
+  actionDropUpHidden = true;
+  refreshButtonHidden = true;
+  saveButtonHidden = true;
+  showOpenTabCombo = false;
+  showSearchButton = false;
+  showHamburgerMenuButton = false;
+  showOkButton = false;
+  heading: string;
+
+  constructor(
+    public component: React.ReactElement,
+    public layoutAfterClose?: IMobileLayoutState,
+    heading?: string)
+  {
     this.heading = heading ?? "";
   }
 

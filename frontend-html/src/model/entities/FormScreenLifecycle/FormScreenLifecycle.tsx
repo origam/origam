@@ -34,7 +34,7 @@ import { getAutorefreshPeriod as getAutoRefreshPeriod } from "model/selectors/Fo
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { getDialogStack, showDialog } from "model/selectors/getDialogStack";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
@@ -1253,7 +1253,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   questionSaveData() {
     return new Promise(
       action((resolve: (value: IQuestionSaveDataAnswer) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
+        const closeDialog = showDialog(this,
           "",
           <QuestionSaveData
             screenTitle={getOpenedScreen(this).tabTitle}
@@ -1278,7 +1278,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   questionDeleteData() {
     return new Promise(
       action((resolve: (value: IQuestionDeleteDataAnswer) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
+        const closeDialog = showDialog(this,
           "",
           <YesNoQuestion
             screenTitle={getOpenedScreen(this).tabTitle}
