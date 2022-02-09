@@ -21,23 +21,29 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
 import { Icon } from "@origam/components";
+import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
 
 export const NavigationButton: React.FC<{
   label: string;
   onClick: () => void;
+  isOpen?: boolean;
 }> = (props) => {
+
   return (
-    <div
-      className={S.navigationButton}
-      onClick={props.onClick}
-    >
-      <div className={S.label}>
-        {props.label}
+    <div>
+      <div
+        className={S.navigationButton}
+        onClick={props.onClick}
+      >
+        <div className={S.label}>
+          {props.label}
+        </div>
+        <Icon
+          src={props.isOpen ? "./icons/noun-chevron-933246.svg" : "./icons/noun-chevron-933251.svg"}
+          className={SN.navigationIcon}
+        />
       </div>
-      <Icon
-        src={"./icons/noun-chevron-933251.svg"}
-        className={S.navigationIcon}
-      />
+      {props.children}
     </div>
   );
 };

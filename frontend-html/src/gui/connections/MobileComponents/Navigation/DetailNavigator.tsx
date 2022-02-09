@@ -21,7 +21,6 @@ import React, { useState } from "react";
 import S from "gui/connections/MobileComponents/Navigation/DetailNavigator.module.scss";
 import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
-import { Icon } from "@origam/components";
 import { INavigationNode, NavigatorState } from "gui/connections/MobileComponents/Navigation/NavigationNode";
 import cx from "classnames";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
@@ -131,27 +130,24 @@ export const NavigationButtonList: React.FC<{
       className={cx(open ? S.navigatorButtonListRoot : "", S.navigationButtonContainer)}
       onClick={() => setOpen(!open)}
     >
-      <div className={SN.navigationButton}>
-        <div className={SN.label}>
-          {T("Details", "mobile_details_dropdown")}
+      <NavigationButton
+        label= {T("Details", "mobile_details_dropdown")}
+        onClick={() => setOpen(!open)}
+        isOpen={open}
+      >
+        <div className={S.navigationButtonList}>
+          <div className={SN.navigationButtonContainer}>
+            {open &&
+              props.nodes.map(node =>
+                <NavigationButton
+                  key={node.name}
+                  label={node.name}
+                  onClick={() => props.onClick(node)}
+                />)
+            }
+          </div>
         </div>
-        <Icon
-          src={open ? "./icons/noun-chevron-933246.svg" : "./icons/noun-chevron-933254.svg"}
-          className={SN.navigationIcon}
-        />
-      </div>
-      <div className={S.navigationButtonList}>
-        <div className={SN.navigationButtonContainer}>
-          {open &&
-            props.nodes.map(node =>
-              <NavigationButton
-                key={node.name}
-                label={node.name}
-                onClick={() => props.onClick(node)}
-              />)
-          }
-        </div>
-      </div>
+      </NavigationButton>
     </div>
   );
 });
