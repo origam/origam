@@ -345,8 +345,13 @@ namespace Origam.ServerCore.Controller
                     .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             });
-        }       
-        
+        }     
+        [HttpPost("[action]")]
+        public IActionResult GetRow([FromBody]MasterRecordInput input)
+        {
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.GetRow(input)));
+        }
         [HttpPost("[action]")]
         public IActionResult GetAggregations([FromBody]GetGroupsAggregations input)
         {

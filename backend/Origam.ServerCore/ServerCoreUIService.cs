@@ -410,6 +410,20 @@ namespace Origam.ServerCore
             return sessionStore == null 
                 ? new Hashtable() : sessionStore.Request.Parameters;
         }
+        public ChangeInfo GetRow(MasterRecordInput input)
+        {
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore 
+                    = sessionManager.GetSession(input.SessionFormIdentifier);
+            }
+            catch
+            {
+                // ignored
+            }
+            return sessionStore?.GetRow(input.Entity, input.RowId);
+        }
         public ArrayList GetData(GetDataInput input)
         {
             SessionStore sessionStore = null;

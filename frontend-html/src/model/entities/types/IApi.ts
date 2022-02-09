@@ -237,6 +237,12 @@ export interface IApi {
     FilterLookups?: { [key: string]: string };
   }): Promise<any>;
 
+  getRow(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }): Promise<any>
+
   getFilterListValues(data: {
     MenuId: string;
     DataStructureEntityId: string;
