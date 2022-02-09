@@ -41,6 +41,7 @@ import {
   ScreenLayoutState,
   SearchLayoutState
 } from "model/entities/MobileState/MobileLayoutState";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 
 @observer
@@ -61,6 +62,9 @@ export class MobileMain extends React.Component<{}> {
   }
 
   componentDidMount() {
+    if(!getActiveScreen(this.workbench)){
+      this.mobileState.layoutState = new MenuLayoutState();
+    }
     this.about.update();
   }
 

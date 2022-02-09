@@ -42,7 +42,6 @@ export class MobileState {
           this.layoutState = new MenuLayoutState();
         }
       },
-      {fireImmediately: true}
     );
   }
 
