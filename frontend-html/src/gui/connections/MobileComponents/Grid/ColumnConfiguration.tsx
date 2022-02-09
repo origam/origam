@@ -36,6 +36,7 @@ import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/M
 import { MobileBooleanInput } from "gui/connections/MobileComponents/Form/MobileBooleanInput";
 import { ColumnOrderEditor } from "gui/connections/MobileComponents/Grid/ColumnOrderEditor";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
+import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 
 export const ColumnConfiguration: React.FC<{
   dataView: IDataView
@@ -210,17 +211,12 @@ export const ColumnConfig: React.FC<{
   }
 
   return (
-    <div>
-      <div
-        className={S.columnConfigHeader}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        {name}
-        <div
-          className={cx(S.arrow, {"fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded})}
-        />
-      </div>
+    <NavigationButton
+      label={name}
+      onClick={() => setIsExpanded(!isExpanded)}
+      isOpen={isExpanded}
+    >
       {isExpanded && renderContent()}
-    </div>
+    </NavigationButton>
   );
 });
