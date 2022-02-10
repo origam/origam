@@ -97,7 +97,7 @@ jobs:
     - name: Copy model to test directory
       run: |
         mkdir test/model
-        cp model-tests test/model
+        cp -r model-tests test/model
         
     - name: Start containers
       run: |
