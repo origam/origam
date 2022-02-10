@@ -69,6 +69,8 @@ import { FilterEditor } from "gui/connections/MobileComponents/Grid/FilterEditor
 import { ColumnConfiguration } from "gui/connections/MobileComponents/Grid/ColumnConfiguration";
 import { getColumnConfigurationModel } from "model/selectors/getColumnConfigurationModel";
 import { saveColumnConfigurationsAsync } from "model/actions/DataView/TableView/saveColumnConfigurations";
+import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import { RecordInfo } from "gui/connections/MobileComponents/Grid/RecordInfo";
 
 @observer
 export class DataViewHeaderInner extends React.Component<{
@@ -147,6 +149,16 @@ export class DataViewHeaderInner extends React.Component<{
         : configurationModel.columnsConfiguration.name,
       new ScreenLayoutState(),
       false,
+    );
+  }
+
+  async onRecordInfoClick(dataView: any){
+    await onRecordInfoClick(dataView)(null);
+    let previousLayout = this.mobileState.layoutState;
+    this.mobileState.layoutState = new EditLayoutState(
+      <RecordInfo recordInfo={getRecordInfo(dataView)}/>,
+      "Record Info",
+      previousLayout
     );
   }
 
@@ -328,7 +340,7 @@ export class DataViewHeaderInner extends React.Component<{
                                   isDisabled={false}
                                   onClick={(event: any) => {
                                     setDropped(false);
-                                    onRecordInfoClick(dataView)(event);
+                                    this.onRecordInfoClick(dataView);
                                   }}
                                 >
                                   {T("Show record information", "info_button_tool_tip")}
