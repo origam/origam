@@ -1,0 +1,121 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "RunTests"
+
+on:
+  push:
+    branches: [ master, 20* ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ master ]
+  schedule:
+    - cron: '40 23 * * 2'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp']
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+        # Learn more:
+        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+        # If you wish to specify custom queries, you can do so here or in a config file.
+        # By default, queries listed here will override any specified in a config file.
+        # Prefix the list here with "+" to use these queries and those in the config file.
+        # queries: ./path/to/local/query, your-org/your-repo/queries@main
+
+    - name: Setup .NET Core SDK 6.0
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: 6.0.x
+
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: NuGet Restore
+      run: nuget restore backend/Origam.sln
+    
+    - name: Build Html Server
+    - run: |
+       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+       
+    - name: Upload server artefact
+    - uses: actions/upload-artifact@v2
+      with:
+        name: htmlserverbuild
+        path: "backend/Origam.Server/bin/Release/Publish"
+    
+    - name: Build origam utils
+    - run: |
+       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Architect" /t:origam-utils:Publish -v:m
+       
+    - name: Upload origam utils artefact
+    - uses: actions/upload-artifact@v2
+      with:
+        name: origam-utilsbuild
+        path: "backend/origam-utils/bin/Release/Publish"
+        
+    - name: Download origam-utils artefact
+    - uses: actions/download-artifact@v2
+      with:
+        name: origam-utilsbuild
+        path: test/origam-utils
+    
+    - name: Download HTML5 artefact
+    - uses: actions/download-artifact@v2
+      with:
+        name: htmlserverbuild
+        path: test/HTML5
+        
+    - name: Copy origam utils to HTML5
+    - run: |
+        cp test/origam-utils/origam-utils.dll test/HTML5
+        cp test/origam-utils.deps.json test/HTML5
+        cp test/origam-utils.dll.config test/HTML5
+        cp test/origam-utils.runtimeconfig.json test/HTML5
+
+    - name: Copy model to test directory
+    - run: |
+        cp model-tests test/model
+        
+    - name: Start containers
+      run: |
+        cd test
+        docker-compose --env-file envFile.env -f "docker-compose.yml" --profile test up --abort-on-container-exit 
+
+    - name: Stop containers
+      if: always()
+      run: |
+        cd test
+        docker-compose --env-file envFile.env -f "docker-compose.yml" --profile test down
+
+    
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
