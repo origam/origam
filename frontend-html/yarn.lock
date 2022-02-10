@@ -1593,17 +1593,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@origam/components@^1.0.0":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.4.2.tgz#a62adb76fe667b667d69f0790675014fa0d64446"
-  integrity sha512-Q+xyI7sO9AnEOTXAYFbzvOo5oEFoalYpgMS4uukDI0+ctK90AjsY071ndbk/lmp9OdioBoaZaEd/K07o1TZlyw==
-  dependencies:
-    react-inlinesvg "^2.3.0"
-
-"@origam/components@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.4.5.tgz#2fc9ab6f7131f6721cb39997378a2a60c8b25874"
-  integrity sha512-L4YQ9st5WejE0thKPoEgGXI9GTmKLFjacQyb2BiPL0EBjGHj68CZ8Je2ezkkJgyVdmY0mvCAn7BLlIhk9oDfew==
+"@origam/components@^1.0.0", "@origam/components@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.5.1.tgz#341c1d9ee966f723f134d7bdfc1c2bfb837f9f2c"
+  integrity sha512-9/RblSLFqI8X/k7HrMo3iATDxav0tNDDzvGJ1a9KatYip9qdJiQ8708hkPDMGWq4gHewoKLXZk98Unmp6wNbHA==
   dependencies:
     react-inlinesvg "^2.3.0"
 
@@ -2060,10 +2053,10 @@
   dependencies:
     "@types/leaflet" "*"
 
-"@types/leaflet@*", "@types/leaflet@^1.7.8":
-  version "1.7.8"
-  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.7.8.tgz#fbae5a3a3d22780632715287764352f80bbe3d4a"
-  integrity sha512-prZwhmUznkwTYCTZVGTR4U1GzgPP3PAWYYQ3wDgVkIoiuQTheWoycsXx4Rz9ARYhlDTl0Ycd8lvhH2/rNSkqIg==
+"@types/leaflet@*", "@types/leaflet@^1.7.9":
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.7.9.tgz#7993d34f14cfa88c45b3d490daba39a3a1be9a2b"
+  integrity sha512-H8vPgD49HKzqM41ArHGZM70g/tfhp8W+JcPxfnF+5H/Xvp+xiP+KQOUNWU8U89fqS1Jj3cpRY/+nbnaHFzwnFA==
   dependencies:
     "@types/geojson" "*"
 
@@ -2554,10 +2547,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@xstate/inspect@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.6.1.tgz#610a7ce014ab3e4586923befd0ff77040b1a1506"
-  integrity sha512-JXvTwnZVxdjXWWOr4v/D30aZYjrgOa6r3iGRd4/r/H7HpvjxDw5/OrPuYDOg6AZBxXJOQ6FBrais9JD/jNP1PQ==
+"@xstate/inspect@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.6.2.tgz#365f4784dece6e36b8fd1c00d419caf2ac353d2d"
+  integrity sha512-ZDJ0NETucV7wyT2Tyr3VeEgVD45TUGMTwbzmU2JfzUOjJQMyqn/XjcXGa3wxzgSvz2I0L4xC5ahRZN85j7oh1Q==
   dependencies:
     fast-safe-stringify "^2.0.7"
 
@@ -8653,9 +8646,9 @@ nan@^2.12.1, nan@^2.13.2:
   integrity sha512-8ZtvEnA2c5aYCZYd1cvgdnU6cqwixRoYg70xPLWUws5ORTa/lnw+u4amixRS/Ac5U5mQVgp9pnlSUnbNWFaWZQ==
 
 nanoid@^3.1.30:
-  version "3.1.30"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.30.tgz#63f93cc548d2a113dc5dfbc63bfa09e2b9b64362"
-  integrity sha512-zJpuPDwOv8D2zq2WRoMe1HsfZthVewpel9CAvTfc/2mBD1uUT/agc5f7GHGWXlYkFvi1mVxe4IjvP2HNrop7nQ==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
+  integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -10840,10 +10833,10 @@ react-chartjs-2@^3.3.0:
   resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-3.3.0.tgz#3f62681645acccc1ab27a9186c70f79d6d417f73"
   integrity sha512-4Mt0SR2aiUbWi/4762odRBYSnbNKSs4HWc0o3IW43py5bMfmfpeZU95w6mbvtuLZH/M3GsPJMU8DvDc+5U9blQ==
 
-react-chartjs-2@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-4.0.0.tgz#a79919c9efe5381b8cb5abfd0ac7a56c9736cdb8"
-  integrity sha512-0kx41EVO6wIoeU6zvdwovX9kKcdrs7O62DGTSNmwAXZeLGJ3U+n4XijO1kxcMmAi4I6PQJWGD5oRwxVixHSp6g==
+react-chartjs-2@^4.0.0, react-chartjs-2@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-4.0.1.tgz#38ed1d5b6e2f789408450c981e9e8e1d78b2e015"
+  integrity sha512-q8bgWzKoFvBvD7YcjT/hXG8jt55TaMAuJ1dmI3tKFJ7CijUWYz4pIfOhkTI6PBTwqu/pmeWsClBRd/7HiWzN1g==
 
 react-color@^2.19.3:
   version "2.19.3"
@@ -13226,10 +13219,10 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-vitals@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.3.tgz#6dca59f41dbc3fcccdb889da06191b437b18f534"
-  integrity sha512-+ijpniAzcnQicXaXIN0/eHQAiV/jMt1oHGHTmz7VdAJPPkzzDhmoYPSpLgJTuFtUh+jCjxCoeTZPg7Ic+g8o7w==
+web-vitals@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-2.1.4.tgz#76563175a475a5e835264d373704f9dde718290c"
+  integrity sha512-sVWcwhU5mX6crfI5Vd2dC4qchyTqxV8URinzt25XqVh+bHEPGH4C3NPrNionCP7Obx59wrYEbNlw4Z8sjALzZg==
 
 webidl-conversions@^5.0.0:
   version "5.0.0"

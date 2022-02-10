@@ -30,6 +30,12 @@ import { CriticalSection } from "utils/sync";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { ScreenPictureCache } from "./ScreenPictureCache";
 import { DataViewCache } from "./DataViewCache";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { getApi } from "model/selectors/getApi";
 
 export class FormScreen implements IFormScreen {
 
@@ -263,6 +269,31 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     yield*this.formScreenLifecycle.start(initUIResult);
     if (this.formScreen) {
       this.formScreen.setDirty(!!preloadIsDirty);
+      if(preloadIsDirty){
+       yield*this.loadDirtyRow(this.formScreen);
+      }
+    }
+  }
+
+  *loadDirtyRow(formScreen: IFormScreen){
+    for (let rootDataView of formScreen.rootDataViews) {
+      const api  = getApi(rootDataView)
+      const isDirty = getFormScreen(rootDataView).isDirty
+      if(isDirty){
+        const dirtyRowResult = (yield api.getRow({
+          SessionFormIdentifier: getSessionId(rootDataView),
+          Entity: getEntity(rootDataView),
+          RowId: getSelectedRowId(rootDataView)!
+        })) as ICRUDResult;
+
+        const selectedRowExists = rootDataView.selectedRowId &&
+          rootDataView.dataTable.getRowById(rootDataView.selectedRowId);
+        dirtyRowResult.operation = selectedRowExists
+          ? IResponseOperation.Update
+          : IResponseOperation.Create;
+
+        yield*processCRUDResult(rootDataView, dirtyRowResult) as any;
+      }
     }
   }
 

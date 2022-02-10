@@ -2142,6 +2142,11 @@ namespace Origam.Server
         public virtual ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
         {
             throw new Exception("GetRowData not available for " + this.GetType().Name);
+        }        
+        
+        public virtual ChangeInfo GetRow(string entity, object id)
+        {
+            throw new Exception("GetRow not available for " + GetType().Name);
         }
         #endregion
 
