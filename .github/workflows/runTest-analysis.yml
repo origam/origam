@@ -70,7 +70,7 @@ jobs:
         name: htmlserverbuild
         path: "backend/Origam.Server/bin/Release/net6.0/publish"
         
-   compose:
+  compose:
     name: Compose
     runs-on: ubuntu-latest
     permissions:
@@ -86,7 +86,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
+    
+    - name: Generate build number
+      uses: einaregilsson/build-number@v3
+      with:
+        token: ${{secrets.github_token}}        
+    - name: Print new build number
+      run: echo "Build number is $BUILD_NUMBER"
       
     - name: Download HTML5 artefact
       uses: actions/download-artifact@v2
