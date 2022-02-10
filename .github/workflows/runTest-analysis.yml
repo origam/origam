@@ -72,13 +72,13 @@ jobs:
     
     - name: Build origam utils
       run: |
-       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Architect" /t:origam-utils:Publish -v:m
+       msbuild backend/Origam.sln /p:TargetFramework=net6.0;Configuration="Release Architect" /p:SelfContained=false  /t:origam-utils:Publish -v:m
        
     - name: Upload origam utils artefact
       uses: actions/upload-artifact@v2
       with:
         name: origam-utilsbuild
-        path: "backend/origam-utils/bin/Release/Publish"
+        path: "backend/origam-utils/bin/Release/net6.0/publish"
         
     - name: Download origam-utils artefact
       uses: actions/download-artifact@v2
