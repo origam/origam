@@ -68,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: htmlserverbuild
-        path: "backend/Origam.Server/bin/Release/Publish"
+        path: "backend/Origam.Server/bin/Release/net6.0/publish"
     
     - name: Download HTML5 artefact
       uses: actions/download-artifact@v2
