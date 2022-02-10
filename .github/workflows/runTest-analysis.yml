@@ -71,6 +71,7 @@ jobs:
         path: "backend/Origam.Server/bin/Release/net6.0/publish"
         
   compose:
+    needs: analyze
     name: Compose
     runs-on: ubuntu-latest
     permissions:
