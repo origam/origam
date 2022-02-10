@@ -28,6 +28,8 @@ export class MobileState {
     this.start();
   }
 
+  lastArgs: any;
+
   // It is ok for these reactions to run indefinitely because the MobileState is never disposed. Hence, no disposers here.
   start() {
     reaction(
@@ -41,9 +43,13 @@ export class MobileState {
         if (!args.activeScreen && args.layoutState instanceof ScreenLayoutState) {
           this.layoutState = new MenuLayoutState();
         }
-        else if (args.activeScreen && args.layoutState instanceof MenuLayoutState) {
+        else if (
+          this.lastArgs && !this.lastArgs.activeScreen && args.activeScreen &&
+          args.layoutState instanceof MenuLayoutState
+        ) {
           this.layoutState = new ScreenLayoutState();
         }
+        this.lastArgs = args;
       },
     );
   }
