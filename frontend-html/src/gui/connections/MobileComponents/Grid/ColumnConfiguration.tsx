@@ -82,16 +82,14 @@ export const ColumnConfiguration: React.FC<{
           onClick={() => configModel.onSaveAsClick()}
         />
         <Button
-          // label={T("Order", "button_cancel")}
-          label={"Order"}
+          label={T("Order", "order_columns_button")}
           onClick={() => {
             const previousLayout = mobileState.layoutState;
             mobileState.layoutState = new EditLayoutState(
               <ColumnOrderEditor dataView={props.dataView}/>,
-              "Order Columns",
+              T("Order Columns" , "order_columns_title"),
               previousLayout,
               true,
-            // {T("Order", "button_cancel")}
             );
           }}
         />

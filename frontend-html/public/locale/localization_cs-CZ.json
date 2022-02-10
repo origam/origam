@@ -415,5 +415,7 @@
   "preview": "Náhled",
   "format": "Formát",
   "row_count": "Řádky",
-  "column_width": "Šířka"
+  "column_width": "Šířka",
+  "order_columns_button": "Seřadit",
+  "order_columns_title": "Pořadí sloupců"
 }

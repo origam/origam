@@ -414,5 +414,7 @@
   "preview": "Vorschau",
   "format": "Format",
   "row_count": "Reihen",
-  "column_width": "Breite"
+  "column_width": "Breite",
+  "order_columns_button": "Sortieren",
+  "order_columns_title": "Spalten sortieren"
 }
