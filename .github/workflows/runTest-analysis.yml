@@ -67,7 +67,7 @@ jobs:
        msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        
     - name: Upload server artefact
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: htmlserverbuild
         path: "backend/Origam.Server/bin/Release/Publish"
