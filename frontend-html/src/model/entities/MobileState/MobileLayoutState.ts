@@ -98,16 +98,14 @@ export class EditLayoutState implements IMobileLayoutState {
   showSearchButton = false;
   showHamburgerMenuButton = false;
   showOkButton = true;
-  heading: string;
 
   constructor(
     public component: React.ReactNode,
+    public heading: string,
     public layoutAfterClose?: IMobileLayoutState,
-    showOkButton?: boolean,
-    heading?: string)
+    showOkButton?: boolean)
   {
     this.showOkButton = showOkButton ?? true;
-    this.heading = heading ?? "";
   }
 
   showCloseButton(someScreensAreOpen: boolean) {
@@ -131,14 +129,12 @@ export class DialogLayoutState implements IMobileLayoutState {
   showSearchButton = false;
   showHamburgerMenuButton = false;
   showOkButton = false;
-  heading: string;
+  heading = "";
 
   constructor(
     public component: React.ReactElement,
-    public layoutAfterClose?: IMobileLayoutState,
-    heading?: string)
+    public layoutAfterClose?: IMobileLayoutState,)
   {
-    this.heading = heading ?? "";
   }
 
   showCloseButton(someScreensAreOpen: boolean) {

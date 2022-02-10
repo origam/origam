@@ -92,8 +92,8 @@ export const MobileFormViewEditor: React.FC<{
         isReadOnly={readOnly}
         backgroundColor={backgroundColor}
         foregroundColor={foregroundColor}
-        customStyle={props.property?.style}
-        property={props.property!}
+        customStyle={props.property.style}
+        property={props.property}
         onChange={onChange}
         onPlusButtonClick={() => {
           mobileState.layoutState = new EditLayoutState(
@@ -101,10 +101,12 @@ export const MobileFormViewEditor: React.FC<{
               {...props}
               isReadOnly={readOnly}
               dataView={getDataView(props.property)}
-              property={props.property!}
+              property={props.property}
               editingTags={true}
               onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}
-            />)
+            />,
+            props.property.name
+          )
         }}
       />);
   }

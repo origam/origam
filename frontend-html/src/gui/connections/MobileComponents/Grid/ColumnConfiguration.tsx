@@ -88,9 +88,9 @@ export const ColumnConfiguration: React.FC<{
             const previousLayout = mobileState.layoutState;
             mobileState.layoutState = new EditLayoutState(
               <ColumnOrderEditor dataView={props.dataView}/>,
+              "Order Columns",
               previousLayout,
               true,
-              "Order Columns"
             // {T("Order", "button_cancel")}
             );
           }}

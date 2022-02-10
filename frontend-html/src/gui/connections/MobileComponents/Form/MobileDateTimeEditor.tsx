@@ -83,6 +83,7 @@ export const MobileDateTimeEditor: React.FC<{
         onClick={props.onClick}
         property={props.property}
       />,
+      props.property.name,
       previousLayout
     )
   }

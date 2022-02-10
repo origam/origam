@@ -73,7 +73,9 @@ export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
       <XmlBuildDropdownEditor
         {...props}
         onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}
-      />)
+      />,
+      props.property.name
+    )
   }
 
   return (

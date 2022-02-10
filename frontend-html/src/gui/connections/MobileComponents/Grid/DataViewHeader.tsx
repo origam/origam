@@ -130,9 +130,9 @@ export class DataViewHeaderInner extends React.Component<{
   onFilterButtonClick(){
     this.mobileState.layoutState =  new EditLayoutState(
       <FilterEditor dataView={this.dataView}/>,
+      T("Filter", "filter_tool_tip"),
       new ScreenLayoutState(),
       true,
-      T("Filter", "filter_tool_tip")
     );
   }
 
@@ -142,11 +142,11 @@ export class DataViewHeaderInner extends React.Component<{
     configurationModel.reset();
     this.mobileState.layoutState =  new EditLayoutState(
       <ColumnConfiguration dataView={this.dataView}/>,
+      !configurationModel.columnsConfiguration.name
+        ?  T("Default View", "default_grid_view_view")
+        : configurationModel.columnsConfiguration.name,
       new ScreenLayoutState(),
       false,
-      configurationModel.columnsConfiguration.name === ""
-        ?  T("Default View", "default_grid_view_view")
-        : configurationModel.columnsConfiguration.name
     );
   }
 

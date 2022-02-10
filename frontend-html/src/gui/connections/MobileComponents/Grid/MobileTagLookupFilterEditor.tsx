@@ -75,6 +75,7 @@ export const MobileTagLookupFilterEditor: React.FC<{
             values={props.setting.val1 ?? []}
             autoFocus={props.autoFocus}
           />,
+          props.property.name,
           layoutBeforeEditing
         )
       }}
