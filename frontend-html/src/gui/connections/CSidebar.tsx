@@ -49,6 +49,7 @@ import { CFavorites } from "gui/connections/CFavorites";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Breakpoint } from "react-socks";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class CSidebar extends React.Component {
@@ -225,18 +226,20 @@ export class CSidebar extends React.Component {
               />
             </Provider>
           </SidebarSection>
-          <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
-            <SidebarSectionDivider/>
-            <SidebarSectionHeader
-              isActive={this.sidebarState.activeSection === "Info"}
-              icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
-              label={T("Info", "infopanel_title")}
-              onClick={() => (this.sidebarState.activeSection = "Info")}
-            />
-            <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
-              <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
-            </SidebarSectionBody>
-          </SidebarSection>
+          {!isMobileLayoutActive(this.workbench) &&
+            <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
+              <SidebarSectionDivider/>
+              <SidebarSectionHeader
+                isActive={this.sidebarState.activeSection === "Info"}
+                icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
+                label={T("Info", "infopanel_title")}
+                onClick={() => (this.sidebarState.activeSection = "Info")}
+              />
+              <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
+                <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
+              </SidebarSectionBody>
+            </SidebarSection>
+          }
           <Breakpoint medium up>
             <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
               <SidebarSectionDivider/>
