@@ -63,7 +63,7 @@ jobs:
       run: nuget restore backend/Origam.sln
     
     - name: Build Html Server
-    - run: |
+      run: |
        msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        
     - name: Upload server artefact
@@ -73,36 +73,37 @@ jobs:
         path: "backend/Origam.Server/bin/Release/Publish"
     
     - name: Build origam utils
-    - run: |
+      run: |
        msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Architect" /t:origam-utils:Publish -v:m
        
     - name: Upload origam utils artefact
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: origam-utilsbuild
         path: "backend/origam-utils/bin/Release/Publish"
         
     - name: Download origam-utils artefact
-    - uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v2
       with:
         name: origam-utilsbuild
         path: test/origam-utils
     
     - name: Download HTML5 artefact
-    - uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v2
       with:
         name: htmlserverbuild
         path: test/HTML5
         
     - name: Copy origam utils to HTML5
-    - run: |
+      run: |
         cp test/origam-utils/origam-utils.dll test/HTML5
         cp test/origam-utils.deps.json test/HTML5
         cp test/origam-utils.dll.config test/HTML5
         cp test/origam-utils.runtimeconfig.json test/HTML5
 
     - name: Copy model to test directory
-    - run: |
+      run: |
+        mkdir test/model
         cp model-tests test/model
         
     - name: Start containers
