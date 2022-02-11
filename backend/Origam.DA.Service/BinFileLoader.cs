@@ -175,13 +175,16 @@ namespace Origam.DA.Service
                     itemTracker.AddOrReplace(x);
                     itemTracker.AddOrReplaceHash(x);
                 });
-            log.HandledDebug(() =>
+            if (log.IsDebugEnabled)
             {
-                log.Debug(
-                    $"Loaded index file: {indexFile}, last modified: {indexFile.LastWriteTime}, " +
-                    "tracker stats:\n" +
-                    itemTracker.GetStats());
-            });
+                log.RunHandled(() =>
+                {
+                    log.Debug(
+                        $"Loaded index file: {indexFile}, last modified: {indexFile.LastWriteTime}, " +
+                        "tracker stats:\n" +
+                        itemTracker.GetStats());
+                });
+            }
 
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             if (settings.CheckFileHashesAfterModelLoad && !itemTracker.IsEmpty)

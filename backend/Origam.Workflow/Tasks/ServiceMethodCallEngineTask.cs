@@ -127,31 +127,35 @@ namespace Origam.Workflow.Tasks
 						{
 							paramList.Add(item.Name, this.Evaluate(item));
 						}
-						log.HandledDebug(() =>
+
+						if (log.IsDebugEnabled)
 						{
-							log.Debug("Passing array of values into parameter '" + parameter.Name + "'");
-							foreach(DictionaryEntry entry in paramList)
+							log.RunHandled(() =>
 							{
-								object v = entry.Value;
-								if(v == null) v = "null";
-								if(v is ArrayList)
+								log.Debug("Passing array of values into parameter '" + parameter.Name + "'");
+								foreach(DictionaryEntry entry in paramList)
 								{
-									v = "array: {";
-									for(int i = 0; i < (entry.Value as ArrayList).Count; i++)
+									object v = entry.Value;
+									if(v == null) v = "null";
+									if(v is ArrayList)
 									{
-										object av = (entry.Value as ArrayList)[i];
+										v = "array: {";
+										for(int i = 0; i < (entry.Value as ArrayList).Count; i++)
+										{
+											object av = (entry.Value as ArrayList)[i];
 
-										if(i != 0) v+= ", ";
-										if(av == null) av = "null";
-										v += av.ToString();
+											if(i != 0) v+= ", ";
+											if(av == null) av = "null";
+											v += av.ToString();
+										}
+										v += "}";
 									}
-									v += "}";
-								}
 
-								log.Debug("     Key: '" + entry.Key + "' Value: '" + v.ToString() + "'");
-							}
-						});
-						
+									log.Debug("     Key: '" + entry.Key + "' Value: '" + v.ToString() + "'");
+								}
+							});
+						}
+
 						agent.Parameters.Add(parameter.ServiceMethodParameter.Name, paramList);
 					}
 					else

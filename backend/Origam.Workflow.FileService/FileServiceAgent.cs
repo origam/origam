@@ -234,30 +234,33 @@ namespace Origam.Workflow.FileService
 
         public override void Run()
         {
-            log.HandledDebug(() =>
+            if (log.IsDebugEnabled)
             {
-                log.DebugFormat("Executing {0}", this.MethodName);
-
-                foreach (DictionaryEntry item in Parameters)
+                log.RunHandled(() =>
                 {
-                    string value;
+                    log.DebugFormat("Executing {0}", this.MethodName);
 
-                    if (item.Value == null)
+                    foreach (DictionaryEntry item in Parameters)
                     {
-                        value = null;
+                        string value;
+
+                        if (item.Value == null)
+                        {
+                            value = null;
+                        }
+                        else if (item.Value is XmlDocument)
+                        {
+                            value = (item.Value as XmlDocument).OuterXml;
+                        }
+                        else
+                        {
+                            value = item.Value.ToString();
+                        }
+                        
+                        log.DebugFormat("Parameter {0}, Value {1}", item.Key, value);
                     }
-                    else if (item.Value is XmlDocument)
-                    {
-                        value = (item.Value as XmlDocument).OuterXml;
-                    }
-                    else
-                    {
-                        value = item.Value.ToString();
-                    }
-                    
-                    log.DebugFormat("Parameter {0}, Value {1}", item.Key, value);
-                }
-            });
+                });
+            }
 
             switch (this.MethodName)
             {

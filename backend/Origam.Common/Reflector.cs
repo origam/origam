@@ -229,9 +229,9 @@ namespace Origam
                     .Default.LoadFromAssemblyPath(ComposeAssemblyPath(
                         assemblyName));
                 classType = assembly.GetType(classname);
-                if (classType == null)
+                if (log.IsDebugEnabled && classType == null)
                 {
-	                log.HandledDebug(() =>
+	                log.RunHandled(() =>
 	                {
 	                    log.DebugFormat("Can't resolve type '{0}' from assembly path '{1}'",
 	                        classname + "," + assemblyName,

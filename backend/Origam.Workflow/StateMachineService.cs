@@ -1152,20 +1152,23 @@ namespace Origam.Workflow
                             else
                             {
                                 // evaluate the condition filter
-                                log.HandledDebug(() =>
+                                if (log.IsDebugEnabled)
                                 {
-                                    XmlContainer datarow;
-                                    if (row.RowState != DataRowState.Deleted)
+                                    log.RunHandled(() =>
                                     {
-                                        datarow = DatasetTools.GetRowXml(row, DataRowVersion.Default);
-                                    }
-                                    else
-                                    {
-                                        datarow = DatasetTools.GetRowXml(row, DataRowVersion.Original);
-                                    }
-                                    log.DebugFormat("Evaluating ConditionFilter {0} of work queue class {1} for row {2}.",
-                                        wqc.ConditionFilter, wqc.Path, datarow.Xml.OuterXml);
-                                });
+                                        XmlContainer datarow;
+                                        if (row.RowState != DataRowState.Deleted)
+                                        {
+                                            datarow = DatasetTools.GetRowXml(row, DataRowVersion.Default);
+                                        }
+                                        else
+                                        {
+                                            datarow = DatasetTools.GetRowXml(row, DataRowVersion.Original);
+                                        }
+                                        log.DebugFormat("Evaluating ConditionFilter {0} of work queue class {1} for row {2}.",
+                                            wqc.ConditionFilter, wqc.Path, datarow.Xml.OuterXml);
+                                    });
+                                }
                                 StringBuilder filterBuilder = new StringBuilder();
                                 string filter;
 

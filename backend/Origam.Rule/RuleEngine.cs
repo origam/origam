@@ -201,11 +201,14 @@ namespace Origam.Rule
 		public void IncrementStatusPosition()
 		{
 			_statusPosition++;
-			log.HandledDebug(() =>
+			if (log.IsDebugEnabled)
 			{
-				log.DebugFormat("Percent complete: {0}",
-					_statusPosition / _statusTotal * 100);
-			});
+				log.RunHandled(() =>
+				{
+					log.DebugFormat("Percent complete: {0}",
+						_statusPosition / _statusTotal * 100);
+				});
+			}
 		}
 
 		Hashtable _positions = new Hashtable();
@@ -3399,7 +3402,10 @@ namespace Origam.Rule
 
 #region Processing Result
 #region TRACE
-				log.HandledDebug(() =>
+
+			if (log.IsDebugEnabled)
+			{
+				log.RunHandled(() =>
 				{
 					if(rule.TargetField != null)
 					{
@@ -3453,7 +3459,9 @@ namespace Origam.Rule
 						log.Debug("   " + ResourceUtils.GetString("PadRuleResult0") + result.ToString());
 					}
 				});
-				#endregion
+			}
+
+#endregion
 
 				if(result is IDataDocument)
 				{
@@ -3499,40 +3507,43 @@ namespace Origam.Rule
 						}
 
 #region TRACE
-						log.HandledDebug(() =>
+						if (log.IsDebugEnabled)
 						{
-							foreach(DataColumn col in changedColumns)
+							log.RunHandled(() =>
 							{
-								string newLookupValue = null;
-								string oldLookupValue = null;
-								object resultValue = resultRow[col];
-								object oldValue = rowChanged[col.ColumnName];
-								string columnName = col.ColumnName;
-
-								if(col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute) && 
-								   col.ExtendedProperties.Contains(Const.OrigamDataType) && 
-								   !OrigamDataType.Array.Equals(col.ExtendedProperties[Const.OrigamDataType]))
+								foreach(DataColumn col in changedColumns)
 								{
-									if(resultValue != DBNull.Value)
-									{
-										newLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), resultValue.ToString());
-									}
-									if(oldValue != DBNull.Value)
-									{
-										oldLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), oldValue.ToString());
-									}
-								}
+									string newLookupValue = null;
+									string oldLookupValue = null;
+									object resultValue = resultRow[col];
+									object oldValue = rowChanged[col.ColumnName];
+									string columnName = col.ColumnName;
 
-								log.Debug("   " 
-									+ columnName + ": "
-									+ resultValue.ToString() 
-									+ (newLookupValue == null ? "" : " (" + newLookupValue + ")")
-									+ ResourceUtils.GetString("PadRuleResult1") 
-									+ ResourceUtils.GetString("PadRuleResult2") 
-									+ oldValue.ToString()
-									+ (oldLookupValue == null ? "" : " (" + oldLookupValue + ")"));
-							}
-						});
+									if(col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute) && 
+									   col.ExtendedProperties.Contains(Const.OrigamDataType) && 
+									   !OrigamDataType.Array.Equals(col.ExtendedProperties[Const.OrigamDataType]))
+									{
+										if(resultValue != DBNull.Value)
+										{
+											newLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), resultValue.ToString());
+										}
+										if(oldValue != DBNull.Value)
+										{
+											oldLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), oldValue.ToString());
+										}
+									}
+
+									log.Debug("   " 
+										+ columnName + ": "
+										+ resultValue.ToString() 
+										+ (newLookupValue == null ? "" : " (" + newLookupValue + ")")
+										+ ResourceUtils.GetString("PadRuleResult1") 
+										+ ResourceUtils.GetString("PadRuleResult2") 
+										+ oldValue.ToString()
+										+ (oldLookupValue == null ? "" : " (" + oldLookupValue + ")"));
+								}
+							});
+						}
 						#endregion
 
 						// copy the values into the source row

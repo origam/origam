@@ -1105,15 +1105,18 @@ namespace Origam.Workflow.WorkQueue
         {
             foreach (DataRow row in selectedRows.Rows)
             {
-                log.HandledInfo(() =>
+                if (log.IsInfoEnabled)
                 {
-                    Guid itemId = (Guid)row["Id"];
+                    log.RunHandled(() =>
+                    {
+                        Guid itemId = (Guid)row["Id"];
 
-                    log.Info("Moving queue item " + itemId.ToString() + 
-                        " to queue id " + newQueueId.ToString() +
-                        (errorMessage == null ? "" : " with error: " 
-                        + errorMessage));
-                });
+                        log.Info("Moving queue item " + itemId + 
+                            " to queue id " + newQueueId +
+                            (errorMessage == null ? "" : " with error: " 
+                            + errorMessage));
+                    });
+                }
                 row["refWorkQueueId"] = newQueueId;
                 if (resetErrors || errorMessage == null)
                 {
@@ -1129,11 +1132,15 @@ namespace Origam.Workflow.WorkQueue
             {
                 DataSet slice = DatasetTools.CloneDataSet(selectedRows.DataSet);
                 DatasetTools.GetDataSlice(slice, new List<DataRow> { row });
-                log.HandledInfo(() =>
+                if (log.IsInfoEnabled)
                 {
-                    Guid itemId = (Guid)row["Id"];
-                    log.Info("Running notifications for item " + itemId.ToString() + ".");
-                });
+                    log.RunHandled(() =>
+                    {
+                        Guid itemId = (Guid)row["Id"];
+                        log.Info("Running notifications for item " + itemId + ".");
+                    });
+                }
+
                 ProcessNotifications(wqc, newQueueId, new Guid(WQ_EVENT_ONCREATE),
                     slice, transactionId);
             }
@@ -1202,12 +1209,15 @@ namespace Origam.Workflow.WorkQueue
             {
                 DataSet slice = DatasetTools.CloneDataSet(selectedRows.DataSet);
                 DatasetTools.GetDataSlice(slice, new List<DataRow> { row });
-                log.HandledInfo(() =>
+                if (log.IsInfoEnabled)
                 {
-                    Guid itemId = (Guid)row["Id"];
-                    log.Info("Running notifications for item " +
-                             itemId.ToString() + ".");
-                });
+                    log.RunHandled(() =>
+                    {
+                        Guid itemId = (Guid)row["Id"];
+                        log.Info("Running notifications for item " +
+                                 itemId + ".");
+                    });
+                }
                 ProcessNotifications(wqc, (Guid)row["refWorkQueueId"],
                      (Guid)ps.GetParameterValue("WorkQueueNotificationEvent_Command"),
                      slice, transactionId);

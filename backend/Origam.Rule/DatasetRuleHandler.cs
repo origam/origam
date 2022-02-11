@@ -126,11 +126,11 @@ namespace Origam.Rule
 
 			if(e.Action == DataRowAction.Add || e.Action == DataRowAction.Change || e.Action == DataRowAction.Rollback)
 			{
-				log.HandledDebug(() =>
+				if(log.IsDebugEnabled)
 				{
-					log.Debug("Starting rules after '" + e.Row.Table.TableName +
+					log.Debug("Starting rules after '" + e.Row?.Table.TableName +
 					          "' changed.");
-				});
+				}
 				try
 				{
 					ruleEngine.ProcessRules(e.Row, data, ruleSet);
@@ -188,12 +188,12 @@ namespace Origam.Rule
 					}
 				}
 
-				log.HandledDebug(() =>
+				if(log.IsDebugEnabled)
 				{
-					log.Debug("Column '" + e.Row.Table.TableName + "." +
-					          e.Column.ColumnName + "' changed to value: " +
-					          e.ProposedValue.ToString());
-				});
+					log.Debug("Column '" + e.Row?.Table.TableName + "." +
+					          e.Column?.ColumnName + "' changed to value: " +
+					          e.ProposedValue);
+				}
 				ruleEngine.ProcessRules(e.Row, data, e.Column, ruleSet);
 			}
 			catch(OrigamRuleException)

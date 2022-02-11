@@ -79,11 +79,11 @@ namespace Origam.BI.SSRS
                 CloseTimeout = serviceTimeout,
                 MaxReceivedMessageSize = 104857600 //100MB
             };
-            log.HandledDebug(() =>
+            if(log.IsDebugEnabled)
             {
                 log.DebugFormat("SSRSService Timeout: {0}",
                     settings.SQLReportServiceTimeout);
-            });
+            }
             var serviceClient = new ReportExecutionServiceSoapClient(
                 binding, new EndpointAddress(settings.SQLReportServiceUrl));
             if(string.IsNullOrEmpty(settings.SQLReportServiceAccount))

@@ -34,12 +34,15 @@ namespace Origam.Mail
         
         public static void SendMessageAndLog(SmtpClient client, MailMessage message)
         {
-            log.HandledDebug(() =>
+            if (log.IsDebugEnabled)
             {
-                log.Debug("Sending mail:");
-                log.Debug(MailLogUtils.ToLogString(client));
-                log.Debug( MailLogUtils.ToLogString(message));
-            });
+                log.RunHandled(() =>
+                {
+                    log.Debug("Sending mail:");
+                    log.Debug(MailLogUtils.ToLogString(client));
+                    log.Debug( MailLogUtils.ToLogString(message));
+                });
+            }
             client.Send(message);
             log.Debug("Mail sent");
         }
