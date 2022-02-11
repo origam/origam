@@ -107,7 +107,7 @@ namespace Origam.Workflow.Tasks
 
 				if(log.IsInfoEnabled)
 				{
-					log.Info("Starting iteration no. " + _iter.CurrentPosition.ToString());
+					log.Info("Starting iteration no. " + _iter.CurrentPosition);
 				}
 
 				// Set workflow
@@ -195,7 +195,7 @@ namespace Origam.Workflow.Tasks
 
 				if(log.IsInfoEnabled)
 				{
-					log.Info("Finishing iteration no. " + _iter.CurrentPosition.ToString());
+					log.Info("Finishing iteration no. " + _iter.CurrentPosition);
 				}
 			}
 		}

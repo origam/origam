@@ -20,6 +20,23 @@ namespace Origam.Extensions
             {
                 log.Error(ex);
             }
+        }        
+        
+        public static void HandledInfo(this ILog log, Action loggingAction)
+        {
+            if (!log.IsInfoEnabled)
+            {
+                return;
+            }
+
+            try
+            {
+                loggingAction();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
         }
     }
 }

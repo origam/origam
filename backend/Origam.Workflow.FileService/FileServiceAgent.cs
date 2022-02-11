@@ -155,7 +155,7 @@ namespace Origam.Workflow.FileService
 
             if (log.IsInfoEnabled)
             {
-                log.InfoFormat("Read {0} records from a file.", newDt.Rows.Count);
+                log.InfoFormat("Read {0} records from a file.", newDt?.Rows.Count);
             }
 
             dt.TableNewRow += new DataTableNewRowEventHandler(dt_TableNewRow);

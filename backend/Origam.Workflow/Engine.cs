@@ -644,7 +644,7 @@ namespace Origam.Workflow
 			SetStepStatus(step, WorkflowStepResult.Failure);
 			if(log.IsErrorEnabled)
 			{
-				log.Error(step.GetType().Name + " " + step.Name + " failed.");
+				log.Error(step?.GetType().Name + " " + step?.Name + " failed.");
 			}
 			// Trace the error
 			if(IsTrace(step))
@@ -1066,7 +1066,7 @@ namespace Origam.Workflow
 			if(log.IsInfoEnabled)
 			{
 				string stepNameLog = "";
-				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem).Path + "'";
+				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem)?.Path + "'";
 				log.Info("Merging context '" + contextName + "'" + stepNameLog);
 			}
 
@@ -1322,7 +1322,7 @@ namespace Origam.Workflow
 			if(log.IsInfoEnabled)
 			{
 				string stepNameLog = "";
-				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem).Path + "'";
+				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem)?.Path + "'";
 				log.Info("Finished merging context '" + contextName + "'" + stepNameLog);
 			}
 		}

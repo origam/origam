@@ -437,7 +437,7 @@ namespace Origam.Utils
             {
                 log.InfoFormat(
                     "Creating hash index file {1} on folder {0} with pattern {2}.",
-                    options.Input, options.Output, options.Mask);
+                    options?.Input, options?.Output, options?.Mask);
             }
 
             string[] fileNames =
@@ -591,8 +591,8 @@ namespace Origam.Utils
                 foreach (SchemaDbCompareResult result in results)
                 {
                     log.Info(
-                        $@"{result.SchemaItemType.SchemaItemDescription()?.Name} {
-                            result.ItemName} {result.Remark}");
+                        $@"{result?.SchemaItemType.SchemaItemDescription()?.Name} {
+                            result?.ItemName} {result?.Remark}");
                 }
             }
         }

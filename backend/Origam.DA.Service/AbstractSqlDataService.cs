@@ -799,7 +799,7 @@ namespace Origam.DA.Service
                 if (log.IsInfoEnabled)
                 {
                     log.Info("BulkCopy; Entity: "
-                        + changedTable.TableName
+                        + changedTable?.TableName
                         + ", " + rowState.ToString()
                         + " " + rowCount.ToString()
                         + " row(s). Transaction id: "
