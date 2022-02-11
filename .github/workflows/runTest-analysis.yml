@@ -57,8 +57,23 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
+    - name: Build Yarn and npm
+      uses: linchpin/action-build-yarn-npm@master
+  
     - name: NuGet Restore
       run: nuget restore backend/Origam.sln
+      
+    - name: Build Frontend
+      run: |
+        cd frontend-html
+        yarn
+        yarn build
+        
+    - name: Upload frontend artefact
+      uses: actions/upload-artifact@v2
+      with:
+        name: htmlfrontendbuild
+        path: "frontend-html/build"   
     
     - name: Build Html Server
       run: |
@@ -93,6 +108,12 @@ jobs:
       with:
         name: htmlserverbuild
         path: test/HTML5
+        
+    - name: Download Frontend artefact
+      uses: actions/download-artifact@v2
+      with:
+        name: htmlfrontendbuild
+        path: test/HTML5/clients/origam
         
     - name: Copy model to test directory
       run: |
