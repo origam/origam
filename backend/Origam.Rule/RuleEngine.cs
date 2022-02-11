@@ -3421,7 +3421,9 @@ namespace Origam.Rule
 								object oldValue = rowChanged[col.ColumnName];
 								string columnName = col.ColumnName;
 
-								if(col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute))
+								if(col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute) && 
+								   col.ExtendedProperties.Contains(Const.OrigamDataType) && 
+								   !OrigamDataType.Array.Equals(col.ExtendedProperties[Const.OrigamDataType]))
 								{
 									if(resultValue != DBNull.Value)
 									{
