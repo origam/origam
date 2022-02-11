@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
+  <ci:Control
+    asi:abstract="true"
+    x:id="6382f412-b961-46a7-9a34-29aed844b8b9"
+    ci:isComplex="false"
+    asi:name="SectionLevelPlugin"
+    ci:namespace="Origam.Gui.Win"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Gui.Win.SectionLevelPlugin">
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="9216622f-c8b5-4ab1-8ed0-c7cacd18133d"
+      cpi:localizable="false"
+      asi:name="AllowNavigation"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="c96b11eb-6a1f-4a3e-8bea-860a400aeb3d"
+      cpi:localizable="false"
+      asi:name="DataMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="49e86ab1-c813-4e17-aadc-7fe10f9a12af"
+      cpi:localizable="false"
+      asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="9ae14462-5434-46cf-9481-be76f91f24da"
+      cpi:localizable="false"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="284544ef-1b84-4252-84c3-b934b0801667"
+      cpi:localizable="false"
+      asi:name="TabIndex"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="bba4f5e3-0857-4a42-b066-377903dfd793"
+      cpi:localizable="true"
+      asi:name="Text"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="a144bc5b-2d60-46d9-a603-5fd63cc62327"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="156ee734-2ab4-4a47-b4c0-4109bdc3e7b9"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
+  </ci:Control>
+</x:file>

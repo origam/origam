@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="f905e3d5-6255-46c3-96e9-4eab51df333a"
@@ -30,17 +30,6 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LookupText/1fdb538d-525f-414c-93b1-29cadb29b1cb"
-        x:id="3c3ce66c-5130-4087-9d0e-349591a035eb"
-        asi:name="Text"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="false"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
         x:id="1a900a5e-cb29-4a15-974d-5821f5d813a6"
         asi:name="Id"
@@ -52,9 +41,20 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/ReferenceCode/b19baf6b-56ac-4506-a076-769c663be977"
-        x:id="ddebf24a-20de-4c1e-a59b-9f787e557839"
-        asi:name="ReferenceCode"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstName/6d9c8b71-337e-4572-87ff-1dd7e1fa3c53"
+        x:id="35191c34-691d-42e1-b9de-efb2225b1f60"
+        asi:name="FirstName"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LookupText/1fdb538d-525f-414c-93b1-29cadb29b1cb"
+        x:id="3c3ce66c-5130-4087-9d0e-349591a035eb"
+        asi:name="Text"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -74,9 +74,9 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstName/6d9c8b71-337e-4572-87ff-1dd7e1fa3c53"
-        x:id="35191c34-691d-42e1-b9de-efb2225b1f60"
-        asi:name="FirstName"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/ReferenceCode/b19baf6b-56ac-4506-a076-769c663be977"
+        x:id="ddebf24a-20de-4c1e-a59b-9f787e557839"
+        asi:name="ReferenceCode"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
@@ -99,19 +99,6 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="df9202a0-18ad-4584-ba6b-9ef0be33e5de"
-      asi:name="DefaultBusinessPartner">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/BusinessPartner/332952e7-216f-4e9f-9fff-13264735b2df"
-        dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LikeLookupTextOrReferenceCode/f9eda42b-c31a-44f8-b49f-9f0a8cc5f021"
-        x:id="8e984053-60e0-4f44-99e4-9f40ef0203a0"
-        asi:name="BusinessPartner_LikeLookupTextOrReferenceCode"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
       x:id="d8e44ef4-b151-46c9-bf2a-d4515f37821d"
       asi:name="GetId">
       <dsfsf:DataStructureFilterSetFilter
@@ -120,6 +107,19 @@
         dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
         x:id="a63254f6-6c43-459d-8218-7faeff352b66"
         asi:name="BusinessPartner_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="df9202a0-18ad-4584-ba6b-9ef0be33e5de"
+      asi:name="DefaultBusinessPartner">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/Partner Management/Lookups/LookupBusinessPartner.origam#LookupBusinessPartner/BusinessPartner/332952e7-216f-4e9f-9fff-13264735b2df"
+        dsfsf:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LikeLookupTextOrReferenceCode/f9eda42b-c31a-44f8-b49f-9f0a8cc5f021"
+        x:id="8e984053-60e0-4f44-99e4-9f40ef0203a0"
+        asi:name="BusinessPartner_LikeLookupTextOrReferenceCode"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsss:DataStructureSortSet

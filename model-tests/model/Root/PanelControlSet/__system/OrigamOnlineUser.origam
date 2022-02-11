@@ -492,7 +492,7 @@
           x:id="15765f36-fe49-4402-b9c0-e3f8bc7e7ea0"
           asi:name="CustomFormat"
           apvi:propertyId="2b9a48c5-5eef-4376-954a-49dcb3d23910"
-          pvi:value="DD.MM.YYYY JJ:NN:SS" />
+          pvi:value="dd.MM.yyyy HH:mm:ss" />
         <pvi:PropertyValueItem
           asi:abstract="false"
           x:id="12c811ab-ed30-4dd7-9a5e-f21e124fe722"

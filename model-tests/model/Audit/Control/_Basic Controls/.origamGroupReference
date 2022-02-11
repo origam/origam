@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+    <x:groupReference x:type="package" x:refId="255eec22-89c5-479a-b48d-e7bc9baa564a"/>
+    <x:groupReference x:type="group" x:refId="36ec6a97-64be-4916-9201-27a95d1b0ff2"/>
+</x:file>
