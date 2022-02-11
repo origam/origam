@@ -57,8 +57,10 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Build Yarn and npm
-      uses: linchpin/action-build-yarn-npm@master
+    - name: Yarn setup
+      uses: DerYeger/yarn-setup-action@master
+      with:
+       node-version: 16
   
     - name: NuGet Restore
       run: nuget restore backend/Origam.sln
