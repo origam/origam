@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
@@ -127,8 +127,7 @@ namespace Origam.Workflow.Tasks
 						{
 							paramList.Add(item.Name, this.Evaluate(item));
 						}
-
-						if(log.IsDebugEnabled)
+						log.HandledDebug(() =>
 						{
 							log.Debug("Passing array of values into parameter '" + parameter.Name + "'");
 							foreach(DictionaryEntry entry in paramList)
@@ -151,8 +150,8 @@ namespace Origam.Workflow.Tasks
 
 								log.Debug("     Key: '" + entry.Key + "' Value: '" + v.ToString() + "'");
 							}
-						}
-
+						});
+						
 						agent.Parameters.Add(parameter.ServiceMethodParameter.Name, paramList);
 					}
 					else
@@ -199,7 +198,7 @@ namespace Origam.Workflow.Tasks
 				{
 					if(log.IsDebugEnabled)
 					{
-						log.Debug("Parameter '" + parameter.Name + "' has no value set.");
+						log.Debug("Parameter '" + parameter?.Name + "' has no value set.");
 					}
 				}
 			}

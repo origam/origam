@@ -141,7 +141,7 @@ namespace Origam.DA.Service
         private void LogTreeIndexState(string message)
         {
             if (!log.IsDebugEnabled) return;
-            log.Debug(message + ", treeIndex.Count: " + treeIndex.Count);
+            log.Debug(message + ", treeIndex.Count: " + treeIndex?.Count);
         }
 
         public bool ContainsFile(FileInfo file) =>

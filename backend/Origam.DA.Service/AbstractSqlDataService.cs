@@ -32,6 +32,7 @@ using System.Text;
 using log4net;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.Generators;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Services;
@@ -456,14 +457,14 @@ namespace Origam.DA.Service
             DataStructureQuery query, IPrincipal userProfile, DataSet dataset, 
             string transactionId, bool forceBulkInsert)
 		{
-			if(log.IsDebugEnabled)
+			log.HandledDebug(() =>
 			{
 				log.Debug("UpdateData; Data Structure Id: " + query.DataSourceId.ToString());
 				StringBuilder sb = new StringBuilder();
 				System.IO.StringWriter sw = new System.IO.StringWriter(sb);
 				dataset.WriteXml(sw, XmlWriteMode.DiffGram);
 				log.Debug("UpdateData; " + sb.ToString());
-			}
+			});
 			bool newTransaction = (transactionId == null);
 			if(transactionId == null) transactionId = Guid.NewGuid().ToString();
 			// If there is nothing to update, we quit immediately

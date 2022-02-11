@@ -23,6 +23,7 @@ using System;
 using System.Data;
 using System.Xml;
 using Origam.DA;
+using Origam.Extensions;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
@@ -125,10 +126,11 @@ namespace Origam.Rule
 
 			if(e.Action == DataRowAction.Add || e.Action == DataRowAction.Change || e.Action == DataRowAction.Rollback)
 			{
-				if(log.IsDebugEnabled)
+				log.HandledDebug(() =>
 				{
-					log.Debug("Starting rules after '" + e.Row.Table.TableName + "' changed.");
-				}
+					log.Debug("Starting rules after '" + e.Row.Table.TableName +
+					          "' changed.");
+				});
 				try
 				{
 					ruleEngine.ProcessRules(e.Row, data, ruleSet);
@@ -185,10 +187,13 @@ namespace Origam.Rule
 						}
 					}
 				}
-				if(log.IsDebugEnabled)
+
+				log.HandledDebug(() =>
 				{
-					log.Debug("Column '" + e.Row.Table.TableName + "." + e.Column.ColumnName + "' changed to value: " + e.ProposedValue.ToString());
-				}
+					log.Debug("Column '" + e.Row.Table.TableName + "." +
+					          e.Column.ColumnName + "' changed to value: " +
+					          e.ProposedValue.ToString());
+				});
 				ruleEngine.ProcessRules(e.Row, data, e.Column, ruleSet);
 			}
 			catch(OrigamRuleException)
@@ -210,7 +215,7 @@ namespace Origam.Rule
 				{
 					if(log.IsDebugEnabled)
 					{
-						log.Debug("Starting rules after '" + deletedRow.Table.TableName + "' deleted.");
+						log.Debug("Starting rules after '" + deletedRow?.Table?.TableName + "' deleted.");
 					}
 					ruleEngine.ProcessRules(deletedRow, data, ruleSet, parentRows);
 					foreach(DataRow row in parentRows)
@@ -240,7 +245,7 @@ namespace Origam.Rule
 		{
 			if(log.IsDebugEnabled)
 			{
-				log.Debug("Starting rules after '" + row.Table.TableName + "' was copied.");
+				log.Debug("Starting rules after '" + row?.Table?.TableName + "' was copied.");
 			}
 			try
 			{

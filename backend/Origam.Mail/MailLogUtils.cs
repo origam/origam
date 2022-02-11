@@ -23,6 +23,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using Origam.Extensions;
 
 namespace Origam.Mail
 {
@@ -33,12 +34,12 @@ namespace Origam.Mail
         
         public static void SendMessageAndLog(SmtpClient client, MailMessage message)
         {
-            if (log.IsDebugEnabled)
+            log.HandledDebug(() =>
             {
                 log.Debug("Sending mail:");
                 log.Debug(MailLogUtils.ToLogString(client));
                 log.Debug( MailLogUtils.ToLogString(message));
-            }
+            });
             client.Send(message);
             log.Debug("Mail sent");
         }

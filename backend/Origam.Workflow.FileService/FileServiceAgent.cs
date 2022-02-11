@@ -30,6 +30,7 @@ using System.Data;
 using log4net;
 using System.Text;
 using Extender;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow.FileService
@@ -233,7 +234,7 @@ namespace Origam.Workflow.FileService
 
         public override void Run()
         {
-            if (log.IsDebugEnabled)
+            log.HandledDebug(() =>
             {
                 log.DebugFormat("Executing {0}", this.MethodName);
 
@@ -256,7 +257,7 @@ namespace Origam.Workflow.FileService
                     
                     log.DebugFormat("Parameter {0}, Value {1}", item.Key, value);
                 }
-            }
+            });
 
             switch (this.MethodName)
             {

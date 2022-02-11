@@ -292,7 +292,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Testing notification " + notification.Description);
+                    log.Debug("Testing notification " + notification?.Description);
                 }
                 // check if the event type is equal (OnCreate, OnEscalate, etc...)
                 if (!notification.refWorkQueueNotificationEventId.Equals(eventTypeId))
@@ -332,7 +332,7 @@ namespace Origam.Workflow.WorkQueue
                     notificationSource = DataDocumentFactory.New(dataSet);
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug("Notification source result: " + notificationSource.Xml.OuterXml);
+                        log.Debug("Notification source result: " + notificationSource?.Xml?.OuterXml);
                     }
                 }
                 DataRow workQueueRow = ExtractWorkQueueRowIfNotNotificationDatastructureIsSet(wqc, queueItem);
@@ -391,7 +391,7 @@ namespace Origam.Workflow.WorkQueue
                     }
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug("Recipients: " + recipients.GetXml());
+                        log.Debug("Recipients: " + recipients?.GetXml());
                     }
                     if (!senders.Contains(recipientRow.refOrigamNotificationChannelTypeId))
                     {
@@ -1394,7 +1394,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     log.DebugFormat(
                         "Skipping external work queues load: adapterBusy: {0}, schemaLoaded: {1}, serviceBeingUnloaded: {2}",
-                        _externalQueueAdapterBusy, schemaService.IsSchemaLoaded, 
+                        _externalQueueAdapterBusy, schemaService?.IsSchemaLoaded, 
                         serviceBeingUnloaded);
                 }
                 return;

@@ -33,6 +33,7 @@ using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
 using log4net;
 using Origam.BI.SSRS.SSRSWebReference;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.BI.SSRS
@@ -78,11 +79,11 @@ namespace Origam.BI.SSRS
                 CloseTimeout = serviceTimeout,
                 MaxReceivedMessageSize = 104857600 //100MB
             };
-            if(log.IsDebugEnabled)
+            log.HandledDebug(() =>
             {
-                log.DebugFormat("SSRSService Timeout: {0}", 
+                log.DebugFormat("SSRSService Timeout: {0}",
                     settings.SQLReportServiceTimeout);
-            }
+            });
             var serviceClient = new ReportExecutionServiceSoapClient(
                 binding, new EndpointAddress(settings.SQLReportServiceUrl));
             if(string.IsNullOrEmpty(settings.SQLReportServiceAccount))

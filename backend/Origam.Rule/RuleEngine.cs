@@ -47,6 +47,7 @@ using DiffPlex.DiffBuilder;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Rule
@@ -200,10 +201,11 @@ namespace Origam.Rule
 		public void IncrementStatusPosition()
 		{
 			_statusPosition++;
-			if(log.IsDebugEnabled)
+			log.HandledDebug(() =>
 			{
-				log.DebugFormat("Percent complete: {0}", _statusPosition / _statusTotal * 100);
-			}
+				log.DebugFormat("Percent complete: {0}",
+					_statusPosition / _statusTotal * 100);
+			});
 		}
 
 		Hashtable _positions = new Hashtable();
@@ -3165,7 +3167,7 @@ namespace Origam.Rule
 						{
 							log.Debug(ResourceUtils.GetString("PadProcessingRules", 
 								DateTime.Now.ToString(), ruleSet.Name, rowChanged.Table.TableName, pk,
-								(columnChanged == null ? "<none>" : columnChanged.ColumnName)));
+								(columnChanged == null ? "<none>" : columnChanged?.ColumnName)));
 						}
 					}			
 				}
@@ -3268,7 +3270,7 @@ namespace Origam.Rule
 			{
 				if(log.IsDebugEnabled)
 				{
-					log.Debug("Evaluating Rule: " + rule.Name + ", Target Field: " + (rule.TargetField == null ? "<none>" : rule.TargetField.Name));
+					log.Debug("Evaluating Rule: " + rule?.Name + ", Target Field: " + (rule?.TargetField == null ? "<none>" : rule?.TargetField.Name));
 				}
 
 				// columns which don't allow nulls will not get processed when empty
@@ -3397,7 +3399,7 @@ namespace Origam.Rule
 
 #region Processing Result
 #region TRACE
-				if(log.IsDebugEnabled)
+				log.HandledDebug(() =>
 				{
 					if(rule.TargetField != null)
 					{
@@ -3450,8 +3452,8 @@ namespace Origam.Rule
 					{
 						log.Debug("   " + ResourceUtils.GetString("PadRuleResult0") + result.ToString());
 					}
-				}
-#endregion
+				});
+				#endregion
 
 				if(result is IDataDocument)
 				{
@@ -3497,7 +3499,7 @@ namespace Origam.Rule
 						}
 
 #region TRACE
-						if(log.IsDebugEnabled)
+						log.HandledDebug(() =>
 						{
 							foreach(DataColumn col in changedColumns)
 							{
@@ -3530,8 +3532,8 @@ namespace Origam.Rule
 									+ oldValue.ToString()
 									+ (oldLookupValue == null ? "" : " (" + oldLookupValue + ")"));
 							}
-						}
-#endregion
+						});
+						#endregion
 
 						// copy the values into the source row
 						PauseRuleProcessing();
@@ -4306,12 +4308,12 @@ namespace Origam.Rule
 
 			if(log.IsDebugEnabled)
 			{
-				log.Debug("Evaluating XPath Rule: " + rule.Name);
+				log.Debug("Evaluating XPath Rule: " + rule?.Name);
 				if(contextPosition != null)
 				{
-					log.Debug("Current Position: " + contextPosition.Current.Name);
+					log.Debug("Current Position: " + contextPosition?.Current?.Name);
 				}
-				log.Debug("  Input data: " + context.Xml.OuterXml);
+				log.Debug("  Input data: " + context.Xml?.OuterXml);
 			}
 
 			XPathNavigator nav = context.Xml.CreateNavigator();

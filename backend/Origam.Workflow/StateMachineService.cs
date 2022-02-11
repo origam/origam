@@ -37,6 +37,7 @@ using DataService
     = Origam.Workbench.Services.CoreServices.DataService;
 using Origam.Schema.WorkflowModel.WorkQueue;
 using System.Linq;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -1151,7 +1152,7 @@ namespace Origam.Workflow
                             else
                             {
                                 // evaluate the condition filter
-                                if (log.IsDebugEnabled)
+                                log.HandledDebug(() =>
                                 {
                                     XmlContainer datarow;
                                     if (row.RowState != DataRowState.Deleted)
@@ -1164,7 +1165,7 @@ namespace Origam.Workflow
                                     }
                                     log.DebugFormat("Evaluating ConditionFilter {0} of work queue class {1} for row {2}.",
                                         wqc.ConditionFilter, wqc.Path, datarow.Xml.OuterXml);
-                                }
+                                });
                                 StringBuilder filterBuilder = new StringBuilder();
                                 string filter;
 
