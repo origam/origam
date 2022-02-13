@@ -40,7 +40,7 @@ namespace Origam.Mail
                 {
                     log.Debug("Sending mail:");
                     log.Debug(MailLogUtils.ToLogString(client));
-                    log.Debug( MailLogUtils.ToLogString(message));
+                    log.Debug(MailLogUtils.ToLogString(message));
                 });
             }
             client.Send(message);
