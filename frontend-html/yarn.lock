@@ -1593,10 +1593,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@origam/components@^1.0.0", "@origam/components@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.5.1.tgz#341c1d9ee966f723f134d7bdfc1c2bfb837f9f2c"
-  integrity sha512-9/RblSLFqI8X/k7HrMo3iATDxav0tNDDzvGJ1a9KatYip9qdJiQ8708hkPDMGWq4gHewoKLXZk98Unmp6wNbHA==
+"@origam/components@^1.0.0", "@origam/components@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.5.2.tgz#79c28b8051fb6d09a84cca8cbcabe036d4e246f7"
+  integrity sha512-Rf5VbN7TenxoH8xqzyucgBY03+STr/+jJ+7YknTfFxr+oAMYFsjhbDSkKjhLJem7/es6x2RISTGSCG+G//e2Wg==
   dependencies:
     react-inlinesvg "^2.3.0"
 
