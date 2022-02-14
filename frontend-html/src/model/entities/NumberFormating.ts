@@ -89,6 +89,9 @@ export function formatNumber(
   dataType: string,
   value: number
 ) {
+  if(isNaN(value)){
+    return "";
+  }
   const locale = getLocaleFromCookie();
   if (customNumericFormat) {
     return formatNumberWithLocale(customNumericFormat, value, locale);

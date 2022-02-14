@@ -22,13 +22,18 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
-import { formatNumber, getCurrentDecimalSeparator, } from "../../../../model/entities/NumberFormating";
+import {
+  formatNumber,
+  getCurrentDecimalSeparator,
+  getCurrentGroupSeparator,
+} from "../../../../model/entities/NumberFormating";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
 export class NumberEditor extends React.Component<{
-  value: string | null;
+  value: string | number | null;
   isReadOnly: boolean;
   isPassword?: boolean;
   isInvalid: boolean;
@@ -39,7 +44,7 @@ export class NumberEditor extends React.Component<{
   customNumberFormat?: string | undefined;
   maxLength?: number;
   customStyle?: any;
-  onChange?(event: any, value: string | null): void;
+  onChange?(event: any, value: string | null): Promise<void>;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
@@ -47,29 +52,26 @@ export class NumberEditor extends React.Component<{
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
-  disposers: any[] = [];
 
-  @observable hasFocus = false;
-  @observable editingValue: null | string = "";
-  @observable wasChanged = false;
+  @observable value: string = this.formatForDisplay(this.props.value);
 
-  @computed get numeralFormattedValue() {
-    if (this.props.value === null) {
-      return "";
+  formatForDisplay(value: string | number | null){
+    if (value === null) {
+        return "";
     }
+    const rawValue = typeof value === "string"
+      ? value.replaceAll(getCurrentGroupSeparator(), "")
+      : value;
     return formatNumber(
       this.props.customNumberFormat,
       this.props.property?.entity ?? "",
-      Number(this.props.value)
+      Number(rawValue)
     );
   }
 
-  @computed get editValue() {
-    if (this.hasFocus) {
-      return this.editingValue;
-    } else {
-      return this.numeralFormattedValue;
-    }
+  formatForOnChange(value: string | number | null){
+    const displayValue = this.formatForDisplay(value);
+    return displayValue.replaceAll(getCurrentGroupSeparator(), "");
   }
 
   componentDidMount() {
@@ -79,82 +81,79 @@ export class NumberEditor extends React.Component<{
     this.updateTextOverflowState();
   }
 
-  componentWillUnmount() {
-    this.disposers.forEach((d) => d());
-  }
-
   componentDidUpdate(prevProps: { value: any }) {
-    if (this.props.value !== prevProps.value && !this.wasChanged) {
-      this.editingValue = this.numeralFormattedValue;
+    if (this.props.value !== prevProps.value) {
+      this.value = this.formatForDisplay(this.props.value)
     }
     this.updateTextOverflowState();
   }
 
+  componentWillUnmount() {
+    this.handleBlur(null);
+  }
+
   @action.bound
   handleFocus(event: any) {
-    this.hasFocus = true;
-    this.wasChanged = false;
-    this.editingValue = this.numeralFormattedValue;
     if (this.elmInput) {
       this.elmInput.select();
       this.elmInput.scrollLeft = 0;
     }
   }
 
-  private updateTextOverflowState() {
+  updateTextOverflowState() {
     if (!this.elmInput) {
       return;
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
-    this.props.onTextOverflowChanged?.(textOverflow ? this.numeralFormattedValue : undefined);
+    this.props.onTextOverflowChanged?.(textOverflow ? this.value : undefined);
   }
+
 
   @action.bound
-  handleBlur(event: any) {
-    this.hasFocus = false;
-    this.wasChanged = false;
-    if (!this.wasChanged || this.props.value === this.editValue) {
-      this.props.onEditorBlur?.(event);
-      return;
-    }
-    if (this.editValue === "") {
-      this.props.onEditorBlur?.(event);
-    } else {
-      this.props.onEditorBlur?.(event);
-    }
+  async handleBlur(event: any) {
+    await runInFlowWithHandler({
+      ctx: this.props.property,
+      action: async () => {
+        let value = this.formatForOnChange(this.value);
+        if(this.formatForOnChange(this.props.value) !== value){
+          this.props.onChange && await this.props.onChange(null, value);
+        }
+        this.props.onEditorBlur?.(event);
+        this.value = this.formatForDisplay(this.value);
+      }})
   }
 
-  @computed
-  private get numericValue() {
-    if (this.editValue === null || this.editValue === "") {
-      return null;
-    }
-    let valueToParse = this.editValue.endsWith(getCurrentDecimalSeparator())
-      ? this.editValue + "0"
-      : this.editValue;
-    valueToParse = valueToParse.replace(getCurrentDecimalSeparator(), ".");
-    return "" + Number(valueToParse);
+
+  isValidNumber(value: string){
+    let formattedValue = value.replaceAll(getCurrentGroupSeparator(), "");
+    return !isNaN(Number(formattedValue))
   }
 
   @action.bound handleChange(event: any) {
-    this.wasChanged = true;
-    const invalidChars = new RegExp("[^\\d\\-" + getCurrentDecimalSeparator() + "]", "g");
-    this.editingValue = (event.target.value || "").replace(invalidChars, "");
-    this.props.onChange && this.props.onChange(null, this.numericValue);
-    this.updateTextOverflowState();
+    const invalidChars = new RegExp("[^\\d\\-" + getCurrentDecimalSeparator() + getCurrentGroupSeparator() + "]", "g");
+    const cleanValue = (event.target.value || "").replaceAll(invalidChars, "");
+    if(this.isValidNumber(cleanValue)){
+      this.value = cleanValue;
+      this.updateTextOverflowState();
+    }
+  }
+
+  isValidCharacter(char: string){
+    if(
+      char === getCurrentDecimalSeparator() ||
+      char === getCurrentGroupSeparator()
+    ) {
+      return true;
+    }
+    return !isNaN(parseInt(char, 10))
   }
 
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Escape") {
-      this.wasChanged = false;
-    } else if (event.key === "Enter") {
-      this.editingValue = this.numeralFormattedValue;
-    }
     this.props.onKeyDown && this.props.onKeyDown(event);
   }
 
-  elmInput: HTMLInputElement | HTMLTextAreaElement | null = null;
-  refInput = (elm: HTMLInputElement | HTMLTextAreaElement | null) => {
+  elmInput: HTMLInputElement | null = null;
+  refInput = (elm: HTMLInputElement | null) => {
     this.elmInput = elm;
   };
 
@@ -179,11 +178,7 @@ export class NumberEditor extends React.Component<{
           className={cx(S.input)}
           type={this.props.isPassword ? "password" : "text"}
           autoComplete={this.props.isPassword ? "new-password" : undefined}
-          value={
-            this.editValue !== undefined && this.editValue !== "NaN" && this.editValue !== null
-              ? this.editValue
-              : ""
-          }
+          value={this.value}
           maxLength={maxLength}
           readOnly={this.props.isReadOnly}
           ref={this.refInput}
