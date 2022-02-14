@@ -17,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action, computed, observable } from "mobx";
-import { observer } from "mobx-react";
+import { action } from "mobx";
 import * as React from "react";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
@@ -31,7 +30,6 @@ import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import { IProperty } from "model/entities/types/IProperty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
-@observer
 export class NumberEditor extends React.Component<{
   value: string | number | null;
   isReadOnly: boolean;
@@ -52,8 +50,9 @@ export class NumberEditor extends React.Component<{
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
-
-  @observable value: string = this.formatForDisplay(this.props.value);
+  state = { value: this.formatForDisplay(this.props.value), cursorPosition: 0};
+  disposer: undefined | (()=> void);
+  inputRef = React.createRef<HTMLInputElement>();
 
   formatForDisplay(value: string | number | null){
     if (value === null) {
@@ -75,87 +74,79 @@ export class NumberEditor extends React.Component<{
   }
 
   componentDidMount() {
-    if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.props.subscribeToFocusManager(this.elmInput);
+    if (this.inputRef.current && this.props.subscribeToFocusManager) {
+      this.props.subscribeToFocusManager(this.inputRef.current);
     }
     this.updateTextOverflowState();
   }
 
   componentDidUpdate(prevProps: { value: any }) {
     if (this.props.value !== prevProps.value) {
-      this.value = this.formatForDisplay(this.props.value)
+      this.setState(
+        { value: this.formatForDisplay(this.props.value)}
+      );
     }
     this.updateTextOverflowState();
   }
 
   componentWillUnmount() {
     this.handleBlur(null);
+    this.disposer?.();
   }
 
   @action.bound
   handleFocus(event: any) {
-    if (this.elmInput) {
-      this.elmInput.select();
-      this.elmInput.scrollLeft = 0;
+    if (this.inputRef.current) {
+      this.inputRef.current.select();
+      this.inputRef.current.scrollLeft = 0;
     }
   }
 
   updateTextOverflowState() {
-    if (!this.elmInput) {
+    if (!this.inputRef.current) {
       return;
     }
-    const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
-    this.props.onTextOverflowChanged?.(textOverflow ? this.value : undefined);
+    const textOverflow = this.inputRef.current.offsetWidth < this.inputRef.current.scrollWidth
+    this.props.onTextOverflowChanged?.(textOverflow ? this.state.value : undefined);
   }
-
 
   @action.bound
   async handleBlur(event: any) {
     await runInFlowWithHandler({
       ctx: this.props.property,
       action: async () => {
-        let value = this.formatForOnChange(this.value);
+        let value = this.formatForOnChange(this.state.value);
         if(this.formatForOnChange(this.props.value) !== value){
           this.props.onChange && await this.props.onChange(null, value);
         }
         this.props.onEditorBlur?.(event);
-        this.value = this.formatForDisplay(this.value);
+        this.setState(
+          { value: this.formatForDisplay(this.state.value)}
+        );
       }})
   }
 
-
-  isValidNumber(value: string){
-    let formattedValue = value.replaceAll(getCurrentGroupSeparator(), "");
-    return !isNaN(Number(formattedValue))
-  }
-
   @action.bound handleChange(event: any) {
-    const invalidChars = new RegExp("[^\\d\\-" + getCurrentDecimalSeparator() + getCurrentGroupSeparator() + "]", "g");
-    const cleanValue = (event.target.value || "").replaceAll(invalidChars, "");
-    if(this.isValidNumber(cleanValue)){
-      this.value = cleanValue;
-      this.updateTextOverflowState();
-    }
-  }
+    const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event);
 
-  isValidCharacter(char: string){
-    if(
-      char === getCurrentDecimalSeparator() ||
-      char === getCurrentGroupSeparator()
-    ) {
-      return true;
-    }
-    return !isNaN(parseInt(char, 10))
+    const newValue = isValidNumber(cleanValue)
+      ? cleanValue
+      : this.state.value;
+
+    this.setState(
+      { value: newValue, cursorPosition: event.target.selectionStart - invalidCharactersBeforeCursor },
+      () => {
+        if(this.inputRef.current){
+          this.inputRef.current.selectionStart = this.state.cursorPosition;
+          this.inputRef.current.selectionEnd =  this.state.cursorPosition;
+        }
+      });
+    this.updateTextOverflowState();
   }
 
   @action.bound handleKeyDown(event: any) {
     this.props.onKeyDown && this.props.onKeyDown(event);
   }
-
-  elmInput: HTMLInputElement | null = null;
-  refInput = (elm: HTMLInputElement | null) => {
-    this.elmInput = elm;
-  };
 
   getStyle() {
     if (this.props.customStyle) {
@@ -178,10 +169,10 @@ export class NumberEditor extends React.Component<{
           className={cx(S.input)}
           type={this.props.isPassword ? "password" : "text"}
           autoComplete={this.props.isPassword ? "new-password" : undefined}
-          value={this.value}
+          value={this.state.value}
           maxLength={maxLength}
           readOnly={this.props.isReadOnly}
-          ref={this.refInput}
+          ref={this.inputRef}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
           onClick={this.props.onClick}
@@ -197,4 +188,38 @@ export class NumberEditor extends React.Component<{
       </div>
     );
   }
+}
+
+function getValidCharacters(event: any){
+  const cleanChars = [];
+  let invalidCharactersBeforeCursor = 0;
+  for (let i = 0; i < event.target.value.length; i++) {
+    const char = event.target.value[i];
+    if(isValidCharacter(char)){
+      cleanChars.push(char)
+    }else{
+      if(i < event.target.selectionStart){
+        invalidCharactersBeforeCursor++;
+      }
+    }
+  }
+  return {
+    cleanValue:cleanChars.join(""),
+    invalidCharactersBeforeCursor: invalidCharactersBeforeCursor
+  };
+}
+
+function isValidNumber(value: string){
+  let formattedValue = value.replaceAll(getCurrentGroupSeparator(), "");
+  return !isNaN(Number(formattedValue))
+}
+
+function isValidCharacter(char: string){
+  if(
+    char === getCurrentDecimalSeparator() ||
+    char === getCurrentGroupSeparator()
+  ) {
+    return true;
+  }
+  return !isNaN(parseInt(char, 10))
 }
