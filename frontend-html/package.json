@@ -5,7 +5,7 @@
   "dependencies": {
     "@decorize/bind": "^1.0.3",
     "@mapbox/geojson-area": "^0.2.2",
-    "@messageformat/core": "^3.0.0",
+    "@messageformat/core": "^3.0.1",
     "@origam/components": "^1.5.2",
     "@origam/plugin-audit": "^1.0.0",
     "@origam/plugin-chart": "^1.1.0",

@@ -1520,16 +1520,16 @@
   dependencies:
     wgs84 "0.0.0"
 
-"@messageformat/core@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@messageformat/core/-/core-3.0.0.tgz#8785c283218a11ced7f1474f547824bbce583f21"
-  integrity sha512-mzMCyADGweNmnMwV/xjKxtXtkXJNVcK5ATOHx4Q0GVr2Z3++in1VfrB/y6jM43nleK27tFO0Y/9pds5vxWqDvQ==
+"@messageformat/core@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@messageformat/core/-/core-3.0.1.tgz#191e12cf9643704d1fd32e592a3fbdc194dd588e"
+  integrity sha512-yxj2+0e46hcZqJfNf0ZYbC2q6WlcGoh4g11mCyRtTueR0AD8F9z4JMYAS1aOiFG8Vl1LZg/h5hZHKmWTAyZq8g==
   dependencies:
     "@messageformat/date-skeleton" "^1.0.0"
     "@messageformat/number-skeleton" "^1.0.0"
     "@messageformat/parser" "^5.0.0"
-    "@messageformat/runtime" "^3.0.0"
-    make-plural "^6.2.1"
+    "@messageformat/runtime" "^3.0.1"
+    make-plural "^7.0.0"
     safe-identifier "^0.4.1"
 
 "@messageformat/date-skeleton@^1.0.0":
@@ -1549,12 +1549,12 @@
   dependencies:
     moo "^0.5.1"
 
-"@messageformat/runtime@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@messageformat/runtime/-/runtime-3.0.0.tgz#1ab31ccd667c2128c0c024d8068c8d83d2b70252"
-  integrity sha512-boV0oH8jnJM/qoynQKnIbnKK5M7JPpKM0y9QUB9nQMMt16qSlgi5FfUo8usgoq6wEYqxDmIqtUfBewcj2VP+yQ==
+"@messageformat/runtime@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@messageformat/runtime/-/runtime-3.0.1.tgz#94d1f6c43265c28ef7aed98ecfcc0968c6c849ac"
+  integrity sha512-6RU5ol2lDtO8bD9Yxe6CZkl0DArdv0qkuoZC+ZwowU+cdRlVE1157wjCmlA5Rsf1Xc/brACnsZa5PZpEDfTFFg==
   dependencies:
-    make-plural "^6.2.1"
+    make-plural "^7.0.0"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -8240,10 +8240,10 @@ make-dir@^3.0.0, make-dir@^3.0.2:
   dependencies:
     semver "^6.0.0"
 
-make-plural@^6.2.1:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/make-plural/-/make-plural-6.2.2.tgz#beb5fd751355e72660eeb2218bb98eec92853c6c"
-  integrity sha512-8iTuFioatnTTmb/YJjywkVIHLjcwkFD9Ms0JpxjEm9Mo8eQYkh1z+55dwv4yc1jQ8ftVBxWQbihvZL1DfzGGWA==
+make-plural@^7.0.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/make-plural/-/make-plural-7.1.0.tgz#8a0381ff8c9be4f074e0acdc42ec97639c2344f9"
+  integrity sha512-PKkwVlAxYVo98NrbclaQIT4F5Oy+X58PZM5r2IwUSCe3syya6PXkIRCn2XCdz7p58Scgpp50PBeHmepXVDG3hg==
 
 makeerror@1.0.12:
   version "1.0.12"
