@@ -55,8 +55,8 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
   return {
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
-    onChange: (event: any, value: any) => {
-      onFieldChange(formPanelView)({
+    onChange: async (event: any, value: any) => {
+      await onFieldChange(formPanelView)({
         event: event,
         row: row,
         property: property,
@@ -72,7 +72,7 @@ export class FormViewEditor extends React.Component<{
   textualValue?: any;
   property?: IProperty;
   isRichText: boolean;
-  onChange?: (event: any, value: any) => void;
+  onChange?: (event: any, value: any) => Promise<void>;
   onEditorBlur?: (event: any) => Promise<any>;
   backgroundColor?: string;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
