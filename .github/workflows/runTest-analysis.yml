@@ -80,6 +80,8 @@ jobs:
     - name: Build Html Server
       run: |
        cd backend
+       set MsBuildEmitSolution=1
+       msbuild.exe Origam.sln  -t:restore
        msbuild Origam.sln /pp -v:m
        msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        
