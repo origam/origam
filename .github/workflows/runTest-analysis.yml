@@ -79,7 +79,8 @@ jobs:
     
     - name: Build Html Server
       run: |
-       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+       cd backend
+       msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        
     - name: Upload server artefact
       uses: actions/upload-artifact@v2
