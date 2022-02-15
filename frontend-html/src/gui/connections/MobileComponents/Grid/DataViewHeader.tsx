@@ -157,7 +157,7 @@ export class DataViewHeaderInner extends React.Component<{
     let previousLayout = this.mobileState.layoutState;
     this.mobileState.layoutState = new EditLayoutState(
       <RecordInfo recordInfo={getRecordInfo(dataView)}/>,
-      "Record Info",
+      T("Record Info", "infopanel_title"),
       previousLayout
     );
   }
