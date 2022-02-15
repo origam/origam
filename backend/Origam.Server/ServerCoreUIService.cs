@@ -205,8 +205,20 @@ namespace Origam.Server
             result.UserId = profile.Id;
             result.Tooltip = ToolTipTools.NextTooltip();
             result.Title = ConfigurationManager.GetActiveConfiguration().TitleText;
+            result.InitialScreenId = GetInitialScreenId();
             CreateUpdateOrigamOnlineUser();
             return result;
+        }
+
+        private static string GetInitialScreenId()
+        {
+            MenuSchemaItemProvider menuProvider = ServiceManager.Services
+                .GetService<SchemaService>()
+                .GetProvider<MenuSchemaItemProvider>();
+            return menuProvider.ChildItemsRecursive
+                .OfType<FormReferenceMenuItem>()
+                .FirstOrDefault(FormTools.IsFormMenuInitialScreen)
+                ?.Id.ToString();
         }
 
         public void Logout()

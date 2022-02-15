@@ -142,5 +142,7 @@ namespace Origam.Server
         public string Title { get; set; }
         public bool ShowToolTipsForMemoFieldsOnly { get; set; }
         public IFilteringConfig FilteringConfig { get; set; }
+
+        public string InitialScreenId { get; set; }
     }
 }

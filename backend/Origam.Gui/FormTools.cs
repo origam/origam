@@ -47,11 +47,28 @@ namespace Origam.Gui
 
             if (!result)
             {
-                string authContext = SecurityManager.GetReadOnlyRoles(formRef.AuthorizationContext);
-                result = SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, authContext);
+                string authContext = SecurityManager
+                    .GetReadOnlyRoles(formRef.AuthorizationContext);
+                result = SecurityManager
+                    .GetAuthorizationProvider()
+                    .Authorize(SecurityManager.CurrentPrincipal, authContext);
             }
 
             return result;
+        }        
+        
+        public static bool IsFormMenuInitialScreen(FormReferenceMenuItem formRef)
+        {
+            if (formRef.AuthorizationContext == "*")
+            {
+                return false;
+            }
+
+            string authContext = SecurityManager
+                .GetInitialScreenRoles(formRef.AuthorizationContext);
+            return SecurityManager
+                .GetAuthorizationProvider()
+                .Authorize(SecurityManager.CurrentPrincipal, authContext);
         }
 
         public static ControlSetItem GetItemFromControlSet(AbstractControlSet controlSet)
