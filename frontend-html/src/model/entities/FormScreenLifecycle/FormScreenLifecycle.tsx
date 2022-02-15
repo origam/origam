@@ -34,7 +34,7 @@ import { getAutorefreshPeriod as getAutoRefreshPeriod } from "model/selectors/Fo
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
-import { getDialogStack, showDialog } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";

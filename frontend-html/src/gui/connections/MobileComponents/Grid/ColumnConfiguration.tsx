@@ -22,7 +22,6 @@ import S from "gui/connections/MobileComponents/Grid/ColumnConfiguration.module.
 import { IDataView } from "model/entities/types/IDataView";
 import { getColumnConfigurationModel } from "model/selectors/getColumnConfigurationModel";
 import { IColumnConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
-import cx from "classnames";
 import { T } from "utils/translation";
 import {
   aggregationOptions,
