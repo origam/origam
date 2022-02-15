@@ -55,8 +55,8 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
   return {
     property: actualProperty,
     getCellValue: () => getCellValue(tablePanelView, row, actualProperty),
-    onChange: (event: any, value: any) =>
-      onFieldChange(tablePanelView)({
+    onChange: async (event: any, value: any) =>
+      await onFieldChange(tablePanelView)({
         event: event,
         row: row,
         property: actualProperty,
@@ -73,7 +73,7 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
 export class TableViewEditor extends React.Component<{
   property?: IProperty;
   getCellValue?: () => any;
-  onChange?: (event: any, value: any) => void;
+  onChange?: (event: any, value: any) => Promise<void>;
   onEditorBlur?: (event: any) => void;
   onEditorKeyDown?: (event: any) => void;
 }> {
