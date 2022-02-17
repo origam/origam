@@ -46,9 +46,7 @@ jobs:
     - name: Build Frontend
       run: |
         cd frontend-html
-        yarn
-        yarn remove node-sass
-        yarn add sass
+        yarn  install --no-lockfile
         yarn build
 
     - name: Upload frontend artefact
