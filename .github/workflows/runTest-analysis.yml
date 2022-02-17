@@ -41,7 +41,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Yarn setup
-      uses: comchangs/action-yarn@v0.1-beta
+      uses: mskelton/setup-yarn@v1.2.1
      
     - name: Build Frontend
       run: |
