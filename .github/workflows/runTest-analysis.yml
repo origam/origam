@@ -39,34 +39,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Setup .NET Core SDK 6.0
-      uses: actions/setup-dotnet@v1.7.2
-      with:
-        dotnet-version: 6.0.x
-
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Yarn setup
-      uses: DerYeger/yarn-setup-action@master
-      with:
-       node-version: 16
-  
     - name: NuGet Restore
       run: nuget restore backend/Origam.sln
-      
-    - name: Build Frontend
-      run: |
-        cd frontend-html
-        yarn
-        yarn build
-        
-    - name: Upload frontend artefact
-      uses: actions/upload-artifact@v2
-      with:
-        name: htmlfrontendbuild
-        path: "frontend-html/build"   
-    
+          
     - name: Build Html Server
       run: |
        cd backend
@@ -95,7 +73,24 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
+
+    - name: Yarn setup
+      uses: DerYeger/yarn-setup-action@master
+      with:
+       node-version: 16
+     
+    - name: Build Frontend
+      run: |
+        cd frontend-html
+        yarn
+        yarn build
+
+    - name: Upload frontend artefact
+      uses: actions/upload-artifact@v2
+      with:
+        name: htmlfrontendbuild
+        path: "frontend-html/build"   
+ 
     - name: Download HTML5 artefact
       uses: actions/download-artifact@v2
       with:
