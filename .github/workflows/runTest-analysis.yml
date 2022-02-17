@@ -41,7 +41,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Yarn setup
-      uses: Borales/actions-yarn@v2.3.0
+      uses: DerYeger/yarn-setup-action@v1.0.1
+      with:
+       # The version of Node.js that will be used
+       node-version: 15 
      
     - name: Build Frontend
       run: |
