@@ -5,7 +5,7 @@
     x:id="951f2cda-2867-4b99-8824-071fa8749ead"
     x:isFolder="true"
     p:name="Security"
-    p:version="5.3.1">
+    p:version="5.3.2">
     <pr:packageReference
       x:id="6b99e793-23bb-47fb-873e-2962679bd9d2"
       pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
