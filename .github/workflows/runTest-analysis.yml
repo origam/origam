@@ -44,12 +44,12 @@ jobs:
       uses: DerYeger/yarn-setup-action@v1.0.1
       with:
        # The version of Node.js that will be used
-       node-version: 15 
+       node-version: 14.x
      
     - name: Build Frontend
       run: |
         cd frontend-html
-        yarn  install --no-lockfile
+        yarn
         yarn build
 
     - name: Upload frontend artefact
