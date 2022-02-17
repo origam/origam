@@ -5,7 +5,7 @@
   "dependencies": {
     "@decorize/bind": "^1.0.3",
     "@mapbox/geojson-area": "^0.2.2",
-    "@messageformat/core": "^3.0.0",
+    "@messageformat/core": "^3.0.1",
     "@origam/components": "^1.5.2",
     "@origam/plugin-audit": "^1.0.0",
     "@origam/plugin-chart": "^1.1.0",
@@ -36,9 +36,9 @@
     "@types/react-virtualized": "^9.21.18",
     "@types/string-strip-html": "^5.0.0",
     "@xstate/inspect": "^0.6.2",
-    "axios": "^0.25.0",
+    "axios": "^0.26.0",
     "bind-decorator": "^1.0.11",
-    "chart.js": "^3.7.0",
+    "chart.js": "^3.7.1",
     "classnames": "^2.3.1",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
@@ -55,7 +55,7 @@
     "mobx": "5",
     "mobx-react": "6",
     "moment": "^2.29.1",
-    "node-sass": "5",
+    "node-sass": "6",
     "numeral": "^2.0.6",
     "oidc-client": "^1.11.5",
     "react": "^17.0.2",
@@ -75,7 +75,7 @@
     "web-vitals": "^2.1.4",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
-    "xstate": "^4.29.0"
+    "xstate": "^4.30.0"
   },
   "homepage": "./",
   "scripts": {
