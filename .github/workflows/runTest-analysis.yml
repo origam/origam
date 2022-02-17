@@ -47,6 +47,8 @@ jobs:
       run: |
         cd frontend-html
         yarn
+        yarn remove node-sass
+        yarn add sass
         yarn build
 
     - name: Upload frontend artefact
