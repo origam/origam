@@ -54,6 +54,9 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
     onChange: async (event: any, value: any) => {
+      if(row === undefined){
+        return;
+      }
       await onFieldChange(formPanelView)({
         event: event,
         row: getSelectedRow(property)!,
