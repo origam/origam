@@ -31,6 +31,8 @@ import { TreeView } from "./TreeView";
 import { observable } from "mobx";
 import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking.1";
 import { PubSub } from "utils/events";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { MobileDataViewHeader } from "gui/connections/MobileComponents/Grid/DataViewHeader";
 
 export interface IDataViewHeaderExtensionItem {
   $iid: number;
@@ -114,7 +116,11 @@ export class DataViewInner extends React.Component<IDataViewProps> {
     return (
       <>
         <div className={S.overlayContainer}>
-          <CDataViewHeader isVisible={!this.props.isHeadless}/>
+          {isMobileLayoutActive(this.props.dataView)
+            ? <MobileDataViewHeader isVisible={!this.props.isHeadless}/>
+            : <CDataViewHeader isVisible={!this.props.isHeadless}/>
+          }
+
           {isWorking && <DataViewLoading/>}
         </div>
         <div className={S.dataViewContentContainer}>{uiBody && uiBody.render()}</div>
@@ -123,6 +129,9 @@ export class DataViewInner extends React.Component<IDataViewProps> {
   }
 
   render() {
+    if(!this.props.dataView){
+      return null;
+    }
     // TODO: Move styling to stylesheet
     const isWorkingDelayed = getIsDataViewOrFormScreenWorkingDelayed(this.props.dataView);
 

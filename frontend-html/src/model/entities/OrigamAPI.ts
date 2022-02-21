@@ -36,6 +36,7 @@ import { T } from "utils/translation";
 import fileDownload from "js-file-download";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { PubSub } from "utils/events";
+import { layoutToString } from "model/entities/TablePanelView/layout";
 
 
 export enum IAuditLogColumnIndices {
@@ -589,6 +590,7 @@ export class OrigamAPI implements IApi {
         ` fixedColumnCount="${tableConfig.fixedColumnCount}"` +
         ` isActive="${tableConfig.isActive}"` +
         ` id="${tableConfig.id}"` +
+        ` layout="${layoutToString(tableConfig.layout)}"` +
         ">" +
         tableConfig.columnConfigurations
           .map(columnConfig =>

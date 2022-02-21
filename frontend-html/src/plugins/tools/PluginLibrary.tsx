@@ -22,14 +22,12 @@ import { createPluginData } from "./PluginData";
 import React, { Fragment } from "react";
 import { registerPlugins } from "plugins/tools/PluginRegistration";
 import { Localizer } from "plugins/tools/Localizer";
-import {
-  ILocalization,
-  IPlugin
-} from "@origam/plugin-interfaces";
+import { ILocalization, IPlugin } from "@origam/plugin-interfaces";
+import { Observer } from "mobx-react";
 
 const pluginFactoryFunctions: Map<string, () => IPlugin> = new Map<string, () => IPlugin>();
 
-export function registerPlugin(pluginName: string, factoryFunction:  () => IPlugin){
+export function registerPlugin(pluginName: string, factoryFunction: () => IPlugin) {
   pluginFactoryFunctions.set(pluginName, factoryFunction)
 }
 
@@ -46,8 +44,13 @@ export class PluginLibrary {
     });
     const dataView = getDataView(args.ctx);
     const pluginData = createPluginData(dataView)
-    const  createLocalizer = (localizations: ILocalization[]) => new Localizer(localizations, "en-us");
-    return <Fragment key={plugin.id}>{plugin.getComponent(pluginData!, createLocalizer)}</Fragment>;
+    const createLocalizer = (localizations: ILocalization[]) => new Localizer(localizations, "en-us");
+    return (
+      <Observer>
+        {
+          () => <Fragment key={plugin.id}>{plugin.getComponent(pluginData!, createLocalizer)}</Fragment>
+        }
+      </Observer>);
   }
 
   get(args: { name: string, modelInstanceId: string, sessionId: string }): IPlugin {

@@ -25,7 +25,7 @@ import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 
-export function onCreateRowClick(ctx: any) {
+export function onCreateRowClick(ctx: any, switchToFormPerspective?: boolean) {
   return flow(function*onCreateRowClick(event: any) {
     try {
       const gridId = getGridId(ctx);
@@ -34,6 +34,9 @@ export function onCreateRowClick(ctx: any) {
       const dataView = getDataView(ctx);
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
+      }
+      if(switchToFormPerspective){
+        dataView.activateFormView?.({saveNewState: false});
       }
       yield*formScreenLifecycle.onCreateRow(entity, gridId);
     } catch (e) {

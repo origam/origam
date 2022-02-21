@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IFormScreenEnvelope } from "./IFormScreen";
 import { IMainMenuItemType } from "./IMainMenu";
+import { EventHandler } from "utils/EventHandler";
 
 export interface IDialogInfo {
   width: number;
@@ -51,6 +52,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   formTitle: string;
 
   setActive(state: boolean): void;
+  activationHandler: EventHandler;
 
   setContent(screen: IFormScreenEnvelope): void;
 

@@ -19,14 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 import { action } from "mobx";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { YesNoQuestion } from "@origam/components";
 import { T } from "utils/translation";
 
 export function askYesNoQuestion(ctx: any, title: string, question: string) {
   return new Promise(
     action((resolve: (value: boolean) => void) => {
-        const closeDialog = getDialogStack(ctx).pushDialog(
+        const closeDialog = showDialog(ctx,
           "",
           <YesNoQuestion
             screenTitle={title}

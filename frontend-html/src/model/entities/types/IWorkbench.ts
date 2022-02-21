@@ -29,6 +29,9 @@ import { Chatrooms } from "../Chatrooms";
 import { Notifications } from "../Notifications";
 import { Favorites } from "model/entities/Favorites";
 import { SidebarState } from "../SidebarState";
+import { observable } from "mobx";
+import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { About } from "model/entities/AboutInfo";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -42,7 +45,7 @@ export interface IWorkbenchData {
   recordInfo: IRecordInfo;
   favorites: Favorites;
   sidebarState: SidebarState;
-
+  about: About;
   lookupListCache: LookupListCacheMulti;
   lookupMultiEngine: IMultiLookupEngine;
 }

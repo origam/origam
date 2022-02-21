@@ -31,7 +31,6 @@ import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPro
 import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
-import { IColumnConfigurationDialog } from "model/entities/TablePanelView/types/IColumnConfigurationDialog";
 import {
   ITableCanvas,
   ITablePanelView,
@@ -50,20 +49,22 @@ import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSav
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
 
   constructor(data: ITablePanelViewData) {
     Object.assign(this, data);
-    this.columnConfigurationDialog.parent = this;
+    this.columnConfigurationModel.parent = this;
     this.filterConfiguration.parent = this;
     this.filterGroupManager.parent = this;
     this.orderingConfiguration.parent = this;
     this.groupingConfiguration.parent = this;
   }
 
-  columnConfigurationDialog: IColumnConfigurationDialog = null as any;
+  columnConfigurationModel: ColumnConfigurationModel = null as any;
   configurationManager: IConfigurationManager = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   filterGroupManager: FilterGroupManager = null as any;
@@ -177,7 +178,35 @@ export class TablePanelView implements ITablePanelView {
         return;
       }
     }
-    yield*this.onCellClickInternal(event, row, columnId, isControlInteraction);
+    if(isMobileLayoutActive(dataView)){
+      yield*this.onCellClickInternalMobile(event, row, columnId, isControlInteraction);
+      yield dataView.activateFormView!({saveNewState: false});
+    }else{
+      yield*this.onCellClickInternal(event, row, columnId, isControlInteraction);
+    }
+  }
+
+  *onCellClickInternalMobile(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
+    const property = this.propertyMap.get(columnId)!;
+    if (property.column !== "CheckBox" || !isControlInteraction) {
+      this.setEditing(false);
+      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+    } else {
+      const rowId = this.dataTable.getRowId(row);
+      yield*this.selectCellAsync(columnId, rowId);
+
+      if (!isReadOnly(property!, rowId)) {
+        yield*onFieldChangeG(this)({
+          event: undefined,
+          row: row,
+          property: property,
+          value: !getCellValue(this, row, property),
+        });
+      }
+    }
+    if (!getGroupingConfiguration(this).isGrouping) {
+      this.scrollToCurrentCell();
+    }
   }
 
   *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {

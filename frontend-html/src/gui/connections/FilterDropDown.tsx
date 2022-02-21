@@ -25,7 +25,7 @@ import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHead
 import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { SaveFilterDialog } from "gui/Components/Dialogs/SaveFilterDialog";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getFilterGroupManager } from "model/selectors/DataView/getFilterGroupManager";
@@ -47,7 +47,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
 
   onSaveFilterClick() {
     const formScreenLifecycle = getFormScreenLifecycle(this.props.ctx);
-    const closeDialog = getDialogStack(formScreenLifecycle).pushDialog(
+    const closeDialog = showDialog(formScreenLifecycle,
       "",
       <SaveFilterDialog
         onOkClick={(name: string, isGlobal: boolean) => {
@@ -155,6 +155,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
             </DropdownItem>
             {filterGroups.map((filterGroup) => (
               <DropdownItem
+                key={filterGroup.id}
                 isDisabled={false}
                 isSelected={this.filterManager.selectedFilterGroup?.id === filterGroup.id}
                 onClick={(event: any) => {
