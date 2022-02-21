@@ -26,6 +26,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler, wrapInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 
 
 export function createPluginData(dataView: IDataView): IPluginData | undefined {
@@ -57,6 +58,21 @@ class GuiHelper implements IGuiHelper {
 
   wrapInFlowWithHandler(action: (() => Promise<any>) | (() => void)) {
     return wrapInFlowWithHandler({ctx:this.ctx, action: action});
+  }
+
+  openMenuItem(args: { itemId: any; idParameter?: string }): Promise<void> {
+   let workbenchLifecycle = getWorkbenchLifecycle(this.ctx);
+   return runGeneratorInFlowWithHandler({
+     ctx: this.ctx,
+     generator: function*() {
+       yield*workbenchLifecycle.onMainMenuItemIdClick({
+         event: undefined,
+         itemId: args.itemId,
+         idParameter: args.idParameter,
+         isSingleRecordEdit: false
+       });
+     }()
+   });
   }
 }
 

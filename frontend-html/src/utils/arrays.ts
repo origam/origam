@@ -83,6 +83,18 @@ declare global {
 
 declare global {
   interface Array<T> {
+    average(): T;
+  }
+}
+
+declare global {
+  interface Array<T> {
+    sum(): T;
+  }
+}
+
+declare global {
+  interface Array<T> {
     groupBy<K>(keyGetter: (key: T) => K): Map<K, T[]>;
   }
 }
@@ -93,6 +105,14 @@ Array.prototype.remove = function (item) {
     this.splice(index, 1);
   }
   return this;
+}
+
+Array.prototype.average = function () {
+  return this.reduce((a, b) => a + b) / this.length;
+}
+
+Array.prototype.sum = function () {
+  return this.reduce((a, b) => a + b);
 }
 
 Array.prototype.groupBy = function <T, K>(keyGetter: (key: T) => K) {
