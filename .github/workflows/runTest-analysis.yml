@@ -32,10 +32,8 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp']
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
-        # Learn more:
-        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
-
+        node-version: [12.x]
+        
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -44,7 +42,7 @@ jobs:
       uses: DerYeger/yarn-setup-action@v1.0.1
       with:
     # The version of Node.js that will be used
-       node-version: 12.x 
+       node-version: 12.x
      
     - name: Build Frontend
       run: |
