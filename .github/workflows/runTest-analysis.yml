@@ -42,6 +42,8 @@ jobs:
 
     - name: Yarn setup
       uses: sergioramos/yarn-actions/install@v6
+      with:
+       version: 12.x
      
     - name: Build Frontend
       run: |
