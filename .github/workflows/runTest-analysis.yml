@@ -49,6 +49,8 @@ jobs:
     - name: Build Frontend
       run: |
         cd frontend-html
+        yarn -version
+        node --version
         yarn
         yarn build
 
