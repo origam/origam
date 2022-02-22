@@ -28,11 +28,11 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import S from "gui/connections/CFavorites.module.scss";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { FavoriteFolderPropertiesDialog } from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { SidebarSectionHeader } from "gui/Components/Sidebar/SidebarSectionHeader";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { SidebarSection } from "gui/Components/Sidebar/SidebarSection";
 import { SidebarSectionDivider } from "gui/Components/Sidebar/SidebarSectionDivider";
 import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";
@@ -41,6 +41,7 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import { action, observable } from "mobx";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
 import { PinButton } from "gui/connections/MenuComponents/PinButton";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
 export class CFavorites extends React.Component<{
@@ -67,7 +68,7 @@ export class CFavorites extends React.Component<{
   }
 
   onCreateNewFolderClick() {
-    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
+    const closeDialog = showDialog(this.props.ctx,
       "",
       <FavoriteFolderPropertiesDialog
         title={T("New Favourites Folder", "new_group_title")}
@@ -84,7 +85,7 @@ export class CFavorites extends React.Component<{
   }
 
   onFolderPropertiesClick() {
-    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
+    const closeDialog = showDialog(this.props.ctx,
       "",
       <FavoriteFolderPropertiesDialog
         title={T("Favourites Folder Properties", "group_properties_title")}
@@ -100,6 +101,13 @@ export class CFavorites extends React.Component<{
         onCancelClick={() => closeDialog()}
       />
     );
+  }
+
+  onMouseEnter() {
+    this.mouseInHeader = true;
+    if (isMobileLayoutActive(this.props.ctx)) {
+      this.props.onHeaderClick?.();
+    }
   }
 
   @action
@@ -192,7 +200,7 @@ export class CFavorites extends React.Component<{
                 className={S.favoritesFolderHeader}
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                onMouseEnter={() => this.mouseInHeader = true}
+                onMouseEnter={() => this.onMouseEnter()}
                 onMouseLeave={() => this.mouseInHeader = false}
               >
                 <SidebarSectionHeader

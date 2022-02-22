@@ -151,46 +151,26 @@ function registerClickHandler(columnId: string) {
         })();
       },
     });
-    onClick({
-      x: cellClickableArea.x,
-      y: cellClickableArea.y,
-      w: cellClickableArea.width,
-      h: cellClickableArea.height,
-      handler(event: any) {
-        flow(function*() {
-          if (event.isDouble) {
-            getTablePanelView(ctx).setEditing(false);
-            const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
-            if (defaultAction && defaultAction.isEnabled) {
-              yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
-            }
-          } else {
-            yield*getTablePanelView(ctx).onCellClick(event, row, columnId, false);
-          }
-        })();
-      },
-    });
-  } else {
-    onClick({
-      x: cellClickableArea.x,
-      y: cellClickableArea.y,
-      w: cellClickableArea.width,
-      h: cellClickableArea.height,
-      handler(event: any) {
-        flow(function*() {
-          if (event.isDouble) {
-            getTablePanelView(ctx).setEditing(false);
-            const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
-            if (defaultAction && defaultAction.isEnabled) {
-              yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
-            }
-          } else {
-            yield*getTablePanelView(ctx).onCellClick(event, row, columnId, false);
-          }
-        })();
-      },
-    });
   }
+  onClick({
+    x: cellClickableArea.x,
+    y: cellClickableArea.y,
+    w: cellClickableArea.width,
+    h: cellClickableArea.height,
+    handler(event: any) {
+      flow(function*() {
+        if (event.isDouble) {
+          getTablePanelView(ctx).setEditing(false);
+          const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
+          if (defaultAction && defaultAction.isEnabled) {
+            yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+          }
+        } else {
+          yield*getTablePanelView(ctx).onCellClick(event, row, columnId, false);
+        }
+      })();
+    },
+  });
 }
 
 function getCellClickableArea() {

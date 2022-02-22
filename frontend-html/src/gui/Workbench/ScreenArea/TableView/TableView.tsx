@@ -56,6 +56,7 @@ import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { CtxDataView, DataViewContext } from "gui/Components/ScreenElements/DataView";
 import S from "./TableView.module.scss";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 interface ITableViewProps {
   dataView?: IDataView;
@@ -373,6 +374,7 @@ class HeaderRenderer implements IHeaderRendererData {
           onColumnWidthChange={this.onColumnWidthChange}
           onColumnWidthChangeFinished={onColumnWidthChangeFinished(this.tablePanelView)}
           onClick={onColumnHeaderClick(this.tablePanelView)}
+          isDragDisabled={isMobileLayoutActive(this.tablePanelView)}
           additionalHeaderContent={this.makeAdditionalHeaderContent(header.id, property, args.columnIndex === 0)}
         />
       </Provider>

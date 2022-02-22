@@ -34,8 +34,6 @@ export class NumberEditor extends React.Component<{
   value: string | number | null;
   isReadOnly: boolean;
   isPassword?: boolean;
-  isInvalid: boolean;
-  invalidMessage?: string;
   property?: IProperty;
   backgroundColor?: string;
   foregroundColor?: string;
@@ -129,18 +127,19 @@ export class NumberEditor extends React.Component<{
   @action.bound handleChange(event: any) {
     const {cleanValue, invalidCharactersBeforeCursor} = getValidCharacters(event);
 
-    const newValue = isValidNumber(cleanValue)
-      ? cleanValue
-      : this.state.value;
+    const newState = isValidNumber(cleanValue)
+      ? { value: cleanValue, cursorPosition: event.target.selectionStart - invalidCharactersBeforeCursor }
+      : { value: this.state.value, cursorPosition: event.target.selectionStart - 1 };
 
     this.setState(
-      { value: newValue, cursorPosition: event.target.selectionStart - invalidCharactersBeforeCursor },
+      newState,
       () => {
         if(this.inputRef.current){
           this.inputRef.current.selectionStart = this.state.cursorPosition;
           this.inputRef.current.selectionEnd =  this.state.cursorPosition;
         }
       });
+
     this.updateTextOverflowState();
   }
 
@@ -180,11 +179,6 @@ export class NumberEditor extends React.Component<{
           onBlur={this.handleBlur}
           onFocus={this.handleFocus}
         />
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }

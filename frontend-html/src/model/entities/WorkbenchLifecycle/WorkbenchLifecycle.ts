@@ -55,6 +55,7 @@ import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
+import { EventHandler } from "utils/EventHandler";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -75,6 +76,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
+  mainMenuItemClickHandler = new EventHandler();
+
   *onMainMenuItemClick(args: {
     event: any;
     item: any;
@@ -93,6 +96,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     } = args.item.attributes;
     const {event} = args;
     const alwaysOpenNew = args.item.attributes.alwaysOpenNew === "true" || args.forceOpenNew;
+    this.mainMenuItemClickHandler.call();
 
     if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
@@ -216,6 +220,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *onWorkQueueListItemClick(event: any, item: any) {
     const openedScreens = getOpenedScreens(this);
 
+    this.mainMenuItemClickHandler.call();
     const id = item.id;
     const type = IMainMenuItemType.WorkQueue;
     const label = item.name;

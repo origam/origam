@@ -1,0 +1,350 @@
+<Window xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Title="TestTab1"
+        MenuId="4c15ccbf-33ee-4746-b059-04f4a49c5a1a" ShowInfoPanel="false" AutoRefreshInterval="0" CacheOnClient="true"
+        autoSaveOnListRecordChange="false" RequestSaveAfterUpdate="false"
+        DynamicFormLabelSource="TestTab1.NumberAndName">
+    <DataSources>
+    </DataSources>
+    <ComponentBindings>
+        <Binding ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentProperty="Id" ParentEntity="TestTab1"
+                 ChildId="e548dc7d-0b03-45a7-8c3e-e5d3c3fb11af" ChildProperty="refTestTab1Id"
+                 ChildEntity="TestTab1Project" ChildPropertyType="Field"/>
+        <Binding ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentProperty="Id" ParentEntity="TestTab1"
+                 ChildId="54bc4034-9018-4e7d-ad29-2564e5b48e00" ChildProperty="refTestTab1Id"
+                 ChildEntity="TestTab1ProjectInvoice" ChildPropertyType="Field"/>
+        <Binding ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentProperty="Id" ParentEntity="TestTab1"
+                 ChildId="66116154-6942-415d-ad97-927c98d99ba9" ChildProperty="refTestTab1Id"
+                 ChildEntity="TestTab1Customer" ChildPropertyType="Field"/>
+        <Binding ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentProperty="Id" ParentEntity="TestTab1"
+                 ChildId="d5650460-fe59-4dda-accb-43d214954462" ChildProperty="refTestTab1Id"
+                 ChildEntity="BusinessTestTab1" ChildPropertyType="Field"/>
+        <Binding ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentProperty="Id" ParentEntity="TestTab1"
+                 ChildId="8bdfdd27-a69c-4273-ae14-a74f77736ef8" ChildProperty="refTestTab1Id"
+                 ChildEntity="TestTab1PriceList" ChildPropertyType="Field"/>
+        <Binding ParentId="8bdfdd27-a69c-4273-ae14-a74f77736ef8" ParentProperty="Id" ParentEntity="TestTab1PriceList"
+                 ChildId="57f65e86-b260-45fd-998d-16df439e1038" ChildProperty="refTestTab1PriceListId"
+                 ChildEntity="TestTab1PriceListItem" ChildPropertyType="Field"/>
+        <Binding ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentProperty="Id" ParentEntity="TestTab1"
+                 ChildId="244628c6-82be-48da-a7a5-137b7c607327" ChildProperty="refTestTab1Id" ChildEntity="DeviceTestTab1"
+                 ChildPropertyType="Field"/>
+        <Binding ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentProperty="Id" ParentEntity="TestTab1"
+                 ChildId="a8ad1a35-932e-4550-a65e-e437803c3e09" ChildProperty="refTestTab1Id"
+                 ChildEntity="TestTab1Cooperation" ChildPropertyType="Field"/>
+    </ComponentBindings>
+    <UIRoot Id="AsTabControl1-BLA_0" ModelInstanceId="abde426b-cbba-4d0a-a347-42c08fcf9018" xsi:type="UIElement"
+            Type="Tab" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+        <Configuration/>
+        <UIChildren>
+            <UIElement Id="TabPage00_1" ModelInstanceId="66c8dc8f-c49c-4f3c-b681-f2a7cb5bd861" xsi:type="UIElement"
+                       Type="Box" Name="TestTab1" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel10_2" ModelInstanceId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" Name="TestTab1"
+                               xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="0fec806a-91a0-4986-a91d-d72cf5e56120" DefaultPanelView="0" IsHeadless="true"
+                               DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                               ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="TestTab1"
+                               DataMember="TestTab1" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <Children>
+                                <FormElement Type="FormSection" Title="Fakturierungs-Prozess" TabIndex="0.14" X="431"
+                                             Y="10" Width="374" Height="274">
+                                    <PropertyNames>
+                                    </PropertyNames>
+                                </FormElement>
+                                <FormElement Type="FormSection" Title="PrintAnalyst" TabIndex="0.16" X="843" Y="10"
+                                             Width="324" Height="274">
+                                    <PropertyNames>
+                                    </PropertyNames>
+                                </FormElement>
+                                <FormElement Type="FormSection" Title="" TabIndex="0.54" X="431" Y="367" Width="374"
+                                             Height="58">
+                                    <PropertyNames>
+                                        <string>refProducerId</string>
+                                    </PropertyNames>
+                                </FormElement>
+                            </Children>
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage01_3" ModelInstanceId="ccee3b81-5430-4663-b3cb-b5e7ef153427" xsi:type="UIElement"
+                       Type="Box" Name="TestTab2" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel2_4" ModelInstanceId="e548dc7d-0b03-45a7-8c3e-e5d3c3fb11af" Name="TestTab2"
+                               xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="b87f9bfe-bf44-48eb-b884-bf50e2470405" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="true" HideCopyButton="false"
+                               ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="TestTab1Project"
+                               DataMember="TestTab1.TestTab1Project" IsRootGrid="false" IsRootEntity="false"
+                               IsPreloaded="true" ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef"
+                               ParentEntityName="TestTab1">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                        <FilterExpressions/>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage03_5" ModelInstanceId="8b5320f1-c727-4b9a-91a1-25a6408b4a3b" xsi:type="UIElement"
+                       Type="Box" Name="TestTab3" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel4_6" ModelInstanceId="9afc2081-97f4-4bcd-afcf-0230ec9d44b3"
+                               Name="TestTab3" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="c771a417-e11c-46c7-95d8-bfae4aa1527e" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="true" HideCopyButton="false"
+                               ShowDeleteButton="true" ShowSelectionCheckboxes="true" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="TestTab1Transaction"
+                               DataMember="TestTab1Transaction" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage04_7" ModelInstanceId="62b30b93-9311-4390-88c6-ec543b980048" xsi:type="UIElement"
+                       Type="Box" Name="TestTab4" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel11_8" ModelInstanceId="54bc4034-9018-4e7d-ad29-2564e5b48e00" Name="TestTab4"
+                               xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="11820715-1987-4c49-afc6-85a2516dcbac" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                               ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false"
+                               Entity="TestTab1ProjectInvoice" DataMember="TestTab1.TestTab1ProjectInvoice"
+                               IsRootGrid="false" IsRootEntity="false" IsPreloaded="true"
+                               ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef" ParentEntityName="TestTab1">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                        <FilterExpressions/>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage05_9" ModelInstanceId="5ecbb58c-2310-434f-a57c-0f7aa7ac8e7d" xsi:type="UIElement"
+                       Type="Box" Name="TestTab5" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel5_10" ModelInstanceId="66116154-6942-415d-ad97-927c98d99ba9" Name="TestTab5"
+                               xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="73564bce-75f9-4e75-a8e5-ace89abccbcc" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="true" HideCopyButton="false"
+                               ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="TestTab1Customer"
+                               DataMember="TestTab1.TestTab1Customer" IsRootGrid="false" IsRootEntity="false"
+                               IsPreloaded="true" ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef"
+                               ParentEntityName="TestTab1">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                        <FilterExpressions/>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage06_11" ModelInstanceId="6090e9f9-c315-4a87-af33-4e650038d71c" xsi:type="UIElement"
+                       Type="Box" Name="TestTab6" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel8_12" ModelInstanceId="d5650460-fe59-4dda-accb-43d214954462" Name="TestTab6"
+                               xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="92db34b2-ebb7-44f0-8283-407f7c51064a" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                               ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="BusinessTestTab1"
+                               DataMember="TestTab1.BusinessTestTab1" IsRootGrid="false" IsRootEntity="false"
+                               IsPreloaded="true" ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef"
+                               ParentEntityName="TestTab1">
+                        <Properties>
+                        </Properties>
+                        <Actions/>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                        <FilterExpressions/>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage09_13" ModelInstanceId="81c29c23-d928-4bd5-b607-7cd26a581828" xsi:type="UIElement"
+                       Type="Box" Name="TestTab7" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="SplitPanel2_14" ModelInstanceId="a653147a-1b78-4cb0-8aa0-859da0e63cf6"
+                               xsi:type="UIElement" Type="HSplit" IsRootGrid="false" IsRootEntity="true"
+                               IsPreloaded="true">
+                        <Configuration/>
+                        <UIChildren>
+                            <UIElement Id="AsPanel7_15" ModelInstanceId="8bdfdd27-a69c-4273-ae14-a74f77736ef8"
+                                       Name="TestTab7" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                                       ModelId="2929fbbe-9ea0-4ba0-a1fe-a7b768661be6" DefaultPanelView="1"
+                                       IsHeadless="false" DisableActionButtons="false" ShowAddButton="true"
+                                       HideCopyButton="false" ShowDeleteButton="true" ShowSelectionCheckboxes="false"
+                                       IsGridHeightDynamic="false" SelectionMember="" OrderMember=""
+                                       IsDraggingEnabled="false" Entity="TestTab1PriceList"
+                                       DataMember="TestTab1.TestTab1PriceList" IsRootGrid="false" IsRootEntity="false"
+                                       IsPreloaded="true" ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef"
+                                       ParentEntityName="TestTab1">
+                                <Properties>
+                                </Properties>
+                                <Actions>
+                                </Actions>
+                                <FormRoot Type="Canvas">
+                                    <PropertyNames>
+                                    </PropertyNames>
+                                </FormRoot>
+                                <Configuration>
+                                </Configuration>
+                                <FilterExpressions/>
+                            </UIElement>
+                            <UIElement Id="AsPanel8_16" ModelInstanceId="57f65e86-b260-45fd-998d-16df439e1038"
+                                       Name="Detail1" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                                       ModelId="f70222ca-74e6-48ad-932d-fc3a2ed01757" DefaultPanelView="1"
+                                       IsHeadless="false" DisableActionButtons="false" ShowAddButton="true"
+                                       HideCopyButton="false" ShowDeleteButton="true" ShowSelectionCheckboxes="false"
+                                       IsGridHeightDynamic="false" SelectionMember="" OrderMember=""
+                                       IsDraggingEnabled="false" Entity="TestTab1PriceListItem"
+                                       DataMember="TestTab1.TestTab1PriceList.TestTab1PriceListItem" IsRootGrid="false"
+                                       IsRootEntity="false" IsPreloaded="true"
+                                       ParentId="8bdfdd27-a69c-4273-ae14-a74f77736ef8"
+                                       ParentEntityName="TestTab1PriceList">
+                                <Properties>
+                                </Properties>
+                                <Actions>
+                                </Actions>
+                                <FormRoot Type="Canvas">
+                                    <PropertyNames>
+                                    </PropertyNames>
+                                </FormRoot>
+                                <Configuration>
+                                </Configuration>
+                                <FilterExpressions/>
+                            </UIElement>
+                        </UIChildren>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage12_17" ModelInstanceId="b670de4e-1ce4-489d-ae07-80a50767f5cb" xsi:type="UIElement"
+                       Type="Box" Name="TestTab8" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel3_18" ModelInstanceId="cdf16dc1-385f-47df-a38b-5c226e00178d"
+                               Name="TestTab8" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="6e797bef-d035-4040-ad63-9b40ba3eb313" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                               ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="TestTab1Order"
+                               DataMember="TestTab1Order" IsRootGrid="true" IsRootEntity="true" IsPreloaded="true">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage13_19" ModelInstanceId="de59bbf2-19e1-45ac-aa58-5100db2a1ee8" xsi:type="UIElement"
+                       Type="Box" Name="TestTab9" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel9_20" ModelInstanceId="244628c6-82be-48da-a7a5-137b7c607327" Name="TestTab9"
+                               xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="c96f078e-060c-4e0f-aace-b68fc8e397b5" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="false" HideCopyButton="false"
+                               ShowDeleteButton="false" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="DeviceTestTab1"
+                               DataMember="TestTab1.DeviceTestTab1" IsRootGrid="false" IsRootEntity="false"
+                               IsPreloaded="true" ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef"
+                               ParentEntityName="TestTab1">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                        <FilterExpressions/>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+            <UIElement Id="TabPage14_21" ModelInstanceId="23ccb267-c1ca-4bb9-b98e-5c998003efaa" xsi:type="UIElement"
+                       Type="Box" Name="TestTab10" IsRootGrid="false" IsRootEntity="true" IsPreloaded="true">
+                <Configuration/>
+                <UIChildren>
+                    <UIElement Id="AsPanel12_22" ModelInstanceId="a8ad1a35-932e-4550-a65e-e437803c3e09"
+                               Name="TestTab10" xsi:type="Grid" Type="Grid" HasPanelConfiguration="true"
+                               ModelId="5230fa6b-397d-4a73-b293-fc277dfa90fc" DefaultPanelView="1" IsHeadless="false"
+                               DisableActionButtons="false" ShowAddButton="true" HideCopyButton="false"
+                               ShowDeleteButton="true" ShowSelectionCheckboxes="false" IsGridHeightDynamic="false"
+                               SelectionMember="" OrderMember="" IsDraggingEnabled="false" Entity="TestTab1Cooperation"
+                               DataMember="TestTab1.TestTab1Cooperation" IsRootGrid="false" IsRootEntity="false"
+                               IsPreloaded="true" ParentId="3d6459b3-fa5d-4b90-9cec-a30ab402f7ef"
+                               ParentEntityName="TestTab1">
+                        <Properties>
+                        </Properties>
+                        <Actions>
+                        </Actions>
+                        <FormRoot Type="Canvas">
+                            <PropertyNames>
+                                <string>refCooperationTestTab1Id</string>
+                                <string>Remark</string>
+                            </PropertyNames>
+                        </FormRoot>
+                        <Configuration>
+                        </Configuration>
+                        <FilterExpressions/>
+                    </UIElement>
+                </UIChildren>
+            </UIElement>
+        </UIChildren>
+    </UIRoot>
+</Window>

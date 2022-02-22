@@ -407,5 +407,15 @@
   "action_error": "Chyba",
   "there_has_been_a_problem": "Nastaly následující problémy:",
   "request_no_longer_authorized": "Váš požadavek již není autorizovaný, to znamená že jste byli odhlášeni, nebo vypršela seance. Přihlašte se, prosím, znovu.",
-  "new_chat": "Nový chat"
+  "new_chat": "Nový chat",
+  "mobile_detail_navigation": "Detail",
+  "mobile_details_dropdown": "Detaily",
+  "mobile_search_title": "Hledat",
+  "auto_complete_date": "Auto Complete",
+  "preview": "Náhled",
+  "format": "Formát",
+  "row_count": "Řádky",
+  "column_width": "Šířka",
+  "order_columns_button": "Seřadit",
+  "order_columns_title": "Pořadí sloupců"
 }

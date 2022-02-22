@@ -56,6 +56,7 @@ export class FormScreen implements IFormScreen {
   dataViewCache = new DataViewCache(this);
 
   @observable isDirty: boolean = false;
+  uiRootType = "";
   dynamicTitleSource: string | undefined;
   sessionId: string = "";
   @observable title: string = "";
@@ -77,6 +78,7 @@ export class FormScreen implements IFormScreen {
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
   autoWorkflowNext: boolean = null as any;
+  workflowTaskId: string | null = null;
 
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];

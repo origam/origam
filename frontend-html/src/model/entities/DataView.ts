@@ -170,7 +170,7 @@ export class DataView implements IDataView {
 
   orderProperty: IProperty;
   activateFormView:
-    | ((args: { saveNewState: boolean }) => Promise<any>)
+    | ((args?: { saveNewState: boolean }) => Promise<any>)
     | undefined;
   activateTableView: (() => Promise<any>) | undefined;
 

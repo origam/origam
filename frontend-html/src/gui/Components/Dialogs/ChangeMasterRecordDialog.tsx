@@ -19,9 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { observer } from "mobx-react";
 import React from "react";
-import { ModalWindow } from "@origam/components";
 import CS from "./DialogsCommon.module.css";
 import { T } from "../../../utils/translation";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class ChangeMasterRecordDialog extends React.Component<{
@@ -43,7 +43,7 @@ export class ChangeMasterRecordDialog extends React.Component<{
 
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("Question", "question_title")}
         titleButtons={null}
         buttonsCenter={
@@ -73,7 +73,7 @@ export class ChangeMasterRecordDialog extends React.Component<{
             .split("\\n")
             .join("\n")}
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

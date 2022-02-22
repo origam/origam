@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "gui/Components/WorkbenchPage/WorkbenchPage.module.scss";
 import SSplitter from "gui/Workbench/ScreenArea/CustomSplitter.module.scss";
 import { Splitter } from "gui/Components/Splitter/Splitter";
 
@@ -26,14 +25,20 @@ export const WorkbenchPage: React.FC<{
   sidebar: React.ReactNode;
   mainbar: React.ReactNode;
 }> = props => (
-  <div className={S.root}>
     <Splitter
       type="isHoriz"
       STYLE={SSplitter}
       panels={[
-        ["sidebar", 1, props.sidebar],
-        ["mainbar", 5, props.mainbar]
+        {
+          id: "sidebar",
+          positionRatio: 1,
+          element: props.sidebar,
+        },
+        {
+          id: "mainbar",
+          positionRatio: 5,
+          element: props.mainbar,
+        }
       ]}
     />
-  </div>
 );

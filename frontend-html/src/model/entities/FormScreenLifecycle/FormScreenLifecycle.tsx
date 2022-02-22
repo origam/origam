@@ -34,7 +34,7 @@ import { getAutorefreshPeriod as getAutoRefreshPeriod } from "model/selectors/Fo
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
@@ -88,6 +88,8 @@ import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 import {T} from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -541,6 +543,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       args.initUIResult.panelConfigurations,
       args.initUIResult.lookupMenuMappings,
       args.initUIResult.sessionId,
+      args.initUIResult.workflowTaskId,
       openedScreen.lazyLoading
     );
     const api = getApi(openedScreen);
@@ -1250,7 +1253,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   questionSaveData() {
     return new Promise(
       action((resolve: (value: IQuestionSaveDataAnswer) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
+        const closeDialog = showDialog(this,
           "",
           <QuestionSaveData
             screenTitle={getOpenedScreen(this).tabTitle}
@@ -1275,7 +1278,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   questionDeleteData() {
     return new Promise(
       action((resolve: (value: IQuestionDeleteDataAnswer) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
+        const closeDialog = showDialog(this,
           "",
           <YesNoQuestion
             screenTitle={getOpenedScreen(this).tabTitle}
@@ -1299,7 +1302,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *applyData(data: any): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
-      // debugger;
       for (let dataView of dataViews) {
         yield dataView.setRecords((entityValue as any).data);
         dataView.setRowCount(dataView.dataTable.rows.length);
@@ -1330,6 +1332,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
               ];
             },
             () => reloadAggregationsDebounced(),
+            {fireImmediately: true}
+          )
+        );
+        this.registerDisposer(
+          reaction(
+            () => isMobileLayoutActive(dataView),
+            () => {
+              const tablePanelView = getTablePanelView(dataView);
+              const configurationManager = getConfigurationManager(tablePanelView);
+              configurationManager.activeTableConfiguration.apply(tablePanelView);
+            },
             {fireImmediately: true}
           )
         );

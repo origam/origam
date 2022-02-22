@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { bind } from "@decorize/bind";
 import { DataViewData } from "../../DataView/DataViewData";
 import { RowCursor } from "../../DataView/TableCursor";
-import { DropdownEditorSetup } from "./DropdownEditor";
 import { action, computed } from "mobx";
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 @bind
 export class TagInputEditorData implements IDropdownEditorData {

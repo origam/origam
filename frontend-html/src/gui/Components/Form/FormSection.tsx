@@ -18,30 +18,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "gui/Components/Form/FormSection.module.scss";
+import "gui/Components/Form/FormSection.module.scss";
 import cx from "classnames";
 import { FormSectionHeader } from "gui/Components/Form/FormSectionHeader";
+import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 
 export const FormSection: React.FC<{
-  top: number;
-  left: number;
-  width: number;
-  height: number;
   title?: string;
   backgroundColor: string | undefined;
   foreGroundColor: string | undefined;
+  dimensions: FieldDimensions;
 }> = (props) => {
+
+  function getStyle(){
+    const style = props.dimensions.asStyle();
+    style["backgroundColor"] = props.backgroundColor;
+    return style;
+  }
   const hasTitle = !!props.title;
   return (
     <div
-      className={cx(S.root, {hasTitle})}
-      style={{
-        top: props.top,
-        left: props.left,
-        width: props.width,
-        height: props.height,
-        backgroundColor: props.backgroundColor,
-      }}
+      className={cx("formSection", {hasTitle})}
+      style={getStyle()}
     >
       {hasTitle && (
         <FormSectionHeader foreGroundColor={props.foreGroundColor} tooltip={props.title}>

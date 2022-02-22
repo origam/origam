@@ -19,112 +19,60 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/Components/Dialogs/ColumnsDialog.module.scss";
 import React from "react";
-import { CloseButton, ModalWindow } from "@origam/components";
+import { CloseButton } from "@origam/components";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
-import { action, observable } from "mobx";
+import { observable } from "mobx";
 import { observer, Observer } from "mobx-react";
-import { AggregationType, tryParseAggregationType, } from "model/entities/types/AggregationType";
 import { T } from "utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import { GroupingUnit, groupingUnitToLabel } from "model/entities/types/GroupingUnit";
-import { IColumnConfiguration, ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
-import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
-import { IOption, SimpleDropdown } from "@origam/components";
-import { compareStrings } from "utils/string";
+import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import {
+  aggregationOptions,
+  ColumnConfigurationModel,
+  IColumnOptions, timeunitOptions
+} from "model/entities/TablePanelView/ColumnConfigurationModel";
+import { SimpleDropdown } from "@origam/components";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 @observer
 export class ColumnsDialog extends React.Component<{
+  model: ColumnConfigurationModel;
+}> {
+
   columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
-  onOkClick?: (configuration: ITableConfiguration) => void;
-  onSaveAsClick: (event: any, configuration: ITableConfiguration) => void;
-  onCancelClick?: (event: any) => void;
-  onCloseClick?: (event: any) => void;
-}> {
+
   constructor(props: any) {
     super(props);
-    this.configuration = this.props.configuration;
-    this.sortedColumnConfigs = [...this.configuration.columnConfigurations].sort(
-      (a, b) => {
-        const optionA = this.props.columnOptions.get(a.propertyId)!;
-        const optionB = this.props.columnOptions.get(b.propertyId)!;
-        return compareStrings(optionA.name, optionB.name)
-      }
-    );
+    this.configuration = this.props.model.columnsConfiguration;
+    this.columnOptions = this.props.model.columnOptions;
   }
-
-  configuration: ITableConfiguration;
-  sortedColumnConfigs: IColumnConfiguration[];
 
   @observable columnWidths = [70, 220, 110, 150, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
-  @action.bound setVisible(rowIndex: number, state: boolean) {
-    this.sortedColumnConfigs[rowIndex].isVisible = state;
-  }
-
-  @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
-    if (entity === "Date") {
-      if (state) {
-        this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
-      } else {
-        this.setTimeGroupingUnit(rowIndex, undefined);
-      }
-    }
-
-    const columnConfCopy = [...this.sortedColumnConfigs];
-    columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
-    if (this.sortedColumnConfigs[rowIndex].groupingIndex === 0) {
-      this.sortedColumnConfigs[rowIndex].groupingIndex =
-        columnConfCopy[0].groupingIndex + 1;
-    } else {
-      this.sortedColumnConfigs[rowIndex].groupingIndex = 0;
-      let groupingIndex = 1;
-      columnConfCopy.reverse();
-      for (let columnConfItem of columnConfCopy) {
-        if (columnConfItem.groupingIndex > 0) {
-          columnConfItem.groupingIndex = groupingIndex++;
-        }
-      }
-    }
-  }
-
-  @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
-    this.sortedColumnConfigs[rowIndex].timeGroupingUnit = groupingUnit;
-  }
-
-  @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
-    this.sortedColumnConfigs[rowIndex].aggregationType = tryParseAggregationType(
-      selectedAggregation
-    );
-  }
-
-  @action.bound handleFixedColumnsCountChange(event: any) {
-    this.configuration.fixedColumnCount = parseInt(event.target.value, 10);
-  }
-
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("Columns", "column_config_title")}
-        titleButtons={<CloseButton onClick={this.props.onCloseClick}/>}
+        titleButtons={<CloseButton onClick={this.props.model.onColumnConfCancel}/>}
         buttonsCenter={
           <>
             <button
               id={"columnConfigOk"}
               tabIndex={0}
               onClick={(event: any) =>
-                this.props.onOkClick && this.props.onOkClick(this.configuration)
+                this.props.model?.onColumnConfigurationSubmit()
               }
             >
               {T("OK", "button_ok")}
             </button>
-            <button onClick={(event) => this.props.onSaveAsClick(event, this.configuration)}>
+            <button onClick={() => this.props.model.onSaveAsClick()}>
               {T("Save As...", "column_config_save_as")}
             </button>
-            <button tabIndex={0} onClick={this.props.onCancelClick}>
+            <button tabIndex={0} onClick={this.props.model.onColumnConfCancel}>
               {T("Cancel", "button_cancel")}
             </button>
           </>
@@ -142,7 +90,7 @@ export class ColumnsDialog extends React.Component<{
                     fixedRowCount={1}
                     cellRenderer={this.renderCell}
                     columnCount={5}
-                    rowCount={1 + this.sortedColumnConfigs.length}
+                    rowCount={1 + this.props.model.sortedColumnConfigs.length}
                     columnWidth={({ index }: { index: number }) => {
                       return this.columnWidths[index];
                     }}
@@ -162,10 +110,10 @@ export class ColumnsDialog extends React.Component<{
             type="number"
             min={0}
             value={"" + this.configuration.fixedColumnCount}
-            onChange={this.handleFixedColumnsCountChange}
+            onChange={this.props.model.handleFixedColumnsCountChange}
           />
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 
@@ -176,26 +124,12 @@ export class ColumnsDialog extends React.Component<{
       aggregationType,
       groupingIndex,
       timeGroupingUnit,
-    } = this.sortedColumnConfigs[rowIndex];
+    } = this.props.model.sortedColumnConfigs[rowIndex];
 
-    const { name, entity, canGroup, canAggregate, modelInstanceId } = this.props.columnOptions.get(propertyId)!;
+    const { name, entity, canGroup, canAggregate, modelInstanceId } = this.columnOptions.get(propertyId)!;
 
-    const aggregationOptions =  [
-      new AggregationOption("", undefined),
-      new AggregationOption(T("SUM", "aggregation_sum"), AggregationType.SUM),
-      new AggregationOption(T("AVG", "aggregation_avg"), AggregationType.AVG),
-      new AggregationOption(T("MIN", "aggregation_min"), AggregationType.MIN),
-      new AggregationOption(T("MAX", "aggregation_max"), AggregationType.MAX),
-    ];
     const selectedAggregationOption = aggregationOptions.find(option => option.value === aggregationType)!;
 
-    const timeunitOptions =  [
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Year), GroupingUnit.Year),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Month), GroupingUnit.Month),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Day), GroupingUnit.Day),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Hour), GroupingUnit.Hour),
-      new TimeUnitOption(groupingUnitToLabel(GroupingUnit.Minute), GroupingUnit.Minute),
-    ];
     const selectedTimeUnitOption = timeunitOptions.find(option => option.value === timeGroupingUnit)!;
 
     switch (columnIndex) {
@@ -204,7 +138,7 @@ export class ColumnsDialog extends React.Component<{
           <input
             type="checkbox"
             key={`${rowIndex}@${columnIndex}`}
-            onChange={(event: any) => this.setVisible(rowIndex, event.target.checked)}
+            onChange={(event: any) => this.props.model.setVisible(rowIndex, event.target.checked)}
             checked={isVisible}
           />
         );
@@ -218,7 +152,7 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
-              onChange={(event: any) => this.setGrouping(rowIndex, event.target.checked, entity)}
+              onChange={(event: any) => this.props.model.setGrouping(rowIndex, event.target.checked, entity)}
               disabled={!canGroup}
             />
             <div>
@@ -230,10 +164,10 @@ export class ColumnsDialog extends React.Component<{
         if (groupingIndex > 0 && entity === "Date") {
           return (
               <SimpleDropdown
-                width={"72.5px"}
                 options={timeunitOptions}
                 selectedOption={selectedTimeUnitOption}
-                onOptionClick={option =>  this.setTimeGroupingUnit(rowIndex, option.value)}
+                onOptionClick={option =>  this.props.model.setTimeGroupingUnit(rowIndex, option.value)}
+                className={S.dropdown}
               />
           );
         } else {
@@ -249,10 +183,10 @@ export class ColumnsDialog extends React.Component<{
         ) {
           return (
             <SimpleDropdown
-              width={"72.5px"}
               options={aggregationOptions}
               selectedOption={selectedAggregationOption}
-              onOptionClick={option => this.setAggregation(rowIndex, option.value)}
+              onOptionClick={option => this.props.model.setAggregation(rowIndex, option.value)}
+              className={S.dropdown}
             />
           );
         } else {
@@ -338,19 +272,4 @@ export class TableHeader extends React.Component<{
   }
 }
 
-class AggregationOption implements IOption<AggregationType | undefined>{
-  constructor (
-   public label: string,
-   public value: AggregationType | undefined,
-  ){
-  }
-}
-
-class TimeUnitOption implements IOption<GroupingUnit>{
-  constructor (
-   public label: string,
-   public value: GroupingUnit,
-  ){
-  }
-}
 

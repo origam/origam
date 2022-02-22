@@ -78,11 +78,14 @@ class DroppedBox extends React.Component<{
     } else {
       style.top = tBounds.top - dBounds.height || 0;
     }
-
     if (tBounds!.left + dBounds.width + 20 < viewportWidth) {
       style.left = tBounds.left || 0;
     } else {
-      style.left = tBounds.left + tBounds.width - dBounds.width || 0;
+      if(tBounds.left + tBounds.width - dBounds.width < 0){
+        style.left = viewportWidth / 2 - dBounds.width / 2;
+      }else{
+        style.left = tBounds.left + tBounds.width - dBounds.width || 0;
+      }
     }
     return style;
   }
