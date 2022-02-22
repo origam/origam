@@ -25,7 +25,7 @@ import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreen
 import { handleError } from "../../actions/handleError";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 
-export function onCopyRowClick(ctx: any) {
+export function onCopyRowClick(ctx: any, switchToFormPerspective?: boolean) {
   return flow(function*onCopyRowClick(event: any) {
     try {
       const selectedRowId = getDataView(ctx).selectedRowId;
@@ -38,6 +38,9 @@ export function onCopyRowClick(ctx: any) {
       const dataView = getDataView(ctx);
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
+      }
+      if(switchToFormPerspective){
+        dataView.activateFormView?.({saveNewState: false});
       }
       yield*formScreenLifecycle.onCopyRow(entity, gridId, selectedRowId);
     } catch (e) {

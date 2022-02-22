@@ -7,6 +7,11 @@
   font-style: normal;
   line-height: 1.5em;
   text-rendering: optimizeLegibility;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 *:focus {
@@ -70,8 +75,9 @@ a.btn.primary:hover {
 
 .input-row input {
   background-color: white;
-  width: 360px;
+  max-width: 360px;
   height: 38px;
+  width: 100%;
 }
 
 .input-form .input-row input:hover, .input-form .input-row input:focus {
@@ -110,6 +116,10 @@ input[type="checkbox"], input[type="radio"] {
   font-size: 0.9em;
 }
 
+.detailview-container{
+  width: 100%;
+}
+
 .detailview-container .detailview-module {
   margin: 0;
   padding-bottom: 0;
@@ -117,8 +127,7 @@ input[type="checkbox"], input[type="radio"] {
 
 .detailview-module.with-title {
   background-color: transparent;
-  padding-left: 1.5em;
-  padding-right: 1.5em;
+  width: 100%;
 }
 
 .detailview-module.with-title .input-row label {
@@ -201,11 +210,13 @@ input[type="checkbox"], input[type="radio"] {
 }
 
 .page-content{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  flex-grow: 1;
+  padding-left: 10px;
+  padding-right: 10px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 iframe

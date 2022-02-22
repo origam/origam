@@ -26,7 +26,6 @@ import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 import { inject, observer } from "mobx-react";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
-import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
@@ -37,7 +36,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
-import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateTimeEditor";
 import { FormFocusManager } from "model/entities/FormFocusManager";
 import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
@@ -51,14 +50,16 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
 
 
 @inject(({property, formPanelView}) => {
-  const row = getSelectedRow(formPanelView)!;
   return {
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
     onChange: async (event: any, value: any) => {
+      if(row === undefined){
+        return;
+      }
       await onFieldChange(formPanelView)({
         event: event,
-        row: row,
+        row: getSelectedRow(property)!,
         property: property,
         value: value,
       });
@@ -93,17 +94,6 @@ export class FormViewEditor extends React.Component<{
     const backgroundColor = readOnly
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
-    let isInvalid = false;
-    let invalidMessage: string | undefined = undefined;
-
-    const errMsg = row
-      ? getFieldErrorMessage(this.props.property!)(row, this.props.property!)
-      : undefined;
-
-    if (errMsg) {
-      isInvalid = true;
-      invalidMessage = errMsg;
-    }
 
     switch (this.props.property!.column) {
       case "Number":
@@ -111,9 +101,7 @@ export class FormViewEditor extends React.Component<{
           <NumberEditor
             value={this.props.value}
             isReadOnly={readOnly}
-            isInvalid={isInvalid}
             isPassword={this.props.property!.isPassword}
-            invalidMessage={invalidMessage}
             property={this.props.property}
             maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
@@ -139,12 +127,10 @@ export class FormViewEditor extends React.Component<{
             id={"editor_" + this.props.property?.modelInstanceId}
             value={this.props.value}
             isReadOnly={readOnly}
-            isInvalid={isInvalid}
             isMultiline={this.props.property!.multiline}
             isPassword={this.props.property!.isPassword}
             customStyle={this.props.property?.style}
             maxLength={this.props.property?.maxLength}
-            invalidMessage={invalidMessage}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
@@ -171,8 +157,6 @@ export class FormViewEditor extends React.Component<{
             outputFormat={this.props.property!.formatterPattern}
             outputFormatToShow={this.props.property!.modelFormatterPattern}
             isReadOnly={readOnly}
-            isInvalid={isInvalid}
-            invalidMessage={invalidMessage}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
@@ -194,8 +178,6 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={readOnly}
             onChange={this.props.onChange}
             onClick={event => this.focusManager.stopAutoFocus()}
-            isInvalid={isInvalid}
-            invalidMessage={invalidMessage}
             onKeyDown={undefined}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
@@ -224,8 +206,6 @@ export class FormViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customStyle={this.props.property?.style}
-            isInvalid={isInvalid}
-            invalidMessage={invalidMessage}
             isLink={this.props.property?.isLink}
             onClick={(event) => {
               onDropdownEditorClick(this.props.property)(event, this.props.property, row);
@@ -251,8 +231,6 @@ export class FormViewEditor extends React.Component<{
               <TagInputEditor
                 value={this.props.value}
                 isReadOnly={readOnly}
-                isInvalid={isInvalid}
-                invalidMessage={invalidMessage}
                 backgroundColor={backgroundColor}
                 foregroundColor={foregroundColor}
                 customStyle={this.props.property?.style}
@@ -268,9 +246,7 @@ export class FormViewEditor extends React.Component<{
           <CheckList
             value={this.props.value}
             onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
-            isInvalid={isInvalid}
             isReadonly={readOnly}
-            invalidMessage={invalidMessage}
             subscribeToFocusManager={(firstCheckInput) =>
               this.focusManager.subscribe(
                 firstCheckInput,
@@ -307,8 +283,6 @@ export class FormViewEditor extends React.Component<{
           <BlobEditor
             isReadOnly={readOnly}
             value={this.props.value}
-            isInvalid={isInvalid}
-            invalidMessage={invalidMessage}
             onKeyDown={this.makeOnKeyDownCallBack()}
             canUpload={!isDirty}
             subscribeToFocusManager={(inputEditor) =>
@@ -371,9 +345,9 @@ export class FormViewEditor extends React.Component<{
   }
 }
 
-export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined){
+export function resolveNumericCellAlignment(customStyle: { [p: string]: string } | undefined) {
   let cellAlignment = new CellAlignment(false, "Number", customStyle);
-  const style = customStyle ?Object.assign({}, customStyle) :{};
+  const style = customStyle ? Object.assign({}, customStyle) : {};
   style["paddingLeft"] = cellAlignment.paddingLeft + "px";
   style["textAlign"] = cellAlignment.alignment;
   return style;

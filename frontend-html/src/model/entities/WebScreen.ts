@@ -22,6 +22,7 @@ import { IOpenedScreen } from "./types/IOpenedScreen";
 import { action, observable } from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
+import { EventHandler } from "utils/EventHandler";
 
 export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
@@ -51,6 +52,9 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   @action.bound
   setActive(state: boolean): void {
     this.isActive = state;
+    if(this.isActive){
+      this.activationHandler.call();
+    }
   }
 
   setContent(screen: IFormScreenEnvelope): void {
@@ -78,4 +82,6 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   parameters: { [key: string]: any } = {};
   hasDynamicTitle: boolean = false;
   parentContext: IOpenedScreen | undefined;
+
+  activationHandler = new EventHandler();
 }

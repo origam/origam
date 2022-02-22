@@ -22,6 +22,7 @@ import { action, computed, observable } from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { EventHandler } from "utils/EventHandler";
 
 export class DialogInfo implements IDialogInfo {
   constructor(public width: number, public height: number) {
@@ -40,6 +41,8 @@ export class OpenedScreen implements IOpenedScreen {
     Object.assign(this, data);
     this.content.parent = this;
   }
+
+  activationHandler = new EventHandler();
 
   @observable stackPosition: number = 0;
   @observable isActive = false;
@@ -85,6 +88,7 @@ export class OpenedScreen implements IOpenedScreen {
         const tablePanelView = getTablePanelView(dataView);
         tablePanelView.triggerOnFocusTable();
       }
+      this.activationHandler.call();
     }
   }
 

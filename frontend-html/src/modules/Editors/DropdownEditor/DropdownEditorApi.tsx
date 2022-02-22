@@ -20,9 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { bind } from "@decorize/bind";
 import { DataViewAPI } from "modules/DataView/DataViewAPI";
 import { RowCursor } from "modules/DataView/TableCursor";
-import { DropdownEditorSetup } from "./DropdownEditor";
-import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
+import { dropdownPageSize, IDropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { EagerlyLoadedGrid } from "./DropdownEditorCommon";
+import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 
 export interface IDropdownEditorApi {
   getLookupList(searchTerm: string): Generator;
@@ -34,7 +34,7 @@ export class DropdownEditorApi implements IDropdownEditorApi {
     private setup: () => DropdownEditorSetup,
     private rowCursor: RowCursor,
     private api: DataViewAPI,
-    private behavior: () => DropdownEditorBehavior,
+    private behavior: () => IDropdownEditorBehavior,
   ) {
   }
 
@@ -61,7 +61,7 @@ export class DropdownEditorApi implements IDropdownEditorApi {
         Parameters: setup.parameters,
         ShowUniqueValues: setup.showUniqueValues,
         SearchText: searchTerm || "",
-        PageSize: this.behavior().pageSize,
+        PageSize: dropdownPageSize,
         PageNumber: this.behavior().willLoadPage,
       });
     }
