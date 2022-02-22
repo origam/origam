@@ -44,7 +44,7 @@ jobs:
       uses: DerYeger/yarn-setup-action@v1.0.1
       with:
        # The version of Node.js that will be used
-       node-version: 16
+       node-version: 12
      
     - name: Build Frontend
       run: |
