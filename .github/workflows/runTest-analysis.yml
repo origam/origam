@@ -38,12 +38,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Yarn setup
-      uses: DerYeger/yarn-setup-action@v1.0.1
+    - name: setup node
+      uses: actions/setup-node@v2
       with:
-    # The version of Node.js that will be used
-       node-version: 12.x
+       node-version: '12'
      
+    - name: Install Yarn
+      run: npm install -g yarn
+      
     - name: Build Frontend
       run: |
         cd frontend-html
