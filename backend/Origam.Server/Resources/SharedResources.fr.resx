@@ -190,7 +190,7 @@
     <value>Annuler</value>
   </data>
   <data name="CheckEmail" xml:space="preserve">
-    <value>Bitte überprüfen Sie Ihre E-Mail Adresse um Ihres Passwort zurückzusetzen.</value>
+    <value>Veuillez vérifier votre adresse e-mail pour réinitialiser votre mot de passe.</value>
   </data>
   <data name="ConfirmationOk1" xml:space="preserve">
     <value>Danke für die Bestätigung Ihrer E-Mail Adresse. Bitte</value>
@@ -238,13 +238,13 @@
     <value>Enregister mon login</value>
   </data>
   <data name="ResetPassword" xml:space="preserve">
-    <value>Passwort zurücksetzen</value>
+    <value>Réinitialiser le mot de passe</value>
   </data>
   <data name="ResetPasswordTitle" xml:space="preserve">
     <value>Setzen Sie Ihr Passwort zurück.</value>
   </data>
   <data name="Submit" xml:space="preserve">
-    <value>Versenden</value>
+    <value>Envoyer</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Ja</value>
