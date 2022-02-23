@@ -24,7 +24,13 @@ div.root{
 }
 
 div.root input:global(.input) {
-  max-height: 25px
+  max-height: 25px;
+  border-right: 1px solid var(--background5);
+  border-radius: 2px;
+
+  &:focus {
+    margin-right: 0;
+  }
 }
 
 div.root div:global(.cell) {
