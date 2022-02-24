@@ -19,7 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IDataView } from "model/entities/types/IDataView";
 import { getProperties } from "model/selectors/DataView/getProperties";
-import { IGuiHelper, IPluginData, IPluginDataView, IPluginProperty, IPluginTableRow, } from "@origam/plugin-interfaces";
+import {
+  IGuiHelper,
+  IOption,
+  IPluginData,
+  IPluginDataView,
+  IPluginProperty,
+  IPluginTableRow,
+} from "@origam/plugin-interfaces";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
@@ -27,6 +34,10 @@ import { getActivePanelView } from "model/selectors/DataView/getActivePanelView"
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler, wrapInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { SimpleDropdown } from "@origam/components";
+import React from "react";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { MobileSimpleDropdown } from "gui/connections/MobileComponents/Form/MobileSimpleDropdown";
 
 
 export function createPluginData(dataView: IDataView): IPluginData | undefined {
@@ -73,6 +84,37 @@ class GuiHelper implements IGuiHelper {
        });
      }()
    });
+  }
+
+  renderDropDown<T>(args: {
+    options: IOption<T>[],
+    selectedOption: IOption<T>,
+    onOptionClick: (option: IOption<T>) => void,
+    width?: string,
+    className?: string
+  })
+  {
+    if(isMobileLayoutActive(this.ctx)){
+      return (
+        <MobileSimpleDropdown
+          options={args.options}
+          selectedOption={args.selectedOption}
+          onOptionClick={args.onOptionClick}
+          width={args.width}
+          className={args.className}
+          ctx={this.ctx}/>
+      );
+    }else{
+      return (
+        <SimpleDropdown
+          options={args.options}
+          selectedOption={args.selectedOption}
+          onOptionClick={args.onOptionClick}
+          width={args.width}
+          className={args.className}
+      />
+    );
+    }
   }
 }
 
