@@ -425,4 +425,7 @@
   <data name="UserNameRequired" xml:space="preserve">
     <value>Benutzername ist erforderlich</value>
   </data>
+  <data name="REset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
 </root>
