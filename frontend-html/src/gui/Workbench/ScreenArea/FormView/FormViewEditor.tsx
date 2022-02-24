@@ -50,6 +50,7 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
 
 
 @inject(({property, formPanelView}) => {
+  const row = getSelectedRow(property);
   return {
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),

@@ -19,6 +19,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/IsInitialScreen/10cad307-f41c-4f38-a74f-37abdc3f96f1"
+        dsc:hideInOutput="false"
+        x:id="0e0a6b82-ed51-49d9-9f2b-dd5072ed613d"
+        asi:name="IsInitialScreen"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Security/DataEntity/Security/OrigamRoleOrigamApplicationRole.origam#OrigamRoleOrigamApplicationRole/IsFormReadOnly/51287ff9-932d-4199-b9fc-479f4eb057fc"
         x:id="09e92a76-d804-4492-a623-75893e552f05"
         asi:name="IsFormReadOnly"
