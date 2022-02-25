@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/TabbedView/TabbedViewHandle.module.scss";
 import cx from "classnames";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 
 export class TabbedViewHandle extends React.Component<{
   title?: string;

@@ -24,11 +24,6 @@ import { GroupingUnit } from "model/entities/types/GroupingUnit";
 
 export class TableColumnConfiguration implements IColumnConfiguration {
 
-  constructor(
-    public propertyId: string
-  ) {
-  }
-
   @observable
   aggregationType: AggregationType | undefined;
   @observable
@@ -37,7 +32,15 @@ export class TableColumnConfiguration implements IColumnConfiguration {
   isVisible: boolean = true;
   @observable
   timeGroupingUnit: GroupingUnit | undefined;
-  width = 0;
+  @observable
+  width;
+
+  constructor(
+    public propertyId: string,
+    defaultWidth: number
+  ) {
+    this.width = defaultWidth;
+  }
 
   deepClone(): IColumnConfiguration {
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this)

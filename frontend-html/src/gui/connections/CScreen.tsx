@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FormScreenBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder";
+import { FormScreenBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder/FormScreenBuilder";
 import { observer, Provider } from "mobx-react";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -163,7 +163,10 @@ class CScreenInner extends React.Component<{
         <CtxPanelVisibility.Provider
           value={{isVisible: getIsTopmostNonDialogScreen(openedScreen)}}
         >
-          <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI}/>
+          <FormScreenBuilder
+            title={formScreen.formScreen!.title}
+            xmlWindowObject={formScreen.formScreen!.screenUI}
+          />
         </CtxPanelVisibility.Provider>
       </Screen>
     );

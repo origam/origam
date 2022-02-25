@@ -41,6 +41,7 @@ export class Header extends React.Component<{
   onColumnWidthChange: (id: string, newWidth: number) => void;
   onColumnWidthChangeFinished: (id: string, newWidth: number) => void;
   onClick?: (event: any, id: string) => void;
+  isDragDisabled: boolean;
 }> {
   width0: number = 0;
   mouseX0: number = 0;
@@ -90,7 +91,12 @@ export class Header extends React.Component<{
       return this.renderHeader();
     }
     return (
-      <Draggable draggableId={this.props.id} index={this.props.columnIndex} key={this.props.id}>
+      <Draggable
+        draggableId={this.props.id}
+        index={this.props.columnIndex}
+        key={this.props.id}
+        isDragDisabled={this.props.isDragDisabled}
+      >
         {(provided) => this.renderHeader(provided)}
       </Draggable>
     );

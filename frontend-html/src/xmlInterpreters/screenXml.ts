@@ -34,12 +34,12 @@ import { FormScreen } from "model/entities/FormScreen";
 import { Lookup } from "model/entities/Lookup";
 import { OrderingConfiguration } from "model/entities/OrderingConfiguration";
 import { Property } from "model/entities/Property";
-import { ColumnConfigurationDialog } from "model/entities/TablePanelView/ColumnConfigurationDialog";
+import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
 import { TablePanelView } from "model/entities/TablePanelView/TablePanelView";
 import { IComponentBinding } from "model/entities/types/IComponentBinding";
 import { IFormScreenLifecycle02 } from "model/entities/types/IFormScreenLifecycle";
 import { IPanelViewType } from "model/entities/types/IPanelViewType";
-import { findStopping } from "./xmlUtils";
+import { findActions, findFormPropertyIds, findFormRoot, findParameters, findStopping, findUIRoot } from "./xmlUtils";
 import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
 import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
 import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
@@ -93,33 +93,8 @@ import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { createConfigurationManager } from "xmlInterpreters/createConfigurationManager";
 import { getMomentFormat, replaceDefaultDateFormats } from "./getMomentFormat";
 import { getTablePanelView } from "../model/selectors/TablePanelView/getTablePanelView";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
-export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
-
-export const findUIChildren = (node: any) =>
-  findStopping(node, (n) => n.parent.name === "UIChildren");
-
-export const findBoxes = (node: any) =>
-  findStopping(node, (n) => n.attributes && n.attributes.Type === "Box");
-
-export const findChildren = (node: any) => findStopping(node, (n) => n.name === "Children")[0];
-
-export const findActions = (node: any) =>
-  findStopping(node, (n) => n.parent.name === "Actions" && n.name === "Action");
-
-export const findParameters = (node: any) => findStopping(node, (n) => n.name === "Parameter");
-
-export const findStrings = (node: any) =>
-  findStopping(node, (n) => n.name === "string").map(
-    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
-  );
-
-export const findFormPropertyIds = (node: any) =>
-  findStopping(node, (n) => n.name === "string" && n.parent.name === "PropertyNames").map(
-    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
-  );
-
-export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];
 
 function getPropertyParameters(node: any) {
   const parameters = findParameters(node);
@@ -241,6 +216,7 @@ export function*interpretScreenXml(
   panelConfigurationsRaw: any,
   lookupMenuMappings: any,
   sessionId: string,
+  workflowTaskId: string | null,
   isLazyLoading: boolean
 ) {
   const workbench = getWorkbench(formScreenLifecycle);
@@ -322,9 +298,11 @@ export function*interpretScreenXml(
   }
 
   const foundLookupIds = new Set<string>();
+  const uiRoot = findUIRoot(windowXml);
 
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
+    uiRootType: uiRoot.attributes.Type,
     menuId: windowXml.attributes.MenuId,
     dynamicTitleSource: screenDoc.elements[0].attributes.DynamicFormLabelSource,
     sessionId,
@@ -341,6 +319,7 @@ export function*interpretScreenXml(
     autoSaveOnListRecordChange: windowXml.attributes.AutoSaveOnListRecordChange === "true",
     requestSaveAfterUpdate: windowXml.attributes.RequestSaveAfterUpdate === "true",
     screenUI: screenDoc,
+    workflowTaskId: workflowTaskId,
     panelConfigurations,
     formScreenLifecycle,
     // isSessioned: windowXml.attributes.UseSession,
@@ -456,7 +435,7 @@ export function*interpretScreenXml(
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
-          columnConfigurationDialog: new ColumnConfigurationDialog(),
+          columnConfigurationModel: new ColumnConfigurationModel(),
           filterConfiguration: filterConfiguration,
           filterGroupManager: filterGroupManager,
           orderingConfiguration: orderingConfiguration,
@@ -503,7 +482,6 @@ export function*interpretScreenXml(
         dataViewInstance.tablePanelView.tableProperties,
         isLazyLoading
       );
-      configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       configurationManager.parent = dataViewInstance.tablePanelView;
       properties
@@ -587,7 +565,9 @@ export function*interpretScreenXml(
           new ViewConfiguration(
             function*(perspectiveTag) {
               dataView.activePanelView = perspectiveTag as any;
-              yield*saveColumnConfigurations(dataView)();
+              if(!isMobileLayoutActive(dataView)){
+                yield*saveColumnConfigurations(dataView)();
+              }
             },
             () => {
               if (

@@ -22,7 +22,7 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { MobXProviderContext, observer } from "mobx-react";
 import { WorkQueuesItem } from "gui/Components/WorkQueues/WorkQueuesItem";
 import { flow } from "mobx";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";

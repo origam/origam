@@ -28,6 +28,7 @@ import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import { ClearableInput } from "gui/connections/MobileComponents/Grid/ClearableInput";
 
 const OPERATORS = [
   Operator.contains,
@@ -102,7 +103,7 @@ class OpEditors extends React.Component<{
       case "contains":
       case "ncontains":
         return (
-          <input
+          <ClearableInput
             id={this.props.id}
             className={CS.input}
             value={this.props.currentValue ?? ""}

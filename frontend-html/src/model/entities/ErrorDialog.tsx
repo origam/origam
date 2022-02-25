@@ -18,17 +18,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import bind from "bind-decorator";
-import { ModalWindow } from "@origam/components";
 import _ from "lodash";
 import { action, computed, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import React from "react";
 import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
 import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
+import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -125,7 +125,7 @@ export class ErrorDialogController implements IErrorDialogController {
     if (!this.isDialogDisplayed) {
       this.isDialogDisplayed = true;
       const previouslyFocusedElement = document.activeElement as HTMLElement;
-      const closeDialog = getDialogStack(this).pushDialog(
+      const closeDialog = showDialog(this,
         "",
         <Observer>
           {() => (
@@ -168,7 +168,7 @@ export class ErrorDialogComponent extends React.Component<{
 }> {
   render() {
     return (
-      <ModalWindow
+      <ModalDialog
         title={T("Error", "error_window_title")}
         titleButtons={null}
         buttonsCenter={
@@ -204,7 +204,7 @@ export class ErrorDialogComponent extends React.Component<{
             )}
           </div>
         </div>
-      </ModalWindow>
+      </ModalDialog>
     );
   }
 }

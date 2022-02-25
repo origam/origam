@@ -187,7 +187,7 @@ export interface IDataView extends IDataViewData {
 
   isTableViewActive: () => boolean;
   isFormViewActive: () => boolean;
-  activateFormView: ((args: { saveNewState: boolean }) => Promise<any>) | undefined;
+  activateFormView: ((args?: { saveNewState: boolean }) => Promise<any>) | undefined;
   activateTableView: (() => Promise<any>) | undefined;
 
   initializeNewScrollLoader(): void;

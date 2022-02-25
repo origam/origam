@@ -1,0 +1,2 @@
+﻿ALTER TABLE [OrigamRoleOrigamApplicationRole] ADD [IsInitialScreen] Bit NOT NULL CONSTRAINT [DF_OrigamRoleOrigamApplicationRole_IsInitialScreen] DEFAULT 0;
+ALTER TABLE [OrigamRoleOrigamApplicationRole] DROP CONSTRAINT [DF_OrigamRoleOrigamApplicationRole_IsInitialScreen];
