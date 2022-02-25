@@ -116,36 +116,33 @@ export class FormField extends React.Component<IFormFieldProps> {
 
 export function getCaptionStyle(props: IFormFieldProps) {
   const dimensions = props.fieldDimensions;
+  const style = {...(props.property?.style ?? {})};
   if(dimensions.isUnset){
-    return dimensions.asStyle();
+    return {...dimensions.asStyle(), ...style};
   }
   if (props.isHidden) {
-    return {
-      display: "none",
-    };
+    style["display"] = "none";
+    return style;
   }
   switch (props.captionPosition) {
     default:
     case ICaptionPosition.Left:
-      return {
-        top: dimensions.top,
-        left: dimensions.left! - props.captionLength,
-        color: props.captionColor,
-      };
+      style["top"] = dimensions.top;
+      style["left"] = dimensions.left! - props.captionLength;
+      style["color"] = props.captionColor;
+      return style;
     case ICaptionPosition.Right:
       // 20 is expected checkbox width, might be needed to be set dynamically
       // if there is some difference in chekbox sizes between various platforms.
-      return {
-        top: dimensions.top,
-        left: props.isCheckbox ? dimensions.left! + 20 : dimensions.left! + dimensions.width! + 4,
-        color: props.captionColor,
-      };
+      style["top"] = dimensions.top;
+      style["left"] = props.isCheckbox ? dimensions.left! + 20 : dimensions.left! + dimensions.width! + 4;
+      style["color"] = props.captionColor;
+      return style;
     case ICaptionPosition.Top:
-      return {
-        top: dimensions.top! - 20, // TODO: Move this constant somewhere else...
-        left: dimensions.left,
-        color: props.captionColor,
-      };
+      style["top"] = dimensions.top! - 20; // TODO: Move this constant somewhere else...
+      style["left"] = dimensions.left;
+      style["color"] = props.captionColor
+      return style;
   }
 }
 
