@@ -92,6 +92,7 @@ namespace Origam.BI.SSRS
             }
             else
             {
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Ntlm;
                 serviceClient.ClientCredentials.Windows.ClientCredential
                     = new NetworkCredential(
                         settings.SQLReportServiceAccount, 
