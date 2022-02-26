@@ -417,4 +417,7 @@
   <data name="TwoFactorCodeRequired" xml:space="preserve">
     <value>Kód pro dvoufaktorové přihlášení musí být vyplněn</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Obnovit</value>
+  </data>
 </root>

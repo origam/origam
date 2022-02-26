@@ -289,10 +289,10 @@
     <value>Vorname</value>
   </data>
   <data name="Email" xml:space="preserve">
-    <value>E-Mail</value>
+    <value>Email</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Passwort bestätigen</value>
+    <value>Mot de passe (confirmer)</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>
@@ -344,5 +344,8 @@
   </data>
   <data name="UserNameRequired" xml:space="preserve">
     <value>nom d’utilisateur nécessaire</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Réinitialiser</value>
   </data>
 </root>
