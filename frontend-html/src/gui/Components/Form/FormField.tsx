@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import S from "gui/Components/Form/FormField.module.scss";
 import { inject, observer } from "mobx-react";
-import { IDockType } from "model/entities/types/IProperty";
+import { IDockType, IProperty } from "model/entities/types/IProperty";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
@@ -41,6 +41,7 @@ export enum ICaptionPosition {
 
   return {
     caption: !!ovrCaption ? ovrCaption : caption,
+    property: property
   };
 })
 @observer
@@ -63,39 +64,38 @@ export class FormField extends React.Component<{
   textualValue?: any;
   isRichText: boolean;
   backgroundColor?: string;
+  property?: IProperty;
 }> {
 
   @observable
   toolTip: string | undefined | null;
 
   get captionStyle() {
+    const style = {...(this.props.property?.style ?? {})};
+
     if (this.props.isHidden) {
-      return {
-        display: "none",
-      };
+      style["display"] = "none";
+      return style;
     }
     switch (this.props.captionPosition) {
       default:
       case ICaptionPosition.Left:
-        return {
-          top: this.props.top,
-          left: this.props.left - this.props.captionLength,
-          color: this.props.captionColor,
-        };
+        style["top"] = this.props.top;
+        style["left"] = this.props.left - this.props.captionLength;
+        style["color"] = this.props.captionColor;
+        return style;
       case ICaptionPosition.Right:
         // 20 is expected checkbox width, might be needed to be set dynamically
         // if there is some difference in chekbox sizes between various platforms.
-        return {
-          top: this.props.top,
-          left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width + 4,
-          color: this.props.captionColor,
-        };
+        style["top"] = this.props.top;
+        style["left"] = this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width + 4;
+        style["color"] = this.props.captionColor;
+        return style;
       case ICaptionPosition.Top:
-        return {
-          top: this.props.top - 20, // TODO: Move this constant somewhere else...
-          left: this.props.left,
-          color: this.props.captionColor,
-        };
+        style["top"] = this.props.top - 20; // TODO: Move this constant somewhere else...
+        style["left"] = this.props.left;
+        style["color"] = this.props.captionColor
+        return style;
     }
   }
 
