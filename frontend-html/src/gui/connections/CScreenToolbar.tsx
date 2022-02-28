@@ -100,7 +100,8 @@ export class CScreenToolbar extends React.Component<{}> {
       section: string;
       actions: IAction[];
     }>,
-    actionFilter: ((action: IAction) => boolean) | undefined
+    actionFilter: ((action: IAction) => boolean) | undefined,
+    setDropped: (state: boolean) => void
   ) {
     const customAssetsRoute = getCustomAssetsRoute(this.application);
 
@@ -129,7 +130,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   icon={getIcon(action)}
                   label={action.caption}
-                  onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                  onClick={(event) =>
+                  {
+                    uiActions.actions.onActionClick(action)(event, action);
+                    setDropped(false)
+                  }
+                }
                 />
               </DropdownItem>
             ))}
@@ -170,11 +176,12 @@ export class CScreenToolbar extends React.Component<{}> {
               )}
             </Observer>
           )}
-          content={() => (
+          content={args => (
             <Dropdown>
               {this.getOverfullActionsDropdownContent(
                 [{section: "", actions: childActions}],
-                undefined
+                undefined,
+                args.setDropped
               )}
             </Dropdown>
           )}
@@ -189,7 +196,10 @@ export class CScreenToolbar extends React.Component<{}> {
               action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl}/> : undefined
             }
             label={action.caption}
-            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+            onClick={(event) => {
+              uiActions.actions.onActionClick(action)(event, action);
+            }
+          }
           />
         )}
       </Observer>
@@ -265,10 +275,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 icon={<Icon src="./icons/dot-menu.svg" tooltip={""}/>}
               />
             )}
-            content={() => (
+            content={(args) => (
               <Dropdown>
-                {this.getOverfullActionsDropdownContent(toolbarActions, (action) =>
-                  this.state.hiddenActionIds.has(action.id)
+                {this.getOverfullActionsDropdownContent(
+                  toolbarActions,
+                  action => this.state.hiddenActionIds.has(action.id),
+                  args.setDropped
                 )}
               </Dropdown>
             )}
