@@ -67,8 +67,9 @@ export class NumberEditor extends React.Component<{
   }
 
   formatForOnChange(value: string | number | null){
-    const displayValue = this.formatForDisplay(value);
-    return displayValue.replaceAll(getCurrentGroupSeparator(), "");
+    return this.formatForDisplay(value)
+      .replaceAll(getCurrentGroupSeparator(), "")
+      .replaceAll(getCurrentDecimalSeparator(), ".");
   }
 
   componentDidMount() {
