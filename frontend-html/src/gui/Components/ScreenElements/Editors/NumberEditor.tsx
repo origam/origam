@@ -143,8 +143,19 @@ export class NumberEditor extends React.Component<{
     this.updateTextOverflowState();
   }
 
-  @action.bound handleKeyDown(event: any) {
-    this.props.onKeyDown && this.props.onKeyDown(event);
+  @action.bound
+  async handleKeyDown(event: any) {
+    await runInFlowWithHandler({
+      ctx: this.props.property,
+      action: async () => {
+        if (event.key === "Enter" || event.key === "Tab"){
+          let value = this.formatForOnChange(this.state.value);
+          if(this.formatForOnChange(this.props.value) !== value){
+            this.props.onChange && await this.props.onChange(null, value);
+          }
+        }
+        this.props.onKeyDown && this.props.onKeyDown(event);
+      }})
   }
 
   getStyle() {
