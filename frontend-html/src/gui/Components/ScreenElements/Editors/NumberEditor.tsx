@@ -53,12 +53,15 @@ export class NumberEditor extends React.Component<{
   inputRef = React.createRef<HTMLInputElement>();
 
   formatForDisplay(value: string | number | null){
-    if (value === null) {
-        return "";
+    let rawValue = value === null ? "0" : value;
+    if(typeof value === "string"){
+      rawValue = value
+        .replaceAll(getCurrentGroupSeparator(), "")
+        .replaceAll(getCurrentDecimalSeparator(), ".")
+      if(value.trim() === ""){
+        rawValue = "0";
+      }
     }
-    const rawValue = typeof value === "string"
-      ? value.replaceAll(getCurrentGroupSeparator(), "")
-      : value;
     return formatNumber(
       this.props.customNumberFormat,
       this.props.property?.entity ?? "",
