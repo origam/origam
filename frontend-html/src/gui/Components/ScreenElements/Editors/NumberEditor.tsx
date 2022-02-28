@@ -226,7 +226,9 @@ function getValidCharacters(event: any){
 }
 
 function isValidNumber(value: string){
-  let formattedValue = value.replaceAll(getCurrentGroupSeparator(), "");
+  let formattedValue = value
+    .replaceAll(getCurrentGroupSeparator(), "")
+    .replaceAll(getCurrentDecimalSeparator(), ".");
   return !isNaN(Number(formattedValue))
 }
 
