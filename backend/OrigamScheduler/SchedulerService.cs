@@ -186,7 +186,7 @@ namespace OrigamScheduler
 					{
                         if (log.IsFatalEnabled)
                         {
-                            log.Fatal(string.Format("Failed to schedule job: {0}, {1}", schedule.Name, schedule.ScheduleTime.Name), ex);
+                            log.Fatal(string.Format("Failed to schedule job: {0}, {1}", schedule.Name, schedule.ScheduleTime?.Name), ex);
                         }
 					}
 				}
@@ -248,7 +248,7 @@ namespace OrigamScheduler
 			{
                 if (log.IsErrorEnabled)
                 {
-                    log.Error(string.Format("Error occured while running the workflow {0}", workflow.Name), ex);
+                    log.Error(string.Format("Error occured while running the workflow {0}", workflow?.Name), ex);
                 }
 			}
 			finally
@@ -286,7 +286,7 @@ namespace OrigamScheduler
 		{
             if (log.IsErrorEnabled)
             {
-                log.Error("Schedule workflow error", Args.Error);
+                log.Error("Schedule workflow error", Args?.Error);
             }
 		}
 

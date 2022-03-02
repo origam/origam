@@ -479,7 +479,7 @@ namespace Origam.Workflow
 				{
 					if (log.IsDebugEnabled)
 					{
-						log.Debug("Initializing data store: " + store.Name);
+						log.Debug("Initializing data store: " + store?.Name);
 					}
 					// Otherwise we generate an empty store
 					if (store.DataType == OrigamDataType.Xml)
@@ -616,7 +616,7 @@ namespace Origam.Workflow
 						if(log.IsDebugEnabled)
 						{
 							log.Debug("---------------------------------------------------------------------------------------");
-							log.Debug("Starting " + engineTask.GetType().Name + ": " + currentModelStep.Name);
+							log.Debug("Starting " + engineTask.GetType().Name + ": " + currentModelStep?.Name);
 						}
 
 						SetStepStatus(currentModelStep, WorkflowStepResult.Running);
@@ -644,7 +644,7 @@ namespace Origam.Workflow
 			SetStepStatus(step, WorkflowStepResult.Failure);
 			if(log.IsErrorEnabled)
 			{
-				log.Error(step.GetType().Name + " " + step.Name + " failed.");
+				log.Error(step?.GetType().Name + " " + step?.Name + " failed.");
 			}
 			// Trace the error
 			if(IsTrace(step))
@@ -931,7 +931,7 @@ namespace Origam.Workflow
 
 			if (log.IsDebugEnabled)
 			{
-				log.Debug("Evaluating startup rule for step " + task.Name);
+				log.Debug("Evaluating startup rule for step " + task?.Name);
 			}
 			result = (bool) this.RuleEngine.EvaluateRule(
 				task.StartConditionRule, task.StartConditionRuleContextStore, null,
@@ -951,7 +951,7 @@ namespace Origam.Workflow
 
 			if(log.IsDebugEnabled)
 			{
-				log.Debug("Evaluating validation rule for step " + step.Name);
+				log.Debug("Evaluating validation rule for step " + step?.Name);
 			}
 			RuleExceptionDataCollection result = 
 				this.RuleEngine.EvaluateEndRule(step.ValidationRule, step.ValidationRuleContextStore);
@@ -1066,7 +1066,7 @@ namespace Origam.Workflow
 			if(log.IsInfoEnabled)
 			{
 				string stepNameLog = "";
-				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem).Path + "'";
+				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem)?.Path + "'";
 				log.Info("Merging context '" + contextName + "'" + stepNameLog);
 			}
 
@@ -1322,7 +1322,7 @@ namespace Origam.Workflow
 			if(log.IsInfoEnabled)
 			{
 				string stepNameLog = "";
-				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem).Path + "'";
+				if(step != null) stepNameLog = ", Step '" + (step as AbstractSchemaItem)?.Path + "'";
 				log.Info("Finished merging context '" + contextName + "'" + stepNameLog);
 			}
 		}
@@ -1476,7 +1476,7 @@ namespace Origam.Workflow
 
 					if(log.IsDebugEnabled)
 					{
-						log.Debug(engineTask.GetType().Name + " " + currentModelStep.Name + " finished successfully.");
+						log.Debug(engineTask.GetType().Name + " " + currentModelStep?.Name + " finished successfully.");
 					}
 
 					if(this.Host.SupportsUI)
@@ -1518,7 +1518,7 @@ namespace Origam.Workflow
 
 			if(log.IsDebugEnabled)
 			{
-				log.Debug("Block '" + this.WorkflowBlock.Name + "' completed");
+				log.Debug("Block '" + this.WorkflowBlock?.Name + "' completed");
 
 				// Show finish screen if this is the root workflow
 				if(this.CallingWorkflow == null)

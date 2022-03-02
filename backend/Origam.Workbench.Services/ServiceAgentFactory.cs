@@ -69,7 +69,7 @@ namespace Origam.Workbench.Services
                             {
                                 if (log.IsDebugEnabled)
                                 {
-                                    log.DebugFormat("Can't load service {0}, skipping {1}", service.Name,
+                                    log.DebugFormat("Can't load service {0}, skipping {1}", service?.Name,
                                         e.Message);
                                 }
                                 continue;
