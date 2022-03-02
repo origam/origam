@@ -2576,10 +2576,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@xstate/inspect@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.6.2.tgz#365f4784dece6e36b8fd1c00d419caf2ac353d2d"
-  integrity sha512-ZDJ0NETucV7wyT2Tyr3VeEgVD45TUGMTwbzmU2JfzUOjJQMyqn/XjcXGa3wxzgSvz2I0L4xC5ahRZN85j7oh1Q==
+"@xstate/inspect@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.6.3.tgz#44f73405b87d159a0d99631ec90887a06396961c"
+  integrity sha512-iCaAWpu1x2IbAdyZmUqwpcKlx8bJPuMd0ialDvynam7u/Y7bMNK9MlcqNWPO/2HCPe9yyMWPWgdR5wt77KmtsQ==
   dependencies:
     fast-safe-stringify "^2.0.7"
 
@@ -13709,10 +13709,10 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xstate@^4.30.0:
-  version "4.30.0"
-  resolved "https://registry.yarnpkg.com/xstate/-/xstate-4.30.0.tgz#d45a962821d761df389b427e39aeca143f4de832"
-  integrity sha512-haGWpXLfsIHPrOMXs5NFuAIvIgaiEBU9pnlXllIxJ0iwwLySXYYLsRY8GXb/zKW+LNoMtTjMXx1lAav/tI7eFQ==
+xstate@^4.30.3:
+  version "4.30.3"
+  resolved "https://registry.yarnpkg.com/xstate/-/xstate-4.30.3.tgz#e1b81bad0bb669b4411294961f286a338d52d8f0"
+  integrity sha512-ccFjxRKvLq5Fap9+Cc2barHjdEqcDMLZOnHKhslGPgOknM/GKku744Hixm7PzBfQolKQqi/oLQcYm6C5GCULyg==
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"
