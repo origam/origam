@@ -21,7 +21,7 @@ import React, { RefObject } from "react";
 import { MainMenuUL } from "gui/Components/MainMenu/MainMenuUL";
 import { MainMenuLI } from "gui/Components/MainMenu/MainMenuLI";
 import { MainMenuItem } from "gui/Components/MainMenu/MainMenuItem";
-import { Icon } from "gui/Components/Icon/Icon";
+import { Icon } from "@origam/components";
 import { inject, MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
@@ -36,7 +36,7 @@ import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import { showDialog } from "model/selectors/getDialogStack";
 import { ChooseFavoriteFolderDialog } from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
 import { getIconUrl } from "gui/getIconUrl";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
@@ -50,6 +50,7 @@ import { SidebarSectionBody } from "gui/Components/Sidebar/SidebarSectionBody";
 import { EditButton } from "gui/connections/MenuComponents/EditButton";
 import { IMainMenuState } from "model/entities/types/IMainMenu";
 import cx from "classnames";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @inject(mainMenuState => mainMenuState)
 @observer
@@ -65,6 +66,13 @@ export class CMainMenu extends React.Component<{
 
   get application(): IApplication {
     return this.context.application;
+  }
+
+  onMouseEnter() {
+    this.mouseInHeader = true;
+    if (isMobileLayoutActive(this.application)) {
+      this.props.onClick();
+    }
   }
 
   @action
@@ -129,7 +137,7 @@ export class CMainMenu extends React.Component<{
         <SidebarSectionDivider/>
         <div
           className={S.topMenuHeader}
-          onMouseEnter={() => this.mouseInHeader = true}
+          onMouseEnter={() => this.onMouseEnter()}
           onMouseLeave={() => this.mouseInHeader = false}
         >
           <SidebarSectionHeader
@@ -224,7 +232,7 @@ class CMainMenuCommandItem extends React.Component<{
             <MainMenuItem
               refDom={refTrigger}
               level={props.level}
-              id={"menu_"+props.node.attributes.id}
+              id={"menu_" + props.node.attributes.id}
               isActive={false}
               icon={
                 <Icon
@@ -254,10 +262,10 @@ class CMainMenuCommandItem extends React.Component<{
               }}
             />
             {this.props.mainMenuState!.editing &&
-            <FavoritesAddRemoveButton
-              isVisible={props.isOpen}
-              menuId={this.menuId}
-              ctx={this.workbench}/>
+              <FavoritesAddRemoveButton
+                isVisible={props.isOpen}
+                menuId={this.menuId}
+                ctx={this.workbench}/>
             }
           </div>
         )}
@@ -289,17 +297,17 @@ class CMainMenuCommandItem extends React.Component<{
               {T("Open in New Tab", "open_in_new_tab")}
             </DropdownItem>
             {(props.node.attributes.type === "FormReferenceMenuItem" ||
-              props.node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
-            <DropdownItem
-              onClick={(event: any) => {
-                setDropped(false);
-                onResetColumnConfigClick(this.workbench)({
-                  item: props.node
-                })
-              }}
-            >
-              {T("Reset Column Configuration", "reset_column_configuration")}
-            </DropdownItem>
+                props.node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
+              <DropdownItem
+                onClick={(event: any) => {
+                  setDropped(false);
+                  onResetColumnConfigClick(this.workbench)({
+                    item: props.node
+                  })
+                }}
+              >
+                {T("Reset Column Configuration", "reset_column_configuration")}
+              </DropdownItem>
             }
             {!this.favorites.isInAnyFavoriteFolder(this.menuId) && (
               <DropdownItem
@@ -436,17 +444,17 @@ export class CFavoritesMenuItem extends React.Component<{
               {T("Open in New Tab", "open_in_new_tab")}
             </DropdownItem>
             {(props.node.attributes.type === "FormReferenceMenuItem" ||
-              props.node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
-            <DropdownItem
-              onClick={(event: any) => {
-                setDropped(false);
-                onResetColumnConfigClick(this.workbench)({
-                  item: props.node
-                })
-              }}
-            >
-              {T("Reset Column Configuration", "reset_column_configuration")}
-            </DropdownItem>
+                props.node.attributes.type === "FormReferenceMenuItem_WithSelection") &&
+              <DropdownItem
+                onClick={(event: any) => {
+                  setDropped(false);
+                  onResetColumnConfigClick(this.workbench)({
+                    item: props.node
+                  })
+                }}
+              >
+                {T("Reset Column Configuration", "reset_column_configuration")}
+              </DropdownItem>
             }
             {this.favorites.isInAnyFavoriteFolder(this.menuId) && (
               <DropdownItem
@@ -475,7 +483,7 @@ function onRemoveFromFavoritesClicked(ctx: any, menuId: string) {
 
 export function onAddToFavoritesClicked(ctx: any, menuId: string) {
   const favorites = getFavorites(ctx);
-  const closeDialog = getDialogStack(ctx).pushDialog(
+  const closeDialog = showDialog(ctx,
     "",
     <ChooseFavoriteFolderDialog
       onOkClick={(folderId: string) => {
@@ -570,7 +578,7 @@ class CMainMenuFolderItem extends React.Component<{
           level={props.level}
           isActive={false}
           icon={this.icon}
-          id={"menu_"+props.node.attributes.id}
+          id={"menu_" + props.node.attributes.id}
           label={props.node.attributes.label}
           isHidden={!props.isOpen}
           onClick={this.handleClick}

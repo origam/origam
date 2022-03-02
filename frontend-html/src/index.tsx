@@ -44,14 +44,22 @@ if (process.env.REACT_APP_SELENIUM_KICK) {
 if (process.env.NODE_ENV === "development") {
   axios.defaults.timeout = 3600000;
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
-
-  //inspect({ iframe: false });
 }
 
 (window as any).ORIGAM_CLIENT_REVISION_HASH = process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
 (window as any).ORIGAM_CLIENT_REVISION_DATE = process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
 
+function disableAutoZoomingOnIPhone(){
+  const safariDerivedBrowser = navigator.vendor && navigator.vendor.indexOf('Apple') > -1;
+  if(safariDerivedBrowser){
+    document
+      .querySelector('meta[name="viewport"]')
+      ?.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1");
+  }
+}
+
 async function main() {
+  disableAutoZoomingOnIPhone();
   preventDoubleclickSelect();
   const locationHash = window.location.hash;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";

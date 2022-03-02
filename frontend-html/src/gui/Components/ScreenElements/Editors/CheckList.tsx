@@ -29,7 +29,6 @@ import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
-import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import cx from "classnames";
 
 export interface IRawCheckListProps {
@@ -46,9 +45,7 @@ export interface IRawCheckListProps {
   LookupId: string;
   Parameters: any;
   menuItemId: string;
-  isInvalid: boolean;
   isReadonly?: boolean;
-  invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 
   onChange?(newValue: string[]): void;
@@ -109,9 +106,7 @@ export class CheckListControler {
 export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
-  isInvalid: boolean;
   isReadonly?: boolean;
-  invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown(event: any): void;
   onClick: () => void;
@@ -133,9 +128,7 @@ export const CheckList: React.FC<{
       menuItemId={getMenuItemId(property)}
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
-      isInvalid={props.isInvalid}
       isReadonly={props.isReadonly}
-      invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
       onKeyDown={props.onKeyDown}
       onClick={props.onClick}
@@ -217,11 +210,6 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
           />
         ))}
       </div>
-      {props.isInvalid && (
-        <div className={CS.notification} title={props.invalidMessage}>
-          <i className="fas fa-exclamation-circle red"/>
-        </div>
-      )}
     </div>
   );
 });

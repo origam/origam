@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import moment from "moment";
 import DateCompleter from "../gui/Components/ScreenElements/Editors/DateCompleter";
+import { DateSequence } from "utils/cookies";
 
 function format(dateTime: moment.Moment, expectedFormat: string): string {
   if (dateTime.hour() === 0 && dateTime.minute() === 0 && dateTime.second() === 0) {
@@ -28,7 +29,7 @@ function format(dateTime: moment.Moment, expectedFormat: string): string {
   return dateTime.format(expectedFormat)
 }
 
-const dateCompleterUs = new DateCompleter("M/D/YYYY h:mm:ss A", "/",
+const dateCompleterUs = new DateCompleter(DateSequence.MonthDayYear, "M/D/YYYY h:mm:ss A", "/",
   ":", " ", () => moment("3/15/2020", "M/D/YYYY"))
 
 test.each([
@@ -51,7 +52,7 @@ test.each([
 });
 
 
-const dateCompleterCz = new DateCompleter("DD.MM.YYYY h:mm:ss", ".",
+const dateCompleterCz = new DateCompleter(DateSequence.DayMonthYear, "DD.MM.YYYY h:mm:ss", ".",
   ":", " ", () => moment("12/15/2017", "M/D/YYYY"))
 
 test.each([

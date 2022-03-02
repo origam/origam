@@ -24,6 +24,8 @@ import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
 import { IDialogStack } from "./types/IDialogStack";
 import { IErrorDialogController } from "./types/IErrorDialog";
 import { IWorkbench } from "./types/IWorkbench";
+import { MobileState } from "model/entities/MobileState/MobileState";
+import { observable } from "mobx";
 
 export class Application implements IApplication {
 
@@ -42,6 +44,7 @@ export class Application implements IApplication {
   dialogStack: IDialogStack = null as any;
 
   workbench?: IWorkbench;
+  mobileState = new MobileState();
 
   resetWorkbench(): void {
     this.workbench = undefined;
@@ -50,6 +53,7 @@ export class Application implements IApplication {
   setWorkbench(workbench: IWorkbench): void {
     this.workbench = workbench;
     workbench.parent = this;
+    this.mobileState.initialize(workbench);
   }
 
   *run() {
@@ -62,4 +66,7 @@ export class Application implements IApplication {
   }
 
   parent?: any;
+
+  @observable
+  breakpoint = "";
 }

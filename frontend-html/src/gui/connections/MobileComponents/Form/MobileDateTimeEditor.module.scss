@@ -1,0 +1,76 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@import "~@origam/styles/dist/styles/EditorsCommon.module";
+
+.root{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.fullScreenEditorRoot {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  overflow-y: auto;
+}
+
+.fullScreenEditorInput {
+  max-height: var(--inputHeight);
+}
+
+.fullScreenEditorInfoRow {
+  padding-left: 5px;
+}
+
+.fullScreenEditorInputContainer{
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include input;
+
+  &:read-only {
+    background: var(--background2);
+    border: 1px solid var(--background5);
+    min-height: var(--inputHeight);
+    height: var(--inputHeight);
+  }
+}
+
+.inputRow {
+  display: flex;
+}
+
+.autoCompleteButton{
+  white-space: nowrap;
+  border: 1px solid var(--background5);
+  border-radius: 0 2px 2px 0;
+  background-color: var(--background2);
+}
+
+.fullScreenEditorRoot :global(.calendarWidgetCell) {
+  font-size: 1.1em;
+}

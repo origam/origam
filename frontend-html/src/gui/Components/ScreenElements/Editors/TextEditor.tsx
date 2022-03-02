@@ -41,8 +41,6 @@ export class TextEditor extends React.Component<{
   isMultiline?: boolean;
   isReadOnly: boolean;
   isPassword?: boolean;
-  isInvalid: boolean;
-  invalidMessage?: string;
   backgroundColor?: string;
   foregroundColor?: string;
   maxLength?: number;
@@ -131,20 +129,15 @@ export class TextEditor extends React.Component<{
     return (
       <div className={S.editorContainer}>
         {this.renderValueTag()}
-        {this.props.isInvalid && (
-          <div className={S.notification} title={this.props.invalidMessage}>
-            <i className="fas fa-exclamation-circle red"/>
-          </div>
-        )}
       </div>
     );
   }
 
   getMultilineDivClass() {
     if (this.props.wrapText) {
-      return S.input + " " + S.wrapText;
+      return S.readonlyDiv + " " + S.input + " " + S.wrapText;
     }
-    return S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
+    return S.readonlyDiv + " " + S.input + " " + (isMultiLine(this.props.value) ? S.scrollY : S.noScrollY);
   }
 
   private renderValueTag() {

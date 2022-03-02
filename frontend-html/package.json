@@ -20,7 +20,7 @@
     "@types/jest": "^27.4.0",
     "@types/js-cookie": "^3.0.1",
     "@types/jsonwebtoken": "^8.5.8",
-    "@types/leaflet": "^1.7.9",
+    "@types/leaflet": "1.7.6",
     "@types/leaflet-draw": "^1.0.5",
     "@types/lodash": "^4.14.178",
     "@types/mapbox__geojson-area": "^0.2.1",
@@ -68,6 +68,7 @@
     "react-inlinesvg": "^2.3.0",
     "react-measure": "^2.5.2",
     "react-scripts": "4.0.3",
+    "react-socks": "^2.2.0",
     "react-virtualized": "^9.22.3",
     "string-strip-html": "^8.3.0",
     "typescript": "^4.5.5",
@@ -81,7 +82,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "node ./custom-scripts/record-git-info.js && react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test src/tests",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

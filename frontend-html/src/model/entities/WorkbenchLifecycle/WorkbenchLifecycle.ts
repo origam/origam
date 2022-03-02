@@ -55,6 +55,7 @@ import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
+import { EventHandler } from "utils/EventHandler";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -75,6 +76,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
+  mainMenuItemClickHandler = new EventHandler();
+
   *onMainMenuItemClick(args: {
     event: any;
     item: any;
@@ -93,6 +96,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     } = args.item.attributes;
     const {event} = args;
     const alwaysOpenNew = args.item.attributes.alwaysOpenNew === "true" || args.forceOpenNew;
+    this.mainMenuItemClickHandler.call();
 
     if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
@@ -216,6 +220,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *onWorkQueueListItemClick(event: any, item: any) {
     const openedScreens = getOpenedScreens(this);
 
+    this.mainMenuItemClickHandler.call();
     const id = item.id;
     const type = IMainMenuItemType.WorkQueue;
     const label = item.name;
@@ -501,6 +506,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({menuUI}));
     getSearcher(this).indexMainMenu(menuUI);
 
+    if(portalInfo.initialScreenId && (portalInfo.sessions.length === 0 || !portalInfo.sessions.some((session: any) => session.objectId === portalInfo.initialScreenId))){
+      const menuItem = getMainMenuItemById(this, portalInfo.initialScreenId);
+      yield onMainMenuItemClick(this)({
+        event: null,
+        item: menuItem,
+        idParameter: undefined
+      });
+    }
+
     if (!DEBUG_CLOSE_ALL_FORMS()) {
       for (let session of portalInfo.sessions) {
         const menuItem = getMainMenuItemById(this, session.objectId);
@@ -529,13 +543,16 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     const openedScreens = getOpenedScreens(this);
     if (openedScreens.items.length > 0) {
-      openedScreens.activateItem(openedScreens.items[0].menuItemId, openedScreens.items[0].order);
-      openedScreens.items[0].isSleeping = false;
-      const initUIResult = yield*this.initUIForScreen(openedScreens.items[0], false);
-      if (openedScreens.items[0].content) {
-        yield*openedScreens.items[0].content.start(
+      const screenToOpen = portalInfo.initialScreenId
+        ? openedScreens.items.find(screen => screen.menuItemId === portalInfo.initialScreenId) ?? openedScreens.items[0]
+        : openedScreens.items[0];
+      openedScreens.activateItem(screenToOpen.menuItemId, screenToOpen.order);
+      screenToOpen.isSleeping = false;
+      const initUIResult = yield*this.initUIForScreen(screenToOpen, false);
+      if (screenToOpen.content) {
+        yield*screenToOpen.content.start(
           initUIResult,
-          openedScreens.items[0].isSleepingDirty
+          screenToOpen.isSleepingDirty
         );
       }
     }

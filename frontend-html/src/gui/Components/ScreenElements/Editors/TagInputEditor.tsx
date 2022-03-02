@@ -19,8 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 
-import CS from "./CommonStyle.module.css";
-import S from "./TagInputEditor.module.css";
+import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
+import S from "gui/Components/ScreenElements/Editors/TagInputEditor.module.css";
 
 import { TagInput, TagInputAdd, TagInputItem, TagInputItemDelete, } from "gui/Components/TagInput/TagInput";
 import { inject, observer } from "mobx-react";
@@ -40,8 +40,6 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
       value: string[];
       textualValues?: string[];
       isReadOnly: boolean;
-      isInvalid: boolean;
-      invalidMessage?: string;
       backgroundColor?: string;
       foregroundColor?: string;
       customStyle?: any;
@@ -146,7 +144,10 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               ))
               : null}
             {props.isReadOnly ? null : (
-              <TagInputAdd onClick={(event) => beh.elmInputElement.focus()}/>
+              <TagInputAdd onClick={(event) => {
+                beh.handleInputBtnClick(event);
+                beh.elmInputElement.focus();
+              }}/>
             )}
             <input
               id={props.id}
@@ -164,11 +165,6 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
               size={1}
             />
           </TagInput>
-          {props.isInvalid && (
-            <div className={CS.notification} title={props.invalidMessage}>
-              <i className="fas fa-exclamation-circle red"/>
-            </div>
-          )}
         </div>
       );
     }

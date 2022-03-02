@@ -23,7 +23,7 @@ import { ISearchResult, isIMenuSearchResult } from "model/entities/types/ISearch
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
-import { Icon } from "../Icon/Icon";
+import { Icon } from "@origam/components";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { DropdownItem } from "../Dropdown/DropdownItem";
 import { T } from "../../../utils/translation";

@@ -34,6 +34,5 @@ export interface IDialogStack {
 
   isOpen(key: string): boolean;
 
-  isAnyDialogShown: boolean;
   parent?: any;
 }

@@ -20,16 +20,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import cx from "classnames";
 import { TypeSymbol } from "dic/Container";
 import React from "react";
-import { DropdownEditorBehavior } from "../DropdownEditorBehavior";
 import { DropdownDataTable, IBodyCellDriver } from "../DropdownTableModel";
 import S from "./BooleanCell.module.scss";
 import { bodyCellClass } from "./CellsCommon";
+import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 
 export class BooleanCellDriver implements IBodyCellDriver {
   constructor(
     private dataIndex: number,
     private dataTable: DropdownDataTable,
-    private behavior: DropdownEditorBehavior
+    private driverState: IDriverState
   ) {
   }
 
@@ -45,10 +45,10 @@ export class BooleanCellDriver implements IBodyCellDriver {
     return (
       <div
         className={cx(
-          bodyCellClass(rowIndex, this.behavior.chosenRowId === rowId, this.behavior.cursorRowId === rowId),
+          bodyCellClass(rowIndex, this.driverState.chosenRowId === rowId, this.driverState.cursorRowId === rowId),
           S.cell
         )}
-        onClick={(e) => this.behavior.handleTableCellClicked(e, rowIndex)}
+        onClick={(e) => this.driverState.handleTableCellClicked(e, rowIndex)}
       >
         {this.formattedText(rowIndex) ? <i className="far fa-check-square"></i> : <i className="far fa-square"></i>}
       </div>

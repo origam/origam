@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import S from "gui/Components/Sidebar/Sidebar.module.scss";
+import "gui/Components/Sidebar/Sidebar.module.scss";
 import React from "react";
 
 export const Sidebar: React.FC = props => (
-  <div className={S.root}>{props.children}</div>
+  <div className={"sidebar"}>{props.children}</div>
 );
