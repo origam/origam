@@ -53,12 +53,15 @@ export class NumberEditor extends React.Component<{
   inputRef = React.createRef<HTMLInputElement>();
 
   formatForDisplay(value: string | number | null){
-    if (value === null) {
-        return "";
+    let rawValue = value === null ? "0" : value;
+    if(typeof value === "string"){
+      rawValue = value
+        .replaceAll(getCurrentGroupSeparator(), "")
+        .replaceAll(getCurrentDecimalSeparator(), ".")
+      if(value.trim() === ""){
+        rawValue = "0";
+      }
     }
-    const rawValue = typeof value === "string"
-      ? value.replaceAll(getCurrentGroupSeparator(), "")
-      : value;
     return formatNumber(
       this.props.customNumberFormat,
       this.props.property?.entity ?? "",
@@ -67,8 +70,9 @@ export class NumberEditor extends React.Component<{
   }
 
   formatForOnChange(value: string | number | null){
-    const displayValue = this.formatForDisplay(value);
-    return displayValue.replaceAll(getCurrentGroupSeparator(), "");
+    return this.formatForDisplay(value)
+      .replaceAll(getCurrentGroupSeparator(), "")
+      .replaceAll(getCurrentDecimalSeparator(), ".");
   }
 
   componentDidMount() {
@@ -143,8 +147,19 @@ export class NumberEditor extends React.Component<{
     this.updateTextOverflowState();
   }
 
-  @action.bound handleKeyDown(event: any) {
-    this.props.onKeyDown && this.props.onKeyDown(event);
+  @action.bound
+  async handleKeyDown(event: any) {
+    await runInFlowWithHandler({
+      ctx: this.props.property,
+      action: async () => {
+        if (event.key === "Enter" || event.key === "Tab"){
+          let value = this.formatForOnChange(this.state.value);
+          if(this.formatForOnChange(this.props.value) !== value){
+            this.props.onChange && await this.props.onChange(null, value);
+          }
+        }
+        this.props.onKeyDown && this.props.onKeyDown(event);
+      }})
   }
 
   getStyle() {
@@ -204,7 +219,9 @@ function getValidCharacters(event: any){
 }
 
 function isValidNumber(value: string){
-  let formattedValue = value.replaceAll(getCurrentGroupSeparator(), "");
+  let formattedValue = value
+    .replaceAll(getCurrentGroupSeparator(), "")
+    .replaceAll(getCurrentDecimalSeparator(), ".");
   return !isNaN(Number(formattedValue))
 }
 
