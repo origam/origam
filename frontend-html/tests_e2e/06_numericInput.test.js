@@ -1,10 +1,13 @@
 const puppeteer = require("puppeteer");
 const { backEndUrl} = require('./additionalConfig');
 const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount,
-  waitForRowCountData, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus
+  waitForRowCountData, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus,
+  switchToTablePerspective
 } = require('./testTools');
-const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader, allDataTypesLazyMenuItemsId} = require("./modelIds");
-const { putNumericTestDataToAllDataTypes, clearScreenConfiguration} = require("./dbTools");
+const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader,
+  allDataTypesLazyMenuItemsId} = require("./modelIds");
+const { putNumericTestDataToAllDataTypes, clearScreenConfiguration,
+  restoreAllDataTypesTable} = require("./dbTools");
 const {
   openFilters,
   setFilter,
@@ -48,18 +51,13 @@ afterEach(async () => {
 });
 
 const dataViewId = "dataView_e67865b0-ce91-413c-bed7-1da486399633";
-const text1PropertyId = "cb584956-8f34-4d95-852e-eff4680a2673";
-const integer1PropertyId = "3f3f6be7-6e87-48d7-9ac1-89ac30dc43ce";
 const currencyPropertyId = "ff303553-9c3e-407f-b63c-a981c9597aee";
-const boolean1PropertyId ="d63fbdbb-3bbc-43c9-a9f2-a8585c42bbae";
-const date1PropertyId ="c8e93248-81c0-4274-9ff1-1b7688944877";
-const comboPropertyId ="14be2199-ad7f-43c3-83bf-a27c1fa66f7c";
-const tagPropertyId ="3c685902-b55b-45cb-807c-01e8386bb313";
 const decimalSeparator = ",";
 const thousandsSeparator = " ";
 
 describe("Html client", () => {
   it("Should format float number after input", async () => {
+    await restoreAllDataTypesTable();
     await switchLanguageTo({locale: "cs-CZ", page: page});
     await login(page);
     await openMenuItem(
@@ -100,6 +98,10 @@ describe("Html client", () => {
 
     const editorValue = await page.evaluate(x => x.value, numberEditor);
     expect(editorValue).toBe(`123${thousandsSeparator}456${decimalSeparator}789`);
+
+    await switchToTablePerspective({page: page});
+
+    await sleep(500); // to make sure there is no error after switching to table perspective
   });
   it("Should reformat float number after changes", async () => {
     await putNumericTestDataToAllDataTypes();

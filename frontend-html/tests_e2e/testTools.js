@@ -207,6 +207,19 @@ async function switchToFormPerspective(args){
   });
 }
 
+async function switchToTablePerspective(args){
+  const switchButton = await args.page.waitForSelector(
+    `.tablePerspectiveButton`,
+    {visible: true});
+  await sleep(300);
+
+  await clickAndWaitForSelector({
+    page: args.page,
+    clickable: switchButton,
+    selector:`.tablePerspectiveDirector`
+  });
+}
+
 async function inputByPressingKeys(args){
   for (const key of args.value) {
     await args.page.keyboard.press(key);
@@ -249,4 +262,5 @@ async function waitForFocus(args){
 
 module.exports = {sleep, xPathContainsClass, getImage, openMenuItem, login, getRowCountData, waitForRowCountData,
   getTableData, waitForRowCount, catchRequests, waitForRowSelected, clickAndWaitForXPath, clickAndWaitForSelector,
-  typeAndWaitForSelector, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus};
+  typeAndWaitForSelector, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus,
+  switchToTablePerspective};
