@@ -4,7 +4,7 @@ const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRe
   waitForRowCountData, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus
 } = require('./testTools');
 const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader, allDataTypesLazyMenuItemsId} = require("./modelIds");
-const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
+const { putNumericTestDataToAllDataTypes, clearScreenConfiguration} = require("./dbTools");
 const {
   openFilters,
   setFilter,
@@ -18,7 +18,6 @@ let browser;
 let page;
 
 beforeAll(async() => {
-  await restoreWidgetSectionTestMaster();
   await clearScreenConfiguration();
 });
 
@@ -101,5 +100,49 @@ describe("Html client", () => {
 
     const editorValue = await page.evaluate(x => x.value, numberEditor);
     expect(editorValue).toBe(`123${thousandsSeparator}456${decimalSeparator}789`);
+  });
+  it("Should reformat float number after changes", async () => {
+    await putNumericTestDataToAllDataTypes();
+    await switchLanguageTo({locale: "cs-CZ", page: page});
+    await login(page);
+    await openMenuItem(
+      page,
+      [
+        topMenuHeader,
+        widgetsMenuItemId,
+        allDataTypesLazyMenuItemsId
+      ]);
+
+    await waitForRowCountData(page, dataViewId,1);
+
+    await sleep(300);
+
+    await switchToFormPerspective({
+      page: page,
+      aPropertyId: currencyPropertyId
+    });
+    await sleep(300);
+    const numberEditor = await page.waitForSelector(
+      `#editor_${currencyPropertyId}`,
+      {visible: true});
+    await page.evaluate(x => {
+      x.focus();
+      x.setSelectionRange(5, 5);
+    }, numberEditor);
+    await sleep(200);
+
+    await page.keyboard.press("Backspace");
+
+    await sleep(500);
+
+    const cursorPosition = await page.evaluate(x => x.selectionStart, numberEditor);
+    expect(cursorPosition).toBe(4);
+
+    await page.keyboard.press("Tab");
+
+    await sleep(1000);
+
+    const editorValue = await page.evaluate(x => x.value, numberEditor);
+    expect(editorValue).toBe(`12${thousandsSeparator}356${decimalSeparator}789`);
   });
 });
