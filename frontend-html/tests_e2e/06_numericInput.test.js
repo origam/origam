@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const { backEndUrl} = require('./additionalConfig');
 const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount,
-  waitForRowCountData, clickAndWaitForSelector
+  waitForRowCountData, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus
 } = require('./testTools');
 const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader, allDataTypesLazyMenuItemsId} = require("./modelIds");
 const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
@@ -56,50 +56,12 @@ const boolean1PropertyId ="d63fbdbb-3bbc-43c9-a9f2-a8585c42bbae";
 const date1PropertyId ="c8e93248-81c0-4274-9ff1-1b7688944877";
 const comboPropertyId ="14be2199-ad7f-43c3-83bf-a27c1fa66f7c";
 const tagPropertyId ="3c685902-b55b-45cb-807c-01e8386bb313";
-const decimalSeparator = ".";
-const thousandsSeparator = ",";
-
-async function switchToFormPerspective(args){
-  const switchButton = await args.page.waitForSelector(
-    `.formPerspectiveButton`,
-    {visible: true});
-  await sleep(300);
-
-  await clickAndWaitForSelector({
-    page: args.page,
-    clickable: switchButton,
-    selector:`#editor_${args.aPropertyId}`
-  });
-}
-
-async function inputByPressingKeys(args){
-  for (const key of args.value) {
-    await args.page.keyboard.press(key);
-    await sleep(100);
-  }
-}
-
-async function waitForFocus(args){
-
-  const element = await args.page.waitForSelector(
-    "#" + args.elementId,
-    {visible: true});
-
-  await sleep(300);
-
-  for (let i = 0; i < 10 ; i++) {
-    await args.page.evaluate(x => x.focus(), element);
-    await sleep(100);
-    const focusedElementId = await args.page.evaluate(x => document.activeElement.attributes["id"].nodeValue);
-    if(focusedElementId === args.elementId){
-      return;
-    }
-  }
-  throw new Error("Could not set focus to:" + args.elementId);
-}
+const decimalSeparator = ",";
+const thousandsSeparator = " ";
 
 describe("Html client", () => {
   it("Should format float number after input", async () => {
+    await switchLanguageTo({locale: "cs-CZ", page: page});
     await login(page);
     await openMenuItem(
       page,

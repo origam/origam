@@ -194,6 +194,59 @@ async function clickAndWaitForXPath(args){
   throw Error(`${args.xPath} did not appear before timeout`);
 }
 
+async function switchToFormPerspective(args){
+  const switchButton = await args.page.waitForSelector(
+    `.formPerspectiveButton`,
+    {visible: true});
+  await sleep(300);
+
+  await clickAndWaitForSelector({
+    page: args.page,
+    clickable: switchButton,
+    selector:`#editor_${args.aPropertyId}`
+  });
+}
+
+async function inputByPressingKeys(args){
+  for (const key of args.value) {
+    await args.page.keyboard.press(key);
+    await sleep(100);
+  }
+}
+
+async function switchLanguageTo(args){
+
+  const languageLinkContainer = await args.page.waitForSelector(
+    "#languageLinkContainer",
+    {visible: true});
+  await sleep(300);
+
+  await args.page.evaluate((container, locale) =>
+      Array.from(container.children)
+        .filter(element=> element.tagName === "A" &&  element.attributes["value"].value === locale)
+        .forEach(element => element.click())
+    ,languageLinkContainer, args.locale);
+}
+
+async function waitForFocus(args){
+
+  const element = await args.page.waitForSelector(
+    "#" + args.elementId,
+    {visible: true});
+
+  await sleep(300);
+
+  for (let i = 0; i < 10 ; i++) {
+    await args.page.evaluate(x => x.focus(), element);
+    await sleep(100);
+    const focusedElementId = await args.page.evaluate(x => document.activeElement.attributes["id"].nodeValue);
+    if(focusedElementId === args.elementId){
+      return;
+    }
+  }
+  throw new Error("Could not set focus to:" + args.elementId);
+}
+
 module.exports = {sleep, xPathContainsClass, getImage, openMenuItem, login, getRowCountData, waitForRowCountData,
   getTableData, waitForRowCount, catchRequests, waitForRowSelected, clickAndWaitForXPath, clickAndWaitForSelector,
-  typeAndWaitForSelector};
+  typeAndWaitForSelector, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus};
