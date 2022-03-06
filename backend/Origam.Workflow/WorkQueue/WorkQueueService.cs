@@ -42,6 +42,7 @@ using System.Linq;
 using System.Threading;
 using Origam.Services;
 using System.Transactions;
+using Origam.Extensions;
 using Origam.Service.Core;
 using Timer = System.Timers.Timer;
 
@@ -292,7 +293,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("Testing notification " + notification.Description);
+                    log.Debug("Testing notification " + notification?.Description);
                 }
                 // check if the event type is equal (OnCreate, OnEscalate, etc...)
                 if (!notification.refWorkQueueNotificationEventId.Equals(eventTypeId))
@@ -332,7 +333,7 @@ namespace Origam.Workflow.WorkQueue
                     notificationSource = DataDocumentFactory.New(dataSet);
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug("Notification source result: " + notificationSource.Xml.OuterXml);
+                        log.Debug("Notification source result: " + notificationSource?.Xml?.OuterXml);
                     }
                 }
                 DataRow workQueueRow = ExtractWorkQueueRowIfNotNotificationDatastructureIsSet(wqc, queueItem);
@@ -355,7 +356,7 @@ namespace Origam.Workflow.WorkQueue
                     {
                         if (log.IsErrorEnabled)
                         {
-                            log.Error(string.Format("Skipping notification for workqueue notification sender definition {0}, no sender returned", sender.Id));
+                            log.Error(string.Format("Skipping notification for workqueue notification sender definition {0}, no sender returned", sender?.Id));
                         }
                         continue;
                     }
@@ -391,7 +392,7 @@ namespace Origam.Workflow.WorkQueue
                     }
                     if (log.IsDebugEnabled)
                     {
-                        log.Debug("Recipients: " + recipients.GetXml());
+                        log.Debug("Recipients: " + recipients?.GetXml());
                     }
                     if (!senders.Contains(recipientRow.refOrigamNotificationChannelTypeId))
                     {
@@ -869,7 +870,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Error occured while processing work queue items., Queue: " + wqc.Name + ", Command: " + command, ex);
+                    log.Error("Error occured while processing work queue items., Queue: " + wqc?.Name + ", Command: " + command, ex);
                 }
                 if (transactionId != null)
                 {
@@ -1106,12 +1107,15 @@ namespace Origam.Workflow.WorkQueue
             {
                 if (log.IsInfoEnabled)
                 {
-                    Guid itemId = (Guid)row["Id"];
+                    log.RunHandled(() =>
+                    {
+                        Guid itemId = (Guid)row["Id"];
 
-                    log.Info("Moving queue item " + itemId.ToString() + 
-                        " to queue id " + newQueueId.ToString() +
-                        (errorMessage == null ? "" : " with error: " 
-                        + errorMessage));
+                        log.Info("Moving queue item " + itemId + 
+                            " to queue id " + newQueueId +
+                            (errorMessage == null ? "" : " with error: " 
+                            + errorMessage));
+                    });
                 }
                 row["refWorkQueueId"] = newQueueId;
                 if (resetErrors || errorMessage == null)
@@ -1130,9 +1134,13 @@ namespace Origam.Workflow.WorkQueue
                 DatasetTools.GetDataSlice(slice, new List<DataRow> { row });
                 if (log.IsInfoEnabled)
                 {
-                    Guid itemId = (Guid)row["Id"];
-                    log.Info("Running notifications for item " + itemId.ToString() + ".");
+                    log.RunHandled(() =>
+                    {
+                        Guid itemId = (Guid)row["Id"];
+                        log.Info("Running notifications for item " + itemId + ".");
+                    });
                 }
+
                 ProcessNotifications(wqc, newQueueId, new Guid(WQ_EVENT_ONCREATE),
                     slice, transactionId);
             }
@@ -1203,8 +1211,12 @@ namespace Origam.Workflow.WorkQueue
                 DatasetTools.GetDataSlice(slice, new List<DataRow> { row });
                 if (log.IsInfoEnabled)
                 {
-                    Guid itemId = (Guid)row["Id"];
-                    log.Info("Running notifications for item " + itemId.ToString() + ".");
+                    log.RunHandled(() =>
+                    {
+                        Guid itemId = (Guid)row["Id"];
+                        log.Info("Running notifications for item " +
+                                 itemId + ".");
+                    });
                 }
                 ProcessNotifications(wqc, (Guid)row["refWorkQueueId"],
                      (Guid)ps.GetParameterValue("WorkQueueNotificationEvent_Command"),
@@ -1394,7 +1406,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     log.DebugFormat(
                         "Skipping external work queues load: adapterBusy: {0}, schemaLoaded: {1}, serviceBeingUnloaded: {2}",
-                        _externalQueueAdapterBusy, schemaService.IsSchemaLoaded, 
+                        _externalQueueAdapterBusy, schemaService?.IsSchemaLoaded, 
                         serviceBeingUnloaded);
                 }
                 return;
@@ -1530,7 +1542,7 @@ namespace Origam.Workflow.WorkQueue
                             {
                                 log.Info("Auto processing work queue item. Id: " +
                                           itemId + ", Queue: "
-                                          + q.Name + ", Command: " + cmd.Text);
+                                          + q.Name + ", Command: " + cmd?.Text);
                             }
                             string param1 = null;
                             string param2 = null;
@@ -1595,7 +1607,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     log.Fatal(
                         "Queue item processing failed. Id: " + itemId + ", Queue: " +
-                        q.Name, ex);
+                        q?.Name, ex);
                 }
             }
         }
@@ -1718,7 +1730,7 @@ namespace Origam.Workflow.WorkQueue
             WorkQueueLoaderAdapter adapter = null;
             if(log.IsInfoEnabled)
             {
-                log.Info("Loading external work queue: " + q.Name);
+                log.Info("Loading external work queue: " + q?.Name);
             }
             try
             {

@@ -152,7 +152,7 @@ namespace Origam.Server.Pages
                 {
                     log.Error(
                         $@"Error occured ({ex.GetType()}) for request: 
-                        {context.Request.AbsoluteUri}: {ex.Message}"
+                        {context.Request?.AbsoluteUri}: {ex.Message}"
                         , ex);
                 }
                 if (log.IsDebugEnabled)

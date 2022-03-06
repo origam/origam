@@ -80,7 +80,7 @@ namespace Origam.BI.SSRS
             };
             if(log.IsDebugEnabled)
             {
-                log.DebugFormat("SSRSService Timeout: {0}", 
+                log.DebugFormat("SSRSService Timeout: {0}",
                     settings.SQLReportServiceTimeout);
             }
             var serviceClient = new ReportExecutionServiceSoapClient(

@@ -51,7 +51,7 @@ export class TablePerspectiveDirector implements IIId {
       render: () => (
         <Observer key={this.$iid}>
           {() => (
-            <div className={cx(S.root, {isActive: this.tablePerspective.isActive})}>
+            <div className={cx(S.root, "tablePerspectiveDirector", {isActive: this.tablePerspective.isActive})}>
               <TableView/>
             </div>
           )}

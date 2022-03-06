@@ -324,14 +324,14 @@ namespace Origam.Workflow
 									{
 										if(this.Trace || log.IsInfoEnabled)
 										{
-											string logText = this.DataService.GetType().ToString() + " updated " + records.ToString() + " references on " + table.MappedObjectName + "." + (column as FieldMappingItem).MappedColumnName;
+											string logText = this.DataService.GetType().ToString() + " updated " + records + " references on " + table.MappedObjectName + "." + (column as FieldMappingItem).MappedColumnName;
 											if(log.IsInfoEnabled)
 											{
 												log.Info(logText);
 											}
 											if(this.Trace)
 											{
-												trace.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Deduplication", "Progress", originalEntity.MappedObjectName, "Audit: " + table.AuditingType.ToString(), "", logText);
+												trace?.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Deduplication", "Progress", originalEntity.MappedObjectName, "Audit: " + table.AuditingType, "", logText);
 											}
 										}
 									}

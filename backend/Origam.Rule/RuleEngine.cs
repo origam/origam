@@ -47,6 +47,7 @@ using DiffPlex.DiffBuilder;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Rule
@@ -200,9 +201,13 @@ namespace Origam.Rule
 		public void IncrementStatusPosition()
 		{
 			_statusPosition++;
-			if(log.IsDebugEnabled)
+			if (log.IsDebugEnabled)
 			{
-				log.DebugFormat("Percent complete: {0}", _statusPosition / _statusTotal * 100);
+				log.RunHandled(() =>
+				{
+					log.DebugFormat("Percent complete: {0}",
+						_statusPosition / _statusTotal * 100);
+				});
 			}
 		}
 
@@ -3165,7 +3170,7 @@ namespace Origam.Rule
 						{
 							log.Debug(ResourceUtils.GetString("PadProcessingRules", 
 								DateTime.Now.ToString(), ruleSet.Name, rowChanged.Table.TableName, pk,
-								(columnChanged == null ? "<none>" : columnChanged.ColumnName)));
+								(columnChanged == null ? "<none>" : columnChanged?.ColumnName)));
 						}
 					}			
 				}
@@ -3268,7 +3273,7 @@ namespace Origam.Rule
 			{
 				if(log.IsDebugEnabled)
 				{
-					log.Debug("Evaluating Rule: " + rule.Name + ", Target Field: " + (rule.TargetField == null ? "<none>" : rule.TargetField.Name));
+					log.Debug("Evaluating Rule: " + rule?.Name + ", Target Field: " + (rule?.TargetField == null ? "<none>" : rule?.TargetField.Name));
 				}
 
 				// columns which don't allow nulls will not get processed when empty
@@ -3397,7 +3402,10 @@ namespace Origam.Rule
 
 #region Processing Result
 #region TRACE
-				if(log.IsDebugEnabled)
+
+			if (log.IsDebugEnabled)
+			{
+				log.RunHandled(() =>
 				{
 					if(rule.TargetField != null)
 					{
@@ -3450,7 +3458,9 @@ namespace Origam.Rule
 					{
 						log.Debug("   " + ResourceUtils.GetString("PadRuleResult0") + result.ToString());
 					}
-				}
+				});
+			}
+
 #endregion
 
 				if(result is IDataDocument)
@@ -3497,41 +3507,44 @@ namespace Origam.Rule
 						}
 
 #region TRACE
-						if(log.IsDebugEnabled)
+						if (log.IsDebugEnabled)
 						{
-							foreach(DataColumn col in changedColumns)
+							log.RunHandled(() =>
 							{
-								string newLookupValue = null;
-								string oldLookupValue = null;
-								object resultValue = resultRow[col];
-								object oldValue = rowChanged[col.ColumnName];
-								string columnName = col.ColumnName;
-
-								if(col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute) && 
-								   col.ExtendedProperties.Contains(Const.OrigamDataType) && 
-								   !OrigamDataType.Array.Equals(col.ExtendedProperties[Const.OrigamDataType]))
+								foreach(DataColumn col in changedColumns)
 								{
-									if(resultValue != DBNull.Value)
-									{
-										newLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), resultValue.ToString());
-									}
-									if(oldValue != DBNull.Value)
-									{
-										oldLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), oldValue.ToString());
-									}
-								}
+									string newLookupValue = null;
+									string oldLookupValue = null;
+									object resultValue = resultRow[col];
+									object oldValue = rowChanged[col.ColumnName];
+									string columnName = col.ColumnName;
 
-								log.Debug("   " 
-									+ columnName + ": "
-									+ resultValue.ToString() 
-									+ (newLookupValue == null ? "" : " (" + newLookupValue + ")")
-									+ ResourceUtils.GetString("PadRuleResult1") 
-									+ ResourceUtils.GetString("PadRuleResult2") 
-									+ oldValue.ToString()
-									+ (oldLookupValue == null ? "" : " (" + oldLookupValue + ")"));
-							}
+									if(col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute) && 
+									   col.ExtendedProperties.Contains(Const.OrigamDataType) && 
+									   !OrigamDataType.Array.Equals(col.ExtendedProperties[Const.OrigamDataType]))
+									{
+										if(resultValue != DBNull.Value)
+										{
+											newLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), resultValue.ToString());
+										}
+										if(oldValue != DBNull.Value)
+										{
+											oldLookupValue = LookupValue(col.ExtendedProperties[Const.DefaultLookupIdAttribute].ToString(), oldValue.ToString());
+										}
+									}
+
+									log.Debug("   " 
+										+ columnName + ": "
+										+ resultValue.ToString() 
+										+ (newLookupValue == null ? "" : " (" + newLookupValue + ")")
+										+ ResourceUtils.GetString("PadRuleResult1") 
+										+ ResourceUtils.GetString("PadRuleResult2") 
+										+ oldValue.ToString()
+										+ (oldLookupValue == null ? "" : " (" + oldLookupValue + ")"));
+								}
+							});
 						}
-#endregion
+						#endregion
 
 						// copy the values into the source row
 						PauseRuleProcessing();
@@ -3862,7 +3875,7 @@ namespace Origam.Rule
                         {
                             log.Error(string.Format(
                                 "Failed evaluating security rule for child relation {0} for entity {1}", 
-                                rel.RelationName, entityId), ex);
+                                rel?.RelationName, entityId), ex);
                         }
                         throw;
                     }
@@ -4306,12 +4319,12 @@ namespace Origam.Rule
 
 			if(log.IsDebugEnabled)
 			{
-				log.Debug("Evaluating XPath Rule: " + rule.Name);
+				log.Debug("Evaluating XPath Rule: " + rule?.Name);
 				if(contextPosition != null)
 				{
-					log.Debug("Current Position: " + contextPosition.Current.Name);
+					log.Debug("Current Position: " + contextPosition?.Current?.Name);
 				}
-				log.Debug("  Input data: " + context.Xml.OuterXml);
+				log.Debug("  Input data: " + context.Xml?.OuterXml);
 			}
 
 			XPathNavigator nav = context.Xml.CreateNavigator();

@@ -47,6 +47,7 @@ export class NumberEditor extends React.Component<{
   onEditorBlur?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
+  id?: string
 }> {
   state = { value: this.formatForDisplay(this.props.value), cursorPosition: 0};
   disposer: undefined | (()=> void);
@@ -178,6 +179,7 @@ export class NumberEditor extends React.Component<{
     return (
       <div className={S.editorContainer}>
         <input
+          id={this.props.id}
           style={this.getStyle()}
           title={this.props.customNumberFormat || undefined}
           className={cx(S.input)}

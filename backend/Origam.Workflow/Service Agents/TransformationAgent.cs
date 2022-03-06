@@ -148,7 +148,7 @@ namespace Origam.Workflow
                 if(log.IsDebugEnabled)
                 {
                     log.DebugFormat("Opening output file {0}...", 
-                        Parameters["OutputFile"]);
+	                    Parameters.ContainsKey("OutputFile") ? Parameters["OutputFile"] : "");
                 }
                 output = File.Open(Parameters["OutputFile"] as string,
                     FileMode.Create, FileAccess.Write, FileShare.None);

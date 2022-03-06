@@ -79,7 +79,7 @@ namespace Origam.BI.SSRS
             if (log.IsDebugEnabled)
             {
                 log.DebugFormat("SSRSService Timeout: {0}", 
-                    reportService.Timeout);
+                    reportService?.Timeout);
             }
             byte[] result = null;
             string reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(report.ReportPath, parameters);
