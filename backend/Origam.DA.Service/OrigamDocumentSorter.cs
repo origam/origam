@@ -19,10 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Linq;
 using System.Xml;
-using System.Xml.Linq;
 using MoreLinq;
 
 namespace Origam.DA.Service
@@ -31,6 +29,7 @@ namespace Origam.DA.Service
     {
         public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
         {
+            var nameSpaceInfo = NameSpaceInfo.Create(doc);
             var newDoc = new OrigamXmlDocument();
             doc.FileElement.Attributes
                 .Cast<XmlAttribute>()
@@ -40,17 +39,19 @@ namespace Origam.DA.Service
             
             doc.ChildNodes
                 .Cast<XmlNode>()
-                .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc));
+                .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc, nameSpaceInfo));
             return newDoc;
         }
 
-        private static void CopyNodes(XmlNode node, XmlNode targetNode, OrigamXmlDocument newDoc)
+        private static void CopyNodes(XmlNode node, XmlNode targetNode, OrigamXmlDocument newDoc, NameSpaceInfo nameSpaceInfo)
         {
+            string fullName = nameSpaceInfo.AbstractSchemaPrefix + ":name";
+            string fullId = nameSpaceInfo.PersistencePrefix + ":id";
             node.ChildNodes
                 .Cast<XmlNode>()
                 .OrderBy(childNode => childNode.LocalName)
-                .ThenBy(childNode => childNode.Attributes?["name"]?.Value ?? "zzzzzzzz")
-                .ThenBy(childNode => childNode.Attributes?["x:id"]?.Value ?? "zzzzzzzz")
+                .ThenBy(childNode => childNode.Attributes?[fullName]?.Value ?? "zzzzzzzz")
+                .ThenBy(childNode => childNode.Attributes?[fullId]?.Value ?? "zzzzzzzz")
                 .ForEach(childNode =>
                 {
                     var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
@@ -59,7 +60,7 @@ namespace Origam.DA.Service
                     XmlElement childCopy = newDoc.CreateElement(childNode.Name, xmlns);
                     CopyAttributes(childNode, childCopy);
                     targetNode.AppendChild(childCopy);
-                    CopyNodes(childNode, childCopy, newDoc);
+                    CopyNodes(childNode, childCopy, newDoc, nameSpaceInfo);
                 });
         }
 
@@ -74,5 +75,28 @@ namespace Origam.DA.Service
                         namespaceURI: attr.NamespaceURI,
                         value: attr.Value));
         }
+    }
+
+    class NameSpaceInfo
+    {
+        public static NameSpaceInfo Create(OrigamXmlDocument doc)
+        {
+            var xmlAttributes = doc.FileElement?.Attributes?
+                .Cast<XmlAttribute>();
+            return new NameSpaceInfo
+            {
+                PersistencePrefix = xmlAttributes
+                    ?.FirstOrDefault(attr => attr.Value.StartsWith(
+                        "http://schemas.origam.com/model-persistence"))
+                    ?.LocalName ?? "",
+                AbstractSchemaPrefix = xmlAttributes
+                    ?.FirstOrDefault(attr => attr.Value.StartsWith(
+                        "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem"))
+                    ?.LocalName ?? ""
+            };
+        }
+
+        public string PersistencePrefix { get; set; }
+        public string AbstractSchemaPrefix { get; set; }
     }
 }
