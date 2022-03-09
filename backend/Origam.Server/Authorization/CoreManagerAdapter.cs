@@ -132,7 +132,7 @@ namespace Origam.Server.Authorization
         public async Task<InternalIdentityResult> ResetPasswordFromUsernameAsync(string userName, string token,
             string newPassword)
         {
-            var user = await FindByIdAsync(userName);
+            var user = await FindByNameAsync(userName);
             IdentityResult coreIdentityResult = await coreUserManager.ResetPasswordAsync(user, token, newPassword);
             return ToInternalIdentityResult(coreIdentityResult);
         }
