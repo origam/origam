@@ -56,6 +56,7 @@ import produce from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
 import { EventHandler } from "utils/EventHandler";
+import { hexToRgb } from "utils/colorUtils";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -477,9 +478,28 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
   }
 
+  assignColors(colors: {[key: string]: string}){
+    for (const colorEntry of Object.entries(colors)) {
+      const hexColorName = colorEntry[0];
+      let intColor = parseInt(colorEntry[1]);
+      if(isNaN(intColor)){
+        throw new Error(`Color code "${colorEntry[1]}" assigned to color "${hexColorName}" could not be parsed to integer`)
+      }
+      const hexColor = "#" + intColor.toString(16);
+      const root = document.querySelector(':root')! as any;
+      root.style.setProperty(hexColorName, hexColor);
+
+      const rgbColorName = hexColorName + "-rgb";
+      const rgbColor = hexToRgb(hexColor);
+      root.style.setProperty(rgbColorName, rgbColor);
+    }
+  }
+
   *initPortal(): any {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
+
+    this.assignColors(portalInfo.style.colors);
 
     if (portalInfo.title) {
       document.title = portalInfo.title;
