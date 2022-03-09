@@ -43,10 +43,11 @@ namespace Origam.DA.Service
             return newDoc;
         }
 
-        private static void CopyNodes(XmlNode node, XmlNode targetNode, OrigamXmlDocument newDoc, NameSpaceInfo nameSpaceInfo)
+        private static void CopyNodes(XmlNode node, XmlElement targetNode, OrigamXmlDocument newDoc, NameSpaceInfo nameSpaceInfo)
         {
             string fullName = nameSpaceInfo.AbstractSchemaPrefix + ":name";
             string fullId = nameSpaceInfo.PersistencePrefix + ":id";
+            CopyAttributes(node, targetNode);
             node.ChildNodes
                 .Cast<XmlNode>()
                 .OrderBy(childNode => childNode.LocalName)
@@ -58,7 +59,6 @@ namespace Origam.DA.Service
                         ? newDoc.FileElement.Attributes["xmlns"].Value
                         : childNode.NamespaceURI;
                     XmlElement childCopy = newDoc.CreateElement(childNode.Name, xmlns);
-                    CopyAttributes(childNode, childCopy);
                     targetNode.AppendChild(childCopy);
                     CopyNodes(childNode, childCopy, newDoc, nameSpaceInfo);
                 });
