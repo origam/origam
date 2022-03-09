@@ -22,10 +22,10 @@ import { getProperties } from "model/selectors/DataView/getProperties";
 import {
   IGuiHelper,
   IOption,
-  IPluginData,
+  IScreenPluginData,
   IPluginDataView,
   IPluginProperty,
-  IPluginTableRow,
+  IPluginTableRow, ISectionPluginData,
 } from "@origam/plugin-interfaces";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { getApi } from "model/selectors/getApi";
@@ -38,15 +38,26 @@ import { SimpleDropdown } from "@origam/components";
 import React from "react";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { MobileSimpleDropdown } from "gui/connections/MobileComponents/Form/MobileSimpleDropdown";
+import { IFormScreen } from "model/entities/types/IFormScreen";
 
 
-export function createPluginData(dataView: IDataView): IPluginData | undefined {
+export function createSectionPluginData(dataView: IDataView): ISectionPluginData | undefined {
   if (!dataView) {
     return undefined;
   }
   return {
     dataView: new PluginDataView(dataView),
     guiHelper: new GuiHelper(dataView)
+  }
+}
+
+export function createScreenPluginData(formScreen: IFormScreen): IScreenPluginData | undefined  {
+  if (!formScreen) {
+    return undefined;
+  }
+  return {
+    dataViews: formScreen.dataViews.map(dataView => new PluginDataView(dataView)),
+    guiHelper: new GuiHelper(formScreen)
   }
 }
 

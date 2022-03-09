@@ -19,17 +19,22 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Collections;
+using System.Data;
 using System.Xml;
 
 namespace Origam.OrigamEngine.ModelXmlBuilders
 {
     public class ScreenLevelPluginBuilder
     {
-        public static void Build(XmlElement parentNode, string text)
+        public static void Build(XmlElement parentNode, string text,
+            Hashtable dataSources,  DataSet dataset)
         {
             parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
             parentNode.SetAttribute("Type", "ScreenLevelPlugin");
             parentNode.SetAttribute("Name", text);
+
+            FormXmlBuilder.AddDataSource(dataSources, dataset);
         }
     }
 }
