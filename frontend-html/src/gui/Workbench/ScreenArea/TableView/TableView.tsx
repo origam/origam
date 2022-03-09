@@ -389,7 +389,7 @@ class HeaderRenderer implements IHeaderRendererData {
     }
     const headerContent: JSX.Element[] = [];
     if (filterControlsDisplayed) {
-      headerContent.push(<div className={S.filterRow}><FilterSettings key={`filter-settings-${columnId}`}
+      headerContent.push(<div className={"filterRow"}><FilterSettings key={`filter-settings-${columnId}`}
                                                                       autoFocus={autoFocus} ctx={this.dataView}/>
       </div>);
     }

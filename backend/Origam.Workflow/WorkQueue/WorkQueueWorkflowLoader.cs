@@ -175,7 +175,7 @@ namespace Origam.Workflow.WorkQueue
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Workflow loader result:");
-				log.Debug(resultData.Xml.OuterXml);
+				log.Debug(resultData?.Xml.OuterXml);
 			}
 			if(resultData == null)
 			{

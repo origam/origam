@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Origam.Extensions;
 
 namespace Origam
 {
@@ -230,9 +231,12 @@ namespace Origam
                 classType = assembly.GetType(classname);
                 if (log.IsDebugEnabled && classType == null)
                 {
-                    log.DebugFormat("Can't resolve type '{0}' from assembly path '{1}'",
-                        classname + "," + assemblyName,
-                        ComposeAssemblyPath(assemblyName));
+	                log.RunHandled(() =>
+	                {
+	                    log.DebugFormat("Can't resolve type '{0}' from assembly path '{1}'",
+	                        classname + "," + assemblyName,
+	                        ComposeAssemblyPath(assemblyName));
+	                });
                 }
             }
 #endif
