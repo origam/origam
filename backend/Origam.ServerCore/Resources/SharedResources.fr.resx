@@ -241,7 +241,7 @@
     <value>Réinitialiser le mot de passe</value>
   </data>
   <data name="ResetPasswordTitle" xml:space="preserve">
-    <value>Setzen Sie Ihr Passwort zurück.</value>
+    <value>Réinitialisez votre mot de passe</value>
   </data>
   <data name="Submit" xml:space="preserve">
     <value>Envoyer</value>
@@ -289,10 +289,10 @@
     <value>Vorname</value>
   </data>
   <data name="Email" xml:space="preserve">
-    <value>E-Mail</value>
+    <value>Email</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Passwort bestätigen</value>
+    <value>Mot de passe (confirmer)</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>
@@ -301,13 +301,13 @@
     <value>Extern Anmelden</value>
   </data>
   <data name="ResetPasswordConfirmation1" xml:space="preserve">
-    <value>Ihr Passwort wurde zurückgesetzt. Bitte klicken Sie </value>
+    <value>Votre mot de passe a été réinitialisé. Veuillez cliquer </value>
   </data>
   <data name="ResetPasswordConfirmation2" xml:space="preserve">
-    <value>hier</value>
+    <value>ici</value>
   </data>
   <data name="ResetPasswordConfirmation3" xml:space="preserve">
-    <value> um sich anzumelden.</value>
+    <value> pour vous connecter.</value>
   </data>
   <data name="EmailConfirmation1" xml:space="preserve">
     <value>Danke für die Bestätigung Ihrer E-Mail Adresse. Bitte klicken Sie </value>
@@ -344,5 +344,8 @@
   </data>
   <data name="UserNameRequired" xml:space="preserve">
     <value>nom d’utilisateur nécessaire</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Réinitialiser</value>
   </data>
 </root>
