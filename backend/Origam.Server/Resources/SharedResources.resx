@@ -414,4 +414,7 @@
   <data name="TwoFactorCodeRequired" xml:space="preserve">
     <value>Two factor code is required</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
 </root>
