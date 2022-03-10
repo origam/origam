@@ -1211,7 +1211,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 		                    parentNode: parentNode, 
 		                    text: renderData.Text,
 		                    dataSources: dataSources, 
-		                    dataset: dataset);
+		                    dataset: dataset,
+		                    dataStructure: structure,
+		                    dataMember: renderData.DataMember
+		                    );
 	                    break;                    
                     case "SectionLevelPlugin":
 	                    SectionLevelPluginBuilder.Build(
@@ -1859,13 +1862,5 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			return entityName;
 		}
-	    
-	    internal static void AddDataSource(Hashtable dataSources, DataSet dataSet)
-	    {
-		    foreach (DataTable table in dataSet.Tables)
-		    {
-			    dataSources[table.TableName] = table;
-		    }
-	    }
 	}
 }

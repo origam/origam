@@ -131,6 +131,7 @@ class GuiHelper implements IGuiHelper {
 
 class PluginDataView implements IPluginDataView {
   properties: IPluginProperty[];
+  entity: string;
 
   get tableRows(): IPluginTableRow[] {
     return this.dataView.tableRows;
@@ -148,6 +149,7 @@ class PluginDataView implements IPluginDataView {
           momentFormatterPattern: property.formatterPattern
         }
       });
+    this.entity = this.dataView.entity;
   }
 
   async saveConfiguration(pluginName: string, configuration: string): Promise<void> {

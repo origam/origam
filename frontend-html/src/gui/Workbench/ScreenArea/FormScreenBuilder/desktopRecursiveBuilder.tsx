@@ -44,7 +44,16 @@ export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
 
   function run(xso: any) {
     switch (xso.attributes.Type) {
-      case "ScreenLevelPlugin":
+      case "ScreenLevelPlugin":{
+        let sessionId = getSessionId(formScreen);
+        return pluginLibrary.getComponent(
+          {
+            name: xso.attributes.Name,
+            modelInstanceId: xso.attributes.ModelInstanceId,
+            sessionId: sessionId,
+            ctx: formScreen
+          });
+      }
       case "SectionLevelPlugin": {
         let dataView = getDataView(xso);
         let sessionId = getSessionId(formScreen);
@@ -73,13 +82,15 @@ export function desktopRecursiveBuilder(formScreen: IFormScreen, xso: any) {
         const serverStoredValue = formScreen.getPanelPosition(xso.attributes.ModelInstanceId);
         const panelPositionRatio = serverValueToPanelSizeRatio(serverStoredValue);
 
-        const panels: IPanelData[] = findUIChildren(xso).map((child, idx) => {
-          return {
-            id: idx,
-            positionRatio: idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
-            element: run(child),
-          }
-        });
+        const panels: IPanelData[] = findUIChildren(xso)
+          .map((child, idx) => {
+              return {
+                id: idx,
+                positionRatio: idx === 0 ? panelPositionRatio : 1 - panelPositionRatio,
+                element: run(child),
+              }
+            })
+          .filter(panel => panel.element !== null);
         return (
           <Splitter
             key={xso.$iid}
