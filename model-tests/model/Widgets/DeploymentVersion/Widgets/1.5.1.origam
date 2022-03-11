@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.2&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.3.1&#xD;&#xA;b9ab12fe-7f7d-43f7-bedc-93747647d6e4, 1.2.3&#xD;&#xA;bb8c67fb-44c1-4b41-8fce-4d50cd5a759d, 1.0.0&#xD;&#xA;255eec22-89c5-479a-b48d-e7bc9baa564a, 1.0.0"
+    x:id="d9cfd13d-c918-4796-b1e4-79f061baf82c"
+    asi:name="1.5.1"
+    dv:version="1.5.1">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:1.5.1.origam___commandText___82595853-e1eb-4396-913e-68985c5d8100.txt"
+      x:id="82595853-e1eb-4396-913e-68985c5d8100"
+      asi:name="00030_Database_Entity_TagInputBinding"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.5.1.origam___commandText___34d7d499-db94-4052-9f1a-b1df5a24a598.txt"
+      x:id="34d7d499-db94-4052-9f1a-b1df5a24a598"
+      asi:name="00010_Database_Entity_TagInputBinding"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:1.5.1.origam___commandText___4ae90a99-bcba-4b33-983c-5b42128a4f9e.txt"
+      x:id="4ae90a99-bcba-4b33-983c-5b42128a4f9e"
+      asi:name="00020_Database_Entity_TagInputSource"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

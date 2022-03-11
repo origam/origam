@@ -73,6 +73,20 @@
           x:id="3c4b6b0b-653b-4e52-b068-e8d01c91bd0f"
           asi:name="body"
           cr:xPath="/ROOT/WorkQueueEntry/MessageBody" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
+          x:id="bae1dd76-c9d1-45e5-ab29-f07a84e8ef12"
+          asi:name="recipientCCEmail"
+          cr:xPath="/ROOT/WorkQueueEntry/CC" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
+          x:id="c8ce6437-c9a6-4751-b923-06c8305e4a79"
+          asi:name="recipientBCCEmail"
+          cr:xPath="/ROOT/WorkQueueEntry/BCC" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
   </w:Workflow>

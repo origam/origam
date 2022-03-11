@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="10d459e0-d21f-45e8-8c05-26b75e3da072"
+    x:isFolder="true"
+    g:name="AutomaticTests"
+    g:rootItemType="DataLookup" />
+</x:file>
