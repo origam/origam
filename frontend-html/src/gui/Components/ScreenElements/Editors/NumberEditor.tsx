@@ -59,7 +59,7 @@ export class NumberEditor extends React.Component<{
       rawValue = value
         .replaceAll(getCurrentGroupSeparator(), "")
         .replaceAll(getCurrentDecimalSeparator(), ".")
-      if(value.trim() === ""){
+      if(value.trim() === "" || value.trim() === "-"){
         rawValue = "0";
       }
     }
@@ -224,13 +224,17 @@ function isValidNumber(value: string){
   let formattedValue = value
     .replaceAll(getCurrentGroupSeparator(), "")
     .replaceAll(getCurrentDecimalSeparator(), ".");
+  if(value.trim() === "-"){
+    return true;
+  }
   return !isNaN(Number(formattedValue))
 }
 
 function isValidCharacter(char: string){
   if(
     char === getCurrentDecimalSeparator() ||
-    char === getCurrentGroupSeparator()
+    char === getCurrentGroupSeparator() ||
+    char === "-"
   ) {
     return true;
   }
