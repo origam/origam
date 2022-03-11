@@ -83,7 +83,7 @@ describe("Html client", () => {
     await page.evaluate(x => x.focus(), numberEditor);
     await sleep(500);
 
-    await inputByPressingKeys({page: page, value: `123456${decimalSeparator}789`})
+    await inputByPressingKeys({page: page, value: `-123456${decimalSeparator}789`})
 
     await sleep(200);
 
@@ -97,7 +97,7 @@ describe("Html client", () => {
     await sleep(1000);
 
     const editorValue = await page.evaluate(x => x.value, numberEditor);
-    expect(editorValue).toBe(`123${thousandsSeparator}456${decimalSeparator}789`);
+    expect(editorValue).toBe(`-123${thousandsSeparator}456${decimalSeparator}789`);
 
     await switchToTablePerspective({page: page});
 
