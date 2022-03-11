@@ -379,9 +379,13 @@ namespace OrigamArchitect.Commands
             host.ExecuteWorkflow(workflowEngine);
         }
 
-        private static void ProcessCrystalReport(ISchemaItem item, string titleName)
+        private void ProcessCrystalReport(ISchemaItem item, string titleName)
         {
             ReportViewer viewer = new ReportViewer((item as CrystalReport), titleName);
+            foreach (DictionaryEntry param in Parameters)
+            {
+                viewer.Parameters.Add(param.Key, param.Value);
+            }
             viewer.LoadReport();
             WorkbenchSingleton.Workbench.ShowView(viewer);
         }
