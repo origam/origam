@@ -80,7 +80,7 @@ namespace Origam.BI.SSRS
             };
             if(log.IsDebugEnabled)
             {
-                log.DebugFormat("SSRSService Timeout: {0}", 
+                log.DebugFormat("SSRSService Timeout: {0}",
                     settings.SQLReportServiceTimeout);
             }
             var serviceClient = new ReportExecutionServiceSoapClient(
@@ -92,6 +92,7 @@ namespace Origam.BI.SSRS
             }
             else
             {
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Ntlm;
                 serviceClient.ClientCredentials.Windows.ClientCredential
                     = new NetworkCredential(
                         settings.SQLReportServiceAccount, 

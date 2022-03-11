@@ -91,6 +91,20 @@
       x:id="40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
       cs:isReturnValue="false"
       asi:name="attachmentName" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
+      cs:isReturnValue="false"
+      asi:name="recipientCCEmail" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="c949513d-ff5f-4def-98bf-f0a96332d30d"
+      cs:isReturnValue="false"
+      asi:name="recipientBCCEmail" />
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="8749b173-a49e-4b27-a4c4-5d85154ec8e0"
@@ -210,6 +224,20 @@
           cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/attachment/190d0ca6-5429-4252-8bce-c544daf65aff"
           x:id="f534fd4e-8e1e-4842-b2fc-c000b0823fd7"
           asi:name="attachment"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientCCEmail/77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
+          x:id="77dd05ac-c631-4265-b0a5-ac7ae2df8f38"
+          asi:name="recipientCCEmail"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientBCCEmail/c949513d-ff5f-4def-98bf-f0a96332d30d"
+          x:id="1fab4726-d91b-40e1-8d7e-9d757b5237ed"
+          asi:name="recipientBCCEmail"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0" xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0" xmlns:wqwc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand/6.0.0" xmlns:wqwcpm="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0" xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0" xmlns:wqwc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand/6.0.0" xmlns:wqwcpm="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping/6.0.0">
   <wqc:WorkQueueClass
     asi:abstract="false"
     wqc:entity="Root/DataEntity/__system/Mail.origam#Mail/af59fd91-736c-462c-9039-daece8811668"
@@ -11,27 +11,6 @@
     wqc:workQueueStructure="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/a919bc9e-69b5-4d8b-ae56-dca81195239b"
     wqc:workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/Sort/b79d29c4-0d97-45d1-8c3f-a13c04e1e789"
     wqc:workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_Mail.origam#WQ_Mail/GetByQueueId/26b49b77-9977-4787-91b5-001a64d260e1">
-    <wqwc:EntityUIAction
-      asi:abstract="false"
-      euia:actionType="Workflow"
-      euia:default="false"
-      x:id="7ccf6b61-001a-4cb8-8ed8-51e80fcc57dd"
-      euia:label="Send"
-      euia:modal="false"
-      euia:mode="ActiveRecord"
-      asi:name="Send"
-      euia:order="10"
-      euia:placement="Toolbar"
-      euia:refreshAfterReturn="None"
-      euia:roles="*"
-      euia:valueType="SavedValue"
-      wqwc:workflow="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/b882bf76-fea8-4b38-82bd-f41e851527fe">
-      <wqwcpm:WorkQueueWorkflowCommandParameterMapping
-        asi:abstract="false"
-        x:id="c8d0635c-6643-4327-bb92-242d41766855"
-        asi:name="WQ_Mail"
-        wqwcpm:value="QueueEntries" />
-    </wqwc:EntityUIAction>
     <wqcem:WorkQueueClassEntityMapping
       asi:abstract="false"
       x:id="df2ad81c-ecc7-46ee-b04b-21f903e4a802"
@@ -67,5 +46,36 @@
       x:id="4d072d00-7ef4-431d-9bec-ffe92c2c6eef"
       asi:name="refId"
       wqcem:xPath="/ROOT/Mail/@Id" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="7dd3e373-518d-4bfc-a7e8-53a6e0915de2"
+      asi:name="CC"
+      wqcem:xPath="/ROOT/Mail/@CC" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="aba7e1fb-7d6e-461a-9220-d57351701e47"
+      asi:name="BCC"
+      wqcem:xPath="/ROOT/Mail/@BCC" />
+    <wqwc:EntityUIAction
+      asi:abstract="false"
+      euia:actionType="Workflow"
+      euia:default="false"
+      x:id="7ccf6b61-001a-4cb8-8ed8-51e80fcc57dd"
+      euia:label="Send"
+      euia:modal="false"
+      euia:mode="ActiveRecord"
+      asi:name="Send"
+      euia:order="10"
+      euia:placement="Toolbar"
+      euia:refreshAfterReturn="None"
+      euia:roles="*"
+      euia:valueType="SavedValue"
+      wqwc:workflow="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/b882bf76-fea8-4b38-82bd-f41e851527fe">
+      <wqwcpm:WorkQueueWorkflowCommandParameterMapping
+        asi:abstract="false"
+        x:id="c8d0635c-6643-4327-bb92-242d41766855"
+        asi:name="WQ_Mail"
+        wqwcpm:value="QueueEntries" />
+    </wqwc:EntityUIAction>
   </wqc:WorkQueueClass>
 </x:file>

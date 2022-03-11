@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.1" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:cm="http://schemas.origam.com/Origam.Schema.MenuModel.ContextMenu/1.0.0" xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.1" xmlns:cm="http://schemas.origam.com/Origam.Schema.MenuModel.ContextMenu/1.0.0" xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0">
   <cm:Menu
     asi:abstract="false"
     x:id="98f7a754-3a51-484d-85d1-f6badf0c6657"
@@ -12,7 +12,7 @@
       x:id="18bdd6b8-570a-4e64-b1cd-0cf67caa3b73"
       frmi:listDataStructure="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/ff521d8b-dee0-495a-b2c3-54b2be2ea57c"
       frmi:listEntity="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/OrigamDataAuditLog/c7785741-76ae-4301-81ab-72705fd27930"
-      frmi:listMethod="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/ScreenFilter/e6df2187-4191-4a42-99a4-a24ec5734359"
+      frmi:listMethod="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/AggregateFilter/2820c8e5-d94c-4c70-8eda-7007091c04e4"
       frmi:listSortSet="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/Sort/e9851505-6fd6-464c-83a7-e62dbb5e3c46"
       frmi:method="Audit/DataStructure/Audit/AuditLogScreen.origam#AuditLogScreen/GetId/a8ae1641-709c-482f-829b-c89e428ec25f"
       asi:name="Audit"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,9 +10,36 @@
     tmi:mappedObjectName="OrigamTraceWorkflow"
     asi:name="OrigamTraceWorkflow"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
-      x:id="e9f16cc0-2075-4379-80f1-e582628b3e61" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="affcb263-3154-4d98-86ea-83f37a97c8aa"
+      asi:name="OrigamDebugWorkflowStep"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/72d8002c-7ddb-451c-9bee-a0e5dafb407b"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="9f2b9068-00b6-43a0-a144-5880349a51b9"
+        asi:name="OrigamDebugWorkflowStepKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/refOrigamTraceWorkflowId/29cd8e49-24a4-4132-969b-dfd2b5cc8a00" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="c4ff1a26-0577-4c66-8b0e-e4459553d43f"
+      asi:name="OrigamTraceRule"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamTraceRule.origam#OrigamTraceRule/32faa9c5-8576-40aa-9e6c-1660ebda3b0a"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="89671f73-8a12-4537-9b05-30bfec0f0022"
+        asi:name="OrigamTraceRuleKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamTraceRule.origam#OrigamTraceRule/RefOrigamTraceWorkflowId/8d527ec4-58ed-44d0-9f77-9c18be647905" />
+    </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -40,20 +67,8 @@
       asi:name="WorkflowName"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
-    <eri:EntityRelation
-      asi:abstract="false"
-      x:id="affcb263-3154-4d98-86ea-83f37a97c8aa"
-      asi:name="OrigamDebugWorkflowStep"
-      eri:or="false"
-      eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/72d8002c-7ddb-451c-9bee-a0e5dafb407b"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-        x:id="9f2b9068-00b6-43a0-a144-5880349a51b9"
-        asi:name="OrigamDebugWorkflowStepKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/refOrigamTraceWorkflowId/29cd8e49-24a4-4132-969b-dfd2b5cc8a00" />
-    </eri:EntityRelation>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="e9f16cc0-2075-4379-80f1-e582628b3e61" />
   </tmi:DataEntity>
 </x:file>

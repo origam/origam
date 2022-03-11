@@ -100,6 +100,7 @@ export class FormViewEditor extends React.Component<{
       case "Number":
         return (
           <NumberEditor
+            id={"editor_" + this.props.property?.modelInstanceId}
             value={this.props.value}
             isReadOnly={readOnly}
             isPassword={this.props.property!.isPassword}

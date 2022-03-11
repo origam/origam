@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0">
+  <ef:EntityFilter
+    asi:abstract="false"
+    x:id="7577e861-5e2e-4e24-a042-f87b37278536"
+    asi:name="FromTime"
+    x:parentId="1d8e4557-fa7c-4f1d-868d-9138ecf6bb97">
+    <fc:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fc:forceDatabaseCalculation="false"
+      fc:function="Root/Function/GreaterThanOrEqual.origam#GreaterThanOrEqual/eb654e87-6c71-4219-9c0e-cdfd0c01f382"
+      x:id="7ab1b418-66e9-4eb2-8a1e-21d152cb72cd"
+      adec:isPrimaryKey="false"
+      asi:name="GreaterOrEqual"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <fcp:FunctionCallParameter
+        asi:abstract="false"
+        x:id="57ba5536-a942-46d3-86c8-27f82f7bf8d3"
+        asi:name="Left"
+        fcp:parameter="Root/Function/GreaterThanOrEqual.origam#GreaterThanOrEqual/Left/88ef0007-3fc8-4898-b39d-e31d4a20c1b7">
+        <ecr:EntityColumnReference
+          asi:abstract="false"
+          ecr:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
+          x:id="a0067a9b-794e-45b0-895d-e023d6e74a22"
+          asi:name="RecordCreated" />
+      </fcp:FunctionCallParameter>
+      <fcp:FunctionCallParameter
+        asi:abstract="false"
+        x:id="eccfe709-3224-4c87-9949-510b8bf786b9"
+        asi:name="Right"
+        fcp:parameter="Root/Function/GreaterThanOrEqual.origam#GreaterThanOrEqual/Right/751618a5-8643-41d1-9512-f62e6444b1de">
+        <pr:ParameterReference
+          asi:abstract="false"
+          x:id="1f532a43-5edd-4db5-96c1-92e2373de0e7"
+          asi:name="DateFrom"
+          pr:parameter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/DateFrom/1b8603d2-5a8a-4a1a-b880-c18fb9d32068" />
+      </fcp:FunctionCallParameter>
+    </fc:DataEntityColumn>
+  </ef:EntityFilter>
+  <ef:EntityFilter
+    asi:abstract="false"
+    x:id="c3c3898e-7c36-4be2-baeb-99858933b3b5"
+    asi:name="ToTime"
+    x:parentId="1d8e4557-fa7c-4f1d-868d-9138ecf6bb97">
+    <fc:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fc:forceDatabaseCalculation="false"
+      fc:function="Root/Function/LessThan.origam#LessThan/d282e478-fcbb-4330-a26d-c4d9ba17403b"
+      x:id="77aba801-a13d-4d6d-bcd8-7dade1834400"
+      adec:isPrimaryKey="false"
+      asi:name="LessThan"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <fcp:FunctionCallParameter
+        asi:abstract="false"
+        x:id="1b936b3e-2049-4434-a8ef-115357a93480"
+        asi:name="Left"
+        fcp:parameter="Root/Function/LessThan.origam#LessThan/Left/a63f78ac-e508-4a8a-ba5d-fed0f483821d">
+        <ecr:EntityColumnReference
+          asi:abstract="false"
+          ecr:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/RecordCreated/2340af1e-d939-47ae-930b-e24b0cb3a756"
+          x:id="c52c5d09-5cb1-439a-80ac-1af6df75bd82"
+          asi:name="RecordCreated" />
+      </fcp:FunctionCallParameter>
+      <fcp:FunctionCallParameter
+        asi:abstract="false"
+        x:id="4ca73086-3df1-4335-95f6-23960ad61334"
+        asi:name="Right"
+        fcp:parameter="Root/Function/LessThan.origam#LessThan/Right/06b7c48e-ce52-45a1-ae5b-423bad79c199">
+        <pr:ParameterReference
+          asi:abstract="false"
+          x:id="9b51ec0c-282a-447b-8e85-39fca42b51c1"
+          asi:name="DateTo"
+          pr:parameter="Audit/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/DateTo/7b7fc210-d980-41c3-811b-48ddce2fadc9" />
+      </fcp:FunctionCallParameter>
+    </fc:DataEntityColumn>
+  </ef:EntityFilter>
+  <dp:Parameter
+    asi:abstract="false"
+    sip:allowNulls="true"
+    sip:dataLength="8"
+    sip:dataType="Date"
+    x:id="1b8603d2-5a8a-4a1a-b880-c18fb9d32068"
+    asi:name="DateFrom"
+    x:parentId="1d8e4557-fa7c-4f1d-868d-9138ecf6bb97" />
+  <dp:Parameter
+    asi:abstract="false"
+    sip:allowNulls="true"
+    sip:dataLength="8"
+    sip:dataType="Date"
+    x:id="7b7fc210-d980-41c3-811b-48ddce2fadc9"
+    asi:name="DateTo"
+    x:parentId="1d8e4557-fa7c-4f1d-868d-9138ecf6bb97" />
+</x:file>

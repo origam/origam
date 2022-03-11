@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="31791c3b-7265-439e-ac96-ddd57aa82579"
@@ -15,7 +15,32 @@
       dse:ignoreImplicitFilters="false"
       asi:name="AllDataTypes"
       dse:relationType="Normal"
-      dse:useUpsert="false" />
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/TagInputBinding/9a7b8c2c-f8a8-4fed-8470-895d2618499a"
+        x:id="ef0d62a1-e6de-465a-88e2-44b03610ac6c"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="TagInputBinding"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="89c90dee-440b-4b5c-b977-4fb472c43329"
+      asi:name="GetTop30">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+        dsfsf:filter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/687edddd-c19a-4f4b-9649-bdfcff866a23"
+        x:id="07e763a2-1b02-4cba-95fe-2b454ded2472"
+        asi:name="AllDataTypes_GetTop30"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
@@ -29,5 +54,17 @@
         asi:name="AllDataTypes_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="a6af8408-6d99-45f8-9084-0599c1cd0518"
+      asi:name="Default">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+        dsssi:fieldName="Date1"
+        x:id="0b84d6c2-adc5-4f69-9990-e374d22b2db0"
+        asi:name="AllDataTypes_0_Date1"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
   </ds:DataStructure>
 </x:file>

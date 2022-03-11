@@ -188,18 +188,9 @@ namespace Origam.Server.Pages
                         // xslt or stored directly in the resulting data
                         XPathNavigator nav = result.Xml.CreateNavigator();
                         nav.Select(xsltPage.ResultXPath);
-
-                        if (page.MimeType == MIME_OCTET_STREAM)
-                        {
-                            byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
-                            response.AddHeader("Content-Length", bytes.LongLength.ToString());
-                            response.BinaryWrite(bytes);
-                        }
-                        else
-                        {
-                            response.AddHeader("Content-Length", nav.Value.Length.ToString());
-                            response.Write(nav.Value);
-                        }
+                        byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
+                        response.AddHeader("Content-Length", bytes.LongLength.ToString());
+                        response.BinaryWrite(bytes);
                     }
                     else
                     {

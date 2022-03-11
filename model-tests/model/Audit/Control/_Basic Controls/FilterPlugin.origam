@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="575916ba-d730-48ab-bb83-ea3146951dc2"
+    ci:isComplex="false"
+    asi:name="FilterPlugin"
+    ci:namespace="Origam.Gui.Win"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Gui.Win.ScreenLevelPlugin">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/ScreenLevelPlugin.origam#ScreenLevelPlugin/dc4e66c4-895b-4ba8-9e11-3faa37508816"
+      x:id="853bf6fd-73c6-4d78-8316-e5344f254257" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="f4789802-6d88-465a-91d8-e2baae446c46"
+      cpi:localizable="false"
+      asi:name="FromParameterName"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="4bf848f1-abbf-4b4a-9c18-f2b06cefcbb1"
+      cpi:localizable="false"
+      asi:name="ToParameterName"
+      cpi:propertyType="String" />
+  </ci:Control>
+</x:file>
