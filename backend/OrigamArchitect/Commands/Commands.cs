@@ -384,7 +384,7 @@ namespace OrigamArchitect.Commands
             ReportViewer viewer = new ReportViewer((item as CrystalReport), titleName);
             foreach (DictionaryEntry param in Parameters)
             {
-				viewer.Parameters.Add(param.Key, param.Value);
+                viewer.Parameters.Add(param.Key, param.Value);
             }
             viewer.LoadReport();
             WorkbenchSingleton.Workbench.ShowView(viewer);
