@@ -3,7 +3,7 @@ const { backEndUrl } = require('./additionalConfig');
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
   catchRequests, waitForRowSelected
 } = require('./testTools');
-const {installMouseHelper} = require('./instalMouseHelper_');
+// const {installMouseHelper} = require('./instalMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
@@ -28,7 +28,7 @@ beforeEach(async () => {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   page = await browser.newPage();
-  await installMouseHelper(page);
+  // await installMouseHelper(page);
   await page.goto(backEndUrl);
   await page.evaluate(() => {
     localStorage.setItem("debugCloseAllForms", "1");
