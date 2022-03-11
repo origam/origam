@@ -153,6 +153,10 @@ jobs:
            **\*.exe.config
          TargetFolder: '$(build.artifactstagingdirectory)\origam-client'
        condition: succeededOrFailed()
+     - powershell: |
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamArchitect.exe.config OrigamArchitect.exe.config.template
+        ren $(build.artifactstagingdirectory)\origam-client\OrigamScheduler.exe.config OrigamScheduler.exe.config.template
+       displayName: 'Rename Config files'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-client'
        inputs:
