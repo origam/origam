@@ -205,7 +205,9 @@ namespace Origam.ServerCore
             DataRow businessPartnerRow = FindBusinessPartnerRowByEmail(normalizedEmail);
             if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
-            string userName = (string)businessPartnerRow["UserName"];
+            string userName = businessPartnerRow["UserName"] == DBNull.Value 
+                ? null 
+                : (string)businessPartnerRow["UserName"];
             DataRow origamUserRow = FindOrigamUserRowByUserName(userName);
             if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
             
@@ -285,6 +287,10 @@ namespace Origam.ServerCore
 
         private DataRow FindOrigamUserRowByUserName(string normalizedUserName)
         {
+            if (string.IsNullOrEmpty(normalizedUserName))
+            {
+                return null;
+            }
             DataSet origamUserDataSet = GetOrigamUserDataSet(
                 GET_ORIGAM_USER_BY_USER_NAME,
                 "OrigamUser_parUserName", normalizedUserName);
