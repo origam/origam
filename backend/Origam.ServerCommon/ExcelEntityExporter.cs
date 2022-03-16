@@ -69,7 +69,7 @@ namespace Origam.ServerCommon
             foreach (var row in rows)
             {
                 if (!isExportUnlimited && (settings.ExportRecordsLimit > -1)
-                                       && (rowIndex + 1 > settings.ExportRecordsLimit))
+                                       && (rowIndex > settings.ExportRecordsLimit))
                 {
                     FillExportLimitExceeded(workbook, sheet, rowIndex);
                     break;
