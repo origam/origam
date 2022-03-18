@@ -2537,10 +2537,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@xstate/inspect@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.6.3.tgz#44f73405b87d159a0d99631ec90887a06396961c"
-  integrity sha512-iCaAWpu1x2IbAdyZmUqwpcKlx8bJPuMd0ialDvynam7u/Y7bMNK9MlcqNWPO/2HCPe9yyMWPWgdR5wt77KmtsQ==
+"@xstate/inspect@^0.6.4":
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.6.4.tgz#dd12abb30375dcb0471b81e8db3b81377cd00be6"
+  integrity sha512-2Gz5wu/RdpeLEpQ93qWQe/lDybJHQq8NzgWyB/EmDUBhOggCeZu4JqJCT7/RsQ7FNSEenZILFbNTftOY00Kg4A==
   dependencies:
     fast-safe-stringify "^2.0.7"
 
