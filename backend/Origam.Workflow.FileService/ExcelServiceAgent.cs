@@ -26,6 +26,7 @@ using System.Data;
 using System.Collections;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using Origam.DA;
 using Origam.Excel;
 
@@ -60,7 +61,14 @@ namespace Origam.Workflow.FileService
             {
                 // read from variable
                 MemoryStream stream = new MemoryStream(file);
-                wb = new HSSFWorkbook(stream);
+                if(excelFormat == ExcelFormat.XLSX)
+                {
+                    wb = new XSSFWorkbook(stream);
+                }
+                else
+                {
+                    wb = new HSSFWorkbook(stream);
+                }
             }
             ISheet[] sheets = ExcelTools.Sheets(sheetName, wb);
             DataSet data = CreateEmptyOutputData();
