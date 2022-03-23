@@ -27,6 +27,8 @@
     "Html5ClientLogoUrl": "/customAssets/someFile2.png"
   },
   "IdentityServerConfig": {
+    "CookieExpirationMinutes": 60,
+    "CookieSlidingExpiration": true,
     "PathToJwtCertificate": "serverCore.pfx",
     "PasswordForJwtCertificate": "bla",
     "UseGoogleLogin": "false",
