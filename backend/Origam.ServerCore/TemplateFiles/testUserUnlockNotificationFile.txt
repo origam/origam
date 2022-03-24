@@ -1,0 +1,8 @@
+﻿Subject: User account got unlocked
+Hello &lt;%FirstNameAndName%&gt;
+ 
+Your user account &lt;%UserName%&gt; has been unlocked by the system administrator. You are now able to login again using your known user credentials or ask for a new password in the recovery password process.
+ 
+Kind regards
+
+Application support
