@@ -40,6 +40,9 @@ namespace Origam.Server.Configuration
         public WebClient WebClient { get; }
         public MobileClient MobileClient { get; }
         public ServerClient ServerClient { get; }
+        
+        public bool CookieSlidingExpiration { get; } 
+        public int CookieExpirationMinutes { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
@@ -49,7 +52,9 @@ namespace Origam.Server.Configuration
             UseGoogleLogin = identityServerSection.GetValue("UseGoogleLogin", false);
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
             GoogleClientSecret = identityServerSection["GoogleClientSecret"] ?? "";
-            
+            CookieSlidingExpiration = identityServerSection.GetValue("CookieSlidingExpiration", true);
+            CookieExpirationMinutes = identityServerSection.GetValue("CookieExpirationMinutes", 60);
+
             var webClientSection = identityServerSection
                 .GetSection("WebClient");
             if (webClientSection.GetChildren().Count() != 0)
