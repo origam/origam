@@ -61,6 +61,13 @@ export class Favorites {
     await this.saveFavorites();
   }
 
+  public async removeList(menuIds: string[]) {
+    for (const menuId of menuIds) {
+      this.favoriteFolders.find((folder) => folder.has(menuId))?.remove(menuId);
+    }
+    await this.saveFavorites();
+  }
+
   private async saveFavorites() {
     const api = getApi(this);
     const xmlFavorites = this.xmlConverter.favoriteIdsToXml(this.favoriteFolders);
