@@ -63,6 +63,29 @@ export class CFavorites extends React.Component<{
     this.favorites = getFavorites(this.props.ctx);
   }
 
+  componentDidMount() {
+   this.removeOutdatedMenuItemIds();
+  }
+
+  removeOutdatedMenuItemIds(){
+    const mainMenu = getMainMenu(this.props.ctx);
+    if(!mainMenu){
+      return;
+    }
+    const allMenuNodes = getAllElements(mainMenu?.menuUI)
+
+    const missingIds = this.props.folder.itemIds
+      .filter(itemId => {
+        const menuItem = allMenuNodes.find((childNode: any) => childNode.attributes["id"] === itemId)
+        return !menuItem;
+      })
+
+    runInFlowWithHandler({
+      ctx: this.props.ctx,
+      action: () => this.favorites.removeList(missingIds),
+    });
+  }
+
   get canBeDeleted() {
     return this.props.folder.id !== this.favorites.defaultFavoritesFolderId;
   }
@@ -141,6 +164,7 @@ export class CFavorites extends React.Component<{
                     <div  {...provided.droppableProps} ref={provided.innerRef}>
                       {this.props.folder.itemIds
                         .map(itemId => menuNodes.find((childNode: any) => childNode.attributes["id"] === itemId))
+                        .filter(node => node)
                         .map((node: any, index: number) =>
                           <Draggable
                             key={node.$iid}
