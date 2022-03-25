@@ -30,6 +30,7 @@ export const WorkbenchPage: React.FC<{
     <Splitter
       type="isHoriz"
       STYLE={SSplitter}
+      dontPrintLeftPane={true}
       panels={[
         ["sidebar", 1, props.sidebar],
         ["mainbar", 5, props.mainbar]
