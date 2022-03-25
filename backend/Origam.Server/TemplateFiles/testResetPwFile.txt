@@ -8,4 +8,4 @@ UserEmail: <%UserEmail%>
 EscapedUserEmail: <%EscapedUserEmail%>
 PortalBaseUrl: <%PortalBaseUrl%>
 
-link: <%PortalBaseUrl%>/Account/ResetPassword?code=<%Token%>
+link: <%PortalBaseUrl%>/Account/ResetPassword?code=<%Token%>&mail=<%EscapedUserEmail%>
