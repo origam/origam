@@ -156,7 +156,6 @@ describe("Html client", () => {
     const rowHeight = 30;
     const tableArea = await page.$(`#${dataViewId}  [class*='Table_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
-    console.log(box)
 
     // open first group on the first level
     await page.mouse.click(
@@ -210,7 +209,6 @@ describe("Html client", () => {
     const rowHeight = 30;
     const tableArea = await page.$(`#${dataViewId}  [class*='Table_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
-    console.log(box)
 
     // open first group on the first level
     await page.mouse.click(
