@@ -55,7 +55,10 @@ export class NumberEditor extends React.Component<{
   inputRef = React.createRef<HTMLInputElement>();
 
   formatForDisplay(value: string | number | null){
-    let rawValue = value === null ? "0" : value;
+    if(value === null || value === ""){
+      return ""
+    }
+    let rawValue = value;
     if(typeof value === "string"){
       rawValue = value
         .replaceAll(getCurrentGroupSeparator(), "")
@@ -72,6 +75,9 @@ export class NumberEditor extends React.Component<{
   }
 
   formatForOnChange(value: string | number | null){
+    if(value === null || value === ""){
+      return null;
+    }
     return this.formatForDisplay(value)
       .replaceAll(getCurrentGroupSeparator(), "")
       .replaceAll(getCurrentDecimalSeparator(), ".");
