@@ -115,4 +115,12 @@ body,
   .noPrint{
     display:none;
   }
+
+  h1.printOnly {
+    display: block;
+  }
+}
+
+.printOnly{
+  display: none;
 }
