@@ -190,7 +190,7 @@
     <value>Stornieren</value>
   </data>
   <data name="CheckEmail" xml:space="preserve">
-    <value>Bitte überprüfen Sie Ihre E-Mail-Postfach, um Ihres Passwort zurückzusetzen.</value>
+    <value>Bitte überprüfen Sie Ihr E-Mail-Postfach, um Ihr Passwort zurückzusetzen.</value>
   </data>
   <data name="ConfirmationOk1" xml:space="preserve">
     <value>Danke für die Bestätigung Ihrer E-Mail Adresse. Bitte</value>
