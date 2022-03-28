@@ -62,6 +62,9 @@ export class Favorites {
   }
 
   public async removeList(menuIds: string[]) {
+    if(menuIds.length === 0){
+      return;
+    }
     for (const menuId of menuIds) {
       this.favoriteFolders.find((folder) => folder.has(menuId))?.remove(menuId);
     }
