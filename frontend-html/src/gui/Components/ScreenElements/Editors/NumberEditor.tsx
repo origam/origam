@@ -54,12 +54,15 @@ export class NumberEditor extends React.Component<{
   inputRef = React.createRef<HTMLInputElement>();
 
   formatForDisplay(value: string | number | null){
-    let rawValue = value === null ? "0" : value;
+    if(value === null || value === ""){
+      return ""
+    }
+    let rawValue = value;
     if(typeof value === "string"){
       rawValue = value
         .replaceAll(getCurrentGroupSeparator(), "")
         .replaceAll(getCurrentDecimalSeparator(), ".")
-      if(value.trim() === ""){
+      if(value.trim() === "" || value.trim() === "-"){
         rawValue = "0";
       }
     }
@@ -71,6 +74,9 @@ export class NumberEditor extends React.Component<{
   }
 
   formatForOnChange(value: string | number | null){
+    if(value === null || value === ""){
+      return null;
+    }
     return this.formatForDisplay(value)
       .replaceAll(getCurrentGroupSeparator(), "")
       .replaceAll(getCurrentDecimalSeparator(), ".");
@@ -224,13 +230,17 @@ function isValidNumber(value: string){
   let formattedValue = value
     .replaceAll(getCurrentGroupSeparator(), "")
     .replaceAll(getCurrentDecimalSeparator(), ".");
+  if(value.trim() === "-"){
+    return true;
+  }
   return !isNaN(Number(formattedValue))
 }
 
 function isValidCharacter(char: string){
   if(
     char === getCurrentDecimalSeparator() ||
-    char === getCurrentGroupSeparator()
+    char === getCurrentGroupSeparator() ||
+    char === "-"
   ) {
     return true;
   }

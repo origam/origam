@@ -8,8 +8,8 @@
   "UserConfig": {
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",
-    "UserUnlockNotificationSubject": "",
-    "UserUnlockNotificationBodyFileName": "",
+    "UserUnlockNotificationSubject": "User Account Unlocked",
+    "UserUnlockNotificationBodyFileName": "testUserUnlockNotificationFile.txt",
     "UserRegistrationMailSubject": "Register",
     "UserRegistrationMailBodyFileName": "testNewUserFile.txt",
     "MultiFactorMailSubject": "Register",
@@ -27,6 +27,8 @@
     "Html5ClientLogoUrl": "/customAssets/someFile2.png"
   },
   "IdentityServerConfig": {
+    "CookieExpirationMinutes": 60,
+    "CookieSlidingExpiration": true,
     "PathToJwtCertificate": "serverCore.pfx",
     "PasswordForJwtCertificate": "bla",
     "UseGoogleLogin": "false",

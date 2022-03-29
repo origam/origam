@@ -288,7 +288,7 @@ namespace Origam.Server.IdentityServerGui.Account
         // GET: /Account/ResetPassword
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
+        public IActionResult ResetPassword(string code = null, string mail = null)
         {
             if (!_configOptions.AllowPasswordReset)
             {
@@ -302,7 +302,11 @@ namespace Origam.Server.IdentityServerGui.Account
             }
             else
             {
-                return  View();
+                var model = new ResetPasswordViewModel
+                {
+                    Email = mail
+                };
+                return  View(model);
             }
         }
         

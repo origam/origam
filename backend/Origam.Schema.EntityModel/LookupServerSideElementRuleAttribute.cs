@@ -36,12 +36,8 @@ namespace Origam.Schema.EntityModel
         {
             if (memberName == String.Empty | memberName == null) CheckRule(instance);
             var iDataLookup = ((ILookupReference)instance).Lookup;
-            if (iDataLookup == null)
-            {
-                return new DataException("No lookup  was found");
-            }
 
-            if(iDataLookup.IsFilteredServerside)
+            if(iDataLookup == null || iDataLookup.IsFilteredServerside)
             {
                 return null;
             }
