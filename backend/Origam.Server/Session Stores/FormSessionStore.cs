@@ -308,6 +308,16 @@ namespace Origam.Server
             }
         }
 
+        internal override object Save()
+        {
+            if (MenuItem.ReadOnlyAccess)
+            {
+                throw new Exception("Read only session cannot be saved");
+            }
+
+            return base.Save();
+        }
+
         public override object ExecuteAction(string actionId)
         {
             if (this.IsProcessing)
@@ -477,7 +487,7 @@ namespace Origam.Server
 
         public override bool HasChanges()
         {
-            return Data != null && Data.HasChanges();
+            return !MenuItem.ReadOnlyAccess && Data != null && Data.HasChanges();
         }
 
         public override IList RestoreData(object recordId)

@@ -1178,8 +1178,8 @@ namespace Origam.Server
         private static bool HasChanges(SessionStore sessionStore)
         {
             var hasChanges 
-                = ((sessionStore is FormSessionStore) 
-                && (sessionStore.Data != null) 
+                = ((sessionStore is FormSessionStore formSessionStore) 
+                && !formSessionStore.MenuItem.ReadOnlyAccess && (sessionStore.Data != null) 
                 && sessionStore.Data.HasChanges()) 
                 || ((sessionStore is WorkflowSessionStore workflowSessionStore)
                 && workflowSessionStore.AllowSave 
