@@ -1,4 +1,4 @@
-name: "CodeQL Backend 2021.1"
+name: "Build Backend 2021.1"
 
 on:
   push:

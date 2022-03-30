@@ -1,4 +1,4 @@
-name: "CodeQL Backend master"
+name: "Build Backend and Architect"
 
 on:
   push:
