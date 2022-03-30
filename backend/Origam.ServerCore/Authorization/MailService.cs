@@ -110,5 +110,13 @@ namespace Origam.ServerCore.Authorization
                 email: user.Email,
                 code: token);
         }
+        public void SendUserUnlockedMessage(IOrigamUser user)
+        {
+            mailSender.SendUserUnlockingNotification(
+                username: user.UserName,
+                email: user.Email,
+                firstNameAndName: user.FirstName + " " + user.Name,
+                languageId: user.LanguageId.ToString());
+        }
     }
 }
