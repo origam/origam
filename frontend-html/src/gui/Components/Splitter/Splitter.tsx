@@ -105,6 +105,7 @@ class SplitterDivider extends React.Component<{
 export class Splitter extends React.Component<{
   type: "isHoriz" | "isVert";
   sizeOverrideFirstPanel?: number;
+  dontPrintLeftPane?: boolean;
   id?: string;
   panels: Array<[any, number, React.ReactNode]>;
   onSizeChangeFinished?(
@@ -281,7 +282,7 @@ export class Splitter extends React.Component<{
       const panel = this.props.panels[i];
       content.push(
         <SplitterPanel
-          className={(this.props.STYLE || S).panel}
+          className={(this.props.STYLE || S).panel + (i === 0 && this.props.dontPrintLeftPane ? " noPrint" : "")}
           type={this.props.type}
           size={this.sizeMap.get(panel[0])!}
           key={`S${panel[0]}`}
