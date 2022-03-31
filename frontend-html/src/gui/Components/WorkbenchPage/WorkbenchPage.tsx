@@ -28,6 +28,7 @@ export const WorkbenchPage: React.FC<{
     <Splitter
       type="isHoriz"
       STYLE={SSplitter}
+      dontPrintLeftPane={true}
       panels={[
         {
           id: "sidebar",

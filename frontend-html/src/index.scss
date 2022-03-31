@@ -110,3 +110,17 @@ body,
 .leaflet-draw-actions a {
   color:var(--background8) !important;
 }
+
+@media print {
+  .noPrint{
+    display:none;
+  }
+
+  h1.printOnly {
+    display: block;
+  }
+}
+
+.printOnly{
+  display: none;
+}
