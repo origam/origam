@@ -222,7 +222,7 @@ class ImageCellRenderer implements IDataCellRenderer {
     const property = currentProperty();
     const iw = img.width;
     const ih = img.height;
-    const cw = property.width;
+    const cw = property.columnWidth;
     const ch = property.height;
     const WR = cw / iw;
     const HR = ch / ih;
