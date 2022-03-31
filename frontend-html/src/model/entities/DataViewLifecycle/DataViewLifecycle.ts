@@ -113,6 +113,8 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     } finally {
       if (wasRunning) {
         await this.startSelectedRowReaction(true);
+      }else{
+        await this.onSelectedRowIdChangeImm();
       }
     }
   }
@@ -144,6 +146,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const api = getApi(this);
       this.changeMasterRowCanceller && this.changeMasterRowCanceller();
       this.changeMasterRowCanceller = api.createCanceller();
+      console.log("getSelectedRowId(this)!: "+ getSelectedRowId(this)!)
       const crudResult = yield api.setMasterRecord(
         {
           SessionFormIdentifier: getSessionId(this),
