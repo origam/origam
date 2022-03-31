@@ -113,7 +113,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     } finally {
       if (wasRunning) {
         await this.startSelectedRowReaction(true);
-      }else{
+      } else {
         await this.onSelectedRowIdChangeImm();
       }
     }
