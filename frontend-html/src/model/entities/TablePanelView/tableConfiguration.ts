@@ -71,7 +71,7 @@ export class TableConfiguration implements ITableConfiguration {
     const newInstance = new TableConfiguration();
     newInstance.id = this.DefaultConfigId
     newInstance.columnConfigurations = properties
-      .map(property => new TableColumnConfiguration(property.id, property.width));
+      .map(property => new TableColumnConfiguration(property.id, property.columnWidth));
     newInstance.layout = layout;
     return newInstance;
   }
