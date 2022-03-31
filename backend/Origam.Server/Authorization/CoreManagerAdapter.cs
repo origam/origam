@@ -99,8 +99,14 @@ namespace Origam.Server.Authorization
         {
             var user = await FindByNameAsync(userName);
             if (user == null) { return false; }
-            return (await coreUserManager.SetLockoutEndDateAsync( user, null))
-                .Succeeded;
+
+            Task<IdentityResult> unlockTask = coreUserManager.SetLockoutEndDateAsync( user, null);
+            bool success = (await unlockTask).Succeeded;
+            if (success)
+            {
+                mailService.SendUserUnlockedMessage(user);
+            }
+            return success;
         }
 
         public async Task<InternalIdentityResult> ConfirmEmailAsync(string userId)
