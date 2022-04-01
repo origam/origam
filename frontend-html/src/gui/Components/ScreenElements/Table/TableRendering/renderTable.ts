@@ -57,6 +57,8 @@ import {
   clearTableDebugValues,
   setTableDebugRendered
 } from "gui/Components/ScreenElements/Table/TableRendering/DebugTableMonitor";
+import { flow } from "mobx";
+import selectors from "model/selectors-tree";
 
 export function renderTable(
   aCtx: any,
@@ -111,7 +113,11 @@ export function renderTable(
       renderRow(i);
     }
     setTableDebugRendered(context())
-  } finally {
+  } 
+  catch(error){
+    flow(() => selectors.error.getDialogController(aCtx).pushError(error))()
+  }
+  finally {
     for (let d of scRenderTable) d();
   }
 }
