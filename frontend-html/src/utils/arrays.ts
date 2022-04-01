@@ -112,7 +112,7 @@ Array.prototype.average = function () {
 }
 
 Array.prototype.sum = function () {
-  return this.reduce((a, b) => a + b);
+  return this.reduce((a, b) => a + b, 0);
 }
 
 Array.prototype.groupBy = function <T, K>(keyGetter: (key: T) => K) {
