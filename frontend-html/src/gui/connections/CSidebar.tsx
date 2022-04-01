@@ -48,7 +48,6 @@ import { SearchResults } from "gui/Components/Search/SearchResults";
 import { CFavorites } from "gui/connections/CFavorites";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { DragDropContext } from 'react-beautiful-dnd';
-import { Breakpoint } from "react-socks";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 
 @observer
@@ -227,39 +226,39 @@ export class CSidebar extends React.Component {
             </Provider>
           </SidebarSection>
           {!isMobileLayoutActive(this.workbench) &&
-            <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
-              <SidebarSectionDivider/>
-              <SidebarSectionHeader
-                isActive={this.sidebarState.activeSection === "Info"}
-                icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
-                label={T("Info", "infopanel_title")}
-                onClick={() => (this.sidebarState.activeSection = "Info")}
-              />
-              <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
-                <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
-              </SidebarSectionBody>
-            </SidebarSection>
+            <>
+              <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
+                <SidebarSectionDivider/>
+                <SidebarSectionHeader
+                  isActive={this.sidebarState.activeSection === "Info"}
+                  icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
+                  label={T("Info", "infopanel_title")}
+                  onClick={() => (this.sidebarState.activeSection = "Info")}
+                />
+                <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
+                  <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
+                </SidebarSectionBody>
+              </SidebarSection>
+              <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
+                <SidebarSectionDivider/>
+                <SidebarSectionHeader
+                  isActive={this.sidebarState.activeSection === "Search"}
+                  icon={
+                    <Icon
+                      src="./icons/search.svg"
+                      tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
+                    />
+                  }
+                  label={T("Search", "search_result", this.sidebarState.resultCount)}
+                  onClick={() => (this.sidebarState.activeSection = "Search")}
+                />
+                <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
+                  <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
+                </SidebarSectionBody>
+                <SidebarSectionDivider/>
+              </SidebarSection>
+            </>
           }
-          <Breakpoint medium up>
-            <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
-              <SidebarSectionDivider/>
-              <SidebarSectionHeader
-                isActive={this.sidebarState.activeSection === "Search"}
-                icon={
-                  <Icon
-                    src="./icons/search.svg"
-                    tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
-                  />
-                }
-                label={T("Search", "search_result", this.sidebarState.resultCount)}
-                onClick={() => (this.sidebarState.activeSection = "Search")}
-              />
-              <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
-                <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
-              </SidebarSectionBody>
-              <SidebarSectionDivider/>
-            </SidebarSection>
-          </Breakpoint>
         </DragDropContext>
       </Sidebar>
     );
