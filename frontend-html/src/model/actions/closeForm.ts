@@ -32,7 +32,7 @@ export function closeForm(ctx: any) {
   return function*closeForm(): Generator {
     const lifecycle = getWorkbenchLifecycle(ctx);
     const openedScreen = getOpenedScreen(ctx);
-    getMobileState(ctx).onFormClose(openedScreen.content.formScreen);
+    getMobileState(ctx).onFormClose(openedScreen?.content?.formScreen);
     yield*lifecycle.closeForm(openedScreen);
     if (openedScreen.content?.refreshOnReturnType) {
       const refreshOnReturnType = openedScreen.content.refreshOnReturnType;
