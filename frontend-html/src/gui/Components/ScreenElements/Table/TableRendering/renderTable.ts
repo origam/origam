@@ -114,10 +114,9 @@ export function renderTable(
     }
     setTableDebugRendered(context())
   } 
-  catch(error){
+  catch(error) {
     flow(() => selectors.error.getDialogController(aCtx).pushError(error))()
-  }
-  finally {
+  } finally {
     for (let d of scRenderTable) d();
   }
 }
