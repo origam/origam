@@ -40,7 +40,12 @@ export class DataSource implements IDataSource {
   rowState: IRowState = null as any;
 
   getFieldByName(name: string): IDataSourceField | undefined {
-    return this.fields.find(field => field.name === name);
+    let field = this.fields.find(field => field.name === name);
+    if(!field){
+      const filedNames = this.fields.map(field => field.name).join(", ");
+      throw new Error(`Filed named "${name}" was not found in data source fields : [${filedNames}]. Please make sure the DataBinding is set up correctly.`);
+    }
+    return field;
   }
 
   getFieldByIndex(index: number): IDataSourceField | undefined {
