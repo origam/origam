@@ -1,0 +1,2 @@
+﻿IF OBJECT_ID ('LockOutSynchronizer', 'TR') IS NOT NULL  
+   DROP TRIGGER LockOutSynchronizer; 

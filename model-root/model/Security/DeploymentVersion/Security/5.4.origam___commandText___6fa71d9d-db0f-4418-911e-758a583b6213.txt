@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamUser] DROP COLUMN [IsLockedOut];
