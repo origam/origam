@@ -1201,7 +1201,6 @@ namespace Origam.DA.Service
                     PrettyLine(sqlExpression);
                     sqlExpression.Append("WHERE ");
                 }
-
                 PostProcessCustomCommandParserWhereClause(
                     replaceParameterTexts, 
                     selectParameterReferences, 
@@ -1304,7 +1303,6 @@ namespace Origam.DA.Service
                 }
             }
         }
-
 
         internal bool IgnoreEntityWhenNoFilters(DataStructureEntity relation, DataStructureFilterSet filter, Hashtable dynamicParameters)
         {
