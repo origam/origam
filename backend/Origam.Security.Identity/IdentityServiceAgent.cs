@@ -746,9 +746,6 @@ namespace Origam.Security.Identity
             XmlAttribute isApproved = xmlDoc.CreateAttribute("IsApproved");
             isApproved.Value = user.IsApproved.ToString();
             userData.Attributes.Append(isApproved);
-            XmlAttribute isLockedOut = xmlDoc.CreateAttribute("IsLockedOut");
-            isLockedOut.Value = user.IsLockedOut.ToString();
-            userData.Attributes.Append(isLockedOut);
             XmlAttribute isOnline = xmlDoc.CreateAttribute("IsOnline");
             userData.Attributes.Append(isOnline);
             isOnline.Value = user.IsOnline.ToString();

@@ -30,7 +30,6 @@ namespace Origam.Security.Common
         DateTime CreationDate { get; }
         string Email { get; set; }
         bool IsApproved { get; set; }
-        bool IsLockedOut { get; set; }
         bool IsOnline { get; set; }
         DateTime LastActivityDate { get;  }
         // TODO: UserServerCore stores lockoutEndDate into LastLockoutEndDate.

@@ -58,7 +58,6 @@ namespace Origam.Server.Authorization
             user.EmailConfirmed = (bool)origamUserRow["EmailConfirmed"];
             user.LastLockoutDate = GetDate(origamUserRow,"LastLockoutDate" );
             user.LastLoginDate = GetDate(origamUserRow,"LastLoginDate");
-            user.IsLockedOut = (bool)origamUserRow["IsLockedOut"];
             user.ProviderUserKey = (Guid)origamUserRow["refBusinessPartnerId"];
             user.BusinessPartnerId = user.ProviderUserKey.ToString();
             user.PasswordHash = (string)origamUserRow["Password"];
@@ -90,7 +89,6 @@ namespace Origam.Server.Authorization
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
             SetDate(origamUserRow,"LastLockoutDate", user.LastLockoutDate);
             SetDate(origamUserRow,"LastLoginDate",user.LastLoginDate);
-            origamUserRow["IsLockedOut"] = user.IsLockedOut;
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
             origamUserRow["Password"] = user.PasswordHash;
             origamUserRow["FailedPasswordAttemptCount"] = user.FailedPasswordAttemptCount;
@@ -105,7 +103,6 @@ namespace Origam.Server.Authorization
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
             SetDate(origamUserRow,"LastLockoutDate", user.LastLockoutDate);
             SetDate(origamUserRow,"LastLoginDate",user.LastLoginDate);
-            origamUserRow["IsLockedOut"] = user.IsLockedOut;
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
             origamUserRow["Password"] = user.PasswordHash;
             origamUserRow["RecordUpdated"] = DateTime.Now;
