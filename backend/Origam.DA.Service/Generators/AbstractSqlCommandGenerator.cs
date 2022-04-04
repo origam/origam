@@ -1201,11 +1201,13 @@ namespace Origam.DA.Service
                     PrettyLine(sqlExpression);
                     sqlExpression.Append("WHERE ");
                 }
-                sqlExpression.Append(
-                    PostProcessCustomCommandParserWhereClause(
-                        filterCommandParser.Sql, entity,
-                        replaceParameterTexts, dynamicParameters, 
-                        selectParameterReferences));
+
+                PostProcessCustomCommandParserWhereClause(
+                    replaceParameterTexts, 
+                    selectParameterReferences, 
+                    filterCommandParser, 
+                    sqlExpression, entity, 
+                    dynamicParameters);
             }
 
             // GROUP BY
@@ -1276,6 +1278,31 @@ namespace Origam.DA.Service
             }
 
             return finalString;
+        }
+
+        private void PostProcessCustomCommandParserWhereClause(
+            Hashtable replaceParameterTexts,
+            Hashtable selectParameterReferences,
+            FilterCommandParser filterCommandParser, StringBuilder sqlExpression,
+            DataStructureEntity entity, Hashtable dynamicParameters)
+        {
+            if (filterCommandParser.Sql == null)
+            {
+                return;
+            }
+            string[] sqlParts = filterCommandParser.Sql.Split("AND");
+            for (int i = 0; i < sqlParts.Length; i++)
+            {
+                sqlExpression.Append(
+                    PostProcessCustomCommandParserWhereClause(
+                        sqlParts[i], entity,
+                        replaceParameterTexts, dynamicParameters,
+                        selectParameterReferences));
+                if (i < sqlParts.Length - 1)
+                {
+                    sqlExpression.Append(" AND ");
+                }
+            }
         }
 
 
