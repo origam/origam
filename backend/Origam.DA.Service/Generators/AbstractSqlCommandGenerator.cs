@@ -1201,11 +1201,12 @@ namespace Origam.DA.Service
                     PrettyLine(sqlExpression);
                     sqlExpression.Append("WHERE ");
                 }
-                sqlExpression.Append(
-                    PostProcessCustomCommandParserWhereClause(
-                        filterCommandParser.Sql, entity,
-                        replaceParameterTexts, dynamicParameters, 
-                        selectParameterReferences));
+                PostProcessCustomCommandParserWhereClause(
+                    replaceParameterTexts, 
+                    selectParameterReferences, 
+                    filterCommandParser, 
+                    sqlExpression, entity, 
+                    dynamicParameters);
             }
 
             // GROUP BY
@@ -1278,6 +1279,30 @@ namespace Origam.DA.Service
             return finalString;
         }
 
+        private void PostProcessCustomCommandParserWhereClause(
+            Hashtable replaceParameterTexts,
+            Hashtable selectParameterReferences,
+            FilterCommandParser filterCommandParser, StringBuilder sqlExpression,
+            DataStructureEntity entity, Hashtable dynamicParameters)
+        {
+            if (filterCommandParser.Sql == null)
+            {
+                return;
+            }
+            string[] sqlParts = filterCommandParser.Sql.Split("AND");
+            for (int i = 0; i < sqlParts.Length; i++)
+            {
+                sqlExpression.Append(
+                    PostProcessCustomCommandParserWhereClauseSegment(
+                        sqlParts[i], entity,
+                        replaceParameterTexts, dynamicParameters,
+                        selectParameterReferences));
+                if (i < sqlParts.Length - 1)
+                {
+                    sqlExpression.Append(" AND ");
+                }
+            }
+        }
 
         internal bool IgnoreEntityWhenNoFilters(DataStructureEntity relation, DataStructureFilterSet filter, Hashtable dynamicParameters)
         {
@@ -3896,7 +3921,7 @@ namespace Origam.DA.Service
         }
 
 
-        internal string PostProcessCustomCommandParserWhereClause(
+        internal string PostProcessCustomCommandParserWhereClauseSegment(
             string input, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters, 
             Hashtable parameterReferences)
