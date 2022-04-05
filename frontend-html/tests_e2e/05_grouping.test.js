@@ -53,6 +53,7 @@ const comboPropertyId ="14be2199-ad7f-43c3-83bf-a27c1fa66f7c";
 const tagPropertyId ="3c685902-b55b-45cb-807c-01e8386bb313";
 
 async function setGrouping() {
+  await sleep(300);
   const threeDotMenuButton = await page.waitForSelector(
     `#${dataViewId} .threeDotMenu`,
     {visible: true}
@@ -94,6 +95,8 @@ async function setGrouping() {
 }
 
 async function clearGrouping() {
+  await sleep(300);
+
   const threeDotMenuButton = await page.waitForSelector(
     `#${dataViewId} .threeDotMenu`,
     {visible: true}
