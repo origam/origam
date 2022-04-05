@@ -1293,7 +1293,7 @@ namespace Origam.DA.Service
             for (int i = 0; i < sqlParts.Length; i++)
             {
                 sqlExpression.Append(
-                    PostProcessCustomCommandParserWhereClause(
+                    PostProcessCustomCommandParserWhereClauseSegment(
                         sqlParts[i], entity,
                         replaceParameterTexts, dynamicParameters,
                         selectParameterReferences));
@@ -3921,7 +3921,7 @@ namespace Origam.DA.Service
         }
 
 
-        internal string PostProcessCustomCommandParserWhereClause(
+        internal string PostProcessCustomCommandParserWhereClauseSegment(
             string input, DataStructureEntity entity,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters, 
             Hashtable parameterReferences)
