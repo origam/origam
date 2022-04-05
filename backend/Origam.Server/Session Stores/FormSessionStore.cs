@@ -519,6 +519,11 @@ namespace Origam.Server
 
         private DataSet LoadDataPiece(object parentId)
         {
+            if (DelayedLoadingParameterName == null)
+            {
+                LoadData();
+            }
+
             return core.DataService.LoadData(DataStructureId, _menuItem.MethodId, 
                 _menuItem.DefaultSetId, Guid.Empty, null, 
                 DelayedLoadingParameterName, parentId);
