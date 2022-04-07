@@ -74,7 +74,6 @@ export class MobileMain extends React.Component<{}> {
         {this.renderStateComponent()}
         <div className={S.dialog + " " + (this.mobileState.dialogComponent === null ? S.hidden : "")}>
           {this.mobileState.dialogComponent}
-          {/*<Dialog/>*/}
         </div>
       </>
     );

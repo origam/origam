@@ -25,14 +25,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 }
 
 .topBar {
-  height: 50px;
+  max-height: 50px;
+  min-height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .bottomBar {
-  height: 50px;
+  max-height: 50px;
   min-height: 50px;
   display: flex;
   align-items: flex-end;
