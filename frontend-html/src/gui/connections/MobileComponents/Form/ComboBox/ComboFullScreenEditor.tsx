@@ -17,11 +17,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import S from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor.module.scss";
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
-import { CtxDropdownRefCtrl } from "@origam/components";
 import { DropdownEditorTable } from "modules/Editors/DropdownEditor/DropdownEditorBody";
 import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/ComboBox/MobileDropdownBehavior";
 import { DropdownColumnDrivers, DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
