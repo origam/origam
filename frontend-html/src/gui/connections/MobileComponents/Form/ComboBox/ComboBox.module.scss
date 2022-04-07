@@ -49,3 +49,10 @@ div.mobileInput div.link {
     color: var(--background5);
   }
 }
+
+.button {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  min-width: 45px;
+}
