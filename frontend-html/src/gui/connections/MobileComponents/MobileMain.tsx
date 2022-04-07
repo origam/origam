@@ -41,8 +41,6 @@ import {
   SearchLayoutState
 } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
-import { Dialog } from "gui/connections/MobileComponents/Dialog";
-
 
 @observer
 export class MobileMain extends React.Component<{}> {
