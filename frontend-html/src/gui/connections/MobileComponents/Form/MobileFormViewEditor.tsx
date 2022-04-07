@@ -96,6 +96,7 @@ export const MobileFormViewEditor: React.FC<{
         property={props.property}
         onChange={onChange}
         onPlusButtonClick={() => {
+          const previousState = mobileState.layoutState;
           mobileState.layoutState = new EditLayoutState(
             <XmlBuildDropdownEditor
               {...props}
@@ -103,7 +104,7 @@ export const MobileFormViewEditor: React.FC<{
               dataView={getDataView(props.property)}
               property={props.property}
               editingTags={true}
-              onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}
+              onValueSelected={() => mobileState.layoutState = previousState}
             />,
             props.property.name
           )

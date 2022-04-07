@@ -35,13 +35,13 @@ import { CScreenContent } from "gui/connections/CScreenContent";
 import { ScreenHeader } from "gui/connections/MobileComponents/ScreenHeader";
 import {
   AboutLayoutState,
-  DialogLayoutState,
   EditLayoutState,
   MenuLayoutState,
   ScreenLayoutState,
   SearchLayoutState
 } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { Dialog } from "gui/connections/MobileComponents/Dialog";
 
 
 @observer
@@ -62,13 +62,25 @@ export class MobileMain extends React.Component<{}> {
   }
 
   componentDidMount() {
-    if(!getActiveScreen(this.workbench)){
+    if (!getActiveScreen(this.workbench)) {
       this.mobileState.layoutState = new MenuLayoutState();
     }
     this.about.update();
   }
 
   renderMainPageContents() {
+    return (
+      <>
+        {this.renderStateComponent()}
+        <div className={S.dialog + " " + (this.mobileState.dialogComponent === null ? S.hidden : "")}>
+          {this.mobileState.dialogComponent}
+          {/*<Dialog/>*/}
+        </div>
+      </>
+    );
+  }
+
+  private renderStateComponent() {
     if (this.mobileState.layoutState instanceof MenuLayoutState) {
       return <CSidebar/>;
     }
@@ -86,9 +98,6 @@ export class MobileMain extends React.Component<{}> {
     }
     if (this.mobileState.layoutState instanceof EditLayoutState) {
       return (this.mobileState.layoutState as EditLayoutState).component
-    }
-    if(this.mobileState.layoutState instanceof DialogLayoutState){
-      return (this.mobileState.layoutState as DialogLayoutState).component
     }
     if (this.mobileState.layoutState instanceof AboutLayoutState) {
       return <MobileAboutView

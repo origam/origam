@@ -5,6 +5,7 @@ import { IFormScreen } from "model/entities/types/IFormScreen";
 import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 import { IMobileLayoutState, MenuLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import React from "react";
 
 export class MobileState {
   _workbench: IWorkbench | undefined;
@@ -16,6 +17,9 @@ export class MobileState {
   activeDataViewId: string | undefined;
 
   breadCrumbsState = new BreadCrumbsState()
+
+  @observable.ref
+  dialogComponent: React.ReactElement | null = null;
 
   initialize(workbench: IWorkbench) {
     let workbenchLifecycle = getWorkbenchLifecycle(workbench);
