@@ -76,7 +76,8 @@ export class DropdownEditorTable extends  React.Component<{
   dataTable: DropdownDataTable,
   rectCtrl: BoundingRect,
   beh: IDropdownEditorBehavior,
-  rowHeight: number
+  rowHeight: number,
+  height?: number
 }> {
   refMultiGrid = createRef<MultiGrid>();
   @observable
@@ -92,6 +93,9 @@ export class DropdownEditorTable extends  React.Component<{
   }
 
   get height(){
+    if(this.props.height){
+      return this.props.height;
+    }
     let height = 0;
     for (let i = 0; i < this.rowCount; i++) {
       height = height + this.props.rowHeight;
