@@ -52,13 +52,16 @@ export function mobileRecursiveBuilder(args:{
           return args.componentFactory.getDetailNavigator(masterNavigationNode);
         }
       }
-      masterNavigationNode.addChild(detailNavigationNode);
       const detailReactElement = run(detailXmlNode, detailNavigationNode);
 
       if (!masterReactElement) {
-        throw new Error("Master element cannot be null");
+        // Happens if the top element is a splitPanel with tabControls in both master and detail slots.
+        return wrapInNavigator(masterNavigationNode, detailNavigationNode,
+          args.formScreen, masterXmlNode,  xso);
       }
+      masterNavigationNode.addChild(detailNavigationNode);
       assignMasterNavigationNodeProperties(masterNavigationNode, masterReactElement, masterXmlNode, xso);
+
       if (detailReactElement) {
         assignDetailNavigationNodeProperties(detailNavigationNode, detailReactElement, detailXmlNode);
       }
@@ -109,6 +112,17 @@ export function mobileRecursiveBuilder(args:{
         });
     }
     return args.desktopRecursiveBuilder(args.formScreen, xso);
+  }
+
+  function wrapInNavigator(childNode1: NavigationNode, childNode2: NavigationNode,
+      formScreen: IFormScreen, masterXmlNode: any,  parentXmlElement: any){
+    const navigationNode = new NavigationNode();
+    navigationNode.id = parentXmlElement.attributes.Id;
+    navigationNode.addChild(childNode1);
+    navigationNode.addChild(childNode2);
+    navigationNode.name = getMasterNavigationNodeName(masterXmlNode, parentXmlElement);
+    navigationNode.formScreen = formScreen
+    return args.componentFactory.getDetailNavigator(navigationNode);
   }
 
   function getMasterNavigationNodeName(xmlNode: any, xmlParentNode?: any) {
