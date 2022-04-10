@@ -17,16 +17,24 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
-import { handleError } from "model/actions/handleError";
+.root {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-export function getNotificationBoxContent(ctx: any) {
-  return function*getNotificationBoxContent() {
-    try {
-      yield*getNotifications(ctx).getNotificationBoxContent();
-    } catch (e) {
-      yield*handleError(ctx)(e);
-      throw e;
-    }
-  };
+.topBar {
+  max-height: 50px;
+  min-height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottomBar {
+  max-height: 50px;
+  min-height: 50px;
+  display: flex;
+  align-items: flex-end;
 }

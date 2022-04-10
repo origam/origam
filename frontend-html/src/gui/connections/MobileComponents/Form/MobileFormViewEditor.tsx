@@ -30,7 +30,7 @@ import { FormViewEditor } from "gui/Workbench/ScreenArea/FormView/FormViewEditor
 import { MobileTagInputEditor } from "gui/connections/MobileComponents/Form/ComboBox/MobileTagInputEditor";
 import { MobXProviderContext } from "mobx-react";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
+import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { MobileDateTimeEditor } from "gui/connections/MobileComponents/Form/MobileDateTimeEditor";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
@@ -96,6 +96,7 @@ export const MobileFormViewEditor: React.FC<{
         property={props.property}
         onChange={onChange}
         onPlusButtonClick={() => {
+          const previousState = mobileState.layoutState;
           mobileState.layoutState = new EditLayoutState(
             <XmlBuildDropdownEditor
               {...props}
@@ -103,7 +104,7 @@ export const MobileFormViewEditor: React.FC<{
               dataView={getDataView(props.property)}
               property={props.property}
               editingTags={true}
-              onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}
+              onValueSelected={() => mobileState.layoutState = previousState}
             />,
             props.property.name
           )
