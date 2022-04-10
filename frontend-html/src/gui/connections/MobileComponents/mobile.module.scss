@@ -39,10 +39,3 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 :root {
   --viewSideMargin: 20px;
 }
-
-div:global(.inputBtn) {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  min-width: 45px;
-}
