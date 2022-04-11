@@ -6,11 +6,11 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   gitcredentials=""
 	   gitcloneBranch="-b master"
 	   fullgiturl=""
-
-	if [[ -n ${gitUrl} ]]; then
 	   if [[ -n ${gitBranch} ]]; then
 	    gitcloneBranch="-b $gitBranch"
 	   fi
+
+	if [[ -n ${gitUrl} ]]; then
 	   if [[ -n ${gitUsername} && -n ${gitPassword} ]]; then
 			gitcredentials="${gitUsername}:${gitPassword}@"
 	   fi
@@ -56,11 +56,11 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   gitconfcredentials=""
 	   gitconfcloneBranch="-b master"
 	   fullconfgiturl=""
+	   if [[ -n ${gitConfBranch} ]]; then
+			gitconfcloneBranch="-b $gitConfBranch"
+	   fi
 	   
 	if [[ -n ${gitConfUrl} ]]; then
-	   if [[ -n ${gitConfBranch} ]]; then
-	    gitconfcloneBranch="-b $gitConfBranch"
-	   fi
 	   if [[ -n ${gitConfUsername} && -n ${gitConfPassword} ]]; then
 			gitconfcredentials="${gitConfUsername}:${gitConfPassword}@"
 	   fi
