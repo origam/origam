@@ -121,7 +121,7 @@ fi
 cd /home/origam/HTML5
 
 if [ ! -d "$DIR/origam" ]; then 
-	echo “Server has no model. Please check It.”;
+	echo “Server has no model!!! Review the instance setup.”;
 	echo "Mandatory: gitPullOnStart(true)"
 	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
 	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
