@@ -31,11 +31,11 @@ using Origam.ServerCore.Pages;
 
 namespace Origam.ServerCore.Middleware
 {
-    public class UserApiMiddleWare
+    public class UserApiMiddleware
     {
         private readonly RequestLocalizationOptions requestLocalizationOptions;
 
-        public UserApiMiddleWare(RequestDelegate next, 
+        public UserApiMiddleware(RequestDelegate next, 
             IOptions<RequestLocalizationOptions> requestLocalizationOptions)
         {
             this.requestLocalizationOptions = requestLocalizationOptions.Value;
@@ -44,7 +44,7 @@ namespace Origam.ServerCore.Middleware
         public async Task Invoke(HttpContext context)
         {
             await SetThreadCultureFromCookie(context);
-            CoreUserApiProcessor userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
+            var userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
             var contextWrapper = new StandardHttpContextWrapper(context);
             userApiProcessor.Process(contextWrapper);
             await Task.CompletedTask;
