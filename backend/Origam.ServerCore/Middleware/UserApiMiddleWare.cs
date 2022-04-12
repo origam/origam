@@ -19,8 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Origam.ServerCommon.Pages;
 using Origam.ServerCore.Pages;
 
@@ -28,16 +33,43 @@ namespace Origam.ServerCore.Middleware
 {
     public class UserApiMiddleWare
     {
-        public UserApiMiddleWare(RequestDelegate next)
+        private readonly RequestLocalizationOptions requestLocalizationOptions;
+
+        public UserApiMiddleWare(RequestDelegate next, 
+            IOptions<RequestLocalizationOptions> requestLocalizationOptions)
         {
+            this.requestLocalizationOptions = requestLocalizationOptions.Value;
         }
 
         public async Task Invoke(HttpContext context)
         {
+            await SetThreadCultureFromCookie(context);
             CoreUserApiProcessor userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
             var contextWrapper = new StandardHttpContextWrapper(context);
             userApiProcessor.Process(contextWrapper);
             await Task.CompletedTask;
+        }
+
+        private async Task SetThreadCultureFromCookie(HttpContext context)
+        {
+            var cultureProvider = requestLocalizationOptions.RequestCultureProviders
+                .OfType<OrigamCookieRequestCultureProvider>().First();
+            var cultureResult =
+                await cultureProvider.DetermineProviderCultureResult(context);
+
+            var culture = cultureResult?.Cultures.FirstOrDefault();
+            if (culture != null)
+            {
+                Thread.CurrentThread.CurrentUICulture =
+                    new CultureInfo(culture.Value.ToString());
+            }
+
+            var uiCulture = cultureResult?.UICultures.FirstOrDefault();
+            if (uiCulture != null)
+            {
+                Thread.CurrentThread.CurrentCulture =
+                    new CultureInfo(uiCulture.Value.ToString());
+            }
         }
     }
 }
