@@ -37,7 +37,7 @@ namespace Origam.ServerCore
             app.MapWhen(
                 context => IsPublicUserApiRoute(startUpConfiguration, context),
                 apiBranch => {
-                    apiBranch.UseMiddleware<UserApiMiddleWare>();
+                    apiBranch.UseMiddleware<UserApiMiddleware>();
                 });
             app.MapWhen(
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
@@ -55,7 +55,7 @@ namespace Origam.ServerCore
                     }
                     await next.Invoke();
                 });
-                apiBranch.UseMiddleware<UserApiMiddleWare>();
+                apiBranch.UseMiddleware<UserApiMiddleware>();
             });
         } 
         
