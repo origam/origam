@@ -244,13 +244,13 @@
     <value>Yes</value>
   </data>
   <data name="ReturnToApplication1" xml:space="preserve">
-    <value>Click</value>
+    <value>Click </value>
   </data>
   <data name="ReturnToApplication2" xml:space="preserve">
     <value>here</value>
   </data>
   <data name="ReturnToApplication3" xml:space="preserve">
-    <value>to return to</value>
+    <value> to return to</value>
   </data>
   <data name="ReturnToApplication4" xml:space="preserve">
     <value></value>
