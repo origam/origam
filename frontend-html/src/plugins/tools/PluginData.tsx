@@ -82,6 +82,10 @@ class GuiHelper implements IGuiHelper {
     return wrapInFlowWithHandler({ctx:this.ctx, action: action});
   }
 
+  isMobileLayoutActive(){
+    return isMobileLayoutActive(this.ctx);
+  }
+
   openMenuItem(args: { itemId: any; idParameter?: string }): Promise<void> {
    let workbenchLifecycle = getWorkbenchLifecycle(this.ctx);
    return runGeneratorInFlowWithHandler({
