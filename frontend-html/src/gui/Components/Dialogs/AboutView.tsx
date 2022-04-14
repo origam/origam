@@ -33,7 +33,7 @@ export class AboutView extends React.Component<{aboutInfo: IAboutInfo}> {
         <div>Client version:</div>
         <div className={S.version}>
           <div>{"Commit ID: "}
-            <a href={"https://github.com/origam/origam-html/commit/" + commitId}>{commitId}</a>
+            <a href={"https://github.com/origam/origam/commit/" + commitId}>{commitId}</a>
           </div>
           <div>Commit Date: {commitDate}</div>
         </div>
