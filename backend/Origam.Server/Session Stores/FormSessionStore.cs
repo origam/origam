@@ -107,7 +107,6 @@ namespace Origam.Server
 
         private void LoadData()
         {
-            log.Debug("LoadData executed");
             if(dataRequested)
             {
                 LoadDataFxServer();
@@ -167,8 +166,6 @@ namespace Origam.Server
 
         private void SetDelayedLoadingParameter(DataStructureMethod method)
         {
-            log.Debug("Setting DelayedLoadingParameterName to: " + CustomParameterService.GetFirstNonCustomParameter(method) +
-                      ", methodId: " + method.Id);
             // set the parameter for delayed data loading - there should be just 1
             DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(method);
         }
@@ -522,7 +519,6 @@ namespace Origam.Server
 
         private DataSet LoadDataPiece(object parentId)
         {
-            log.Debug("DelayedLoadingParameterName " + DelayedLoadingParameterName);
             if (DelayedLoadingParameterName == null)
             {
                 LoadData();
