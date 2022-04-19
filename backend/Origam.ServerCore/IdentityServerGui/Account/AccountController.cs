@@ -402,7 +402,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 if (result.Succeeded && user != null)
                 {
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.BusinessPartnerId, user.UserName, clientId: context?.ClientId));
                     
                     if (context != null)
                     {
