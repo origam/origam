@@ -259,16 +259,17 @@ export const CheckListItem: React.FC<{
     setIsFocused(false);
   }
 
-  function onClick(event: any) {
+  function onLabelClick(event: any) {
     props.onClick && props.onClick(event);
-    refInput?.current?.focus();
+    refInput.current?.click();
+    event.stopPropagation();
   }
 
   const refInput = useRef<HTMLInputElement>(null);
   props.inputSetter(new InputReference(refInput));
 
   return (
-    <div className={S.item} onClick={onClick}>
+    <div className={S.item} >
       <input
         ref={refInput}
         type="checkbox"
@@ -278,8 +279,15 @@ export const CheckListItem: React.FC<{
         onKeyDown={onKeyDown}
         onFocus={onInputFocus}
         onBlur={onInputBlur}
+        readOnly={true}
+        onMouseDown={(event)=> props.onClick && props.onClick(event)}
       />
-      <div className={"content " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}>
+      <div
+        onClick={onLabelClick}
+        onMouseUp={()=> {
+          refInput?.current?.focus();
+        }}
+        className={"content " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}>
         {props.label}
       </div>
     </div>
