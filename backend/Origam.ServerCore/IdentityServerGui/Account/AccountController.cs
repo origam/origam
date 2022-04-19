@@ -394,16 +394,16 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null && !await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    return View("EmailNotConfirmed");
+                }
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 if (result.Succeeded && user != null)
                 {
-                    if (!await _userManager.IsEmailConfirmedAsync(user))
-                    {
-                        return View("EmailNotConfirmed");
-                    }
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.BusinessPartnerId, user.UserName, clientId: context?.ClientId));
-
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
+                    
                     if (context != null)
                     {
                         if (await _clientStore.IsPkceClientAsync(context.ClientId))
