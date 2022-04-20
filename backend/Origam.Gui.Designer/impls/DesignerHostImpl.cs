@@ -225,15 +225,24 @@ namespace Origam.Gui.Designer
 				Control instance = Generator.LoadControl(FormTools.GetItemFromControlSet(PanelSet));
 				return (instance, null);
 			}
-			
-			ControlItem refControl = controlItem ?? ToolboxPane.DragAndDropControl 
-				?? ServiceManager.Services
-				.GetService<ISchemaService>()
-				.GetProvider<UserControlSchemaItemProvider>()
-				.ChildItems.ToGeneric()
-				.Cast<ControlItem>()
-				.FirstOrDefault(item =>
-					item.ControlType == type.FullName);
+
+			ControlItem refControl = controlItem;
+			if (refControl == null && 
+			    ToolboxPane.DragAndDropControl != null && 
+			    ToolboxPane.DragAndDropControl.GetType() == type)
+			{
+				refControl = ToolboxPane.DragAndDropControl;
+			}
+			else
+			{
+				refControl = ServiceManager.Services
+					.GetService<ISchemaService>()
+					.GetProvider<UserControlSchemaItemProvider>()
+					.ChildItems.ToGeneric()
+					.Cast<ControlItem>()
+					.FirstOrDefault(item =>
+						item.ControlType == type.FullName);
+			}
 			
 			var missingPropertyItems = refControl?
 				.ChildItemsByType(ControlPropertyItem.CategoryConst)
