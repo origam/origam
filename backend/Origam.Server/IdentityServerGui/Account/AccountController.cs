@@ -127,6 +127,7 @@ namespace Origam.Server.IdentityServerGui.Account
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
+                    _logger.LogWarning("ForgotPassword - " +model.Email + " User does not exist or is not confirmed");
                     return View("ForgotPasswordConfirmation");
                 }
 
@@ -134,7 +135,8 @@ namespace Origam.Server.IdentityServerGui.Account
                 // Send an email with this link
                 var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.BusinessPartnerId, code = passwordResetToken }, protocol: HttpContext.Request.Scheme);
-                _mailService.SendPasswordResetToken( user, passwordResetToken, 24 ); 
+                _mailService.SendPasswordResetToken( user, passwordResetToken, 24 );
+                _logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
                 return View("ForgotPasswordConfirmation");
             }
 
@@ -298,6 +300,11 @@ namespace Origam.Server.IdentityServerGui.Account
             if (code == null)
             {
                 _logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
+                return View("Error");
+            }
+            else if (mail == null)
+            {
+                _logger.LogWarning($"mail supplied to {nameof(ResetPassword)} was null");
                 return View("Error");
             }
             else
