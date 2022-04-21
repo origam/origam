@@ -14,7 +14,7 @@
     "@origam/styles": "^2.0.0",
     "@origam/utils": "^1.0.1",
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^12.1.4",
+    "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "@types/classnames": "^2.3.1",
     "@types/jest": "^27.4.1",
