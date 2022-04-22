@@ -563,6 +563,12 @@ namespace Origam.Workflow
 
         public bool IsTrace(IWorkflowStep workflowStep)
         {
+			// step can be null e.g. when called from workflow screen in Architect
+			if(workflowStep == null)
+            {
+				return false;
+            }
+
 	        if (workflowStep is Schema.WorkflowModel.Workflow &&
 	            workflowStep.TraceLevel == Origam.Trace.InheritFromParent)
 	        {
