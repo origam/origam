@@ -175,7 +175,7 @@
     <value>Der Benutzer wurde nicht gefunden.</value>
   </data>
   <data name="EmailInvalid" xml:space="preserve">
-    <value>Ungültige E-Mailadresse</value>
+    <value>Adresse email invalide</value>
   </data>
   <data name="StringTooShort" xml:space="preserve">
     <value>{0} muss mindestens {2} Zeichen lang sein.</value>

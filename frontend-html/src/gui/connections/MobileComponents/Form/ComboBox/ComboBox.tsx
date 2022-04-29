@@ -22,8 +22,6 @@ import S from "gui/connections/MobileComponents/Form/ComboBox/ComboBox.module.sc
 import cx from "classnames";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
-import { MobileState } from "model/entities/MobileState/MobileState";
-import { EditLayoutState, ScreenLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { ComboFullScreenEditor } from "gui/connections/MobileComponents/Form/ComboBox/ComboFullScreenEditor";
 import { IDataView } from "model/entities/types/IDataView";
 import { IProperty } from "model/entities/types/IProperty";
@@ -32,10 +30,12 @@ import { MobileDropdownBehavior } from "gui/connections/MobileComponents/Form/Co
 import { DropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import { DropdownEditorData, IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 import { TagInputEditorData } from "modules/Editors/DropdownEditor/TagInputEditorData";
-import {  DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
+import { DropdownDataTable } from "modules/Editors/DropdownEditor/DropdownTableModel";
 import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
 import { DropdownEditorSetup, DropdownEditorSetupFromXml } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
 import { onMobileLinkClick } from "model/actions/DropdownEditor/onMobileLinkClick";
+import { showDialog } from "model/selectors/getDialogStack";
+import { Dialog } from "gui/connections/MobileComponents/Dialog";
 
 
 export interface IComboBoxProps {
@@ -55,27 +55,28 @@ export interface IComboBoxProps {
 
 export const ComboBox: React.FC<IComboBoxProps> = observer((props) => {
 
-  const mobileState = useContext(MobXProviderContext).application.mobileState as MobileState;
+  const application = useContext(MobXProviderContext).application;
   const row = getSelectedRow(props.property);
   const currentValue = row && props.dataView.dataTable.getCellText(row, props.property);
 
-  function onTextClick(){
-    if(props.isLink){
+  function onTextClick() {
+    if (props.isLink) {
       onMobileLinkClick(props.property, row)
     }
   }
 
-  function onButtonClick(){
-    if(props.isReadOnly){
+  function onButtonClick() {
+    if (props.isReadOnly) {
       return;
     }
-    mobileState.layoutState = new EditLayoutState(
-      <XmlBuildDropdownEditor
-        {...props}
-        onValueSelected={() => mobileState.layoutState = new ScreenLayoutState()}
-      />,
-      props.property.name
-    )
+    let closeDialog = showDialog(application, "editor",
+      <Dialog heading={props.property.name}>
+        <XmlBuildDropdownEditor
+          {...props}
+          onValueSelected={() => closeDialog()}
+        />
+      </Dialog>
+    );
   }
 
   return (
@@ -110,7 +111,7 @@ export function XmlBuildDropdownEditor(props: {
   isLink?: boolean;
   autoSort?: boolean;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
-  onValueSelected: ()=> void;
+  onValueSelected: () => void;
   onKeyDown?(event: any): void;
   dataView: IDataView,
   property: IProperty;
@@ -164,13 +165,13 @@ export function XmlBuildDropdownEditor(props: {
   });
 
   return (
-      <ComboFullScreenEditor
-        {...props}
-        behavior={dropdownEditorInfrastructure.behavior}
-        dataTable={dropdownEditorInfrastructure.editorDataTable}
-        columnDrivers={dropdownEditorInfrastructure.setup.columnDrivers}
-        editorData={dropdownEditorInfrastructure.editorData}
-      />
+    <ComboFullScreenEditor
+      {...props}
+      behavior={dropdownEditorInfrastructure.behavior}
+      dataTable={dropdownEditorInfrastructure.editorDataTable}
+      columnDrivers={dropdownEditorInfrastructure.setup.columnDrivers}
+      editorData={dropdownEditorInfrastructure.editorData}
+    />
   );
 }
 

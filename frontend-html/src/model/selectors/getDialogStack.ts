@@ -21,7 +21,6 @@ import { getApplication } from './getApplication';
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import React from "react";
 import { getMobileState } from "model/selectors/getMobileState";
-import { DialogLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 export function getDialogStack(ctx: any) {
@@ -30,15 +29,13 @@ export function getDialogStack(ctx: any) {
 
 export function showDialog(ctx: any, key: string, component: React.ReactElement) {
   if(isMobileLayoutActive(ctx)){
-    const layoutStateBefore = getMobileState(ctx).layoutState;
-    const dialogLayoutState = new DialogLayoutState(component, layoutStateBefore);
     const closeFunction = () => {
       runInFlowWithHandler({ctx: ctx, action: async ()=> {
-          getMobileState(ctx).layoutState = await dialogLayoutState.close(ctx)
+          getMobileState(ctx).dialogComponent = null;
         }
       })
     };
-    getMobileState(ctx).layoutState = dialogLayoutState;
+    getMobileState(ctx).dialogComponent = component;
     return closeFunction;
   }
   return getDialogStack(ctx).pushDialog(key, component);

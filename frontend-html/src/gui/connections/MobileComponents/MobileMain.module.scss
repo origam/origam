@@ -40,3 +40,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   display: flex;
   flex-direction: column;
 }
+
+.dialog {
+  top: 0;
+  left: 0;
+  z-index: 100;
+  position: absolute;
+  height: 100%;
+  background: var(--background1);
+  overflow: hidden;
+}
+
+.hidden{
+  display: none;
+}

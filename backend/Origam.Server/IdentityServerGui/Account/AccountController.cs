@@ -127,6 +127,7 @@ namespace Origam.Server.IdentityServerGui.Account
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
+                    _logger.LogWarning("ForgotPassword - " +model.Email + " User does not exist or is not confirmed");
                     return View("ForgotPasswordConfirmation");
                 }
 
@@ -134,7 +135,8 @@ namespace Origam.Server.IdentityServerGui.Account
                 // Send an email with this link
                 var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.BusinessPartnerId, code = passwordResetToken }, protocol: HttpContext.Request.Scheme);
-                _mailService.SendPasswordResetToken( user, passwordResetToken, 24 ); 
+                _mailService.SendPasswordResetToken( user, passwordResetToken, 24 );
+                _logger.LogInformation("ForgotPassword - " + model.Email + " Mail was sent.");
                 return View("ForgotPasswordConfirmation");
             }
 
@@ -300,6 +302,11 @@ namespace Origam.Server.IdentityServerGui.Account
                 _logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
                 return View("Error");
             }
+            else if (mail == null)
+            {
+                _logger.LogWarning($"mail supplied to {nameof(ResetPassword)} was null");
+                return View("Error");
+            }
             else
             {
                 var model = new ResetPasswordViewModel
@@ -388,35 +395,15 @@ namespace Origam.Server.IdentityServerGui.Account
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null && !await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    return View("EmailNotConfirmed");
+                }
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 if (result.Succeeded && user != null)
                 {
-                    if (!await _userManager.IsEmailConfirmedAsync(user))
-                    {
-                        return View("EmailNotConfirmed");
-                    }
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.UserName, user.Name, clientId: context?.Client.ClientId));
-
-                    // only set explicit expiration here if user chooses "remember me". 
-                    // otherwise we rely upon expiration configured in cookie middleware.
-                    AuthenticationProperties props = null;
-                    if (AccountOptions.AllowRememberLogin && model.RememberLogin)
-                    {
-                        props = new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
-                        };
-                    };
-
-                    // issue authentication cookie with subject ID and username
-                    var isuser = new IdentityServerUser(user.BusinessPartnerId)
-                    {
-                        DisplayName = user.UserName
-                    };
-
-                    await HttpContext.SignInAsync(isuser, props);
                     
                     if (context != null)
                     {

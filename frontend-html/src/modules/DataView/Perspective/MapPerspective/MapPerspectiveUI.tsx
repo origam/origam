@@ -563,22 +563,24 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   mapFittedToLayers = false;
 
+  lmap: L.DrawMap | undefined;
+
   initLeaflet() {
-    const lmap = L.map(this.elmMapDiv!, {
+    this.lmap = L.map(this.elmMapDiv!, {
       layers: this.layerList
         .filter(([rawLayer, leaLayer]) => rawLayer.defaultEnabled)
         .map(([rawLayer, leaLayer]) => leaLayer),
     });
-    this.leafletMap = lmap;
-    lmap.setZoom(this.props.initialZoom || 0);
+    this.leafletMap = this.lmap;
+    this.lmap.setZoom(this.props.initialZoom || 0);
     this.panToCenter();
     L.control
       .layers({}, this.leafletlayersDescriptor, {position: "topleft", collapsed: true})
-      .addTo(lmap);
-    L.control.scale().addTo(lmap);
+      .addTo(this.lmap);
+    L.control.scale().addTo(this.lmap);
 
-    lmap.addLayer(this.leafletMapObjects);
-    lmap.addLayer(this.leafletMapRoute);
+    this.lmap.addLayer(this.leafletMapObjects);
+    this.lmap.addLayer(this.leafletMapRoute);
 
     this._disposers.push(
       reaction(
@@ -598,7 +600,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           if (!this.props.mapCenter && allLayerBounds.isValid() && !this.mapFittedToLayers) {
             allLayerBounds = allLayerBounds.pad(0.1);
             const mapCenter = allLayerBounds.getCenter();
-            lmap.panTo(mapCenter);
+            this.lmap!.panTo(mapCenter);
             this.mapFittedToLayers = true;
           }
           this.highlightSelectedLayer();
@@ -669,6 +671,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   @action.bound
   handleResize(rect: ContentRect) {
     this.contentRect = rect;
+    this.lmap?.invalidateSize();
   }
 
   render() {

@@ -223,7 +223,7 @@ export class TablePanelView implements ITablePanelView {
           if (isEditing) {
             this.setEditing(false);
           }
-          this.selectCell(this.dataTable.getRowId(row) as string, property.id);
+          yield*this.selectCellAsync(this.dataTable.getRowId(row) as string, property.id);
           if (isEditing) {
             this.setEditing(true);
           }
@@ -231,7 +231,7 @@ export class TablePanelView implements ITablePanelView {
       }
     } else {
       const rowId = this.dataTable.getRowId(row);
-      yield*this.selectCellAsync(columnId, rowId);
+      yield*this.selectCellAsync(rowId, columnId);
 
       if (!isReadOnly(property!, rowId)) {
         yield*onFieldChangeG(this)({
@@ -247,7 +247,7 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  private*selectCellAsync(columnId: string, rowId: string) {
+  private*selectCellAsync(rowId: string, columnId: string,) {
     this.selectedColumnId = columnId;
     const dataView = getDataView(this);
     if (dataView.selectedRowId === rowId) {

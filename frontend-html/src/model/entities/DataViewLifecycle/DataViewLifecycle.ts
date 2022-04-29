@@ -64,6 +64,9 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   onSelectedRowIdChangeImm = flow(
     function*(this: DataViewLifecycle) {
+      if(!isLazyLoading(this)){
+        return;
+      }
       const dataView = getDataView(this);
       try {
         this.monitor.inFlow++;
@@ -113,6 +116,8 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     } finally {
       if (wasRunning) {
         await this.startSelectedRowReaction(true);
+      } else {
+        await this.onSelectedRowIdChangeImm();
       }
     }
   }

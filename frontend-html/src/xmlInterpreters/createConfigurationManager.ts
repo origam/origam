@@ -44,7 +44,7 @@ function makeColumnConfigurations(properties: IProperty[], tableConfigNode: any,
 
   const newColumnConfigurations = properties
     .filter(property => !parsedColumnConfigurationIds.includes(property.id))
-    .map(property => new TableColumnConfiguration(property.id, property.width));
+    .map(property => new TableColumnConfiguration(property.id, property.columnWidth));
   return columnConfigurations.concat(newColumnConfigurations);
 }
 
@@ -110,7 +110,7 @@ export function createConfigurationManagerForLayout(configurationNodes: any, pro
 }
 
 function parseColumnConfigurationNode(columnConfigNode: any, property: IProperty, isLazyLoading: boolean) {
-  const tableConfiguration = new TableColumnConfiguration(property.id, property.width);
+  const tableConfiguration = new TableColumnConfiguration(property.id, property.columnWidth);
   tableConfiguration.width = fixColumnWidth(parseInt(columnConfigNode.attributes.width));
 
   if (columnConfigNode.attributes.isVisible === "false" || tableConfiguration.width < 0) {

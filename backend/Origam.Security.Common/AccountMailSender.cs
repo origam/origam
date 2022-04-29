@@ -141,7 +141,7 @@ namespace Origam.Security.Common
         }
 
         public bool SendUserUnlockingNotification(string username, string email,
-            string languageId, string firstNameAndName, string userMail)
+            string languageId, string firstNameAndName)
         {
             string userLangIETF = ResolveIetfTagFromOrigamLanguageId(languageId);
             // build template replacements
@@ -152,12 +152,6 @@ namespace Origam.Security.Common
                     new KeyValuePair<string, string>("<%FirstNameAndName%>",
                         firstNameAndName)
                 };
-            // resolve recipient email
-            string resultEmail = email;
-            if (resultEmail == null)
-            {
-                resultEmail = userMail;
-            }
 
             MailMessage userUnlockNotificationMail;
             using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
@@ -165,7 +159,7 @@ namespace Origam.Security.Common
             {
                 try
                 {
-                    userUnlockNotificationMail = GenerateMail(resultEmail,
+                    userUnlockNotificationMail = GenerateMail(email,
                         fromAddress, userUnlockNotificationBodyFilename,
                         Resources.UserUnlockNotificationTemplate,
                         userUnlockNotificationSubject, userLangIETF, replacements);
@@ -176,7 +170,7 @@ namespace Origam.Security.Common
                     {
                         log.ErrorFormat("Unlocking user: Failed to generate a mail"
                                         + " for a user `{0}' to `{1}': {2}"
-                            , username, resultEmail, ex);
+                            , username, email, ex);
                     }
 
                     throw ex;
@@ -193,7 +187,7 @@ namespace Origam.Security.Common
                 {
                     log.ErrorFormat("Unlocking user: Failed to send a mail"
                                     + " for a user `{0}' to `{1}': {2}"
-                        , username, resultEmail, ex);
+                        , username, email, ex);
                 }
 
                 throw new Exception(
@@ -208,7 +202,7 @@ namespace Origam.Security.Common
             {
                 log.DebugFormat("User `{0}' has been unlocked and the"
                                 + " notification mail has been sent to `{1}'.",
-                    username, resultEmail);
+                    username, email);
             }
 
             return true;

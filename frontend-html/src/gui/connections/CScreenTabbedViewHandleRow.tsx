@@ -44,7 +44,7 @@ export class CScreenTabbedViewHandleRow extends React.Component {
     const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
 
     return (
-      <TabbedViewHandleRow>
+      <TabbedViewHandleRow className={"noPrint"}>
         {openedScreenItems.map((item) => (
           <ErrorBoundaryEncapsulated ctx={item} key={`${item.menuItemId}@${item.order}`}>
             <CScreenTabbedViewHandle item={item}/>

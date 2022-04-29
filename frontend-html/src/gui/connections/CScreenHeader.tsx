@@ -68,35 +68,38 @@ class CScreenHeaderInner extends React.Component<{ activeScreen: IOpenedScreen }
     const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
     const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
     return (
-      <ScreenHeader
-        isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
-      >
-        <h1>{activeScreen.formTitle}</h1>
-        {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
-        {isCancelButton && (
-          <button
-            className={S.workflowActionBtn}
-            onClick={onWorkflowAbortClick(content.formScreen!)}
-          >
-            {T("Cancel", "button_cancel")}
-          </button>
-        )}
-        {isNextButton && (
-          <button
-            className={S.workflowActionBtn}
-            onClick={onWorkflowNextClick(content.formScreen!)}
-          >
-            {T("Next", "button_next")}
-          </button>
-        )}
-        <ScreenHeaderPusher/>
-        <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
-          <Icon
-            src="./icons/fullscreen.svg"
-            tooltip={T("Fullscreen", "fullscreen_button_tool_tip")}
-          />
-        </ScreenHeaderAction>
-      </ScreenHeader>
+      <>
+        <h1 className={"printOnly"}>{activeScreen.formTitle}</h1>
+        <ScreenHeader
+          isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
+        >
+          <h1>{activeScreen.formTitle}</h1>
+          {(isCancelButton || isNextButton) && <ScreenheaderDivider/>}
+          {isCancelButton && (
+            <button
+              className={S.workflowActionBtn}
+              onClick={onWorkflowAbortClick(content.formScreen!)}
+            >
+              {T("Cancel", "button_cancel")}
+            </button>
+          )}
+          {isNextButton && (
+            <button
+              className={S.workflowActionBtn}
+              onClick={onWorkflowNextClick(content.formScreen!)}
+            >
+              {T("Next", "button_next")}
+            </button>
+          )}
+          <ScreenHeaderPusher/>
+          <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
+            <Icon
+              src="./icons/fullscreen.svg"
+              tooltip={T("Fullscreen", "fullscreen_button_tool_tip")}
+            />
+          </ScreenHeaderAction>
+        </ScreenHeader>
+      </>
     );
   }
 }

@@ -103,10 +103,31 @@ body,
 }
 
 .tippy-tooltip.tippy-tooltip--regular, .tippy-popper.tippy-tooltip.light-theme[data-animatefill] {
-  background-color:var(--background1) !important;
+  background-color: var(--background1) !important;
 }
 
 .leaflet-control-container,
 .leaflet-draw-actions a {
-  color:var(--background8) !important;
+  color: var(--background8) !important;
+}
+
+@media print {
+  .noPrint {
+    display: none;
+  }
+
+  h1.printOnly {
+    display: block;
+  }
+  html > body {
+    overflow: visible;
+
+    #root div {
+      overflow: visible;
+    }
+  }
+}
+
+.printOnly {
+  display: none;
 }
