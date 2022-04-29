@@ -106,7 +106,6 @@ export class MobileMain extends React.Component<{}> {
           <ScreenHeader/>
           <CScreenContent/>
         </div>
-        {this.renderDialogContents()}
         <BottomToolBar
           mobileState={this.mobileState}
           ctx={this.context.application}
