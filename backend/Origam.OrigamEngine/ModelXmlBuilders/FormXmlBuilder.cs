@@ -228,6 +228,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				DataTable table = (DataTable)entry.Value;
 
 				string entityName = (string)entry.Key;
+				if (table.PrimaryKey.Length == 0)
+				{
+					throw new ArgumentException($"Cannot render data source into xml, because the source table \"{table.TableName}\" does not have a primary key.");
+				}
+
 				string identifier = table.PrimaryKey[0].ColumnName;
 				string lookupCacheKey = DatabaseTableName(table);
 			    string dataStructureEntityId = table.ExtendedProperties["Id"]?.ToString();
@@ -1202,7 +1207,14 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                             renderData.TreeId);
                         break;
                     case "ScreenLevelPlugin":
-	                    ScreenLevelPluginBuilder.Build(parentNode, renderData.Text);
+	                    ScreenLevelPluginBuilder.Build(
+		                    parentNode: parentNode, 
+		                    text: renderData.Text,
+		                    dataSources: dataSources, 
+		                    dataset: dataset,
+		                    dataStructure: structure,
+		                    dataMember: renderData.DataMember
+		                    );
 	                    break;                    
                     case "SectionLevelPlugin":
 	                    SectionLevelPluginBuilder.Build(

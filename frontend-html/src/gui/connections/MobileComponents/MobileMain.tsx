@@ -29,7 +29,6 @@ import { Search } from "gui/connections/MobileComponents/Search";
 import { BottomToolBar } from "gui/connections/MobileComponents/BottomToolBar/BottomToolBar";
 import { MobileAboutView } from "gui/connections/MobileComponents/MobileAboutView";
 import { IWorkbench } from "model/entities/types/IWorkbench";
-import { CDialogContent } from "gui/connections/CDialogContent";
 import { BreadCrumbs } from "gui/connections/MobileComponents/Navigation/BreadCrumbs";
 import { CScreenContent } from "gui/connections/CScreenContent";
 import { ScreenHeader } from "gui/connections/MobileComponents/ScreenHeader";
@@ -81,15 +80,6 @@ export class MobileMain extends React.Component<{}> {
     if (this.mobileState.layoutState instanceof MenuLayoutState) {
       return <CSidebar/>;
     }
-    if (this.mobileState.layoutState instanceof ScreenLayoutState) {
-      return (
-        <>
-          <BreadCrumbs/>
-          <ScreenHeader/>
-          <CScreenContent/>
-        </>
-      );
-    }
     if (this.mobileState.layoutState instanceof SearchLayoutState) {
       return <Search/>
     }
@@ -102,15 +92,20 @@ export class MobileMain extends React.Component<{}> {
         mobileState={this.mobileState}
       />
     }
-    throw new Error(this.mobileState.layoutState + " not implemented");
+    if (!(this.mobileState.layoutState instanceof ScreenLayoutState)){
+      throw new Error(this.mobileState.layoutState + " not implemented");
+    }
   }
 
   render() {
     return (
       <div className={S.root}>
         <TopToolBar mobileState={this.mobileState}/>
-        {this.renderMainPageContents()}
-        <CDialogContent/>
+        <div className={S.mainWrapper + " " + (this.mobileState.layoutState instanceof ScreenLayoutState ? "" : S.hidden)}>
+          <BreadCrumbs/>
+          <ScreenHeader/>
+          <CScreenContent/>
+        </div>
         <BottomToolBar
           mobileState={this.mobileState}
           ctx={this.context.application}

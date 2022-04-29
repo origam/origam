@@ -241,7 +241,8 @@ export function*interpretScreenXml(
       (n.name === "UIElement" || n.name === "UIRoot") &&
       (n.attributes.Type === "Grid" ||
         n.attributes.Type === "TreePanel" ||
-        n.attributes.Type === "SectionLevelPlugin")
+        n.attributes.Type === "SectionLevelPlugin" ||
+        n.attributes.Type === "ScreenLevelPluginData")
   );
 
   checkInfiniteScrollWillWork(dataViews, formScreenLifecycle, panelConfigurations);

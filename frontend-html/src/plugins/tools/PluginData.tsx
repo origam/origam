@@ -19,22 +19,45 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IDataView } from "model/entities/types/IDataView";
 import { getProperties } from "model/selectors/DataView/getProperties";
-import { IGuiHelper, IPluginData, IPluginDataView, IPluginProperty, IPluginTableRow, } from "@origam/plugin-interfaces";
+import {
+  IGuiHelper,
+  IOption,
+  IScreenPluginData,
+  IPluginDataView,
+  IPluginProperty,
+  IPluginTableRow, ISectionPluginData,
+} from "@origam/plugin-interfaces";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
 import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
 import { runGeneratorInFlowWithHandler, runInFlowWithHandler, wrapInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
+import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { SimpleDropdown } from "@origam/components";
+import React from "react";
+import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { MobileSimpleDropdown } from "gui/connections/MobileComponents/Form/MobileSimpleDropdown";
+import { IFormScreen } from "model/entities/types/IFormScreen";
 
 
-export function createPluginData(dataView: IDataView): IPluginData | undefined {
+export function createSectionPluginData(dataView: IDataView): ISectionPluginData | undefined {
   if (!dataView) {
     return undefined;
   }
   return {
     dataView: new PluginDataView(dataView),
     guiHelper: new GuiHelper(dataView)
+  }
+}
+
+export function createScreenPluginData(formScreen: IFormScreen): IScreenPluginData | undefined  {
+  if (!formScreen) {
+    return undefined;
+  }
+  return {
+    dataViews: formScreen.dataViews.map(dataView => new PluginDataView(dataView)),
+    guiHelper: new GuiHelper(formScreen)
   }
 }
 
@@ -58,10 +81,61 @@ class GuiHelper implements IGuiHelper {
   wrapInFlowWithHandler(action: (() => Promise<any>) | (() => void)) {
     return wrapInFlowWithHandler({ctx:this.ctx, action: action});
   }
+
+  isMobileLayoutActive(){
+    return isMobileLayoutActive(this.ctx);
+  }
+
+  openMenuItem(args: { itemId: any; idParameter?: string }): Promise<void> {
+   let workbenchLifecycle = getWorkbenchLifecycle(this.ctx);
+   return runGeneratorInFlowWithHandler({
+     ctx: this.ctx,
+     generator: function*() {
+       yield*workbenchLifecycle.onMainMenuItemIdClick({
+         event: undefined,
+         itemId: args.itemId,
+         idParameter: args.idParameter,
+         isSingleRecordEdit: false
+       });
+     }()
+   });
+  }
+
+  renderDropDown<T>(args: {
+    options: IOption<T>[],
+    selectedOption: IOption<T>,
+    onOptionClick: (option: IOption<T>) => void,
+    width?: string,
+    className?: string
+  })
+  {
+    if(isMobileLayoutActive(this.ctx)){
+      return (
+        <MobileSimpleDropdown
+          options={args.options}
+          selectedOption={args.selectedOption}
+          onOptionClick={args.onOptionClick}
+          width={args.width}
+          className={args.className}
+          ctx={this.ctx}/>
+      );
+    }else{
+      return (
+        <SimpleDropdown
+          options={args.options}
+          selectedOption={args.selectedOption}
+          onOptionClick={args.onOptionClick}
+          width={args.width}
+          className={args.className}
+      />
+    );
+    }
+  }
 }
 
 class PluginDataView implements IPluginDataView {
   properties: IPluginProperty[];
+  entity: string;
 
   get tableRows(): IPluginTableRow[] {
     return this.dataView.tableRows;
@@ -79,6 +153,7 @@ class PluginDataView implements IPluginDataView {
           momentFormatterPattern: property.formatterPattern
         }
       });
+    this.entity = this.dataView.entity;
   }
 
   async saveConfiguration(pluginName: string, configuration: string): Promise<void> {

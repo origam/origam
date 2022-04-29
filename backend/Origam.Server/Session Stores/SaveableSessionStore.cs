@@ -121,7 +121,7 @@ namespace Origam.Server
             set { _template = value; }
         }
 
-        internal object Save()
+        internal virtual object Save()
         {
             if (Data.HasErrors)
             {
