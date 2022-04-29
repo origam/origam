@@ -562,8 +562,8 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     this.panToCenter();
     L.control
       .layers({}, this.leafletlayersDescriptor, { position: "topleft", collapsed: true })
-      .addTo(lmap);
-    L.control.scale().addTo(lmap);
+      .addTo(this.lmap);
+    L.control.scale().addTo(this.lmap);
 
     this.lmap.addLayer(this.leafletMapObjects);
     this.lmap.addLayer(this.leafletMapRoute);
