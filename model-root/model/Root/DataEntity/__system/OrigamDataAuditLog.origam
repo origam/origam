@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:efr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilterReference/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:efr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilterReference/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -11,22 +11,22 @@
     asi:name="OrigamDataAuditLog"
     ade:readOnly="false">
     <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/d3171349-284d-458e-a22d-be875074b398"
-      x:id="5f2eee82-9919-4438-8a0b-d49c44493d01" />
-    <sia:ancestor
       sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
       x:id="1dfba82c-71e9-4daa-befa-e285d4b8a90c" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/d3171349-284d-458e-a22d-be875074b398"
+      x:id="5f2eee82-9919-4438-8a0b-d49c44493d01" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
-      adec:dataType="Memo"
+      adec:dataType="Integer"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="5e053cd2-7ee2-42b9-a8cb-3f45269053db"
+      x:id="2455770c-cdd2-4ac3-820c-bfd067192d4c"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="OldValue"
-      asi:name="OldValue"
+      fmi:mappedColumnName="ActionType"
+      asi:name="ActionType"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -40,6 +40,32 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="refColumnId"
       asi:name="refColumnId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="31bed106-accf-49ff-9c8f-8724258d9ec3"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="NewValue"
+      asi:name="NewValue"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="5e053cd2-7ee2-42b9-a8cb-3f45269053db"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="OldValue"
+      asi:name="OldValue"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -60,19 +86,6 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="31bed106-accf-49ff-9c8f-8724258d9ec3"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="NewValue"
-      asi:name="NewValue"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
       adec:dataLength="50"
       adec:dataType="String"
       adec:excludeFromAllFields="false"
@@ -81,19 +94,6 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="OldValueId"
       asi:name="OldValueId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="2455770c-cdd2-4ac3-820c-bfd067192d4c"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="ActionType"
-      asi:name="ActionType"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -168,33 +168,89 @@
         adec:dataType="Boolean"
         adec:excludeFromAllFields="false"
         fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="effc7481-1bb4-46ea-a99a-629c11eee87b"
+        fc:function="Root/Function/LogicalAnd.origam#LogicalAnd/030bf9c0-69a3-459c-88a1-3a3b8025392a"
+        x:id="6469eb5f-599c-492e-851a-0ef013dede0c"
         adec:isPrimaryKey="false"
-        asi:name="="
+        asi:name="and"
         adec:onCopyAction="Copy"
         adec:xmlMappingType="Attribute">
         <fcp:FunctionCallParameter
           asi:abstract="false"
-          x:id="d4136bd8-04e6-4aab-b37d-e397f53893cf"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <pr:ParameterReference
+          x:id="07113188-6484-426a-bfce-f75a2d851c98"
+          asi:name="Arguments"
+          fcp:parameter="Root/Function/LogicalAnd.origam#LogicalAnd/Arguments/d86e8210-ad76-4b11-9cba-67a33c8f33f7">
+          <fc:DataEntityColumn
             asi:abstract="false"
-            x:id="86f6753d-b823-4cde-854d-9e20151aa3af"
-            asi:name="parRefParentRecordId"
-            pr:parameter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/parRefParentRecordId/39373b8a-c514-4ff5-9cda-ae1eaa555fe9" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="b456ad0e-b6b0-49ae-9310-e91dcfcbb41d"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="68619c5f-da25-401b-a917-d7e0ab5ac75c"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="8b30f76f-2f32-40ab-9e52-147a2bb3acae"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <ecr:EntityColumnReference
+                asi:abstract="false"
+                ecr:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/SecondReferenceKey/a340fd4b-ea2e-4397-8ee0-c40b6cf174a0"
+                x:id="ae00ab54-0412-4313-b24a-398b900ccbbf"
+                asi:name="SecondReferenceKey" />
+            </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="b8a12e23-1251-4257-bc46-5c3775acc646"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+              <pr:ParameterReference
+                asi:abstract="false"
+                x:id="3cb416c9-67eb-477e-bce6-2fe51e01da80"
+                asi:name="parRefParentRecordId"
+                pr:parameter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/parRefParentRecordId/39373b8a-c514-4ff5-9cda-ae1eaa555fe9" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+          <fc:DataEntityColumn
             asi:abstract="false"
-            ecr:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/SecondReferenceKey/a340fd4b-ea2e-4397-8ee0-c40b6cf174a0"
-            x:id="e38ea1a0-4b52-4dfe-aba8-d22dd0190cf1"
-            asi:name="SecondReferenceKey" />
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="8a994385-5560-4f23-b94f-5b06ef559ebb"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="264d79d8-bc8c-43f5-90ba-e7d9a9950aeb"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+              <dcr:DataConstantReference
+                asi:abstract="false"
+                dcr:constant="Root/DataConstant/OrigamDataAuditLog_ActionType_Delete.origam#OrigamDataAuditLog_ActionType_Delete/6909f0f8-d860-410b-8dca-8bf47f949d8a"
+                x:id="b99f632b-283f-4cb4-8b4c-c3786620349c"
+                asi:name="OrigamDataAuditLog_ActionType_Delete" />
+            </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="cc48fc7b-7f42-40ce-8b83-698a9612081b"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <ecr:EntityColumnReference
+                asi:abstract="false"
+                ecr:field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/ActionType/2455770c-cdd2-4ac3-820c-bfd067192d4c"
+                x:id="79094f40-c88a-4553-a3a9-d4c992fc60d5"
+                asi:name="ActionType" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
