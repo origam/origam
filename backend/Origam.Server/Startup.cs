@@ -170,7 +170,17 @@ namespace Origam.Server
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
             }
-            
+
+            if (identityServerConfig.UseMicrosoftLogin)
+            {
+                authenticationBuilder.AddMicrosoftAccount(microsoftOptions =>
+                {
+                    microsoftOptions.ClientId = identityServerConfig.MicrosoftClientId;
+                    microsoftOptions.ClientSecret = identityServerConfig.MicrosoftClientSecret;
+                    microsoftOptions.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                });
+            }
+
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = languageConfig.DefaultCulture;
