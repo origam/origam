@@ -100,7 +100,7 @@
                        asp-action="Challenge"
                        asp-route-provider="@provider.AuthenticationScheme"
                        asp-route-returnUrl="@Model.ReturnUrl">
-                        @provider.DisplayName
+                        @SharedLocalizer[provider.DisplayName]
                     </a>
                 }
             </div>

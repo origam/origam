@@ -253,7 +253,7 @@
     <value> to return to</value>
   </data>
   <data name="ReturnToApplication4" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ToLogin1" xml:space="preserve">
     <value>Click </value>
@@ -416,5 +416,8 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
+  </data>
+  <data name="SignInWithMicrosoftAccount" xml:space="preserve">
+    <value>Sign in with Microsoft Account</value>
   </data>
 </root>

@@ -253,7 +253,7 @@
     <value> pro návrat do</value>
   </data>
   <data name="ReturnToApplication4" xml:space="preserve">
-    <value></value>
+    <value />
   </data>
   <data name="ToLogin1" xml:space="preserve">
     <value>Pro opětovné přihlášení klikněte </value>
@@ -419,5 +419,8 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Obnovit</value>
+  </data>
+  <data name="SignInWithMicrosoftAccount" xml:space="preserve">
+    <value>Přihlášení přes Microsoft účet</value>
   </data>
 </root>

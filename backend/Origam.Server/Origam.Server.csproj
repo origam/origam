@@ -240,6 +240,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties assets_4identity_4lib_4bootstrap_4css_4bootstrap_1css_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
