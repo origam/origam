@@ -29,7 +29,7 @@ FETCH NEXT FROM load_cursor INTO @Index_Name, @Index_Table, @Column_Name,@Obj_id
  WHILE @@FETCH_STATUS = 0 
 BEGIN 
 	print 'Working on ' + @Index_Table +' '+ @Index_Name +' '+ CONVERT(varchar(255),@Obj_id);
-	SET @dropIndex = 'ALTER TABLE [dbo].['+@Index_Table+'] DROP CONSTRAINT ['+@Index_Name+'] WITH ( ONLINE = OFF );'
+	SET @dropIndex = 'ALTER TABLE ['+@Index_Table+'] DROP CONSTRAINT ['+@Index_Name+'] WITH ( ONLINE = OFF );'
 	EXECUTE sp_executesql @dropIndex;
 	SET @nonclusteredname = 'ALTER TABLE '+@Index_Table+' ADD CONSTRAINT ['+@Index_Table + '_NonClusteredIndex_'  +  CONVERT(varchar(255),NEWID())+'] PRIMARY KEY NONCLUSTERED (Id);'
 	EXECUTE sp_executesql @nonclusteredname;

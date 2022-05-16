@@ -42,7 +42,7 @@
             <example>
             An example of a SQL Server table that could be logged to:
             <code lang="SQL">
-            CREATE TABLE [dbo].[Log] ( 
+            CREATE TABLE [Log] ( 
               [ID] [int] IDENTITY (1, 1) NOT NULL ,
               [Date] [datetime] NOT NULL ,
               [Thread] [varchar] (255) NOT NULL ,

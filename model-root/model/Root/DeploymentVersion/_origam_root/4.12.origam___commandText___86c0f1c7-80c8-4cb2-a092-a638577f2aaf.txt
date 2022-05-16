@@ -1,12 +1,11 @@
-﻿
-CREATE  VIEW [dbo].[BusinessPartnerLookup]
+﻿CREATE VIEW [BusinessPartnerLookup]
 AS
 SELECT
 	cast(BusinessPartner.Name + ISNULL(' ' + BusinessPartner.FirstName, '') + ISNULL(N', ' + ParentBusinessPartner.Name, N'') as nvarchar(1000)) AS LookupText,
 	BusinessPartner.*
 FROM
-	dbo.BusinessPartner BusinessPartner 
-	left outer join dbo.BusinessPartner ParentBusinessPartner
+	BusinessPartner BusinessPartner 
+	left outer join BusinessPartner ParentBusinessPartner
 		ON ParentBusinessPartner.Id = BusinessPartner.ParentId
 
 
