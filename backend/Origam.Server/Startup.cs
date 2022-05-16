@@ -26,26 +26,28 @@ using System.Security.Principal;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Origam.Security.Common;
 using Origam.Security.Identity;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Origam.Server.Authorization;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
 using SoapCore;
+
 
 namespace Origam.Server
 {
@@ -170,7 +172,20 @@ namespace Origam.Server
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
             }
-            
+
+            if (identityServerConfig.UseMicrosoftLogin)
+            {
+                authenticationBuilder.AddMicrosoftAccount(
+                    MicrosoftAccountDefaults.AuthenticationScheme,
+                    "SignInWithMicrosoftAccount", 
+                    microsoftOptions =>
+                {
+                    microsoftOptions.ClientId = identityServerConfig.MicrosoftClientId;
+                    microsoftOptions.ClientSecret = identityServerConfig.MicrosoftClientSecret;
+                    microsoftOptions.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                });
+            }
+
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = languageConfig.DefaultCulture;

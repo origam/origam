@@ -34,6 +34,9 @@
     "UseGoogleLogin": "false",
     "GoogleClientId": "",
     "GoogleClientSecret": "",
+    "UseMicrosoftLogin": "false",
+    "MicrosoftClientId": "",
+    "MicrosoftClientSecret": "",
     "WebClient": {
       "RedirectUris": [
         "https://localhost:3000/#origamClientCallback/",

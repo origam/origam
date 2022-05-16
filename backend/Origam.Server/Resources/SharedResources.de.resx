@@ -428,4 +428,7 @@
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
+  <data name="SignInWithMicrosoftAccount" xml:space="preserve">
+    <value>Melden Sie sich mit Ihrem Microsoft-Konto an</value>
+  </data>
 </root>
