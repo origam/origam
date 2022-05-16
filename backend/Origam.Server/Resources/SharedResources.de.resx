@@ -431,4 +431,7 @@
   <data name="SignInWithMicrosoftAccount" xml:space="preserve">
     <value>Melden Sie sich mit Ihrem Microsoft-Konto an</value>
   </data>
+  <data name="SignInWithGoogleAccount" xml:space="preserve">
+    <value>Melden Sie sich mit Ihrem Google-Konto an</value>
+  </data>
 </root>
