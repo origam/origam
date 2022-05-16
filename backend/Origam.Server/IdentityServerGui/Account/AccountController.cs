@@ -124,10 +124,10 @@ namespace Origam.Server.IdentityServerGui.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    _logger.LogWarning("ForgotPassword - " +model.Email + " User does not exist or is not confirmed");
+                    _logger.LogWarning("ForgotPassword - " +model.Email + " User does not exist.");
                     return View("ForgotPasswordConfirmation");
                 }
 
@@ -337,6 +337,7 @@ namespace Origam.Server.IdentityServerGui.Account
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
             }
+            user.EmailConfirmed = true;
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
             if (result.Succeeded)
             {
