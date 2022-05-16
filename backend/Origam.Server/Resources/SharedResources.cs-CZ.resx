@@ -423,4 +423,7 @@
   <data name="SignInWithMicrosoftAccount" xml:space="preserve">
     <value>Přihlášení přes Microsoft účet</value>
   </data>
+  <data name="SignInWithGoogleAccount" xml:space="preserve">
+    <value>Přihlášení přes Google účet</value>
+  </data>
 </root>

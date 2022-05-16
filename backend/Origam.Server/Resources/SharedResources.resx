@@ -420,4 +420,7 @@
   <data name="SignInWithMicrosoftAccount" xml:space="preserve">
     <value>Sign in with Microsoft Account</value>
   </data>
+  <data name="SignInWithGoogleAccount" xml:space="preserve">
+    <value>Sign in with Google Account</value>
+  </data>
 </root>
