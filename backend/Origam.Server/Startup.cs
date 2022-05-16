@@ -26,6 +26,7 @@ using System.Security.Principal;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -165,11 +166,14 @@ namespace Origam.Server
             
             if (identityServerConfig.UseGoogleLogin)
             {
-                authenticationBuilder.AddGoogle(options =>
+                authenticationBuilder.AddGoogle(
+                   GoogleDefaults.AuthenticationScheme,
+                   "SignInWithGoogleAccount",
+                   options =>
                 {
-                    options.ClientId = identityServerConfig.GoogleClientId;
-                    options.ClientSecret = identityServerConfig.GoogleClientSecret; 
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                   options.ClientId = identityServerConfig.GoogleClientId;
+                   options.ClientSecret = identityServerConfig.GoogleClientSecret; 
+                   options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
             }
 
