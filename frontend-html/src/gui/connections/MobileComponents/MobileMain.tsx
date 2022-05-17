@@ -40,6 +40,7 @@ import {
   SearchLayoutState
 } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { CDialogContent } from "gui/connections/CDialogContent";
 
 @observer
 export class MobileMain extends React.Component<{}> {
@@ -101,6 +102,8 @@ export class MobileMain extends React.Component<{}> {
     return (
       <div className={S.root}>
         <TopToolBar mobileState={this.mobileState}/>
+        {this.renderMainPageContents()}
+        <CDialogContent/>
         <div className={S.mainWrapper + " " + (this.mobileState.layoutState instanceof ScreenLayoutState ? "" : S.hidden)}>
           <BreadCrumbs/>
           <ScreenHeader/>
