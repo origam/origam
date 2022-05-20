@@ -1220,6 +1220,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
 
       yield * new_ProcessActionResult(action)(result);
+      yield*refreshRowStates(this)();
       const dataView = getDataView(action);
       dataView?.formFocusManager?.refocusLast();
     } finally {
