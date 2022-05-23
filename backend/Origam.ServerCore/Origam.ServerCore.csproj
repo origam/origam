@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>8a03936d-700c-4edd-9ffa-e3df428dc822</UserSecretsId>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <LangVersion>7.1</LangVersion>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -69,7 +69,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
     <PackageReference Include="Origam.Service.Core" Version="1.0.3" />
     <PackageReference Include="SoapCore" Version="1.1.0.10" />
@@ -80,8 +80,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj" />
     <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj" />
-    <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj" />
-    <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj" />
+	<ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj" />
+	<ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
@@ -95,7 +95,6 @@
     <ProjectReference Include="..\Origam.ServerCommon\Origam.ServerCommon.csproj" />
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
-    <ProjectReference Include="..\Origam.Workbench\Origam.Workbench.csproj" />
     <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj" />
     <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
   </ItemGroup>
