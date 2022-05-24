@@ -560,20 +560,21 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         yield api.destroyUI({FormSessionId: session.formSessionId});
       }
     }
-
     const openedScreens = getOpenedScreens(this);
     if (openedScreens.items.length > 0) {
       const screenToOpen = portalInfo.initialScreenId
         ? openedScreens.items.find(screen => screen.menuItemId === portalInfo.initialScreenId) ?? openedScreens.items[0]
         : openedScreens.items[0];
       openedScreens.activateItem(screenToOpen.menuItemId, screenToOpen.order);
-      screenToOpen.isSleeping = false;
-      const initUIResult = yield*this.initUIForScreen(screenToOpen, false);
-      if (screenToOpen.content) {
-        yield*screenToOpen.content.start(
-          initUIResult,
-          screenToOpen.isSleepingDirty
-        );
+      if(screenToOpen.isSleeping){
+        screenToOpen.isSleeping = false;
+        const initUIResult = yield*this.initUIForScreen(screenToOpen, false);
+        if (screenToOpen.content) {
+          yield*screenToOpen.content.start(
+            initUIResult,
+            screenToOpen.isSleepingDirty
+          );
+        }
       }
     }
 
