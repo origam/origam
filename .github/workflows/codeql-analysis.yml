@@ -35,12 +35,9 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
-    
-    
-    - name: Build Backend
+    - name: Nuget restore
       run: |
-       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Server"
-       msbuild backend/Origam.sln /p:UseSharedCompilation=false /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+       msbuild backend/Origam.sln -t:restore 
 
     - name: Build Architect
       run: |
