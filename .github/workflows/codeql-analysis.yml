@@ -35,12 +35,10 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
     
-    - name: NuGet Restore
-      run: nuget restore backend/Origam.sln
-      
     - name: Build Architect
       run: |
-       msbuild backend/Origam.sln 
+       msbuild Origam.sln -t:restore /p:Configuration="Release Architect"
+       msbuild backend/Origam.sln /p:Configuration="Release Architect"
        
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
