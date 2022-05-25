@@ -85,12 +85,10 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: NuGet Restore
-      run: nuget restore backend/Origam.sln
-          
     - name: Build Html Server
       run: |
        cd backend
+       msbuild Origam.sln -t:restore /p:Configuration="Release Server"
        msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        
     - name: Upload server artefact
