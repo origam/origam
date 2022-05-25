@@ -37,7 +37,7 @@ jobs:
     
     - name: Build Architect
       run: |
-       msbuild Origam.sln -t:restore /p:Configuration="Release Architect"
+       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
        
     - name: Perform CodeQL Analysis
