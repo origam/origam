@@ -45,7 +45,7 @@
     "flexsearch": "^0.7.21",
     "html-to-draftjs": "^1.5.0",
     "immer": "^9.0.14",
-    "immutable": "^4.0.0",
+    "immutable": "^4.1.0",
     "js-cookie": "^3.0.1",
     "js-file-download": "^0.4.12",
     "jsonwebtoken": "^8.5.1",
