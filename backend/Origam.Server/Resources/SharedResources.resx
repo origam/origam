@@ -423,4 +423,7 @@
   <data name="SignInWithGoogleAccount" xml:space="preserve">
     <value>Sign in with Google Account</value>
   </data>
+  <data name="SignInWithAzureAd" xml:space="preserve">
+    <value>Sign in with Azure AD</value>
+  </data>
 </root>

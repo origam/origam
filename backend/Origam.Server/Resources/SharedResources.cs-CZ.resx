@@ -426,4 +426,7 @@
   <data name="SignInWithGoogleAccount" xml:space="preserve">
     <value>Přihlášení přes Google účet</value>
   </data>
+  <data name="SignInWithAzureAd" xml:space="preserve">
+    <value>Přihlášení přes Azure AD</value>
+  </data>
 </root>

@@ -434,4 +434,7 @@
   <data name="SignInWithGoogleAccount" xml:space="preserve">
     <value>Melden Sie sich mit Ihrem Google-Konto an</value>
   </data>
+  <data name="SignInWithAzureAd" xml:space="preserve">
+    <value>Melden Sie sich mit Ihrem Azure AD an</value>
+  </data>
 </root>
