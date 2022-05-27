@@ -36,7 +36,8 @@ RUN mv reverse-proxy.conf /etc/nginx/sites-available \
 USER origam
 
 WORKDIR /home/origam
-RUN mkdir HTML5
+RUN mkdir HTML5 HTML5-SOURCE
+COPY --chown=origam:origam HTML5-SOURCE /home/origam/HTML5-SOURCE/
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
