@@ -109,7 +109,9 @@ namespace Origam.DA.Service
         }
         public void Persist(ItemTracker itemTracker)
         {
+#if DEBUG
             CheckDataConsistency(itemTracker);
+#endif
             itemTracker.CleanUp();
             var serializationData = new TrackerSerializationData(
                 itemTracker.AllFiles, itemTracker.GetStats());
