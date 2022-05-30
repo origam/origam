@@ -98,6 +98,7 @@
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
     <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
     <ProjectReference Include="..\Origam.Workflow.FileService\Origam.Workflow.FileService.csproj" />
+    <ProjectReference Include="..\Origam.workflow.mail\Origam.workflow.mail.csproj" />
     <ProjectReference Include="..\Origam.Workflow\Origam.Workflow.csproj" />
   </ItemGroup>
 
