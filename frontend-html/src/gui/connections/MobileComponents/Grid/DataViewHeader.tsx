@@ -195,7 +195,11 @@ export class DataViewHeaderInner extends React.Component<{
           return (
             <Observer>
               {() => (
-                <DataViewHeader domRef={measureRef} isVisible={this.isBarVisible}>
+                <DataViewHeader
+                  domRef={measureRef}
+                  isVisible={this.isBarVisible}
+                  className={"mobileDataViewHeader"}
+                >
                   {this.isBarVisible &&
                     <>
                       <div className="fullspaceBlock">
