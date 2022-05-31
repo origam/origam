@@ -21,8 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
@@ -36,10 +34,14 @@ namespace Origam.Server.Configuration
         public string GoogleClientId { get; }
         public string GoogleClientSecret { get; }
         public bool UseGoogleLogin { get;}
-
+        
         public string MicrosoftClientId { get; }
         public string MicrosoftClientSecret { get; }
         public bool UseMicrosoftLogin { get; }
+        
+        public bool UseAzureAdLogin { get; }
+        public string AzureAdClientId { get; }
+        public string AzureAdTenantId { get; }
 
         public WebClient WebClient { get; }
         public MobileClient MobileClient { get; }
@@ -59,6 +61,9 @@ namespace Origam.Server.Configuration
             UseMicrosoftLogin = identityServerSection.GetValue("UseMicrosoftLogin", false);
             MicrosoftClientId = identityServerSection["MicrosoftClientId"] ?? "";
             MicrosoftClientSecret = identityServerSection["MicrosoftClientSecret"] ?? "";
+            UseAzureAdLogin = identityServerSection.GetValue("UseAzureAdLogin", false);
+            AzureAdClientId = identityServerSection["AzureAdClientId"] ?? "";
+            AzureAdTenantId = identityServerSection["AzureAdTenantId"] ?? "";
             CookieSlidingExpiration = identityServerSection.GetValue("CookieSlidingExpiration", true);
             CookieExpirationMinutes = identityServerSection.GetValue("CookieExpirationMinutes", 60);
 

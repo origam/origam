@@ -133,7 +133,7 @@ namespace Origam.Server
             services.Configure<ChatConfig>(options => Configuration.GetSection("ChatConfig").Bind(options));
             services.Configure<HtmlClientConfig>(options => Configuration.GetSection("HtmlClientConfig").Bind(options));
 
-           services.AddIdentityServer()
+            services.AddIdentityServer()
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
                 .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
@@ -143,17 +143,17 @@ namespace Origam.Server
                     identityServerConfig.PasswordForJwtCertificate))
                 .AddInMemoryApiScopes(Settings.GetApiScopes());
            
-           services.ConfigureApplicationCookie(options =>
-           {
-               options.ExpireTimeSpan = TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
-               options.SlidingExpiration = identityServerConfig.CookieSlidingExpiration;
-           });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
+                options.SlidingExpiration = identityServerConfig.CookieSlidingExpiration;
+            });
            
-           services.AddSoapCore();
-           services.AddSingleton<DataServiceSoap>();
-           services.AddSingleton<WorkflowServiceSoap>();
+            services.AddSoapCore();
+            services.AddSingleton<DataServiceSoap>();
+            services.AddSingleton<WorkflowServiceSoap>();
 
-           services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization(options => {
@@ -188,6 +188,33 @@ namespace Origam.Server
                     microsoftOptions.ClientSecret = identityServerConfig.MicrosoftClientSecret;
                     microsoftOptions.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
+            }
+
+            if (identityServerConfig.UseAzureAdLogin)
+            {
+                if (string.IsNullOrEmpty(identityServerConfig.AzureAdClientId))
+                {
+                    throw new Exception(
+                        "AzureAdClientId has to be specified when using Azure AD");
+                }
+                if (string.IsNullOrEmpty(identityServerConfig.AzureAdTenantId))
+                {
+                    throw new Exception(
+                        "AzureAdTenantId has to be specified when using Azure AD");
+                }
+                authenticationBuilder.AddOpenIdConnect(
+                    "AzureAd",
+                    "SignInWithAzureAd",
+                    options =>
+                    {
+                        options.ClientId = identityServerConfig.AzureAdClientId;
+                        options.Authority 
+                            = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdTenantId}/";
+                        options.CallbackPath = "/signin-oidc";
+                        options.SaveTokens = true;
+                        options.SignInScheme = IdentityServerConstants
+                            .ExternalCookieAuthenticationScheme;
+                    });
             }
 
             services.Configure<RequestLocalizationOptions>(options =>
