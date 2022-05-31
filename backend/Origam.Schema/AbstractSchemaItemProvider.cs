@@ -189,7 +189,6 @@ namespace Origam.Schema
 	                {
 		                return;
 	                }
-
 	                foreach (ISchemaItem item in this.ChildItems)
                     {
                         if (item.PrimaryKey.Equals(persistedItem.PrimaryKey))
