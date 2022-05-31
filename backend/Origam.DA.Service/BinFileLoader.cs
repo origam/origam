@@ -109,7 +109,13 @@ namespace Origam.DA.Service
         }
         public void Persist(ItemTracker itemTracker)
         {
+#if DEBUG
+            // The CheckDataConsistency method was originally a debugging tool.
+            // Running this method on a medium size project takes about 300 ms
+            // which seemed like a lot for something that is not necessary anymore.
+            // That is why was this call removed from the production builds. 
             CheckDataConsistency(itemTracker);
+#endif
             itemTracker.CleanUp();
             var serializationData = new TrackerSerializationData(
                 itemTracker.AllFiles, itemTracker.GetStats());

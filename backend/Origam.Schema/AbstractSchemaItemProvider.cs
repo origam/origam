@@ -185,7 +185,11 @@ namespace Origam.Schema
                 }
                 else
                 {
-                    foreach (ISchemaItem item in this.ChildItems)
+	                if (!_childItemsPopulated)
+	                {
+		                return;
+	                }
+	                foreach (ISchemaItem item in this.ChildItems)
                     {
                         if (item.PrimaryKey.Equals(persistedItem.PrimaryKey))
                         {
