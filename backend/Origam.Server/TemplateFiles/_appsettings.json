@@ -31,15 +31,24 @@
     "CookieSlidingExpiration": true,
     "PathToJwtCertificate": "serverCore.pfx",
     "PasswordForJwtCertificate": "bla",
-    "UseGoogleLogin": "false",
-    "GoogleClientId": "",
-    "GoogleClientSecret": "",
-    "UseMicrosoftLogin": "false",
-    "MicrosoftClientId": "",
-    "MicrosoftClientSecret": "",
-    "UseAzureAdLogin": "false",
-    "AzureAdClientId": "",
-    "AzureAdTenantId": "",
+    // uncomment following section to enable Google Login
+    /*
+    "GoogleLogin": {
+      "ClientId": "",
+      "ClientSecret": ""
+    },*/
+    // uncomment following section to enable Microsoft Login
+    /*
+    "MicrosoftLogin": {
+      "ClientId": "",
+      "ClientSecret": ""
+    },*/
+    // uncomment following section to enable Azure AD Login
+    /*
+    "AzureAdLogin": {
+      "ClientId": "",
+      "TenantId": ""
+    },*/
     "WebClient": {
       "RedirectUris": [
         "https://localhost:3000/#origamClientCallback/",

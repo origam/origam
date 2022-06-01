@@ -31,47 +31,79 @@ namespace Origam.Server.Configuration
     {
         public string PathToJwtCertificate { get; }
         public string PasswordForJwtCertificate { get; }
-        public string GoogleClientId { get; }
-        public string GoogleClientSecret { get; }
-        public bool UseGoogleLogin { get;}
-        
-        public string MicrosoftClientId { get; }
-        public string MicrosoftClientSecret { get; }
-        public bool UseMicrosoftLogin { get; }
-        
-        public bool UseAzureAdLogin { get; }
-        public string AzureAdClientId { get; }
-        public string AzureAdTenantId { get; }
-
+        public GoogleLogin GoogleLogin { get; }
+        public MicrosoftLogin MicrosoftLogin { get; }
+        public AzureAdLogin AzureAdLogin {get;}
         public WebClient WebClient { get; }
         public MobileClient MobileClient { get; }
         public ServerClient ServerClient { get; }
-        
         public bool CookieSlidingExpiration { get; } 
         public int CookieExpirationMinutes { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
-            IConfigurationSection identityServerSection = configuration.GetSectionOrThrow("IdentityServerConfig");
-            PathToJwtCertificate = identityServerSection.GetStringOrThrow("PathToJwtCertificate");
-            PasswordForJwtCertificate = identityServerSection.GetValue<string>("PasswordForJwtCertificate");
-            UseGoogleLogin = identityServerSection.GetValue("UseGoogleLogin", false);
-            GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
-            GoogleClientSecret = identityServerSection["GoogleClientSecret"] ?? "";
-            UseMicrosoftLogin = identityServerSection.GetValue("UseMicrosoftLogin", false);
-            MicrosoftClientId = identityServerSection["MicrosoftClientId"] ?? "";
-            MicrosoftClientSecret = identityServerSection["MicrosoftClientSecret"] ?? "";
-            UseAzureAdLogin = identityServerSection.GetValue("UseAzureAdLogin", false);
-            AzureAdClientId = identityServerSection["AzureAdClientId"] ?? "";
-            AzureAdTenantId = identityServerSection["AzureAdTenantId"] ?? "";
-            CookieSlidingExpiration = identityServerSection.GetValue("CookieSlidingExpiration", true);
-            CookieExpirationMinutes = identityServerSection.GetValue("CookieExpirationMinutes", 60);
+            IConfigurationSection identityServerSection = configuration
+                .GetSectionOrThrow("IdentityServerConfig");
+            PathToJwtCertificate = identityServerSection
+                .GetStringOrThrow("PathToJwtCertificate");
+            PasswordForJwtCertificate = identityServerSection.GetValue<string>(
+                    "PasswordForJwtCertificate");
+            CookieSlidingExpiration = identityServerSection
+                .GetValue("CookieSlidingExpiration", true);
+            CookieExpirationMinutes = identityServerSection
+                .GetValue("CookieExpirationMinutes", 60);
+            GoogleLogin = ConfigureGoogleLogin(identityServerSection);
+            MicrosoftLogin = ConfigureMicrosoftLogin(identityServerSection);
+            AzureAdLogin = ConfigureAzureAdLogin(identityServerSection);
+            WebClient = ConfigureWebClient(identityServerSection);
+            MobileClient = ConfigureMobileClient(identityServerSection);
+            ServerClient = ConfigureServerClient(identityServerSection);
+        }
 
+        private ServerClient ConfigureServerClient(
+            IConfigurationSection identityServerSection)
+        {
+            var serverClientSection = identityServerSection
+                .GetSection("ServerClient");
+            if (identityServerSection.GetChildren().Any())
+            {
+                return new ServerClient
+                {
+                    ClientSecret = serverClientSection.GetStringOrThrow("ClientSecret")
+                };
+            }
+            return null;
+        }
+
+        private MobileClient ConfigureMobileClient(
+            IConfigurationSection identityServerSection)
+        {
+            var mobileClientSection = identityServerSection
+                .GetSection("MobileClient");
+            if (mobileClientSection.GetChildren().Any())
+            {
+                return new MobileClient
+                {
+                    PostLogoutRedirectUris = mobileClientSection
+                        .GetSectionOrThrow("PostLogoutRedirectUris")
+                        .GetStringArrayOrThrow(),
+                    RedirectUris = mobileClientSection
+                        .GetSectionOrThrow("RedirectUris")
+                        .GetStringArrayOrThrow(),
+                    ClientSecret= mobileClientSection.GetStringOrThrow("ClientSecret")
+                }; 
+            }
+            return null;
+        }
+
+        private WebClient ConfigureWebClient(
+            IConfigurationSection identityServerSection)
+        {
             var webClientSection = identityServerSection
                 .GetSection("WebClient");
-            if (webClientSection.GetChildren().Count() != 0)
+            if (webClientSection.GetChildren().Any())
             {
-                WebClient = new WebClient
+                return new WebClient
                 {
                     PostLogoutRedirectUris = webClientSection
                         .GetSectionOrThrow("PostLogoutRedirectUris")
@@ -84,33 +116,58 @@ namespace Origam.Server.Configuration
                         ?.Get<string[]>()
                 };
             }
-            
-            var mobileClientSection = identityServerSection
-                .GetSection("MobileClient");
+            return null;
+        }
 
-            if (mobileClientSection.GetChildren().Count() != 0)
+        private GoogleLogin ConfigureGoogleLogin(
+            IConfigurationSection identityServerSection)
+        {
+            var googleLoginSection = identityServerSection
+                .GetSection("GoogleLogin");
+            if (googleLoginSection.GetChildren().Any())
             {
-                MobileClient = new MobileClient
+                return new GoogleLogin()
                 {
-                    PostLogoutRedirectUris = mobileClientSection
-                        .GetSectionOrThrow("PostLogoutRedirectUris")
-                        .GetStringArrayOrThrow(),
-                    RedirectUris = mobileClientSection
-                        .GetSectionOrThrow("RedirectUris")
-                        .GetStringArrayOrThrow(),
-                    ClientSecret= mobileClientSection.GetStringOrThrow("ClientSecret")
-                }; 
-            }
-            
-            var serverClientSection = identityServerSection
-                .GetSection("ServerClient");
-            if (identityServerSection.GetChildren().Count() != 0)
-            {
-                ServerClient = new ServerClient
-                {
-                    ClientSecret = serverClientSection.GetStringOrThrow("ClientSecret")
+                    ClientId = googleLoginSection.GetStringOrThrow("ClientId"),
+                    ClientSecret = googleLoginSection
+                        .GetStringOrThrow("ClientSecret")
                 };
             }
+            return null;
+        }
+        
+        private MicrosoftLogin ConfigureMicrosoftLogin(
+            IConfigurationSection identityServerSection)
+        {
+            var microsoftLoginSection = identityServerSection
+                .GetSection("MicrosoftLogin");
+            if (microsoftLoginSection.GetChildren().Any())
+            {
+                return new MicrosoftLogin()
+                {
+                    ClientId = microsoftLoginSection.GetStringOrThrow(
+                        "ClientId"),
+                    ClientSecret = microsoftLoginSection.GetStringOrThrow(
+                    "ClientSecret")
+                };
+            }
+            return null;
+        }
+        
+        private AzureAdLogin ConfigureAzureAdLogin(
+            IConfigurationSection identityServerSection)
+        {
+            var azureAdLoginSection = identityServerSection
+                .GetSection("AzureAdLogin");
+            if (azureAdLoginSection.GetChildren().Any())
+            {
+                return new AzureAdLogin()
+                {
+                    ClientId = azureAdLoginSection.GetStringOrThrow("ClientId"),
+                    TenantId = azureAdLoginSection.GetStringOrThrow("TenantId")
+                };
+            }
+            return null;
         }
     }
 
@@ -131,5 +188,23 @@ namespace Origam.Server.Configuration
         public string[] RedirectUris { get; set; }
         public string[] PostLogoutRedirectUris { get; set; }
         public string ClientSecret { get; set; }
+    }
+
+    public class GoogleLogin
+    {
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+    }
+
+    public class MicrosoftLogin
+    {
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+    }
+    
+    public class AzureAdLogin
+    {
+        public string ClientId { get; set; }
+        public string TenantId { get; set; }
     }
 }
