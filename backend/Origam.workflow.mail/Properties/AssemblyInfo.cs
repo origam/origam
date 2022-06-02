@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Advantage Solutions, s. r. o.")]
 [assembly: AssemblyProduct("Advantage ORIGAM")]
-[assembly: AssemblyCopyright("(c) 2005 - 2021 Advantage Solutions, s. r. o.")]
+[assembly: AssemblyCopyright("(c) 2005 - 2022 Advantage Solutions, s. r. o.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
