@@ -319,7 +319,5 @@ namespace Origam.workflow.mail
             var result = value != null ? value.ToString() : string.Empty;
             return result;
         }
-
-
     }
 }
