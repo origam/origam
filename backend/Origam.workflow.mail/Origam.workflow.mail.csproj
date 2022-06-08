@@ -8,6 +8,7 @@
 	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MimeKit" Version="3.2.0" />
+    <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
   </ItemGroup>
 
   <ItemGroup>

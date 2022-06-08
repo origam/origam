@@ -31,6 +31,7 @@ using Origam.Mail;
 using Origam.Workflow.WorkQueue;
 using Origam.Workbench.Services;
 using MimeKit;
+using MimeTypes;
 
 namespace Origam.workflow.mail
 {
@@ -314,7 +315,9 @@ namespace Origam.workflow.mail
 
         private static string GetDefaultExtension(string mimeType)
         {
-            return string.Empty;
+            var value = MimeTypeMap.GetExtension(mimeType);
+            var result = value != null ? value.ToString() : string.Empty;
+            return result;
         }
     }
 }
