@@ -55,7 +55,7 @@
     "mobx": "5",
     "mobx-react": "6",
     "moment": "^2.29.3",
-    "sass": "^1.50.1",
+    "sass": "^1.52.3",
     "numeral": "^2.0.6",
     "oidc-client": "^1.11.5",
     "react": "^17.0.2",
