@@ -55,6 +55,7 @@ namespace Origam.Schema.WorkflowModel
 			this.ChildItemTypes.Add(typeof(WorkflowCallTask));
 			this.ChildItemTypes.Add(typeof(SetWorkflowPropertyTask));
 			this.ChildItemTypes.Add(typeof(UpdateContextTask));
+			this.ChildItemTypes.Add(typeof(AcceptContextStoreChangesTask));
 			this.ChildItemTypes.Add(typeof(TransactionWorkflowBlock));
 			this.ChildItemTypes.Add(typeof(ForeachWorkflowBlock));
 			this.ChildItemTypes.Add(typeof(LoopWorkflowBlock));
