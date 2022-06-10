@@ -36,7 +36,6 @@ namespace Origam.Schema.WorkflowModel
 		public AcceptContextStoreChangesTask(Key primaryKey) 
 			: base(primaryKey)	{}
 		#region Properties
-		[EntityColumn("G10")]  
 		public Guid ContextStoreId;
 
 		[TypeConverter(typeof(ContextStoreConverter))]
