@@ -80,7 +80,7 @@ export class FormField extends React.Component<IFormFieldProps> {
 
     return (
       <>
-        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption &&
+        {this.props.captionPosition !== ICaptionPosition.None && !this.props.hideCaption && this.props.dock !== IDockType.Fill &&
         <label
           className={S.caption}
           style={getCaptionStyle(this.props)}
