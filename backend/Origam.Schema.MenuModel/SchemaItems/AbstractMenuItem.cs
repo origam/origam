@@ -32,7 +32,7 @@ namespace Origam.Schema.MenuModel
     /// Summary description for AbstractMenuItem.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.1")]
+    [ClassMetaVersion("6.0.2")]
     public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationContextContainer
 	{
 		public const string CategoryConst = "MenuItem";
@@ -118,6 +118,19 @@ namespace Origam.Schema.MenuModel
 				this.GraphicsId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
+
+		private int order = 100;
+		[DefaultValue(100)]
+		[Category("Menu Item")]
+		[Localizable(false)]
+		[NotNullModelElementRule]
+		[Description("Primary attribute to use in sorting of menu items, secondary is Name.")]
+		[XmlAttribute ("order")]
+		public int Order
+		{
+			get => order;
+			set => order = value;
+		}
 		
 		public override byte[] NodeImage
 		{
@@ -145,33 +158,34 @@ namespace Origam.Schema.MenuModel
 
 		public override int CompareTo(object obj)
 		{
-			AbstractMenuItem item = obj as AbstractMenuItem;
-            Submenu submenu = obj as Submenu;
-
-            if (submenu != null)
+			var item = obj as AbstractMenuItem;
+			if (obj is Submenu submenu)
             {
                 return 1;
             }
             if (item != null)
-			{
-				return this.DisplayName.CompareTo(item.DisplayName);
-			}
-			else
-			{
-				return base.CompareTo(obj);
-			}
+            {
+	            var orderComparison = Order.CompareTo(item.Order);
+	            return orderComparison == 0 
+		            ? DisplayName.CompareTo(item.DisplayName) 
+		            : orderComparison;
+            }
+            return base.CompareTo(obj);
 		}
-
 
 		public class MenuItemComparer : System.Collections.IComparer
 		{
-			public MenuItemComparer()
+			#region IComparer Members
+			public int Compare(object x, object y)
 			{
+	            var orderComparison = (x as AbstractMenuItem).Order
+		            .CompareTo((y as AbstractMenuItem).Order);
+	            return orderComparison == 0 
+		            ? (x as AbstractMenuItem).DisplayName
+		            .CompareTo((y as AbstractMenuItem).DisplayName) 
+		            : orderComparison;
 			}
 
-			#region IComparer Members
-
-			public int Compare(object x, object y) => (x as AbstractMenuItem).DisplayName.CompareTo((y as AbstractMenuItem).DisplayName);
 			#endregion
 		}
 	}
