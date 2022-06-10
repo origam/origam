@@ -22,7 +22,10 @@ export class FieldDimensions {
     }
   }
   get isUnset(){
-    return !this.top || !this.left || !this.width || !this.height
+    return this.top === undefined  || this.left === undefined ||
+      this.width === undefined || this.height === undefined ||
+      this.top === null  || this.left === null ||
+      this.width === null || this.height === null
   }
 
   asStyle(){
