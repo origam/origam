@@ -22,4 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-grow: 1;
   overflow: auto;
   background-color: transparent;
+  display: flex;
+  flex-direction: column;
 }
