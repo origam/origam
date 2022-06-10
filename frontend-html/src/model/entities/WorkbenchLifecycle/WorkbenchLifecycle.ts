@@ -485,7 +485,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if(isNaN(intColor)){
         throw new Error(`Color code "${colorEntry[1]}" assigned to color "${hexColorName}" could not be parsed to integer`)
       }
-      const hexColor = "#" + intColor.toString(16);
+      const hexColor = "#" + intColor.toString(16).padStart(6, '0');
       const root = document.querySelector(':root')! as any;
       root.style.setProperty(hexColorName, hexColor);
 
