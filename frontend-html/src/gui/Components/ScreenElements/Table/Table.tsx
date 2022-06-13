@@ -386,8 +386,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     let destinationHeaderIndex = Math.floor(result.destination.index); // separators must also have indices (1.5, 2.5, 3.5...)
     onColumnOrderChangeFinished(
       this.context.tablePanelView,
-      this.context.tablePanelView.tablePropertyIds[result.source.index],
-      this.context.tablePanelView.tablePropertyIds[destinationHeaderIndex]
+      this.context.tablePanelView.tableProperties[result.source.index].id,
+      this.context.tablePanelView.tableProperties[destinationHeaderIndex].id
     );
   }
 
