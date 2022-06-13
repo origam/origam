@@ -90,7 +90,7 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   setSelectedColumnId(id: string | undefined): void;
 
-  swapColumns(id1: string, id2: string): void;
+  moveColumn(idToMove: string, idToMoveBehind: string): void;
 
   columnOrderChangingTargetId: string | undefined;
   columnOrderChangingSourceId: string | undefined;

@@ -349,12 +349,11 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
-  swapColumns(id1: string, id2: string): void {
-    const idx1 = this.tablePropertyIds.findIndex((id) => id === id1);
-    const idx2 = this.tablePropertyIds.findIndex((id) => id === id2);
-    const tmp = this.tablePropertyIds[idx1];
-    this.tablePropertyIds[idx1] = this.tablePropertyIds[idx2];
-    this.tablePropertyIds[idx2] = tmp;
+  moveColumn(idToMove: string, idToMoveBehind: string): void {
+    const idx1 = this.tablePropertyIds.findIndex((id) => id === idToMove);
+    const idx2 = this.tablePropertyIds.findIndex((id) => id === idToMoveBehind);
+    this.tablePropertyIds.splice(idx1,1);
+    this.tablePropertyIds.splice(idx2,0, idToMove);
   }
 
   @action.bound
