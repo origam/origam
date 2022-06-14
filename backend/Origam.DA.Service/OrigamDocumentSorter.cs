@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using MoreLinq;
@@ -27,13 +28,32 @@ namespace Origam.DA.Service
 {
     public static class OrigamDocumentSorter
     {
+        private class XmlnsComparer : IComparer<string>
+        {
+            private const string XmlnsX = "xmlns:x";
+            public int Compare(string x, string y)
+            {
+                if (x == XmlnsX)
+                {
+                    return 1;
+                }
+                if (y == XmlnsX)
+                {
+                    return -1;
+                }
+                return string.Compare(x, y);
+            }
+        }
         public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
         {
-            var nameSpaceInfo = NameSpaceInfo.Create(doc);
+            var nameSpaceInfo = NamespaceInfo.Create(doc);
             var newDoc = new OrigamXmlDocument();
             doc.FileElement.Attributes
                 .Cast<XmlAttribute>()
-                .OrderBy(attribute => attribute.Value)
+                .OrderBy(
+                    attribute => attribute.Name, 
+                    new XmlnsComparer(),
+                    OrderByDirection.Ascending)
                 .ForEach(attribute => 
                     newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value));
             
@@ -43,24 +63,27 @@ namespace Origam.DA.Service
             return newDoc;
         }
 
-        private static void CopyNodes(XmlNode node, XmlElement targetNode, OrigamXmlDocument newDoc, NameSpaceInfo nameSpaceInfo)
+        private static void CopyNodes(
+                XmlNode node, 
+                XmlElement targetNode, 
+                OrigamXmlDocument newDoc, 
+                NamespaceInfo namespaceInfo)
         {
-            string fullName = nameSpaceInfo.AbstractSchemaPrefix + ":name";
-            string fullId = nameSpaceInfo.PersistencePrefix + ":id";
+            var fullId = namespaceInfo.PersistencePrefix + ":id";
             CopyAttributes(node, targetNode);
             node.ChildNodes
                 .Cast<XmlNode>()
-                .OrderBy(childNode => childNode.LocalName)
-                .ThenBy(childNode => childNode.Attributes?[fullName]?.Value ?? "zzzzzzzz")
-                .ThenBy(childNode => childNode.Attributes?[fullId]?.Value ?? "zzzzzzzz")
+                .OrderBy(childNode => childNode.Prefix + childNode.LocalName)
+                .ThenBy(childNode 
+                    => childNode.Attributes?[fullId]?.Value ?? "zzzzzzzz")
                 .ForEach(childNode =>
                 {
                     var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
                         ? newDoc.FileElement.Attributes["xmlns"].Value
                         : childNode.NamespaceURI;
-                    XmlElement childCopy = newDoc.CreateElement(childNode.Name, xmlns);
+                    var childCopy = newDoc.CreateElement(childNode.Name, xmlns);
                     targetNode.AppendChild(childCopy);
-                    CopyNodes(childNode, childCopy, newDoc, nameSpaceInfo);
+                    CopyNodes(childNode, childCopy, newDoc, namespaceInfo);
                 });
         }
 
@@ -77,13 +100,13 @@ namespace Origam.DA.Service
         }
     }
 
-    class NameSpaceInfo
+    class NamespaceInfo
     {
-        public static NameSpaceInfo Create(OrigamXmlDocument doc)
+        public static NamespaceInfo Create(OrigamXmlDocument doc)
         {
             var xmlAttributes = doc.FileElement?.Attributes?
                 .Cast<XmlAttribute>();
-            return new NameSpaceInfo
+            return new NamespaceInfo
             {
                 PersistencePrefix = xmlAttributes
                     ?.FirstOrDefault(attr => attr.Value.StartsWith(
