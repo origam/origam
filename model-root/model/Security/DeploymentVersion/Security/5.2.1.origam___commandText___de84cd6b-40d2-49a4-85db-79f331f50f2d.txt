@@ -1,7 +1,6 @@
 ﻿IF (NOT EXISTS (SELECT * 
                  FROM INFORMATION_SCHEMA.TABLES 
-                 WHERE TABLE_SCHEMA = 'dbo' 
-                 AND  TABLE_NAME = 'OrigamIdentityGrant'))
+                 WHERE TABLE_NAME = 'OrigamIdentityGrant'))
 BEGIN   
 	CREATE TABLE [OrigamIdentityGrant] (
 		[Key] NVarChar(100) NULL,

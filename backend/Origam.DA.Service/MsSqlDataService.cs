@@ -554,7 +554,7 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
 
         public override string CreateBusinessPartnerInsert(QueryParameterCollection parameters)
         {
-            return string.Format("INSERT INTO [dbo].[BusinessPartner] ([FirstName],[UserName],[Name],[Id],[UserEmail]) " +
+            return string.Format("INSERT INTO [BusinessPartner] ([FirstName],[UserName],[Name],[Id],[UserEmail]) " +
                 "VALUES ('{0}','{1}','{2}','{3}','{4}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name== "FirstName").Select(param =>param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
@@ -565,7 +565,7 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
 
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
-            return string.Format("INSERT INTO [dbo].[OrigamUser] " +
+            return string.Format("INSERT INTO [OrigamUser] " +
                 "([UserName],[IsLockedOut],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
                 "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')", 
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
@@ -577,7 +577,7 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
 
         public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
         {
-            return string.Format("INSERT INTO [dbo].[BusinessPartnerOrigamRole] ([Id],[refBusinessPartnerId],[refOrigamRoleId]) " +
+            return string.Format("INSERT INTO [BusinessPartnerOrigamRole] ([Id],[refBusinessPartnerId],[refOrigamRoleId]) " +
                 "VALUES ('{0}','{1}','{2}')",
                 Guid.NewGuid().ToString(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
@@ -586,7 +586,7 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
 
         public override string AlreadyCreatedUser(QueryParameterCollection parameters)
         {
-            return string.Format("UPDATE [dbo].[OrigamParameters] SET [BooleanValue] = 1 WHERE [Id] = 'e42f864f-5018-4967-abdc-5910439adc9a'");
+            return string.Format("UPDATE [OrigamParameters] SET [BooleanValue] = 1 WHERE [Id] = 'e42f864f-5018-4967-abdc-5910439adc9a'");
         }
 
         protected override void ResetTransactionIsolationLevel(IDbCommand command)

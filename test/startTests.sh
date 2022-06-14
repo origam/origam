@@ -12,7 +12,7 @@ fi
 export ASPNETCORE_URLS="http://+:8080"
 dotnet Origam.Server.dll &
 echo "TEST DB Connection"
-DATAOUT=$(dotnet origam-utils.dll test-db -t 5 -d 5000 -c "SELECT 1 FROM dbo.\"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
+DATAOUT=$(dotnet origam-utils.dll test-db -t 5 -d 5000 -c "SELECT 1 FROM \"OrigamModelVersion\" where \"refSchemaExtensionId\"='${OrigamSettings_SchemaExtensionGuid}'")
 if [[ "$DATAOUT" != True ]]; then
 echo "Database connection failed";
 exit 1;

@@ -30,7 +30,7 @@ ALTER TABLE BusinessPartnerAsapRole WITH NOCHECK ADD CONSTRAINT
 	FK_BusinessPartnerAsapRole_refAsapRoleId_AsapRole FOREIGN KEY
 	(
 	refAsapRoleId
-	) REFERENCES dbo.AsapRole
+	) REFERENCES AsapRole
 	(
 	Id
 	)
