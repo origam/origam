@@ -33,6 +33,10 @@ namespace Origam.DA.Service
             private const string XmlnsX = "xmlns:x";
             public int Compare(string x, string y)
             {
+                if ((x == XmlnsX) && (y == XmlnsX))
+                {
+                    return 0;
+                }
                 if (x == XmlnsX)
                 {
                     return 1;
@@ -56,7 +60,6 @@ namespace Origam.DA.Service
                     OrderByDirection.Ascending)
                 .ForEach(attribute => 
                     newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value));
-            
             doc.ChildNodes
                 .Cast<XmlNode>()
                 .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc, nameSpaceInfo));
@@ -75,7 +78,9 @@ namespace Origam.DA.Service
                 .Cast<XmlNode>()
                 .OrderBy(childNode => childNode.Prefix + childNode.LocalName)
                 .ThenBy(childNode 
-                    => childNode.Attributes?[fullId]?.Value ?? "zzzzzzzz")
+                    => childNode.Attributes?[fullId]?.Value 
+                       ?? childNode.Attributes?["id"]?.Value 
+                       ?? "zzzzzzzz")
                 .ForEach(childNode =>
                 {
                     var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
