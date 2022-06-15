@@ -24,56 +24,38 @@ using Origam.Schema.WorkflowModel;
 
 namespace Origam.Workflow
 {
-	/// <summary>
-	/// Summary description for WorkflowTaskFactory.
-	/// </summary>
 	public class WorkflowTaskFactory
 	{
 		public static IWorkflowEngineTask GetTask(IWorkflowStep step)
 		{
-			if(step is CheckRuleStep)
+			switch(step)
 			{
-				return new Tasks.CheckRuleEngineTask();
-			}
-			else if(step is ServiceMethodCallTask)
-			{
-				return new Tasks.ServiceMethodCallEngineTask();
-			}
-			else if(step is WorkflowCallTask)
-			{
-				return new Tasks.WorkflowCallEngineTask();
-			}
-			else if(step is ForeachWorkflowBlock)
-			{
-				return new Tasks.ForEachBlockEngineTask();
-			}
-			else if(step is TransactionWorkflowBlock)
-			{
-				return new Tasks.TransactionBlockEngineTask();
-			}
-			else if(step is UIFormTask)
-			{
-				return new Tasks.UIEngineTask();
-			}
-			else if(step is SetWorkflowPropertyTask)
-			{
-				return new Tasks.SetWorkflowPropertyEngineTask();
-			}
-			else if(step is UpdateContextTask)
-			{
-				return new Tasks.UpdateContextEngineTask();
-			}
-			else if(step is LoopWorkflowBlock)
-			{
-				return new Tasks.LoopBlockEngineTask();
-			}
-			else if(step is WaitTask)
-			{
-				return new Tasks.WaitEngineTask();
-			}
-			else
-			{
-				throw new ArgumentOutOfRangeException("step", step, ResourceUtils.GetString("ErrorStepNotImplemented"));
+				case CheckRuleStep _:
+					return new Tasks.CheckRuleEngineTask();
+				case ServiceMethodCallTask _:
+					return new Tasks.ServiceMethodCallEngineTask();
+				case WorkflowCallTask _:
+					return new Tasks.WorkflowCallEngineTask();
+				case ForeachWorkflowBlock _:
+					return new Tasks.ForEachBlockEngineTask();
+				case TransactionWorkflowBlock _:
+					return new Tasks.TransactionBlockEngineTask();
+				case UIFormTask _:
+					return new Tasks.UIEngineTask();
+				case SetWorkflowPropertyTask _:
+					return new Tasks.SetWorkflowPropertyEngineTask();
+				case UpdateContextTask _:
+					return new Tasks.UpdateContextEngineTask();
+				case AcceptContextStoreChangesTask _:
+					return new Tasks.AcceptContextStoreChangesEngineTask();
+				case LoopWorkflowBlock _:
+					return new Tasks.LoopBlockEngineTask();
+				case WaitTask _:
+					return new Tasks.WaitEngineTask();
+				default:
+					throw new ArgumentOutOfRangeException(
+						"step", step, 
+						ResourceUtils.GetString("ErrorStepNotImplemented"));
 			}
 		}
 	}

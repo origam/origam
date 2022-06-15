@@ -77,7 +77,7 @@ namespace Origam.ReflectorCache
 
 		public object InvokeObject(string typeName, object[] args)
 		{
-			Key key = args[0] as Key;
+			var key = args[0] as Key;
 			switch(typeName)
 			{
 				case "Origam.Schema.EntityModel.DataConstantReference":
@@ -102,6 +102,8 @@ namespace Origam.ReflectorCache
 					return new Origam.Schema.WorkflowModel.SetWorkflowPropertyTask(key);
 				case "Origam.Schema.WorkflowModel.UpdateContextTask":
 					return new Origam.Schema.WorkflowModel.UpdateContextTask(key);
+				case "Origam.Schema.WorkflowModel.AcceptContextStoreChanges":
+					return new Origam.Schema.WorkflowModel.AcceptContextStoreChangesTask(key);
 				case "Origam.Schema.EntityModel.DataStructureReference":
 					return new Origam.Schema.EntityModel.DataStructureReference(key);
 				case "Origam.Schema.GuiModel.PropertyValueItem":
