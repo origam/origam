@@ -163,60 +163,52 @@ namespace Origam.Server
             var authenticationBuilder = services
                 .AddLocalApiAuthentication()
                 .AddAuthentication();
-            
-            if (identityServerConfig.UseGoogleLogin)
+            if (identityServerConfig.GoogleLogin != null)
             {
                 authenticationBuilder.AddGoogle(
                    GoogleDefaults.AuthenticationScheme,
                    "SignInWithGoogleAccount",
                    options =>
                 {
-                   options.ClientId = identityServerConfig.GoogleClientId;
-                   options.ClientSecret = identityServerConfig.GoogleClientSecret; 
-                   options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                   options.ClientId = identityServerConfig.GoogleLogin.ClientId;
+                   options.ClientSecret = identityServerConfig.GoogleLogin
+                       .ClientSecret; 
+                   options.SignInScheme = IdentityServerConstants
+                       .ExternalCookieAuthenticationScheme;
                 });
             }
-
-            if (identityServerConfig.UseMicrosoftLogin)
+            if (identityServerConfig.MicrosoftLogin != null)
             {
                 authenticationBuilder.AddMicrosoftAccount(
                     MicrosoftAccountDefaults.AuthenticationScheme,
                     "SignInWithMicrosoftAccount", 
                     microsoftOptions =>
                 {
-                    microsoftOptions.ClientId = identityServerConfig.MicrosoftClientId;
-                    microsoftOptions.ClientSecret = identityServerConfig.MicrosoftClientSecret;
-                    microsoftOptions.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    microsoftOptions.ClientId = identityServerConfig
+                        .MicrosoftLogin.ClientId;
+                    microsoftOptions.ClientSecret = identityServerConfig
+                        .MicrosoftLogin.ClientSecret;
+                    microsoftOptions.SignInScheme = IdentityServerConstants
+                        .ExternalCookieAuthenticationScheme;
                 });
             }
-
-            if (identityServerConfig.UseAzureAdLogin)
+            if (identityServerConfig.AzureAdLogin != null)
             {
-                if (string.IsNullOrEmpty(identityServerConfig.AzureAdClientId))
-                {
-                    throw new Exception(
-                        "AzureAdClientId has to be specified when using Azure AD");
-                }
-                if (string.IsNullOrEmpty(identityServerConfig.AzureAdTenantId))
-                {
-                    throw new Exception(
-                        "AzureAdTenantId has to be specified when using Azure AD");
-                }
                 authenticationBuilder.AddOpenIdConnect(
                     "AzureAd",
                     "SignInWithAzureAd",
                     options =>
                     {
-                        options.ClientId = identityServerConfig.AzureAdClientId;
+                        options.ClientId = identityServerConfig.AzureAdLogin
+                            .ClientId;
                         options.Authority 
-                            = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdTenantId}/";
+                            = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
                         options.CallbackPath = "/signin-oidc";
                         options.SaveTokens = true;
                         options.SignInScheme = IdentityServerConstants
                             .ExternalCookieAuthenticationScheme;
                     });
             }
-
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = languageConfig.DefaultCulture;
@@ -243,7 +235,7 @@ namespace Origam.Server
                 app.UseExceptionHandler("/Error/Error");
                 app.UseHsts();
             }
-            if (Configuration.GetValue<bool>("BehindProxy") == true)
+            if (Configuration.GetValue<bool>("BehindProxy"))
             {
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
