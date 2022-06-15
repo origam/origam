@@ -19,13 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-//using ConfigurationManager = Origam.ConfigurationManager;
-
 using CommandLine;
 using CommandLine.Text;
 using Origam.DA;
 using Origam.DA.Service;
-using Origam.OrigamEngine;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
 using Origam.Workbench.Services;
@@ -34,7 +31,6 @@ using System.Collections;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using BrockAllen.IdentityReboot;
@@ -50,7 +46,7 @@ namespace Origam.Utils
 
         private static EventHandler cancelHandler;
 
-        private static log4net.ILog log =
+        private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase
                 .GetCurrentMethod().DeclaringType);
 
@@ -86,7 +82,7 @@ namespace Origam.Utils
         {
         }
 
-        class RestarServerOptions
+        class RestartServerOptions
         {
         }
 
@@ -94,7 +90,7 @@ namespace Origam.Utils
         {
             [Option('d', "missing-in-db", DefaultValue = false,
                 HelpText = "Display elements missing in database.")]
-            public bool MissingInDB { get; set; }
+            public bool MissingInDb { get; set; }
 
             [Option('s', "missing-in-schema", DefaultValue = false,
                 HelpText = "Display elements missing in schema.")]
@@ -115,10 +111,10 @@ namespace Origam.Utils
                 HelpText = "MaxDegreeOfParallelism.")]
             public int Parallelism { get; set; }
 
-            [Option('w', "forceWait_ms", Required = false, DefaultValue = 0,
+            [Option('w', "forceWait", Required = false, DefaultValue = 0,
                 HelpText =
-                    "Delay between processing of queue items in miliseconds.")]
-            public int ForceWait_ms { get; set; }
+                    "Delay between processing of queue items in milliseconds.")]
+            public int ForceWaitMs { get; set; }
 
             [Option('v', "verbose", DefaultValue = true,
                 HelpText = "Prints all messages to standard output.")]
@@ -127,28 +123,28 @@ namespace Origam.Utils
             [ParserState] public IParserState LastParserState { get; set; }
         }
 
-        public class ProcessCheckRules
+        class ProcessCheckRules
         {
         }
         
-        public class DBTestArguments
+        class DbTestArguments
         {
-            [Option('t', "tries", Required = true,
+            [Option('a', "attempts", Required = true,
                 HelpText = "How many times to run test.")]
-            public int tries { get; set; }
+            public int Attempts { get; set; }
             [Option('d', "delay", Required = true,
                 HelpText = "How long to wait till next try.")]
-            public int delay { get; set; }
+            public int Delay { get; set; }
             [Option('c', "sql-command", Required = true,
                 HelpText = "What sql-command to run.")]
-            public string sqlCommand { get; set; }
+            public string SqlCommand { get; set; }
         }
 
-        public class ProcessDocGeneratorArgs
+        class ProcessDocGeneratorArgs
         {
             [Option('o', "output", Required = true,
                 HelpText = "Output directory")]
-            public string Dataout { get; set; }
+            public string Output { get; set; }
 
             [Option('l', "language", Required = true,
                 HelpText = "Localization(ie. cs-CZ).")]
@@ -164,7 +160,7 @@ namespace Origam.Utils
             [ParserState] public IParserState LastParserState { get; set; }
         }
 
-        internal class GeneratePassHashOptions
+        class GeneratePassHashOptions
         {
             [Option('p', "password", Required = true,
                 HelpText = "String to hash")]
@@ -187,7 +183,7 @@ namespace Origam.Utils
             public GeneratePassHashOptions GeneratePassHashOptions { get; set; }
             
             [VerbOption("test-db", HelpText = "Try to connect to database and run a sql command.")]
-            public DBTestArguments DbTestArguments { get; set; }
+            public DbTestArguments DbTestArguments { get; set; }
 #if !NETCORE2_1
             [VerbOption("process-queue",
                 HelpText = "Process a queue.")]
@@ -198,7 +194,7 @@ namespace Origam.Utils
             public RunUpdateScriptsOptions RunUpdateScriptsVerb { get; set; }
 
             [VerbOption("restart-server", HelpText = "Invokes server restart.")]
-            public RestarServerOptions RestartServerVerb { get; set; }
+            public RestartServerOptions RestartServerVerb { get; set; }
 
             [VerbOption("create-hash-index",
                 HelpText =
@@ -220,7 +216,6 @@ namespace Origam.Utils
             }
         }
 
-
         private static bool CancelHandler(CtrlType sig)
         {
             log.Info("Exiting system due to external CTRL-C," +
@@ -233,7 +228,7 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
-            string invokedVerb = "";
+            var invokedVerb = "";
             object invokedVerbInstance = null;
             var options = new Options();
             if (!Parser.Default.ParseArguments(args, options,
@@ -245,19 +240,18 @@ namespace Origam.Utils
             {
                 return 1;
             }
-
             switch (invokedVerb)
             {
                 case "process-checkrules":
                 {
                         EntryAssembly();
-                        return ProcesRule(
+                        return ProcessRule(
                         (ProcessCheckRules)invokedVerbInstance);
                 }
                 case "process-docgenerator":
                 {
                         EntryAssembly();
-                        return ProcesDocGenerator(
+                        return ProcessDocGenerator(
                         (ProcessDocGeneratorArgs)invokedVerbInstance);
                 }
                 case "generate-password-hash":
@@ -270,7 +264,7 @@ namespace Origam.Utils
                 case "process-queue":
                 {
                         EntryAssembly();
-                        return ProcesQueue(
+                        return ProcessQueue(
                         (ProcessQueueOptions)invokedVerbInstance);
                 }
                 case "run-scripts":
@@ -298,7 +292,7 @@ namespace Origam.Utils
                 case "test-db":
                 {
                     return TestDatabase(
-                        (DBTestArguments)invokedVerbInstance);
+                        (DbTestArguments)invokedVerbInstance);
                 }
 #endif
                 default:
@@ -317,62 +311,54 @@ namespace Origam.Utils
 
         private static int HashPassword(GeneratePassHashOptions options)
         {
-            string hash =
+            var hash =
                 new AdaptivePasswordHasher().HashPassword(options.Password);
-
             log.Info("");
             log.Info("Password: " + options.Password);
             log.Info("Hash: " + hash);
-
             return 0;
         }
 
-        private static int ProcesDocGenerator(ProcessDocGeneratorArgs config)
+        private static int ProcessDocGenerator(ProcessDocGeneratorArgs config)
         {
-            Thread.CurrentThread.CurrentUICulture =
-                new CultureInfo(config.Language);
-            RuntimeServiceFactoryProcessor RuntimeServiceFactory =
-                new RuntimeServiceFactoryProcessor();
+            Thread.CurrentThread.CurrentUICulture 
+                = new CultureInfo(config.Language);
+            var runtimeServiceFactory = new RuntimeServiceFactoryProcessor();
             OrigamEngine.OrigamEngine.ConnectRuntime(
-                customServiceFactory: RuntimeServiceFactory);
-            OrigamSettings settings =
-                ConfigurationManager.GetActiveConfiguration();
-            FilePersistenceService persistenceService =
-                ServiceManager.Services.GetService(
-                    typeof(FilePersistenceService)) as FilePersistenceService;
-            MenuSchemaItemProvider menuprovider = new MenuSchemaItemProvider
+                customServiceFactory: runtimeServiceFactory);
+            var settings = ConfigurationManager.GetActiveConfiguration();
+            var persistenceService 
+                = ServiceManager.Services.GetService<FilePersistenceService>();
+            var menuProvider = new MenuSchemaItemProvider
             {
-                PersistenceProvider =
-                    (FilePersistenceProvider)persistenceService.SchemaProvider
+                PersistenceProvider 
+                    = (FilePersistenceProvider)persistenceService.SchemaProvider
             };
-
-            FilePersistenceProvider persprovider =
-                (FilePersistenceProvider)persistenceService.SchemaProvider;
+            var persistenceProvider 
+                = (FilePersistenceProvider)persistenceService.SchemaProvider;
             persistenceService.LoadSchema(settings.DefaultSchemaExtensionId,
                 false, false, "");
-
             var documentation = new FileStorageDocumentationService(
-                persprovider,
+                persistenceProvider,
                 persistenceService.FileEventQueue);
-            new DocProcessor(config.Dataout, config.Xslt, config.RootFile,
+            new DocProcessor(config.Output, config.Xslt, config.RootFile,
                 documentation,
-                menuprovider, persistenceService, null).Run();
+                menuProvider, persistenceService, null).Run();
             return 0;
-
         }
 
-        private static int ProcesRule(ProcessCheckRules invokedVerbInstance)
+        private static int ProcessRule(ProcessCheckRules invokedVerbInstance)
         {
-            RulesProcessor rulesProcessor = new RulesProcessor();
+            var rulesProcessor = new RulesProcessor();
             return rulesProcessor.Run();
         }
 
-        private static int ProcesQueue(ProcessQueueOptions options)
+        private static int ProcessQueue(ProcessQueueOptions options)
         {
             log.Info("------------ Input -------------");
             log.Info($"queueCode: {options.QueueRefCode}");
             log.Info($"parallelism: {options.Parallelism}");
-            log.Info($"forceWait_ms: {options.ForceWait_ms}");
+            log.Info($"forceWait_ms: {options.ForceWaitMs}");
             log.Info($"-------------------------------");
             cancelHandler += CancelHandler;
             SetConsoleCtrlHandler(cancelHandler, true);
@@ -389,7 +375,7 @@ namespace Origam.Utils
                 queueProcessor = new QueueProcessor(
                     options.QueueRefCode,
                     options.Parallelism,
-                    options.ForceWait_ms
+                    options.ForceWaitMs
                 );
                 queueProcessor.Run();
             }
@@ -405,11 +391,10 @@ namespace Origam.Utils
             {
                 log.Info("Running update scripts...");
             }
-
             OrigamEngine.OrigamEngine.ConnectRuntime(
                 runRestartTimer: false, loadDeploymentScripts: true);
-            IDeploymentService deployment = ServiceManager.Services.GetService(
-                typeof(IDeploymentService)) as IDeploymentService;
+            var deployment
+                = ServiceManager.Services.GetService<IDeploymentService>();
             deployment.Deploy();
             return 0;
         }
@@ -427,7 +412,6 @@ namespace Origam.Utils
             {
                 log.Info("Invoking server restart...");
             }
-
             OrigamEngine.OrigamEngine.SetRestart();
         }
 
@@ -439,35 +423,29 @@ namespace Origam.Utils
                     "Creating hash index file {1} on folder {0} with pattern {2}.",
                     options?.Input, options?.Output, options?.Mask);
             }
-
-            string[] fileNames =
-                Directory.GetFiles(options.Input, options.Mask);
-            HashIndexFile hashIndexFile
-                = new HashIndexFile(options.Output);
-            foreach (string filename in fileNames)
+            var fileNames 
+                = Directory.GetFiles(options.Input, options.Mask);
+            var hashIndexFile = new HashIndexFile(options.Output);
+            foreach (var filename in fileNames)
             {
                 if (log.IsInfoEnabled)
                 {
                     log.InfoFormat("Hashing {0}...", filename);
                 }
-
                 hashIndexFile.AddEntryToIndexFile(
-                    hashIndexFile.CreateIndexFileEntry(
-                        filename));
+                    hashIndexFile.CreateIndexFileEntry(filename));
             }
-
             if (log.IsInfoEnabled)
             {
                 log.Info("Hash index file finished.");
             }
-
             hashIndexFile.Dispose();
             return 0;
         }
 
         private static int CompareSchema(CompareSchemaOptions options)
         {
-            if (!options.MissingInDB 
+            if (!options.MissingInDb 
                 && !options.MissingInSchema
                 && !options.ExistingButDifferent)
             {
@@ -475,32 +453,26 @@ namespace Origam.Utils
                 {
                     log.Info("No comparison switches enabled...");
                 }
-
                 return 0;
             }
-
             OrigamEngine.OrigamEngine.ConnectRuntime(runRestartTimer: false);
             if (log.IsInfoEnabled)
             {
                 log.Info(
                     $@"Comparing schema with database: missing in database({
-                        options.MissingInDB}), missing in schema({
+                        options.MissingInDb}), missing in schema({
                             options.MissingInSchema}), existing but different({
                                 options.ExistingButDifferent})...");
             }
-
-            IPersistenceService persistenceService
-                = ServiceManager.Services.GetService(
-                    typeof(IPersistenceService)) as IPersistenceService;
-            OrigamSettings settings
-                = ConfigurationManager.GetActiveConfiguration() as
-                    OrigamSettings;
-            MsSqlDataService dataService = new MsSqlDataService(
+            var persistenceService
+                = ServiceManager.Services.GetService<IPersistenceService>();
+            var settings = ConfigurationManager.GetActiveConfiguration();
+            var dataService = new MsSqlDataService(
                 settings.DataConnectionString,
                 settings.DataBulkInsertThreshold,
                 settings.DataUpdateBatchSize);
             dataService.PersistenceProvider = persistenceService.SchemaProvider;
-            ArrayList results = dataService.CompareSchema(
+            var results = dataService.CompareSchema(
                 persistenceService.SchemaProvider);
             if (results.Count == 0)
             {
@@ -508,21 +480,17 @@ namespace Origam.Utils
                 {
                     log.Info("No differences found.");
                 }
-
                 return 0;
             }
-            else
-            {
-                return DisplaySchemaComparisonResults(options, results);
-            }
+            return DisplaySchemaComparisonResults(options, results);
         }
 
         private static int DisplaySchemaComparisonResults(
             CompareSchemaOptions options, ArrayList results)
         {
-            ArrayList existingButDifferent = new ArrayList();
-            ArrayList missingInDatabase = new ArrayList();
-            ArrayList missingInSchema = new ArrayList();
+            var existingButDifferent = new ArrayList();
+            var missingInDatabase = new ArrayList();
+            var missingInSchema = new ArrayList();
             foreach (SchemaDbCompareResult result in results)
             {
                 switch (result.ResultType)
@@ -544,42 +512,34 @@ namespace Origam.Utils
                     }
                 }
             }
-
-            int displayedResultsCount = 0;
-            if (options.MissingInDB)
+            var displayedResultsCount = 0;
+            if (options.MissingInDb)
             {
                 DisplayComparisonResultGroup(
                     missingInDatabase, "Missing in Database:");
                 displayedResultsCount += missingInDatabase.Count;
             }
-
             if (options.MissingInSchema)
             {
                 DisplayComparisonResultGroup(
                     missingInSchema, "Missing in Schema:");
                 displayedResultsCount += missingInSchema.Count;
             }
-
             if (options.ExistingButDifferent)
             {
                 DisplayComparisonResultGroup(
                     existingButDifferent, "Existing But Different:");
                 displayedResultsCount += existingButDifferent.Count;
             }
-
             if (displayedResultsCount == 0)
             {
                 if (log.IsInfoEnabled)
                 {
                     log.Info("No differences found.");
                 }
-
                 return 0;
             }
-            else
-            {
-                return 1;
-            }
+            return 1;
         }
 
         private static void DisplayComparisonResultGroup(
@@ -597,13 +557,12 @@ namespace Origam.Utils
             }
         }
 
-        private static int TestDatabase(DBTestArguments arguments)
+        private static int TestDatabase(DbTestArguments arguments)
         {
             OrigamSettingsCollection configurations;
             try
             {
-                configurations =
-                    ConfigurationManager.GetAllConfigurations();
+                configurations = ConfigurationManager.GetAllConfigurations();
                 if (configurations.Count != 1)
                 {
                     return SetTestDatabaseReturn(false);
@@ -612,31 +571,28 @@ namespace Origam.Utils
             {
                 return SetTestDatabaseReturn(false);
             }
-            OrigamSettings settings = configurations[0];
-            string connString = settings.DataConnectionString;
-            bool result = false;
-            for (int i = 0; i < arguments.tries; i++)
+            var origamSettings = configurations[0];
+            var connString = origamSettings.DataConnectionString;
+            var result = false;
+            for (var i = 0; i < arguments.Attempts; i++)
             {
                 try
                 {
                     using (var connection = new SqlConnection(connString))
                     {
-                        var query = arguments.sqlCommand;
+                        var query = arguments.SqlCommand;
                         var command = new SqlCommand(query, connection);
                         connection.Open();
-                        var info = command.ExecuteScalar().ToString();
-                        if (info != null)
-                        {
-                            result = true;
-                            break;
-                        }
+                        command.ExecuteScalar();
+                        result = true;
+                        break;
                     }
                 }
                 catch (Exception ex)
                 {
                     log.Info("Failure:", ex);
                 }
-                Thread.Sleep(arguments.delay);
+                Thread.Sleep(arguments.Delay);
             }
             return SetTestDatabaseReturn(result);
         }
