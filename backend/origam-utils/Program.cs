@@ -31,6 +31,7 @@ using System.Collections;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using BrockAllen.IdentityReboot;
@@ -337,11 +338,13 @@ namespace Origam.Utils
                 Console.WriteLine("Failed to load OrigamSettings.config");
                 return -1;
             }
-			Directory.GetFiles(
-                configurations[0].ModelSourceControlLocation, 
-                "*.origam", 
-                SearchOption.AllDirectories).ForEach(
-                path =>
+			Directory
+                .EnumerateFiles(
+                    configurations[0].ModelSourceControlLocation, 
+                    "*.origam", 
+                    SearchOption.AllDirectories)
+                .AsParallel()
+                .ForEach(path =>
                 {
                     Console.Write("Processing ");
                     Console.Write(path);
