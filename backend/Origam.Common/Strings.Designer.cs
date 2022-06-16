@@ -178,7 +178,7 @@ namespace Origam {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} Copyright (C) 2021  Advantage Solutions, s.r.o 
+        ///   Looks up a localized string similar to {0} Copyright (C) 2022  Advantage Solutions, s.r.o 
         ///This program comes with ABSOLUTELY NO WARRANTY.
         ///This is free software, and you are welcome to redistribute it
         ///under certain conditions..

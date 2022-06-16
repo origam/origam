@@ -34,6 +34,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using BrockAllen.IdentityReboot;
+using MoreLinq.Extensions;
+using Origam.Extensions;
 
 namespace Origam.Utils
 {
@@ -123,11 +125,11 @@ namespace Origam.Utils
             [ParserState] public IParserState LastParserState { get; set; }
         }
 
-        class ProcessCheckRules
+        class ProcessCheckRulesOptions
         {
         }
         
-        class DbTestArguments
+        class DbTestOptions
         {
             [Option('a', "attempts", Required = true,
                 HelpText = "How many times to run test.")]
@@ -140,7 +142,7 @@ namespace Origam.Utils
             public string SqlCommand { get; set; }
         }
 
-        class ProcessDocGeneratorArgs
+        class ProcessDocGeneratorOptions
         {
             [Option('o', "output", Required = true,
                 HelpText = "Output directory")]
@@ -160,6 +162,10 @@ namespace Origam.Utils
             [ParserState] public IParserState LastParserState { get; set; }
         }
 
+        class NormalizeFileFormatOptions
+        {
+        }
+
         class GeneratePassHashOptions
         {
             [Option('p', "password", Required = true,
@@ -169,13 +175,13 @@ namespace Origam.Utils
 
         class Options
         {
-            [VerbOption("process-checkrules",
+            [VerbOption("process-check-rules",
                 HelpText = "Check rules in project.")]
-            public ProcessCheckRules ProcessCheckRules { get; set; }
+            public ProcessCheckRulesOptions ProcessCheckRules { get; set; }
 
-            [VerbOption("process-docgenerator",
+            [VerbOption("process-doc-generator",
                 HelpText = "Generate Menu into output with xslt template.")]
-            public ProcessDocGeneratorArgs ProcessDocGeneratorArgs { get; set; }
+            public ProcessDocGeneratorOptions ProcessDocGeneratorArgs { get; set; }
 
             [VerbOption("generate-password-hash",
                 HelpText =
@@ -183,7 +189,7 @@ namespace Origam.Utils
             public GeneratePassHashOptions GeneratePassHashOptions { get; set; }
             
             [VerbOption("test-db", HelpText = "Try to connect to database and run a sql command.")]
-            public DbTestArguments DbTestArguments { get; set; }
+            public DbTestOptions DbTestArguments { get; set; }
 #if !NETCORE2_1
             [VerbOption("process-queue",
                 HelpText = "Process a queue.")]
@@ -205,6 +211,15 @@ namespace Origam.Utils
                 HelpText =
                     "Compares schema with database. If no comparison switches are defined, no comparison is done. More than one switch can be enabled.")]
             public CompareSchemaOptions CompareSchemaVerb { get; set; }
+            
+            [VerbOption("normalize-file-format",
+                HelpText =
+                    "Formats all files in the model according to the actual formatting rules.")]
+            public NormalizeFileFormatOptions NormalizeFileFormatOptions
+            {
+                get;
+                set;
+            }
 #endif
             [ParserState] 
             public IParserState LastParserState { get; set; }
@@ -240,65 +255,61 @@ namespace Origam.Utils
             {
                 return 1;
             }
+            EntryAssembly();
             switch (invokedVerb)
             {
                 case "process-checkrules":
                 {
-                        EntryAssembly();
                         return ProcessRule(
-                        (ProcessCheckRules)invokedVerbInstance);
+                            (ProcessCheckRulesOptions)invokedVerbInstance);
                 }
                 case "process-docgenerator":
                 {
-                        EntryAssembly();
                         return ProcessDocGenerator(
-                        (ProcessDocGeneratorArgs)invokedVerbInstance);
+                            (ProcessDocGeneratorOptions)invokedVerbInstance);
                 }
                 case "generate-password-hash":
                 {
-                        EntryAssembly();
                         return HashPassword(
-                        (GeneratePassHashOptions)invokedVerbInstance);
+                            (GeneratePassHashOptions)invokedVerbInstance);
                 }
 #if !NETCORE2_1
                 case "process-queue":
                 {
-                        EntryAssembly();
                         return ProcessQueue(
-                        (ProcessQueueOptions)invokedVerbInstance);
+                            (ProcessQueueOptions)invokedVerbInstance);
                 }
                 case "run-scripts":
                 {
-                        EntryAssembly();
                         return RunUpdateScripts();
                 }
                 case "restart-server":
                 {
-                        EntryAssembly();
                         return RestartServer();
                 }
                 case "create-hash-index":
                 {
-                        EntryAssembly();
                         return CreateHashIndex(
-                        (CreateHashIndexOptions)invokedVerbInstance);
+                            (CreateHashIndexOptions)invokedVerbInstance);
                 }
                 case "compare-schema":
                 {
-                        EntryAssembly();
                         return CompareSchema(
-                        (CompareSchemaOptions)invokedVerbInstance);
+                            (CompareSchemaOptions)invokedVerbInstance);
                 }
                 case "test-db":
                 {
                     return TestDatabase(
-                        (DbTestArguments)invokedVerbInstance);
+                        (DbTestOptions)invokedVerbInstance);
+                }
+                case "normalize-file-format":
+                {
+                    return NormalizeFileFormat();
                 }
 #endif
                 default:
                 {
-                        EntryAssembly();
-                        return 1;
+                    return 1;
                 }
             }
         }
@@ -307,6 +318,42 @@ namespace Origam.Utils
         {
             Console.WriteLine(string.Format(Strings.ShortGnu,
                     System.Reflection.Assembly.GetEntryAssembly().GetName().Name));
+        }
+
+        private static int NormalizeFileFormat()
+        {
+            OrigamSettingsCollection configurations;
+            try
+            {
+                configurations = ConfigurationManager.GetAllConfigurations();
+                if (configurations.Count != 1)
+                {
+                    Console.WriteLine(
+                        "OrigamSettings.config doesn't contain exactly one configuration.");
+                    return -1;
+                }
+            } catch
+            {
+                Console.WriteLine("Failed to load OrigamSettings.config");
+                return -1;
+            }
+			Directory.GetFiles(
+                configurations[0].ModelSourceControlLocation, 
+                "*.origam", 
+                SearchOption.AllDirectories).ForEach(
+                path =>
+                {
+                    Console.Write("Processing ");
+                    Console.Write(path);
+                    Console.Write("...");
+                    var source = new OrigamXmlDocument(path);
+                    var xmlToWrite = OrigamDocumentSorter
+                        .CopyAndSort(source)
+                        .ToBeautifulString();
+                    File.WriteAllText(path, xmlToWrite);
+                    Console.WriteLine("DONE");
+                });
+            return 0;
         }
 
         private static int HashPassword(GeneratePassHashOptions options)
@@ -319,7 +366,7 @@ namespace Origam.Utils
             return 0;
         }
 
-        private static int ProcessDocGenerator(ProcessDocGeneratorArgs config)
+        private static int ProcessDocGenerator(ProcessDocGeneratorOptions config)
         {
             Thread.CurrentThread.CurrentUICulture 
                 = new CultureInfo(config.Language);
@@ -347,7 +394,7 @@ namespace Origam.Utils
             return 0;
         }
 
-        private static int ProcessRule(ProcessCheckRules invokedVerbInstance)
+        private static int ProcessRule(ProcessCheckRulesOptions invokedVerbInstance)
         {
             var rulesProcessor = new RulesProcessor();
             return rulesProcessor.Run();
@@ -557,7 +604,7 @@ namespace Origam.Utils
             }
         }
 
-        private static int TestDatabase(DbTestArguments arguments)
+        private static int TestDatabase(DbTestOptions arguments)
         {
             OrigamSettingsCollection configurations;
             try

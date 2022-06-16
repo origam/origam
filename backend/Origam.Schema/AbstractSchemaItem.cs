@@ -363,7 +363,7 @@ namespace Origam.Schema
 				{
 					ChildItems.Remove(item);
 				}
-                RefreshIamAncestor(_rootItemForRefresh);
+                RefreshDescendants(_rootItemForRefresh);
             }
             if(IsDeleted)
             {
@@ -389,21 +389,22 @@ namespace Origam.Schema
 			}
 		}
 
-        private void RefreshIamAncestor(AbstractSchemaItem AbschemaItem)
+        private void RefreshDescendants(AbstractSchemaItem abstractSchemaItem)
         {
-            if(AbschemaItem.Inheritable)
-            {
-                foreach( var abstractSchemaIttem in AbschemaItem.RootProvider.ChildItems)
-                { 
-                    foreach (var itemAncestor in abstractSchemaIttem.Ancestors)
-                    {
-                        if (itemAncestor.AncestorId==AbschemaItem.Id)
-                        {
-                            abstractSchemaIttem.ClearCache();
-                        }
-                    }
-                }
-            }
+	        if (!abstractSchemaItem.Inheritable)
+	        {
+		        return;
+	        }
+	        foreach(var childItem in abstractSchemaItem.RootProvider.ChildItems)
+	        { 
+		        foreach (var itemAncestor in childItem.Ancestors)
+		        {
+			        if (itemAncestor.AncestorId == abstractSchemaItem.Id)
+			        {
+				        childItem.ClearCache();
+			        }
+		        }
+	        }
         }
 
         public void ClearCache()
