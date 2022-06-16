@@ -1532,6 +1532,10 @@ namespace Origam.DA.Service
                     i++;
                 }
             }
+            if (primaryKeys.Count == 0)
+            {
+                throw new Exception("Entity " + entity.Name + " has no a fieldMappingItem primaryKey.");
+            }
             PrettyLine(sqlExpression);
             sqlExpression.AppendFormat("FROM {0} AS {1} ",
                 RenderExpression(entity.EntityDefinition, null, null, null, null),
