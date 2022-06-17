@@ -256,47 +256,54 @@ namespace Origam.Utils
             {
                 return 1;
             }
-            EntryAssembly();
             switch (invokedVerb)
             {
                 case "process-checkrules":
                 {
-                        return ProcessRule(
-                            (ProcessCheckRulesOptions)invokedVerbInstance);
+                    EntryAssembly();
+                    return ProcessRule(
+                        (ProcessCheckRulesOptions)invokedVerbInstance);
                 }
                 case "process-docgenerator":
                 {
-                        return ProcessDocGenerator(
-                            (ProcessDocGeneratorOptions)invokedVerbInstance);
+                    EntryAssembly();
+                    return ProcessDocGenerator(
+                        (ProcessDocGeneratorOptions)invokedVerbInstance);
                 }
                 case "generate-password-hash":
                 {
-                        return HashPassword(
-                            (GeneratePassHashOptions)invokedVerbInstance);
+                    EntryAssembly();
+                    return HashPassword(
+                        (GeneratePassHashOptions)invokedVerbInstance);
                 }
 #if !NETCORE2_1
                 case "process-queue":
                 {
-                        return ProcessQueue(
-                            (ProcessQueueOptions)invokedVerbInstance);
+                    EntryAssembly();
+                    return ProcessQueue(
+                        (ProcessQueueOptions)invokedVerbInstance);
                 }
                 case "run-scripts":
                 {
-                        return RunUpdateScripts();
+                    EntryAssembly();
+                    return RunUpdateScripts();
                 }
                 case "restart-server":
                 {
-                        return RestartServer();
+                    EntryAssembly();
+                    return RestartServer();
                 }
                 case "create-hash-index":
                 {
-                        return CreateHashIndex(
-                            (CreateHashIndexOptions)invokedVerbInstance);
+                    EntryAssembly();
+                    return CreateHashIndex(
+                        (CreateHashIndexOptions)invokedVerbInstance);
                 }
                 case "compare-schema":
                 {
-                        return CompareSchema(
-                            (CompareSchemaOptions)invokedVerbInstance);
+                    EntryAssembly();
+                    return CompareSchema(
+                        (CompareSchemaOptions)invokedVerbInstance);
                 }
                 case "test-db":
                 {
@@ -305,6 +312,7 @@ namespace Origam.Utils
                 }
                 case "normalize-file-format":
                 {
+                    EntryAssembly();
                     return NormalizeFileFormat();
                 }
 #endif
