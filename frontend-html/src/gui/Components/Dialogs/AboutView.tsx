@@ -42,7 +42,7 @@ export class AboutView extends React.Component<{aboutInfo: IAboutInfo}> {
           <a href={"/Attributions.txt"} target="_blank" rel="noreferrer">Copyright attributions</a>
         </div>
         <br/>
-        <div>Copyright 2020 Advantage Solutions, s. r. o.</div>
+        <div>&copy; 2004 - 2022 Advantage Solutions, s. r. o.</div>
         <br/>
       </div>
     );
