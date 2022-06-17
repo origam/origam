@@ -633,9 +633,12 @@ namespace Origam.Utils
                         var query = arguments.SqlCommand;
                         var command = new SqlCommand(query, connection);
                         connection.Open();
-                        command.ExecuteScalar();
-                        result = true;
-                        break;
+                        var info = command.ExecuteScalar().ToString();
+                        if (info != null)
+                        {
+                            result = true;
+                            break;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -647,10 +650,10 @@ namespace Origam.Utils
             return SetTestDatabaseReturn(result);
         }
 
-        private static int SetTestDatabaseReturn(bool bol)
+        private static int SetTestDatabaseReturn(bool returnValue)
         {
-            Console.Write(bol);
-            return Convert.ToInt32(bol);
+            Console.Write(returnValue);
+            return Convert.ToInt32(returnValue);
         }
     }
 }
