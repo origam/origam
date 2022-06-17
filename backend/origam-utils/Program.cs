@@ -133,13 +133,13 @@ namespace Origam.Utils
         class DbTestOptions
         {
             [Option('a', "attempts", Required = true,
-                HelpText = "How many times to run test.")]
+                HelpText = "Number of test attempts.")]
             public int Attempts { get; set; }
             [Option('d', "delay", Required = true,
-                HelpText = "How long to wait till next try.")]
+                HelpText = "Delay between attempts in milliseconds.")]
             public int Delay { get; set; }
             [Option('c', "sql-command", Required = true,
-                HelpText = "What sql-command to run.")]
+                HelpText = "SQL command to run.")]
             public string SqlCommand { get; set; }
         }
 
