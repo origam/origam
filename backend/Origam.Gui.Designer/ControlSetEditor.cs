@@ -549,7 +549,7 @@ namespace Origam.Gui.Designer
 				catch(Exception ex)
 				{
 					invalidControls.Add(childItem);
-					throw new Exception( "Error occured while generating form. ControlSet: '" + cntrlSet.Path + "'.", ex);
+					throw new Exception("Error occured while generating form. ControlSet: '" + cntrlSet.Path + "'.", ex);
 				}
 			}
 
