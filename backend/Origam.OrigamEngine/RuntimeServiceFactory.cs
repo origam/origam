@@ -42,7 +42,7 @@ namespace Origam.OrigamEngine
             ServiceManager.Services.AddService(new MetaModelUpgradeService());
             ServiceManager.Services.AddService(CreatePersistenceService());
             ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
-            // Architect initialzes its own version of schema service
+            // Architect initializes its own version of schema service
             if (ServiceManager.Services.GetService(typeof(SchemaService)) == null)
             {
                 ServiceManager.Services.AddService(new SchemaService());

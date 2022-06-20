@@ -2,7 +2,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 async function executeProcedure(procedureName){
-    const script = "dotnet ../origam-utils.dll test-db -t 1 -d 0 -c  \"EXEC " + procedureName + "\"";
+    const script = "dotnet ../origam-utils.dll test-db -a 1 -d 0 -c  \"EXEC " + procedureName + "\"";
     await exec(script);
   }
 

@@ -2292,7 +2292,7 @@ namespace OrigamArchitect
 			try
 			{
 				_attachmentPad?.GetAttachments(mainEntityId, mainRecordId, childReferences);
-				}
+			}
 			catch
 			{
 			}

@@ -40,7 +40,7 @@ namespace Origam.Rule
             ServiceManager.Services.GetService<IStatusBarService>();
             statusBar.SetStatusText("Indexing references...");
             ReferenceIndexManager.ClearReferenceIndex(false);
-           List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
+            List<Dictionary<IFilePersistent, string>> errorFragments = independentPersistenceService
                     .SchemaProvider
                     .RetrieveList<IFilePersistent>()
                     .OfType<AbstractSchemaItem>()
@@ -72,13 +72,13 @@ namespace Origam.Rule
             return errorFragments;
         }
 
-        private static bool BelongsToProvider(ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
+        private static bool BelongsToProvider(
+            ISchemaItemProvider provider, AbstractSchemaItem retrievedObj)
         {
-            if(String.Compare(retrievedObj.ItemType, ((AbstractSchemaItemProvider)provider).RootItemType,true)==0)
-            {
-                return true;
-            }
-            return false;
+            return String.Compare(
+                retrievedObj.ItemType, 
+                ((AbstractSchemaItemProvider)provider).RootItemType,
+                true) == 0;
         }
     }
 }

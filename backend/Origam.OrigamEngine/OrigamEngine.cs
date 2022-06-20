@@ -121,9 +121,7 @@ namespace Origam.OrigamEngine
                 PrincipalPolicy.NoPrincipal);
             SecurityManager.SetServerIdentity();
 			SetActiveConfiguration(configName);
-			OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() 
-                as OrigamSettings;
+			var settings = ConfigurationManager.GetActiveConfiguration();
 			if (customServiceFactory == null)
 			{
 				standardServiceFactory.InitializeServices();
@@ -166,10 +164,8 @@ namespace Origam.OrigamEngine
 
 		private static void SetActiveConfiguration(string configName="")
 		{
-			OrigamSettingsCollection configurations =
-				ConfigurationManager.GetAllConfigurations();
-			
-			OrigamSettings origamSettings = GetSettings(configName, configurations);
+			var configurations = ConfigurationManager.GetAllConfigurations();
+			var origamSettings = GetSettings(configName, configurations);
 			ConfigurationManager.SetActiveConfiguration(origamSettings);
 		}
 
