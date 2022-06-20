@@ -549,7 +549,7 @@ namespace Origam.Gui.Designer
 				catch(Exception ex)
 				{
 					invalidControls.Add(childItem);
-					AsMessageBox.ShowError(this, "Error occured while generating form. ControlSet: '" + cntrlSet.Path + "'.", "Form Generating Failed", ex);
+					throw new Exception("Error occured while generating form. ControlSet: '" + cntrlSet.Path + "'.", ex);
 				}
 			}
 

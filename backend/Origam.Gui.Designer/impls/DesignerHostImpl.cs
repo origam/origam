@@ -226,22 +226,23 @@ namespace Origam.Gui.Designer
 				return (instance, null);
 			}
 
+			var baseControl = ServiceManager.Services
+				.GetService<ISchemaService>()
+				.GetProvider<UserControlSchemaItemProvider>()
+				.ChildItems.ToGeneric()
+				.Cast<ControlItem>()
+				.FirstOrDefault(item =>
+					item.ControlType == type.FullName);
 			ControlItem refControl = controlItem;
 			if (refControl == null && 
-			    ToolboxPane.DragAndDropControl != null && 
-			    ToolboxPane.DragAndDropControl.GetType() == type)
+			    ToolboxPane.DragAndDropControl != null &&
+			    ToolboxPane.DragAndDropControl.ControlType == type.ToString())
 			{
 				refControl = ToolboxPane.DragAndDropControl;
 			}
 			else
 			{
-				refControl = ServiceManager.Services
-					.GetService<ISchemaService>()
-					.GetProvider<UserControlSchemaItemProvider>()
-					.ChildItems.ToGeneric()
-					.Cast<ControlItem>()
-					.FirstOrDefault(item =>
-						item.ControlType == type.FullName);
+				refControl = baseControl;
 			}
 			
 			var missingPropertyItems = refControl?
@@ -260,7 +261,7 @@ namespace Origam.Gui.Designer
 			Type newType =
 				dynamicTypeFactory.CreateNewTypeWithDynamicProperties(
 					parentType: type,
-					inheritor: refControl,
+					inheritor: baseControl,
 					dynamicProperties: missingPropertyItems.Select(propItem =>
 						new DynamicProperty
 						{
