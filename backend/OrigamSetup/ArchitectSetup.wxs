@@ -31,7 +31,7 @@
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="origam" Name="ORIGAM">
           <Directory Id="INSTALLDIR" Name="$(var.OrigamProductName) ">
-            <Component Id="ConfigFile" Guid="">
+            <Component Id="ConfigFile" Guid="" NeverOverwrite="yes">
               <File Id="OrigamSettings" Name="OrigamSettings.config" DiskId="1" Source="config/OrigamSettings.architect.config" KeyPath="yes">
               </File>
             </Component>
