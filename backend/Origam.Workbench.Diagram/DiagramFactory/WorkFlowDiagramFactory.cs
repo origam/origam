@@ -205,35 +205,29 @@ namespace Origam.Workbench.Diagram
 
 		private Subgraph AddToSubgraph(IWorkflowBlock workFlowBlock, Subgraph subgraph)
 		{
-			IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
+			IDictionary<Key, Node> nodes = new Dictionary<Key, Node>();
 
 			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
 				AbstractWorkflowStep.CategoryConst))
 			{
-				if (step is IWorkflowBlock subBlock)
-				{
-					Node shape = AddWorkflowDiagram(subBlock, subgraph);
-					ht.Add(step.PrimaryKey, shape);
-				}
-				else
-				{
-					Subgraph shape = AddSubgraphNode(step, subgraph);
-					ht.Add(step.PrimaryKey, shape);
-				}
+				Node shape = step is IWorkflowBlock subBlock
+					? AddWorkflowDiagram(subBlock, subgraph)
+					: AddSubgraphNode(step, subgraph);
+				nodes.Add(step.PrimaryKey, shape);
 			}
 
 			// add connections
 			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
 				AbstractWorkflowStep.CategoryConst))
 			{
-				Node destinationShape = ht[step.PrimaryKey];
+				Node destinationShape = nodes[step.PrimaryKey];
 				if (destinationShape == null)
 					throw new NullReferenceException(Strings.WorkFlowDiagramFactory_DestinationShape_not_found);
 				int i = 0;
 				foreach (WorkflowTaskDependency dependency in step.ChildItemsByType(
 					WorkflowTaskDependency.CategoryConst))
 				{
-					Node sourceShape = ht[dependency.Task.PrimaryKey];
+					Node sourceShape = nodes[dependency.Task.PrimaryKey];
 					if (sourceShape == null)
 						throw new NullReferenceException(Strings.WorkFlowDiagramFactory_SourceShape_not_found);
 
