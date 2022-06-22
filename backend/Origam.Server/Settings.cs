@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using IdentityServer4;
 using IdentityServer4.Models;
 using Origam.Server.Configuration;
+using IdentityServerConstants = IdentityServer4.IdentityServerConstants;
 
 namespace Origam.Server
 {

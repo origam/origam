@@ -8,7 +8,6 @@ using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.Security.Common;
+using Origam.Server.Configuration;
 
 namespace Origam.Server.IdentityServerGui.Account
 {
@@ -23,24 +23,26 @@ namespace Origam.Server.IdentityServerGui.Account
     [AllowAnonymous]
     public class ExternalController : Microsoft.AspNetCore.Mvc.Controller
     {
-        private readonly UserManager<IOrigamUser> _userManager;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
-        private readonly ILogger<ExternalController> _logger;
-        private readonly IEventService _events;
+        private readonly UserManager<IOrigamUser> userManager;
+        private readonly IIdentityServerInteractionService interaction;
+        private readonly ILogger<ExternalController> logger;
+        private readonly IEventService events;
+
+        private readonly IdentityServerConfig identityServerConfig;
 
         public ExternalController(
             IIdentityServerInteractionService interaction,
-            IClientStore clientStore,
             IEventService events,
-            ILogger<ExternalController> logger, UserManager<IOrigamUser> userManager)
+            ILogger<ExternalController> logger, 
+            UserManager<IOrigamUser> userManager,
+            IdentityServerConfig identityServerConfig)
         {
 
-            _interaction = interaction;
-            _clientStore = clientStore;
-            _logger = logger;
-            _userManager = userManager;
-            _events = events;
+            this.interaction = interaction;
+            this.logger = logger;
+            this.userManager = userManager;
+            this.identityServerConfig = identityServerConfig;
+            this.events = events;
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace Origam.Server.IdentityServerGui.Account
             if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
 
             // validate returnUrl - either it is a valid OIDC URL or back to a local page
-            if (Url.IsLocalUrl(returnUrl) == false && _interaction.IsValidReturnUrl(returnUrl) == false)
+            if (Url.IsLocalUrl(returnUrl) == false && interaction.IsValidReturnUrl(returnUrl) == false)
             {
                 // user might have clicked on a malicious link - should be logged
                 throw new Exception("invalid return URL");
@@ -137,10 +139,10 @@ namespace Origam.Server.IdentityServerGui.Account
                 throw new Exception("External authentication error");
             }
 
-            if (_logger.IsEnabled(LogLevel.Debug))
+            if (logger.IsEnabled(LogLevel.Debug))
             {
                 var externalClaims = result.Principal.Claims.Select(c => $"{c.Type}: {c.Value}");
-                _logger.LogDebug("External claims: {@claims}", externalClaims);
+                logger.LogDebug("External claims: {@claims}", externalClaims);
             }
 
             // lookup our user and external provider info
@@ -178,8 +180,8 @@ namespace Origam.Server.IdentityServerGui.Account
             var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 
             // check if external login is in the context of an OIDC request
-            var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.BusinessPartnerId, user.UserName, true, context?.Client.ClientId));
+            var context = await interaction.GetAuthorizationContextAsync(returnUrl);
+            await events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.BusinessPartnerId, user.UserName, true, context?.Client.ClientId));
 
             if (context != null)
             {
@@ -194,36 +196,46 @@ namespace Origam.Server.IdentityServerGui.Account
             return Redirect(returnUrl);
         }
         
-        private (IOrigamUser user, string provider, string providerUserId, IEnumerable<Claim> claims) FindUserFromExternalProvider(AuthenticateResult result)
+        private 
+            (IOrigamUser user, 
+            string provider, 
+            string providerUserId, 
+            IEnumerable<Claim> claims) FindUserFromExternalProvider(
+                AuthenticateResult result)
         {
             var externalUser = result.Principal;
-
-            // try to determine the unique id of the external user (issued by the provider)
-            // the most common claim type for that are the sub claim and the NameIdentifier
-            // depending on the external provider, some other claim type might be used
-            var userIdClaim = externalUser.FindFirst(JwtClaimTypes.Subject) ??
-                              externalUser.FindFirst(ClaimTypes.NameIdentifier) ??
-                              throw new Exception("Unknown userid");
-
-            // remove the user id claim so we don't include it as an extra claim if/when we provision the user
+            // try to determine the unique id of the external user
+            // (issued by the provider)
+            // the most common claim type for that are the sub claim and
+            // the NameIdentifier depending on the external provider,
+            // some other claim types might be used
+            var userIdClaim 
+                = externalUser.FindFirst(JwtClaimTypes.Subject) 
+                  ?? externalUser.FindFirst(ClaimTypes.NameIdentifier) 
+                  ?? throw new Exception("Unknown userid");
+            // remove the user id claim so we don't include it as an extra claim
+            // if/when we provision the user
             var claims = externalUser.Claims.ToList();
             claims.Remove(userIdClaim);
-
             var provider = result.Properties.Items["scheme"];
             var providerUserId = userIdClaim.Value;
-            
-            Claim email = externalUser.FindFirst(claim => claim.Type == ClaimTypes.Email);
-            IOrigamUser user;
-            if (email == null)
+            var externalCallbackProcessingInfo =
+                identityServerConfig
+                    .GetExternalCallbackProcessingInfo(provider);
+            var checkedClaim = externalUser.FindFirst(claim 
+                => claim.Type == externalCallbackProcessingInfo.ClaimType);
+            if (checkedClaim == null)
             {
-                // try to find by user name
-                var userNameClaim = externalUser.FindFirst("name");
-                user = _userManager.FindByNameAsync(userNameClaim.Value).Result; 
+                logger.LogError("ClaimType {0} not found.", 
+                    externalCallbackProcessingInfo.ClaimType);
+                throw new Exception("Failed to locate checked claim.");
             }
-            else
-            {
-                user = _userManager.FindByEmailAsync(email.Value).Result;
-            }
+            var user = externalCallbackProcessingInfo.AuthenticationType
+                       == AuthenticationType.Email 
+                ? userManager.FindByEmailAsync(checkedClaim.Value).Result 
+                : userManager.FindByNameAsync(checkedClaim.Value).Result;
+            // time for authentication post-processing if needed
+            // (e. g. tenant validation)
             return (user, provider, providerUserId, claims);
         }
 
