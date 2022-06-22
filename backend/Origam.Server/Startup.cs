@@ -23,14 +23,10 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using System.Threading.Tasks;
-using DiffPlex;
-using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -91,8 +87,7 @@ namespace Origam.Server
             });
 
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
-            var builder = services.AddMvc()
-                .AddNewtonsoftJson();
+            var builder = services.AddMvc().AddNewtonsoftJson();
 #if DEBUG
             builder.AddRazorRuntimeCompilation();
 #endif
