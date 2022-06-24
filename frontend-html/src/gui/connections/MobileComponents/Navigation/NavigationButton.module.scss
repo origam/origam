@@ -17,9 +17,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
+.openRoot {
+  height: 100%;
+}
 
-.navigationButtonContainer  > div.navigationButton:first-child {
-  border-width:  1px 0 1px 0;
+.navigationButtonContainer > div.navigationButton:first-child {
+  border-width: 1px 0 1px 0;
 }
 
 .navigationButton {
@@ -42,6 +45,6 @@ svg.navigationIcon {
   height: 35px;
 }
 
-.label{
+.label {
   font-size: 15px;
 }
