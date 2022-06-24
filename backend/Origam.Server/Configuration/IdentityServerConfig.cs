@@ -54,6 +54,7 @@ namespace Origam.Server.Configuration
         public ServerClient ServerClient { get; }
         public bool CookieSlidingExpiration { get; } 
         public int CookieExpirationMinutes { get; }
+        public string AuthenticationPostProcessor { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
@@ -73,6 +74,8 @@ namespace Origam.Server.Configuration
             WebClient = ConfigureWebClient(identityServerSection);
             MobileClient = ConfigureMobileClient(identityServerSection);
             ServerClient = ConfigureServerClient(identityServerSection);
+            AuthenticationPostProcessor = identityServerSection.GetValue(
+                "AuthenticationPostProcessor", "");
         }
 
         private ServerClient ConfigureServerClient(
@@ -228,7 +231,6 @@ namespace Origam.Server.Configuration
     {
         public AuthenticationType AuthenticationType { get; set; }
         public string ClaimType { get; set; }
-        public string AuthenticationPostProcessor { get; set; }
 
         protected ExternalCallbackProcessingInfo(
             IConfigurationSection configurationSection)
@@ -237,8 +239,6 @@ namespace Origam.Server.Configuration
                 "AuthenticationType", AuthenticationType.Email);
             ClaimType = configurationSection.GetValue(
                 "ClaimType", ClaimTypes.Email);
-            AuthenticationPostProcessor = configurationSection.GetValue(
-                "AuthenticationPostProcessor", "");
         }
     }
     
