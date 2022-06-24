@@ -47,6 +47,7 @@ using Origam.Security.Identity;
 using Origam.Server.Authorization;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
+using Origam.Service.Core;
 using SoapCore;
 
 
@@ -191,36 +192,39 @@ namespace Origam.Server
             var authenticationBuilder = services
                 .AddLocalApiAuthentication()
                 .AddAuthentication();
-            if (identityServerConfig.GoogleLogin != null)
+            if(identityServerConfig.GoogleLogin != null)
             {
                 authenticationBuilder.AddGoogle(
-                   GoogleDefaults.AuthenticationScheme,
-                   "SignInWithGoogleAccount",
-                   options =>
-                {
-                   options.ClientId = identityServerConfig.GoogleLogin.ClientId;
-                   options.ClientSecret = identityServerConfig.GoogleLogin
-                       .ClientSecret; 
-                   options.SignInScheme = IdentityServer4.IdentityServerConstants
-                       .ExternalCookieAuthenticationScheme;
-                });
+                    GoogleDefaults.AuthenticationScheme,
+                    "SignInWithGoogleAccount",
+                    options =>
+                    {
+                        options.ClientId =
+                            identityServerConfig.GoogleLogin.ClientId;
+                        options.ClientSecret = identityServerConfig.GoogleLogin
+                            .ClientSecret;
+                        options.SignInScheme = IdentityServer4
+                            .IdentityServerConstants
+                            .ExternalCookieAuthenticationScheme;
+                    });
             }
-            if (identityServerConfig.MicrosoftLogin != null)
+            if(identityServerConfig.MicrosoftLogin != null)
             {
                 authenticationBuilder.AddMicrosoftAccount(
                     MicrosoftAccountDefaults.AuthenticationScheme,
-                    "SignInWithMicrosoftAccount", 
+                    "SignInWithMicrosoftAccount",
                     microsoftOptions =>
-                {
-                    microsoftOptions.ClientId = identityServerConfig
-                        .MicrosoftLogin.ClientId;
-                    microsoftOptions.ClientSecret = identityServerConfig
-                        .MicrosoftLogin.ClientSecret;
-                    microsoftOptions.SignInScheme = IdentityServer4.IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
-                });
+                    {
+                        microsoftOptions.ClientId = identityServerConfig
+                            .MicrosoftLogin.ClientId;
+                        microsoftOptions.ClientSecret = identityServerConfig
+                            .MicrosoftLogin.ClientSecret;
+                        microsoftOptions.SignInScheme = IdentityServer4
+                            .IdentityServerConstants
+                            .ExternalCookieAuthenticationScheme;
+                    });
             }
-            if (identityServerConfig.AzureAdLogin != null)
+            if(identityServerConfig.AzureAdLogin != null)
             {
                 authenticationBuilder.AddOpenIdConnect(
                     IdentityServerDefaults.AzureAdScheme,
@@ -229,13 +233,14 @@ namespace Origam.Server
                     {
                         options.ClientId = identityServerConfig.AzureAdLogin
                             .ClientId;
-                        options.Authority 
+                        options.Authority
                             = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
                         options.CallbackPath = "/signin-oidc";
                         options.SaveTokens = true;
-                        options.SignInScheme = IdentityServer4.IdentityServerConstants
+                        options.SignInScheme = IdentityServer4
+                            .IdentityServerConstants
                             .ExternalCookieAuthenticationScheme;
-                        options.TokenValidationParameters 
+                        options.TokenValidationParameters
                             = new TokenValidationParameters
                             {
                                 ValidateIssuer = false,
@@ -247,6 +252,23 @@ namespace Origam.Server
             // ExternalController needs to tap the info for the callback
             // resolution
             services.AddSingleton(identityServerConfig);
+            // Setup authentication post processor
+            if (string.IsNullOrEmpty(
+                   identityServerConfig.AuthenticationPostProcessor))
+            {
+                services.AddSingleton<IAuthenticationPostProcessor, 
+                        AlwaysValidAuthenticationPostProcessor>();
+            }
+            else
+            {
+                var classpath = identityServerConfig
+                    .AuthenticationPostProcessor.Split(',');
+                var authenticationPostProcessor 
+                    = Reflector.ResolveTypeFromAssembly(
+                        classpath[0], classpath[1]);
+                services.AddSingleton(typeof(IAuthenticationPostProcessor),
+                    authenticationPostProcessor);
+            }
         }
 
         public void Configure(

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.Security.Common;
 using Origam.Server.Configuration;
+using Origam.Service.Core;
 
 namespace Origam.Server.IdentityServerGui.Account
 {
@@ -27,22 +28,25 @@ namespace Origam.Server.IdentityServerGui.Account
         private readonly IIdentityServerInteractionService interaction;
         private readonly ILogger<ExternalController> logger;
         private readonly IEventService events;
-
         private readonly IdentityServerConfig identityServerConfig;
+        private readonly IAuthenticationPostProcessor
+            authenticationPostProcessor;
 
         public ExternalController(
             IIdentityServerInteractionService interaction,
             IEventService events,
             ILogger<ExternalController> logger, 
             UserManager<IOrigamUser> userManager,
-            IdentityServerConfig identityServerConfig)
+            IdentityServerConfig identityServerConfig,
+            IAuthenticationPostProcessor authenticationPostProcessor)
         {
 
             this.interaction = interaction;
+            this.events = events;
             this.logger = logger;
             this.userManager = userManager;
             this.identityServerConfig = identityServerConfig;
-            this.events = events;
+            this.authenticationPostProcessor = authenticationPostProcessor;
         }
 
         /// <summary>
@@ -234,9 +238,13 @@ namespace Origam.Server.IdentityServerGui.Account
                        == AuthenticationType.Email 
                 ? userManager.FindByEmailAsync(checkedClaim.Value).Result 
                 : userManager.FindByNameAsync(checkedClaim.Value).Result;
-            // time for authentication post-processing if needed
-            // (e. g. tenant validation)
-            return (user, provider, providerUserId, claims);
+            // time for authentication post-processing
+            // the default post processor returns always true 
+            var postProcessorResult = authenticationPostProcessor.Validate(
+                user.BusinessPartnerId, user.UserName, provider, 
+                providerUserId, claims);
+            return (postProcessorResult ? user : null, provider, providerUserId, 
+                claims);
         }
 
         private IOrigamUser AutoProvisionUser(string provider, string providerUserId, IEnumerable<Claim> claims)
