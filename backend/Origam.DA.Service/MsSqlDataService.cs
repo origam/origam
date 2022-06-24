@@ -381,8 +381,8 @@ namespace Origam.DA.Service
 @"INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
 VALUES ('{0}', '{1}', '', 1, getdate())
 -- add to the built-in SuperUser role
-INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
-VALUES (newid(), '{2}', '{0}', getdate(), 0)",
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly, IsInitialScreen)
+VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
 

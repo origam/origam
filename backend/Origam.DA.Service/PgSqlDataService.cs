@@ -319,9 +319,9 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
             systemRole.Append(Environment.NewLine);
             systemRole.Append("-- add to the built-in SuperUser role ");
             systemRole.Append(Environment.NewLine);
-            systemRole.Append(" INSERT INTO \"OrigamRoleOrigamApplicationRole\" (\"Id\", \"refOrigamRoleId\", \"refOrigamApplicationRoleId\", \"RecordCreated\", \"IsFormReadOnly\") ");
+            systemRole.Append(" INSERT INTO \"OrigamRoleOrigamApplicationRole\" (\"Id\", \"refOrigamRoleId\", \"refOrigamApplicationRoleId\", \"RecordCreated\", \"IsFormReadOnly\", \"IsInitialScreen\") ");
             systemRole.Append(Environment.NewLine);
-            systemRole.Append(" VALUES (gen_random_uuid(), '{2}', '{0}', now(), false)");
+            systemRole.Append(" VALUES (gen_random_uuid(), '{2}', '{0}', now(), false, false)");
             return string.Format(systemRole.ToString(),
                  roleId, roleName, SecurityManager.BUILTIN_SUPER_USER_ROLE);
         }
