@@ -157,7 +157,7 @@ namespace Origam.Server.IdentityServerGui.Account
                 // in this sample we don't show how that would be done, as our sample implementation
                 // simply auto-provisions new external user
                 //user = AutoProvisionUser(provider, providerUserId, claims);
-                return NotFound();
+                return Redirect("/Account/AccessDenied");
             }
 
             // this allows us to collect any additional claims or properties
