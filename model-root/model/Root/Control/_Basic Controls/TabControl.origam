@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="2e39362b-80a6-4430-a9bd-b3013583a2fe"
@@ -9,13 +13,6 @@
     ci:requestSaveAfterChangeAllowed="false"
     ci:toolboxVisibility="FormDesigner"
     ci:typeName="Origam.Gui.Win.AsTabControl">
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="caf75be0-9df7-4429-bf92-141142eb3925"
-      cpi:localizable="false"
-      asi:name="Width"
-      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -33,9 +30,23 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
+      x:id="aef916e5-fc01-4460-9e28-e94736b084bd"
+      cpi:localizable="false"
+      asi:name="TabIndex"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="b117b110-17c9-49f0-90b1-91d6d9abb472"
       cpi:localizable="false"
       asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="caf75be0-9df7-4429-bf92-141142eb3925"
+      cpi:localizable="false"
+      asi:name="Width"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -51,12 +62,5 @@
       cpi:localizable="false"
       asi:name="Text"
       cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="aef916e5-fc01-4460-9e28-e94736b084bd"
-      cpi:localizable="false"
-      asi:name="TabIndex"
-      cpi:propertyType="Integer" />
   </ci:Control>
 </x:file>

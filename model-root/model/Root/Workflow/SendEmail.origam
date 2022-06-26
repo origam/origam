@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="6e6d4e02-812a-4c95-afd1-eb2428802e2b"
@@ -9,23 +23,44 @@
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
+      x:id="1870bf85-8623-45c3-8833-636c2dbbcce5"
+      cs:isReturnValue="false"
+      asi:name="body" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Blob"
+      cs:disableConstraints="false"
+      x:id="190d0ca6-5429-4252-8bce-c544daf65aff"
+      cs:isReturnValue="false"
+      asi:name="attachment" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="2aa7eb45-5c0c-4282-bcec-886666e61a0a"
+      cs:isReturnValue="false"
+      asi:name="senderEmail" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
       x:id="2f33a900-e0d3-45e6-8f8b-1b86747e6500"
       cs:isReturnValue="false"
       asi:name="recipientEmail" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
+      cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="b3b7c054-88bf-4509-b6d6-21337102efee"
+      x:id="40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
       cs:isReturnValue="false"
-      asi:name="attachmentEntityId" />
+      asi:name="attachmentName" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
+      cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="e90181d2-df88-4cc6-a8c1-2e9e88f2b488"
+      x:id="48abb054-bb38-4eb3-9f07-cbfa21e2abb2"
       cs:isReturnValue="false"
-      asi:name="attachmentRecordId" />
+      asi:name="MailWorkQueueName" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
@@ -33,13 +68,6 @@
       x:id="51b19b48-2b22-467a-b9d8-35474c974b5a"
       cs:isReturnValue="false"
       asi:name="subject" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="1870bf85-8623-45c3-8833-636c2dbbcce5"
-      cs:isReturnValue="false"
-      asi:name="body" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -52,16 +80,9 @@
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="a3dd1cc2-28db-4ede-a6e6-75b784a6bf9d"
+      x:id="77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
       cs:isReturnValue="false"
-      asi:name="senderName" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="2aa7eb45-5c0c-4282-bcec-886666e61a0a"
-      cs:isReturnValue="false"
-      asi:name="senderEmail" />
+      asi:name="recipientCCEmail" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -72,32 +93,18 @@
       cs:structure="Root/DataStructure/__system/Mail.origam#Mail/f4eaf9b5-e5a2-4d4b-afb5-174fe5e0b6ea" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="Blob"
-      cs:disableConstraints="false"
-      x:id="190d0ca6-5429-4252-8bce-c544daf65aff"
-      cs:isReturnValue="false"
-      asi:name="attachment" />
-    <cs:ContextStore
-      asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="48abb054-bb38-4eb3-9f07-cbfa21e2abb2"
+      x:id="a3dd1cc2-28db-4ede-a6e6-75b784a6bf9d"
       cs:isReturnValue="false"
-      asi:name="MailWorkQueueName" />
+      asi:name="senderName" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="String"
+      cs:dataType="UniqueIdentifier"
       cs:disableConstraints="false"
-      x:id="40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
+      x:id="b3b7c054-88bf-4509-b6d6-21337102efee"
       cs:isReturnValue="false"
-      asi:name="attachmentName" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
-      cs:isReturnValue="false"
-      asi:name="recipientCCEmail" />
+      asi:name="attachmentEntityId" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
@@ -105,6 +112,54 @@
       x:id="c949513d-ff5f-4def-98bf-f0a96332d30d"
       cs:isReturnValue="false"
       asi:name="recipientBCCEmail" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="e90181d2-df88-4cc6-a8c1-2e9e88f2b488"
+      cs:isReturnValue="false"
+      asi:name="attachmentRecordId" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="570eb0ce-081d-4b56-a2d2-d81e3bdc99e5"
+      asi:name="02_Send"
+      wt:outputContextStore="Root/Workflow/SendEmail.origam#SendEmail/senderEmail/2aa7eb45-5c0c-4282-bcec-886666e61a0a"
+      wt:outputMethod="Ignore"
+      aws:roles="*"
+      smct:service="Root/Service/MailService.origam#MailService/3240b59e-08ec-4dc2-bbf5-a2c6cb1bfd7c"
+      smct:serviceMethod="Root/Service/MailService.origam#MailService/SendMail/b5b0f1e1-3a75-4815-b65a-aef501604df7"
+      aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsEmpty.origam#SR_SimpleContextValue_IsEmpty/76df31d0-66f4-4b52-9d6c-0bc15ff38fb9"
+      aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="22ccf918-0058-40c3-a2d5-0e7659e3600e"
+        asi:name="Server"
+        smcp:serviceMethodParameter="Root/Service/MailService.origam#MailService/SendMail/Server/e0677965-ba0f-4e84-80d5-ce0ce20e40bd" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="5c3e3283-aa14-40e1-9a41-8b89343ad856"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/MailService.origam#MailService/SendMail/Data/8111a1a9-22c7-4f11-8044-72b3784f65d9">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Mail/857307fa-36a9-4a40-8f6b-987b8677aaa7"
+          x:id="3e62eeff-b96e-4626-a140-1f33c7b89404"
+          asi:name="Mail"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="d733e03c-b1de-4510-9549-3d8ab69d5400"
+        asi:name="Port"
+        smcp:serviceMethodParameter="Root/Service/MailService.origam#MailService/SendMail/Port/28d6024b-a275-4564-9630-e0d4af062834" />
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="cd412f37-88f2-4d8a-98b9-21a186477599"
+        asi:name="After_01_GenerateMail"
+        wtd:startEvent="Success"
+        wtd:task="Root/Workflow/SendEmail.origam#SendEmail/01_GenerateMail/e716dcf0-7115-4be7-a175-c5feab33f0d4" />
+    </smct:WorkflowTask>
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="8749b173-a49e-4b27-a4c4-5d85154ec8e0"
@@ -118,18 +173,6 @@
       aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentRecordId/e90181d2-df88-4cc6-a8c1-2e9e88f2b488">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="f0464a39-38e8-4d85-a157-7eca4a5cde56"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
-        <dsr:DataStructureReference
-          asi:abstract="false"
-          dsr:dataStructure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f"
-          x:id="e3d045be-7f1e-4f2e-88c6-af97cb7f10cf"
-          dsr:method="Root/DataStructure/__system/Attachment.origam#Attachment/Attachment/b3624c91-526d-4b2b-a282-6d99e62a1eb5"
-          asi:name="Attachment" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
         x:id="79dd3994-9ddb-4d8b-8c16-ecb4a5a6c4c4"
         asi:name="Parameters"
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
@@ -140,6 +183,18 @@
           x:id="d2da669a-2838-46d8-af8f-38970175659f"
           asi:name="Attachment_parRefParentRecordId"
           cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="f0464a39-38e8-4d85-a157-7eca4a5cde56"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f"
+          x:id="e3d045be-7f1e-4f2e-88c6-af97cb7f10cf"
+          dsr:method="Root/DataStructure/__system/Attachment.origam#Attachment/Attachment/b3624c91-526d-4b2b-a282-6d99e62a1eb5"
+          asi:name="Attachment" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
     <smct:WorkflowTask
@@ -153,28 +208,15 @@
       smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="a7754d7c-d581-4bda-a951-b2415bb9fcd0"
-        asi:name="Data"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Mail/857307fa-36a9-4a40-8f6b-987b8677aaa7"
-          x:id="f09843c9-cb02-4301-9977-00b0d3106309"
-          asi:name="Mail"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
         x:id="7569bc23-a2c4-4325-9b7a-b648ff34b7ab"
         asi:name="Parameters"
         smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/senderName/a3dd1cc2-28db-4ede-a6e6-75b784a6bf9d"
-          x:id="2a480133-0d14-4389-a8dc-1c105f4a1e44"
-          asi:name="senderName"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientBCCEmail/c949513d-ff5f-4def-98bf-f0a96332d30d"
+          x:id="1fab4726-d91b-40e1-8d7e-9d757b5237ed"
+          asi:name="recipientBCCEmail"
           cr:xPath="/" />
         <cr:WorkflowContextReference
           asi:abstract="false"
@@ -186,9 +228,9 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientEmail/2f33a900-e0d3-45e6-8f8b-1b86747e6500"
-          x:id="9d8c74f8-8ff4-4109-8d83-4fa5e9c141f6"
-          asi:name="recipientEmail"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/senderName/a3dd1cc2-28db-4ede-a6e6-75b784a6bf9d"
+          x:id="2a480133-0d14-4389-a8dc-1c105f4a1e44"
+          asi:name="senderName"
           cr:xPath="/" />
         <cr:WorkflowContextReference
           asi:abstract="false"
@@ -200,9 +242,9 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
-          x:id="a96e2b84-3462-473f-9496-5fce750cf99c"
-          asi:name="attachmentName"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/subject/51b19b48-2b22-467a-b9d8-35474c974b5a"
+          x:id="2dd13cba-5fac-42da-afc3-b9dbc9649036"
+          asi:name="subject"
           cr:xPath="/" />
         <cr:WorkflowContextReference
           asi:abstract="false"
@@ -214,9 +256,23 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/subject/51b19b48-2b22-467a-b9d8-35474c974b5a"
-          x:id="2dd13cba-5fac-42da-afc3-b9dbc9649036"
-          asi:name="subject"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientCCEmail/77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
+          x:id="77dd05ac-c631-4265-b0a5-ac7ae2df8f38"
+          asi:name="recipientCCEmail"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientEmail/2f33a900-e0d3-45e6-8f8b-1b86747e6500"
+          x:id="9d8c74f8-8ff4-4109-8d83-4fa5e9c141f6"
+          asi:name="recipientEmail"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
+          x:id="a96e2b84-3462-473f-9496-5fce750cf99c"
+          asi:name="attachmentName"
           cr:xPath="/" />
         <cr:WorkflowContextReference
           asi:abstract="false"
@@ -225,19 +281,18 @@
           x:id="f534fd4e-8e1e-4842-b2fc-c000b0823fd7"
           asi:name="attachment"
           cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="a7754d7c-d581-4bda-a951-b2415bb9fcd0"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientCCEmail/77e36b1c-2e24-46ef-99ba-91aec96b8d8b"
-          x:id="77dd05ac-c631-4265-b0a5-ac7ae2df8f38"
-          asi:name="recipientCCEmail"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/recipientBCCEmail/c949513d-ff5f-4def-98bf-f0a96332d30d"
-          x:id="1fab4726-d91b-40e1-8d7e-9d757b5237ed"
-          asi:name="recipientBCCEmail"
+          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Mail/857307fa-36a9-4a40-8f6b-987b8677aaa7"
+          x:id="f09843c9-cb02-4301-9977-00b0d3106309"
+          asi:name="Mail"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
@@ -258,47 +313,6 @@
         wtd:startEvent="Finish"
         wtd:task="Root/Workflow/SendEmail.origam#SendEmail/00_LoadData_Attachment_structure/8749b173-a49e-4b27-a4c4-5d85154ec8e0" />
     </smct:WorkflowTask>
-    <smct:WorkflowTask
-      asi:abstract="false"
-      x:id="570eb0ce-081d-4b56-a2d2-d81e3bdc99e5"
-      asi:name="02_Send"
-      wt:outputContextStore="Root/Workflow/SendEmail.origam#SendEmail/senderEmail/2aa7eb45-5c0c-4282-bcec-886666e61a0a"
-      wt:outputMethod="Ignore"
-      aws:roles="*"
-      smct:service="Root/Service/MailService.origam#MailService/3240b59e-08ec-4dc2-bbf5-a2c6cb1bfd7c"
-      smct:serviceMethod="Root/Service/MailService.origam#MailService/SendMail/b5b0f1e1-3a75-4815-b65a-aef501604df7"
-      aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsEmpty.origam#SR_SimpleContextValue_IsEmpty/76df31d0-66f4-4b52-9d6c-0bc15ff38fb9"
-      aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2">
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="22ccf918-0058-40c3-a2d5-0e7659e3600e"
-        asi:name="Server"
-        smcp:serviceMethodParameter="Root/Service/MailService.origam#MailService/SendMail/Server/e0677965-ba0f-4e84-80d5-ce0ce20e40bd" />
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="d733e03c-b1de-4510-9549-3d8ab69d5400"
-        asi:name="Port"
-        smcp:serviceMethodParameter="Root/Service/MailService.origam#MailService/SendMail/Port/28d6024b-a275-4564-9630-e0d4af062834" />
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="5c3e3283-aa14-40e1-9a41-8b89343ad856"
-        asi:name="Data"
-        smcp:serviceMethodParameter="Root/Service/MailService.origam#MailService/SendMail/Data/8111a1a9-22c7-4f11-8044-72b3784f65d9">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Mail/857307fa-36a9-4a40-8f6b-987b8677aaa7"
-          x:id="3e62eeff-b96e-4626-a140-1f33c7b89404"
-          asi:name="Mail"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <wtd:WorkflowTaskDependency
-        asi:abstract="false"
-        x:id="cd412f37-88f2-4d8a-98b9-21a186477599"
-        asi:name="After_01_GenerateMail"
-        wtd:startEvent="Success"
-        wtd:task="Root/Workflow/SendEmail.origam#SendEmail/01_GenerateMail/e716dcf0-7115-4be7-a175-c5feab33f0d4" />
-    </smct:WorkflowTask>
     <twb:WorkflowTask
       asi:abstract="false"
       x:id="1175e9f9-ccff-4158-9ac6-e0fe7f0b240f"
@@ -309,67 +323,6 @@
       twb:transactionType="None">
       <smct:WorkflowTask
         asi:abstract="false"
-        x:id="dc26af21-82ca-455a-aec6-8799b7340516"
-        asi:name="01_Attachment_structure_fromAttachmentDataAndName"
-        wt:outputContextStore="Root/Workflow/SendEmail.origam#SendEmail/Attachment_structure/573507e4-1521-44b9-a2e6-72cd68e9cde3"
-        wt:outputMethod="AppendMergeExisting"
-        aws:roles="*"
-        smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
-        smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
-        aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
-        aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9">
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="3b6bd81b-c368-4769-96d0-110f79b5b07d"
-          asi:name="Parameters"
-          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Root/DataConstant/_guids/_guid_empty.origam#_guid_empty/3d973b7e-7594-4e7d-999a-a6356776a028"
-            x:id="b6b7fa2c-2481-4458-a3bc-13ede3c74adc"
-            asi:name="recordId" />
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
-            x:id="ff4ea8c1-e7e3-49bc-acd8-0cd0db6e7a26"
-            asi:name="fileName"
-            cr:xPath="/" />
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/attachment/190d0ca6-5429-4252-8bce-c544daf65aff"
-            x:id="647acbba-9421-4d02-8600-30a9fad86fc6"
-            asi:name="attachment"
-            cr:xPath="/" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="39c0b094-20c9-40ee-baa6-e5b9514791c9"
-          asi:name="Data"
-          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Mail/857307fa-36a9-4a40-8f6b-987b8677aaa7"
-            x:id="61a71699-4527-4430-b29e-05528ea29ba6"
-            asi:name="Mail"
-            cr:xPath="/" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="4e1e432d-b480-4bbc-9197-f87c0b05ec7d"
-          asi:name="XslScript"
-          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
-          <tr:TransformationReference
-            asi:abstract="false"
-            x:id="4ef1cfbc-3afb-46ed-992a-9a18ade601d0"
-            asi:name="_attachment"
-            tr:transformation="Root/Transformation/_attachment.origam#_attachment/dfc3c4d7-0046-4657-84d6-6199b40e51fd" />
-        </smcp:ServiceMethodCallParameter>
-      </smct:WorkflowTask>
-      <smct:WorkflowTask
-        asi:abstract="false"
         x:id="96020e28-678b-40d6-818e-c5bc13ced848"
         asi:name="02_Send_byQueue"
         wt:outputContextStore="Root/Workflow/SendEmail.origam#SendEmail/MailWorkQueueName/48abb054-bb38-4eb3-9f07-cbfa21e2abb2"
@@ -377,19 +330,6 @@
         aws:roles="*"
         smct:service="Root/Service/WorkQueueService.origam#WorkQueueService/59ff3c8c-036b-4ac9-9953-cd9eeb5dabfc"
         smct:serviceMethod="Root/Service/WorkQueueService.origam#WorkQueueService/Add/f58c3c70-8eb9-4cdc-b74e-a2a06efe7a02">
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="df32ec85-4641-4235-bfd3-2d1b31bd8d02"
-          asi:name="Attachments"
-          smcp:serviceMethodParameter="Root/Service/WorkQueueService.origam#WorkQueueService/Add/Attachments/cb810cba-c2d7-4f4a-9ff7-1b3bf0cb46e5">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Attachment_structure/573507e4-1521-44b9-a2e6-72cd68e9cde3"
-            x:id="f2320d42-6b3c-48d2-95e5-8fa92f4368df"
-            asi:name="Attachment_structure"
-            cr:xPath="/" />
-        </smcp:ServiceMethodCallParameter>
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
           x:id="1e27627a-a5e4-4030-84ba-5c6051c9179d"
@@ -416,12 +356,86 @@
             asi:name="Mail"
             cr:xPath="/" />
         </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="df32ec85-4641-4235-bfd3-2d1b31bd8d02"
+          asi:name="Attachments"
+          smcp:serviceMethodParameter="Root/Service/WorkQueueService.origam#WorkQueueService/Add/Attachments/cb810cba-c2d7-4f4a-9ff7-1b3bf0cb46e5">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Attachment_structure/573507e4-1521-44b9-a2e6-72cd68e9cde3"
+            x:id="f2320d42-6b3c-48d2-95e5-8fa92f4368df"
+            asi:name="Attachment_structure"
+            cr:xPath="/" />
+        </smcp:ServiceMethodCallParameter>
         <wtd:WorkflowTaskDependency
           asi:abstract="false"
           x:id="7fc51361-7ef5-4245-b11e-75b5f650a721"
           asi:name="After_01_Attachment_structure_fromAttachmentDataAndName"
           wtd:startEvent="Finish"
           wtd:task="Root/Workflow/SendEmail.origam#SendEmail/02_SendByQueue/01_Attachment_structure_fromAttachmentDataAndName/dc26af21-82ca-455a-aec6-8799b7340516" />
+      </smct:WorkflowTask>
+      <smct:WorkflowTask
+        asi:abstract="false"
+        x:id="dc26af21-82ca-455a-aec6-8799b7340516"
+        asi:name="01_Attachment_structure_fromAttachmentDataAndName"
+        wt:outputContextStore="Root/Workflow/SendEmail.origam#SendEmail/Attachment_structure/573507e4-1521-44b9-a2e6-72cd68e9cde3"
+        wt:outputMethod="AppendMergeExisting"
+        aws:roles="*"
+        smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+        smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6"
+        aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
+        aws:startConditionRuleContextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9">
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="39c0b094-20c9-40ee-baa6-e5b9514791c9"
+          asi:name="Data"
+          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/Mail/857307fa-36a9-4a40-8f6b-987b8677aaa7"
+            x:id="61a71699-4527-4430-b29e-05528ea29ba6"
+            asi:name="Mail"
+            cr:xPath="/" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="3b6bd81b-c368-4769-96d0-110f79b5b07d"
+          asi:name="Parameters"
+          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/attachment/190d0ca6-5429-4252-8bce-c544daf65aff"
+            x:id="647acbba-9421-4d02-8600-30a9fad86fc6"
+            asi:name="attachment"
+            cr:xPath="/" />
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Root/Workflow/SendEmail.origam#SendEmail/attachmentName/40125c60-8a69-4a36-a5d3-d68d54a2a3d9"
+            x:id="ff4ea8c1-e7e3-49bc-acd8-0cd0db6e7a26"
+            asi:name="fileName"
+            cr:xPath="/" />
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_guids/_guid_empty.origam#_guid_empty/3d973b7e-7594-4e7d-999a-a6356776a028"
+            x:id="b6b7fa2c-2481-4458-a3bc-13ede3c74adc"
+            asi:name="recordId" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="4e1e432d-b480-4bbc-9197-f87c0b05ec7d"
+          asi:name="XslScript"
+          smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+          <tr:TransformationReference
+            asi:abstract="false"
+            x:id="4ef1cfbc-3afb-46ed-992a-9a18ade601d0"
+            asi:name="_attachment"
+            tr:transformation="Root/Transformation/_attachment.origam#_attachment/dfc3c4d7-0046-4657-84d6-6199b40e51fd" />
+        </smcp:ServiceMethodCallParameter>
       </smct:WorkflowTask>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"

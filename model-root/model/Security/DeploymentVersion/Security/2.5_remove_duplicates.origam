@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="4fcae0ba-dcbc-4bfa-baab-7fd1dd04bda2"
@@ -15,10 +20,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="5"
-      scusa:commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___ffb780b4-5fef-4ab0-a3a3-9517b26667ba.txt"
-      x:id="ffb780b4-5fef-4ab0-a3a3-9517b26667ba"
-      asi:name="00005_Remove_duplicates"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___5e6e9974-c808-4172-b1b9-fe5a7ecd7c98.txt"
+      x:id="5e6e9974-c808-4172-b1b9-fe5a7ecd7c98"
+      asi:name="00030_Index_OrigamRole.ix_Unique"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -31,10 +36,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="30"
-      scusa:commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___5e6e9974-c808-4172-b1b9-fe5a7ecd7c98.txt"
-      x:id="5e6e9974-c808-4172-b1b9-fe5a7ecd7c98"
-      asi:name="00030_Index_OrigamRole.ix_Unique"
+      ausa:activityOrder="5"
+      scusa:commandText="-***-ExternalFile:2.5_remove_duplicates.origam___commandText___ffb780b4-5fef-4ab0-a3a3-9517b26667ba.txt"
+      x:id="ffb780b4-5fef-4ab0-a3a3-9517b26667ba"
+      asi:name="00005_Remove_duplicates"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

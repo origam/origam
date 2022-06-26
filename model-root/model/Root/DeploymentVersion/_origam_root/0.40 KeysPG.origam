@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="910945fa-803a-4f8b-b583-12d4402524c4"
     asi:name="0.40 KeysPG"
     dv:version="0.39">
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___2366c152-748e-4527-bc24-dec6e82c66aa.txt"
-      x:id="2366c152-748e-4527-bc24-dec6e82c66aa"
-      asi:name="00010_FillWorkQueueLocalizationTables"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="20"
@@ -31,10 +28,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___3a66f3b0-72fe-4dc4-a0d8-39243d29b33b.txt"
-      x:id="3a66f3b0-72fe-4dc4-a0d8-39243d29b33b"
-      asi:name="00040_WorkQueueNotificationEvents_DeleteUnused_AddCommand"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___2366c152-748e-4527-bc24-dec6e82c66aa.txt"
+      x:id="2366c152-748e-4527-bc24-dec6e82c66aa"
+      asi:name="00010_FillWorkQueueLocalizationTables"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -47,6 +44,14 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___3a66f3b0-72fe-4dc4-a0d8-39243d29b33b.txt"
+      x:id="3a66f3b0-72fe-4dc4-a0d8-39243d29b33b"
+      asi:name="00040_WorkQueueNotificationEvents_DeleteUnused_AddCommand"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="60"
       scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___87a6e4c1-af13-41fb-a4f9-0484f2cd2f30.txt"
       x:id="87a6e4c1-af13-41fb-a4f9-0484f2cd2f30"
@@ -55,18 +60,18 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="70"
-      scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___a9068884-c2bd-4417-976d-be925752822d.txt"
-      x:id="a9068884-c2bd-4417-976d-be925752822d"
-      asi:name="00070_OrigamNotificationChannelType_Transalations"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="80"
       scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___a48495ae-7147-451e-a1c8-016df8de9c71.txt"
       x:id="a48495ae-7147-451e-a1c8-016df8de9c71"
       asi:name="00080_WorkQueueCommandType_Add_RunNotificaitons"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:0.40 KeysPG.origam___commandText___a9068884-c2bd-4417-976d-be925752822d.txt"
+      x:id="a9068884-c2bd-4417-976d-be925752822d"
+      asi:name="00070_OrigamNotificationChannelType_Transalations"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
     x:id="5643627e-99f8-4df4-bfd6-d31db81cad4a"
     asi:name="RuleExceptionData"
     ade:readOnly="false">
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="c7089321-a55f-4d61-823c-fdb8e2fed215"
+      adec:isPrimaryKey="false"
+      asi:name="Severity"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
     <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -16,17 +33,6 @@
       x:id="ce374f6b-7348-4a09-afe3-17a909e0fb53"
       adec:isPrimaryKey="false"
       asi:name="FieldName"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      x:id="fc76a77d-fbbc-472b-a666-4c87df66205b"
-      adec:isPrimaryKey="false"
-      asi:name="Message"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <df:DataEntityColumn
@@ -45,11 +51,11 @@
       asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
-      adec:dataType="Integer"
+      adec:dataType="Memo"
       adec:excludeFromAllFields="false"
-      x:id="c7089321-a55f-4d61-823c-fdb8e2fed215"
+      x:id="fc76a77d-fbbc-472b-a666-4c87df66205b"
       adec:isPrimaryKey="false"
-      asi:name="Severity"
+      asi:name="Message"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
   </de:DataEntity>

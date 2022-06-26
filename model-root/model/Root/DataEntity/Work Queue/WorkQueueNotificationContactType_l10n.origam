@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,12 +19,26 @@
     tmi:mappedObjectName="WorkQueueNotificationContactType_l10n"
     asi:name="WorkQueueNotificationContactType_l10n"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="dbd46dc8-8a63-4210-9571-05d2599e570e" />
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/b822344b-e1a6-4de0-ae41-ea49e9f981ac"
-      x:id="7cb80f9d-9de1-481a-9189-3abd1c126f54" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="be3f167b-daf2-4556-852a-dd9490c26dad"
+      asi:name="ix_unq_WorkQueueNotificationContactType"
+      dei:unique="true">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
+        x:id="4805e5eb-3b35-4593-868f-e680596775ee"
+        asi:name="0_refWorkQueueNotificationContactTypeId"
+        deif:sortOrder="Ascending" />
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
+        x:id="be4015f8-969f-4616-9922-14c84bf97673"
+        asi:name="1_refLanguageId"
+        deif:ordinalPosition="1"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -46,25 +69,11 @@
       asi:name="Name"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="be3f167b-daf2-4556-852a-dd9490c26dad"
-      asi:name="ix_unq_WorkQueueNotificationContactType"
-      dei:unique="true">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
-        x:id="be4015f8-969f-4616-9922-14c84bf97673"
-        asi:name="1_refLanguageId"
-        deif:ordinalPosition="1"
-        deif:sortOrder="Ascending" />
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
-        x:id="4805e5eb-3b35-4593-868f-e680596775ee"
-        asi:name="0_refWorkQueueNotificationContactTypeId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/b822344b-e1a6-4de0-ae41-ea49e9f981ac"
+      x:id="7cb80f9d-9de1-481a-9189-3abd1c126f54" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="dbd46dc8-8a63-4210-9571-05d2599e570e" />
   </tmi:DataEntity>
 </x:file>

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
@@ -10,56 +19,6 @@
     tmi:mappedObjectName="Organization"
     asi:name="Organization"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="5bb45cb7-8839-4c3f-9baa-3fea95014442" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="5f01be2b-6135-4d0c-96f4-09f5d1fb8cd2"
-      adec:isPrimaryKey="false"
-      adec:label="Name"
-      fmi:mappedColumnName="Name"
-      asi:name="Name"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="40"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="39e779cb-af24-4720-92a5-12647c202431"
-      adec:isPrimaryKey="false"
-      adec:label="Code"
-      fmi:mappedColumnName="ReferenceCode"
-      asi:name="ReferenceCode"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/__system/LookupBusinessPartner.origam#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-      x:id="306f4f8e-0821-430e-9f09-f768eb66b18d"
-      adec:isPrimaryKey="false"
-      adec:label="Business Partner"
-      fmi:mappedColumnName="refBusinessPartnerId"
-      asi:name="refBusinessPartnerId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
     <eri:EntityRelation
       asi:abstract="false"
       x:id="ad87cff1-c602-4cb7-b096-4f1ad4d7d438"
@@ -90,5 +49,55 @@
         asi:name="OrganizationMappingListKey1"
         ercpi:relatedEntityField="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/refOrganizationId/f7261cdc-b4b0-4995-8e71-9ac3982bf37c" />
     </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/__system/LookupBusinessPartner.origam#LookupBusinessPartner/08d82ef5-df38-48d6-a276-ee5b7f027bd6"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="306f4f8e-0821-430e-9f09-f768eb66b18d"
+      adec:isPrimaryKey="false"
+      adec:label="Business Partner"
+      fmi:mappedColumnName="refBusinessPartnerId"
+      asi:name="refBusinessPartnerId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="40"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="39e779cb-af24-4720-92a5-12647c202431"
+      adec:isPrimaryKey="false"
+      adec:label="Code"
+      fmi:mappedColumnName="ReferenceCode"
+      asi:name="ReferenceCode"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="5f01be2b-6135-4d0c-96f4-09f5d1fb8cd2"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="5bb45cb7-8839-4c3f-9baa-3fea95014442" />
   </tmi:DataEntity>
 </x:file>

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,23 +20,6 @@
     tmi:mappedObjectName="Mail"
     asi:name="Mail"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="df703283-67bd-4623-be3f-d6405b2316a0" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Date"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="fd53327e-07cd-4096-807a-08534a11339c"
-      adec:isPrimaryKey="false"
-      adec:label="Sent"
-      fmi:mappedColumnName="DateSent"
-      asi:name="DateSent"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -36,6 +29,72 @@
       x:id="166af7fd-850d-4c30-a587-375843902756"
       adec:isPrimaryKey="false"
       asi:name="BCC"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      x:id="65ff9b65-a245-492b-a5a5-a78b8387bf57"
+      adec:isPrimaryKey="false"
+      asi:name="MessageId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      x:id="877e02f2-2eda-4599-b403-9dacf4465680"
+      adec:isPrimaryKey="false"
+      asi:name="CC"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="3e5da01a-402d-451a-b4ea-275a0a099eaf"
+      asi:name="MailAttachment"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/Attachment.origam#Attachment/71f94167-a1b0-4054-a003-faa9b3c84aef"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="6fdc7216-c4bf-416c-ace8-b794a24bcc5b"
+        asi:name="MailAttachmentKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="1b8911d8-5ede-4d96-b069-9ac2cd0b6515"
+      adec:isPrimaryKey="false"
+      adec:label="Received"
+      fmi:mappedColumnName="DateReceived"
+      asi:name="DateReceived"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="500"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="570024cc-ede3-41f9-b605-9113a055f47f"
+      adec:isPrimaryKey="false"
+      adec:label="Subject"
+      fmi:mappedColumnName="Subject"
+      asi:name="Subject"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -71,46 +130,6 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataLength="500"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="570024cc-ede3-41f9-b605-9113a055f47f"
-      adec:isPrimaryKey="false"
-      adec:label="Subject"
-      fmi:mappedColumnName="Subject"
-      asi:name="Subject"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Date"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="1b8911d8-5ede-4d96-b069-9ac2cd0b6515"
-      adec:isPrimaryKey="false"
-      adec:label="Received"
-      fmi:mappedColumnName="DateReceived"
-      asi:name="DateReceived"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      x:id="877e02f2-2eda-4599-b403-9dacf4465680"
-      adec:isPrimaryKey="false"
-      asi:name="CC"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
       adec:dataType="Memo"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
@@ -121,31 +140,22 @@
       asi:name="MessageBody"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
-    <df:DataEntityColumn
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
-      adec:dataType="Memo"
+      adec:dataType="Date"
       adec:excludeFromAllFields="false"
-      x:id="65ff9b65-a245-492b-a5a5-a78b8387bf57"
+      fmi:excludeFromAuditing="false"
+      x:id="fd53327e-07cd-4096-807a-08534a11339c"
       adec:isPrimaryKey="false"
-      asi:name="MessageId"
+      adec:label="Sent"
+      fmi:mappedColumnName="DateSent"
+      asi:name="DateSent"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <eri:EntityRelation
-      asi:abstract="false"
-      x:id="3e5da01a-402d-451a-b4ea-275a0a099eaf"
-      asi:name="MailAttachment"
-      eri:or="false"
-      eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/__system/Attachment.origam#Attachment/71f94167-a1b0-4054-a003-faa9b3c84aef"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="6fdc7216-c4bf-416c-ace8-b794a24bcc5b"
-        asi:name="MailAttachmentKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d" />
-    </eri:EntityRelation>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="df703283-67bd-4623-be3f-d6405b2316a0" />
   </tmi:DataEntity>
 </x:file>

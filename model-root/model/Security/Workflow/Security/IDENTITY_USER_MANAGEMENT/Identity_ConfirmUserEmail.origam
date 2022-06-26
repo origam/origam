@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="0019e8e5-31c9-4fa9-a22a-a4096aab8a59"
@@ -7,11 +16,11 @@
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="String"
+      cs:dataType="UniqueIdentifier"
       cs:disableConstraints="false"
-      x:id="becd77dc-21b0-4d4d-9ced-764b95d34f0b"
+      x:id="02e7436c-f8a2-42c0-832a-83c8968f424e"
       cs:isReturnValue="false"
-      asi:name="OutputFromIdentity" />
+      asi:name="UserId" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
@@ -21,11 +30,11 @@
       asi:name="Token" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
+      cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="02e7436c-f8a2-42c0-832a-83c8968f424e"
+      x:id="becd77dc-21b0-4d4d-9ced-764b95d34f0b"
       cs:isReturnValue="false"
-      asi:name="UserId" />
+      asi:name="OutputFromIdentity" />
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="fbb20a8d-3ed2-4a16-b59e-53d7336e59d4"
@@ -39,19 +48,6 @@
       aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/UserId/02e7436c-f8a2-42c0-832a-83c8968f424e">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="7bc86e2a-858f-400a-a485-33c8766449e6"
-        asi:name="UserId"
-        smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/UserId/eefe44f5-6ca6-4ccf-8b92-d1989d3ecc39">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/UserId/02e7436c-f8a2-42c0-832a-83c8968f424e"
-          x:id="9ac1c963-61a5-49ca-b36f-838760ec5faf"
-          asi:name="UserId"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
         x:id="552819da-c68f-411b-8cf6-7bc17f144608"
         asi:name="Token"
         smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/Token/95d34e32-b67d-4758-8619-6589e42bdb91">
@@ -61,6 +57,19 @@
           cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/Token/43dff6f4-bc0e-469e-b80d-7c632fe2b2dd"
           x:id="633200bc-0ffb-4dcc-8a99-de7e6e78f65f"
           asi:name="Token"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="7bc86e2a-858f-400a-a485-33c8766449e6"
+        asi:name="UserId"
+        smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/ConfirmEmail/UserId/eefe44f5-6ca6-4ccf-8b92-d1989d3ecc39">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/UserId/02e7436c-f8a2-42c0-832a-83c8968f424e"
+          x:id="9ac1c963-61a5-49ca-b36f-838760ec5faf"
+          asi:name="UserId"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>

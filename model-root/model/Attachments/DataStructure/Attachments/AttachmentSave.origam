@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="4659ef8b-f62c-46dc-904a-2d3c6f3cc9fa"
@@ -19,18 +25,6 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
-        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamAttachmentFields.origam#IOrigamAttachmentFields/Data/de01feaf-6f60-4a6c-9003-b6f61198ef8a"
-        dsc:hideInOutput="false"
-        x:id="1a6ff762-e233-4b00-b4e8-b74cffc8bd99"
-        asi:name="Data"
-        dsc:upsertType="Replace"
-        dsc:useCopiedValue="false"
-        dsc:useLookupValue="false"
-        dsc:writeOnly="true"
-        dsc:xmlMappingType="Default" />
-      <dsc:DataStructureColumn
-        asi:abstract="false"
-        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__system/Attachment.origam#Attachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
         dsc:hideInOutput="false"
         x:id="0aa77078-c78a-4372-b0cf-3024fa356e7a"
@@ -39,6 +33,18 @@
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
         dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamAttachmentFields.origam#IOrigamAttachmentFields/Data/de01feaf-6f60-4a6c-9003-b6f61198ef8a"
+        dsc:hideInOutput="false"
+        x:id="1a6ff762-e233-4b00-b4e8-b74cffc8bd99"
+        asi:name="Data"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="true"
         dsc:xmlMappingType="Default" />
       <dsc:DataStructureColumn
         asi:abstract="false"

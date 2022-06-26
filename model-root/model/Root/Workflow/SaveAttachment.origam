@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="bcc376af-fe1e-4689-9a96-67cd1f2a1437"
@@ -7,25 +18,11 @@
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
-      cs:disableConstraints="false"
-      x:id="b53506d8-2649-41c0-905a-325f7d420ecc"
-      cs:isReturnValue="false"
-      asi:name="entityId" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
-      cs:disableConstraints="false"
-      x:id="c9b5095f-ed8a-4540-bceb-67557faea396"
-      cs:isReturnValue="false"
-      asi:name="recordId" />
-    <cs:ContextStore
-      asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="a8ee613d-bb2c-45e2-88e9-7bc9a0fec568"
+      x:id="30cb80d7-1d63-4f12-af3a-e00110672619"
       cs:isReturnValue="false"
-      asi:name="fileName" />
+      asi:name="remark" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -38,9 +35,16 @@
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="30cb80d7-1d63-4f12-af3a-e00110672619"
+      x:id="a8ee613d-bb2c-45e2-88e9-7bc9a0fec568"
       cs:isReturnValue="false"
-      asi:name="remark" />
+      asi:name="fileName" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="b53506d8-2649-41c0-905a-325f7d420ecc"
+      cs:isReturnValue="false"
+      asi:name="entityId" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Blob"
@@ -48,6 +52,13 @@
       x:id="baa50b41-3979-47f5-a9cf-ed1581e2d642"
       cs:isReturnValue="false"
       asi:name="data" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="c9b5095f-ed8a-4540-bceb-67557faea396"
+      cs:isReturnValue="false"
+      asi:name="recordId" />
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="3704ca35-801a-447e-a155-616ea780f72f"
@@ -57,17 +68,6 @@
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
       smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="c5c5359f-dad7-4b97-9c6c-32bfe32f46f6"
-        asi:name="XslScript"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
-        <tr:TransformationReference
-          asi:abstract="false"
-          x:id="f9bddca5-be2b-4f61-b622-02f5f63b8d66"
-          asi:name="_attachment"
-          tr:transformation="Root/Transformation/_attachment.origam#_attachment/dfc3c4d7-0046-4657-84d6-6199b40e51fd" />
-      </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="3ff247a7-a1ec-424d-a3ad-921f4180a27f"
@@ -88,13 +88,6 @@
         smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
         <cr:WorkflowContextReference
           asi:abstract="false"
-          cr:castToDataType="Blob"
-          cr:contextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/data/baa50b41-3979-47f5-a9cf-ed1581e2d642"
-          x:id="ca7c62cf-b996-4c61-8d56-2fbaf9a66c04"
-          asi:name="attachment"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
           cr:castToDataType="String"
           cr:contextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/entityId/b53506d8-2649-41c0-905a-325f7d420ecc"
           x:id="ac45af81-a737-424d-b615-497a6a7aa28b"
@@ -103,9 +96,16 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/remark/30cb80d7-1d63-4f12-af3a-e00110672619"
-          x:id="df0d8d2d-e935-4b96-a654-72fb78178fc7"
-          asi:name="remark"
+          cr:contextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/fileName/a8ee613d-bb2c-45e2-88e9-7bc9a0fec568"
+          x:id="bc551988-f741-4077-a462-9fea445c4342"
+          asi:name="fileName"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="Blob"
+          cr:contextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/data/baa50b41-3979-47f5-a9cf-ed1581e2d642"
+          x:id="ca7c62cf-b996-4c61-8d56-2fbaf9a66c04"
+          asi:name="attachment"
           cr:xPath="/" />
         <cr:WorkflowContextReference
           asi:abstract="false"
@@ -117,10 +117,21 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/fileName/a8ee613d-bb2c-45e2-88e9-7bc9a0fec568"
-          x:id="bc551988-f741-4077-a462-9fea445c4342"
-          asi:name="fileName"
+          cr:contextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/remark/30cb80d7-1d63-4f12-af3a-e00110672619"
+          x:id="df0d8d2d-e935-4b96-a654-72fb78178fc7"
+          asi:name="remark"
           cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c5c5359f-dad7-4b97-9c6c-32bfe32f46f6"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="f9bddca5-be2b-4f61-b622-02f5f63b8d66"
+          asi:name="_attachment"
+          tr:transformation="Root/Transformation/_attachment.origam#_attachment/dfc3c4d7-0046-4657-84d6-6199b40e51fd" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
     <smct:WorkflowTask
@@ -134,6 +145,17 @@
       smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
+        x:id="6df3064a-0519-4f57-96ec-de4dc83cf883"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f"
+          x:id="e771cc92-3cce-40ec-835b-c2feaa17162d"
+          asi:name="Attachment" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
         x:id="9218bd4d-3116-49d3-ac82-db84cbf7774e"
         asi:name="Data"
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
@@ -144,17 +166,6 @@
           x:id="c0df9b7e-e015-400b-8e9a-6a7e53f912a7"
           asi:name="Attachment"
           cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="6df3064a-0519-4f57-96ec-de4dc83cf883"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
-        <dsr:DataStructureReference
-          asi:abstract="false"
-          dsr:dataStructure="Root/DataStructure/__system/Attachment.origam#Attachment/04a07967-4b59-4c14-8320-e6d073f6f77f"
-          x:id="e771cc92-3cce-40ec-835b-c2feaa17162d"
-          asi:name="Attachment" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
   </w:Workflow>

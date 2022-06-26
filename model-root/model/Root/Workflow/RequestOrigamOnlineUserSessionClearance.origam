@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="d63fe57c-7a00-4d44-8da3-f023d6ba1404"
@@ -31,17 +43,6 @@
       smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="9389ee57-21e4-415e-8173-0db3db20f3fa"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
-        <dsr:DataStructureReference
-          asi:abstract="false"
-          dsr:dataStructure="Root/DataStructure/__system/OrigamOnlineUser.origam#OrigamOnlineUser/aa4c9df9-d6da-408e-a095-fd377ffcc319"
-          x:id="268000d6-a053-4d2c-81dc-8fac2d5bd6ad"
-          asi:name="OrigamOnlineUser" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
         x:id="903f0d4c-f671-4bf1-a3a5-61e5f392385c"
         asi:name="Data"
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
@@ -53,12 +54,68 @@
           asi:name="OrigamOnlineUser"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="9389ee57-21e4-415e-8173-0db3db20f3fa"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Root/DataStructure/__system/OrigamOnlineUser.origam#OrigamOnlineUser/aa4c9df9-d6da-408e-a095-fd377ffcc319"
+          x:id="268000d6-a053-4d2c-81dc-8fac2d5bd6ad"
+          asi:name="OrigamOnlineUser" />
+      </smcp:ServiceMethodCallParameter>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
         x:id="ba09f53b-864c-4f00-98b8-12c6472dffa9"
         asi:name="After_02_Transform_OrigamOnlineUser"
         wtd:startEvent="Success"
         wtd:task="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/02_Transform_OrigamOnlineUser/3dbb9565-3b48-45a3-8d9d-a5e597f96053" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="3dbb9565-3b48-45a3-8d9d-a5e597f96053"
+      asi:name="02_Transform_OrigamOnlineUser"
+      wt:outputContextStore="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/OrigamOnlineUser/7a8cda0c-834e-4ddc-9ce8-b03ca84ce8a4"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="0f765355-217b-423d-b6d2-a965225d1a86"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="641da2f0-d079-437e-a8f5-a44ac9d22f10"
+          asi:name="RequestOrigamOnlineUserSessionClearance"
+          tr:transformation="Root/Transformation/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/264f944d-e007-4499-8282-543794e61414" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="a0473ee3-2067-4226-8fae-b83ceba2aacd"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="f2b544f4-8fea-4ccf-9490-38d45540b1f9"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/OrigamOnlineUser/7a8cda0c-834e-4ddc-9ce8-b03ca84ce8a4"
+          x:id="0c278f57-3ac8-4bbc-a995-3f395c5914b7"
+          asi:name="OrigamOnlineUser"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="27cf0f7b-bc31-4789-a93b-e3a80b8952e3"
+        asi:name="After_01_LoadData_OrigamOnlineUser"
+        wtd:startEvent="Success"
+        wtd:task="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/01_LoadData_OrigamOnlineUser/be394566-f9f4-413a-9306-4ec62fe6fe31" />
     </smct:WorkflowTask>
     <smct:WorkflowTask
       asi:abstract="false"
@@ -94,51 +151,6 @@
           dsr:method="Root/DataStructure/__system/OrigamOnlineUser.origam#OrigamOnlineUser/GetId/242c3f6a-58c5-4ad9-8ba1-31f5243e9890"
           asi:name="OrigamOnlineUser" />
       </smcp:ServiceMethodCallParameter>
-    </smct:WorkflowTask>
-    <smct:WorkflowTask
-      asi:abstract="false"
-      x:id="3dbb9565-3b48-45a3-8d9d-a5e597f96053"
-      asi:name="02_Transform_OrigamOnlineUser"
-      wt:outputContextStore="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/OrigamOnlineUser/7a8cda0c-834e-4ddc-9ce8-b03ca84ce8a4"
-      wt:outputMethod="AppendMergeExisting"
-      aws:roles="*"
-      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
-      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="f2b544f4-8fea-4ccf-9490-38d45540b1f9"
-        asi:name="Data"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/OrigamOnlineUser/7a8cda0c-834e-4ddc-9ce8-b03ca84ce8a4"
-          x:id="0c278f57-3ac8-4bbc-a995-3f395c5914b7"
-          asi:name="OrigamOnlineUser"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="0f765355-217b-423d-b6d2-a965225d1a86"
-        asi:name="XslScript"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
-        <tr:TransformationReference
-          asi:abstract="false"
-          x:id="641da2f0-d079-437e-a8f5-a44ac9d22f10"
-          asi:name="RequestOrigamOnlineUserSessionClearance"
-          tr:transformation="Root/Transformation/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/264f944d-e007-4499-8282-543794e61414" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="a0473ee3-2067-4226-8fae-b83ceba2aacd"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
-      <wtd:WorkflowTaskDependency
-        asi:abstract="false"
-        x:id="27cf0f7b-bc31-4789-a93b-e3a80b8952e3"
-        asi:name="After_01_LoadData_OrigamOnlineUser"
-        wtd:startEvent="Success"
-        wtd:task="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/01_LoadData_OrigamOnlineUser/be394566-f9f4-413a-9306-4ec62fe6fe31" />
     </smct:WorkflowTask>
   </w:Workflow>
 </x:file>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="bb00e1d3-4ae3-4a5e-8ef8-54a4ff0ebb9a"
@@ -18,17 +22,6 @@
       dse:useUpsert="false">
       <dse:DataStructureEntity
         asi:abstract="false"
-        dse:allFields="true"
-        dse:concurrencyHandling="Standard"
-        dse:entity="Root/DataEntity/Organization Management/Organization.origam#Organization/OrganizationMapping/ad87cff1-c602-4cb7-b096-4f1ad4d7d438"
-        x:id="e75c73ee-2a16-4b07-bb2e-2ea203ceae77"
-        dse:ignoreCondition="None"
-        dse:ignoreImplicitFilters="false"
-        asi:name="OrganizationMapping"
-        dse:relationType="Normal"
-        dse:useUpsert="false" />
-      <dse:DataStructureEntity
-        asi:abstract="false"
         dse:allFields="false"
         dse:concurrencyHandling="Standard"
         dse:entity="Root/DataEntity/Organization Management/Organization.origam#Organization/OrganizationMappingList/e6c321f8-489a-4b0c-b0bb-cc9f10b6283c"
@@ -37,6 +30,17 @@
         dse:ignoreImplicitFilters="false"
         asi:name="OrganizationMappingList"
         dse:relationType="FilterParent"
+        dse:useUpsert="false" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Organization Management/Organization.origam#Organization/OrganizationMapping/ad87cff1-c602-4cb7-b096-4f1ad4d7d438"
+        x:id="e75c73ee-2a16-4b07-bb2e-2ea203ceae77"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrganizationMapping"
+        dse:relationType="Normal"
         dse:useUpsert="false" />
     </dse:DataStructureEntity>
   </ds:DataStructure>

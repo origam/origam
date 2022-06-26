@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="9a805f08-aa81-468e-a2a0-5bdb57b734e5"
@@ -12,20 +16,6 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="4dedbac1-070c-48b8-b468-17b008b5f4b1"
-      cpi:localizable="false"
-      asi:name="Width"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="9168475b-8aad-4278-9e41-19f0cf0f60cd"
-      cpi:localizable="false"
-      asi:name="Left"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
       x:id="0ae19511-c396-43a5-ac0c-62b6c3cb888c"
       cpi:localizable="false"
       asi:name="TabIndex"
@@ -33,9 +23,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="52d8fcdd-1ec5-4ed4-89c6-6f9c9bc71705"
+      x:id="0c143f08-d922-40df-bfb0-f54727fe9fcb"
       cpi:localizable="false"
-      asi:name="Top"
+      asi:name="Height"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -47,9 +37,23 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="0c143f08-d922-40df-bfb0-f54727fe9fcb"
+      x:id="4dedbac1-070c-48b8-b468-17b008b5f4b1"
       cpi:localizable="false"
-      asi:name="Height"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="52d8fcdd-1ec5-4ed4-89c6-6f9c9bc71705"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="9168475b-8aad-4278-9e41-19f0cf0f60cd"
+      cpi:localizable="false"
+      asi:name="Left"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"

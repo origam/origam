@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="58cd284e-7dc5-489e-b099-23dfb1147bf9"
@@ -12,6 +16,20 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
+      x:id="1917cdc4-abe3-454f-9bbd-647b064c42d4"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="31f7f286-76a2-487a-b623-e932c228234c"
+      cpi:localizable="false"
+      asi:name="IconId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="4831056b-00af-401a-84d6-0af79e48700a"
       cpi:localizable="false"
       asi:name="TabIndex"
@@ -19,23 +37,30 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="b0c50c3d-273a-4040-a7d2-29b47211e4dc"
+      x:id="68d9f2ab-37b9-43a8-a05d-c73285fd47be"
       cpi:localizable="false"
-      asi:name="Height"
+      asi:name="Left"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="ec8fc35c-d83d-4062-9c02-3f83e9504982"
+      x:id="8d7883bc-5e0a-4ca1-add2-9482e1181775"
       cpi:localizable="false"
-      asi:name="WorkflowId"
-      cpi:propertyType="UniqueIdentifier" />
+      asi:name="Width"
+      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="1917cdc4-abe3-454f-9bbd-647b064c42d4"
+      x:id="ae75c0df-a38b-449f-a1c2-bb5178fd1df5"
       cpi:localizable="false"
-      asi:name="Top"
+      asi:name="MergeType"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="b0c50c3d-273a-4040-a7d2-29b47211e4dc"
+      cpi:localizable="false"
+      asi:name="Height"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -54,24 +79,10 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="8d7883bc-5e0a-4ca1-add2-9482e1181775"
+      x:id="ec8fc35c-d83d-4062-9c02-3f83e9504982"
       cpi:localizable="false"
-      asi:name="Width"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="ae75c0df-a38b-449f-a1c2-bb5178fd1df5"
-      cpi:localizable="false"
-      asi:name="MergeType"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="68d9f2ab-37b9-43a8-a05d-c73285fd47be"
-      cpi:localizable="false"
-      asi:name="Left"
-      cpi:propertyType="Integer" />
+      asi:name="WorkflowId"
+      cpi:propertyType="UniqueIdentifier" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -79,12 +90,5 @@
       cpi:localizable="true"
       asi:name="Text"
       cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="31f7f286-76a2-487a-b623-e932c228234c"
-      cpi:localizable="false"
-      asi:name="IconId"
-      cpi:propertyType="UniqueIdentifier" />
   </ci:Control>
 </x:file>

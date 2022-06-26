@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="6d13ec20-3b17-456e-ae43-3021cb067a70"
@@ -12,9 +16,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="869d8cd1-d517-4dd1-9a79-6b011cc36958"
+      x:id="1a418c27-6bf2-4caf-9f93-d93f8a97ac8f"
       cpi:localizable="false"
-      asi:name="Top"
+      asi:name="Height"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -26,16 +30,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="ce6911cf-7112-49a6-aef7-a244ec326e6c"
+      x:id="869d8cd1-d517-4dd1-9a79-6b011cc36958"
       cpi:localizable="false"
-      asi:name="Left"
+      asi:name="Top"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="1a418c27-6bf2-4caf-9f93-d93f8a97ac8f"
+      x:id="ce6911cf-7112-49a6-aef7-a244ec326e6c"
       cpi:localizable="false"
-      asi:name="Height"
+      asi:name="Left"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"

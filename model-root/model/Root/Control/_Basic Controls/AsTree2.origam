@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="2269b929-ec50-437b-a6fe-8040d90ec6e0"
@@ -12,13 +16,6 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="fe79ee95-eac9-4b21-ba91-01ef457a2dcc"
-      cpi:localizable="false"
-      asi:name="StyleId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
       x:id="247a17cb-0f0d-4b5a-8588-07f2339c580f"
       cpi:localizable="false"
       asi:name="Height"
@@ -26,10 +23,24 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
+      x:id="78dc7fbc-6afa-48cf-8f48-a2b69d998139"
+      cpi:localizable="false"
+      asi:name="FormParameterName"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="7bb643fb-d763-4564-be40-3830d592b5aa"
       cpi:localizable="false"
       asi:name="Top"
       cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="9c39124d-e9a9-4a28-a9f0-af4119d10b77"
+      cpi:localizable="false"
+      asi:name="TreeId"
+      cpi:propertyType="UniqueIdentifier" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -47,23 +58,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="78dc7fbc-6afa-48cf-8f48-a2b69d998139"
-      cpi:localizable="false"
-      asi:name="FormParameterName"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="9c39124d-e9a9-4a28-a9f0-af4119d10b77"
-      cpi:localizable="false"
-      asi:name="TreeId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
       x:id="b8907a5b-d7bc-46f6-b8cd-bf10e70ba957"
       cpi:localizable="false"
       asi:name="Left"
       cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="fe79ee95-eac9-4b21-ba91-01ef457a2dcc"
+      cpi:localizable="false"
+      asi:name="StyleId"
+      cpi:propertyType="UniqueIdentifier" />
   </ci:Control>
 </x:file>
