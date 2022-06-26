@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.GuiModel.Graphics/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:g="http://schemas.origam.com/Origam.Schema.GuiModel.Graphics/6.0.0">
   <g:Graphics
     asi:abstract="false"
     g:graphicsDataByte="-***-ExternalFile:Home.png.origam___graphicsDataByte___0858cbb7-ff2f-4cc4-8727-57daa399012a.png"

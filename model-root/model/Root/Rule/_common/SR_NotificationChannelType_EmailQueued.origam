@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ar="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:sr="http://schemas.origam.com/Origam.Schema.RuleModel.StartRule/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xpr="http://schemas.origam.com/Origam.Schema.RuleModel.XPathRule/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ar="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:sr="http://schemas.origam.com/Origam.Schema.RuleModel.StartRule/6.0.0"
+  xmlns:xpr="http://schemas.origam.com/Origam.Schema.RuleModel.XPathRule/6.0.0">
   <sr:Rule
     asi:abstract="false"
     ar:dataType="Boolean"

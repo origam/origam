@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:efr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilterReference/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:efr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilterReference/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -9,24 +24,6 @@
     tmi:mappedObjectName="BusinessPartnerLookup"
     asi:name="BusinessPartnerLookup"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
-      x:id="3a5d35d4-2a14-4647-9de8-fab709c67014" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="1000"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="1fdb538d-525f-414c-93b1-29cadb29b1cb"
-      adec:isPrimaryKey="false"
-      adec:label="Name"
-      fmi:mappedColumnName="LookupText"
-      asi:name="LookupText"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
     <ef:EntityFilter
       asi:abstract="false"
       x:id="433b3ef5-42f3-46ab-99c0-2aa05ed5be20"
@@ -44,17 +41,6 @@
         asi:name="Like"
         adec:onCopyAction="Copy"
         adec:xmlMappingType="Attribute">
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="fa1f4cd1-a0fe-4223-a815-90d7a046742f"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Like.origam#Like/Left/f09324de-cc07-40f4-834e-2fe90599d1b7">
-          <ecr:EntityColumnReference
-            asi:abstract="false"
-            ecr:field="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LookupText/1fdb538d-525f-414c-93b1-29cadb29b1cb"
-            x:id="b210d085-804a-4053-ae6d-198354c013f7"
-            asi:name="LookupText" />
-        </fcp:FunctionCallParameter>
         <fcp:FunctionCallParameter
           asi:abstract="false"
           x:id="818b15a2-f6eb-4f2f-bdf8-9b541201194c"
@@ -81,13 +67,13 @@
               <dcr:DataConstantReference
                 asi:abstract="false"
                 dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
-                x:id="db94f0b0-aefe-48cf-97d9-0aa03d1a1125"
-                asi:name="3_wildcard" />
+                x:id="32916883-1a12-4955-a326-86b793b4536b"
+                asi:name="1_wildcard" />
               <dcr:DataConstantReference
                 asi:abstract="false"
                 dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
-                x:id="32916883-1a12-4955-a326-86b793b4536b"
-                asi:name="1_wildcard" />
+                x:id="db94f0b0-aefe-48cf-97d9-0aa03d1a1125"
+                asi:name="3_wildcard" />
               <pr:ParameterReference
                 asi:abstract="false"
                 x:id="edc7ebf0-8d09-4483-a48c-248320d9c9fb"
@@ -95,6 +81,17 @@
                 pr:parameter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/parSearchText/bac333ea-e4de-48e0-b3bf-04108bb6402a" />
             </fcp:FunctionCallParameter>
           </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="fa1f4cd1-a0fe-4223-a815-90d7a046742f"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Like.origam#Like/Left/f09324de-cc07-40f4-834e-2fe90599d1b7">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LookupText/1fdb538d-525f-414c-93b1-29cadb29b1cb"
+            x:id="b210d085-804a-4053-ae6d-198354c013f7"
+            asi:name="LookupText" />
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
@@ -193,17 +190,35 @@
           fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
           <efr:EntityFilterReference
             asi:abstract="false"
-            efr:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/GetLikeReferenceCode/d3c75b27-f9c1-49dd-ad75-2e7624c99a9c"
-            x:id="96e25791-8fb9-40b2-9abd-0da1023c6ba1"
-            asi:name="GetLikeReferenceCode" />
-          <efr:EntityFilterReference
-            asi:abstract="false"
             efr:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/GetLikeLookupText/433b3ef5-42f3-46ab-99c0-2aa05ed5be20"
             x:id="49274104-05ef-4a5c-ac37-8ab88d20c4bc"
             asi:name="GetLikeLookupText" />
+          <efr:EntityFilterReference
+            asi:abstract="false"
+            efr:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/GetLikeReferenceCode/d3c75b27-f9c1-49dd-ad75-2e7624c99a9c"
+            x:id="96e25791-8fb9-40b2-9abd-0da1023c6ba1"
+            asi:name="GetLikeReferenceCode" />
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="1000"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="1fdb538d-525f-414c-93b1-29cadb29b1cb"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="LookupText"
+      asi:name="LookupText"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      x:id="3a5d35d4-2a14-4647-9de8-fab709c67014" />
     <sip:Parameter
       asi:abstract="false"
       sip:allowNulls="true"

@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0">
   <de:DataEntity
     asi:abstract="true"
     ade:audit="None"
     x:id="85de4821-d615-4b53-8542-3aaeeca1c7c0"
     asi:name="IResourceAccessList"
     ade:readOnly="false">
+    <eri:EntityRelation
+      asi:abstract="true"
+      x:id="5e7af2fe-ae3d-47b7-b863-8f55cbbcd4fe"
+      asi:name="ResourceAccessList"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Root/DataEntity/Resource Management/ResourceAccessList.origam#ResourceAccessList/86e47cb7-3d7b-4b01-8a2e-5217dcb89f09"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="true"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IResourceAccessList.origam#IResourceAccessList/refResourceAccessLevelId/e92d84d6-8e2f-4dbe-969b-29f9118e6113"
+        x:id="518fb374-0774-4890-a4cd-a1c39894e10a"
+        asi:name="ResourceAccessListKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Resource Management/ResourceAccessList.origam#ResourceAccessList/refResourceAccessLevelId/48a4dc16-2136-44af-a3da-6cee266fc672" />
+    </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="true"
       adec:allowNulls="false"
@@ -24,20 +47,5 @@
       asi:name="refResourceAccessLevelId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <eri:EntityRelation
-      asi:abstract="true"
-      x:id="5e7af2fe-ae3d-47b7-b863-8f55cbbcd4fe"
-      asi:name="ResourceAccessList"
-      eri:or="false"
-      eri:parentChild="false"
-      eri:relatedEntity="Root/DataEntity/Resource Management/ResourceAccessList.origam#ResourceAccessList/86e47cb7-3d7b-4b01-8a2e-5217dcb89f09"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="true"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IResourceAccessList.origam#IResourceAccessList/refResourceAccessLevelId/e92d84d6-8e2f-4dbe-969b-29f9118e6113"
-        x:id="518fb374-0774-4890-a4cd-a1c39894e10a"
-        asi:name="ResourceAccessListKey1"
-        ercpi:relatedEntityField="Root/DataEntity/Resource Management/ResourceAccessList.origam#ResourceAccessList/refResourceAccessLevelId/48a4dc16-2136-44af-a3da-6cee266fc672" />
-    </eri:EntityRelation>
   </de:DataEntity>
 </x:file>

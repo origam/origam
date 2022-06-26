@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="8c8e3bc6-acab-4636-af34-1ca5b5ee7696"
@@ -7,26 +12,18 @@
     dv:version="4.9">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="50"
-      scusa:commandText="-***-ExternalFile:4.9.origam___commandText___4a9f4900-3889-4313-b652-940102a0b364.txt"
-      x:id="4a9f4900-3889-4313-b652-940102a0b364"
-      asi:name="00050_Database_Entity_OrigamMapOrigamMapLayer"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:4.9.origam___commandText___a833aa77-718c-4df9-b7c3-985096a09aa2.txt"
-      x:id="a833aa77-718c-4df9-b7c3-985096a09aa2"
-      asi:name="00040_Index_OrigamMapLayer.ix_Unique"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="10"
       scusa:commandText="-***-ExternalFile:4.9.origam___commandText___06785f8f-a32f-44e4-a99b-da474e8c856d.txt"
       x:id="06785f8f-a32f-44e4-a99b-da474e8c856d"
       asi:name="00010_drop"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:4.9.origam___commandText___4a9f4900-3889-4313-b652-940102a0b364.txt"
+      x:id="4a9f4900-3889-4313-b652-940102a0b364"
+      asi:name="00050_Database_Entity_OrigamMapOrigamMapLayer"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -43,6 +40,14 @@
       scusa:commandText="-***-ExternalFile:4.9.origam___commandText___97ba2a59-0bb0-4415-8336-fe3510809e93.txt"
       x:id="97ba2a59-0bb0-4415-8336-fe3510809e93"
       asi:name="00020_Database_Entity_OrigamMapOrigamMapLayer"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:4.9.origam___commandText___a833aa77-718c-4df9-b7c3-985096a09aa2.txt"
+      x:id="a833aa77-718c-4df9-b7c3-985096a09aa2"
+      asi:name="00040_Index_OrigamMapLayer.ix_Unique"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,9 +19,19 @@
     tmi:mappedObjectName="CounterDetail"
     asi:name="CounterDetail"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="af2e329d-5161-47cc-8e8d-93ddf8f55056" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="00078890-64b0-46f6-b885-0019704f67cb"
+      asi:name="ix_refCounterId"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/CounterDetail.origam#CounterDetail/refCounterId/08e22bfe-69f5-4e24-878f-0188526ddc59"
+        x:id="ab1e63af-a73c-4e40-82ae-e2e0389a1d76"
+        asi:name="0_refCounterId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -26,35 +45,6 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="refCounterId"
       asi:name="refCounterId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="255"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="74658e86-c13d-4c65-887b-06c893a9efb4"
-      adec:isPrimaryKey="false"
-      adec:label="Prefix"
-      fmi:mappedColumnName="Prefix"
-      asi:name="Prefix"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Date"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="e8b87f9a-9ab9-479b-bbf4-11908d299b14"
-      adec:isPrimaryKey="false"
-      adec:label="Valid From"
-      fmi:mappedColumnName="ValidFrom"
-      asi:name="ValidFrom"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -73,6 +63,20 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="16b7ef84-5207-4d58-87a2-89fae8e1d6f9"
+      adec:isPrimaryKey="false"
+      adec:label="Valid Until"
+      fmi:mappedColumnName="ValidTo"
+      asi:name="ValidTo"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
@@ -83,6 +87,35 @@
       adec:label="Number Length"
       fmi:mappedColumnName="Length"
       asi:name="Length"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="4264cf78-6967-4c5c-a73b-8b5a06698f68"
+      adec:isPrimaryKey="false"
+      adec:label="From"
+      fmi:mappedColumnName="CounterFrom"
+      asi:name="CounterFrom"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="255"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="74658e86-c13d-4c65-887b-06c893a9efb4"
+      adec:isPrimaryKey="false"
+      adec:label="Prefix"
+      fmi:mappedColumnName="Prefix"
+      asi:name="Prefix"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -106,25 +139,11 @@
       adec:dataType="Date"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="16b7ef84-5207-4d58-87a2-89fae8e1d6f9"
+      x:id="e8b87f9a-9ab9-479b-bbf4-11908d299b14"
       adec:isPrimaryKey="false"
-      adec:label="Valid Until"
-      fmi:mappedColumnName="ValidTo"
-      asi:name="ValidTo"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="4264cf78-6967-4c5c-a73b-8b5a06698f68"
-      adec:isPrimaryKey="false"
-      adec:label="From"
-      fmi:mappedColumnName="CounterFrom"
-      asi:name="CounterFrom"
+      adec:label="Valid From"
+      fmi:mappedColumnName="ValidFrom"
+      asi:name="ValidFrom"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -141,18 +160,8 @@
       asi:name="CounterTo"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="00078890-64b0-46f6-b885-0019704f67cb"
-      asi:name="ix_refCounterId"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/__system/CounterDetail.origam#CounterDetail/refCounterId/08e22bfe-69f5-4e24-878f-0188526ddc59"
-        x:id="ab1e63af-a73c-4e40-82ae-e2e0389a1d76"
-        asi:name="0_refCounterId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="af2e329d-5161-47cc-8e8d-93ddf8f55056" />
   </tmi:DataEntity>
 </x:file>

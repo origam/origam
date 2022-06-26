@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
     x:id="0785a3d4-0308-4432-b40f-adfbe6c7f71b"
     asi:name="OrigamNotification"
     ade:readOnly="false">
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      x:id="5f687a85-41b7-4768-99fd-1dda6cfa3964"
-      adec:isPrimaryKey="false"
-      asi:name="Body"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
     <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -39,5 +34,16 @@
       asi:name="Id"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      x:id="5f687a85-41b7-4768-99fd-1dda6cfa3964"
+      adec:isPrimaryKey="false"
+      asi:name="Body"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
   </de:DataEntity>
 </x:file>

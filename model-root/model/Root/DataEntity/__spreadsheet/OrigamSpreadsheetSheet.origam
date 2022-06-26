@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
     x:id="dc98ed3a-0b1f-4438-8ea3-b02f934ceaa8"
     asi:name="OrigamSpreadsheetSheet"
     ade:readOnly="false">
-    <fmi:DataEntityColumn
+    <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Integer"
       adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="24faa48e-baa0-4561-b33f-53e0795c0001"
+      x:id="0f09bea5-7ad5-45f2-aaa1-bdc5c1ade965"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="TabColorIndex"
-      asi:name="TabColorIndex"
+      asi:name="DefaultColumnWidth"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -34,30 +41,6 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      x:id="a67366b9-09b2-47e2-8543-6043e795f148"
-      adec:isPrimaryKey="false"
-      asi:name="DefaultRowHeight"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="7a2c6986-2fae-4139-9a0c-719c95651fc3"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="SheetName"
-      asi:name="SheetName"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
       adec:dataType="Boolean"
       adec:excludeFromAllFields="false"
       x:id="1a1c2c14-53b2-44c6-8761-9ff3153b6d22"
@@ -67,13 +50,13 @@
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="false"
+      adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Integer"
       adec:excludeFromAllFields="false"
-      x:id="f7b7edd7-c3b5-437b-bc45-afb09afa3cad"
-      adec:isPrimaryKey="true"
-      asi:name="Index"
+      x:id="26492592-a521-4e1a-82a6-e3e6333d318c"
+      adec:isPrimaryKey="false"
+      asi:name="FreezeRowIndex"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -82,9 +65,9 @@
       adec:autoIncrement="false"
       adec:dataType="Integer"
       adec:excludeFromAllFields="false"
-      x:id="0f09bea5-7ad5-45f2-aaa1-bdc5c1ade965"
+      x:id="a67366b9-09b2-47e2-8543-6043e795f148"
       adec:isPrimaryKey="false"
-      asi:name="DefaultColumnWidth"
+      asi:name="DefaultRowHeight"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -100,29 +83,29 @@
       adec:xmlMappingType="Hidden" />
     <df:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
       adec:excludeFromAllFields="false"
-      x:id="26492592-a521-4e1a-82a6-e3e6333d318c"
-      adec:isPrimaryKey="false"
-      asi:name="FreezeRowIndex"
+      x:id="f7b7edd7-c3b5-437b-bc45-afb09afa3cad"
+      adec:isPrimaryKey="true"
+      asi:name="Index"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <eri:EntityRelation
       asi:abstract="false"
-      x:id="8a9aacae-0c47-444f-80d0-26bca98cbf15"
-      asi:name="Row"
+      x:id="70521b88-d0a8-47eb-86e0-80a62b7d1f37"
+      asi:name="AutoFilterRange"
       eri:or="false"
       eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/42013bb5-6ad9-456e-bf21-269a8d30867a"
+      eri:relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetAutoFilterRange.origam#OrigamSpreadsheetAutoFilterRange/43a16ec7-5f87-4099-a620-1ef979a4d171"
       eri:selfJoin="false">
       <ercpi:EntityRelationColumnPair
         asi:abstract="false"
         ercpi:baseEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetSheet.origam#OrigamSpreadsheetSheet/Index/f7b7edd7-c3b5-437b-bc45-afb09afa3cad"
-        x:id="6029e326-b829-4a99-b7ca-85ceea160883"
-        asi:name="RowKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/SheetIndex/1d2f937b-61c8-479e-8e6a-86ac68a93e6e" />
+        x:id="41d44e62-eed1-4950-8b76-4237c156a2f4"
+        asi:name="AutoFilterRangeKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetAutoFilterRange.origam#OrigamSpreadsheetAutoFilterRange/SheetIndex/89125d39-198b-4ced-b945-2103bbfd2a11" />
     </eri:EntityRelation>
     <eri:EntityRelation
       asi:abstract="false"
@@ -141,18 +124,44 @@
     </eri:EntityRelation>
     <eri:EntityRelation
       asi:abstract="false"
-      x:id="70521b88-d0a8-47eb-86e0-80a62b7d1f37"
-      asi:name="AutoFilterRange"
+      x:id="8a9aacae-0c47-444f-80d0-26bca98cbf15"
+      asi:name="Row"
       eri:or="false"
       eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetAutoFilterRange.origam#OrigamSpreadsheetAutoFilterRange/43a16ec7-5f87-4099-a620-1ef979a4d171"
+      eri:relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/42013bb5-6ad9-456e-bf21-269a8d30867a"
       eri:selfJoin="false">
       <ercpi:EntityRelationColumnPair
         asi:abstract="false"
         ercpi:baseEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetSheet.origam#OrigamSpreadsheetSheet/Index/f7b7edd7-c3b5-437b-bc45-afb09afa3cad"
-        x:id="41d44e62-eed1-4950-8b76-4237c156a2f4"
-        asi:name="AutoFilterRangeKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetAutoFilterRange.origam#OrigamSpreadsheetAutoFilterRange/SheetIndex/89125d39-198b-4ced-b945-2103bbfd2a11" />
+        x:id="6029e326-b829-4a99-b7ca-85ceea160883"
+        asi:name="RowKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/SheetIndex/1d2f937b-61c8-479e-8e6a-86ac68a93e6e" />
     </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="24faa48e-baa0-4561-b33f-53e0795c0001"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="TabColorIndex"
+      asi:name="TabColorIndex"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="7a2c6986-2fae-4139-9a0c-719c95651fc3"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="SheetName"
+      asi:name="SheetName"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
   </de:DataEntity>
 </x:file>

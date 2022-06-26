@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -12,31 +18,9 @@
       adec:autoIncrement="false"
       adec:dataType="Integer"
       adec:excludeFromAllFields="false"
-      x:id="89125d39-198b-4ced-b945-2103bbfd2a11"
-      adec:isPrimaryKey="false"
-      asi:name="SheetIndex"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Hidden" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
       x:id="05a1e3a6-dbba-49bf-8231-3a03a5af416d"
       adec:isPrimaryKey="false"
       asi:name="LastRowIndex"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      x:id="9ac9b3c6-b0df-4588-a3ae-546b2d1891a0"
-      adec:isPrimaryKey="false"
-      asi:name="LastColumnIndex"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -56,9 +40,20 @@
       adec:autoIncrement="false"
       adec:dataType="Integer"
       adec:excludeFromAllFields="false"
-      x:id="e87c36ae-09cf-409e-93fa-918c4729f489"
+      x:id="89125d39-198b-4ced-b945-2103bbfd2a11"
       adec:isPrimaryKey="false"
-      asi:name="FirstRowIndex"
+      asi:name="SheetIndex"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Hidden" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="9ac9b3c6-b0df-4588-a3ae-546b2d1891a0"
+      adec:isPrimaryKey="false"
+      asi:name="LastColumnIndex"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -70,6 +65,17 @@
       x:id="a19d160b-67fd-4a4d-b54f-dc337182988a"
       adec:isPrimaryKey="false"
       asi:name="FirstColumnIndex"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="e87c36ae-09cf-409e-93fa-918c4729f489"
+      adec:isPrimaryKey="false"
+      asi:name="FirstRowIndex"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
   </de:DataEntity>

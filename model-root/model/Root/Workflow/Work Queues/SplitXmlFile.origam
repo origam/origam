@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="502221ba-e12f-4fe0-b1a2-b46db48fbf70"
     asi:name="SplitXmlFile"
     w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="2130f34d-8c56-4f00-af50-e15859eb884f"
+      cs:isReturnValue="false"
+      asi:name="SplitXPath" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
@@ -16,24 +36,17 @@
       asi:abstract="false"
       cs:dataType="Xml"
       cs:disableConstraints="false"
-      x:id="dd8bbc26-fe08-490f-890b-7610883f5cab"
+      x:id="8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
       cs:isReturnValue="false"
-      asi:name="WQ_TextFile_Source"
+      asi:name="WQ_TextFile_Target"
       cs:structure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="2130f34d-8c56-4f00-af50-e15859eb884f"
-      cs:isReturnValue="false"
-      asi:name="SplitXPath" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
       cs:disableConstraints="false"
-      x:id="8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
+      x:id="dd8bbc26-fe08-490f-890b-7610883f5cab"
       cs:isReturnValue="false"
-      asi:name="WQ_TextFile_Target"
+      asi:name="WQ_TextFile_Source"
       cs:structure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b" />
     <smct:WorkflowTask
       asi:abstract="false"
@@ -46,22 +59,6 @@
       smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="bd2ff580-a115-4763-be6c-101b2e207c19"
-        asi:name="XslScript"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
-        <tr:TransformationReference
-          asi:abstract="false"
-          x:id="b9a74149-3a16-4cef-ae51-a025130b6514"
-          asi:name="_deleteAll"
-          tr:transformation="Root/Transformation/_deleteAll.origam#_deleteAll/fd51c50d-c167-4144-8af7-acce5bc84103" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="3a6fa354-12a9-4999-a429-38bd695d9e7b"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
         x:id="1086cc45-d612-43b3-9b9d-7dea250b9f02"
         asi:name="Data"
         smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
@@ -72,6 +69,22 @@
           x:id="a40ceb52-d1c8-409a-a193-0c30c9bdcbb4"
           asi:name="WQ_TextFile_Source"
           cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="3a6fa354-12a9-4999-a429-38bd695d9e7b"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="bd2ff580-a115-4763-be6c-101b2e207c19"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="b9a74149-3a16-4cef-ae51-a025130b6514"
+          asi:name="_deleteAll"
+          tr:transformation="Root/Transformation/_deleteAll.origam#_deleteAll/fd51c50d-c167-4144-8af7-acce5bc84103" />
       </smcp:ServiceMethodCallParameter>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
@@ -142,40 +155,6 @@
       twb:transactionType="Atomic">
       <smct:WorkflowTask
         asi:abstract="false"
-        x:id="8c63ab35-b3e8-4524-842d-0ebdaa02ca88"
-        asi:name="StoreTarget"
-        wt:outputContextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Target/8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
-        wt:outputMethod="Ignore"
-        aws:roles="*"
-        smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-        smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="dd60055c-9d19-44fb-9111-6d82bf191903"
-          asi:name="Data"
-          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Target/8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
-            x:id="8b0e1584-e49a-4ecc-a1b6-6ddc0f9aa600"
-            asi:name="WQ_TextFile_Target"
-            cr:xPath="/" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="7c278212-9fab-4526-a831-f34e07c99d9b"
-          asi:name="DataStructure"
-          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
-          <dsr:DataStructureReference
-            asi:abstract="false"
-            dsr:dataStructure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b"
-            x:id="48d1f190-c3b5-44ab-9867-44e59359a394"
-            asi:name="WQ_TextFile" />
-        </smcp:ServiceMethodCallParameter>
-      </smct:WorkflowTask>
-      <smct:WorkflowTask
-        asi:abstract="false"
         x:id="18aa07ca-eb40-43be-8729-91ccb5dd9255"
         asi:name="StoreSource"
         wt:outputContextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Source/dd8bbc26-fe08-490f-890b-7610883f5cab"
@@ -183,6 +162,17 @@
         aws:roles="*"
         smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
         smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="a6fdb5e3-9bb1-41a9-8f44-65638672c4fd"
+          asi:name="DataStructure"
+          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+          <dsr:DataStructureReference
+            asi:abstract="false"
+            dsr:dataStructure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b"
+            x:id="72df8aa2-d521-494b-ae73-e1693e0e519e"
+            asi:name="WQ_TextFile" />
+        </smcp:ServiceMethodCallParameter>
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
           x:id="d4aeec16-e3fd-4172-8a3e-4e9e7ab78b9d"
@@ -196,16 +186,39 @@
             asi:name="WQ_TextFile_Source"
             cr:xPath="/" />
         </smcp:ServiceMethodCallParameter>
+      </smct:WorkflowTask>
+      <smct:WorkflowTask
+        asi:abstract="false"
+        x:id="8c63ab35-b3e8-4524-842d-0ebdaa02ca88"
+        asi:name="StoreTarget"
+        wt:outputContextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Target/8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
+        wt:outputMethod="Ignore"
+        aws:roles="*"
+        smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+        smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
-          x:id="a6fdb5e3-9bb1-41a9-8f44-65638672c4fd"
+          x:id="7c278212-9fab-4526-a831-f34e07c99d9b"
           asi:name="DataStructure"
           smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
           <dsr:DataStructureReference
             asi:abstract="false"
             dsr:dataStructure="Root/DataStructure/Work Queue/WQ_TextFile.origam#WQ_TextFile/0e157367-9ecd-42e1-8e68-da905adceb6b"
-            x:id="72df8aa2-d521-494b-ae73-e1693e0e519e"
+            x:id="48d1f190-c3b5-44ab-9867-44e59359a394"
             asi:name="WQ_TextFile" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="dd60055c-9d19-44fb-9111-6d82bf191903"
+          asi:name="Data"
+          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Target/8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
+            x:id="8b0e1584-e49a-4ecc-a1b6-6ddc0f9aa600"
+            asi:name="WQ_TextFile_Target"
+            cr:xPath="/" />
         </smcp:ServiceMethodCallParameter>
       </smct:WorkflowTask>
       <wtd:WorkflowTaskDependency

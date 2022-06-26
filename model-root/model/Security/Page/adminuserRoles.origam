@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xdp="http://schemas.origam.com/Origam.Schema.GuiModel.XsltDataPage/6.0.0">
   <xdp:Page
     asi:abstract="false"
     ap:allowDelete="false"

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:csp="http://schemas.origam.com/Origam.Schema.GuiModel.ControlStyleProperty/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0"
+  xmlns:csp="http://schemas.origam.com/Origam.Schema.GuiModel.ControlStyleProperty/6.0.0">
   <ci:Control
     asi:abstract="true"
     x:id="47a20d1a-ae4b-482c-949f-a81bee8ea28d"
@@ -12,115 +17,10 @@
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="0688ff2b-b946-463f-9e87-069fa03387c9"
+      x:id="02d9ba6b-e6ec-46f4-8073-6dc398c081e5"
       cpi:localizable="false"
-      asi:name="MapTextRotationMember"
+      asi:name="MapTextColorMember"
       cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="2e965f41-7fea-480b-a44a-095637d0af7d"
-      cpi:localizable="false"
-      asi:name="Height"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
-      cpi:localizable="false"
-      asi:name="IsVisualEditorVisible"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="1ca1946f-3b37-4c49-8443-10c1503dc76c"
-      cpi:localizable="false"
-      asi:name="MapTextLocationMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="9e6a6536-c207-4c72-9374-12b6a31d1395"
-      cpi:localizable="false"
-      asi:name="CalendarShowAllResources"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="35a06531-13c7-4cf4-bec9-1406ff912040"
-      cpi:localizable="false"
-      asi:name="DefaultCalendarView"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="9724950e-a16b-4844-9038-15f0242a09c8"
-      cpi:localizable="false"
-      asi:name="MapCenter"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="e47201b5-5334-4748-8f04-1626ef9ee93c"
-      cpi:localizable="false"
-      asi:name="IndependentDataSourceId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="30e6c918-04b4-4628-90c9-1ba607c9d998"
-      cpi:localizable="false"
-      asi:name="CalendarDateFromMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="84ee631d-39c1-4ecd-91f9-24e434507bc7"
-      cpi:localizable="false"
-      asi:name="GridVisible"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="2e429e40-0776-4de8-b6d8-2a3b4e56548c"
-      cpi:localizable="false"
-      asi:name="MapLocationMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="dfed9e9e-2ab8-4ea8-b9de-2b6a31d1b1af"
-      cpi:localizable="false"
-      asi:name="NewRecordInDetailView"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1"
-      cpi:localizable="false"
-      asi:name="SelectionMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
-      cpi:localizable="false"
-      asi:name="IsGridHeightDynamic"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="0646ac0a-46ff-419f-a7b4-3892877ba9dc"
-      cpi:localizable="false"
-      asi:name="CalendarDescriptionMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="c7625dc7-56c7-4072-a107-390de90a13e5"
-      cpi:localizable="false"
-      asi:name="DisableActionButtons"
-      cpi:propertyType="Boolean" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
@@ -131,178 +31,24 @@
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="4584fc29-2af7-404e-83ec-3f4847afa367"
+      x:id="049c3765-137e-4f7c-a9f5-bef4d9561e61"
       cpi:localizable="false"
-      asi:name="IsMapVisible"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="5e622365-4906-444e-a802-443bee69c542"
-      cpi:localizable="false"
-      asi:name="OrderMember"
+      asi:name="MapAzimuthMember"
       cpi:propertyType="String" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="6441ece9-86a8-4394-a33a-4a4bdd4489e9"
+      x:id="0646ac0a-46ff-419f-a7b4-3892877ba9dc"
       cpi:localizable="false"
-      asi:name="CalendarNameMember"
+      asi:name="CalendarDescriptionMember"
       cpi:propertyType="String" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
+      x:id="0688ff2b-b946-463f-9e87-069fa03387c9"
       cpi:localizable="false"
-      asi:name="IsCalendarVisible"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="91c94efb-ef4a-4851-a427-4d10f6c0a923"
-      cpi:localizable="false"
-      asi:name="PipelineStateLookupId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="2ed67118-feb2-4529-bf0b-524d38ab408c"
-      cpi:localizable="false"
-      asi:name="Left"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98"
-      cpi:localizable="false"
-      asi:name="CalendarDateDueMember"
+      asi:name="MapTextRotationMember"
       cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="d4ecde27-8521-4983-b99a-5e8821b881cb"
-      cpi:localizable="false"
-      asi:name="IsMapSupported"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="85e7c9e2-0c94-47a2-b297-63c19270cf40"
-      cpi:localizable="false"
-      asi:name="CalendarViewStyleId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="6cc64b12-082f-48cd-be8f-6780211718fe"
-      cpi:localizable="false"
-      asi:name="PipelineNameMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="cc52b1dd-ac5c-41e9-b054-688e18c91a97"
-      cpi:localizable="false"
-      asi:name="DraggingLabelMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="02d9ba6b-e6ec-46f4-8073-6dc398c081e5"
-      cpi:localizable="false"
-      asi:name="MapTextColorMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="9c6b43b4-df9a-455d-bbe3-70921e0790db"
-      cpi:localizable="false"
-      asi:name="MapColorMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="f8a067fe-7753-4393-9ab9-70ca3c0c0b11"
-      cpi:localizable="false"
-      asi:name="CalendarDateToMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="16c346fc-561e-404b-a76a-7198ab488710"
-      cpi:localizable="false"
-      asi:name="Width"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="a3bfb334-aa7d-4507-ba2c-75017676892f"
-      cpi:localizable="false"
-      asi:name="IsCalendarSupported"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="c679d676-0489-44d8-a604-77b1c0dbdeb6"
-      cpi:localizable="false"
-      asi:name="IsPipelineVisible"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
-      cpi:localizable="false"
-      asi:name="MapResolution"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="8842aa84-6723-411f-ab53-7bf69c00e05a"
-      cpi:localizable="false"
-      asi:name="CalendarRowHeightConstantId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a"
-      cpi:localizable="false"
-      asi:name="CalendarIsFinishedMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
-      cpi:localizable="false"
-      asi:name="IndependentDataSourceSortId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="76f51292-1b14-43e3-b044-89d6c1234d5c"
-      cpi:localizable="false"
-      asi:name="MapIconMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="c9e691f4-520e-46a8-b1a1-941ae833bf88"
-      cpi:localizable="false"
-      asi:name="ShowDeleteButton"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22"
-      cpi:localizable="false"
-      asi:name="CalendarResourceNameLookupField"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="cf2165e0-27f2-4155-a003-a861bbe396ef"
-      cpi:localizable="false"
-      asi:name="IndependentDataSourceMethodId"
-      cpi:propertyType="UniqueIdentifier" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
@@ -320,51 +66,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
-      cpi:localizable="true"
-      asi:name="PanelTitle"
-      cpi:propertyType="String" />
+      x:id="16c346fc-561e-404b-a76a-7198ab488710"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
+      x:id="1ca1946f-3b37-4c49-8443-10c1503dc76c"
       cpi:localizable="false"
-      asi:name="IsPipelineSupported"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="b8048914-a6a8-4ec2-9063-ba40ea7643b0"
-      cpi:localizable="false"
-      asi:name="PipelineDateMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="049c3765-137e-4f7c-a9f5-bef4d9561e61"
-      cpi:localizable="false"
-      asi:name="MapAzimuthMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="63642a1c-b4ad-4984-b487-befbd0a4b216"
-      cpi:localizable="false"
-      asi:name="PipelinePriceMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
-      cpi:localizable="false"
-      asi:name="StyleId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
-      cpi:localizable="false"
-      asi:name="DataMember"
+      asi:name="MapTextLocationMember"
       cpi:propertyType="String" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
@@ -376,58 +87,37 @@
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="cd590061-51dc-4cce-a423-d427357d5a03"
+      x:id="2e429e40-0776-4de8-b6d8-2a3b4e56548c"
       cpi:localizable="false"
-      asi:name="MapTextMember"
+      asi:name="MapLocationMember"
       cpi:propertyType="String" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="d3e6cd08-af2d-412f-927f-d4e972a0e380"
+      x:id="2e965f41-7fea-480b-a44a-095637d0af7d"
       cpi:localizable="false"
-      asi:name="CalendarCustomSortMember"
+      asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="2ed67118-feb2-4529-bf0b-524d38ab408c"
+      cpi:localizable="false"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="30e6c918-04b4-4628-90c9-1ba607c9d998"
+      cpi:localizable="false"
+      asi:name="CalendarDateFromMember"
       cpi:propertyType="String" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+      x:id="32a68d80-174e-46ba-b0ca-b86c6fb5abc0"
       cpi:localizable="false"
-      asi:name="IconId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="f142959e-1909-4769-acf8-e035a345642a"
-      cpi:localizable="false"
-      asi:name="IsDraggingEnabled"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="af590ff2-4668-40e3-8195-e1a1f735d433"
-      cpi:localizable="false"
-      asi:name="ShowNewButton"
-      cpi:propertyType="Boolean" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6"
-      cpi:localizable="false"
-      asi:name="ImplicitFilter"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="76adc867-8e5c-4d20-869f-e47ecadedf47"
-      cpi:localizable="false"
-      asi:name="DefaultConfiguration"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="true"
-      cpi:bindOnly="false"
-      x:id="ba13e820-a44c-43e4-8927-f5026ab11a3a"
-      cpi:localizable="false"
-      asi:name="IsVisualEditorSupported"
+      asi:name="IsPipelineSupported"
       cpi:propertyType="Boolean" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
@@ -439,10 +129,108 @@
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="e5434a33-cb85-47d9-a56f-f81456706911"
+      x:id="35a06531-13c7-4cf4-bec9-1406ff912040"
       cpi:localizable="false"
-      asi:name="PipelineStateMember"
+      asi:name="DefaultCalendarView"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="4584fc29-2af7-404e-83ec-3f4847afa367"
+      cpi:localizable="false"
+      asi:name="IsMapVisible"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="4cbf6280-e2ca-4fdf-b621-66df94961094"
+      cpi:localizable="false"
+      asi:name="HideCopyButton"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="4f2ad140-c94b-49eb-9e65-4a52e3cb3e4e"
+      cpi:localizable="false"
+      asi:name="IsCalendarVisible"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="5dc5a7d0-4ce9-496e-b528-c10e73368ee5"
+      cpi:localizable="false"
+      asi:name="StyleId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="5e622365-4906-444e-a802-443bee69c542"
+      cpi:localizable="false"
+      asi:name="OrderMember"
       cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="63642a1c-b4ad-4984-b487-befbd0a4b216"
+      cpi:localizable="false"
+      asi:name="PipelinePriceMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="6441ece9-86a8-4394-a33a-4a4bdd4489e9"
+      cpi:localizable="false"
+      asi:name="CalendarNameMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="6cc64b12-082f-48cd-be8f-6780211718fe"
+      cpi:localizable="false"
+      asi:name="PipelineNameMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="76adc867-8e5c-4d20-869f-e47ecadedf47"
+      cpi:localizable="false"
+      asi:name="DefaultConfiguration"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="76f51292-1b14-43e3-b044-89d6c1234d5c"
+      cpi:localizable="false"
+      asi:name="MapIconMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="84ee631d-39c1-4ecd-91f9-24e434507bc7"
+      cpi:localizable="false"
+      asi:name="GridVisible"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="85e7c9e2-0c94-47a2-b297-63c19270cf40"
+      cpi:localizable="false"
+      asi:name="CalendarViewStyleId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="87bb70a8-a0a7-4c4e-9f18-5724d74b3b98"
+      cpi:localizable="false"
+      asi:name="CalendarDateDueMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="8842aa84-6723-411f-ab53-7bf69c00e05a"
+      cpi:localizable="false"
+      asi:name="CalendarRowHeightConstantId"
+      cpi:propertyType="UniqueIdentifier" />
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
@@ -453,41 +241,258 @@
     <cpi:ControlPropertyItem
       asi:abstract="true"
       cpi:bindOnly="false"
-      x:id="4cbf6280-e2ca-4fdf-b621-66df94961094"
+      x:id="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
       cpi:localizable="false"
-      asi:name="HideCopyButton"
+      asi:name="DataMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
+      cpi:localizable="true"
+      asi:name="PanelTitle"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="91c94efb-ef4a-4851-a427-4d10f6c0a923"
+      cpi:localizable="false"
+      asi:name="PipelineStateLookupId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="9724950e-a16b-4844-9038-15f0242a09c8"
+      cpi:localizable="false"
+      asi:name="MapCenter"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="9c6b43b4-df9a-455d-bbe3-70921e0790db"
+      cpi:localizable="false"
+      asi:name="MapColorMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="9e6a6536-c207-4c72-9374-12b6a31d1395"
+      cpi:localizable="false"
+      asi:name="CalendarShowAllResources"
       cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="a3bfb334-aa7d-4507-ba2c-75017676892f"
+      cpi:localizable="false"
+      asi:name="IsCalendarSupported"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="ac6384aa-a8b8-4344-8402-7a53e1f94c13"
+      cpi:localizable="false"
+      asi:name="MapResolution"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="af590ff2-4668-40e3-8195-e1a1f735d433"
+      cpi:localizable="false"
+      asi:name="ShowNewButton"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="b1b2e6a0-f7f5-44f1-abea-0f3b34da6b76"
+      cpi:localizable="false"
+      asi:name="IsVisualEditorVisible"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="b8048914-a6a8-4ec2-9063-ba40ea7643b0"
+      cpi:localizable="false"
+      asi:name="PipelineDateMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="ba13e820-a44c-43e4-8927-f5026ab11a3a"
+      cpi:localizable="false"
+      asi:name="IsVisualEditorSupported"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="c3f96d4c-f4c3-42ca-af5b-e46b4e7536e6"
+      cpi:localizable="false"
+      asi:name="ImplicitFilter"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="c679d676-0489-44d8-a604-77b1c0dbdeb6"
+      cpi:localizable="false"
+      asi:name="IsPipelineVisible"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="c7625dc7-56c7-4072-a107-390de90a13e5"
+      cpi:localizable="false"
+      asi:name="DisableActionButtons"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+      cpi:localizable="false"
+      asi:name="IconId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="c9e691f4-520e-46a8-b1a1-941ae833bf88"
+      cpi:localizable="false"
+      asi:name="ShowDeleteButton"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="cc52b1dd-ac5c-41e9-b054-688e18c91a97"
+      cpi:localizable="false"
+      asi:name="DraggingLabelMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="cd590061-51dc-4cce-a423-d427357d5a03"
+      cpi:localizable="false"
+      asi:name="MapTextMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="cf2165e0-27f2-4155-a003-a861bbe396ef"
+      cpi:localizable="false"
+      asi:name="IndependentDataSourceMethodId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="d3e6cd08-af2d-412f-927f-d4e972a0e380"
+      cpi:localizable="false"
+      asi:name="CalendarCustomSortMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="d4ecde27-8521-4983-b99a-5e8821b881cb"
+      cpi:localizable="false"
+      asi:name="IsMapSupported"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="d7a13674-7f44-4463-a595-2fb3ab1dbb61"
+      cpi:localizable="false"
+      asi:name="IsGridHeightDynamic"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="dc3ab7b2-3183-4ad4-bafe-886a2407c1bf"
+      cpi:localizable="false"
+      asi:name="IndependentDataSourceSortId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="dfed9e9e-2ab8-4ea8-b9de-2b6a31d1b1af"
+      cpi:localizable="false"
+      asi:name="NewRecordInDetailView"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="e47201b5-5334-4748-8f04-1626ef9ee93c"
+      cpi:localizable="false"
+      asi:name="IndependentDataSourceId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="e5434a33-cb85-47d9-a56f-f81456706911"
+      cpi:localizable="false"
+      asi:name="PipelineStateMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="f142959e-1909-4769-acf8-e035a345642a"
+      cpi:localizable="false"
+      asi:name="IsDraggingEnabled"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="f3a804f3-61c9-4215-8c42-2b9edd0c4ba1"
+      cpi:localizable="false"
+      asi:name="SelectionMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="f8a067fe-7753-4393-9ab9-70ca3c0c0b11"
+      cpi:localizable="false"
+      asi:name="CalendarDateToMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="fa8c5b1c-42fa-4eeb-9c5f-a073625e5a22"
+      cpi:localizable="false"
+      asi:name="CalendarResourceNameLookupField"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="true"
+      cpi:bindOnly="false"
+      x:id="ff52e0c4-c2a8-4d47-ae9b-7cb5bcbb415a"
+      cpi:localizable="false"
+      asi:name="CalendarIsFinishedMember"
+      cpi:propertyType="String" />
     <csp:ControlStyleProperty
       asi:abstract="true"
-      x:id="96e821c9-ab26-4deb-812d-174b4027a31b"
-      asi:name="calendarSeparatorColor" />
-    <csp:ControlStyleProperty
-      asi:abstract="true"
-      x:id="af4e2a63-3c31-41d7-8ca9-1ec708e22e8e"
-      asi:name="calendarDefaultColor" />
-    <csp:ControlStyleProperty
-      asi:abstract="true"
-      x:id="9aeaed5f-e751-47d6-96c3-33e414ae6e7f"
-      asi:name="calendarHeaderTextColor" />
-    <csp:ControlStyleProperty
-      asi:abstract="true"
-      x:id="63f33343-aea7-4741-a4d3-4cf177c9bff3"
-      asi:name="calendarEventBackgroundColor" />
-    <csp:ControlStyleProperty
-      asi:abstract="true"
-      x:id="af688d6e-aa7d-409d-bd50-556fe591996a"
-      asi:name="calendarSeparatorOverlayColor" />
+      x:id="0b2c6876-84c9-4dee-9ca0-e654d3d7a928"
+      asi:name="calendarHeaderBackgroundColor" />
     <csp:ControlStyleProperty
       asi:abstract="true"
       x:id="604f9b1e-a92c-4760-b9a0-683f739d8deb"
       asi:name="calendarCellBackgroundColor" />
     <csp:ControlStyleProperty
       asi:abstract="true"
-      x:id="b9bd035e-d78e-4e1b-82f2-acfc9919a5ae"
-      asi:name="calendarDropMarkColor" />
+      x:id="63f33343-aea7-4741-a4d3-4cf177c9bff3"
+      asi:name="calendarEventBackgroundColor" />
     <csp:ControlStyleProperty
       asi:abstract="true"
-      x:id="0b2c6876-84c9-4dee-9ca0-e654d3d7a928"
-      asi:name="calendarHeaderBackgroundColor" />
+      x:id="96e821c9-ab26-4deb-812d-174b4027a31b"
+      asi:name="calendarSeparatorColor" />
+    <csp:ControlStyleProperty
+      asi:abstract="true"
+      x:id="9aeaed5f-e751-47d6-96c3-33e414ae6e7f"
+      asi:name="calendarHeaderTextColor" />
+    <csp:ControlStyleProperty
+      asi:abstract="true"
+      x:id="af4e2a63-3c31-41d7-8ca9-1ec708e22e8e"
+      asi:name="calendarDefaultColor" />
+    <csp:ControlStyleProperty
+      asi:abstract="true"
+      x:id="af688d6e-aa7d-409d-bd50-556fe591996a"
+      asi:name="calendarSeparatorOverlayColor" />
+    <csp:ControlStyleProperty
+      asi:abstract="true"
+      x:id="b9bd035e-d78e-4e1b-82f2-acfc9919a5ae"
+      asi:name="calendarDropMarkColor" />
   </ci:Control>
 </x:file>

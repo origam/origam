@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="372f3db0-41a1-4739-81aa-e1f7f7741791"
@@ -20,9 +26,9 @@
         smp:allowTransformationReference="true"
         smp:allowWorkflowReference="true"
         smp:callElements="127"
-        sip:dataType="Integer"
-        x:id="85a51acd-186f-4023-ab34-26f6c1e3285c"
-        asi:name="Copies" />
+        sip:dataType="Xml"
+        x:id="0e61d657-45cd-4165-9512-62a2f4c6360e"
+        asi:name="Report" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -34,9 +40,23 @@
         smp:allowTransformationReference="true"
         smp:allowWorkflowReference="true"
         smp:callElements="127"
-        sip:dataType="Xml"
-        x:id="0e61d657-45cd-4165-9512-62a2f4c6360e"
-        asi:name="Report" />
+        sip:dataType="Integer"
+        x:id="85a51acd-186f-4023-ab34-26f6c1e3285c"
+        asi:name="Copies" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="true"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataType="Array"
+        x:id="a13eff10-468a-446f-a3ff-e8bd7a0d9fd7"
+        asi:name="Parameters" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -65,40 +85,12 @@
         sip:dataType="String"
         x:id="b00d4c7f-c91e-4672-83b6-e24707e40d9a"
         asi:name="PrinterName" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="true"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataType="Array"
-        x:id="a13eff10-468a-446f-a3ff-e8bd7a0d9fd7"
-        asi:name="Parameters" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
       x:id="7d3c9582-e748-41cb-9ae6-b842d2aeea75"
       asi:name="GetReport"
       sm:returnValueDataType="Blob">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="90ec5cb3-5c2b-4b55-95b7-45283bcea2cd"
-        asi:name="Format" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -113,6 +105,20 @@
         sip:dataType="Array"
         x:id="08e8a2af-f08e-4bd6-9fe6-4ec603f82969"
         asi:name="Parameters" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="90ec5cb3-5c2b-4b55-95b7-45283bcea2cd"
+        asi:name="Format" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="false"

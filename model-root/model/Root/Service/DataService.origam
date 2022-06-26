@@ -1,9 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
     asi:name="DataService">
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="3c1c855d-3c06-49e1-bfbf-cf234134d083"
+      asi:name="StoreData"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Boolean"
+        x:id="010bc65c-5867-41d6-a3f0-8daa9b2377cd"
+        asi:name="ForceBulkInsert" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="4"
+        sip:dataType="Xml"
+        x:id="c229b1e0-cb1e-4c79-ad99-488775df3b19"
+        asi:name="DataStructure" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Xml"
+        x:id="d4d7ec83-a1e8-458e-9900-36562b201ffc"
+        asi:name="Data" />
+    </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
       x:id="7ae51467-4bca-43b2-98e5-00bf49b4855f"
@@ -103,20 +157,6 @@
         smp:allowWorkflowReference="false"
         smp:callElements="67"
         sip:dataType="UniqueIdentifier"
-        x:id="cde7854f-abda-4ff6-8186-85a868d9da81"
-        asi:name="newValue" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="67"
-        sip:dataType="UniqueIdentifier"
         x:id="1e2dc94e-8983-452f-a850-92f83365bb15"
         asi:name="oldValue" />
       <smp:Parameter
@@ -133,6 +173,20 @@
         sip:dataType="UniqueIdentifier"
         x:id="2cf11e0b-fc92-4fad-b869-dabc352050c1"
         asi:name="EntityId" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="67"
+        sip:dataType="UniqueIdentifier"
+        x:id="cde7854f-abda-4ff6-8186-85a868d9da81"
+        asi:name="newValue" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
@@ -153,54 +207,6 @@
         sip:dataType="Xml"
         x:id="c4c4742d-959c-475b-90df-25fd3ec7c099"
         asi:name="DataStructure" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="3c1c855d-3c06-49e1-bfbf-cf234134d083"
-      asi:name="StoreData"
-      sm:returnValueDataType="Xml">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="1"
-        sip:dataType="Xml"
-        x:id="d4d7ec83-a1e8-458e-9900-36562b201ffc"
-        asi:name="Data" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="4"
-        sip:dataType="Xml"
-        x:id="c229b1e0-cb1e-4c79-ad99-488775df3b19"
-        asi:name="DataStructure" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="Boolean"
-        x:id="010bc65c-5867-41d6-a3f0-8daa9b2377cd"
-        asi:name="ForceBulkInsert" />
     </sm:ServiceMethod>
   </s:Service>
 </x:file>

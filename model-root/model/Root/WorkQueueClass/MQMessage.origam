@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0" xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0"
+  xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0">
   <wqc:WorkQueueClass
     asi:abstract="false"
     x:id="0dba45e7-44f2-471e-b139-55637b39abbf"
@@ -16,14 +20,14 @@
       wqcem:xPath="/ROOT/Message/ReceivedTime" />
     <wqcem:WorkQueueClassEntityMapping
       asi:abstract="false"
-      x:id="c32a9f94-833b-47d7-be6c-a6bb22688353"
-      asi:name="MessageSequenceNumber"
-      wqcem:xPath="/ROOT/Message/MessageSequenceNumber" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
       x:id="2e2ef577-6262-4eb4-b8ea-b8f2d604a241"
       asi:name="Message"
       wqcem:sortOrder="2"
       wqcem:xPath="/ROOT/Message/Message" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="c32a9f94-833b-47d7-be6c-a6bb22688353"
+      asi:name="MessageSequenceNumber"
+      wqcem:xPath="/ROOT/Message/MessageSequenceNumber" />
   </wqc:WorkQueueClass>
 </x:file>

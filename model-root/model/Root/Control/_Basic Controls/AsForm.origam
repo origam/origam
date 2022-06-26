@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="ff32a695-c533-4262-87d6-e4cd4451e2c9"
@@ -12,9 +16,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="fde5e452-b2a4-4f38-968a-29e20625b699"
+      x:id="2d33a742-193c-42b2-8a21-c8c6ccedfd6c"
       cpi:localizable="false"
-      asi:name="Left"
+      asi:name="Top"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -33,16 +37,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="2d33a742-193c-42b2-8a21-c8c6ccedfd6c"
+      x:id="99f5687f-be11-49ec-a2eb-fba58d945b3e"
       cpi:localizable="false"
-      asi:name="Top"
+      asi:name="Width"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="99f5687f-be11-49ec-a2eb-fba58d945b3e"
+      x:id="fde5e452-b2a4-4f38-968a-29e20625b699"
       cpi:localizable="false"
-      asi:name="Width"
+      asi:name="Left"
       cpi:propertyType="Integer" />
   </ci:Control>
 </x:file>

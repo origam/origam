@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:erf="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationFilter/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:erf="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationFilter/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -11,9 +21,41 @@
     tmi:mappedObjectName="OrigamNotificationTemplate"
     asi:name="OrigamNotificationTemplate"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="1ba410ed-4ea5-4bc1-9053-774585385dfc" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="554b0bc6-d226-4424-8716-2211bc7aed92"
+      asi:name="OrigamNotificationTemplate_l10n"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/e287e3bf-5f74-4311-b091-56f5b97adc9c"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="a1484281-b152-4bc3-9b03-f7d4fb295ed5"
+        asi:name="OrigamNotificationTemplate_l10nKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/refOrigamNotificationTemplateId/72262b46-cfc1-4f19-9e07-9547451c4e94" />
+      <erf:EntityRelationFilter
+        asi:abstract="false"
+        erf:filter="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/GetByLanguageId/afb5b84b-f4a3-4e3a-a382-c110624f71c9"
+        x:id="8b6cad43-ae71-4c42-acfa-0ec5e29de9aa"
+        asi:name="GetByLanguageId" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="58b38019-12e4-4938-ba26-08defbd60f16"
+      asi:name="OrigamNotificationTemplate_l10n_all"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/e287e3bf-5f74-4311-b091-56f5b97adc9c"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="ee64b311-2526-46df-80b8-b00fe0b71c48"
+        asi:name="OrigamNotificationTemplate_l10n_allKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/refOrigamNotificationTemplateId/72262b46-cfc1-4f19-9e07-9547451c4e94" />
+    </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -43,40 +85,8 @@
       asi:name="Name"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <eri:EntityRelation
-      asi:abstract="false"
-      x:id="58b38019-12e4-4938-ba26-08defbd60f16"
-      asi:name="OrigamNotificationTemplate_l10n_all"
-      eri:or="false"
-      eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/e287e3bf-5f74-4311-b091-56f5b97adc9c"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="ee64b311-2526-46df-80b8-b00fe0b71c48"
-        asi:name="OrigamNotificationTemplate_l10n_allKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/refOrigamNotificationTemplateId/72262b46-cfc1-4f19-9e07-9547451c4e94" />
-    </eri:EntityRelation>
-    <eri:EntityRelation
-      asi:abstract="false"
-      x:id="554b0bc6-d226-4424-8716-2211bc7aed92"
-      asi:name="OrigamNotificationTemplate_l10n"
-      eri:or="false"
-      eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/e287e3bf-5f74-4311-b091-56f5b97adc9c"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="a1484281-b152-4bc3-9b03-f7d4fb295ed5"
-        asi:name="OrigamNotificationTemplate_l10nKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/refOrigamNotificationTemplateId/72262b46-cfc1-4f19-9e07-9547451c4e94" />
-      <erf:EntityRelationFilter
-        asi:abstract="false"
-        erf:filter="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/GetByLanguageId/afb5b84b-f4a3-4e3a-a382-c110624f71c9"
-        x:id="8b6cad43-ae71-4c42-acfa-0ec5e29de9aa"
-        asi:name="GetByLanguageId" />
-    </eri:EntityRelation>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="1ba410ed-4ea5-4bc1-9053-774585385dfc" />
   </tmi:DataEntity>
 </x:file>

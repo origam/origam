@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachine/6.0.0" xmlns:sme="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachineEvent/6.0.0" xmlns:smepm="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachineEventParameterMapping/6.0.1" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachine/6.0.0"
+  xmlns:sme="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachineEvent/6.0.0"
+  xmlns:smepm="http://schemas.origam.com/Origam.Schema.WorkflowModel.StateMachineEventParameterMapping/6.0.1">
   <sm:WorkflowStateMachine
     asi:abstract="false"
     sm:entity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
@@ -22,18 +27,18 @@
         smepm:wfParameterType="Current" />
       <smepm:WorkflowEntityParameterMapping
         asi:abstract="false"
-        smepm:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
-        smepm:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserName/15c44b5f-c719-440e-983f-44f177593f63"
-        x:id="d2812362-db33-4600-9245-afa78ae34990"
-        asi:name="Username"
-        smepm:wfParameterType="Current" />
-      <smepm:WorkflowEntityParameterMapping
-        asi:abstract="false"
         smepm:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/OldEmail/50a91ca7-302f-4015-8fc7-e6af939d12f9"
         smepm:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserEmail/9c3c1729-7779-4784-a5ba-a1144dc21426"
         x:id="8fdb8ef2-8a19-4c78-a4b3-b44b55bd0fab"
         asi:name="OldEmail"
         smepm:wfParameterType="Original" />
+      <smepm:WorkflowEntityParameterMapping
+        asi:abstract="false"
+        smepm:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
+        smepm:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserName/15c44b5f-c719-440e-983f-44f177593f63"
+        x:id="d2812362-db33-4600-9245-afa78ae34990"
+        asi:name="Username"
+        smepm:wfParameterType="Current" />
     </sme:StateMachineEvent>
   </sm:WorkflowStateMachine>
 </x:file>

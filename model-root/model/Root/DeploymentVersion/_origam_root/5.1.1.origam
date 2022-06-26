@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     dv:deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.1.0"
@@ -16,10 +21,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="11"
-      scusa:commandText="-***-ExternalFile:5.1.1.origam___commandText___9535a0c8-227d-4414-9ed6-29112b205a3a.txt"
-      x:id="9535a0c8-227d-4414-9ed6-29112b205a3a"
-      asi:name="00011_PG_Database_Field_BusinessPartner.Avatar"
+      ausa:activityOrder="21"
+      scusa:commandText="-***-ExternalFile:5.1.1.origam___commandText___82462d06-93d3-45cf-ab3c-0a24d5f9e128.txt"
+      x:id="82462d06-93d3-45cf-ab3c-0a24d5f9e128"
+      asi:name="00021_PG_Database_Field_BusinessPartner.AvatarName"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -32,10 +37,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="21"
-      scusa:commandText="-***-ExternalFile:5.1.1.origam___commandText___82462d06-93d3-45cf-ab3c-0a24d5f9e128.txt"
-      x:id="82462d06-93d3-45cf-ab3c-0a24d5f9e128"
-      asi:name="00021_PG_Database_Field_BusinessPartner.AvatarName"
+      ausa:activityOrder="11"
+      scusa:commandText="-***-ExternalFile:5.1.1.origam___commandText___9535a0c8-227d-4414-9ed6-29112b205a3a.txt"
+      x:id="9535a0c8-227d-4414-9ed6-29112b205a3a"
+      asi:name="00011_PG_Database_Field_BusinessPartner.Avatar"
       scusa:platform="PgSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

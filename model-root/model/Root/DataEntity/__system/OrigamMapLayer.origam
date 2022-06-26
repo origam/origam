@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
@@ -11,56 +28,6 @@
     tmi:mappedObjectName="OrigamMapLayer"
     asi:name="OrigamMapLayer"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="e87644a9-28f5-4cb1-bd92-441c66dc5802" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="be47e1e0-896d-4a0d-aa9b-304ba5b681a3"
-      adec:isPrimaryKey="false"
-      adec:label="Name"
-      fmi:mappedColumnName="Name"
-      asi:name="Name"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="20"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="2a543d1a-6d47-47f4-9922-86fc82171a47"
-      adec:isPrimaryKey="false"
-      adec:label="Code"
-      fmi:mappedColumnName="ReferenceCode"
-      asi:name="ReferenceCode"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/__system/OrigamMapLayerType.origam#OrigamMapLayerType/fff613a4-d8f1-432d-a49d-0060d92029dc"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamMapLayerType.origam#OrigamMapLayerType/5765aac6-9836-45d8-8599-83c067ac2551"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="07e6078f-fe45-47c1-8aa9-988e0fbb0b3c"
-      adec:isPrimaryKey="false"
-      adec:label="Type"
-      fmi:mappedColumnName="refOrigamMapLayerTypeId"
-      asi:name="refOrigamMapLayerTypeId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
     <dei:DataEntityIndex
       asi:abstract="false"
       dei:generateDeploymentScript="false"
@@ -117,21 +84,6 @@
     </ef:EntityFilter>
     <eri:EntityRelation
       asi:abstract="false"
-      x:id="de888de0-564e-47cd-b94b-167a67dee723"
-      asi:name="OrigamMapOrigamMapLayer"
-      eri:or="false"
-      eri:parentChild="false"
-      eri:relatedEntity="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/6d1bd9cd-0f9f-46ae-a4eb-62f4c8824509"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="d7a2f5b9-a6b3-4cbe-b03b-54bd74268261"
-        asi:name="OrigamMapOrigamMapLayerKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapLayerId/ad4deea8-743f-4532-8f6b-9b68110af950" />
-    </eri:EntityRelation>
-    <eri:EntityRelation
-      asi:abstract="false"
       x:id="861f1b3a-f662-4ea5-940b-55dac3be5d4c"
       asi:name="OrigamMapLayerParameter"
       eri:or="false"
@@ -145,6 +97,71 @@
         asi:name="OrigamMapLayerParameterKey1"
         ercpi:relatedEntityField="Root/DataEntity/__system/OrigamMapLayerParameter.origam#OrigamMapLayerParameter/refOrigamMapLayerId/752b9963-0c8b-404b-8191-10ad6a27a236" />
     </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="de888de0-564e-47cd-b94b-167a67dee723"
+      asi:name="OrigamMapOrigamMapLayer"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/6d1bd9cd-0f9f-46ae-a4eb-62f4c8824509"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="d7a2f5b9-a6b3-4cbe-b03b-54bd74268261"
+        asi:name="OrigamMapOrigamMapLayerKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamMapOrigamMapLayer.origam#OrigamMapOrigamMapLayer/refOrigamMapLayerId/ad4deea8-743f-4532-8f6b-9b68110af950" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/__system/OrigamMapLayerType.origam#OrigamMapLayerType/fff613a4-d8f1-432d-a49d-0060d92029dc"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamMapLayerType.origam#OrigamMapLayerType/5765aac6-9836-45d8-8599-83c067ac2551"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="07e6078f-fe45-47c1-8aa9-988e0fbb0b3c"
+      adec:isPrimaryKey="false"
+      adec:label="Type"
+      fmi:mappedColumnName="refOrigamMapLayerTypeId"
+      asi:name="refOrigamMapLayerTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="20"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="2a543d1a-6d47-47f4-9922-86fc82171a47"
+      adec:isPrimaryKey="false"
+      adec:label="Code"
+      fmi:mappedColumnName="ReferenceCode"
+      asi:name="ReferenceCode"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="be47e1e0-896d-4a0d-aa9b-304ba5b681a3"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="e87644a9-28f5-4cb1-bd92-441c66dc5802" />
     <sip:Parameter
       asi:abstract="false"
       sip:allowNulls="true"

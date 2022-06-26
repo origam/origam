@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     dv:deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.0"
@@ -8,26 +13,26 @@
     dv:version="5.0">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:5.0.origam___commandText___ad4d61c8-d78c-4e98-b2aa-2d5ef67db1ae.txt"
-      x:id="ad4d61c8-d78c-4e98-b2aa-2d5ef67db1ae"
-      asi:name="00020_RenameColumns"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="25"
-      scusa:commandText="-***-ExternalFile:5.0.origam___commandText___d5ef99ec-a528-4c68-afb9-918bcf5141be.txt"
-      x:id="d5ef99ec-a528-4c68-afb9-918bcf5141be"
-      asi:name="00025_DropRenamingProcedure"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="10"
       scusa:commandText="-***-ExternalFile:5.0.origam___commandText___27e7644e-46e0-4acf-b685-a5abfbaf12e6.txt"
       x:id="27e7644e-46e0-4acf-b685-a5abfbaf12e6"
       asi:name="00010_RenameTables"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="35"
+      scusa:commandText="-***-ExternalFile:5.0.origam___commandText___7ada8bee-9af1-4b58-9ce3-5158f171d481.txt"
+      x:id="7ada8bee-9af1-4b58-9ce3-5158f171d481"
+      asi:name="00035_Database_Entity_OrigamIdentityGrant"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.0.origam___commandText___ad4d61c8-d78c-4e98-b2aa-2d5ef67db1ae.txt"
+      x:id="ad4d61c8-d78c-4e98-b2aa-2d5ef67db1ae"
+      asi:name="00020_RenameColumns"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -40,10 +45,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="35"
-      scusa:commandText="-***-ExternalFile:5.0.origam___commandText___7ada8bee-9af1-4b58-9ce3-5158f171d481.txt"
-      x:id="7ada8bee-9af1-4b58-9ce3-5158f171d481"
-      asi:name="00035_Database_Entity_OrigamIdentityGrant"
+      ausa:activityOrder="25"
+      scusa:commandText="-***-ExternalFile:5.0.origam___commandText___d5ef99ec-a528-4c68-afb9-918bcf5141be.txt"
+      x:id="d5ef99ec-a528-4c68-afb9-918bcf5141be"
+      asi:name="00025_DropRenamingProcedure"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

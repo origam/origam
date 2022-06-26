@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,26 +19,26 @@
     tmi:mappedObjectName="OrigamNotificationTemplate_l10n"
     asi:name="OrigamNotificationTemplate_l10n"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/b822344b-e1a6-4de0-ae41-ea49e9f981ac"
-      x:id="06560e3f-6dea-4988-8be2-362b2cc9bf62" />
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="3867367b-2c3a-4fa0-9e78-8678188e360e" />
-    <fmi:DataEntityColumn
+    <dei:DataEntityIndex
       asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="d6dca1e4-4778-4245-8123-227f2ad22b63"
-      adec:isPrimaryKey="false"
-      adec:label="Template"
-      fmi:mappedColumnName="Template"
-      asi:name="Template"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
+      dei:generateDeploymentScript="false"
+      x:id="1dea1f03-9f00-40af-8d55-b2442992cba7"
+      asi:name="ix_unq_OrigamNotificationTemplate"
+      dei:unique="true">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
+        x:id="2d4de3e0-ba7c-4d71-9263-d38e73aeb1a6"
+        asi:name="1_refLanguageId"
+        deif:ordinalPosition="1"
+        deif:sortOrder="Ascending" />
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/refOrigamNotificationTemplateId/72262b46-cfc1-4f19-9e07-9547451c4e94"
+        x:id="e28feb62-fdd2-4b68-aa8f-4307fb23d98a"
+        asi:name="0_refOrigamNotificationTemplateId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -61,25 +70,25 @@
       asi:name="Name"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="1dea1f03-9f00-40af-8d55-b2442992cba7"
-      asi:name="ix_unq_OrigamNotificationTemplate"
-      dei:unique="true">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/__system/OrigamNotificationTemplate_l10n.origam#OrigamNotificationTemplate_l10n/refOrigamNotificationTemplateId/72262b46-cfc1-4f19-9e07-9547451c4e94"
-        x:id="e28feb62-fdd2-4b68-aa8f-4307fb23d98a"
-        asi:name="0_refOrigamNotificationTemplateId"
-        deif:sortOrder="Ascending" />
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
-        x:id="2d4de3e0-ba7c-4d71-9263-d38e73aeb1a6"
-        asi:name="1_refLanguageId"
-        deif:ordinalPosition="1"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="d6dca1e4-4778-4245-8123-227f2ad22b63"
+      adec:isPrimaryKey="false"
+      adec:label="Template"
+      fmi:mappedColumnName="Template"
+      asi:name="Template"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/b822344b-e1a6-4de0-ae41-ea49e9f981ac"
+      x:id="06560e3f-6dea-4988-8be2-362b2cc9bf62" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="3867367b-2c3a-4fa0-9e78-8678188e360e" />
   </tmi:DataEntity>
 </x:file>

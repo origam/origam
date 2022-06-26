@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="09362bfa-8370-4838-b4ef-4446be9b8646"
@@ -7,18 +12,10 @@
     dv:version="2.0">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="70"
-      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___59e9825d-639a-4b72-a824-074b37cf2a50.txt"
-      x:id="59e9825d-639a-4b72-a824-074b37cf2a50"
-      asi:name="00070_Index_OrigamApplicationRole.ix_Name"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="60"
-      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___83a1fba8-a918-4a57-9487-1f4fd7f9fc55.txt"
-      x:id="83a1fba8-a918-4a57-9487-1f4fd7f9fc55"
-      asi:name="00060_AssignConvertedRoles"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___106377d1-7057-43db-9f72-921807a44ffe.txt"
+      x:id="106377d1-7057-43db-9f72-921807a44ffe"
+      asi:name="00020_Database_Object_Mapping_OrigamRoleOrigamApplicationRole"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -31,26 +28,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___106377d1-7057-43db-9f72-921807a44ffe.txt"
-      x:id="106377d1-7057-43db-9f72-921807a44ffe"
-      asi:name="00020_Database_Object_Mapping_OrigamRoleOrigamApplicationRole"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___b00242a4-30d2-492e-8178-b5f0645965a0.txt"
-      x:id="b00242a4-30d2-492e-8178-b5f0645965a0"
-      asi:name="00040_Database_Object_Mapping_OrigamRoleOrigamApplicationRole"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="50"
-      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___86073085-9f8f-4118-91a5-b7d09d1fd276.txt"
-      x:id="86073085-9f8f-4118-91a5-b7d09d1fd276"
-      asi:name="00050_ConvertApplicationRoles"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___59e9825d-639a-4b72-a824-074b37cf2a50.txt"
+      x:id="59e9825d-639a-4b72-a824-074b37cf2a50"
+      asi:name="00070_Index_OrigamApplicationRole.ix_Name"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -63,10 +44,34 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___83a1fba8-a918-4a57-9487-1f4fd7f9fc55.txt"
+      x:id="83a1fba8-a918-4a57-9487-1f4fd7f9fc55"
+      asi:name="00060_AssignConvertedRoles"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___86073085-9f8f-4118-91a5-b7d09d1fd276.txt"
+      x:id="86073085-9f8f-4118-91a5-b7d09d1fd276"
+      asi:name="00050_ConvertApplicationRoles"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="30"
       scusa:commandText="-***-ExternalFile:2.0.origam___commandText___9d3281c9-0cf6-4a5a-897b-e33bd4e9280d.txt"
       x:id="9d3281c9-0cf6-4a5a-897b-e33bd4e9280d"
       asi:name="00030_Database_Object_Mapping_OrigamApplicationRole"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:2.0.origam___commandText___b00242a4-30d2-492e-8178-b5f0645965a0.txt"
+      x:id="b00242a4-30d2-492e-8178-b5f0645965a0"
+      asi:name="00040_Database_Object_Mapping_OrigamRoleOrigamApplicationRole"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

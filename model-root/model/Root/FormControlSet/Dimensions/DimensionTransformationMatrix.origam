@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:apvi="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPropertyValueItem/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:csi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlSetItem/6.0.0" xmlns:fcs="http://schemas.origam.com/Origam.Schema.GuiModel.FormControlSet/6.0.0" xmlns:pvi="http://schemas.origam.com/Origam.Schema.GuiModel.PropertyValueItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:apvi="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPropertyValueItem/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:csi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlSetItem/6.0.0"
+  xmlns:fcs="http://schemas.origam.com/Origam.Schema.GuiModel.FormControlSet/6.0.0"
+  xmlns:pvi="http://schemas.origam.com/Origam.Schema.GuiModel.PropertyValueItem/6.0.0">
   <fcs:FormControlSet
     asi:abstract="false"
     fcs:dataStructure="Root/DataStructure/Dimensions/DimensionTransformationMatrix.origam#DimensionTransformationMatrix/d6e8b2e4-3ef8-42e8-83b9-18258e611bf2"
@@ -27,16 +33,16 @@
           pvi:value="DimensionTransformationMatrix" />
         <pvi:PropertyValueItem
           asi:abstract="false"
-          x:id="3e4dbd67-9978-45c2-a4ee-1fd326f658e7"
-          asi:name="TabIndex"
-          apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
-          pvi:value="0" />
+          x:id="075ea419-3fb9-43f9-96bc-d21975a34ad9"
+          asi:name="Top"
+          apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
+          pvi:value="8" />
         <pvi:PropertyValueItem
           asi:abstract="false"
-          x:id="a540a5e8-3445-4d5e-afad-3d3b34fdca2d"
-          asi:name="Width"
-          apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
-          pvi:value="600" />
+          x:id="2c2c831e-e742-44a6-a94f-52844022db2f"
+          asi:name="Height"
+          apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
+          pvi:value="200" />
         <pvi:PropertyValueItem
           asi:abstract="false"
           x:id="3c74c992-5355-4649-bb89-3dcf314a8878"
@@ -51,10 +57,34 @@
           pvi:value="true" />
         <pvi:PropertyValueItem
           asi:abstract="false"
-          x:id="2c2c831e-e742-44a6-a94f-52844022db2f"
-          asi:name="Height"
-          apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
-          pvi:value="200" />
+          x:id="3e4dbd67-9978-45c2-a4ee-1fd326f658e7"
+          asi:name="TabIndex"
+          apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
+          pvi:value="0" />
+        <pvi:PropertyValueItem
+          asi:abstract="false"
+          x:id="75f5a1af-a050-46ba-b643-f590f9941aba"
+          asi:name="IconId"
+          apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+          pvi:value="00000000-0000-0000-0000-000000000000" />
+        <pvi:PropertyValueItem
+          asi:abstract="false"
+          x:id="a540a5e8-3445-4d5e-afad-3d3b34fdca2d"
+          asi:name="Width"
+          apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
+          pvi:value="600" />
+        <pvi:PropertyValueItem
+          asi:abstract="false"
+          x:id="ae6e9f2a-cca4-48a2-99d5-ba513b64feca"
+          asi:name="PanelTitle"
+          apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
+          pvi:value="Nastavení automatického zadávání dimenzí" />
+        <pvi:PropertyValueItem
+          asi:abstract="false"
+          x:id="c1dcf8d0-35d4-4b0c-9f8f-e55a54924802"
+          asi:name="ShowNewButton"
+          apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
+          pvi:value="true" />
         <pvi:PropertyValueItem
           asi:abstract="false"
           x:id="d1982c7c-192f-4b0a-b03c-551fe29f4466"
@@ -67,43 +97,19 @@
           asi:name="ShowDeleteButton"
           apvi:propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
           pvi:value="true" />
-        <pvi:PropertyValueItem
-          asi:abstract="false"
-          x:id="ae6e9f2a-cca4-48a2-99d5-ba513b64feca"
-          asi:name="PanelTitle"
-          apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
-          pvi:value="Nastavení automatického zadávání dimenzí" />
-        <pvi:PropertyValueItem
-          asi:abstract="false"
-          x:id="075ea419-3fb9-43f9-96bc-d21975a34ad9"
-          asi:name="Top"
-          apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
-          pvi:value="8" />
-        <pvi:PropertyValueItem
-          asi:abstract="false"
-          x:id="c1dcf8d0-35d4-4b0c-9f8f-e55a54924802"
-          asi:name="ShowNewButton"
-          apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
-          pvi:value="true" />
-        <pvi:PropertyValueItem
-          asi:abstract="false"
-          x:id="75f5a1af-a050-46ba-b643-f590f9941aba"
-          asi:name="IconId"
-          apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
-          pvi:value="00000000-0000-0000-0000-000000000000" />
       </csi:ControlSetItem>
-      <pvi:PropertyValueItem
-        asi:abstract="false"
-        x:id="1142a355-4fd0-4a20-ae44-018b36205594"
-        asi:name="Height"
-        apvi:propertyId="3ec90be1-7cc2-481d-aed3-85505560eb70"
-        pvi:value="344" />
       <pvi:PropertyValueItem
         asi:abstract="false"
         x:id="03e2fe14-c4c3-45da-953d-40553e1f97f3"
         asi:name="Width"
         apvi:propertyId="99f5687f-be11-49ec-a2eb-fba58d945b3e"
         pvi:value="712" />
+      <pvi:PropertyValueItem
+        asi:abstract="false"
+        x:id="1142a355-4fd0-4a20-ae44-018b36205594"
+        asi:name="Height"
+        apvi:propertyId="3ec90be1-7cc2-481d-aed3-85505560eb70"
+        pvi:value="344" />
       <pvi:PropertyValueItem
         asi:abstract="false"
         x:id="b53ecb88-1ad7-4877-9889-68870741e87e"

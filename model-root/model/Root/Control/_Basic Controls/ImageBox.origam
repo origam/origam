@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="42314a5f-7951-43c5-bf8b-cfe83a12855d"
@@ -11,17 +15,24 @@
     ci:typeName="Origam.Gui.Win.ImageBox">
     <cpi:ControlPropertyItem
       asi:abstract="false"
-      cpi:bindOnly="true"
-      x:id="d97cb877-ea98-4eab-8de0-063745f5fd88"
+      cpi:bindOnly="false"
+      x:id="02266b5d-b7ca-4f7c-b315-b41eb641575a"
       cpi:localizable="false"
-      asi:name="ImageData"
-      cpi:propertyType="Xml" />
+      asi:name="Height"
+      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
       x:id="1a0b94e0-2243-4e03-959b-5168c33eccd8"
       cpi:localizable="false"
       asi:name="GridColumnWidth"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="5d9a09e8-4569-4a6b-8a11-f7a20e15bafb"
+      cpi:localizable="false"
+      asi:name="TabIndex"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -40,13 +51,6 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="02266b5d-b7ca-4f7c-b315-b41eb641575a"
-      cpi:localizable="false"
-      asi:name="Height"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
       x:id="9e59b419-d42b-47f7-b0f5-b544227644fe"
       cpi:localizable="false"
       asi:name="SourceType"
@@ -60,17 +64,17 @@
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
+      cpi:bindOnly="true"
+      x:id="d97cb877-ea98-4eab-8de0-063745f5fd88"
+      cpi:localizable="false"
+      asi:name="ImageData"
+      cpi:propertyType="Xml" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
       cpi:bindOnly="false"
       x:id="e8179fd8-24ae-4dc5-8d5a-f785c3d3b759"
       cpi:localizable="false"
       asi:name="Left"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="5d9a09e8-4569-4a6b-8a11-f7a20e15bafb"
-      cpi:localizable="false"
-      asi:name="TabIndex"
       cpi:propertyType="Integer" />
   </ci:Control>
 </x:file>
