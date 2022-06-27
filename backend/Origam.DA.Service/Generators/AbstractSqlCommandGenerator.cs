@@ -1517,24 +1517,35 @@ namespace Origam.DA.Service
             StringBuilder sqlExpression = new StringBuilder();
 
             ArrayList primaryKeys = new ArrayList();
+            StringBuilder primaryDetachKeys = new StringBuilder();
             sqlExpression.Append("SELECT ");
 
             RenderSelectColumns(entity.RootItem as DataStructure, sqlExpression, new StringBuilder(),
                 new StringBuilder(), entity, columnsInfo, new Hashtable(), new Hashtable(), null,
                 selectParameterReferences, forceDatabaseCalculation);
 
-            int i = 0;
             foreach (DataStructureColumn column in entity.Columns)
             {
                 if (column.Field is FieldMappingItem && column.UseLookupValue == false && column.UseCopiedValue == false)
                 {
                     if (column.Field.IsPrimaryKey) primaryKeys.Add(column);
-                    i++;
+                }
+                if (column.Field is DetachedField && column.UseLookupValue == false && column.UseCopiedValue == false)
+                {
+                    if (column.Field.IsPrimaryKey) primaryDetachKeys.Append(column.Name).Append(";");
                 }
             }
             if (primaryKeys.Count == 0)
             {
-                throw new Exception("Entity " + entity.Name + " has no a fieldMappingItem primaryKey.");
+                string errorMessage = "The primary key of entity "  + entity.Name +  " must be in the database.";
+                if(!string.IsNullOrEmpty(primaryDetachKeys.ToString()))
+                {
+                    errorMessage += "Primary key items " + 
+                        primaryDetachKeys.ToString().Substring(0, primaryDetachKeys.ToString().Length - 1) + 
+                        " are virtual!"; ;
+                }
+                
+                throw new Exception(errorMessage);
             }
             PrettyLine(sqlExpression);
             sqlExpression.AppendFormat("FROM {0} AS {1} ",
@@ -1552,7 +1563,7 @@ namespace Origam.DA.Service
             }
             PrettyLine(sqlExpression);
             sqlExpression.Append("WHERE (");
-            i = 0;
+            int i = 0;
             foreach (DataStructureColumn column in primaryKeys)
             {
                 if (i > 0) sqlExpression.Append(" AND ");
