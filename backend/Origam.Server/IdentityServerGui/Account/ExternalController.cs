@@ -216,7 +216,7 @@ namespace Origam.Server.IdentityServerGui.Account
             var userIdClaim 
                 = externalUser.FindFirst(JwtClaimTypes.Subject) 
                   ?? externalUser.FindFirst(ClaimTypes.NameIdentifier) 
-                  ?? throw new Exception("Unknown userid");
+                  ?? throw new Exception("User identifier claim wasn't found.");
             // remove the user id claim so we don't include it as an extra claim
             // if/when we provision the user
             var claims = externalUser.Claims.ToList();
