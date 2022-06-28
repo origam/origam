@@ -505,5 +505,5 @@ jobs:
          Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
-           $(TAG).$(Build.BuildId)
-           $(TAG_LATEST)
+            $(TAG).$(Build.BuildId)
+            $(TAG)
