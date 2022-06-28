@@ -216,16 +216,19 @@ namespace Origam.Server.IdentityServerGui.Account
             var userIdClaim 
                 = externalUser.FindFirst(JwtClaimTypes.Subject) 
                   ?? externalUser.FindFirst(ClaimTypes.NameIdentifier) 
-                  ?? throw new Exception("User identifier claim wasn't found.");
+                  ?? throw new Exception(
+                  $"User identifier claim wasn't found. Checked claims " 
+                  + $"were {JwtClaimTypes.Subject} " 
+                  + $"and {ClaimTypes.NameIdentifier}");
             // remove the user id claim so we don't include it as an extra claim
             // if/when we provision the user
             var claims = externalUser.Claims.ToList();
             claims.Remove(userIdClaim);
             var provider = result.Properties.Items["scheme"];
             var providerUserId = userIdClaim.Value;
-            var externalCallbackProcessingInfo =
-                identityServerConfig
-                    .GetExternalCallbackProcessingInfo(provider);
+            var externalCallbackProcessingInfo 
+                = identityServerConfig.GetExternalCallbackProcessingInfo(
+                    provider);
             var checkedClaim = externalUser.FindFirst(claim 
                 => claim.Type == externalCallbackProcessingInfo.ClaimType);
             if (checkedClaim == null)
