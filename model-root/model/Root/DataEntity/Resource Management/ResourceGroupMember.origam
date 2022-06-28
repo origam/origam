@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
@@ -9,9 +18,32 @@
     tmi:mappedObjectName="ResourceGroupMember"
     asi:name="ResourceGroupMember"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="cdc26643-ff5c-48c3-9e22-cd787a0cb341" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="713c62b3-bc66-4970-ba64-f02f4029c6d9"
+      asi:name="ix_MemberResource"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
+        x:id="cdf69dd5-f8fd-4f7f-86f7-28bd6caf9b70"
+        asi:name="0_refMemberResourceId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="977b7d00-fecb-4879-b7d6-427c25789dc4"
+      asi:name="ix_Resource"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
+        x:id="ab9eeb69-43f7-433b-a3bd-1eab3e43b899"
+        asi:name="0_refResourceId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -44,31 +76,8 @@
       asi:name="refMemberResourceId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="977b7d00-fecb-4879-b7d6-427c25789dc4"
-      asi:name="ix_Resource"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
-        x:id="ab9eeb69-43f7-433b-a3bd-1eab3e43b899"
-        asi:name="0_refResourceId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="713c62b3-bc66-4970-ba64-f02f4029c6d9"
-      asi:name="ix_MemberResource"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Resource Management/ResourceGroupMember.origam#ResourceGroupMember/refMemberResourceId/fd94ca3d-5c4e-43dc-97e6-8d1f731f9abf"
-        x:id="cdf69dd5-f8fd-4f7f-86f7-28bd6caf9b70"
-        asi:name="0_refMemberResourceId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="cdc26643-ff5c-48c3-9e22-cd787a0cb341" />
   </tmi:DataEntity>
 </x:file>

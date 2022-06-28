@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54"
@@ -9,9 +22,9 @@
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="b6b11a0e-12e8-415a-9ef2-0e0e0674b92f"
+      x:id="23538c66-bdc7-4b16-9d68-c375d425b0d4"
       cs:isReturnValue="false"
-      asi:name="FirstName" />
+      asi:name="Password" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="UniqueIdentifier"
@@ -19,20 +32,6 @@
       x:id="60ae5e90-0b21-452f-baf9-11bedc7da91a"
       cs:isReturnValue="false"
       asi:name="RoleId" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
-      cs:disableConstraints="false"
-      x:id="9e1530df-580c-4089-8d24-1269ce70b3d7"
-      cs:isReturnValue="false"
-      asi:name="Id" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="d972154a-50ab-47a3-9ca0-4d8318052399"
-      cs:isReturnValue="false"
-      asi:name="OutputFromMembership" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
@@ -51,18 +50,25 @@
       cs:structure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="String"
+      cs:dataType="UniqueIdentifier"
       cs:disableConstraints="false"
-      x:id="d14b0f0e-9101-4431-bb9f-b0e4e4d01fcc"
+      x:id="9e1530df-580c-4089-8d24-1269ce70b3d7"
       cs:isReturnValue="false"
-      asi:name="UserName" />
+      asi:name="Id" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Boolean"
+      cs:disableConstraints="false"
+      x:id="a3a1e895-e6c8-494a-8527-e4c529ca3a63"
+      cs:isReturnValue="false"
+      asi:name="RequestEmailConfirmation" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="23538c66-bdc7-4b16-9d68-c375d425b0d4"
+      x:id="b6b11a0e-12e8-415a-9ef2-0e0e0674b92f"
       cs:isReturnValue="false"
-      asi:name="Password" />
+      asi:name="FirstName" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
@@ -72,17 +78,204 @@
       asi:name="Name" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="Boolean"
+      cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="a3a1e895-e6c8-494a-8527-e4c529ca3a63"
+      x:id="d14b0f0e-9101-4431-bb9f-b0e4e4d01fcc"
       cs:isReturnValue="false"
-      asi:name="RequestEmailConfirmation" />
+      asi:name="UserName" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="d972154a-50ab-47a3-9ca0-4d8318052399"
+      cs:isReturnValue="false"
+      asi:name="OutputFromMembership" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="b3ef57a6-d32a-4200-8424-c456854912f4"
+      asi:name="01_CreateBusinessPartner"
+      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="74acafdb-1950-4b74-900c-eac6fbe5d150"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
+          x:id="9cf35f4b-6d5d-4689-96e9-126990447215"
+          asi:name="UserProfile_New"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="7898d41e-40aa-4f44-8f46-e876d78400a6"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="d270ff16-9489-48f6-a780-6ab8e4250e91"
+          asi:name="NewUser_CreateBusinessPartner"
+          tr:transformation="Security/Transformation/Security/NewUser_CreateBusinessPartner.origam#NewUser_CreateBusinessPartner/21934fda-a12e-4560-91b2-5410c8277c59" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c2983b6b-c77f-42a6-8b3a-3b83728d60c7"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Email/64b866f6-6846-481d-acf8-8c664282c9ce"
+          x:id="497c834e-b581-4295-8d93-694937419819"
+          asi:name="email"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserName/d14b0f0e-9101-4431-bb9f-b0e4e4d01fcc"
+          x:id="4e7f7240-c319-40fc-b36e-8226ff1155d5"
+          asi:name="userName"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Name/b9123688-1cb1-42ee-90dc-e383253ebea5"
+          x:id="5649726d-b132-4e71-a8c3-2647e867dacf"
+          asi:name="name"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Password/23538c66-bdc7-4b16-9d68-c375d425b0d4"
+          x:id="7ca21f08-d5ff-4fa0-bd5a-33a4e2021cf6"
+          asi:name="password"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Id/9e1530df-580c-4089-8d24-1269ce70b3d7"
+          x:id="9b873e3c-8452-428c-a0d1-2239eb4ccc43"
+          asi:name="id"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/RoleId/60ae5e90-0b21-452f-baf9-11bedc7da91a"
+          x:id="bbf52cad-ea44-4e7d-bc12-c61f2535ff58"
+          asi:name="roleId"
+          cr:xPath="/" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/FirstName/b6b11a0e-12e8-415a-9ef2-0e0e0674b92f"
+          x:id="c4042956-ec3d-46a7-8efc-c11af5c391c0"
+          asi:name="firstName"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
     <twb:WorkflowTask
       asi:abstract="false"
       x:id="117fb77f-62eb-4b82-96e9-9dd10c3eb56b"
       asi:name="02_SaveUserAndCallMembership"
       aws:roles="*"
       twb:transactionType="Atomic">
+      <smct:WorkflowTask
+        asi:abstract="false"
+        x:id="82767f5c-8353-4951-9315-799a213db7bf"
+        asi:name="02_CreateUser_Identity"
+        wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/OutputFromMembership/d972154a-50ab-47a3-9ca0-4d8318052399"
+        wt:outputMethod="AppendMergeExisting"
+        aws:roles="*"
+        smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+        smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/CreateUser/3721b774-d828-49e2-b80d-93dc7d189a75">
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="721eeb2b-4b8b-4368-898b-9326b834623f"
+          asi:name="Email"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Email/71afe313-2206-49a4-b0dc-42d0720567ad">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
+            x:id="ab289103-f3a6-4b22-b4b5-20c9e1c6135b"
+            asi:name="Email"
+            cr:xPath="/ROOT/BusinessPartner/@UserEmail" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="b7f6ad0e-afef-4c61-98cc-ecab263af7e4"
+          asi:name="PasswordAnswer"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordAnswer/f5f8da01-a93f-468a-a7df-1a6bb44c2a37" />
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="ba220773-c8b0-40de-baf6-e9dce077cf1c"
+          asi:name="Password"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Password/3b97d106-dd77-47f4-861b-a0e6ed248e97">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
+            x:id="715cb70e-35ec-4346-8651-855191e12b33"
+            asi:name="Password"
+            cr:xPath="/ROOT/BusinessPartner/@UserPassword" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="bef9bc92-531c-4fc2-9963-c1c5ba6c2e1a"
+          asi:name="EmailConfirmed"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/EmailConfirmed/984b2b27-634d-4aa7-b3c2-0541376774da">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/RequestEmailConfirmation/a3a1e895-e6c8-494a-8527-e4c529ca3a63"
+            x:id="91f91c14-7efd-492c-9e05-02d545d41749"
+            asi:name="Confirmed"
+            cr:xPath="/ROOT/value = 'false'" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="dc128c9d-83e2-4812-b94b-01e8b89d1a4e"
+          asi:name="PasswordQuestion"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordQuestion/4f3f8c55-209d-43b9-bb3e-67f166c421e5" />
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="e22cdd7f-e6bb-4f5e-8c68-1af29356535a"
+          asi:name="ProviderUserKey"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/ProviderUserKey/dd68f8c9-172d-4423-931a-d3fcda304c87">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
+            x:id="b0a4356b-d5c5-472b-aad8-ce26e6a1f9f6"
+            asi:name="ProviderUserKey"
+            cr:xPath="/ROOT/BusinessPartner/Id" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="f79d1832-aa5a-4e92-95f4-c05b8daf02a5"
+          asi:name="Username"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Username/5ec01d8a-c34a-4d2a-84e6-a30f85856ca1">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
+            x:id="a56dacae-67e1-4e12-8d58-73b35612b92e"
+            asi:name="UserName"
+            cr:xPath="/ROOT/BusinessPartner/UserName" />
+        </smcp:ServiceMethodCallParameter>
+        <wtd:WorkflowTaskDependency
+          asi:abstract="false"
+          x:id="98fbd485-2f1f-40bf-9250-70f81610dc69"
+          asi:name="After_01_StoreNewUser"
+          wtd:startEvent="Success"
+          wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/02_SaveUserAndCallMembership/01_StoreNewUser/9046d95d-e3f5-4ebd-8eb0-3c38da3a9164" />
+      </smct:WorkflowTask>
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="9046d95d-e3f5-4ebd-8eb0-3c38da3a9164"
@@ -117,97 +310,6 @@
             cr:xPath="/" />
         </smcp:ServiceMethodCallParameter>
       </smct:WorkflowTask>
-      <smct:WorkflowTask
-        asi:abstract="false"
-        x:id="82767f5c-8353-4951-9315-799a213db7bf"
-        asi:name="02_CreateUser_Identity"
-        wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/OutputFromMembership/d972154a-50ab-47a3-9ca0-4d8318052399"
-        wt:outputMethod="AppendMergeExisting"
-        aws:roles="*"
-        smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
-        smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/CreateUser/3721b774-d828-49e2-b80d-93dc7d189a75">
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="dc128c9d-83e2-4812-b94b-01e8b89d1a4e"
-          asi:name="PasswordQuestion"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordQuestion/4f3f8c55-209d-43b9-bb3e-67f166c421e5" />
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="e22cdd7f-e6bb-4f5e-8c68-1af29356535a"
-          asi:name="ProviderUserKey"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/ProviderUserKey/dd68f8c9-172d-4423-931a-d3fcda304c87">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
-            x:id="b0a4356b-d5c5-472b-aad8-ce26e6a1f9f6"
-            asi:name="ProviderUserKey"
-            cr:xPath="/ROOT/BusinessPartner/Id" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="721eeb2b-4b8b-4368-898b-9326b834623f"
-          asi:name="Email"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Email/71afe313-2206-49a4-b0dc-42d0720567ad">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
-            x:id="ab289103-f3a6-4b22-b4b5-20c9e1c6135b"
-            asi:name="Email"
-            cr:xPath="/ROOT/BusinessPartner/@UserEmail" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="f79d1832-aa5a-4e92-95f4-c05b8daf02a5"
-          asi:name="Username"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Username/5ec01d8a-c34a-4d2a-84e6-a30f85856ca1">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
-            x:id="a56dacae-67e1-4e12-8d58-73b35612b92e"
-            asi:name="UserName"
-            cr:xPath="/ROOT/BusinessPartner/UserName" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="bef9bc92-531c-4fc2-9963-c1c5ba6c2e1a"
-          asi:name="EmailConfirmed"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/EmailConfirmed/984b2b27-634d-4aa7-b3c2-0541376774da">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/RequestEmailConfirmation/a3a1e895-e6c8-494a-8527-e4c529ca3a63"
-            x:id="91f91c14-7efd-492c-9e05-02d545d41749"
-            asi:name="Confirmed"
-            cr:xPath="/ROOT/value = 'false'" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="ba220773-c8b0-40de-baf6-e9dce077cf1c"
-          asi:name="Password"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Password/3b97d106-dd77-47f4-861b-a0e6ed248e97">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
-            x:id="715cb70e-35ec-4346-8651-855191e12b33"
-            asi:name="Password"
-            cr:xPath="/ROOT/BusinessPartner/@UserPassword" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="b7f6ad0e-afef-4c61-98cc-ecab263af7e4"
-          asi:name="PasswordAnswer"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordAnswer/f5f8da01-a93f-468a-a7df-1a6bb44c2a37" />
-        <wtd:WorkflowTaskDependency
-          asi:abstract="false"
-          x:id="98fbd485-2f1f-40bf-9250-70f81610dc69"
-          asi:name="After_01_StoreNewUser"
-          wtd:startEvent="Success"
-          wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/02_SaveUserAndCallMembership/01_StoreNewUser/9046d95d-e3f5-4ebd-8eb0-3c38da3a9164" />
-      </smct:WorkflowTask>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
         x:id="c402c125-bb25-43b1-bacc-9220a0d25f43"
@@ -215,94 +317,5 @@
         wtd:startEvent="Success"
         wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/01_CreateBusinessPartner/b3ef57a6-d32a-4200-8424-c456854912f4" />
     </twb:WorkflowTask>
-    <smct:WorkflowTask
-      asi:abstract="false"
-      x:id="b3ef57a6-d32a-4200-8424-c456854912f4"
-      asi:name="01_CreateBusinessPartner"
-      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
-      wt:outputMethod="AppendMergeExisting"
-      aws:roles="*"
-      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
-      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="c2983b6b-c77f-42a6-8b3a-3b83728d60c7"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Id/9e1530df-580c-4089-8d24-1269ce70b3d7"
-          x:id="9b873e3c-8452-428c-a0d1-2239eb4ccc43"
-          asi:name="id"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Name/b9123688-1cb1-42ee-90dc-e383253ebea5"
-          x:id="5649726d-b132-4e71-a8c3-2647e867dacf"
-          asi:name="name"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Password/23538c66-bdc7-4b16-9d68-c375d425b0d4"
-          x:id="7ca21f08-d5ff-4fa0-bd5a-33a4e2021cf6"
-          asi:name="password"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/Email/64b866f6-6846-481d-acf8-8c664282c9ce"
-          x:id="497c834e-b581-4295-8d93-694937419819"
-          asi:name="email"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserName/d14b0f0e-9101-4431-bb9f-b0e4e4d01fcc"
-          x:id="4e7f7240-c319-40fc-b36e-8226ff1155d5"
-          asi:name="userName"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/FirstName/b6b11a0e-12e8-415a-9ef2-0e0e0674b92f"
-          x:id="c4042956-ec3d-46a7-8efc-c11af5c391c0"
-          asi:name="firstName"
-          cr:xPath="/" />
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/RoleId/60ae5e90-0b21-452f-baf9-11bedc7da91a"
-          x:id="bbf52cad-ea44-4e7d-bc12-c61f2535ff58"
-          asi:name="roleId"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="7898d41e-40aa-4f44-8f46-e876d78400a6"
-        asi:name="XslScript"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
-        <tr:TransformationReference
-          asi:abstract="false"
-          x:id="d270ff16-9489-48f6-a780-6ab8e4250e91"
-          asi:name="NewUser_CreateBusinessPartner"
-          tr:transformation="Security/Transformation/Security/NewUser_CreateBusinessPartner.origam#NewUser_CreateBusinessPartner/21934fda-a12e-4560-91b2-5410c8277c59" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="74acafdb-1950-4b74-900c-eac6fbe5d150"
-        asi:name="Data"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
-          x:id="9cf35f4b-6d5d-4689-96e9-126990447215"
-          asi:name="UserProfile_New"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-    </smct:WorkflowTask>
   </w:Workflow>
 </x:file>

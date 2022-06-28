@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="afac6813-b010-4204-80c0-d602eede4387"
     asi:name="Identity_OnBusinessPartnerUpdate"
     w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="47be9868-2d69-4b47-98fa-5631a711b313"
+      cs:isReturnValue="false"
+      asi:name="Username" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="50a91ca7-302f-4015-8fc7-e6af939d12f9"
+      cs:isReturnValue="false"
+      asi:name="OldEmail" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -17,81 +43,9 @@
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="47be9868-2d69-4b47-98fa-5631a711b313"
-      cs:isReturnValue="false"
-      asi:name="Username" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
       x:id="c4470478-6218-4ccd-8a2b-9f3cefa96c3b"
       cs:isReturnValue="false"
       asi:name="Email" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="50a91ca7-302f-4015-8fc7-e6af939d12f9"
-      cs:isReturnValue="false"
-      asi:name="OldEmail" />
-    <twb:WorkflowTask
-      asi:abstract="false"
-      x:id="1a4c875f-cdd3-47a1-bbe5-4f544b1df122"
-      asi:name="02_WhenUsernameNotEmpty"
-      aws:roles="*"
-      aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
-      aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
-      twb:transactionType="None">
-      <smct:WorkflowTask
-        asi:abstract="false"
-        x:id="e905928b-b0c3-4635-8bad-eb01f47c0879"
-        asi:name="03_Call_MembershipService_UpdateEmail"
-        wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
-        wt:outputMethod="Ignore"
-        aws:roles="*"
-        smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
-        smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/UpdateUser/1c7a14b9-e49b-422c-9e66-86fd5db29c6d"
-        aws:startConditionRule="Security/Rule/_common/SR_SimpleContextValue_IsFalse.origam#SR_SimpleContextValue_IsFalse/df25192e-f532-419e-a226-f4e953f02499"
-        aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/AreEmailsTheSame/9b28d2f3-3aea-4a43-8ba4-1bdc6e6bf96d">
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="a6755038-5975-4a3c-b442-4ea48198ce8e"
-          asi:name="Email"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UpdateUser/Email/039877df-d323-44eb-9dbf-5e7fd5324b1e">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Email/c4470478-6218-4ccd-8a2b-9f3cefa96c3b"
-            x:id="998d545c-8392-4228-8a96-bf0f58b11cdf"
-            asi:name="Email"
-            cr:xPath="/" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="8352578c-f5bb-4f5c-b930-6df9fadd9aab"
-          asi:name="Username"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UpdateUser/Username/2ba3b7a1-8b2c-4707-8200-4df5b8ae06af">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
-            x:id="0c87f009-a254-4d23-a795-ea309f381613"
-            asi:name="Username"
-            cr:xPath="/" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="a4cef7a6-95a9-4c56-b023-7050ac86e1b4"
-          asi:name="IsApproved"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UpdateUser/IsApproved/da302b15-eff5-4e04-b042-86c26f505650" />
-      </smct:WorkflowTask>
-      <wtd:WorkflowTaskDependency
-        asi:abstract="false"
-        x:id="fbe9aec4-9c9b-43e1-b30c-a0a7be69e15e"
-        asi:name="After_01_Transform_AreEmailsChanged"
-        wtd:startEvent="Success"
-        wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/01_Transform_AreEmailsTheSame/4cc80a1e-a314-4383-9f59-c0b199fae8ea" />
-    </twb:WorkflowTask>
     <smct:WorkflowTask
       asi:abstract="false"
       aws:features="IDENTITY_USER_MANAGEMENT"
@@ -102,6 +56,17 @@
       aws:roles="*"
       smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
       smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="a15517b3-8a21-48ef-a12a-c325b9afaf1a"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="a3fe71e7-a0b1-4b51-ae83-f79e671b90b8"
+          asi:name="TwoScalarValues_AreEqual"
+          tr:transformation="Security/Transformation/Security/TwoScalarValues_AreEqual.origam#TwoScalarValues_AreEqual/868bc2d5-073d-4060-bc75-dba807303525" />
+      </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="a591cc82-43e9-4878-bccb-4dc7501a318c"
@@ -135,17 +100,64 @@
           asi:name="AreEmailsChanged"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="a15517b3-8a21-48ef-a12a-c325b9afaf1a"
-        asi:name="XslScript"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
-        <tr:TransformationReference
-          asi:abstract="false"
-          x:id="a3fe71e7-a0b1-4b51-ae83-f79e671b90b8"
-          asi:name="TwoScalarValues_AreEqual"
-          tr:transformation="Security/Transformation/Security/TwoScalarValues_AreEqual.origam#TwoScalarValues_AreEqual/868bc2d5-073d-4060-bc75-dba807303525" />
-      </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
+    <twb:WorkflowTask
+      asi:abstract="false"
+      x:id="1a4c875f-cdd3-47a1-bbe5-4f544b1df122"
+      asi:name="02_WhenUsernameNotEmpty"
+      aws:roles="*"
+      aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
+      aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
+      twb:transactionType="None">
+      <smct:WorkflowTask
+        asi:abstract="false"
+        x:id="e905928b-b0c3-4635-8bad-eb01f47c0879"
+        asi:name="03_Call_MembershipService_UpdateEmail"
+        wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
+        wt:outputMethod="Ignore"
+        aws:roles="*"
+        smct:service="Security/Service/IdentityService.origam#IdentityService/888933c6-e4b4-40c0-ae6b-462721fe8a60"
+        smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/UpdateUser/1c7a14b9-e49b-422c-9e66-86fd5db29c6d"
+        aws:startConditionRule="Security/Rule/_common/SR_SimpleContextValue_IsFalse.origam#SR_SimpleContextValue_IsFalse/df25192e-f532-419e-a226-f4e953f02499"
+        aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/AreEmailsTheSame/9b28d2f3-3aea-4a43-8ba4-1bdc6e6bf96d">
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="8352578c-f5bb-4f5c-b930-6df9fadd9aab"
+          asi:name="Username"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UpdateUser/Username/2ba3b7a1-8b2c-4707-8200-4df5b8ae06af">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
+            x:id="0c87f009-a254-4d23-a795-ea309f381613"
+            asi:name="Username"
+            cr:xPath="/" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="a4cef7a6-95a9-4c56-b023-7050ac86e1b4"
+          asi:name="IsApproved"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UpdateUser/IsApproved/da302b15-eff5-4e04-b042-86c26f505650" />
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="a6755038-5975-4a3c-b442-4ea48198ce8e"
+          asi:name="Email"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/UpdateUser/Email/039877df-d323-44eb-9dbf-5e7fd5324b1e">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Email/c4470478-6218-4ccd-8a2b-9f3cefa96c3b"
+            x:id="998d545c-8392-4228-8a96-bf0f58b11cdf"
+            asi:name="Email"
+            cr:xPath="/" />
+        </smcp:ServiceMethodCallParameter>
+      </smct:WorkflowTask>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="fbe9aec4-9c9b-43e1-b30c-a0a7be69e15e"
+        asi:name="After_01_Transform_AreEmailsChanged"
+        wtd:startEvent="Success"
+        wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/01_Transform_AreEmailsTheSame/4cc80a1e-a314-4383-9f59-c0b199fae8ea" />
+    </twb:WorkflowTask>
   </w:Workflow>
 </x:file>

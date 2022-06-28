@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="099d2fd6-0343-4879-8334-7c927958cfb1"
@@ -9,13 +13,6 @@
     ci:requestSaveAfterChangeAllowed="false"
     ci:toolboxVisibility="FormDesigner"
     ci:typeName="Origam.Gui.Win.CollapsibleContainer">
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="fed8bb41-1cc7-49f2-988e-74b74542d182"
-      cpi:localizable="false"
-      asi:name="StyleId"
-      cpi:propertyType="UniqueIdentifier" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -47,6 +44,13 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
+      x:id="72bb9454-de3a-461e-9143-f2c46012b26d"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="c0d50f04-28df-4ed6-b9fd-c923d1c4448c"
       cpi:localizable="false"
       asi:name="TabIndex"
@@ -54,9 +58,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="72bb9454-de3a-461e-9143-f2c46012b26d"
+      x:id="fed8bb41-1cc7-49f2-988e-74b74542d182"
       cpi:localizable="false"
-      asi:name="Top"
-      cpi:propertyType="Integer" />
+      asi:name="StyleId"
+      cpi:propertyType="UniqueIdentifier" />
   </ci:Control>
 </x:file>

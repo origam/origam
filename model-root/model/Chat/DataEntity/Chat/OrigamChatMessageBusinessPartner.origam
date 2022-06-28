@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -9,9 +18,19 @@
     tmi:mappedObjectName="OrigamChatMessageBusinessPartner"
     asi:name="OrigamChatMessageBusinessPartner"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="8aa8e1a1-37b4-4c1e-8b63-d17515b6edbf" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="true"
+      x:id="11764138-7773-4fe4-a6db-aa1d330371ea"
+      asi:name="ix_OrigamChatMessage"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Chat/DataEntity/Chat/OrigamChatMessageBusinessPartner.origam#OrigamChatMessageBusinessPartner/refOrigamChatMessageId/7ccb6016-26bc-4197-aa03-88476e60f50a"
+        x:id="1f76cfff-5d6b-4024-ba13-f01f363a6822"
+        asi:name="0_refOrigamChatMessageId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -43,18 +62,8 @@
       asi:name="refBusinessPartnerId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="true"
-      x:id="11764138-7773-4fe4-a6db-aa1d330371ea"
-      asi:name="ix_OrigamChatMessage"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Chat/DataEntity/Chat/OrigamChatMessageBusinessPartner.origam#OrigamChatMessageBusinessPartner/refOrigamChatMessageId/7ccb6016-26bc-4197-aa03-88476e60f50a"
-        x:id="1f76cfff-5d6b-4024-ba13-f01f363a6822"
-        asi:name="0_refOrigamChatMessageId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="8aa8e1a1-37b4-4c1e-8b63-d17515b6edbf" />
   </tmi:DataEntity>
 </x:file>

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -12,20 +18,20 @@
       adec:autoIncrement="false"
       adec:dataType="Boolean"
       adec:excludeFromAllFields="false"
-      x:id="40cf41cb-a970-40fc-9849-355f7f02cc75"
+      x:id="2c001912-c039-458a-b2dd-cbcf36c77f77"
       adec:isPrimaryKey="false"
-      asi:name="AutoSize"
+      asi:name="PageBreak"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataType="Integer"
+      adec:dataType="Boolean"
       adec:excludeFromAllFields="false"
-      x:id="99ca1c1d-6607-4cc7-b7c1-74251605a1f2"
+      x:id="40cf41cb-a970-40fc-9849-355f7f02cc75"
       adec:isPrimaryKey="false"
-      asi:name="Width"
+      asi:name="AutoSize"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -43,11 +49,11 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataType="Boolean"
+      adec:dataType="Integer"
       adec:excludeFromAllFields="false"
-      x:id="2c001912-c039-458a-b2dd-cbcf36c77f77"
+      x:id="99ca1c1d-6607-4cc7-b7c1-74251605a1f2"
       adec:isPrimaryKey="false"
-      asi:name="PageBreak"
+      asi:name="Width"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn

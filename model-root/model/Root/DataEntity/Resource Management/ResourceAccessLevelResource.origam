@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
@@ -9,9 +18,32 @@
     tmi:mappedObjectName="ResourceAccessLevelResource"
     asi:name="ResourceAccessLevelResource"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="df3ee47b-3813-494f-9bc9-c8b1ab28c6c7" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="3e4aed1d-1fdb-4800-bb89-271364893d67"
+      asi:name="ix_ResourceAccessLevel"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/refResourceAccessLevelId/4e7d12d5-3d3c-40be-b08e-0a889163ed2e"
+        x:id="4f3ec5ed-0b7f-418c-ad02-6c029ad9a6a2"
+        asi:name="0_refResourceAccessLevelId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="a8c3a104-4009-4952-902a-8eac081cbd78"
+      asi:name="ix_Resource"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/refResourceId/6cdf63e0-e6e0-419d-ad8c-9b104b5815c7"
+        x:id="09da57d7-a1f0-4257-99e0-f8bf91c3d6d1"
+        asi:name="0_refResourceId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -45,31 +77,8 @@
       asi:name="refResourceId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="3e4aed1d-1fdb-4800-bb89-271364893d67"
-      asi:name="ix_ResourceAccessLevel"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/refResourceAccessLevelId/4e7d12d5-3d3c-40be-b08e-0a889163ed2e"
-        x:id="4f3ec5ed-0b7f-418c-ad02-6c029ad9a6a2"
-        asi:name="0_refResourceAccessLevelId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="a8c3a104-4009-4952-902a-8eac081cbd78"
-      asi:name="ix_Resource"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/refResourceId/6cdf63e0-e6e0-419d-ad8c-9b104b5815c7"
-        x:id="09da57d7-a1f0-4257-99e0-f8bf91c3d6d1"
-        asi:name="0_refResourceId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="df3ee47b-3813-494f-9bc9-c8b1ab28c6c7" />
   </tmi:DataEntity>
 </x:file>

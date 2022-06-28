@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
     x:id="e8a9ffc7-622c-419c-8a83-9767ac78a41f"
     asi:name="FileSystemInfo"
     ade:readOnly="false">
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      x:id="0b5cecb3-cdb9-4e46-bb1d-a9cdaa7e01a9"
+      adec:isPrimaryKey="false"
+      asi:name="CreationTime"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      x:id="0d804bc2-cd22-4798-814d-e1c9d68c693c"
+      adec:isPrimaryKey="true"
+      asi:name="Id"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -16,29 +44,6 @@
       x:id="10722d94-de0a-4b39-9e61-430d1f8b4e78"
       adec:isPrimaryKey="false"
       asi:name="IsDirectory"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Date"
-      adec:excludeFromAllFields="false"
-      x:id="e5b98002-6c18-465a-a4e0-4370eea34e44"
-      adec:isPrimaryKey="false"
-      asi:name="LastWriteTime"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="255"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      x:id="bcbaa09e-39a7-408a-b1be-507d6ba9d31a"
-      adec:isPrimaryKey="false"
-      asi:name="Name"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -57,12 +62,47 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      x:id="7015a0cd-7220-4615-898e-b0bd3f01c380"
+      adec:isPrimaryKey="false"
+      asi:name="LastAccessTime"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
       adec:dataType="Memo"
       adec:excludeFromAllFields="false"
       x:id="75be85ab-1cb8-4b79-a488-941a7ba201e3"
       adec:isPrimaryKey="false"
       adec:label="Full path of the directory of file."
       asi:name="FullName"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Long"
+      adec:excludeFromAllFields="false"
+      x:id="a0ae9e91-721e-467e-8953-3e5105bfc9c5"
+      adec:isPrimaryKey="false"
+      adec:label="Length of file"
+      asi:name="Length"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="255"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      x:id="bcbaa09e-39a7-408a-b1be-507d6ba9d31a"
+      adec:isPrimaryKey="false"
+      asi:name="Name"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
@@ -82,43 +122,9 @@
       adec:autoIncrement="false"
       adec:dataType="Date"
       adec:excludeFromAllFields="false"
-      x:id="0b5cecb3-cdb9-4e46-bb1d-a9cdaa7e01a9"
+      x:id="e5b98002-6c18-465a-a4e0-4370eea34e44"
       adec:isPrimaryKey="false"
-      asi:name="CreationTime"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Date"
-      adec:excludeFromAllFields="false"
-      x:id="7015a0cd-7220-4615-898e-b0bd3f01c380"
-      adec:isPrimaryKey="false"
-      asi:name="LastAccessTime"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      x:id="0d804bc2-cd22-4798-814d-e1c9d68c693c"
-      adec:isPrimaryKey="true"
-      asi:name="Id"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Long"
-      adec:excludeFromAllFields="false"
-      x:id="a0ae9e91-721e-467e-8953-3e5105bfc9c5"
-      adec:isPrimaryKey="false"
-      adec:label="Length of file"
-      asi:name="Length"
+      asi:name="LastWriteTime"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
   </de:DataEntity>

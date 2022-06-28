@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="2b24863a-0f20-440b-bc6e-bf8fb4665665"
@@ -19,16 +23,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="da588742-d374-4ffd-ba44-306abbc11e14"
+      x:id="67e3c765-253d-484b-8966-7d47ec206934"
       cpi:localizable="false"
-      asi:name="DataMember"
-      cpi:propertyType="String" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="f25a8be1-f9a7-4eec-b9f1-3d25cd15c747"
-      cpi:localizable="false"
-      asi:name="Top"
+      asi:name="Height"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -40,16 +37,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="67e3c765-253d-484b-8966-7d47ec206934"
+      x:id="b72fae12-6b92-4ed4-a0c3-cae71c521c9e"
       cpi:localizable="false"
-      asi:name="Height"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="f30dce6f-7a3c-429a-b256-abdaf25bfaca"
-      cpi:localizable="false"
-      asi:name="Left"
+      asi:name="TabIndex"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -61,6 +51,20 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
+      x:id="ca2d9056-ef91-48f6-a79e-f9c523fcc84f"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="da588742-d374-4ffd-ba44-306abbc11e14"
+      cpi:localizable="false"
+      asi:name="DataMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="e914897b-29e4-4609-81ce-bebc6300c674"
       cpi:localizable="false"
       asi:name="NameColumn"
@@ -68,16 +72,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="b72fae12-6b92-4ed4-a0c3-cae71c521c9e"
+      x:id="f25a8be1-f9a7-4eec-b9f1-3d25cd15c747"
       cpi:localizable="false"
-      asi:name="TabIndex"
+      asi:name="Top"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="ca2d9056-ef91-48f6-a79e-f9c523fcc84f"
+      x:id="f30dce6f-7a3c-429a-b256-abdaf25bfaca"
       cpi:localizable="false"
-      asi:name="Width"
+      asi:name="Left"
       cpi:propertyType="Integer" />
   </ci:Control>
 </x:file>

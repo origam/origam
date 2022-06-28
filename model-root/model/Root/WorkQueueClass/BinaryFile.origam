@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0" xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0" xmlns:wqwc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand/6.0.0" xmlns:wqwcpm="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:wqc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClass/6.0.0"
+  xmlns:wqcem="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueClassEntityMapping/6.0.0"
+  xmlns:wqwc="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommand/6.0.0"
+  xmlns:wqwcpm="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkQueueWorkflowCommandParameterMapping/6.0.0">
   <wqc:WorkQueueClass
     asi:abstract="false"
     x:id="0f67ee03-0ece-4efa-b25c-c3e518963722"
@@ -8,6 +15,34 @@
     wqc:workQueueStructure="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/dd83b8a7-edfc-48e9-8290-2348a434ad1f"
     wqc:workQueueStructureSortSet="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/ByFileCreationTime/8a38ddf0-c4bc-4324-b822-f937bea20d3d"
     wqc:workQueueStructureUserListMethod="Root/DataStructure/Work Queue/WQ_BinaryFile.origam#WQ_BinaryFile/GetByQueueId/2523b4cc-3713-48ab-8acd-9b63657d1cde">
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="25221b75-e88b-44b5-ae05-dccce94bedbe"
+      asi:name="FileLastAccessTime"
+      wqcem:sortOrder="2"
+      wqcem:xPath="/ROOT/File/LastAccessTime" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="36c8099c-04e9-41cd-8be2-1f097ca9614e"
+      asi:name="FileCreationTime"
+      wqcem:sortOrder="1"
+      wqcem:xPath="/ROOT/File/CreationTime" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="5c7fdca4-b0a8-4d1a-9d10-dc27e2bac1a1"
+      asi:name="FileName"
+      wqcem:xPath="/ROOT/File/Name" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="92f70d74-143f-429e-bc70-bec7558bcb8f"
+      asi:name="Data"
+      wqcem:xPath="/ROOT/File/Data" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="ad1907d3-3b7a-49fa-91f4-2c512ec63d01"
+      asi:name="FileLastWriteTime"
+      wqcem:sortOrder="3"
+      wqcem:xPath="/ROOT/File/LastWriteTime" />
     <wqwc:EntityUIAction
       asi:abstract="false"
       euia:actionType="Workflow"
@@ -25,6 +60,11 @@
       wqwc:workflow="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/502221ba-e12f-4fe0-b1a2-b46db48fbf70">
       <wqwcpm:WorkQueueWorkflowCommandParameterMapping
         asi:abstract="false"
+        x:id="26f79a15-e9f0-403e-a383-c3b8a82c8755"
+        asi:name="WQ_TextFile_Source"
+        wqwcpm:value="QueueEntries" />
+      <wqwcpm:WorkQueueWorkflowCommandParameterMapping
+        asi:abstract="false"
         x:id="e1d483e7-0481-46f1-977a-36663f682009"
         asi:name="TargetQueue"
         wqwcpm:value="Parameter2" />
@@ -33,39 +73,6 @@
         x:id="e9d84f4a-d40e-4fd4-bb00-652eb7da4a8b"
         asi:name="SplitXPath"
         wqwcpm:value="Parameter1" />
-      <wqwcpm:WorkQueueWorkflowCommandParameterMapping
-        asi:abstract="false"
-        x:id="26f79a15-e9f0-403e-a383-c3b8a82c8755"
-        asi:name="WQ_TextFile_Source"
-        wqwcpm:value="QueueEntries" />
     </wqwc:EntityUIAction>
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="36c8099c-04e9-41cd-8be2-1f097ca9614e"
-      asi:name="FileCreationTime"
-      wqcem:sortOrder="1"
-      wqcem:xPath="/ROOT/File/CreationTime" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="ad1907d3-3b7a-49fa-91f4-2c512ec63d01"
-      asi:name="FileLastWriteTime"
-      wqcem:sortOrder="3"
-      wqcem:xPath="/ROOT/File/LastWriteTime" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="92f70d74-143f-429e-bc70-bec7558bcb8f"
-      asi:name="Data"
-      wqcem:xPath="/ROOT/File/Data" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="5c7fdca4-b0a8-4d1a-9d10-dc27e2bac1a1"
-      asi:name="FileName"
-      wqcem:xPath="/ROOT/File/Name" />
-    <wqcem:WorkQueueClassEntityMapping
-      asi:abstract="false"
-      x:id="25221b75-e88b-44b5-ae05-dccce94bedbe"
-      asi:name="FileLastAccessTime"
-      wqcem:sortOrder="2"
-      wqcem:xPath="/ROOT/File/LastAccessTime" />
   </wqc:WorkQueueClass>
 </x:file>

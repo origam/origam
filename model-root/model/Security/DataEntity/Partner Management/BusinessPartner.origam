@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0" xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0" xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sc="http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:euia="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIAction/6.2.0"
+  xmlns:euiapm="http://schemas.origam.com/Origam.Schema.GuiModel.EntityUIActionParameterMapping/6.0.0"
+  xmlns:ewa="http://schemas.origam.com/Origam.Schema.MenuModel.EntityWorkflowAction/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sc="http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0">
   <df:DataEntityColumn
     asi:abstract="true"
     adec:allowNulls="true"
@@ -7,10 +23,10 @@
     adec:dataLength="255"
     adec:dataType="String"
     adec:excludeFromAllFields="false"
-    x:id="691eff15-9e19-4f09-b15b-1ed1682c4887"
+    x:id="21ced315-8828-454d-a24f-d37993a62437"
     adec:isPrimaryKey="false"
-    adec:label="Password (Old)"
-    asi:name="OldPassword"
+    adec:label="Password (Confirm)"
+    asi:name="ConfirmUserPassword"
     adec:onCopyAction="Copy"
     x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
     adec:xmlMappingType="Attribute" />
@@ -37,13 +53,55 @@
     adec:dataLength="255"
     adec:dataType="String"
     adec:excludeFromAllFields="false"
-    x:id="21ced315-8828-454d-a24f-d37993a62437"
+    x:id="691eff15-9e19-4f09-b15b-1ed1682c4887"
     adec:isPrimaryKey="false"
-    adec:label="Password (Confirm)"
-    asi:name="ConfirmUserPassword"
+    adec:label="Password (Old)"
+    asi:name="OldPassword"
     adec:onCopyAction="Copy"
     x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
     adec:xmlMappingType="Attribute" />
+  <ef:EntityFilter
+    asi:abstract="true"
+    x:id="27969716-fa79-4aa9-ba8c-3fcd50ed383e"
+    asi:name="GetByUserEmail"
+    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6">
+    <fc:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fc:forceDatabaseCalculation="false"
+      fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+      x:id="21c9e5d5-de1a-4db4-98be-23c7d82a5aea"
+      adec:isPrimaryKey="false"
+      asi:name="="
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <fcp:FunctionCallParameter
+        asi:abstract="true"
+        x:id="acc82953-468e-4d00-a77d-f31cb76addb9"
+        asi:name="Right"
+        fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+        <pr:ParameterReference
+          asi:abstract="true"
+          x:id="79a66d46-5c51-4502-8fc1-fc65259dd2ff"
+          asi:name="parUserEmail"
+          pr:parameter="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/parUserEmail/118a16a2-f31e-40f4-9eff-8deaf1dd4a89" />
+      </fcp:FunctionCallParameter>
+      <fcp:FunctionCallParameter
+        asi:abstract="true"
+        x:id="b5e22d7d-fa19-4cdf-a9e2-32f29bf38cf0"
+        asi:name="Left"
+        fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+        <ecr:EntityColumnReference
+          asi:abstract="true"
+          ecr:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserEmail/9c3c1729-7779-4784-a5ba-a1144dc21426"
+          x:id="c057f61e-3193-4984-b4d9-acf31b737ebe"
+          asi:name="UserEmail" />
+      </fcp:FunctionCallParameter>
+    </fc:DataEntityColumn>
+  </ef:EntityFilter>
   <ef:EntityFilter
     asi:abstract="true"
     x:id="eb5e13ee-6b45-4816-ba13-1590a42e9436"
@@ -86,48 +144,6 @@
       </fcp:FunctionCallParameter>
     </fc:DataEntityColumn>
   </ef:EntityFilter>
-  <ef:EntityFilter
-    asi:abstract="true"
-    x:id="27969716-fa79-4aa9-ba8c-3fcd50ed383e"
-    asi:name="GetByUserEmail"
-    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6">
-    <fc:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:excludeFromAllFields="false"
-      fc:forceDatabaseCalculation="false"
-      fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-      x:id="21c9e5d5-de1a-4db4-98be-23c7d82a5aea"
-      adec:isPrimaryKey="false"
-      asi:name="="
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute">
-      <fcp:FunctionCallParameter
-        asi:abstract="true"
-        x:id="b5e22d7d-fa19-4cdf-a9e2-32f29bf38cf0"
-        asi:name="Left"
-        fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-        <ecr:EntityColumnReference
-          asi:abstract="true"
-          ecr:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/UserEmail/9c3c1729-7779-4784-a5ba-a1144dc21426"
-          x:id="c057f61e-3193-4984-b4d9-acf31b737ebe"
-          asi:name="UserEmail" />
-      </fcp:FunctionCallParameter>
-      <fcp:FunctionCallParameter
-        asi:abstract="true"
-        x:id="acc82953-468e-4d00-a77d-f31cb76addb9"
-        asi:name="Right"
-        fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-        <pr:ParameterReference
-          asi:abstract="true"
-          x:id="79a66d46-5c51-4502-8fc1-fc65259dd2ff"
-          asi:name="parUserEmail"
-          pr:parameter="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/parUserEmail/118a16a2-f31e-40f4-9eff-8deaf1dd4a89" />
-      </fcp:FunctionCallParameter>
-    </fc:DataEntityColumn>
-  </ef:EntityFilter>
   <eri:EntityRelation
     asi:abstract="true"
     x:id="bd05e4af-804f-4307-99eb-6bbcee6bfa6a"
@@ -146,42 +162,39 @@
   </eri:EntityRelation>
   <ewa:EntityUIAction
     asi:abstract="true"
-    euia:actionType="OpenForm"
-    euia:buttonIcon="Security/Graphics/security_user_password.png.origam#security_user_password.png/7856accc-c1bf-43c0-a38e-15625ea14b47"
+    euia:actionType="Workflow"
     ewa:cleanDataBeforeMerge="false"
-    ewa:closeType="None"
+    ewa:closeType="CloseAndCommit"
     ewa:commitChangesAfterMerge="false"
-    euia:default="false"
+    euia:default="true"
     euia:features="IDENTITY_USER_MANAGEMENT"
-    x:id="d0e0cb68-c308-4511-be2d-112014b919ef"
-    euia:label="Change Password"
+    x:id="011afc41-139c-4b0a-9d1c-6686674b02fd"
+    euia:label="Create"
     ewa:mergeType="AppendMergeExisting"
-    euia:modal="true"
-    euia:modalDialogHeight="130"
-    euia:modalDialogWidth="490"
+    euia:modal="false"
     euia:mode="ActiveRecord"
-    asi:name="Identity_ChangePassword"
+    asi:name="Identity_CreateUser_Save"
     euia:order="10"
     x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
     euia:placement="Toolbar"
     euia:refreshAfterReturn="None"
     ewa:refreshAfterWorkflow="RefreshChangedRecords"
     ewa:refreshPortalAfterFinish="false"
-    ewa:requestSaveBeforeWorkflow="true"
+    ewa:requestSaveBeforeWorkflow="false"
     euia:roles="*"
     ewa:saveAfterWorkflow="false"
     euia:valueType="SavedValue"
-    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ChangePassword.origam#Identity_ChangePassword/f11a9a03-29d6-4b07-b6d0-71bcea36da86">
+    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUserFromExistingBusinessPartner_Save.origam#Identity_CreateUserFromExistingBusinessPartner_Save/4680903c-1bff-42ea-8ee6-93a0120d750b">
     <euiapm:EntityUIActionParameterMapping
       asi:abstract="true"
-      euiapm:field="."
-      x:id="95553560-c50c-4b4f-973d-cde2a0cdf9c4"
-      asi:name="UserProfile_Screen"
+      euiapm:field="/"
+      x:id="1ea42502-a61a-410a-ae8c-228b4031e57f"
+      asi:name="UserProfile_New"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="3df264ed-e691-4c4d-aeeb-9582015e6de8"
+      x:id="d7778bb8-1cf5-48fb-8a86-ee1f23c99396"
       asi:name="ScreenSectionCondition1"
-      sc:screen="Security/FormControlSet/Security/UserProfile.origam#UserProfile/e5cfa7bb-1eb4-429a-a0c0-8840359de4a1" />
+      sc:screen="Security/FormControlSet/Security/CreateNewMembershipUser.origam#CreateNewMembershipUser/6672d3c7-79f2-4a95-a2ec-605686f447ad" />
   </ewa:EntityUIAction>
   <ewa:EntityUIAction
     asi:abstract="true"
@@ -218,6 +231,43 @@
       euiapm:type="Current" />
     <sc:ScreenCondition
       x:id="a6050c21-bc53-47be-bd17-9ace24b1b4ac"
+      asi:name="ScreenSectionCondition1"
+      sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
+  </ewa:EntityUIAction>
+  <ewa:EntityUIAction
+    asi:abstract="true"
+    euia:actionType="OpenForm"
+    ewa:cleanDataBeforeMerge="false"
+    ewa:closeType="None"
+    ewa:commitChangesAfterMerge="false"
+    euia:default="false"
+    euia:features="IDENTITY_USER_MANAGEMENT"
+    x:id="36b724a0-ee28-465f-935f-bfbfdf527a47"
+    euia:label="Confirm Email"
+    ewa:mergeType="AppendMergeExisting"
+    euia:modal="false"
+    euia:mode="ActiveRecord"
+    asi:name="Identity_ForceConfirmEmail"
+    euia:order="10"
+    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
+    euia:placement="Toolbar"
+    euia:refreshAfterReturn="None"
+    ewa:refreshAfterWorkflow="RefreshChangedRecords"
+    ewa:refreshPortalAfterFinish="false"
+    ewa:requestSaveBeforeWorkflow="false"
+    euia:roles="*"
+    euia:rule="Security/Rule/Security/IsBusinessPartner_HasUsernameAndIsUserEmailNotConfirmed.origam#IsBusinessPartner_HasUsernameAndIsUserEmailNotConfirmed/35a109e3-3afc-4a33-81b6-931669fbce57"
+    ewa:saveAfterWorkflow="false"
+    euia:valueType="SavedValue"
+    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/b3d7c4f4-e6d2-45f4-8e1e-cca6743d570f">
+    <euiapm:EntityUIActionParameterMapping
+      asi:abstract="true"
+      euiapm:field="Id"
+      x:id="33634487-a2e5-45ef-aef1-a620d96a74e8"
+      asi:name="UserId"
+      euiapm:type="Current" />
+    <sc:ScreenCondition
+      x:id="5816281d-51e8-4d0d-8b31-4d81e735d4d9"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
   </ewa:EntityUIAction>
@@ -269,12 +319,12 @@
     ewa:commitChangesAfterMerge="false"
     euia:default="true"
     euia:features="IDENTITY_USER_MANAGEMENT"
-    x:id="011afc41-139c-4b0a-9d1c-6686674b02fd"
-    euia:label="Create"
+    x:id="82b212a4-0322-4e15-af50-baf6bf65cd2d"
+    euia:label="OK"
     ewa:mergeType="AppendMergeExisting"
     euia:modal="false"
     euia:mode="ActiveRecord"
-    asi:name="Identity_CreateUser_Save"
+    asi:name="Identity_ChangePassword_Save"
     euia:order="10"
     x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
     euia:placement="Toolbar"
@@ -285,17 +335,17 @@
     euia:roles="*"
     ewa:saveAfterWorkflow="false"
     euia:valueType="SavedValue"
-    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUserFromExistingBusinessPartner_Save.origam#Identity_CreateUserFromExistingBusinessPartner_Save/4680903c-1bff-42ea-8ee6-93a0120d750b">
+    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ChangePassword_Save.origam#Identity_ChangePassword_Save/e77e6ed0-3095-46ee-abc3-6555c2106ef6">
     <euiapm:EntityUIActionParameterMapping
       asi:abstract="true"
       euiapm:field="/"
-      x:id="1ea42502-a61a-410a-ae8c-228b4031e57f"
-      asi:name="UserProfile_New"
+      x:id="bf990846-4c0a-4ab4-8cc4-bfd29f7b647d"
+      asi:name="UserProfile_Screen"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="d7778bb8-1cf5-48fb-8a86-ee1f23c99396"
+      x:id="18976714-2fcd-421f-bd5c-7153e0e015bd"
       asi:name="ScreenSectionCondition1"
-      sc:screen="Security/FormControlSet/Security/CreateNewMembershipUser.origam#CreateNewMembershipUser/6672d3c7-79f2-4a95-a2ec-605686f447ad" />
+      sc:screen="Security/FormControlSet/Security/UserProfile_ChangePassword.origam#UserProfile_ChangePassword/ba02ab58-a633-4356-b8ee-d6cab9f3b8f6" />
   </ewa:EntityUIAction>
   <ewa:EntityUIAction
     asi:abstract="true"
@@ -341,42 +391,6 @@
       x:id="f56f1210-c15c-40f5-ad0f-70790c341af6"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
-  </ewa:EntityUIAction>
-  <ewa:EntityUIAction
-    asi:abstract="true"
-    euia:actionType="Workflow"
-    euia:buttonIcon="Security/Graphics/security_user_assign.png.origam#security_user_assign.png/1d582145-542e-4c7d-90b6-05bab5e0bac1"
-    ewa:cleanDataBeforeMerge="false"
-    ewa:closeType="CloseAndCancel"
-    ewa:commitChangesAfterMerge="false"
-    euia:default="false"
-    x:id="e71638ba-84bf-4134-9806-abe7a8deda84"
-    euia:label="Save"
-    ewa:mergeType="AppendMergeExisting"
-    euia:modal="false"
-    euia:mode="ActiveRecord"
-    asi:name="Identity_CreateUser_Save"
-    euia:order="10"
-    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
-    euia:placement="Toolbar"
-    euia:refreshAfterReturn="None"
-    ewa:refreshAfterWorkflow="RefreshChangedRecords"
-    ewa:refreshPortalAfterFinish="false"
-    ewa:requestSaveBeforeWorkflow="false"
-    euia:roles="*"
-    ewa:saveAfterWorkflow="false"
-    euia:valueType="SavedValue"
-    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/c63a999f-b117-4618-8aaa-a38789039452">
-    <euiapm:EntityUIActionParameterMapping
-      asi:abstract="true"
-      euiapm:field="/"
-      x:id="be220014-7a8d-4b2e-931f-8ade24da053d"
-      asi:name="UserProfile_New"
-      euiapm:type="Current" />
-    <sc:ScreenCondition
-      x:id="7966d28f-65e9-45e2-9401-7e96c98f07a5"
-      asi:name="ScreenSectionCondition1"
-      sc:screen="Security/FormControlSet/Security/NewUser.origam#NewUser/ea3e6bf4-d9f6-4324-af8f-6a00439374ef" />
   </ewa:EntityUIAction>
   <ewa:EntityUIAction
     asi:abstract="true"
@@ -454,54 +468,57 @@
   </ewa:EntityUIAction>
   <ewa:EntityUIAction
     asi:abstract="true"
-    euia:actionType="Workflow"
-    ewa:cleanDataBeforeMerge="false"
-    ewa:closeType="CloseAndCommit"
-    ewa:commitChangesAfterMerge="false"
-    euia:default="true"
-    euia:features="IDENTITY_USER_MANAGEMENT"
-    x:id="82b212a4-0322-4e15-af50-baf6bf65cd2d"
-    euia:label="OK"
-    ewa:mergeType="AppendMergeExisting"
-    euia:modal="false"
-    euia:mode="ActiveRecord"
-    asi:name="Identity_ChangePassword_Save"
-    euia:order="10"
-    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
-    euia:placement="Toolbar"
-    euia:refreshAfterReturn="None"
-    ewa:refreshAfterWorkflow="RefreshChangedRecords"
-    ewa:refreshPortalAfterFinish="false"
-    ewa:requestSaveBeforeWorkflow="false"
-    euia:roles="*"
-    ewa:saveAfterWorkflow="false"
-    euia:valueType="SavedValue"
-    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ChangePassword_Save.origam#Identity_ChangePassword_Save/e77e6ed0-3095-46ee-abc3-6555c2106ef6">
-    <euiapm:EntityUIActionParameterMapping
-      asi:abstract="true"
-      euiapm:field="/"
-      x:id="bf990846-4c0a-4ab4-8cc4-bfd29f7b647d"
-      asi:name="UserProfile_Screen"
-      euiapm:type="Current" />
-    <sc:ScreenCondition
-      x:id="18976714-2fcd-421f-bd5c-7153e0e015bd"
-      asi:name="ScreenSectionCondition1"
-      sc:screen="Security/FormControlSet/Security/UserProfile_ChangePassword.origam#UserProfile_ChangePassword/ba02ab58-a633-4356-b8ee-d6cab9f3b8f6" />
-  </ewa:EntityUIAction>
-  <ewa:EntityUIAction
-    asi:abstract="true"
     euia:actionType="OpenForm"
+    euia:buttonIcon="Security/Graphics/security_user_password.png.origam#security_user_password.png/7856accc-c1bf-43c0-a38e-15625ea14b47"
     ewa:cleanDataBeforeMerge="false"
     ewa:closeType="None"
     ewa:commitChangesAfterMerge="false"
     euia:default="false"
     euia:features="IDENTITY_USER_MANAGEMENT"
-    x:id="36b724a0-ee28-465f-935f-bfbfdf527a47"
-    euia:label="Confirm Email"
+    x:id="d0e0cb68-c308-4511-be2d-112014b919ef"
+    euia:label="Change Password"
+    ewa:mergeType="AppendMergeExisting"
+    euia:modal="true"
+    euia:modalDialogHeight="130"
+    euia:modalDialogWidth="490"
+    euia:mode="ActiveRecord"
+    asi:name="Identity_ChangePassword"
+    euia:order="10"
+    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
+    euia:placement="Toolbar"
+    euia:refreshAfterReturn="None"
+    ewa:refreshAfterWorkflow="RefreshChangedRecords"
+    ewa:refreshPortalAfterFinish="false"
+    ewa:requestSaveBeforeWorkflow="true"
+    euia:roles="*"
+    ewa:saveAfterWorkflow="false"
+    euia:valueType="SavedValue"
+    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ChangePassword.origam#Identity_ChangePassword/f11a9a03-29d6-4b07-b6d0-71bcea36da86">
+    <euiapm:EntityUIActionParameterMapping
+      asi:abstract="true"
+      euiapm:field="."
+      x:id="95553560-c50c-4b4f-973d-cde2a0cdf9c4"
+      asi:name="UserProfile_Screen"
+      euiapm:type="Current" />
+    <sc:ScreenCondition
+      x:id="3df264ed-e691-4c4d-aeeb-9582015e6de8"
+      asi:name="ScreenSectionCondition1"
+      sc:screen="Security/FormControlSet/Security/UserProfile.origam#UserProfile/e5cfa7bb-1eb4-429a-a0c0-8840359de4a1" />
+  </ewa:EntityUIAction>
+  <ewa:EntityUIAction
+    asi:abstract="true"
+    euia:actionType="Workflow"
+    euia:buttonIcon="Security/Graphics/security_user_assign.png.origam#security_user_assign.png/1d582145-542e-4c7d-90b6-05bab5e0bac1"
+    ewa:cleanDataBeforeMerge="false"
+    ewa:closeType="CloseAndCancel"
+    ewa:commitChangesAfterMerge="false"
+    euia:default="false"
+    x:id="e71638ba-84bf-4134-9806-abe7a8deda84"
+    euia:label="Save"
     ewa:mergeType="AppendMergeExisting"
     euia:modal="false"
     euia:mode="ActiveRecord"
-    asi:name="Identity_ForceConfirmEmail"
+    asi:name="Identity_CreateUser_Save"
     euia:order="10"
     x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
     euia:placement="Toolbar"
@@ -510,20 +527,19 @@
     ewa:refreshPortalAfterFinish="false"
     ewa:requestSaveBeforeWorkflow="false"
     euia:roles="*"
-    euia:rule="Security/Rule/Security/IsBusinessPartner_HasUsernameAndIsUserEmailNotConfirmed.origam#IsBusinessPartner_HasUsernameAndIsUserEmailNotConfirmed/35a109e3-3afc-4a33-81b6-931669fbce57"
     ewa:saveAfterWorkflow="false"
     euia:valueType="SavedValue"
-    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/b3d7c4f4-e6d2-45f4-8e1e-cca6743d570f">
+    ewa:workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/c63a999f-b117-4618-8aaa-a38789039452">
     <euiapm:EntityUIActionParameterMapping
       asi:abstract="true"
-      euiapm:field="Id"
-      x:id="33634487-a2e5-45ef-aef1-a620d96a74e8"
-      asi:name="UserId"
+      euiapm:field="/"
+      x:id="be220014-7a8d-4b2e-931f-8ade24da053d"
+      asi:name="UserProfile_New"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="5816281d-51e8-4d0d-8b31-4d81e735d4d9"
+      x:id="7966d28f-65e9-45e2-9401-7e96c98f07a5"
       asi:name="ScreenSectionCondition1"
-      sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
+      sc:screen="Security/FormControlSet/Security/NewUser.origam#NewUser/ea3e6bf4-d9f6-4324-af8f-6a00439374ef" />
   </ewa:EntityUIAction>
   <sip:Parameter
     asi:abstract="true"

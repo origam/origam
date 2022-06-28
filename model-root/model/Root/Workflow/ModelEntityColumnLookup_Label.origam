@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="094508c1-abd1-4a4f-a40f-dd130e1c1cf9"
@@ -7,18 +17,18 @@
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="90af5dc3-0b8f-4992-be9f-4c5917389cde"
-      cs:isReturnValue="true"
-      asi:name="Result" />
-    <cs:ContextStore
-      asi:abstract="false"
       cs:dataType="UniqueIdentifier"
       cs:disableConstraints="false"
       x:id="6d79bdbd-36e0-4780-a892-b28d6cdd1ef7"
       cs:isReturnValue="false"
       asi:name="Id" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="90af5dc3-0b8f-4992-be9f-4c5917389cde"
+      cs:isReturnValue="true"
+      asi:name="Result" />
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="3dcf1092-f606-4bdd-94c9-80f871decc87"
@@ -28,6 +38,17 @@
       aws:roles="*"
       smct:service="Root/Service/ModelService.origam#ModelService/92d3277e-dabc-4093-bd25-bc010078b925"
       smct:serviceMethod="Root/Service/ModelService.origam#ModelService/ElementAttribute/6ed7e428-32bc-45d9-89b9-9424a5f2cf74">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="9df52b7e-84b2-4069-a5b9-3b008a8d93d4"
+        asi:name="AttributeName"
+        smcp:serviceMethodParameter="Root/Service/ModelService.origam#ModelService/ElementAttribute/AttributeName/17448517-ab08-4135-9a7a-854d5361480d">
+        <dcr:DataConstantReference
+          asi:abstract="false"
+          dcr:constant="Root/DataConstant/Model/ModelItemAttribute_Caption.origam#ModelItemAttribute_Caption/8c95b75e-e6c6-4c95-b8e5-eb23d25c5bf9"
+          x:id="07286b03-a1c8-4e1f-907a-18068feb9b95"
+          asi:name="ModelItemAttribute_Caption" />
+      </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="cb01fa2c-1f6a-48f2-b96b-6b38a82dffd1"
@@ -40,17 +61,6 @@
           x:id="d488239e-f7bc-4364-bf00-2c76b2360e6e"
           asi:name="Id"
           cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="9df52b7e-84b2-4069-a5b9-3b008a8d93d4"
-        asi:name="AttributeName"
-        smcp:serviceMethodParameter="Root/Service/ModelService.origam#ModelService/ElementAttribute/AttributeName/17448517-ab08-4135-9a7a-854d5361480d">
-        <dcr:DataConstantReference
-          asi:abstract="false"
-          dcr:constant="Root/DataConstant/Model/ModelItemAttribute_Caption.origam#ModelItemAttribute_Caption/8c95b75e-e6c6-4c95-b8e5-eb23d25c5bf9"
-          x:id="07286b03-a1c8-4e1f-907a-18068feb9b95"
-          asi:name="ModelItemAttribute_Caption" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
   </w:Workflow>

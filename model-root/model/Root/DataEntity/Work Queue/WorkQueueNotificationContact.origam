@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -9,55 +23,108 @@
     tmi:mappedObjectName="WorkQueueNotificationContact"
     asi:name="WorkQueueNotificationContact"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="d1021353-14f9-48f8-8c32-39e1fbd6a0fc" />
-    <fmi:DataEntityColumn
+    <dei:DataEntityIndex
       asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="IsRecipient"
-      asi:name="IsRecipient"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
+      dei:generateDeploymentScript="false"
+      x:id="d3d20bcc-f40b-41a9-b538-64cd23bb5565"
+      asi:name="ix_WorkQueueNotification"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/IsRecipient/ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
+        x:id="53e48ad5-87bc-46e6-a2ab-c959e80014ac"
+        asi:name="1_IsRecipient"
+        deif:ordinalPosition="1"
+        deif:sortOrder="Ascending" />
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/refWorkQueueNotificationId/4c329aca-0699-4853-9a98-5287e2424dfc"
+        x:id="ef4ed27f-22f0-4377-8f51-638421d1f37c"
+        asi:name="0_refWorkQueueNotificationId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <ef:EntityFilter
       asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueNotification.origam#WorkQueueNotification/f0091abf-4f4d-47fd-a057-3b38c9f38f42"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="4c329aca-0699-4853-9a98-5287e2424dfc"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="refWorkQueueNotificationId"
-      asi:name="refWorkQueueNotificationId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
+      x:id="1c0138fe-16c4-4f83-af9a-9b5fd99845f1"
+      asi:name="GetSenders">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="59b02a9c-2aa4-4d37-a47f-b132ccc95fb5"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="47be1698-7db3-4eb2-a14b-fab719209aa3"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/IsRecipient/ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
+            x:id="9a75af4b-a442-4c6b-a483-51e90a7cbb1d"
+            asi:name="IsRecipient" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="a634d07e-35f1-4d6b-931d-bd26f133ffd4"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+            x:id="691cdfe1-37fc-4305-a6e1-2364134b7fd8"
+            asi:name="false" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
       asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/Work Queue/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/009eb501-4c82-47d8-a9c6-e74edcd4c180"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/52d613af-8a2b-4ffd-ba08-944fe1f9dd69"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="1fe66a6d-213e-4de9-a1d8-5311299a9051"
-      adec:isPrimaryKey="false"
-      adec:label="Channel"
-      fmi:mappedColumnName="refOrigamNotificationChannelTypeId"
-      asi:name="refOrigamNotificationChannelTypeId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
+      x:id="f46c7878-c212-4e83-ab4c-cc4b9d8ffabc"
+      asi:name="GetRecipients">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="e671b39f-6c87-4a6a-8006-cab3cbc9afaa"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="51b9e3ca-8953-4710-ab7f-888844446cb7"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/IsRecipient/ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
+            x:id="dea3bb67-2748-42eb-9e0d-10078979eae8"
+            asi:name="IsRecipient" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="c5ecc7f2-1b24-4723-93c8-1eeee864ac6e"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <dcr:DataConstantReference
+            asi:abstract="false"
+            dcr:constant="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
+            x:id="29136945-7e1b-4037-a72d-683278ed3400"
+            asi:name="true" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -90,107 +157,54 @@
       asi:name="refWorkQueueNotificationContactTypeId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <dei:DataEntityIndex
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="d3d20bcc-f40b-41a9-b538-64cd23bb5565"
-      asi:name="ix_WorkQueueNotification"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/refWorkQueueNotificationId/4c329aca-0699-4853-9a98-5287e2424dfc"
-        x:id="ef4ed27f-22f0-4377-8f51-638421d1f37c"
-        asi:name="0_refWorkQueueNotificationId"
-        deif:sortOrder="Ascending" />
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/IsRecipient/ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
-        x:id="53e48ad5-87bc-46e6-a2ab-c959e80014ac"
-        asi:name="1_IsRecipient"
-        deif:ordinalPosition="1"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
-    <ef:EntityFilter
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Work Queue/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/009eb501-4c82-47d8-a9c6-e74edcd4c180"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamNotificationChannelType.origam#OrigamNotificationChannelType/52d613af-8a2b-4ffd-ba08-944fe1f9dd69"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="1fe66a6d-213e-4de9-a1d8-5311299a9051"
+      adec:isPrimaryKey="false"
+      adec:label="Channel"
+      fmi:mappedColumnName="refOrigamNotificationChannelTypeId"
+      asi:name="refOrigamNotificationChannelTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      x:id="1c0138fe-16c4-4f83-af9a-9b5fd99845f1"
-      asi:name="GetSenders">
-      <fc:DataEntityColumn
-        asi:abstract="false"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="59b02a9c-2aa4-4d37-a47f-b132ccc95fb5"
-        adec:isPrimaryKey="false"
-        asi:name="="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Attribute">
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="a634d07e-35f1-4d6b-931d-bd26f133ffd4"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
-            x:id="691cdfe1-37fc-4305-a6e1-2364134b7fd8"
-            asi:name="false" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="47be1698-7db3-4eb2-a14b-fab719209aa3"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="false"
-            ecr:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/IsRecipient/ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
-            x:id="9a75af4b-a442-4c6b-a483-51e90a7cbb1d"
-            asi:name="IsRecipient" />
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueNotification.origam#WorkQueueNotification/f0091abf-4f4d-47fd-a057-3b38c9f38f42"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="4c329aca-0699-4853-9a98-5287e2424dfc"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refWorkQueueNotificationId"
+      asi:name="refWorkQueueNotificationId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      x:id="f46c7878-c212-4e83-ab4c-cc4b9d8ffabc"
-      asi:name="GetRecipients">
-      <fc:DataEntityColumn
-        asi:abstract="false"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="e671b39f-6c87-4a6a-8006-cab3cbc9afaa"
-        adec:isPrimaryKey="false"
-        asi:name="="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Attribute">
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="c5ecc7f2-1b24-4723-93c8-1eeee864ac6e"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <dcr:DataConstantReference
-            asi:abstract="false"
-            dcr:constant="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
-            x:id="29136945-7e1b-4037-a72d-683278ed3400"
-            asi:name="true" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="51b9e3ca-8953-4710-ab7f-888844446cb7"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="false"
-            ecr:field="Root/DataEntity/Work Queue/WorkQueueNotificationContact.origam#WorkQueueNotificationContact/IsRecipient/ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
-            x:id="dea3bb67-2748-42eb-9e0d-10078979eae8"
-            asi:name="IsRecipient" />
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="ea4c7e3b-dacb-49d6-afb5-08310267ccbc"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="IsRecipient"
+      asi:name="IsRecipient"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="d1021353-14f9-48f8-8c32-39e1fbd6a0fc" />
   </tmi:DataEntity>
 </x:file>

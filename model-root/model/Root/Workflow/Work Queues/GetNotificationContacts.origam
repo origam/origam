@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1">
   <w:Workflow
     asi:abstract="false"
     x:id="1e621daf-c70d-4cc1-9a52-73427c499006"
@@ -16,18 +20,18 @@
       asi:abstract="false"
       cs:dataType="Xml"
       cs:disableConstraints="false"
-      x:id="a08966b0-249a-4f8d-bdbd-2635a9b41e65"
-      cs:isReturnValue="false"
-      asi:name="WorkQueueRow"
-      cs:structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="Xml"
-      cs:disableConstraints="false"
       x:id="66918999-a6d3-499f-9e4d-5928be8756ec"
       cs:isReturnValue="true"
       asi:name="OrigamNotificationContactData"
       cs:structure="Root/DataStructure/__system/OrigamNotificationContactData.origam#OrigamNotificationContactData/9647f6ba-f214-4974-b90e-b5a67fcfe9e0" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="a08966b0-249a-4f8d-bdbd-2635a9b41e65"
+      cs:isReturnValue="false"
+      asi:name="WorkQueueRow"
+      cs:structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="UniqueIdentifier"
@@ -37,18 +41,18 @@
       asi:name="OrigamNotificationChannelTypeId" />
     <cs:ContextStore
       asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="d9f9899b-9dd8-45da-bd4f-fb63faf7d695"
+      cs:isReturnValue="false"
+      asi:name="value" />
+    <cs:ContextStore
+      asi:abstract="false"
       cs:dataType="Xml"
       cs:disableConstraints="false"
       x:id="f2604561-0598-4700-b78d-a11b082e0cfd"
       cs:isReturnValue="false"
       asi:name="context"
       cs:structure="Root/DataStructure/__system/_any.origam#_any/78a0f3a0-116f-48a7-8bdd-adf7c868ce85" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="d9f9899b-9dd8-45da-bd4f-fb63faf7d695"
-      cs:isReturnValue="false"
-      asi:name="value" />
   </w:Workflow>
 </x:file>

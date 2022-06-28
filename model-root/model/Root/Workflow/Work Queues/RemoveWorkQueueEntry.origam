@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="4b2f32ac-c39f-4a41-85a9-921f844f0b0a"
     asi:name="RemoveWorkQueueEntry"
     w:transactionBehavior="InheritExisting">
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="UniqueIdentifier"
+      cs:disableConstraints="false"
+      x:id="24bbd853-611b-4791-983c-7314e4780cec"
+      cs:isReturnValue="false"
+      asi:name="entryId" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -13,48 +32,6 @@
       cs:isReturnValue="false"
       asi:name="WorkQueueEntry_Delete"
       cs:structure="Root/DataStructure/Work Queue/WorkQueueEntry_Delete.origam#WorkQueueEntry_Delete/fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76" />
-    <cs:ContextStore
-      asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
-      cs:disableConstraints="false"
-      x:id="24bbd853-611b-4791-983c-7314e4780cec"
-      cs:isReturnValue="false"
-      asi:name="entryId" />
-    <smct:WorkflowTask
-      asi:abstract="false"
-      x:id="a0b9773b-374a-4b88-b486-4fd993b8c263"
-      asi:name="01_LoadData_WorkQueueEntry_Delete"
-      wt:outputContextStore="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/WorkQueueEntry_Delete/4c2bdf28-e4f8-4b45-aad2-41e930ca0b3e"
-      wt:outputMethod="AppendMergeExisting"
-      aws:roles="*"
-      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="f35bfcb6-bd70-4bfb-96d9-4dd4c9a78c4b"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
-        <dsr:DataStructureReference
-          asi:abstract="false"
-          dsr:dataStructure="Root/DataStructure/Work Queue/WorkQueueEntry_Delete.origam#WorkQueueEntry_Delete/fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"
-          x:id="7695fee8-1005-4f41-bd69-7e79cf9992b2"
-          dsr:method="Root/DataStructure/Work Queue/WorkQueueEntry_Delete.origam#WorkQueueEntry_Delete/GetId/49dc1b8a-dc9d-461d-aa4e-262115ab6809"
-          asi:name="WorkQueueEntry_Delete" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="27fc9771-f6b6-44fe-b8f2-6f0eb22228d5"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/entryId/24bbd853-611b-4791-983c-7314e4780cec"
-          x:id="7673078c-434f-4b73-81bc-32337806a645"
-          asi:name="WorkQueueEntry_parId"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-    </smct:WorkflowTask>
     <smct:WorkflowTask
       asi:abstract="false"
       x:id="7705e05c-a95b-4288-9773-7e8235528685"
@@ -77,6 +54,11 @@
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
+        x:id="b9a3d45b-e740-4979-bf0e-952e4b9866ac"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
         x:id="d7446f50-95aa-49de-9391-859318f71567"
         asi:name="Data"
         smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
@@ -88,17 +70,47 @@
           asi:name="WorkQueueEntry_Delete"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="b9a3d45b-e740-4979-bf0e-952e4b9866ac"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
         x:id="0f6be4cf-f95b-4688-9999-c2909af31989"
         asi:name="After_01_LoadData_WorkQueueEntry_Delete"
         wtd:startEvent="Success"
         wtd:task="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/01_LoadData_WorkQueueEntry_Delete/a0b9773b-374a-4b88-b486-4fd993b8c263" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="a0b9773b-374a-4b88-b486-4fd993b8c263"
+      asi:name="01_LoadData_WorkQueueEntry_Delete"
+      wt:outputContextStore="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/WorkQueueEntry_Delete/4c2bdf28-e4f8-4b45-aad2-41e930ca0b3e"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="27fc9771-f6b6-44fe-b8f2-6f0eb22228d5"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/entryId/24bbd853-611b-4791-983c-7314e4780cec"
+          x:id="7673078c-434f-4b73-81bc-32337806a645"
+          asi:name="WorkQueueEntry_parId"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="f35bfcb6-bd70-4bfb-96d9-4dd4c9a78c4b"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Root/DataStructure/Work Queue/WorkQueueEntry_Delete.origam#WorkQueueEntry_Delete/fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"
+          x:id="7695fee8-1005-4f41-bd69-7e79cf9992b2"
+          dsr:method="Root/DataStructure/Work Queue/WorkQueueEntry_Delete.origam#WorkQueueEntry_Delete/GetId/49dc1b8a-dc9d-461d-aa4e-262115ab6809"
+          asi:name="WorkQueueEntry_Delete" />
+      </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
     <smct:WorkflowTask
       asi:abstract="false"
@@ -111,6 +123,17 @@
       smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
+        x:id="df74fd67-166e-4270-9404-a5ed88cbde02"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Root/DataStructure/Work Queue/WorkQueueEntry_Delete.origam#WorkQueueEntry_Delete/fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"
+          x:id="5fa56b6d-435a-48dd-a3bb-cfda55ba6b70"
+          asi:name="WorkQueueEntry_Delete" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
         x:id="fb0eb0fe-e45c-4bde-9ee0-0844f2248825"
         asi:name="Data"
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
@@ -121,17 +144,6 @@
           x:id="bc06a22d-913d-4c4a-be8d-41966b761fc3"
           asi:name="WorkQueueEntry_Delete"
           cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="df74fd67-166e-4270-9404-a5ed88cbde02"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
-        <dsr:DataStructureReference
-          asi:abstract="false"
-          dsr:dataStructure="Root/DataStructure/Work Queue/WorkQueueEntry_Delete.origam#WorkQueueEntry_Delete/fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"
-          x:id="5fa56b6d-435a-48dd-a3bb-cfda55ba6b70"
-          asi:name="WorkQueueEntry_Delete" />
       </smcp:ServiceMethodCallParameter>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"

@@ -30,7 +30,7 @@ export const NavigationButton: React.FC<{
 }> = (props) => {
 
   return (
-    <div>
+    <div className={props.isOpen ? S.openRoot : ""}>
       <div
         className={S.navigationButton}
         onClick={props.onClick}

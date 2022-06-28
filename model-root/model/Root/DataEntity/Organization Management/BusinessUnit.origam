@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
@@ -10,12 +17,6 @@
     tmi:mappedObjectName="BusinessUnit"
     asi:name="BusinessUnit"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/c26cc2d3-c9b9-4550-90e1-bbb9d45afb8f"
-      x:id="22bce2b9-3c47-4bfd-b47f-63304da5ac9d" />
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="8930a582-6510-4ead-a514-883fd171207f" />
     <eri:EntityRelation
       asi:abstract="false"
       x:id="1e5ec40a-8bef-4eb7-b40f-12ea4a9dfaf5"
@@ -31,5 +32,11 @@
         asi:name="OrganizationKey1"
         ercpi:relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e" />
     </eri:EntityRelation>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/Organization Management/IBusinessUnit.origam#IBusinessUnit/c26cc2d3-c9b9-4550-90e1-bbb9d45afb8f"
+      x:id="22bce2b9-3c47-4bfd-b47f-63304da5ac9d" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="8930a582-6510-4ead-a514-883fd171207f" />
   </tmi:DataEntity>
 </x:file>

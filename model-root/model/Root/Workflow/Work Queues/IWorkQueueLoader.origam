@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1">
   <w:Workflow
     asi:abstract="true"
     x:id="c5edb03a-08f3-4497-ab85-20fe241d1f29"
@@ -9,9 +13,16 @@
       asi:abstract="true"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="f405cef2-2fad-4d58-a71c-10df3831e966"
+      x:id="5b42a43e-2c4b-40ea-ac95-b4171bc5e19a"
       cs:isReturnValue="false"
-      asi:name="resultState" />
+      asi:name="lastState" />
+    <cs:ContextStore
+      asi:abstract="true"
+      cs:dataType="String"
+      cs:disableConstraints="false"
+      x:id="5c200c7e-3118-4660-aa74-8ba521a4d81c"
+      cs:isReturnValue="false"
+      asi:name="password" />
     <cs:ContextStore
       asi:abstract="true"
       cs:dataType="String"
@@ -31,15 +42,8 @@
       asi:abstract="true"
       cs:dataType="String"
       cs:disableConstraints="false"
-      x:id="5c200c7e-3118-4660-aa74-8ba521a4d81c"
+      x:id="f405cef2-2fad-4d58-a71c-10df3831e966"
       cs:isReturnValue="false"
-      asi:name="password" />
-    <cs:ContextStore
-      asi:abstract="true"
-      cs:dataType="String"
-      cs:disableConstraints="false"
-      x:id="5b42a43e-2c4b-40ea-ac95-b4171bc5e19a"
-      cs:isReturnValue="false"
-      asi:name="lastState" />
+      asi:name="resultState" />
   </w:Workflow>
 </x:file>

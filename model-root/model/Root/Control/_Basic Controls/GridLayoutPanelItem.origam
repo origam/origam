@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="b08ddbe7-cabc-4e21-a8b0-822e224c4374"
@@ -12,37 +16,9 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="af6cbf1f-3cab-4595-b9cd-0108a49f5be3"
+      x:id="1811c89d-dc91-4375-a420-af1a16c3e9b3"
       cpi:localizable="false"
-      asi:name="TopCell"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="7bf56421-998b-468e-8dd2-23a1b663a698"
-      cpi:localizable="false"
-      asi:name="Top"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="40567c08-1027-4c26-9b38-2b7370d74143"
-      cpi:localizable="false"
-      asi:name="Left"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="a2c6ffe3-7b04-45f4-a089-53a47799dee7"
-      cpi:localizable="false"
-      asi:name="LeftCell"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="b14e5460-6a9c-46e5-b92c-70c9c9e26b6c"
-      cpi:localizable="false"
-      asi:name="HeightCells"
+      asi:name="Width"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -54,9 +30,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="1811c89d-dc91-4375-a420-af1a16c3e9b3"
+      x:id="40567c08-1027-4c26-9b38-2b7370d74143"
       cpi:localizable="false"
-      asi:name="Width"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="7bf56421-998b-468e-8dd2-23a1b663a698"
+      cpi:localizable="false"
+      asi:name="Top"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
@@ -64,6 +47,27 @@
       x:id="88ccff09-6b2d-4b19-aa52-f9269d2ff5ea"
       cpi:localizable="false"
       asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="a2c6ffe3-7b04-45f4-a089-53a47799dee7"
+      cpi:localizable="false"
+      asi:name="LeftCell"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="af6cbf1f-3cab-4595-b9cd-0108a49f5be3"
+      cpi:localizable="false"
+      asi:name="TopCell"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="b14e5460-6a9c-46e5-b92c-70c9c9e26b6c"
+      cpi:localizable="false"
+      asi:name="HeightCells"
       cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
