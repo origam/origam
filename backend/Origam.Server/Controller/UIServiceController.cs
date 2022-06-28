@@ -51,6 +51,7 @@ using Origam.Server.Model.Search;
 using Origam.Server.Model.UIService;
 using Origam.Workbench;
 using Origam.Service.Core;
+using IdentityServerConstants = IdentityServer4.IdentityServerConstants;
 
 namespace Origam.Server.Controller
 {

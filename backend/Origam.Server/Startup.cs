@@ -23,7 +23,6 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -42,11 +41,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
+using Origam.Service.Core;
 using SoapCore;
 
 
@@ -87,8 +88,7 @@ namespace Origam.Server
             });
 
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
-            var builder = services.AddMvc()
-                .AddNewtonsoftJson();
+            var builder = services.AddMvc().AddNewtonsoftJson();
 #if DEBUG
             builder.AddRazorRuntimeCompilation();
 #endif
@@ -123,15 +123,28 @@ namespace Origam.Server
             });
             
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IPrincipal>(
-                provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
-            services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
-            services.Configure<ClientFilteringConfig>(options => Configuration.GetSection("ClientFilteringConfig").Bind(options));
-            services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
-            services.Configure<CustomAssetsConfig>(options => Configuration.GetSection("CustomAssetsConfig").Bind(options));
-            services.Configure<UserLockoutConfig>(options => Configuration.GetSection("UserLockoutConfig").Bind(options));
-            services.Configure<ChatConfig>(options => Configuration.GetSection("ChatConfig").Bind(options));
-            services.Configure<HtmlClientConfig>(options => Configuration.GetSection("HtmlClientConfig").Bind(options));
+            services.AddTransient<IPrincipal>(provider 
+                => provider.GetService<IHttpContextAccessor>()
+                    .HttpContext?.User);
+            services.Configure<UserConfig>(options 
+                => Configuration.GetSection("UserConfig").Bind(options));
+            services.Configure<ClientFilteringConfig>(options 
+                => Configuration.GetSection("ClientFilteringConfig")
+                    .Bind(options));
+            services.Configure<IdentityGuiConfig>(options 
+                => Configuration.GetSection("IdentityGuiConfig")
+                    .Bind(options));
+            services.Configure<CustomAssetsConfig>(options 
+                => Configuration.GetSection("CustomAssetsConfig")
+                    .Bind(options));
+            services.Configure<UserLockoutConfig>(options 
+                => Configuration.GetSection("UserLockoutConfig")
+                    .Bind(options));
+            services.Configure<ChatConfig>(options 
+                => Configuration.GetSection("ChatConfig").Bind(options));
+            services.Configure<HtmlClientConfig>(options 
+                => Configuration.GetSection("HtmlClientConfig")
+                    .Bind(options));
 
             services.AddIdentityServer()
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
@@ -160,55 +173,9 @@ namespace Origam.Server
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
                         factory.Create(typeof(SharedResources));
                 });
-            var authenticationBuilder = services
-                .AddLocalApiAuthentication()
-                .AddAuthentication();
-            if (identityServerConfig.GoogleLogin != null)
-            {
-                authenticationBuilder.AddGoogle(
-                   GoogleDefaults.AuthenticationScheme,
-                   "SignInWithGoogleAccount",
-                   options =>
-                {
-                   options.ClientId = identityServerConfig.GoogleLogin.ClientId;
-                   options.ClientSecret = identityServerConfig.GoogleLogin
-                       .ClientSecret; 
-                   options.SignInScheme = IdentityServerConstants
-                       .ExternalCookieAuthenticationScheme;
-                });
-            }
-            if (identityServerConfig.MicrosoftLogin != null)
-            {
-                authenticationBuilder.AddMicrosoftAccount(
-                    MicrosoftAccountDefaults.AuthenticationScheme,
-                    "SignInWithMicrosoftAccount", 
-                    microsoftOptions =>
-                {
-                    microsoftOptions.ClientId = identityServerConfig
-                        .MicrosoftLogin.ClientId;
-                    microsoftOptions.ClientSecret = identityServerConfig
-                        .MicrosoftLogin.ClientSecret;
-                    microsoftOptions.SignInScheme = IdentityServerConstants
-                        .ExternalCookieAuthenticationScheme;
-                });
-            }
-            if (identityServerConfig.AzureAdLogin != null)
-            {
-                authenticationBuilder.AddOpenIdConnect(
-                    "AzureAd",
-                    "SignInWithAzureAd",
-                    options =>
-                    {
-                        options.ClientId = identityServerConfig.AzureAdLogin
-                            .ClientId;
-                        options.Authority 
-                            = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
-                        options.CallbackPath = "/signin-oidc";
-                        options.SaveTokens = true;
-                        options.SignInScheme = IdentityServerConstants
-                            .ExternalCookieAuthenticationScheme;
-                    });
-            }
+            
+            ConfigureAuthentication(services);
+            
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = languageConfig.DefaultCulture;
@@ -218,6 +185,90 @@ namespace Origam.Server
                 options.RequestCultureProviders.Insert(0, 
                     new OrigamCookieRequestCultureProvider(languageConfig));
             });
+        }
+
+        private void ConfigureAuthentication(IServiceCollection services)
+        {
+            var authenticationBuilder = services
+                .AddLocalApiAuthentication()
+                .AddAuthentication();
+            if(identityServerConfig.GoogleLogin != null)
+            {
+                authenticationBuilder.AddGoogle(
+                    GoogleDefaults.AuthenticationScheme,
+                    "SignInWithGoogleAccount",
+                    options =>
+                    {
+                        options.ClientId =
+                            identityServerConfig.GoogleLogin.ClientId;
+                        options.ClientSecret = identityServerConfig.GoogleLogin
+                            .ClientSecret;
+                        options.SignInScheme = IdentityServer4
+                            .IdentityServerConstants
+                            .ExternalCookieAuthenticationScheme;
+                    });
+            }
+            if(identityServerConfig.MicrosoftLogin != null)
+            {
+                authenticationBuilder.AddMicrosoftAccount(
+                    MicrosoftAccountDefaults.AuthenticationScheme,
+                    "SignInWithMicrosoftAccount",
+                    microsoftOptions =>
+                    {
+                        microsoftOptions.ClientId = identityServerConfig
+                            .MicrosoftLogin.ClientId;
+                        microsoftOptions.ClientSecret = identityServerConfig
+                            .MicrosoftLogin.ClientSecret;
+                        microsoftOptions.SignInScheme = IdentityServer4
+                            .IdentityServerConstants
+                            .ExternalCookieAuthenticationScheme;
+                    });
+            }
+            if(identityServerConfig.AzureAdLogin != null)
+            {
+                authenticationBuilder.AddOpenIdConnect(
+                    IdentityServerDefaults.AzureAdScheme,
+                    "SignInWithAzureAd",
+                    options =>
+                    {
+                        options.ClientId = identityServerConfig.AzureAdLogin
+                            .ClientId;
+                        options.Authority
+                            = $@"https://login.microsoftonline.com/{identityServerConfig.AzureAdLogin.TenantId}/";
+                        options.CallbackPath = "/signin-oidc";
+                        options.SaveTokens = true;
+                        options.SignInScheme = IdentityServer4
+                            .IdentityServerConstants
+                            .ExternalCookieAuthenticationScheme;
+                        options.TokenValidationParameters
+                            = new TokenValidationParameters
+                            {
+                                ValidateIssuer = false,
+                                ValidAudience =
+                                    $"{identityServerConfig.AzureAdLogin.ClientId}"
+                            };
+                    });
+            }
+            // ExternalController needs to tap the info for the callback
+            // resolution
+            services.AddSingleton(identityServerConfig);
+            // Setup authentication post processor
+            if (string.IsNullOrEmpty(
+                   identityServerConfig.AuthenticationPostProcessor))
+            {
+                services.AddSingleton<IAuthenticationPostProcessor, 
+                        AlwaysValidAuthenticationPostProcessor>();
+            }
+            else
+            {
+                var classpath = identityServerConfig
+                    .AuthenticationPostProcessor.Split(',');
+                var authenticationPostProcessor 
+                    = Reflector.ResolveTypeFromAssembly(
+                        classpath[0], classpath[1]);
+                services.AddSingleton(typeof(IAuthenticationPostProcessor),
+                    authenticationPostProcessor);
+            }
         }
 
         public void Configure(
@@ -299,7 +350,6 @@ namespace Origam.Server
             // add DI to origam, in order to be able to resolve IPrincipal from
             // https://davidpine.net/blog/principal-architecture-changes/
             // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
-            
             SecurityManager.SetDIServiceProvider(app.ApplicationServices);
             OrigamUtils.ConnectOrigamRuntime(loggerFactory, startUpConfiguration.ReloadModelWhenFilesChangesDetected);
         }

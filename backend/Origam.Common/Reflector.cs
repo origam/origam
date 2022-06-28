@@ -216,7 +216,7 @@ namespace Origam
             //			return result;
         }
 
-        private static Type ResolveTypeFromAssembly(
+        public static Type ResolveTypeFromAssembly(
             string classname, string assemblyName)
         {
             var classType = Type.GetType(classname + "," + assemblyName);

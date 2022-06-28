@@ -21,12 +21,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System;
 using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.Extensions.Configuration;
 using Origam.Extensions;
 
 namespace Origam.Server.Configuration
 {
+    public enum AuthenticationType
+    {
+        Email,
+        Username
+    }
+    
+    public static class IdentityServerDefaults
+    {
+        public const string AzureAdScheme = "AzureAd";
+    }
+    
     public class IdentityServerConfig
     {
         public string PathToJwtCertificate { get; }
@@ -39,10 +54,11 @@ namespace Origam.Server.Configuration
         public ServerClient ServerClient { get; }
         public bool CookieSlidingExpiration { get; } 
         public int CookieExpirationMinutes { get; }
+        public string AuthenticationPostProcessor { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
-            IConfigurationSection identityServerSection = configuration
+            var identityServerSection = configuration
                 .GetSectionOrThrow("IdentityServerConfig");
             PathToJwtCertificate = identityServerSection
                 .GetStringOrThrow("PathToJwtCertificate");
@@ -58,6 +74,8 @@ namespace Origam.Server.Configuration
             WebClient = ConfigureWebClient(identityServerSection);
             MobileClient = ConfigureMobileClient(identityServerSection);
             ServerClient = ConfigureServerClient(identityServerSection);
+            AuthenticationPostProcessor = identityServerSection.GetValue(
+                "AuthenticationPostProcessor", "");
         }
 
         private ServerClient ConfigureServerClient(
@@ -126,11 +144,12 @@ namespace Origam.Server.Configuration
                 .GetSection("GoogleLogin");
             if (googleLoginSection.GetChildren().Any())
             {
-                return new GoogleLogin()
+                return new GoogleLogin(googleLoginSection)
                 {
-                    ClientId = googleLoginSection.GetStringOrThrow("ClientId"),
-                    ClientSecret = googleLoginSection
-                        .GetStringOrThrow("ClientSecret")
+                    ClientId = googleLoginSection.GetStringOrThrow(
+                        "ClientId"),
+                    ClientSecret = googleLoginSection .GetStringOrThrow(
+                        "ClientSecret")
                 };
             }
             return null;
@@ -143,7 +162,7 @@ namespace Origam.Server.Configuration
                 .GetSection("MicrosoftLogin");
             if (microsoftLoginSection.GetChildren().Any())
             {
-                return new MicrosoftLogin()
+                return new MicrosoftLogin(microsoftLoginSection)
                 {
                     ClientId = microsoftLoginSection.GetStringOrThrow(
                         "ClientId"),
@@ -161,13 +180,31 @@ namespace Origam.Server.Configuration
                 .GetSection("AzureAdLogin");
             if (azureAdLoginSection.GetChildren().Any())
             {
-                return new AzureAdLogin()
+                return new AzureAdLogin(azureAdLoginSection)
                 {
                     ClientId = azureAdLoginSection.GetStringOrThrow("ClientId"),
                     TenantId = azureAdLoginSection.GetStringOrThrow("TenantId")
                 };
             }
             return null;
+        }
+
+        public ExternalCallbackProcessingInfo GetExternalCallbackProcessingInfo(
+            string authenticationScheme)
+        {
+            switch(authenticationScheme)
+            {
+                case GoogleDefaults.AuthenticationScheme:
+                    return GoogleLogin;
+                case MicrosoftAccountDefaults.AuthenticationScheme:
+                    return MicrosoftLogin;
+                case IdentityServerDefaults.AzureAdScheme:
+                    return AzureAdLogin;
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(authenticationScheme),
+                        $@"Invalid authentication scheme {authenticationScheme}");
+            }
         }
     }
 
@@ -190,21 +227,51 @@ namespace Origam.Server.Configuration
         public string ClientSecret { get; set; }
     }
 
-    public class GoogleLogin
+    public abstract class ExternalCallbackProcessingInfo
     {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-    }
+        public AuthenticationType AuthenticationType { get; set; }
+        public string ClaimType { get; set; }
 
-    public class MicrosoftLogin
-    {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
+        protected ExternalCallbackProcessingInfo(
+            IConfigurationSection configurationSection)
+        {
+            AuthenticationType = configurationSection.GetValue(
+                "AuthenticationType", AuthenticationType.Email);
+            ClaimType = configurationSection.GetValue(
+                "ClaimType", ClaimTypes.Email);
+        }
     }
     
-    public class AzureAdLogin
+    public class GoogleLogin : ExternalCallbackProcessingInfo
+    {
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+
+        public GoogleLogin(IConfigurationSection configurationSection) 
+            : base(configurationSection)
+        {
+        }
+    }
+
+    public class MicrosoftLogin : ExternalCallbackProcessingInfo
+    {
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+
+        public MicrosoftLogin(IConfigurationSection configurationSection) 
+            : base(configurationSection)
+        {
+        }
+    }
+    
+    public class AzureAdLogin : ExternalCallbackProcessingInfo
     {
         public string ClientId { get; set; }
         public string TenantId { get; set; }
+
+        public AzureAdLogin(IConfigurationSection configurationSection) 
+            : base(configurationSection)
+        {
+        }
     }
 }
