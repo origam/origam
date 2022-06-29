@@ -39,6 +39,7 @@ using Origam.Server;
 using Origam.Workbench.Services;
 using System.Linq;
 using System.Web;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Server.Pages
@@ -150,7 +151,7 @@ namespace Origam.Server.Pages
             {
                 if (log.IsErrorEnabled) 
                 {
-                    log.Error(
+                    log.LogOrigamError(
                         $@"Error occured ({ex.GetType()}) for request: 
                         {context.Request?.AbsoluteUri}: {ex.Message}"
                         , ex);

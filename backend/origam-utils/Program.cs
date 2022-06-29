@@ -439,7 +439,7 @@ namespace Origam.Utils
             }
             catch (Exception ex)
             {
-                log.Error(ex.Message);
+                log.LogOrigamError(ex);
             }
         }
 

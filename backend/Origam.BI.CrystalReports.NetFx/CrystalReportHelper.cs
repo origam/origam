@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections;
 using System.Data;
@@ -28,6 +29,7 @@ using Origam.Workbench.Services;
 
 using CrystalDecisions.CrystalReports.Engine;
 using log4net.Core;
+using Origam.Extensions;
 
 namespace Origam.BI.CrystalReports
 {
@@ -119,7 +121,7 @@ namespace Origam.BI.CrystalReports
 			}
 			catch (Exception ex)
             {
-                log.Error("Error occured while initializing Crystal Report " + path, ex);
+                log.LogOrigamError("Error occured while initializing Crystal Report " + path, ex);
             }
 			try
 			{

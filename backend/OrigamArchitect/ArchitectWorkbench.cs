@@ -1570,7 +1570,7 @@ namespace OrigamArchitect
 			        .Any(x => !(x is OperationCanceledException));
 		        if (actualExceptionsExist)
 	            {
-	                log.Error(ae);
+	                log.LogOrigamError(ae);
 	                this.RunWithInvoke(() => AsMessageBox.ShowError(
 		                this, ae.Message, strings.GenericError_Title, ae));
 	            }
@@ -1717,7 +1717,7 @@ namespace OrigamArchitect
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex);
+				log.LogOrigamError(ex);
 				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
 					MessageBoxIcon.Error);
 			}
