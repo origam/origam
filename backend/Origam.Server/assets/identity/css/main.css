@@ -226,6 +226,11 @@ iframe
 
 .logo-container{
   margin-bottom: 50px;
+  width: 100%;
+  flex: 1;
+  > img {
+	  flex: 1;
+  }
 }
 
 .centered{
