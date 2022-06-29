@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Text;
 
 namespace Origam
@@ -41,9 +42,13 @@ namespace Origam
 
 		public OrigamException (string message, Exception innerException) : base(message, innerException)
 		{
+			foreach (DictionaryEntry entry in innerException.Data)
+			{
+				Data[entry.Key] = entry.Value;
+			}
 		}
 
-		public OrigamException (string message, string customStackTrace, Exception innerException) : base(message, innerException)
+		public OrigamException (string message, string customStackTrace, Exception innerException) : this(message, innerException)
 		{
 			this.AppendStackTrace(customStackTrace);
 		}

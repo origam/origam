@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Origam.Extensions;
 
 namespace Origam.Workbench.Pads
 {
@@ -178,7 +179,7 @@ namespace Origam.Workbench.Pads
                 SetOutputText(message);
                 if(log.IsErrorEnabled)
                 {
-                    log.Error(message, ex);
+                    log.LogOrigamError(message, ex);
                 }
             }
         }

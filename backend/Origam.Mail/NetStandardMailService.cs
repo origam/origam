@@ -26,6 +26,7 @@ using System.Net.Mail;
 using System.Xml.XPath;
 using System.Net.Mime;
 using System.Net;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Mail
@@ -129,7 +130,7 @@ namespace Origam.Mail
                 }
                 catch(Exception ex)
                 {
-                    log.Error(ex);
+                    log.LogOrigamError(ex);
                     throw;
                 }
             }
@@ -232,7 +233,7 @@ namespace Origam.Mail
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex);
+                    log.LogOrigamError(ex);
                     throw;
                 }
             }

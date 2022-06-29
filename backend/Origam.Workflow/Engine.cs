@@ -40,6 +40,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -732,7 +733,7 @@ namespace Origam.Workflow
 
             if (log.IsErrorEnabled)
             {
-                log.Error(ex.Message, ex);
+	            log.LogOrigamError(ex.Message, ex);
             }
 
 			FinishWorkflow(ex);
