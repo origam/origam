@@ -28,7 +28,7 @@ using System.Windows.Forms;
 
 namespace Origam.Extensions
 {
-    public static class ControlExtrensions
+    public static class ControlExtensions
     {
         public static T RunWithInvoke<T>(this Control control, Func<T> func)
         {
