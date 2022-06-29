@@ -42,6 +42,14 @@ namespace Origam.DA.Service
                 throw new Exception("Cannot add namespace to an empty document");
             }
 
+            XmlAttribute attributeToUpdate = FileElement.Attributes
+                .Cast<XmlAttribute>()
+                .FirstOrDefault(attr => attr.Value == nameSpace && attr.LocalName != nameSpaceName);
+            if (attributeToUpdate != null)
+            {
+                FileElement.RemoveAttribute(attributeToUpdate.Name);
+            }
+
             FileElement.SetAttribute("xmlns:"+nameSpaceName, nameSpace);
             return nameSpaceName;
         }
