@@ -28,6 +28,7 @@ using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.DA.Common;
 using Origam.DA.Service.MetaModelUpgrade;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
 namespace Origam.DA.Service
@@ -51,6 +52,7 @@ namespace Origam.DA.Service
 
         public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, MetaModelUpgradeMode mode)
         {
+            PropertyToNamespaceMapping.Init();
             Result<List<XmlFileData>, XmlLoadError> result = FindMissingFiles(itemTracker);
 
             if (result.IsFailure)
