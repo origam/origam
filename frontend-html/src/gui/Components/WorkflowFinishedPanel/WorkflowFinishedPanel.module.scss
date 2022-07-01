@@ -32,10 +32,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     flex-direction: row;
     align-items: center;
     margin-left: 15px;
-    p {
+    > * {
+      margin: 0;
+      padding: 0;
+    }
+    * {
       font-size: 16px;
-      margin: 0px;
-      padding: 0px;
     }
   }
 }
