@@ -651,7 +651,7 @@ namespace Origam.Workflow
 			SetStepStatus(step, WorkflowStepResult.Failure);
 			if(log.IsErrorEnabled)
 			{
-				log.Error(step?.GetType().Name + " " + step?.Name + " failed.");
+				log.Error($"{step?.GetType().Name} {(step as AbstractSchemaItem)?.Path} failed.");
 			}
 			// Trace the error
 			if(IsTrace(step))
