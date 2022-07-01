@@ -76,6 +76,9 @@ export class RecordInfo implements IRecordInfo {
     dataStructureEntityId: string,
     rowId: string
   ) {
+    if(this.recordInfoExpanded){
+      return;
+    }
     this.recordInfoExpanded = true;
     this.recordAuditExpanded = false;
     this.triggerInfoSectionExpand();
@@ -119,6 +122,9 @@ export class RecordInfo implements IRecordInfo {
   }
 
   *onSidebarInfoSectionExpanded() {
+    if(this.recordInfoExpanded){
+      return;
+    }
     this.recordInfoExpanded = true;
     this.recordAuditExpanded = false;
     if (this.hasValidLoadedFor()) {
