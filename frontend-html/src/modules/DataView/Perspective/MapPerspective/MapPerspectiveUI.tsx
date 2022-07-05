@@ -23,7 +23,6 @@ import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
 import { action, autorun, computed, observable, reaction, runInAction } from "mobx";
-import qs from "querystring";
 import React from "react";
 import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
@@ -250,7 +249,12 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         switch (obj.type) {
           case IMapObjectType.POINT: {
             const iconUrl = obj.icon || "img/map/marker-icon.png#anchor=[12,41]";
-            const pq = iconUrl ? qs.parse(iconUrl.split("#")[1] || "") : null;
+            const urlParams = new URLSearchParams(iconUrl.split("#")[1] || "");
+            const urlQuery: {[key: string]: any} = {};
+            for (let key of urlParams.keys()){
+              urlQuery[key] = urlParams.get(key);
+            }
+            const pq = iconUrl ? urlQuery : null;
             const anchor = pq?.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
             const iconAnchor: [number, number] = anchor;
             const iconRotation = obj.azimuth || 0;

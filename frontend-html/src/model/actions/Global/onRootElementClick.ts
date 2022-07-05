@@ -18,7 +18,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { flow } from "mobx";
-import qs from "querystring";
 import { handleError } from "../handleError";
 import { executeWeblink } from "./executeWeblink";
 
@@ -35,7 +34,11 @@ export function onRootElementClick(ctx: any) {
           event.preventDefault();
           const urlParts = actionUrl.split("?");
           const urlPath = urlParts[0];
-          const urlQuery = qs.parse(urlParts[1] || "");
+          const urlParams = new URLSearchParams(urlParts[1] || "");
+          const urlQuery: {[key: string]: any} = {};
+          for (let key of urlParams.keys()){
+            urlQuery[key] = urlParams.get(key);
+          }
           yield*executeWeblink(ctx)(urlPath, urlQuery);
         }
       }
