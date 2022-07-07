@@ -8,6 +8,7 @@ using MoreLinq.Extensions;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
+using Origam.Schema;
 
 namespace Origam.DA.Service.NamespaceMapping
 {
@@ -34,19 +35,29 @@ namespace Origam.DA.Service.NamespaceMapping
                 .DistinctBy(x=>x.FullName)
                 .Select(Assembly.Load)
                 .SelectMany(assembly => assembly.GetTypes());
-           
+
+            AddMapping(typeof(Package));
+            
             allTypes
                 .Where(type => 
                     typeof(IFilePersistent).IsAssignableFrom(type) && 
                     type != typeof(IFilePersistent))
-                .ForEach(type =>
-                {
-                    var typeFullName = type.FullName;
-                    var propertyMappings =
-                        GetPropertyMappings(type,  XmlNamespaceTools.GetXmlNameSpace);
-                    instances[type] = new PropertyToNamespaceMapping(propertyMappings, typeFullName);
-                });
+                .ForEach(AddMapping);
         }
+
+        private static void AddMapping(Type type)
+        {
+            if (instances.ContainsKey(type))
+            {
+                return;
+            }
+            var typeFullName = type.FullName;
+            var propertyMappings =
+                GetPropertyMappings(type, XmlNamespaceTools.GetXmlNameSpace);
+            instances[type] =
+                new PropertyToNamespaceMapping(propertyMappings, typeFullName);
+        }
+
         public static PropertyToNamespaceMapping Get(Type instanceType)
         {
             return instances[instanceType];
