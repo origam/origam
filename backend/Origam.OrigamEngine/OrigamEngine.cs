@@ -36,6 +36,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Security.Principal;
+using Origam.Extensions;
 
 namespace Origam.OrigamEngine
 {
@@ -246,7 +247,7 @@ namespace Origam.OrigamEngine
                 RestartTimer.Interval *= 10;
                 if(log.IsErrorEnabled)
                 {
-                    log.Error("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
+                    log.LogOrigamError("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
                 }
             }
 		}

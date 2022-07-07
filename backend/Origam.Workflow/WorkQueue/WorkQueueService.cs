@@ -870,7 +870,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Error occured while processing work queue items., Queue: " + wqc?.Name + ", Command: " + command, ex);
+                    log.LogOrigamError("Error occured while processing work queue items., Queue: " + wqc?.Name + ", Command: " + command, ex);
                 }
                 if (transactionId != null)
                 {
@@ -1439,7 +1439,7 @@ namespace Origam.Workflow.WorkQueue
                             {
                                 if(log.IsErrorEnabled)
                                 {
-                                    log.Error("Failed loading external work queue " + q.Name, ex);
+                                    log.LogOrigamError("Failed loading external work queue " + q.Name, ex);
                                 }
                                 q.ExternalSourceLastMessage = ex.Message;
                                 q.ExternalSourceLastTime = DateTime.Now;
@@ -1451,7 +1451,7 @@ namespace Origam.Workflow.WorkQueue
             }
             catch (Exception ex)
             {
-                if (log.IsErrorEnabled) log.Error("External queue load failed.", ex);
+                if (log.IsErrorEnabled) log.LogOrigamError("External queue load failed.", ex);
             }
             finally
             {
@@ -1811,7 +1811,7 @@ namespace Origam.Workflow.WorkQueue
                 q.ExternalSourceLastMessage = ResourceUtils.GetString("ErrorMessage", ex.Message);
                 q.ExternalSourceLastTime = DateTime.Now;
 
-                if(log.IsErrorEnabled) log.Error("Failed to load queue " + q.Name, ex);
+                if(log.IsErrorEnabled) log.LogOrigamError("Failed to load queue " + q.Name, ex);
             }
         }
 
@@ -1938,7 +1938,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 if(log.IsErrorEnabled)
                 {
-                    log.Error("Unexpected error occured while autoprocessing workqueues.", ex);
+                    log.LogOrigamError("Unexpected error occured while autoprocessing workqueues.", ex);
                 }
             }
             finally

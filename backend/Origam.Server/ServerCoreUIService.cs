@@ -188,7 +188,7 @@ namespace Origam.Server
                     {
                         if(log.IsFatalEnabled)
                         {
-                            log.Error(
+                            log.LogOrigamError(
                                 "Failed to destroy session " + id.ToString()
                                 + ".", ex);
                         }

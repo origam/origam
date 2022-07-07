@@ -40,6 +40,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -650,7 +651,7 @@ namespace Origam.Workflow
 			SetStepStatus(step, WorkflowStepResult.Failure);
 			if(log.IsErrorEnabled)
 			{
-				log.Error(step?.GetType().Name + " " + step?.Name + " failed.");
+				log.Error($"{step?.GetType().Name} {(step as AbstractSchemaItem)?.Path} failed.");
 			}
 			// Trace the error
 			if(IsTrace(step))
@@ -732,7 +733,7 @@ namespace Origam.Workflow
 
             if (log.IsErrorEnabled)
             {
-                log.Error(ex.Message, ex);
+	            log.LogOrigamError(ex.Message, ex);
             }
 
 			FinishWorkflow(ex);

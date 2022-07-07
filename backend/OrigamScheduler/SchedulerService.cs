@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Collections;
 using Origam;
+using Origam.Extensions;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.OrigamEngine;
@@ -248,7 +249,7 @@ namespace OrigamScheduler
 			{
                 if (log.IsErrorEnabled)
                 {
-                    log.Error(string.Format("Error occured while running the workflow {0}", workflow?.Name), ex);
+                    log.LogOrigamError(string.Format("Error occured while running the workflow {0}", workflow?.Name), ex);
                 }
 			}
 			finally

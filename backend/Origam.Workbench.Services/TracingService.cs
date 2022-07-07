@@ -23,6 +23,7 @@ using System;
 using System.Data;
 using System.Reflection;
 using Origam.DA;
+using Origam.Extensions;
 
 namespace Origam.Workbench.Services
 {
@@ -121,7 +122,7 @@ namespace Origam.Workbench.Services
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex);
+				log.LogOrigamError(ex);
 			}
 		}
 
@@ -170,7 +171,7 @@ namespace Origam.Workbench.Services
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex);
+				log.LogOrigamError(ex);
 			}
 		}
 

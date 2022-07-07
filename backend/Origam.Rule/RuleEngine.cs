@@ -3873,7 +3873,7 @@ namespace Origam.Rule
                     {
                         if (log.IsErrorEnabled)
                         {
-                            log.Error(string.Format(
+                            log.LogOrigamError(string.Format(
                                 "Failed evaluating security rule for child relation {0} for entity {1}", 
                                 rel?.RelationName, entityId), ex);
                         }
