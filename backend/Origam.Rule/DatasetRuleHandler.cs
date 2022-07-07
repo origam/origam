@@ -138,7 +138,7 @@ namespace Origam.Rule
 				catch(Exception ex)
 				{
 					var origamRuleException = new OrigamRuleException(ResourceUtils.GetString("ErrorRuleFailureRecord", e.Row.Table.DisplayExpression, Environment.NewLine + ex.Message), ex, e.Row);
-					log.Error(origamRuleException); // DataTable will ignore the exception after we throw it so we at least log it here
+					log.LogOrigamError(origamRuleException); // DataTable will ignore the exception after we throw it so we at least log it here
 					throw origamRuleException;
 				}
 			}

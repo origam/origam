@@ -1789,7 +1789,7 @@ namespace Origam.Gui.Designer
 			}
 			catch(Exception ex)
 			{
-				log.Error(ex);
+				log.LogOrigamError(ex);
 				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
 					MessageBoxIcon.Error);
 			}
