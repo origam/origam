@@ -33,8 +33,6 @@ namespace Origam.Security
 	/// </summary>
 	public class OrigamDatabaseAuthorizationProvider : IOrigamAuthorizationProvider
 	{
-		private record Credential(string RoleName, bool IsReadOnly, bool IsInitialScreen);
-
 		public OrigamDatabaseAuthorizationProvider()
 		{
 		}
