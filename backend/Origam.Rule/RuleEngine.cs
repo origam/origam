@@ -5163,8 +5163,6 @@ namespace Origam.Rule
 	class AddMinutesFunction : IXsltContextFunction 
 	{
 		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
 		public AddMinutesFunction(XPathResultType[] argTypes)
 		{
 			_argTypes = argTypes;
@@ -6073,9 +6071,7 @@ namespace Origam.Rule
 			}
 			else if (name == "AddMinutes")
 			{
-				AddMinutesFunction f = new AddMinutesFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
+				return new AddMinutesFunction(ArgTypes);
 			}
 			else if (name == "AddYears")
 			{
