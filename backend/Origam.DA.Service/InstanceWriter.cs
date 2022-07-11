@@ -48,7 +48,7 @@ namespace Origam.DA.Service
         public void Write(IFilePersistent instance)
         {
             var namespaceMapping = PropertyToNamespaceMapping
-                .CreateOrGet(instance.GetType())
+                .Get(instance.GetType())
                 .DeepCopy();
             namespaceMapping.AddNamespacesToDocumentAndAdjustMappings(xmlDocument);
 

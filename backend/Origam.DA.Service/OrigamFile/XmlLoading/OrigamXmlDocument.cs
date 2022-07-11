@@ -41,9 +41,17 @@ namespace Origam.DA.Service
             {
                 throw new Exception("Cannot add namespace to an empty document");
             }
-            var nextNamespaceName = GetNextNamespaceName(nameSpaceName, nameSpace);
-            FileElement.SetAttribute("xmlns:"+nextNamespaceName, nameSpace);
-            return nextNamespaceName;
+
+            XmlAttribute attributeToUpdate = FileElement.Attributes
+                .Cast<XmlAttribute>()
+                .FirstOrDefault(attr => attr.Value == nameSpace && attr.LocalName != nameSpaceName);
+            if (attributeToUpdate != null)
+            {
+                FileElement.RemoveAttribute(attributeToUpdate.Name);
+            }
+
+            FileElement.SetAttribute("xmlns:"+nameSpaceName, nameSpace);
+            return nameSpaceName;
         }
         
         public void RemoveWithNamespace(XmlNode nodeToDelete)
@@ -59,26 +67,6 @@ namespace Origam.DA.Service
                     .First(attr => attr.Value == nodeToDelete.NamespaceURI);
                 FileElement.Attributes.Remove(namespaceToRemove);
             }
-        }
-
-        private string GetNextNamespaceName(string nameSpaceName, string nameSpace)
-        {
-            string currentValue = FileElement.Attributes[nameSpaceName]?.InnerText;
-            if (string.IsNullOrEmpty(currentValue) || currentValue == nameSpace)
-            {
-                return nameSpaceName;
-            }
-            
-            var lastNamespaceSuffix = FileElement.Attributes
-                .Cast<XmlAttribute>()
-                .Select(attr => attr.Name)
-                .Where(attrName => attrName.StartsWith(nameSpaceName))
-                .Select(attrName =>
-                    attrName.Substring(nameSpaceName.Length, attrName.Length- nameSpaceName.Length))
-                .Last();
-            int.TryParse(lastNamespaceSuffix, out int lastNamespaceNumber);
-            int nextNamespaceNumber = lastNamespaceNumber + 1;
-            return nameSpaceName + nextNamespaceNumber;
         }
     }
 }
