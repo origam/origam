@@ -21,23 +21,32 @@ import React from "react";
 import S from "gui/Components/Dialogs/AboutView.module.scss";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
 
-export class AboutView extends React.Component<{aboutInfo: IAboutInfo}> {
+export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
   render() {
-    const commitId = (window as any).ORIGAM_CLIENT_REVISION_HASH;
-    const commitDate = (window as any).ORIGAM_CLIENT_REVISION_DATE;
+    const customClientBuildVersion = (window as any).ORIGAM_CUSTOM_CLIENT_BUILD as string;
+    const uiPluginVersions = (window as any).ORIGAM_UI_PLUGINS as string;
+    const uiPluginVersionList = uiPluginVersions ? uiPluginVersions.split(";") : [];
+    const serverPluginVersions = (window as any).ORIGAM_SERVER_PLUGINS as string;
+    const serverPluginVersionList = serverPluginVersions ? serverPluginVersions.split(";") : [];
+    const pluginVersionList = [...uiPluginVersionList, ...serverPluginVersionList]
+
     return (
       <div className={S.root}>
-        <div>Server version:</div>
-        <div className={S.version}>{this.props.aboutInfo.serverVersion}</div>
+        <div>Origam image version: {this.props.aboutInfo.serverVersion}</div>
         <br/>
-        <div>Client version:</div>
-        <div className={S.version}>
-          <div>{"Commit ID: "}
-            <a href={"https://github.com/origam/origam/commit/" + commitId}>{commitId}</a>
-          </div>
-          <div>Commit Date: {commitDate}</div>
-        </div>
-        <br/>
+        {customClientBuildVersion &&
+          <>
+            <div>Custom client build version: {customClientBuildVersion}</div>
+            <br/>
+          </>
+        }
+        {pluginVersionList.length > 0 &&
+          <>
+            <div>Used Origam plugins:</div>
+            {pluginVersionList.map(x => <div className={S.version}>{x}</div>)}
+            <br/>
+          </>
+        }
         <div>
           <a href={"/Attributions.txt"} target="_blank" rel="noreferrer">Copyright attributions</a>
         </div>

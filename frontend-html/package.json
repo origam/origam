@@ -81,8 +81,8 @@
   "homepage": "./",
   "scripts": {
     "start": "react-scripts start",
-    "build": "node ./custom-scripts/record-git-info.js && react-scripts build",
-    "test": "react-scripts test src/tests",
+    "build": "node ./custom-scripts/updateVersions.js && react-scripts build",
+    "test":  "react-scripts test src/tests",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
