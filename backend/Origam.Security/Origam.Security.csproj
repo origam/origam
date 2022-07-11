@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="AbstractProfileProvider.cs">
     </Compile>
+    <Compile Include="Credential.cs" />
     <Compile Include="OrigamDatabaseAuthorizationProvider.cs">
       <SubType>Code</SubType>
     </Compile>
