@@ -45,7 +45,7 @@ namespace Origam.DA.Service.NamespaceMapping
                 .ForEach(AddMapping);
         }
 
-        private static void AddMapping(Type type)
+        public static void AddMapping(Type type)
         {
             if (instances.ContainsKey(type))
             {
