@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/Dialogs/AboutView.module.scss";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { T } from "utils/translation";
 
 export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
   render() {
@@ -32,23 +33,33 @@ export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
 
     return (
       <div className={S.root}>
-        <div>Origam image version: {this.props.aboutInfo.serverVersion}</div>
+        <div>
+          {T("Origam image version: {0}","origam_image_version", this.props.aboutInfo.serverVersion)}
+        </div>
         <br/>
         {customClientBuildVersion &&
           <>
-            <div>Custom client build version: {customClientBuildVersion}</div>
+            <div>
+              {T("Custom client build version: {0}","custom_client_version", customClientBuildVersion)}
+            </div>
             <br/>
           </>
         }
         {pluginVersionList.length > 0 &&
           <>
-            <div>Used Origam plugins:</div>
+            <div>{T("Used Origam plugins:","used_origam_plugins")}</div>
             {pluginVersionList.map(x => <div className={S.version}>{x}</div>)}
             <br/>
           </>
         }
         <div>
-          <a href={"/Attributions.txt"} target="_blank" rel="noreferrer">Copyright attributions</a>
+          <a
+            href={"/Attributions.txt"}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {T("Copyright attributions","copyright_attributions")}
+          </a>
         </div>
         <br/>
         <div>&copy; 2004 - 2022 Advantage Solutions, s. r. o.</div>
