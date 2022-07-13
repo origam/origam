@@ -80,7 +80,7 @@ namespace Origam.Server.Pages
 			{
 				transformParams.Add(rp.Key, rp.Value);
 			}
-			RuleEngine ruleEngine = new RuleEngine(null, null);
+			RuleEngine ruleEngine = RuleEngine.Create(null, null);
 			Validate(null, transformParams, ruleEngine, fdPage.InputValidationRule);
 
             DataSet data = core.DataService.LoadData(fdPage.DataStructureId, fdPage.DataStructureMethodId, Guid.Empty, fdPage.DataStructureSortSetId, null, qparams);

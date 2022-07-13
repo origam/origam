@@ -226,7 +226,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 log.Debug("Adding Work Queue Entry for Queue: " + workQueueName);
             }
-            RuleEngine ruleEngine = new RuleEngine(new Hashtable(), transactionId);
+            RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
             UserProfile profile = SecurityManager.CurrentUserProfile();
 
             WorkQueueClass wqc = WQClassInternal(workQueueClass);
@@ -533,7 +533,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     parameters["WorkQueueRow"] = DatasetTools.GetRowXml(workQueueRow, DataRowVersion.Default);
                 }
-                IDataDocument notificationData = (IDataDocument)transform.Transform(notificationSource, template, parameters, new RuleEngine(null, transactionId), resultStructure, false);
+                IDataDocument notificationData = (IDataDocument)transform.Transform(notificationSource, template, parameters, RuleEngine.Create(null, transactionId), resultStructure, false);
 
                 // return result
                 return notificationData;
@@ -714,7 +714,7 @@ namespace Origam.Workflow.WorkQueue
 
             WorkQueueClass wqc = WQClassInternal(workQueueClass);
 
-            RuleEngine ruleEngine = new RuleEngine(new Hashtable(), transactionId);
+            RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
             UserProfile profile = SecurityManager.CurrentUserProfile();
 
             // get filterset for this relation no (1-7)
@@ -1673,7 +1673,7 @@ namespace Origam.Workflow.WorkQueue
                 nav.MoveToFirstChild();	// /ROOT/
                 nav.MoveToFirstChild();	// WorkQueueEntry/
 
-                RuleEngine re = new RuleEngine(new Hashtable(), transactionId);
+                RuleEngine re = RuleEngine.Create(new Hashtable(), transactionId);
 
                 string evaluationResult = re.EvaluateXPath(nav, condition);
 

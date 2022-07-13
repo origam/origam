@@ -221,7 +221,7 @@ namespace Origam.BI.Excel
                     as DataStructure;
                 IXsltEngine transformer = AsTransform.GetXsltEngine(
                     persistence.SchemaProvider, report.TransformationId);
-                RuleEngine ruleEngine = new RuleEngine(null, null);
+                RuleEngine ruleEngine = RuleEngine.Create(null, null);
                 IDataDocument resultDoc = transformer.Transform(xmlDataDoc,
                     report.TransformationId, parameters, ruleEngine, outputDs, false)
                     as IDataDocument;

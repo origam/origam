@@ -419,7 +419,7 @@ namespace Origam.Server
                 if (!grid.GetAttribute("DataMember").Contains(".") &&
                     grid.GetAttribute("ShowAddButton") == "true")
                 {
-                    RuleEngine re = new RuleEngine(new Hashtable(), null);
+                    RuleEngine re = RuleEngine.Create(new Hashtable(), null);
                     XmlContainer newRecordData = new XmlContainer();
                     newRecordData.Xml.AppendChild(
                         newRecordData.Xml.CreateElement("ROOT"));

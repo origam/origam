@@ -117,7 +117,7 @@ namespace Origam.Server
             this.Request = request;
             this.IsModalDialog = request.IsModalDialog;
             _ruleHandler = new DatasetRuleHandler();
-            _ruleEngine = new RuleEngine(null, null);
+            _ruleEngine = RuleEngine.Create(null, null);
             this.CacheExpiration = DateTime.Now.AddMinutes(5);
             dataRequested = request.DataRequested || request.IsSingleRecordEdit;
         }

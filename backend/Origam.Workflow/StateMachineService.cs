@@ -929,7 +929,7 @@ namespace Origam.Workflow
             // check business rule
             if (operation.Rule != null)
             {
-                RuleEngine ruleEngine = new RuleEngine(new Hashtable(), transactionId);
+                RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
                 //				ruleEngine.TransactionId = transactionId;
 
                 object result = ruleEngine.EvaluateRule(operation.Rule, data, null);

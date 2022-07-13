@@ -67,30 +67,91 @@ namespace Origam.Rule
 		private Color NullColor = Color.FromArgb(0, 0, 0, 0);
 
 		IXsltEngine _transformer;
-		ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 		Counter _counter;
-		IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-		IDataLookupService _lookupService = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
+		private IPersistenceService _persistence;
+		private IDataLookupService _lookupService;
+		private IParameterService _parameterService;
+		private IBusinessServicesService _businessService;
+		private IStateMachineService _stateMachineService;
+		private ITracingService _tracingService;
+		private IDocumentationService _documentationService;
+
 		IServiceAgent _dataServiceAgent;
 
 #if ORIGAM_CLIENT
 		private static Hashtable _xpathRulesCache = new Hashtable();
 #endif
-		
-		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 
-		public RuleEngine(Hashtable contextStores, string transactionId,
-			Guid workflowInstanceId) :this(contextStores, transactionId)
+		public static RuleEngine Create(Hashtable contextStores, string transactionId,
+			Guid workflowInstanceId)
+		{
+			return new RuleEngine(
+				contextStores, 
+				transactionId,
+				workflowInstanceId,
+				ServiceManager.Services.GetService<IPersistenceService>(),
+				ServiceManager.Services.GetService<IDataLookupService>(),
+				ServiceManager.Services.GetService<IParameterService>(),
+				ServiceManager.Services.GetService<IBusinessServicesService>(),
+				ServiceManager.Services.GetService<IStateMachineService>(),
+				ServiceManager.Services.GetService<ITracingService>(),
+				ServiceManager.Services.GetService<IDocumentationService>()
+			);
+		}
+		public static RuleEngine Create()
+		{
+			return Create(new Hashtable(), null);
+		}
+
+		public static RuleEngine Create(Hashtable contextStores, string transactionId)
+		{
+			return new RuleEngine(
+				contextStores, 
+				transactionId, 
+				ServiceManager.Services.GetService<IPersistenceService>(),
+				ServiceManager.Services.GetService<IDataLookupService>(),
+				ServiceManager.Services.GetService<IParameterService>(),
+				ServiceManager.Services.GetService<IBusinessServicesService>(),
+				ServiceManager.Services.GetService<IStateMachineService>(),
+				ServiceManager.Services.GetService<ITracingService>(),
+				ServiceManager.Services.GetService<IDocumentationService>()
+			);
+		}
+		
+
+		private RuleEngine(Hashtable contextStores, string transactionId,
+			Guid workflowInstanceId, IPersistenceService persistence,
+			IDataLookupService lookupService,
+			IParameterService parameterService,
+			IBusinessServicesService businessService,
+			IStateMachineService stateMachineService,
+			ITracingService tracingService,
+			IDocumentationService documentationService) 
+			:this(contextStores, transactionId, persistence, lookupService,
+				parameterService, businessService, stateMachineService,	tracingService,
+				documentationService
+		)
 		{
 			_workflowInstanceId = workflowInstanceId;
 		}
-
-		public RuleEngine() : this(new Hashtable(), null)
+		
+		public RuleEngine(Hashtable contextStores, string transactionId,
+			IPersistenceService persistence,
+			IDataLookupService lookupService,
+			IParameterService parameterService,
+			IBusinessServicesService businessService,
+			IStateMachineService stateMachineService,
+			ITracingService tracingService,
+			IDocumentationService documentationService)
 		{
-		}
-
-		public RuleEngine(Hashtable contextStores, string transactionId) //: this()
-		{
+			_persistence = persistence;
+			_lookupService = lookupService;
+			_parameterService = parameterService;
+			_businessService = businessService;
+			_stateMachineService = stateMachineService;
+			_tracingService = tracingService;
+			_documentationService = documentationService;
+			
 			this.TransactionId = transactionId;
 			_contextStores = contextStores;
 
@@ -99,7 +160,7 @@ namespace Origam.Rule
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorInitializeEngine"));
 			}
 
-			_counter = new Counter();
+			_counter = new Counter(businessService);
 
 #if NETSTANDARD
             XsltEngineType xsltEngineType = XsltEngineType.XslCompiledTransform;
@@ -109,7 +170,7 @@ namespace Origam.Rule
 
             _transformer = AsTransform.GetXsltEngine(
                 xsltEngineType, _persistence.SchemaProvider);
-			_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
+			_dataServiceAgent = _businessService.GetAgent("DataService", null, null);
 		}
 
 		#region Properties
@@ -278,9 +339,7 @@ namespace Origam.Rule
 
 		public string GetMenuId(string lookupId, string value)
 		{
-			IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-
-			return ls.GetMenuBinding(new Guid(lookupId), value).MenuId;
+			return _lookupService.GetMenuBinding(new Guid(lookupId), value).MenuId;
 		}
 
 		public int GetInventoryAvailability(string inventoryId, string warehouseId)
@@ -333,10 +392,9 @@ namespace Origam.Rule
 			}
 		}
 
-		public static bool IsUserLockedOut(string userId)
+		public bool IsUserLockedOut(string userId)
 		{
-			IServiceAgent identityServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-				as IBusinessServicesService).GetAgent("IdentityService", null, null);
+			IServiceAgent identityServiceAgent = _businessService.GetAgent("IdentityService", null, null);
 			identityServiceAgent.MethodName = "IsLockedOut";
 			identityServiceAgent.Parameters.Clear();
 			identityServiceAgent.Parameters["UserId"] = new Guid(userId);
@@ -344,10 +402,9 @@ namespace Origam.Rule
 			return (bool) identityServiceAgent.Result; 
 		}
 
-		public static bool IsUserEmailConfirmed(string userId)
+		public bool IsUserEmailConfirmed(string userId)
 		{
-			IServiceAgent identityServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService))
-				as IBusinessServicesService).GetAgent("IdentityService", null, null);
+			IServiceAgent identityServiceAgent = _businessService.GetAgent("IdentityService", null, null);
 			identityServiceAgent.MethodName = "IsEmailConfirmed";
 			identityServiceAgent.Parameters.Clear();
 			identityServiceAgent.Parameters["UserId"] = new Guid(userId);
@@ -355,12 +412,10 @@ namespace Origam.Rule
 			return (bool)identityServiceAgent.Result;
 		}
 
-        public static bool Is2FAEnforced(string userId)
+        public bool Is2FAEnforced(string userId)
         {
             IServiceAgent identityServiceAgent 
-                = (ServiceManager.Services.GetService(
-                typeof(IBusinessServicesService))
-                as IBusinessServicesService).GetAgent(
+                = _businessService.GetAgent(
                 "IdentityService", null, null);
             identityServiceAgent.MethodName = "Is2FAEnforced";
             identityServiceAgent.Parameters.Clear();
@@ -1952,11 +2007,9 @@ namespace Origam.Rule
 			return SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, roleName);
 		}
 
-		public static bool IsInState(string entityId, string fieldId, string currentStateValue, string targetStateId)
+		public bool IsInState(string entityId, string fieldId, string currentStateValue, string targetStateId)
 		{
-			IStateMachineService sms = ServiceManager.Services.GetService(typeof(IStateMachineService)) as IStateMachineService;
-			
-			return sms.IsInState(new Guid(entityId), new Guid(fieldId), currentStateValue, new Guid(targetStateId));
+			return _stateMachineService.IsInState(new Guid(entityId), new Guid(fieldId), currentStateValue, new Guid(targetStateId));
 		}
 
 		public XPathNodeIterator NextStates(string entityId, string fieldId, string currentStateValue, XPathNodeIterator row)
@@ -1988,10 +2041,8 @@ namespace Origam.Rule
 					}
 				} while(row.Current.MoveToNext());
 			}
-
-			IStateMachineService sms = ServiceManager.Services.GetService(typeof(IStateMachineService)) as IStateMachineService;
 			
-			object[] states = sms.AllowedStateValues(new Guid(entityId), new Guid(fieldId), currentStateValue, doc, null);
+			object[] states = _stateMachineService.AllowedStateValues(new Guid(entityId), new Guid(fieldId), currentStateValue, doc, null);
 
 			XmlDocument resultDoc = new XmlDocument();
 			XmlElement statesElement = resultDoc.CreateElement("states");
@@ -2308,8 +2359,7 @@ namespace Origam.Rule
 			         rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing) &&
 			        ruleEvaluationDidRun)
 			    {
-				    ServiceManager.Services
-					    .GetService<ITracingService>()
+				    _tracingService
 					    .TraceRule(
 						    ruleId: rule.Id, 
 						    ruleName: rule.Name, 
@@ -2329,10 +2379,9 @@ namespace Origam.Rule
 			{
 				string errorMessage = ResourceUtils.GetString("ErrorRuleFailed", rule.Name);
 
-				IDocumentationService svc = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
-				if(svc != null)
+				if(_documentationService != null)
 				{
-					string doc = svc.GetDocumentation((Guid)rule.PrimaryKey["Id"], DocumentationType.RULE_EXCEPTION_MESSAGE);
+					string doc = _documentationService.GetDocumentation((Guid)rule.PrimaryKey["Id"], DocumentationType.RULE_EXCEPTION_MESSAGE);
 
 					if(doc != "")
 					{
@@ -2391,8 +2440,7 @@ namespace Origam.Rule
 				if (rule.Trace == Origam.Trace.Yes ||
 				    rule.Trace == Origam.Trace.InheritFromParent && parentIsTracing)
 				{
-					ServiceManager.Services
-						.GetService<ITracingService>()
+					_tracingService
 						.TraceRule(
 							ruleId: rule.Id, 
 							ruleName: rule.Name, 
@@ -2549,7 +2597,7 @@ namespace Origam.Rule
 					return context;
 				}
 
-				OrigamXsltContext ctx =  new OrigamXsltContext(new NameTable(), this);
+				OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable(), this);
 				XPathNavigator nav = ((XmlDocument)context).CreateNavigator();
 				XPathExpression expr = nav.Compile(xpath);
 				expr.SetContext(ctx);
@@ -3641,9 +3689,7 @@ namespace Origam.Rule
 			if(entityRules.Count > 0)
 			{
 				entityRules.Sort();
-
-				IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-
+				
 				foreach(EntityConditionalFormatting rule in entityRules)
 				{
 					if(IsRuleMatching(data, rule.Rule, rule.Roles, contextPosition))
@@ -3667,7 +3713,7 @@ namespace Origam.Rule
 							{
 								if(rule.DynamicColorLookupField == null) throw new Exception(ResourceUtils.GetString("ErrorNoForegroundDynamicColorLookup"));
 
-								object color = ls.GetDisplayText(rule.ForeColorLookupId, lookupParam, false, false, null );
+								object color = _lookupService.GetDisplayText(rule.ForeColorLookupId, lookupParam, false, false, null );
 						
 								if(color is int) foreColor = System.Drawing.Color.FromArgb((int)color);
 							}
@@ -3676,7 +3722,7 @@ namespace Origam.Rule
 							{
 								if(rule.DynamicColorLookupField == null) throw new Exception(ResourceUtils.GetString("ErrorNoBackgroundDynamicColorLookup"));
 
-								object color = ls.GetDisplayText(rule.BackColorLookupId, lookupParam, false, false, null );
+								object color = _lookupService.GetDisplayText(rule.BackColorLookupId, lookupParam, false, false, null );
 						
 								if(color is int) backColor = System.Drawing.Color.FromArgb((int)color);
 							}
@@ -3717,13 +3763,11 @@ namespace Origam.Rule
 			{
 				rules.Sort();
 
-				IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
 				foreach (EntityFieldDynamicLabel rule in rules)
 				{
 					if(IsRuleMatching(data, rule.Rule, rule.Roles, contextPosition))
 					{
-						string result = (string)ps.GetParameterValue(rule.LabelConstantId, OrigamDataType.String);
+						string result = (string)_parameterService.GetParameterValue(rule.LabelConstantId, OrigamDataType.String);
 						return result;
 					}
 				}
@@ -4351,7 +4395,7 @@ namespace Origam.Rule
 			//			}
 			//#endif
 
-			OrigamXsltContext ctx =  new OrigamXsltContext(new NameTable(), this);
+			OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable(), this);
 			expr.SetContext(ctx);
 
 			object result;
@@ -5503,7 +5547,7 @@ namespace Origam.Rule
     class IsInStateFunction : IXsltContextFunction
     {
         private XPathResultType[] _argTypes = null;
-
+        public RuleEngine Engine { get; set; }
         public IsInStateFunction(XPathResultType[] argTypes)
         {
             _argTypes = argTypes;
@@ -5531,14 +5575,15 @@ namespace Origam.Rule
         public object Invoke(XsltContext xsltContext,
             object[] args, XPathNavigator docContext)
         {
-            return RuleEngine.IsInState((string)args[0], (string)args[1], (string)args[2], (string)args[3]);
+            return Engine.IsInState((string)args[0], (string)args[1], (string)args[2], (string)args[3]);
         }
     }
 
 	class IsUserLockedOutFunction : IXsltContextFunction
 	{
 		private XPathResultType[] _argTypes = null;
-
+		public RuleEngine Engine { get; set; }
+		
 		public IsUserLockedOutFunction(XPathResultType[] argTypes)
 		{
 			_argTypes = argTypes;
@@ -5562,18 +5607,18 @@ namespace Origam.Rule
 		{
 			get { return _argTypes; }
 		}
-
 		public object Invoke(XsltContext xsltContext,
 			object[] args, XPathNavigator docContext)
 		{
-			return RuleEngine.IsUserLockedOut((string)args[0]);
+			return Engine.IsUserLockedOut((string)args[0]);
 		}
 	}
 
 	class IsUserEmailConfirmedFunction : IXsltContextFunction
 	{
 		private XPathResultType[] _argTypes = null;
-
+		public RuleEngine Engine { get; set; }
+		
 		public IsUserEmailConfirmedFunction(XPathResultType[] argTypes)
 		{
 			_argTypes = argTypes;
@@ -5601,7 +5646,7 @@ namespace Origam.Rule
 		public object Invoke(XsltContext xsltContext,
 			object[] args, XPathNavigator docContext)
 		{
-			return RuleEngine.IsUserEmailConfirmed((string)args[0]);
+			return Engine.IsUserEmailConfirmed((string)args[0]);
 		}
 	}
 
@@ -5815,6 +5860,7 @@ namespace Origam.Rule
     class Is2FAEnforcedFunction : IXsltContextFunction
     {
         private XPathResultType[] _argTypes = null;
+        public RuleEngine Engine { get; set; }
 
         public Is2FAEnforcedFunction(XPathResultType[] argTypes)
         {
@@ -5843,7 +5889,7 @@ namespace Origam.Rule
         public object Invoke(XsltContext xsltContext,
             object[] args, XPathNavigator docContext)
         {
-            return RuleEngine.Is2FAEnforced((string)args[0]);
+            return Engine.Is2FAEnforced((string)args[0]);
         }
     }
 
@@ -6154,6 +6200,7 @@ namespace Origam.Rule
 			else if (name == "IsInState")
 			{
 				IsInStateFunction f = new IsInStateFunction(ArgTypes);
+				f.Engine = this.Engine;
 				return f;
 			}
 			else if (name == "FormatLink")
@@ -6164,16 +6211,19 @@ namespace Origam.Rule
 			else if (name == "IsUserLockedOut")
 			{
 				IsUserLockedOutFunction f = new IsUserLockedOutFunction(ArgTypes);
+				f.Engine = this.Engine;
 				return f;
 			}
 			else if (name == "IsUserEmailConfirmed")
 			{
 				IsUserEmailConfirmedFunction f = new IsUserEmailConfirmedFunction(ArgTypes);
+				f.Engine = this.Engine;
 				return f;
 			}
 			else if (name == "Is2FAEnforced")
 			{
 				Is2FAEnforcedFunction f = new Is2FAEnforcedFunction(ArgTypes);
+				f.Engine = this.Engine;
 				return f;
 			}
 			else

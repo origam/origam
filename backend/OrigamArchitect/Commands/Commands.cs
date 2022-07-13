@@ -332,7 +332,7 @@ namespace OrigamArchitect.Commands
             {
                 wf = wfRef.Workflow;
                 // set parameters
-                RuleEngine ruleEngine = new RuleEngine(null, null);
+                RuleEngine ruleEngine = RuleEngine.Create(null, null);
                 foreach (AbstractSchemaItem parameter in item.ChildItems)
                 {
                     if (parameter != null)
@@ -351,7 +351,7 @@ namespace OrigamArchitect.Commands
                 WorkflowSchedule schedule = item as WorkflowSchedule;
                 wf = schedule.Workflow;
                 // set parameters
-                RuleEngine ruleEngine = new RuleEngine(null, null);
+                RuleEngine ruleEngine = RuleEngine.Create(null, null);
                 foreach (AbstractSchemaItem parameter in schedule.ChildItems)
                 {
                     if (parameter != null)

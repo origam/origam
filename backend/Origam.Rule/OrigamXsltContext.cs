@@ -37,24 +37,35 @@ namespace Origam.Rule
     {
         private ExsltContext _exslt;
         private static readonly RuleFunctionContext _ruleCtx =
-            new RuleFunctionContext(new NameTable());        
-        // store reference to internal nametable
-        //private XmlNameTable _nt;
+            new RuleFunctionContext(new NameTable());
         private Dictionary<string, object> _serviceXslFunctionsDict;
 
-        public OrigamXsltContext(XmlNameTable nt)
+        public static OrigamXsltContext Create(XmlNameTable nameTable)
+        {
+            return new OrigamXsltContext(
+                nameTable,
+                ServiceManager.Services.GetService<IBusinessServicesService>()
+            );
+        }
+        
+        public static OrigamXsltContext Create(NameTable nameTable, RuleEngine ruleEngine)
+        {
+            return new OrigamXsltContext(
+                nameTable,
+                ruleEngine,
+                ServiceManager.Services.GetService<IBusinessServicesService>()
+            );
+        }
+
+        private OrigamXsltContext(XmlNameTable nt, IBusinessServicesService businessService)
             : base((NameTable)nt)
         {
             _serviceXslFunctionsDict = new Dictionary<string, object>();
-            //_nt = nt;
             _exslt = new ExsltContext(nt);
 
             // add function from services
-            IBusinessServicesService bsService =
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-            
             foreach (IXslFunctionProvider xslFunctionProvider
-                in bsService.XslFunctionProviderServiceAgents)
+                     in businessService.XslFunctionProviderServiceAgents)
             {
                 AddNamespace(xslFunctionProvider.DefaultPrefix,
                     xslFunctionProvider.NameSpaceUri);
@@ -66,8 +77,8 @@ namespace Origam.Rule
         /// <summary>
         /// Creates new ExsltContext instance.
         /// </summary>        
-        public OrigamXsltContext(NameTable nt, RuleEngine ruleEngine)
-            : this(nt)
+        public OrigamXsltContext(NameTable nt, RuleEngine ruleEngine, IBusinessServicesService businessService)
+            : this(nt, businessService)
         {
             _ruleCtx.Engine = ruleEngine;
         }

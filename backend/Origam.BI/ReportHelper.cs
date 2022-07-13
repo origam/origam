@@ -55,7 +55,7 @@ namespace Origam.BI
             }
             var persistence = ServiceManager.Services
                 .GetService<IPersistenceService>();
-            var ruleEngine = new RuleEngine(null, null);
+            var ruleEngine = RuleEngine.Create(null, null);
             var transformParams = new Hashtable();
             foreach(SchemaItemParameter parameter in report.Parameters)
             {
@@ -230,7 +230,7 @@ namespace Origam.BI
             {
                 return null;
             }
-			var ruleEngine = new RuleEngine(null, null);
+			var ruleEngine = RuleEngine.Create(null, null);
 			var cultureString = (string)ruleEngine.EvaluateContext(
                 reportElement.LocaleXPath, doc, OrigamDataType.String, null);
 			return cultureString;

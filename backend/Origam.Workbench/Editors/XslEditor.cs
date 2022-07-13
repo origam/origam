@@ -977,7 +977,7 @@ namespace Origam.Workbench.Editors
 				IServiceAgent transformer = (ServiceManager.Services.GetService(
                     typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent(
                     "DataTransformationService", 
-                    new RuleEngine(new Hashtable(), null), null);
+                    RuleEngine.Create(new Hashtable(), null), null);
 
 				var doc = new XmlContainer(sourceXml);
 
@@ -1008,7 +1008,7 @@ namespace Origam.Workbench.Editors
 			    {
 			        if (dataDoc.DataSet.HasErrors == false && ruleSet != null)
 			        {
-			            RuleEngine re = new RuleEngine(null, null);
+			            RuleEngine re = RuleEngine.Create(null, null);
 			            re.ProcessRules(dataDoc, ruleSet, null);
 			        }
 			    }
@@ -1083,8 +1083,8 @@ namespace Origam.Workbench.Editors
 
 				XPathNavigator nav = doc.CreateNavigator();
 				XPathExpression expr = nav.Compile(xpath);
-				OrigamXsltContext ctx =  new OrigamXsltContext(new NameTable(),
-                    new RuleEngine(new Hashtable(), null));
+				OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable(),
+                    RuleEngine.Create(new Hashtable(), null));
 				expr.SetContext(ctx);
 
 				object result = nav.Evaluate(expr);

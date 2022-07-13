@@ -39,26 +39,12 @@ namespace Origam.Rule
 
 		private DataStructureQuery _query = null;
 		private CounterDataset _data = new CounterDataset();
-		IServiceAgent _dataServiceAgent;
+		private readonly IServiceAgent _dataServiceAgent;
 
-		public Counter()
+		public Counter(IBusinessServicesService businessService)
 		{
-			_dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
+			_dataServiceAgent = businessService.GetAgent("DataService", null, null);
 		}
-
-//		private IDataService _dataService;
-//		public IDataService DataService
-//		{
-//			get
-//			{
-//				return _dataService;
-//			}
-//			set
-//			{
-//				_dataService = value;
-//			}
-//		}
-
 
 		public string GetNewCounter (string counterCode, DateTime date, string transactionId)
 		{
@@ -71,7 +57,6 @@ namespace Origam.Rule
 				bool error = false;
 				try
 				{
-					SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 					_query = new DataStructureQuery( new Guid(QUERY), new Guid(FILTER));
 					_query.Parameters.Add( new QueryParameter("Counter_parReferenceCode", counterCode) );
 					row = ReadRow(_query, counterCode, date, transactionId);

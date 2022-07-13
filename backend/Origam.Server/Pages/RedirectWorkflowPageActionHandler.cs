@@ -57,7 +57,7 @@ namespace Origam.Server.Pages
         {
             RedirectWorkflowPageAction redirectAction = action as RedirectWorkflowPageAction;
 
-            RuleEngine re = new RuleEngine(new Hashtable(), null);
+            RuleEngine re = RuleEngine.Create(new Hashtable(), null);
             IXmlContainer doc = re.GetXmlDocumentFromData(workflowResult);
             XPathNavigator nav = doc.Xml.CreateNavigator();
             string url = re.EvaluateXPath(nav, redirectAction.XPath);

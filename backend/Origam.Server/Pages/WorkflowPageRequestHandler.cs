@@ -78,7 +78,7 @@ namespace Origam.Server.Pages
 			}
 
 
-			RuleEngine ruleEngine = new RuleEngine(null, null);
+			RuleEngine ruleEngine = RuleEngine.Create(null, null);
 			Validate(null, transformParams, ruleEngine, workflowPage.InputValidationRule);
 			if (workflowPage.DisableConstraintForInputValidation)
 			{
@@ -98,7 +98,7 @@ namespace Origam.Server.Pages
             ArrayList actions = workflowPage.ChildItemsByType(AbstractWorkflowPageAction.CategoryConst);
             actions.Sort();
 
-            RuleEngine re = new RuleEngine(new Hashtable(), null);
+            RuleEngine re = RuleEngine.Create(new Hashtable(), null);
 
             foreach (AbstractWorkflowPageAction action in actions)
             {

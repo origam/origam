@@ -215,7 +215,7 @@ namespace OrigamScheduler
 				engine.WorkflowBlock = workflow;
 
 				// input parameters
-				RuleEngine ruleEngine = new RuleEngine(null, null);
+				RuleEngine ruleEngine = RuleEngine.Create(null, null);
 				foreach(AbstractSchemaItem parameter in schedule.ChildItems)
 				{
 					if(parameter != null)

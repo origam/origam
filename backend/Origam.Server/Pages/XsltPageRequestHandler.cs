@@ -72,7 +72,7 @@ namespace Origam.Server.Pages
             XsltDataPage xsltPage = page as XsltDataPage;
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             IXsltEngine transformer = null;
-            RuleEngine ruleEngine = new RuleEngine(null, null);
+            RuleEngine ruleEngine = RuleEngine.Create(null, null);
             Hashtable transformParams = new Hashtable();
             QueryParameterCollection qparams = new QueryParameterCollection();
             Hashtable preprocessorParams = GetPreprocessorParameters(request);

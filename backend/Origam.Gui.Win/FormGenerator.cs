@@ -54,7 +54,7 @@ namespace Origam.Gui.Win
 	{
 		private enum ProcessPropertyValueOperation {Save, Load}
 
-		private RuleEngine _formRuleEngine = new RuleEngine(new Hashtable(), null);
+		private RuleEngine _formRuleEngine = RuleEngine.Create(new Hashtable(), null);
 		private BindingContext _bindContext = new BindingContext();
 		private Hashtable _propertyCache = new Hashtable();
 		private Hashtable _bindings = new Hashtable();
@@ -2181,7 +2181,7 @@ namespace Origam.Gui.Win
             this.Form.EndCurrentEdit();
             if (_selectionDialogEndRule != null)
             {
-                RuleEngine ruleEngine = new RuleEngine();
+                RuleEngine ruleEngine = RuleEngine.Create();
                 RuleExceptionDataCollection ruleExceptions = ruleEngine.EvaluateEndRule(_selectionDialogEndRule, XmlData);
                 if (ruleExceptions != null && ruleExceptions.Count > 0)
                 {

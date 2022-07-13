@@ -78,7 +78,7 @@ namespace Origam.Server.Pages
 			{
 				transformParams.Add(rp.Key, rp.Value);
 			}
-			RuleEngine ruleEngine = new RuleEngine(null, null);
+			RuleEngine ruleEngine = RuleEngine.Create(null, null);
 			Validate(null, transformParams, ruleEngine, reportPage.InputValidationRule);
 
 			// get report
