@@ -20,26 +20,46 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import S from "gui/Components/Dialogs/AboutView.module.scss";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { T } from "utils/translation";
 
-export class AboutView extends React.Component<{aboutInfo: IAboutInfo}> {
+export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
   render() {
-    const commitId = (window as any).ORIGAM_CLIENT_REVISION_HASH;
-    const commitDate = (window as any).ORIGAM_CLIENT_REVISION_DATE;
+    const customClientBuildVersion = (window as any).ORIGAM_CUSTOM_CLIENT_BUILD as string;
+    const uiPluginVersions = (window as any).ORIGAM_UI_PLUGINS as string;
+    const uiPluginVersionList = uiPluginVersions ? uiPluginVersions.split(";") : [];
+    const serverPluginVersions = (window as any).ORIGAM_SERVER_PLUGINS as string;
+    const serverPluginVersionList = serverPluginVersions ? serverPluginVersions.split(";") : [];
+    const pluginVersionList = [...uiPluginVersionList, ...serverPluginVersionList]
+
     return (
       <div className={S.root}>
-        <div>Server version:</div>
-        <div className={S.version}>{this.props.aboutInfo.serverVersion}</div>
-        <br/>
-        <div>Client version:</div>
-        <div className={S.version}>
-          <div>{"Commit ID: "}
-            <a href={"https://github.com/origam/origam/commit/" + commitId}>{commitId}</a>
-          </div>
-          <div>Commit Date: {commitDate}</div>
+        <div>
+          {T("Origam image version: {0}","origam_image_version", this.props.aboutInfo.serverVersion)}
         </div>
         <br/>
+        {customClientBuildVersion &&
+          <>
+            <div>
+              {T("Custom client build version: {0}","custom_client_version", customClientBuildVersion)}
+            </div>
+            <br/>
+          </>
+        }
+        {pluginVersionList.length > 0 &&
+          <>
+            <div>{T("Used Origam plugins:","used_origam_plugins")}</div>
+            {pluginVersionList.map(x => <div className={S.version}>{x}</div>)}
+            <br/>
+          </>
+        }
         <div>
-          <a href={"/Attributions.txt"} target="_blank" rel="noreferrer">Copyright attributions</a>
+          <a
+            href={"/Attributions.txt"}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {T("Copyright attributions","copyright_attributions")}
+          </a>
         </div>
         <br/>
         <div>&copy; 2004 - 2022 Advantage Solutions, s. r. o.</div>
