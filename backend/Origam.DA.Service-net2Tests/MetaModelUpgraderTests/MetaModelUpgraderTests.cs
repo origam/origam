@@ -27,6 +27,7 @@ using System.Xml.Linq;
 using Moq;
 using NUnit.Framework;
 using Origam.DA.Service.MetaModelUpgrade;
+using Origam.DA.Service.NamespaceMapping;
 
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
@@ -104,6 +105,8 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeTwoVersions()
         {
             XFileData xFileData = LoadFile("TestPersistedClassV5.0.0.origam");
+            PropertyToNamespaceMapping.Init();
+            PropertyToNamespaceMapping.AddMapping(typeof(TestBaseClass));
             var sut = new MetaModelAnalyzer(new NullFileWriter(), new MetaModelUpgrader(GetType().Assembly));
             sut.TryUpgrade(xFileData);
             
