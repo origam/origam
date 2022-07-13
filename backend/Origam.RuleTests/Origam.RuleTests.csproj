@@ -62,6 +62,9 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=4.18.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920">
+      <HintPath>..\..\..\..\Users\jindr\.nuget\packages\moq\4.18.1\lib\net462\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -83,12 +86,31 @@
     <Compile Include="RuleEngineTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj">
+      <Project>{b4e4dc00-766a-4ca3-83d8-0a5383462f53}</Project>
+      <Name>Origam.DA.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj">
       <Project>{4f05db44-2bbd-4b54-8d37-e8038d1ee1e7}</Project>
       <Name>Origam.Rule</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Schema\Origam.Schema.csproj">
+      <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
+      <Name>Origam.Schema</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
+      <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
+      <Name>Origam.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj">
+      <Project>{eca06542-5635-455e-b513-07f60222ca7d}</Project>
+      <Name>Origam.Workbench.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Moq">
+      <Version>4.18.1</Version>
+    </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.13.3</Version>
     </PackageReference>
