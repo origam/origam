@@ -5160,6 +5160,37 @@ namespace Origam.Rule
 		}
 	}
 
+	class AddMinutesFunction : IXsltContextFunction 
+	{
+		private XPathResultType[] _argTypes = null;
+		public AddMinutesFunction(XPathResultType[] argTypes)
+		{
+			_argTypes = argTypes;
+		}
+		public int Minargs    
+		{ 
+			get { return 2; }
+		}
+		public int Maxargs    
+		{ 
+			get { return 2; }
+		}
+		public XPathResultType ReturnType 
+		{ 
+			get { return XPathResultType.String; }
+		}
+		public XPathResultType[] ArgTypes
+		{ 
+			get { return _argTypes; }
+		}
+
+		public object Invoke(XsltContext xsltContext, 
+			object[] args, XPathNavigator docContext) 
+		{
+			return RuleEngine.AddMinutes(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
+		}
+	}
+
 	class DifferenceInDaysFunction : IXsltContextFunction 
 	{
 		private XPathResultType[] _argTypes = null;
@@ -6037,6 +6068,10 @@ namespace Origam.Rule
 				AddHoursFunction f = new AddHoursFunction(ArgTypes);
 				f.Engine = this.Engine;
 				return f;
+			}
+			else if (name == "AddMinutes")
+			{
+				return new AddMinutesFunction(ArgTypes);
 			}
 			else if (name == "AddYears")
 			{
