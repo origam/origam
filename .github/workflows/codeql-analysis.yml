@@ -47,7 +47,7 @@ jobs:
           **\*test*.dll
           !**\*TestAdapter.dll
           !**\obj\**
-        searchFolder: backend
+        searchFolder: D:\a\origam\origam\backend
    
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
