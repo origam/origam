@@ -5411,19 +5411,19 @@ namespace Origam.Rule
                 case 2:
                     return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]));
                 case 3:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[2]));
+                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]));
                 case 4:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]));
+                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]));
                 case 5:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]));
+                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]));
                 case 6:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]));
+                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]));
                 case 7:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]));
+                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]));
                 case 8:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]), XmlTools.XPathArgToString(args[7]));
+                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]), XmlTools.XPathArgToString(args[7]));
                 case 9:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]), XmlTools.XPathArgToString(args[7]), XmlTools.XPathArgToString(args[8]));
+                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]), XmlTools.XPathArgToString(args[7]), XmlTools.XPathArgToString(args[8]));
                 default:
                     throw new Exception(ResourceUtils.GetString("ErrorInvalidNumberArguments"));
             }        
