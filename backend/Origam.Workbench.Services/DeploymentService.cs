@@ -314,12 +314,24 @@ namespace Origam.Workbench.Services
 				.SelectMany(GetDeploymentVersions)
 				.ToList();
 
-			new DeploymentSorter()
+			var deploymentSorter = new DeploymentSorter();
+			deploymentSorter.SortingFailed += (sender, message) =>
+			{
+				Log(message);
+				throw new Exception(message);
+			};
+			deploymentSorter
 				.SortToRespectDependencies(unsortedDeployments)
 				.Cast<DeploymentVersion>()
 				.Where(WasNotRunAlready)
-				.SelectMany(deplVersion => deplVersion.UpdateScriptActivities)
-				.ForEach(ExecuteActivity);
+				.ForEach(deplVersion =>
+				{
+					Log($"Package: {deplVersion.Package.Name}, Deployment version: {deplVersion.Version}");
+					foreach (var activity in deplVersion.UpdateScriptActivities)
+					{
+						ExecuteActivity(activity);
+					}
+				});
         }
 
 		private bool WasNotRunAlready(DeploymentVersion deplversion)
@@ -545,7 +557,17 @@ namespace Origam.Workbench.Services
 		{
 			if(log.IsInfoEnabled)
 			{
-				log.Info(text);
+				if (text.Contains("\n"))
+				{
+					foreach (var line in text.Split('\n'))
+					{
+						log.Info(line);
+					}
+				}
+				else
+				{
+					log.Info(text);
+				}
 			}
 		}
 		#endregion
