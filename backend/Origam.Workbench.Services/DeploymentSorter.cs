@@ -39,6 +39,8 @@ namespace Origam.Workbench.Services
         private IDeploymentVersion current;
         private List<IDeploymentVersion> allDeployments;
 
+        public event EventHandler<string> SortingFailed;
+
         public List<IDeploymentVersion> SortToRespectDependencies(
             IEnumerable<IDeploymentVersion> deplVersionsToSort)
         {
@@ -48,15 +50,21 @@ namespace Origam.Workbench.Services
 
             while (remainingDeployments.Count > 0)
             {
+                int remainingDeploymentsBefore = remainingDeployments.Count;
                 remainingDeployments
-                    .Where(x => !HasActiveDependencies(x))
+                    .Where(x => !HasActiveDependencies(x) && !SomeDeploymentsHaveToRunBefore(x))
                     .OrderBy(deployment => deployment)
                     .ToList()
                     .ForEach(ProcessDependent);
+                int remainingDeploymentsAfter = remainingDeployments.Count;
                 if (remainingDeployments.Count > 0 &&
                     remainingDeployments.Count(x=>!HasActiveDependencies(x)) == 0)
                 {
                     HandleInfiniteLoopError();
+                }
+                if (remainingDeploymentsAfter == remainingDeploymentsBefore)
+                {
+                    HandleDeploymentDeadlock();
                 }
             }
 
@@ -65,6 +73,54 @@ namespace Origam.Workbench.Services
                 throw new Exception("Number of input and output deployments doesn't match");
             }
             return sortedDeployments;
+        }
+
+        private void HandleDeploymentDeadlock()
+        {
+            string sortedDeploymentsStr = string.Join("\n" ,sortedDeployments.Select(x => $"{x.PackageName} {x.Version}"));
+            var deadlockedDeployments = remainingDeployments
+                .GroupBy(x => x.SchemaExtensionId)
+                .Select(group => 
+                    group.OrderBy(deploymentVersion => deploymentVersion.Version).First());
+
+            var nextStepCandidates = deadlockedDeployments.Select(x =>
+                $"Candidate: {x.PackageName} {x.Version}\n" +
+                    $"\tDependencies:\n" +
+                        $"\t\t{string.Join("\n\t\t", GetDependencyList(x))}");
+
+            string message = 
+                "Deployment script order could not be determined, because circular" +
+                " dependencies were detected among some deployment versions.\n"+
+                $"Successfully ordered deployment versions:\n" +
+                $"{sortedDeploymentsStr}\n"+
+                "The sorting process failed with these deployment versions as the next step candidates:\n"+
+                $"{string.Join("\n", nextStepCandidates)}\n";
+
+            SortingFailed?.Invoke(this, message);
+        }
+
+        private IEnumerable<string> GetDependencyList(IDeploymentVersion deployment)
+        {
+            Dictionary<Guid,string> packageNameDictionary = allDeployments.
+                GroupBy(x => x.SchemaExtensionId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.First().PackageName);
+
+            var packageVersions = deployment.DeploymentDependencies
+                .Select(dependency =>
+                {
+                    packageNameDictionary.TryGetValue(dependency.PackageId, out string packageName);
+                    return $"{packageName ?? dependency.PackageId.ToString()} {dependency.PackageVersion}";
+                }).ToList();
+            var previousDeployment = sortedDeployments
+                .LastOrDefault(x => x.SchemaExtensionId == deployment.SchemaExtensionId);
+            
+            if (previousDeployment != null)
+            {
+                packageVersions.Add($"{previousDeployment.PackageName} {previousDeployment.Version}");
+            }
+            return packageVersions;
         }
 
         private void HandleInfiniteLoopError()
@@ -81,8 +137,7 @@ namespace Origam.Workbench.Services
                                         deploymentVersion.PackageName + " depends on it self! Remove the dependency to continue.");
                 }
             }
-
-            throw new Exception("Infinite loop! Could not find any deployments without active dependencies.");
+            SortingFailed?.Invoke(this, "Infinite loop! Could not find any deployments without active dependencies.");
         }
 
         private void ProcessDependent(IDeploymentVersion deployment)
@@ -90,7 +145,7 @@ namespace Origam.Workbench.Services
             MoveToSorted(deployment);
  
             GetDependentDeployments(deployment)
-                .Where(x=>!HasActiveDependencies(x))
+                .Where(x=>!HasActiveDependencies(x) && !SomeDeploymentsHaveToRunBefore(x))
                 .OrderBy(x => x, new OtherPackagesFirst(current.SchemaExtensionId))
                 .ForEach(ProcessDependent);
         }
@@ -122,6 +177,20 @@ namespace Origam.Workbench.Services
         {
             return GetAllDependencies(deployment)
                 .Any(IsInRemainingDeployments);
+        }
+        
+        private bool SomeDeploymentsHaveToRunBefore(IDeploymentVersion deployment)
+        {
+            var previousDeployment = sortedDeployments
+                .LastOrDefault(x => x.SchemaExtensionId == deployment.SchemaExtensionId);
+            if (previousDeployment == null)
+            {
+                return false;
+            }
+
+            return remainingDeployments
+                .Where(x => x != deployment)
+                .Any(x => IsAmongDependencies(x.DeploymentDependencies, previousDeployment));
         }
 
         private IEnumerable<DeploymentDependency> GetAllDependencies(IDeploymentVersion deployment)
