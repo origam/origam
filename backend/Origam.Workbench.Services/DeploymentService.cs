@@ -557,17 +557,7 @@ namespace Origam.Workbench.Services
 		{
 			if(log.IsInfoEnabled)
 			{
-				if (text.Contains("\n"))
-				{
-					foreach (var line in text.Split('\n'))
-					{
-						log.Info(line);
-					}
-				}
-				else
-				{
-					log.Info(text);
-				}
+				log.Info(text);
 			}
 		}
 		#endregion
