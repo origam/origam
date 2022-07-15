@@ -77,24 +77,24 @@ namespace Origam.Workbench.Services
 
         private void HandleDeploymentDeadlock()
         {
-            string sortedDeploymentsStr = string.Join("\n" ,sortedDeployments.Select(x => $"{x.PackageName} {x.Version}"));
+            string sortedDeploymentsStr = string.Join("\r\n" ,sortedDeployments.Select(x => $"{x.PackageName} {x.Version}"));
             var deadlockedDeployments = remainingDeployments
                 .GroupBy(x => x.SchemaExtensionId)
                 .Select(group => 
                     group.OrderBy(deploymentVersion => deploymentVersion.Version).First());
 
             var nextStepCandidates = deadlockedDeployments.Select(x =>
-                $"Candidate: {x.PackageName} {x.Version}\n" +
-                    $"\tDependencies:\n" +
-                        $"\t\t{string.Join("\n\t\t", GetDependencyList(x))}");
+                $"Candidate: {x.PackageName} {x.Version}\r\n" +
+                    $"\tDependencies:\r\n" +
+                        $"\t\t{string.Join("\r\n\t\t", GetDependencyList(x))}");
 
             string message = 
-                "Deployment script order could not be determined, because circular" +
-                " dependencies were detected among some deployment versions.\n"+
-                $"Successfully ordered deployment versions:\n" +
-                $"{sortedDeploymentsStr}\n"+
-                "The sorting process failed with these deployment versions as the next step candidates:\n"+
-                $"{string.Join("\n", nextStepCandidates)}\n";
+                "Deployment version order could not be determined, because circular\r\n" +
+                "dependencies were detected among some deployment versions.\r\n"+
+                $"Successfully ordered deployment versions:\r\n" +
+                $"{sortedDeploymentsStr}\r\n"+
+                "The sorting process failed with these deployment versions as the next step candidates:\r\n"+
+                $"{string.Join("\r\n", nextStepCandidates)}\r\n";
 
             SortingFailed?.Invoke(this, message);
         }
