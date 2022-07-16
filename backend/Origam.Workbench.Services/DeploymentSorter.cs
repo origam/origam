@@ -61,10 +61,12 @@ namespace Origam.Workbench.Services
                     remainingDeployments.Count(x=>!HasActiveDependencies(x)) == 0)
                 {
                     HandleInfiniteLoopError();
+                    return new List<IDeploymentVersion>();
                 }
                 if (remainingDeploymentsAfter == remainingDeploymentsBefore)
                 {
                     HandleDeploymentDeadlock();
+                    return new List<IDeploymentVersion>();
                 }
             }
 
