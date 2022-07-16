@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
@@ -83,8 +84,15 @@ namespace Origam.WorkbenchTests
             };
 
             var deploymentSorter = new DeploymentSorter();
+            int sortingFailedCalledTimes = 0;
+            deploymentSorter.SortingFailed += (sender, message) =>
+            {
+                sortingFailedCalledTimes++;
+            };
             List<IDeploymentVersion> sortedDeployments =
                 deploymentSorter.SortToRespectDependencies(unsortedDeployments);
+            
+            Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
 
             Assert.That(sortedDeployments[0], Is.EqualTo(deployment1));
             Assert.That(sortedDeployments[1], Is.EqualTo(deployment2));
@@ -212,7 +220,146 @@ namespace Origam.WorkbenchTests
 
             CheckTheOrderIsCorrect(deployment1, deployment2, deployment3, deployment4);
         }
-        
+
+        [Test]
+        public void ShouldNotRunDeploymentBeforeAllDeploymentsReferencingItsParentWereAlsoExecuted()
+        {
+            //   P1     p2    p3
+            //               1.0
+            //      <-------- 
+            //   1.0<--1.0
+            //         1.1<--1.1
+            //   1.1
+            //
+            //  P1 1.1 must run last. If it does not, the other deployments will
+            //  not be able to run because they depend on P1 1.0
+            
+            var deployment1 = new MockDeploymentVersion(
+                new PackageVersion("1.0"),
+                new List<DeploymentDependency>(),
+                package1Id);
+            var deployment2 = new MockDeploymentVersion(
+                new PackageVersion("1.1"),
+                new List<DeploymentDependency>(),
+                package1Id);
+            var deployment3 = new MockDeploymentVersion(
+                new PackageVersion("1.0"),
+                new List<DeploymentDependency>
+                {
+                    new DeploymentDependency(package1Id, new PackageVersion("1.0"))
+                },
+                package2Id);
+            var deployment4 = new MockDeploymentVersion(
+                new PackageVersion("1.1"),
+                new List<DeploymentDependency>(),
+                package2Id);
+            var deployment5 = new MockDeploymentVersion(
+                new PackageVersion("1.0"),
+                new List<DeploymentDependency>(),
+                package3Id);
+            var deployment6 = new MockDeploymentVersion(
+                new PackageVersion("1.1"),
+                new List<DeploymentDependency>
+                {
+                    new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                    new DeploymentDependency(package2Id, new PackageVersion("1.1"))
+                },
+                package3Id);
+            
+            var unsortedDeployments = new List<IDeploymentVersion>
+            {
+                deployment4,
+                deployment1,
+                deployment6,
+                deployment3,
+                deployment2,
+                deployment5
+            };
+            
+            var deploymentSorter = new DeploymentSorter();
+            int sortingFailedCalledTimes = 0;
+            deploymentSorter.SortingFailed += (sender, message) =>
+            {
+                sortingFailedCalledTimes++;
+            };
+            List<IDeploymentVersion> sortedDeployments =
+                deploymentSorter.SortToRespectDependencies(unsortedDeployments);
+            
+            Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
+            Assert.That(sortedDeployments.Last(), Is.EqualTo(deployment2));
+        }
+
+        [Test]
+        public void ShouldRecognizeDeadlock()
+        {
+            //   P1    p2   p3
+            //              1.0
+            //        1.0<--
+            //  1.0<--1.1  
+            //  1.1<--------1.1 
+            //
+            //  If all packages version 1.0 are deployed,
+            //  no other deployment can run because:
+            //  - P1 1.1 has to wait for P2 1.1 because it depends on P1 1.0
+            //  - P2 1.1 has to wait for P3 1.1 because it depends on P2 1.0
+            //  - P3 1.1 cannot run because P1 1.1 is not deployed yet
+            // => Deployment dead lock
+            
+            var deployment1 = new MockDeploymentVersion(
+                new PackageVersion("1.0"),
+                new List<DeploymentDependency>(),
+                package1Id);
+            var deployment2 = new MockDeploymentVersion(
+                new PackageVersion("1.1"),
+                new List<DeploymentDependency>(),
+                package1Id);
+            var deployment3 = new MockDeploymentVersion(
+                new PackageVersion("1.0"),
+                new List<DeploymentDependency>(),
+                package2Id);
+            var deployment4 = new MockDeploymentVersion(
+                new PackageVersion("1.1"),
+                new List<DeploymentDependency>
+                {
+                    new DeploymentDependency(package1Id, new PackageVersion("1.0")),
+                },
+                package2Id);
+            var deployment5 = new MockDeploymentVersion(
+                new PackageVersion("1.0"),
+                new List<DeploymentDependency>(),
+                package3Id);
+            var deployment6 = new MockDeploymentVersion(
+                new PackageVersion("1.1"),
+                new List<DeploymentDependency>
+                {
+                    new DeploymentDependency(package1Id, new PackageVersion("1.1")),
+                    new DeploymentDependency(package2Id, new PackageVersion("1.0"))
+                },
+                package3Id);
+            
+            var unsortedDeployments = new List<IDeploymentVersion>
+            {
+                deployment4,
+                deployment1,
+                deployment6,
+                deployment3,
+                deployment2,
+                deployment5
+            };
+
+            var deploymentSorter = new DeploymentSorter();
+            int sortingFailedCalledTimes = 0;
+            deploymentSorter.SortingFailed += (sender, message) =>
+            {
+                sortingFailedCalledTimes++;
+            };
+            List<IDeploymentVersion> sortedDeployments =
+                deploymentSorter.SortToRespectDependencies(unsortedDeployments);
+            
+            Assert.That(sortingFailedCalledTimes, Is.EqualTo(1));
+            Assert.That(sortedDeployments, Has.Count.EqualTo(0));
+        }
+
         [Test]
         public void ShouldOrderTwoRelatedAndOneUnrelatedPackageByDependencies()
         {
@@ -290,9 +437,15 @@ namespace Origam.WorkbenchTests
             };
 
             var deploymentSorter = new DeploymentSorter();
+            int sortingFailedCalledTimes = 0;
+            deploymentSorter.SortingFailed += (sender, message) =>
+            {
+                sortingFailedCalledTimes++;
+            };
             List<IDeploymentVersion> sortedDeployments =
                 deploymentSorter.SortToRespectDependencies(unsortedDeployments);
-
+            
+            Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
             Assert.That(sortedDeployments[0], Is.EqualTo(deployment1));
             Assert.That(sortedDeployments[1], Is.EqualTo(deployment2));
             Assert.That(sortedDeployments[2], Is.EqualTo(deployment3));
@@ -319,9 +472,15 @@ namespace Origam.WorkbenchTests
             };
 
             var deploymentSorter = new DeploymentSorter();
+            int sortingFailedCalledTimes = 0;
+            deploymentSorter.SortingFailed += (sender, message) =>
+            {
+                sortingFailedCalledTimes++;
+            };
             List<IDeploymentVersion> sortedDeployments =
                 deploymentSorter.SortToRespectDependencies(unsortedDeployments);
-
+            
+            Assert.That(sortingFailedCalledTimes, Is.EqualTo(0));
             Assert.That(sortedDeployments[0], Is.EqualTo(deployment1));
             Assert.That(sortedDeployments[1], Is.EqualTo(deployment2));
             Assert.That(sortedDeployments[2], Is.EqualTo(deployment3));
