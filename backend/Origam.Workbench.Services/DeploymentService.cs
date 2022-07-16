@@ -197,7 +197,7 @@ namespace Origam.Workbench.Services
 		#region Private Methods
 		private void ExecuteActivity(AbstractUpdateScriptActivity activity)
 		{
-			Log(DateTime.Now + " Executing activity: " + activity.Name);
+			Log("Executing activity: " + activity.Name);
 
 			try
 			{
@@ -248,7 +248,7 @@ namespace Origam.Workbench.Services
             {
                 result = agent.ExecuteUpdate(activity.CommandText, _transactionId);
             }
-			Log(DateTime.Now + " " + result);
+			Log(result);
 		}
 
 		private void ExecuteActivity(FileRestoreUpdateScriptActivity activity)
@@ -314,12 +314,24 @@ namespace Origam.Workbench.Services
 				.SelectMany(GetDeploymentVersions)
 				.ToList();
 
-			new DeploymentSorter()
+			var deploymentSorter = new DeploymentSorter();
+			deploymentSorter.SortingFailed += (sender, message) =>
+			{
+				Log(message);
+				throw new Exception(message);
+			};
+			deploymentSorter
 				.SortToRespectDependencies(unsortedDeployments)
 				.Cast<DeploymentVersion>()
 				.Where(WasNotRunAlready)
-				.SelectMany(deplVersion => deplVersion.UpdateScriptActivities)
-				.ForEach(ExecuteActivity);
+				.ForEach(deplVersion =>
+				{
+					Log($"{deplVersion.Package.Name}: {deplVersion.Version}");
+					foreach (var activity in deplVersion.UpdateScriptActivities)
+					{
+						ExecuteActivity(activity);
+					}
+				});
         }
 
 		private bool WasNotRunAlready(DeploymentVersion deplversion)
