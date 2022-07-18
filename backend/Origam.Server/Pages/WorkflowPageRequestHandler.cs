@@ -108,7 +108,7 @@ namespace Origam.Server.Pages
                     conditionResult = (bool)re.EvaluateRule(action.ConditionRule, workflowResult, null);
                 }
 
-                if (conditionResult && RuleEngine.IsInRole(action.Roles) && RuleEngine.IsFeatureOn(action.Features))
+                if (conditionResult && re.IsInRole(action.Roles) && re.IsFeatureOn(action.Features))
                 {
                     IWorkflowPageActionHandler handler;
                     if (action is RedirectWorkflowPageAction)

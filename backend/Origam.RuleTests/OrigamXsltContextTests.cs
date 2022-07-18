@@ -47,7 +47,8 @@ namespace Origam.Rule.Tests
         private Mock<IBusinessServicesService> businessServiceMock;
         private Mock<IParameterService> parameterServiceMock;
         private Mock<IDataLookupService> lookupServiceMock;
-            
+        private Mock<IOrigamAuthorizationProvider> authorizationProvider;
+        private Mock<Func<UserProfile>> userProfileGetterMock;
         [SetUp]
         public void Init()
         {
@@ -60,8 +61,9 @@ namespace Origam.Rule.Tests
             var tracingServiceMock = new Mock<ITracingService>();
             var documentationServiceMock = new Mock<IDocumentationService>();
             parameterServiceMock = new Mock<IParameterService>();
+            authorizationProvider = new Mock<IOrigamAuthorizationProvider>();
+            userProfileGetterMock = new Mock<Func<UserProfile>>();
 
-            // .GetParameterValue(name, OrigamDataType.String)
             ruleEngine = new RuleEngine(
                 new Hashtable(), 
                 null,
@@ -71,7 +73,9 @@ namespace Origam.Rule.Tests
                 businessServiceMock.Object,
                 stateMachineServiceMock.Object,
                 tracingServiceMock.Object,
-                documentationServiceMock.Object
+                documentationServiceMock.Object,
+                authorizationProvider.Object,
+                userProfileGetterMock.Object
             );
         }
         

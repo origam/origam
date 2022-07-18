@@ -1314,11 +1314,12 @@ namespace Origam.Server
         private static IXmlContainer GetTooltip(object id, ArrayList tooltips)
         {
             tooltips.Sort();
+            RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), null);
             DataServiceDataTooltip tooltip = null;
             foreach (DataServiceDataTooltip tt in tooltips)
             {
-                if (RuleEngine.IsFeatureOn(tt.Features) 
-                    && RuleEngine.IsInRole(tt.Roles))
+                if (ruleEngine.IsFeatureOn(tt.Features) 
+                    && ruleEngine.IsInRole(tt.Roles))
                 {
                     tooltip = tt;
                 }

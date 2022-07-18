@@ -75,8 +75,9 @@ namespace Origam.Rule
 		private IStateMachineService _stateMachineService;
 		private ITracingService _tracingService;
 		private IDocumentationService _documentationService;
-
-		IServiceAgent _dataServiceAgent;
+		private IOrigamAuthorizationProvider _authorizationProvider;
+		private IServiceAgent _dataServiceAgent;
+		private Func<UserProfile> _userProfileGetter;
 
 #if ORIGAM_CLIENT
 		private static Hashtable _xpathRulesCache = new Hashtable();
@@ -95,7 +96,9 @@ namespace Origam.Rule
 				ServiceManager.Services.GetService<IBusinessServicesService>(),
 				ServiceManager.Services.GetService<IStateMachineService>(),
 				ServiceManager.Services.GetService<ITracingService>(),
-				ServiceManager.Services.GetService<IDocumentationService>()
+				ServiceManager.Services.GetService<IDocumentationService>(),
+				SecurityManager.GetAuthorizationProvider(),
+				SecurityManager.CurrentUserProfile
 			);
 		}
 		public static RuleEngine Create()
@@ -114,7 +117,9 @@ namespace Origam.Rule
 				ServiceManager.Services.GetService<IBusinessServicesService>(),
 				ServiceManager.Services.GetService<IStateMachineService>(),
 				ServiceManager.Services.GetService<ITracingService>(),
-				ServiceManager.Services.GetService<IDocumentationService>()
+				ServiceManager.Services.GetService<IDocumentationService>(),
+				SecurityManager.GetAuthorizationProvider(),
+				SecurityManager.CurrentUserProfile
 			);
 		}
 		
@@ -126,10 +131,12 @@ namespace Origam.Rule
 			IBusinessServicesService businessService,
 			IStateMachineService stateMachineService,
 			ITracingService tracingService,
-			IDocumentationService documentationService) 
+			IDocumentationService documentationService,
+			IOrigamAuthorizationProvider authorizationProvider,
+			Func<UserProfile> userProfileGetter) 
 			:this(contextStores, transactionId, persistence, lookupService,
 				parameterService, businessService, stateMachineService,	tracingService,
-				documentationService
+				documentationService, authorizationProvider, userProfileGetter
 		)
 		{
 			_workflowInstanceId = workflowInstanceId;
@@ -142,7 +149,9 @@ namespace Origam.Rule
 			IBusinessServicesService businessService,
 			IStateMachineService stateMachineService,
 			ITracingService tracingService,
-			IDocumentationService documentationService)
+			IDocumentationService documentationService,
+			IOrigamAuthorizationProvider authorizationProvider,
+			Func<UserProfile> userProfileGetter)
 		{
 			_persistence = persistence;
 			_lookupService = lookupService;
@@ -151,9 +160,10 @@ namespace Origam.Rule
 			_stateMachineService = stateMachineService;
 			_tracingService = tracingService;
 			_documentationService = documentationService;
-			
-			this.TransactionId = transactionId;
+			_authorizationProvider = authorizationProvider;
+			TransactionId = transactionId;
 			_contextStores = contextStores;
+			_userProfileGetter = userProfileGetter;
 
 			if(_persistence == null)
 			{
@@ -305,25 +315,25 @@ namespace Origam.Rule
 
 		public string ActiveProfileId()
 		{
-            UserProfile profile = SecurityManager.CurrentUserProfile();
+            UserProfile profile = _userProfileGetter();
 			return profile.Id.ToString();
 		}
 
 		public object ActiveProfileGuId()
 		{
-            UserProfile profile = SecurityManager.CurrentUserProfile();
+            UserProfile profile = _userProfileGetter();
 			return profile.Id;
 		}
 
 		public string ActiveProfileBusinessUnitId()
 		{
-            UserProfile profile = SecurityManager.CurrentUserProfile();
+            UserProfile profile = _userProfileGetter();
 		    return profile.BusinessUnitId.ToString();
 		}
 
 		public string ActiveProfileOrganizationId()
 		{
-            UserProfile profile = SecurityManager.CurrentUserProfile();
+            UserProfile profile = _userProfileGetter();
 			return profile.OrganizationId.ToString();
 		}
 
@@ -1995,16 +2005,14 @@ namespace Origam.Rule
 			return (boolCondition ? trueResult : falseResult);
 		}
 
-		public static bool IsFeatureOn(string featureCode)
+		public bool IsFeatureOn(string featureCode)
 		{
-			IParameterService param = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-
-			return param.IsFeatureOn(featureCode);
+			return _parameterService.IsFeatureOn(featureCode);
 		}
 
-		public static bool IsInRole(string roleName)
+		public bool IsInRole(string roleName)
 		{
-			return SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, roleName);
+			return _authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roleName);
 		}
 
 		public bool IsInState(string entityId, string fieldId, string currentStateValue, string targetStateId)
@@ -3975,8 +3983,7 @@ namespace Origam.Rule
 		        return false;
 	        }
 
-	        return !SecurityManager
-		        .GetAuthorizationProvider()
+	        return !_authorizationProvider
 		        .Authorize(SecurityManager.CurrentPrincipal, action.Roles);
         }
 
@@ -4127,8 +4134,7 @@ namespace Origam.Rule
 		private bool IsRuleMatching(XmlContainer data, IRule rule, string roles, XPathNodeIterator contextPosition)
 		{
 			// check roles
-			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
-			if(! authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roles))
+			if(!_authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roles))
 			{
 				return false;
 			}
@@ -5477,7 +5483,8 @@ namespace Origam.Rule
 	class IsFeatureOnFunction : IXsltContextFunction 
 	{
 		private XPathResultType[] _argTypes = null;
-
+		public RuleEngine Engine { get; set; }
+		
 		public IsFeatureOnFunction (XPathResultType[] argTypes)
 		{
 			_argTypes = argTypes;
@@ -5505,14 +5512,15 @@ namespace Origam.Rule
 		public object Invoke(XsltContext xsltContext, 
 			object[] args, XPathNavigator docContext) 
 		{
-			return RuleEngine.IsFeatureOn((string)args[0]);
+			return Engine.IsFeatureOn((string)args[0]);
 		}
 	}
 
 	class IsInRoleFunction : IXsltContextFunction 
 	{
 		private XPathResultType[] _argTypes = null;
-
+		public RuleEngine Engine { get; set; }
+		
 		public IsInRoleFunction (XPathResultType[] argTypes)
 		{
 			_argTypes = argTypes;
@@ -5540,7 +5548,7 @@ namespace Origam.Rule
 		public object Invoke(XsltContext xsltContext, 
 			object[] args, XPathNavigator docContext) 
 		{
-			return RuleEngine.IsInRole((string)args[0]);
+			return Engine.IsInRole((string)args[0]);
 		}
 	}
 
@@ -6156,11 +6164,13 @@ namespace Origam.Rule
 			else if (name == "IsFeatureOn")
 			{
 				IsFeatureOnFunction f = new IsFeatureOnFunction(ArgTypes);
+				f.Engine = this.Engine;
 				return f;
 			}
 			else if (name == "IsInRole")
 			{
 				IsInRoleFunction f = new IsInRoleFunction(ArgTypes);
+				f.Engine = this.Engine;
 				return f;
 			}
 			else if (name == "ActiveProfileBusinessUnitId")
