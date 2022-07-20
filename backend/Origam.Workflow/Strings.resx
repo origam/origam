@@ -342,9 +342,6 @@
   <data name="ErrorContextEvalFailed" xml:space="preserve">
     <value>Context evaluation failed for '{0}'</value>
   </data>
-  <data name="ErrorUnknownAccessMode" xml:space="preserve">
-    <value>Unknown file access mode.</value>
-  </data>
   <data name="ErrorInvalidConnectionString" xml:space="preserve">
     <value>Invalid connection string.</value>
   </data>
@@ -354,11 +351,14 @@
   <data name="ErrorNoSearchPattern" xml:space="preserve">
     <value>Search pattern not specified.</value>
   </data>
-  <data name="ErrorSplitByNegativeValue" xml:space="preserve">
-    <value>splitFileByRows has negative value.</value>
+  <data name="ErrorSplitFileByRows" xml:space="preserve">
+    <value>splitFileByRows must be a positive number.</value>
   </data>
   <data name="SplitBinaryFilesNotSupported" xml:space="preserve">
     <value>Splitting binary files is not supported.</value>
+  </data>
+  <data name="AggregateCompressedFilesButNoCompression" xml:space="preserve">
+    <value>"AggregateCompressedFiles" readType specified but "compression" is not set.</value>
   </data>
   <data name="ErrorNoServer" xml:space="preserve">
     <value>Server not specified.</value>
