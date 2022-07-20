@@ -67,7 +67,7 @@ namespace Origam.Rule
 		private Color NullColor = Color.FromArgb(0, 0, 0, 0);
 
 		IXsltEngine _transformer;
-		Counter _counter;
+		ICounter _counter;
 		private IPersistenceService _persistence;
 		private IDataLookupService _lookupService;
 		private IParameterService _parameterService;
@@ -86,6 +86,7 @@ namespace Origam.Rule
 		public static RuleEngine Create(Hashtable contextStores, string transactionId,
 			Guid workflowInstanceId)
 		{
+			var businessService = ServiceManager.Services.GetService<IBusinessServicesService>();
 			return new RuleEngine(
 				contextStores, 
 				transactionId,
@@ -93,12 +94,13 @@ namespace Origam.Rule
 				ServiceManager.Services.GetService<IPersistenceService>(),
 				ServiceManager.Services.GetService<IDataLookupService>(),
 				ServiceManager.Services.GetService<IParameterService>(),
-				ServiceManager.Services.GetService<IBusinessServicesService>(),
+				businessService,
 				ServiceManager.Services.GetService<IStateMachineService>(),
 				ServiceManager.Services.GetService<ITracingService>(),
 				ServiceManager.Services.GetService<IDocumentationService>(),
 				SecurityManager.GetAuthorizationProvider(),
-				SecurityManager.CurrentUserProfile
+				SecurityManager.CurrentUserProfile,
+				new Counter(businessService)
 			);
 		}
 		public static RuleEngine Create()
@@ -108,18 +110,20 @@ namespace Origam.Rule
 
 		public static RuleEngine Create(Hashtable contextStores, string transactionId)
 		{
+			var businessService = ServiceManager.Services.GetService<IBusinessServicesService>();
 			return new RuleEngine(
 				contextStores, 
 				transactionId, 
 				ServiceManager.Services.GetService<IPersistenceService>(),
 				ServiceManager.Services.GetService<IDataLookupService>(),
 				ServiceManager.Services.GetService<IParameterService>(),
-				ServiceManager.Services.GetService<IBusinessServicesService>(),
+				businessService,
 				ServiceManager.Services.GetService<IStateMachineService>(),
 				ServiceManager.Services.GetService<ITracingService>(),
 				ServiceManager.Services.GetService<IDocumentationService>(),
 				SecurityManager.GetAuthorizationProvider(),
-				SecurityManager.CurrentUserProfile
+				SecurityManager.CurrentUserProfile,
+				new Counter(businessService)
 			);
 		}
 		
@@ -133,10 +137,11 @@ namespace Origam.Rule
 			ITracingService tracingService,
 			IDocumentationService documentationService,
 			IOrigamAuthorizationProvider authorizationProvider,
-			Func<UserProfile> userProfileGetter) 
+			Func<UserProfile> userProfileGetter,
+			ICounter counter) 
 			:this(contextStores, transactionId, persistence, lookupService,
 				parameterService, businessService, stateMachineService,	tracingService,
-				documentationService, authorizationProvider, userProfileGetter
+				documentationService, authorizationProvider, userProfileGetter, counter
 		)
 		{
 			_workflowInstanceId = workflowInstanceId;
@@ -151,7 +156,8 @@ namespace Origam.Rule
 			ITracingService tracingService,
 			IDocumentationService documentationService,
 			IOrigamAuthorizationProvider authorizationProvider,
-			Func<UserProfile> userProfileGetter)
+			Func<UserProfile> userProfileGetter,
+			ICounter counter)
 		{
 			_persistence = persistence;
 			_lookupService = lookupService;
@@ -170,7 +176,7 @@ namespace Origam.Rule
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorInitializeEngine"));
 			}
 
-			_counter = new Counter(businessService);
+			_counter = counter;
 
 #if NETSTANDARD
             XsltEngineType xsltEngineType = XsltEngineType.XslCompiledTransform;

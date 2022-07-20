@@ -27,10 +27,15 @@ using Origam.Workbench.Services;
 
 namespace Origam.Rule
 {
+	public interface ICounter
+	{
+		string GetNewCounter (string counterCode, DateTime date, string transactionId);
+	}
+
 	/// <summary>
 	/// Summary description for Counter.
 	/// </summary>
-	public class Counter
+	public class Counter : ICounter
 	{
 		private const int RETRIES		= 50;
 		private const int RETRY_INTERVAL = 1000;
