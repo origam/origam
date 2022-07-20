@@ -50,6 +50,7 @@ namespace Origam.Rule.Tests
         private Mock<IOrigamAuthorizationProvider> authorizationProvider;
         private Mock<Func<UserProfile>> userProfileGetterMock;
         private Mock<ICounter> counterMock;
+        private  Mock<IStateMachineService> stateMachineServiceMock;
 
         [SetUp]
         public void Init()
@@ -59,7 +60,7 @@ namespace Origam.Rule.Tests
             businessServiceMock
                 .Setup(service => service.XslFunctionProviderServiceAgents)
                 .Returns(new  List<IServiceAgent>());
-            var stateMachineServiceMock = new Mock<IStateMachineService>();
+            stateMachineServiceMock = new Mock<IStateMachineService>();
             var tracingServiceMock = new Mock<ITracingService>();
             var documentationServiceMock = new Mock<IDocumentationService>();
             parameterServiceMock = new Mock<IParameterService>();
@@ -184,6 +185,29 @@ namespace Origam.Rule.Tests
             object expectedResult = "1,548760E+000" ;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }  
+        
+        [TestCase("MinString", "a")]
+        [TestCase("MaxString", "w")]
+        public void ShouldTestStringOperationFunctions(string functionName, string expectedResult)
+        {
+            string xpath = $"AS:{functionName}(ROOT/N1/@name)";
+            
+            var document = new XmlDocument();
+            document.LoadXml("<ROOT><N1 name=\"w\"></N1><N1 name=\"a\"></N1><N1  name=\"e\"></N1></ROOT>");
+            XPathNavigator nav = document.CreateNavigator();
             XPathExpression expr = nav.Compile(xpath);
             
             
@@ -564,7 +588,31 @@ namespace Origam.Rule.Tests
         public void ShouldReturnNull()
         {
             string xpath = "AS:null()";
-            string expectedResult = null;
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = ( XPathNodeIterator)nav.Evaluate(expr);
+            
+            Assert.That(result, Is.AssignableTo(typeof(XPathNodeIterator)));
+            XPathNodeIterator resultIterator = (XPathNodeIterator)result;
+            Assert.That(resultIterator, Has.Count.EqualTo(0));
+        } 
+        
+        [Test]
+        public void ShouldRunToXml()
+        {
+            string testXml = "<TestNode />";
+            string xpath = $"AS:ToXml('{testXml}')";
+            string expectedResult = testXml;
             
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             XPathNavigator nav = new XmlDocument().CreateNavigator();
@@ -578,8 +626,179 @@ namespace Origam.Rule.Tests
             
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
+            Assert.That(result, Is.AssignableTo(typeof(XPathNodeIterator)));
+            XPathNodeIterator resultIterator = (XPathNodeIterator)result;
+            resultIterator.MoveNext();
+            Assert.That(resultIterator.Current.OuterXml, Is.EqualTo(expectedResult));
+        } 
+        
+        [TestCase("AS:GenerateSerial('counter1')") ]
+        [TestCase("AS:GenerateSerial('counter1', '0001-01-01')")]
+        public void ShouldGenerateSerial(string xpath)
+        {
+            string counterCode = "counter1";
+            string expectedResult = "result1";
             
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+
+            counterMock
+                .Setup(x => x.GetNewCounter(counterCode, DateTime.MinValue, null))
+                .Returns("result1");
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
             Assert.That(result, Is.EqualTo(expectedResult));
+        }  
+        
+        [Test]
+        public void ShouldTestIsInState()
+        {
+            Guid entityId = Guid.Parse("153c5d36-0aa7-4073-a4f9-b0dc31f2edea");
+            Guid fieldId = Guid.Parse("1038de85-5c44-4e75-9052-70a4c3c35dab");
+            string currentState = "testState";
+            Guid targetStateId = Guid.Parse("2157eb16-6643-45f7-b304-bd6fea811e16");
+            
+            string xpath = $"AS:IsInState('{entityId}', '{fieldId}', '{currentState}', '{targetStateId}')";
+            bool expectedResult = true;
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+
+            stateMachineServiceMock
+                .Setup(x => x.IsInState(entityId, fieldId, currentState ,targetStateId))
+                .Returns(true);
+
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+        
+        [Test]
+        public void ShouldTestFormatLink()
+        {
+            string xpath = $"AS:FormatLink('http://localhost', 'test1')";
+            string expectedResult = "<a href=\"http://localhost\" target=\"_blank\"><u><font color=\"#0000ff\">test1</font></u></a>";
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+        
+        [Test]
+        public void ShouldTestIsUserLockedOut()
+        {
+            string userId = "4c738d1f-b0a8-4816-9f06-4d58ef49fcda";
+            string xpath = $"AS:IsUserLockedOut('{userId}')";
+            bool expectedResult = true;
+            
+            var agentMock = new Mock<IServiceAgent>();
+            var agentParameters = new Hashtable();
+            agentMock
+                .SetupGet(x => x.Parameters)
+                .Returns(agentParameters); 
+            agentMock
+                .SetupGet(x => x.Parameters)
+                .Returns(agentParameters);
+            agentMock   
+                .SetupGet(x => x.Result)
+                .Returns(expectedResult);
+            agentMock   
+                .SetupSet(x => x.MethodName = "IsLockedOut")
+                .Verifiable();
+            businessServiceMock
+                .Setup(x => x.GetAgent("IdentityService", null, null))
+                .Returns(agentMock.Object);
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+            Assert.That(agentParameters, Has.Count.EqualTo(1));
+            Assert.That(agentParameters.ContainsKey("UserId"));
+            Assert.That(agentParameters["UserId"], Is.EqualTo(Guid.Parse(userId)));
+            agentMock.Verify();
+            agentMock.Verify(x => x.Run(), Times.Once);
+        }
+        
+        [TestCase("IsUserLockedOut", "IsLockedOut")]
+        [TestCase("IsUserEmailConfirmed","IsEmailConfirmed")]
+        [TestCase("Is2FAEnforced","Is2FAEnforced")]
+        public void ShouldTestUserInfoMethods(string asMethodName, string methodName)
+        {
+            string userId = "4c738d1f-b0a8-4816-9f06-4d58ef49fcda";
+            string xpath = $"AS:{asMethodName}('{userId}')";
+            bool expectedResult = true;
+            
+            var agentMock = new Mock<IServiceAgent>();
+            var agentParameters = new Hashtable();
+            agentMock
+                .SetupGet(x => x.Parameters)
+                .Returns(agentParameters); 
+            agentMock
+                .SetupGet(x => x.Parameters)
+                .Returns(agentParameters);
+            agentMock   
+                .SetupGet(x => x.Result)
+                .Returns(expectedResult);
+            agentMock   
+                .SetupSet(x => x.MethodName = methodName)
+                .Verifiable();
+            businessServiceMock
+                .Setup(x => x.GetAgent("IdentityService", null, null))
+                .Returns(agentMock.Object);
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+            Assert.That(agentParameters, Has.Count.EqualTo(1));
+            Assert.That(agentParameters.ContainsKey("UserId"));
+            Assert.That(agentParameters["UserId"], Is.EqualTo(Guid.Parse(userId)));
+            agentMock.Verify();
+            agentMock.Verify(x => x.Run(), Times.Once);
         }
     }
 }
