@@ -222,9 +222,6 @@ namespace Origam.Rule.Tests
                 lookupServiceMock
                     .Setup(service => service.GetDisplayText(Guid.Parse(lookupId), paramTable,false, false, null))
                     .Returns(expectedResult);
-
-                object displayText = lookupServiceMock.Object.GetDisplayText(Guid.Parse(lookupId),
-                    paramTable, false, false, null);
             }            
             else if (parameters.Length == 6)
             {
