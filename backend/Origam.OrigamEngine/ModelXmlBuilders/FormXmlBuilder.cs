@@ -1116,6 +1116,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			if (control.ControlItem.Name == "AsForm") {
 				// for the Form we find its root control and we continue
+				if(control.ChildItemsByType(ControlSetItem.CategoryConst).Count==0) 
+				{ 
+					return false; 
+				}
 				item = (AbstractSchemaItem)control.ChildItemsByType (ControlSetItem.CategoryConst) [0];
 				control = item as ControlSetItem;
 			}
