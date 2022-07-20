@@ -457,12 +457,12 @@ namespace Origam.Rule.Tests
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
             Assert.That(result, Is.EqualTo(expectedResult));
-        }           
-        [Test]
-        public void ShouldGetUTCDateTime()
+        } 
+        
+        [TestCase("AS:UTCDateTime()")]
+        [TestCase("AS:LocalDateTime()")]
+        public void ShouldGetDateTimeNow(string xpath)
         {
-            DateTime.Now;
-            string xpath = "AS:UTCDateTime()";
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             XPathNavigator nav = new XmlDocument().CreateNavigator();
             XPathExpression expr = nav.Compile(xpath);
@@ -474,8 +474,111 @@ namespace Origam.Rule.Tests
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
+            DateTime resultDateTime = DateTime.Parse((string)result);
+            DateTime minTestTime = DateTime.Now - new TimeSpan(0,0,0,1);
+            DateTime maxTestTime = DateTime.Now + new TimeSpan(0,0,0,1);
+            Assert.That(resultDateTime, Is.GreaterThan(minTestTime));
+            Assert.That(resultDateTime, Is.LessThan(maxTestTime));
+        } 
+
+        [Test]
+        public void ShouldTestIfFeatureOn()
+        {
+            string xpath = "AS:IsFeatureOn('testFeature')";
+            bool expectedResult = true;
+            parameterServiceMock
+                .Setup(service => service.IsFeatureOn("testFeature"))
+                .Returns(true);    
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
             Assert.That(result, Is.EqualTo(expectedResult));
         }   
         
+        [Test]
+        public void ShouldTestIsInRole()
+        {
+            string xpath = "AS:IsInRole('testRole')";
+            bool expectedResult = true;
+            authorizationProvider
+                .Setup(service => service.Authorize(SecurityManager.CurrentPrincipal, "testRole"))
+                .Returns(true);    
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }   
+                
+        [TestCase("AS:ActiveProfileBusinessUnitId()", "3eed4998-4ca1-445f-a02d-d9851ea978a4")]
+        [TestCase("AS:ActiveProfileId()", "e93a81d4-2520-4f14-9af9-574a61c609b0")]
+        [TestCase("AS:ActiveProfileOrganizationId()", "4f68699e-6755-4b7d-be93-257ae28f32f5")]
+        public void ShouldGetActiveProfileBusinessUnitId(string xpath, string expectedResult)
+        {
+            userProfileGetterMock.
+                Setup(x => x.Invoke())
+                .Returns(new UserProfile
+                    {
+                        BusinessUnitId = Guid.Parse("3eed4998-4ca1-445f-a02d-d9851ea978a4"),
+                        Id = Guid.Parse("e93a81d4-2520-4f14-9af9-574a61c609b0"),
+                        OrganizationId = Guid.Parse("4f68699e-6755-4b7d-be93-257ae28f32f5")
+                    }
+                );
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+        
+                        
+        [Test]
+        public void ShouldReturnNull()
+        {
+            string xpath = "AS:null()";
+            string expectedResult = null;
+            
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
     }
 }
