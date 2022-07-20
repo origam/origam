@@ -339,9 +339,6 @@
   <data name="ErrorContextEvalFailed" xml:space="preserve">
     <value>Context evaluation failed for '{0}'</value>
   </data>
-  <data name="ErrorUnknownAccessMode" xml:space="preserve">
-    <value>Unknown file access mode.</value>
-  </data>
   <data name="ErrorInvalidConnectionString" xml:space="preserve">
     <value>Invalid connection string.</value>
   </data>

@@ -67,18 +67,14 @@ namespace Origam.Workflow.WorkQueue
 			}
 		}
 		private int _currentPosition;
-        private bool _aggregationExecuted;
 		private string[] _filenames;
 		private readonly Hashtable _files = new Hashtable();
 		private string _transactionId;
 		private bool _isLocalTransaction;
-		private string _mode;
-        private bool _aggregate;
+		private FileType _mode = FileType.TEXT;
+        private ReadType _readType = ReadType.SingleFiles;
         private string _encoding;
-        public const string MODE_TEXT = "TEXT";
-        public const string MODE_BINARY = "BINARY";
-        private string _compression;
-        private const string COMPRESSION_ZIP = "ZIP";
+        private CompressionType _compression = CompressionType.None;
         private ZipInputStream _currentZipStream;
         private int _splitFileByRows;
         private bool _splitFileAndKeepHeader;
@@ -86,10 +82,30 @@ namespace Origam.Workflow.WorkQueue
         
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		
-        public override void Connect(IWorkQueueService service, Guid queueId, 
-            string workQueueClass, string connection, string userName, string password, 
-            string transactionId)
+
+		public enum FileType
+        {
+			TEXT = 0,
+			BINARY = 1
+        }
+
+		public enum ReadType
+        {
+			SingleFiles = 0,
+			AggregateCompressedFiles = 1,
+			AggregateAllFiles = 2,
+			SplitByRows = 3
+        }
+
+		public enum CompressionType
+		{
+			None = 0,
+			ZIP = 1
+		}
+
+		public override void Connect(IWorkQueueService service, Guid queueId, 
+            string workQueueClass, string connection, string userName, 
+			string password, string transactionId)
 		{
 			if(log.IsInfoEnabled)
 			{
@@ -103,52 +119,60 @@ namespace Origam.Workflow.WorkQueue
             }
             string path = null;
 			string searchPattern = null;
-			var connectionParts = connection.Split(";".ToCharArray());
-			foreach(var part in connectionParts)
+			if (connection != null)
 			{
-				var pair = part.Split("=".ToCharArray());
-				if(pair.Length == 2)
+				var connectionParts = connection.Split(";".ToCharArray());
+				foreach (var part in connectionParts)
 				{
-					switch(pair[0])
+					var pair = part.Split("=".ToCharArray());
+					if (pair.Length == 2)
 					{
-						case "path":
-							path = pair[1];
-							break;
-						case "searchPattern":
-							searchPattern = pair[1];
-							break;
-						case "mode":
-							_mode = pair[1].ToUpper();
-							if(_mode != MODE_TEXT && _mode != MODE_BINARY)
+						try
+						{
+							switch (pair[0])
 							{
-                                throw new ArgumentOutOfRangeException(
-	                                "mode", _mode, 
-                                    ResourceUtils.GetString(
-	                                    "ErrorUnknownAccessMode"));
+								case "path":
+									path = pair[1];
+									break;
+								case "searchPattern":
+									searchPattern = pair[1];
+									break;
+								case "mode":
+									_mode = (FileType)Enum.Parse(
+										typeof(FileType), pair[1]);
+									break;
+								case "encoding":
+									_encoding = pair[1];
+									break;
+								case "compression":
+									_compression = (CompressionType)Enum.Parse(
+										typeof(CompressionType), pair[1]);
+									break;
+								case "readType":
+									_readType = (ReadType)Enum.Parse(
+										typeof(ReadType), pair[1]);
+									break;
+								case "splitFileByRows":
+									_splitFileByRows = Convert.ToInt32(pair[1]);
+									break;
+								case "keepHeader":
+									_splitFileAndKeepHeader =
+										Convert.ToBoolean(pair[1]);
+									break;
+								default:
+									throw new ArgumentOutOfRangeException(
+										"connectionParameterName",
+										pair[0],
+										ResourceUtils.GetString(
+											"ErrorInvalidConnectionString"));
 							}
-							break;
-						case "encoding":
-							_encoding = pair[1];
-							break;
-                        case "compression":
-                            _compression = pair[1].ToUpper();
-                            break;
-                        case "aggregate":
-                            _aggregate = Convert.ToBoolean(pair[1]);
-                            break;
-                        case "splitFileByRows":
-	                        _splitFileByRows = Convert.ToInt32(pair[1]);
-	                        break;
-                        case "keepHeader":
-	                        _splitFileAndKeepHeader =
-		                        Convert.ToBoolean(pair[1]);
-	                        break;
-						default:
-							throw new ArgumentOutOfRangeException(
-								"connectionParameterName", 
-								pair[0], 
-								ResourceUtils.GetString(
-									"ErrorInvalidConnectionString"));
+						}
+						catch (Exception ex)
+                        {
+							throw new Exception(
+								"An error has occurred while parsing the connection string: "
+								+ ex.Message);
+                        }
 					}
 				}
 			}
@@ -162,15 +186,24 @@ namespace Origam.Workflow.WorkQueue
 				throw new Exception(
 					ResourceUtils.GetString("ErrorNoSearchPattern"));
 			}
-			if(_splitFileByRows < 0)
-			{
-				throw new Exception(
-					ResourceUtils.GetString("ErrorSplitByNegativeValue"));
+            if (_readType == ReadType.SplitByRows)
+            {
+				if (_splitFileByRows <= 0)
+				{
+					throw new Exception(
+						ResourceUtils.GetString("ErrorSplitFileByRows"));
+				}
+				if (_mode == FileType.BINARY)
+				{
+					throw new Exception(
+						ResourceUtils.GetString("SplitBinaryFilesNotSupported"));
+				}
 			}
-			if((_splitFileByRows > 0) && (_mode == MODE_BINARY))
-			{
+			if (_readType == ReadType.AggregateCompressedFiles
+				&& _compression == CompressionType.None)
+            {
 				throw new Exception(
-					ResourceUtils.GetString("SplitBinaryFilesNotSupported"));
+					ResourceUtils.GetString("AggregateCompressedFilesButNoCompression"));
 			}
 			// lock the files
 			_filenames = Directory.GetFiles(path, searchPattern);
@@ -219,52 +252,61 @@ namespace Origam.Workflow.WorkQueue
 		public override WorkQueueAdapterResult GetItem(string lastState)
 		{
 			var dataTable = CreateFileDataset(_mode).Tables["File"];
-            if(_aggregate)
+			bool result;
+			switch (_readType)
             {
-	            if(_aggregationExecuted)
-	            {
-		            return null;
-	            }
-                // retrieve all files as multiple records
-                while(RetrieveNextFile(dataTable))
-                {
-                }
-                if(dataTable.Rows.Count == 0)
-                {
-					return null;
-                }
-                // create an aggregated record with files as Data field
-                var aggregatedDataTable 
-	                = CreateFileDataset(_mode).Tables["File"];
-                var dataRow = aggregatedDataTable.NewRow();
-                dataRow["Name"] = $"Multiple files {DateTime.Now}";
-                dataRow["Data"] = dataTable.DataSet.GetXml();
-                aggregatedDataTable.Rows.Add(dataRow);
-                _aggregationExecuted = true;
-                return new WorkQueueAdapterResult(
-	                DataDocumentFactory.New(aggregatedDataTable.DataSet));
+                case ReadType.SingleFiles:
+					result = RetrieveNextFile(dataTable, false);
+					break;
+				case ReadType.AggregateCompressedFiles:
+					return RetrieveAggregate(dataTable, true);
+                case ReadType.AggregateAllFiles:
+					return RetrieveAggregate(dataTable, false);
+				case ReadType.SplitByRows:
+					result = RetrieveNextSegment(dataTable);
+					break;
+                default:
+					throw new ArgumentOutOfRangeException(
+						"readType", _readType, "Unknown ReadType value.");
             }
-			return RetrieveNext(dataTable);
-        }
-		
-        private WorkQueueAdapterResult RetrieveNext(DataTable dataTable)
+			return result
+				? new WorkQueueAdapterResult(
+					DataDocumentFactory.New(dataTable.DataSet))
+				: null;
+		}
+
+        private WorkQueueAdapterResult RetrieveAggregate(DataTable dataTable,
+			bool compressedOnly)
         {
-            bool result;
-            if((_splitFileByRows == 0) || (_mode == MODE_BINARY))
+			// retrieve files as multiple records
+			while(RetrieveNextFile(dataTable, compressedOnly))	{} 
+            if (dataTable.Rows.Count == 0)
             {
-                result = RetrieveNextFile(dataTable);
+                return null;
             }
-            else
+            // create an aggregated record with files as Data field
+            var aggregatedDataTable
+                = CreateFileDataset(_mode).Tables["File"];
+			DataRow dataRow;
+            if (compressedOnly)
             {
-	            result = RetrieveNextSegment(dataTable);
-            }
-	        return result 
-		        ? new WorkQueueAdapterResult(
-			        DataDocumentFactory.New(dataTable.DataSet)) 
-		        : null;
+				string fileName = _filenames[_currentPosition - 1];
+				dataRow = CreateAndInitializeDataRow(
+					aggregatedDataTable, fileName, fileName);
+			}
+			else
+            {
+				dataRow = aggregatedDataTable.NewRow();
+				dataRow["Name"] = $"Multiple files {DateTime.Now}";
+			}
+			dataRow["Data"] = dataTable.DataSet.GetXml();
+            aggregatedDataTable.Rows.Add(dataRow);
+            return new WorkQueueAdapterResult(
+                DataDocumentFactory.New(aggregatedDataTable.DataSet));
         }
 
-        private (Stream, string, string) GetNextFileStream()
+        private (Stream, string, string) GetNextFileStream(
+			bool aggregateCompressedFilesOnly)
         {
         start:
 			if(_currentPosition + 1 > _files.Count)
@@ -275,7 +317,7 @@ namespace Origam.Workflow.WorkQueue
             var title = fileName;
             var fileStream = (FileStream)_files[fileName];
             Stream finalStream;
-            if(_compression == COMPRESSION_ZIP)
+            if(_compression == CompressionType.ZIP)
             {
                 var zipStream = _currentZipStream;
                 if(zipStream == null)
@@ -290,8 +332,15 @@ namespace Origam.Workflow.WorkQueue
                     zipStream.Close();
                     ((IDisposable)zipStream).Dispose();
                     _currentPosition++;
-                    goto start;
-                }
+                    if (aggregateCompressedFilesOnly)
+                    {
+						return (null, null, null);
+					}
+					else
+                    {
+						goto start;
+					}
+				}
                 finalStream = zipStream;
                 title += " " + zipEntry.Name;
             }
@@ -312,7 +361,7 @@ namespace Origam.Workflow.WorkQueue
             if((_splitFileStreamReader == null)
 			|| _splitFileStreamReader.EndOfStream)
             {
-				var (stream, filename, title) = GetNextFileStream();
+				var (stream, filename, title) = GetNextFileStream(false);
 				if(stream == null)
 				{
 					return false;
@@ -333,9 +382,11 @@ namespace Origam.Workflow.WorkQueue
             return true;
         }
 
-        private bool RetrieveNextFile(DataTable dataTable)
+        private bool RetrieveNextFile(
+			DataTable dataTable, bool aggregateCompressedFiles)
         {
-	        var (stream, filename, title) = GetNextFileStream();
+	        var (stream, filename, title) =
+				GetNextFileStream(aggregateCompressedFiles);
 	        if(stream == null)
 	        {
 		        return false;
@@ -367,7 +418,8 @@ namespace Origam.Workflow.WorkQueue
 				// last parts tend to remain in buffer, we need to flush them
 				streamWriter.Flush();
 				var dataRow = CreateAndInitializeDataRow(
-					dataTable, _splitFileStreamReader.ProcessedFilename, _splitFileStreamReader.ProcessedFileTitle);
+					dataTable, _splitFileStreamReader.ProcessedFilename,
+					_splitFileStreamReader.ProcessedFileTitle);
 				dataRow["SequenceNumber"] 
 					= _splitFileStreamReader.SegmentNumber;
 				memoryStream.Position = 0;
@@ -381,7 +433,7 @@ namespace Origam.Workflow.WorkQueue
         }
 
 		public static DataSet GetFileFromStream(
-			Stream stream, string mode, string filename, 
+			Stream stream, FileType mode, string filename, 
 			string title, string encoding)
 		{
             var dataTable = CreateFileDataset(mode).Tables["File"];
@@ -391,23 +443,23 @@ namespace Origam.Workflow.WorkQueue
 		}
 
         private static void AddFileFromStream(
-	        Stream stream, DataTable dataTable, string mode, string filename, 
+	        Stream stream, DataTable dataTable, FileType mode, string filename, 
 	        string title, string encoding)
         {
             AddFileToTable(stream, mode, filename, title, encoding, dataTable);
         }
 
-        private static DataSet CreateFileDataset(string mode)
+        private static DataSet CreateFileDataset(FileType mode)
         {
             var dataSet = new DataSet("ROOT");
             var dataTable = dataSet.Tables.Add("File");
             dataTable.Columns.Add("Name", typeof(string));
             switch(mode)
             {
-	            case MODE_TEXT:
+	            case FileType.TEXT:
 		            dataTable.Columns.Add("Data", typeof(string));
 		            break;
-	            case MODE_BINARY:
+	            case FileType.BINARY:
 		            dataTable.Columns.Add("Data", typeof(byte[]));
 		            break;
             }
@@ -440,17 +492,17 @@ namespace Origam.Workflow.WorkQueue
         }
 
         private static void AddFileToTable(
-	        Stream stream, string mode, string filename, string title, 
+	        Stream stream, FileType mode, string filename, string title, 
 	        string encoding, DataTable dataTable)
         {
             var dataRow = CreateAndInitializeDataRow(
 	            dataTable, filename, title);
             switch(mode)
             {
-	            case MODE_TEXT:
+	            case FileType.TEXT:
 		            ReadTextStream(stream, encoding, dataRow);
 		            break;
-	            case MODE_BINARY:
+	            case FileType.BINARY:
 		            ReadBinaryStream(stream, dataRow);
 		            break;
             }
