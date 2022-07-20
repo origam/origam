@@ -186,17 +186,20 @@ namespace Origam.Workflow.WorkQueue
 				throw new Exception(
 					ResourceUtils.GetString("ErrorNoSearchPattern"));
 			}
-			if(_splitFileByRows < 0)
-			{
-				throw new Exception(
-					ResourceUtils.GetString("ErrorSplitFileByRows"));
+            if (_readType == ReadType.SplitByRows)
+            {
+				if (_splitFileByRows <= 0)
+				{
+					throw new Exception(
+						ResourceUtils.GetString("ErrorSplitFileByRows"));
+				}
+				if (_mode == FileType.BINARY)
+				{
+					throw new Exception(
+						ResourceUtils.GetString("SplitBinaryFilesNotSupported"));
+				}
 			}
-			if(_readType == ReadType.SplitByRows && _mode == FileType.BINARY)
-			{
-				throw new Exception(
-					ResourceUtils.GetString("SplitBinaryFilesNotSupported"));
-			}
-			if(_readType == ReadType.AggregateCompressedFiles
+			if (_readType == ReadType.AggregateCompressedFiles
 				&& _compression == CompressionType.None)
             {
 				throw new Exception(
