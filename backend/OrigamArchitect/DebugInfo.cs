@@ -34,6 +34,7 @@ using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.OrigamEngine;
+using Origam.Rule;
 
 namespace Origam.Workflow
 {
@@ -245,7 +246,7 @@ namespace Origam.Workflow
 			AddHeader("Resource Management Information", result);
 			try
 			{
-				Rule.RuleEngine engine = new Origam.Rule.RuleEngine(null, null);
+				Rule.RuleEngine engine = RuleEngine.Create(null, null);
 
 				AddInfo("Active Resource Id", engine.ResourceIdByActiveProfile(), result);
 			}
@@ -276,7 +277,7 @@ namespace Origam.Workflow
 
 					try
 					{
-						IServiceAgent agent = serviceProvider.GetAgent(service.Name, new Rule.RuleEngine(null, null), null);
+						IServiceAgent agent = serviceProvider.GetAgent(service.Name, RuleEngine.Create(null, null), null);
 						AddLine(agent.Info, result);
 					}
 					catch(Exception ex)

@@ -35,6 +35,7 @@ using Moq;
 using NUnit.Framework;
 using Origam.DA;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Assert = NUnit.Framework.Assert;
 
@@ -52,6 +53,8 @@ namespace Origam.Rule.Tests
         private Mock<ICounter> counterMock;
         private  Mock<IStateMachineService> stateMachineServiceMock;
 
+        private Mock<IXsltFunctionSchemaItemProvider> functionSchemaItemProvider;
+
         [SetUp]
         public void Init()
         {
@@ -67,6 +70,7 @@ namespace Origam.Rule.Tests
             authorizationProvider = new Mock<IOrigamAuthorizationProvider>();
             userProfileGetterMock = new Mock<Func<UserProfile>>();
             counterMock = new Mock<ICounter>();
+            functionSchemaItemProvider = new Mock<IXsltFunctionSchemaItemProvider>();
 
             ruleEngine = new RuleEngine(
                 new Hashtable(), 
@@ -99,7 +103,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -130,7 +135,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -148,7 +154,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -171,7 +178,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -191,7 +199,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -214,7 +223,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -269,7 +279,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -289,7 +300,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -325,7 +337,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -353,7 +366,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -373,7 +387,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -396,7 +411,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -416,7 +432,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -436,7 +453,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -458,7 +476,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -477,7 +496,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -495,7 +515,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -522,7 +543,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -546,7 +568,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -575,7 +598,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -596,7 +620,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -621,7 +646,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -650,7 +676,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -680,7 +707,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -701,7 +729,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -741,7 +770,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -788,7 +818,8 @@ namespace Origam.Rule.Tests
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(), 
                 ruleEngine, 
-                businessServiceMock.Object
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
             );
             
             expr.SetContext(sut);
@@ -800,5 +831,37 @@ namespace Origam.Rule.Tests
             agentMock.Verify();
             agentMock.Verify(x => x.Run(), Times.Once);
         }
+        
+        
+        [Test]
+        public void ShouldTest()
+        {
+            string xpath = "AS1:Test()";
+            string expectedResult = "test";
+
+            XPathNavigator nav = new XmlDocument().CreateNavigator();
+            XPathExpression expr = nav.Compile(xpath);
+            
+            var functionCollection = new XsltFunctionCollection();
+            functionCollection.AssemblyName = "Origam.Rule";
+            functionCollection.FullClassName = "Origam.Rule.LegacyXsltFunctionContainer";
+            functionCollection.XslNameSpaceUri = "http://schema.advantages.cz/AsapFunctions1";
+            functionCollection.XslNameSpacePrefix = "AS1";
+            functionSchemaItemProvider
+                .Setup(x =>
+                    x.ChildItemsByType(XsltFunctionCollection.CategoryConst))
+                .Returns(new ArrayList { functionCollection });
+
+            OrigamXsltContext sut = new OrigamXsltContext(
+                new NameTable(), 
+                ruleEngine, 
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object
+            );
+            
+            expr.SetContext(sut);
+            object result = nav.Evaluate(expr);
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }   
     }
 }

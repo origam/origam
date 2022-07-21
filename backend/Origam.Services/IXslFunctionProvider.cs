@@ -27,6 +27,8 @@ namespace Origam.Services
     /// given prefix. (If not overriden within xsl declaration)
     /// As Xpath function the defail prefix is used.
     /// </summary>
+    ///
+    ///  remove this
     public interface IXslFunctionProvider
     {
         // Namespace URI, something world-unique - e.g. http://schema.advantages.cz/AsapFunctions

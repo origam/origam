@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Xml;
@@ -30,11 +31,13 @@ using System.Xml.Xsl;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Mvp.Xml.Exslt;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Rule
 {
     public class OrigamXsltContext : XsltContext
     {
+        private readonly IXsltFunctionSchemaItemProvider _xsltFunctionSchemaItemProvider;
         private ExsltContext _exslt;
         private static readonly RuleFunctionContext _ruleCtx =
             new RuleFunctionContext(new NameTable());
@@ -42,28 +45,52 @@ namespace Origam.Rule
 
         public static OrigamXsltContext Create(XmlNameTable nameTable)
         {
+            var schemaService = ServiceManager.Services.GetService<SchemaService>();
             return new OrigamXsltContext(
                 nameTable,
-                ServiceManager.Services.GetService<IBusinessServicesService>()
+                ServiceManager.Services.GetService<IBusinessServicesService>(),
+                schemaService.GetProvider<XsltFunctionSchemaItemProvider>()
             );
         }
         
         public static OrigamXsltContext Create(NameTable nameTable, RuleEngine ruleEngine)
         {
+            var schemaService = ServiceManager.Services.GetService<SchemaService>();
             return new OrigamXsltContext(
                 nameTable,
                 ruleEngine,
-                ServiceManager.Services.GetService<IBusinessServicesService>()
+                ServiceManager.Services.GetService<IBusinessServicesService>(),
+                schemaService.GetProvider<XsltFunctionSchemaItemProvider>()
             );
         }
 
-        private OrigamXsltContext(XmlNameTable nt, IBusinessServicesService businessService)
+        private OrigamXsltContext(XmlNameTable nt, IBusinessServicesService businessService,
+           IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider)
             : base((NameTable)nt)
         {
+            _xsltFunctionSchemaItemProvider = xsltFunctionSchemaItemProvider;
             _serviceXslFunctionsDict = new Dictionary<string, object>();
             _exslt = new ExsltContext(nt);
+            
+            var xsltFunctionCollections = _xsltFunctionSchemaItemProvider
+                .ChildItemsByType(XsltFunctionCollection.CategoryConst)
+                .Cast<XsltFunctionCollection>();
+            
+            foreach (var functionCollection in xsltFunctionCollections)
+            {
+                object instantiatedObject = Reflector.InvokeObject(functionCollection.FullClassName, functionCollection.AssemblyName);
+                if (!(instantiatedObject is IXsltFunctionContainer functionContainer))
+                {
+                    throw new Exception($"Referenced class {functionCollection.FullClassName} from {functionCollection.AssemblyName} does not implement interface {nameof(IXsltFunctionContainer)}");
+                }
 
-            // add function from services
+                AddNamespace(functionCollection.XslNameSpacePrefix,
+                    functionCollection.XslNameSpaceUri);
+                _serviceXslFunctionsDict.Add(functionCollection.XslNameSpaceUri,
+                    functionContainer);
+            }
+
+            // add function from services  register new schema items
             foreach (IXslFunctionProvider xslFunctionProvider
                      in businessService.XslFunctionProviderServiceAgents)
             {
@@ -77,8 +104,9 @@ namespace Origam.Rule
         /// <summary>
         /// Creates new ExsltContext instance.
         /// </summary>        
-        public OrigamXsltContext(NameTable nt, RuleEngine ruleEngine, IBusinessServicesService businessService)
-            : this(nt, businessService)
+        public OrigamXsltContext(NameTable nt, RuleEngine ruleEngine,
+            IBusinessServicesService businessService, IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider)
+            : this(nt, businessService, xsltFunctionSchemaItemProvider)
         {
             _ruleCtx.Engine = ruleEngine;
         }
