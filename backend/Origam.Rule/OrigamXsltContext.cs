@@ -22,71 +22,47 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Security;
+using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Mvp.Xml.Exslt;
-using Origam.Schema.EntityModel;
 
 namespace Origam.Rule
 {
     public class OrigamXsltContext : XsltContext
     {
-        private readonly IXsltFunctionSchemaItemProvider _xsltFunctionSchemaItemProvider;
         private ExsltContext _exslt;
-        private static readonly RuleFunctionContext _ruleCtx =
-            new RuleFunctionContext(new NameTable());
         private Dictionary<string, object> _serviceXslFunctionsDict;
 
         public static OrigamXsltContext Create(XmlNameTable nameTable)
         {
-            var schemaService = ServiceManager.Services.GetService<SchemaService>();
+            var businessService = ServiceManager.Services.GetService<IBusinessServicesService>();
+            IEnumerable<IXsltFunctionContainer> functionContainers = XsltFunctionContainerFactory.Create();
             return new OrigamXsltContext(
                 nameTable,
-                ServiceManager.Services.GetService<IBusinessServicesService>(),
-                schemaService.GetProvider<XsltFunctionSchemaItemProvider>()
+                businessService,
+                functionContainers
             );
         }
         
-        public static OrigamXsltContext Create(NameTable nameTable, RuleEngine ruleEngine)
-        {
-            var schemaService = ServiceManager.Services.GetService<SchemaService>();
-            return new OrigamXsltContext(
-                nameTable,
-                ruleEngine,
-                ServiceManager.Services.GetService<IBusinessServicesService>(),
-                schemaService.GetProvider<XsltFunctionSchemaItemProvider>()
-            );
-        }
-
-        private OrigamXsltContext(XmlNameTable nt, IBusinessServicesService businessService,
-           IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider)
+        public OrigamXsltContext(XmlNameTable nt, IBusinessServicesService businessService,
+            IEnumerable<IXsltFunctionContainer> xsltFunctionContainers)
             : base((NameTable)nt)
         {
-            _xsltFunctionSchemaItemProvider = xsltFunctionSchemaItemProvider;
             _serviceXslFunctionsDict = new Dictionary<string, object>();
             _exslt = new ExsltContext(nt);
             
-            var xsltFunctionCollections = _xsltFunctionSchemaItemProvider
-                .ChildItemsByType(XsltFunctionCollection.CategoryConst)
-                .Cast<XsltFunctionCollection>();
-            
-            foreach (var functionCollection in xsltFunctionCollections)
-            {
-                object instantiatedObject = Reflector.InvokeObject(functionCollection.FullClassName, functionCollection.AssemblyName);
-                if (!(instantiatedObject is IXsltFunctionContainer functionContainer))
-                {
-                    throw new Exception($"Referenced class {functionCollection.FullClassName} from {functionCollection.AssemblyName} does not implement interface {nameof(IXsltFunctionContainer)}");
-                }
 
-                AddNamespace(functionCollection.XslNameSpacePrefix,
-                    functionCollection.XslNameSpaceUri);
-                _serviceXslFunctionsDict.Add(functionCollection.XslNameSpaceUri,
+            foreach (var functionContainer in xsltFunctionContainers)
+            {
+                AddNamespace(functionContainer.XslNameSpacePrefix,
+                    functionContainer.XslNameSpaceUri);
+                _serviceXslFunctionsDict.Add(functionContainer.XslNameSpaceUri,
                     functionContainer);
             }
 
@@ -100,17 +76,6 @@ namespace Origam.Rule
                     xslFunctionProvider.XslFunctions);
             }
         }
-
-        /// <summary>
-        /// Creates new ExsltContext instance.
-        /// </summary>        
-        public OrigamXsltContext(NameTable nt, RuleEngine ruleEngine,
-            IBusinessServicesService businessService, IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider)
-            : this(nt, businessService, xsltFunctionSchemaItemProvider)
-        {
-            _ruleCtx.Engine = ruleEngine;
-        }
-
 
         public override bool Whitespace
         {
@@ -132,11 +97,6 @@ namespace Origam.Rule
 
         public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
         {
-            if (prefix.ToUpper() == "AS" || string.IsNullOrEmpty(prefix))
-            {
-                return _ruleCtx.ResolveFunction(prefix, name, ArgTypes);
-            }
-            // now try to finalize with services
             Object serviceXslFunctions;            
             String ns = LookupNamespace(prefix);
             if (ns != null)
@@ -157,8 +117,8 @@ namespace Origam.Rule
                     return func;
                 }
             }
-            // prefix not found in services, continue with exslt
-            return _exslt.ResolveFunction(prefix, name, ArgTypes);
+            throw new XPathException(string.Format("Xsl Function not found: prefix='{0}', name='{1}'",
+                prefix, name), null);
         }
 
         public override IXsltContextVariable ResolveVariable(string prefix, string name)
@@ -167,16 +127,31 @@ namespace Origam.Rule
         }
 
         #region private functions
-        
+
+        private bool Equals(string a, string b, bool ignoreCase)
+        {
+            return string.Compare(a, b,
+                ignoreCase
+                    ? StringComparison.OrdinalIgnoreCase
+                    : StringComparison.Ordinal) == 0;
+        }
+
+        private string GetNameFromAttribute(MethodInfo method)
+        {
+            var xsltFunctionAttribute = method.GetCustomAttribute(typeof(XsltFunctionAttribute)) 
+                as XsltFunctionAttribute;
+            return xsltFunctionAttribute?.XsltName;
+        }
 
         private MethodInfo FindBestMethod(MethodInfo[] methods, bool ignoreCase, bool publicOnly, string name, XPathResultType[] argTypes)
         {
             int length = methods.Length;
             int free = 0;
-            // restrict search to methods with the same name and requiested protection attribute
+            // restrict search to methods with the same name and requested protection attribute
             for (int i = 0; i < length; i++)
             {
-                if (string.Compare(name, methods[i].Name, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0)
+                if (Equals(name, methods[i].Name, ignoreCase) ||
+                    Equals(name, GetNameFromAttribute(methods[i]), ignoreCase))
                 {
                     if (!publicOnly || methods[i].GetBaseDefinition().IsPublic)
                     {

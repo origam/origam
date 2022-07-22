@@ -67,7 +67,7 @@ namespace Origam.Rule
 		private Color NullColor = Color.FromArgb(0, 0, 0, 0);
 
 		IXsltEngine _transformer;
-		ICounter _counter;
+		// ICounter _counter;
 		private IPersistenceService _persistence;
 		private IDataLookupService _lookupService;
 		private IParameterService _parameterService;
@@ -176,7 +176,7 @@ namespace Origam.Rule
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorInitializeEngine"));
 			}
 
-			_counter = counter;
+			// _counter = counter;
 
 #if NETSTANDARD
             XsltEngineType xsltEngineType = XsltEngineType.XslCompiledTransform;
@@ -319,7 +319,7 @@ namespace Origam.Rule
 			_positions.Remove(id);
 		}
 
-		public string ActiveProfileId()
+		private string ActiveProfileId()
 		{
             UserProfile profile = _userProfileGetter();
 			return profile.Id.ToString();
@@ -329,18 +329,6 @@ namespace Origam.Rule
 		{
             UserProfile profile = _userProfileGetter();
 			return profile.Id;
-		}
-
-		public string ActiveProfileBusinessUnitId()
-		{
-            UserProfile profile = _userProfileGetter();
-		    return profile.BusinessUnitId.ToString();
-		}
-
-		public string ActiveProfileOrganizationId()
-		{
-            UserProfile profile = _userProfileGetter();
-			return profile.OrganizationId.ToString();
 		}
 
         public static bool IsUserAuthenticated()
@@ -407,39 +395,7 @@ namespace Origam.Rule
 				return ds.Tables["Resource"].Rows[0]["Id"].ToString();
 			}
 		}
-
-		public bool IsUserLockedOut(string userId)
-		{
-			IServiceAgent identityServiceAgent = _businessService.GetAgent("IdentityService", null, null);
-			identityServiceAgent.MethodName = "IsLockedOut";
-			identityServiceAgent.Parameters.Clear();
-			identityServiceAgent.Parameters["UserId"] = new Guid(userId);
-			identityServiceAgent.Run();
-			return (bool) identityServiceAgent.Result; 
-		}
-
-		public bool IsUserEmailConfirmed(string userId)
-		{
-			IServiceAgent identityServiceAgent = _businessService.GetAgent("IdentityService", null, null);
-			identityServiceAgent.MethodName = "IsEmailConfirmed";
-			identityServiceAgent.Parameters.Clear();
-			identityServiceAgent.Parameters["UserId"] = new Guid(userId);
-			identityServiceAgent.Run();
-			return (bool)identityServiceAgent.Result;
-		}
-
-        public bool Is2FAEnforced(string userId)
-        {
-            IServiceAgent identityServiceAgent 
-                = _businessService.GetAgent(
-                "IdentityService", null, null);
-            identityServiceAgent.MethodName = "Is2FAEnforced";
-            identityServiceAgent.Parameters.Clear();
-            identityServiceAgent.Parameters["UserId"] = new Guid(userId);
-            identityServiceAgent.Run();
-            return (bool)identityServiceAgent.Result;
-        }
-
+		
 		public string GetInventoryName(string inventoryId)
 		{
 			DataStructureQuery query = new DataStructureQuery(new Guid("05649ca4-d692-4909-b334-bcf6fae3023b"), new Guid("764f5b79-afd3-474f-97da-2912251cfb88"));
@@ -532,7 +488,7 @@ namespace Origam.Rule
 			{
 				throw new FormatException(ResourceUtils.GetString("ErrorRoundAmountInvalid"), ex);
 			}
-			return NormalRound(amount, "0");
+			return LegacyXsltFunctionContainer.NormalStaticRound(amount, "0");
 		}
 
 		public string RoundDepreciationPlan(string amount)
@@ -582,29 +538,7 @@ namespace Origam.Rule
 		{
 			return Round(amount);
 		}
-
-		public static string NormalRound(string num, string place)
-		{			
-            decimal num1;
-			int num2;
-			try {
-				try
-				{
-					num1 = XmlConvert.ToDecimal(num);
-				} catch {
-					double dnum1 = Double.Parse(num, NumberStyles.Float, CultureInfo.InvariantCulture);
-					num1 = Convert.ToDecimal(dnum1);
-				}				
-				num2 = XmlConvert.ToInt32(place);
-			}
-			catch
-			{
-				return NotANumber;
-			}
-			decimal res = Round(num1, "0b58b6b8-5d68-42bd-bf23-c698a9c78cbf",
-				(decimal) Math.Pow(10, -num2));
-			return XmlConvert.ToString(res);
-		}
+		
         /// <summary>
         /// Decodes number in signed overpunch format 
         /// https://en.wikipedia.org/wiki/Signed_overpunch
@@ -724,20 +658,7 @@ namespace Origam.Rule
             return $"{beforeDecPoint}.{afterDecPoint}";
         }
 
-
-		public static string ResizeImage(string inputData, int width, int height)
-		{
-			byte[] inBytes = System.Convert.FromBase64String(inputData);
-
-
-			return System.Convert.ToBase64String(
-				ImageResizer.FixedSizeBytesInBytesOut(
-					inBytes, width, height
-				)
-			);
-		}
-
-		public static string ResizeImage(string inputData, int width, int height, string keepAspectRatio, string outFormat)
+        public static string ResizeImage(string inputData, int width, int height, string keepAspectRatio, string outFormat)
 		{
 			byte[] inBytes = System.Convert.FromBase64String(inputData);
 
@@ -782,145 +703,6 @@ namespace Origam.Rule
 			XPathNodeIterator result = nav.Select("/");
 
 			return result;
-		}
-
-		public string OrigamRound(decimal num, string origamRounding)
-		{
-			decimal result;
-
-			if(origamRounding == "")
-			{
-				result = num;
-			}
-			else
-			{
-				decimal precision = (decimal)_lookupService.GetDisplayText(new Guid("7d3d6933-648b-42cb-8947-0d2cb700152b"), origamRounding, this.TransactionId);
-				string type = this.LookupValue("994608ad-9634-439b-975a-484067f5b5a6", origamRounding);
-
-				result = Round(num, type, precision);
-			}
-			
-			return XmlConvert.ToString(result);
-		}
-
-		public static decimal Round(decimal num, string type, decimal precision)
-		{
-			switch(type)
-			{
-				case "9ecc0d91-f4bd-411e-936d-e4a8066b38dd": // up
-					return RoundUD(true, precision, num);
-				case "970da659-63b1-42e5-9c5b-bfff0216a976": //down
-					return RoundUD(false, precision, num);
-				case "0b58b6b8-5d68-42bd-bf23-c698a9c78cbf": //arithmetic
-					decimal lvalue = decimal.ToInt64((num / precision) + (0.5m * Math.Sign(num))) * precision;
-					return lvalue;
-					//return decimal.Round(num, GetDecimalPlaces(precision));
-			}
-
-			throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorUnknownRoundingType"));
-		}
-
-		// round up/down to certain units
-		private static decimal RoundUD(bool bRoundUp, decimal dbUnit, decimal dbVal)
-		{
-			const int ROUND_DP = 10;
-			decimal dbValInUnit = dbVal / dbUnit;
-			dbValInUnit = decimal.Round(dbValInUnit, ROUND_DP);
-			if (bRoundUp) // round up
-			{
-				if(GetDecimalPlaces(dbValInUnit) > 0)
-				{
-					dbValInUnit = decimal.Floor(dbValInUnit + 1); // ceiling
-				}
-			}
-			else // round down
-			{
-				dbValInUnit = decimal.Floor(dbValInUnit);
-			}
-			return (dbValInUnit * dbUnit);
-		}
-		
-		// get the number of decimal places
-		private static int GetDecimalPlaces(decimal val)
-		{
-			const int MAX_DP = 10;
-			decimal THRES = pow(0.1m, MAX_DP);
-			if (val == 0) return 0;
-			int nDecimal = 0;
-			while (val - decimal.Floor(val) > THRES && nDecimal < MAX_DP)
-			{
-				val *= 10;
-				nDecimal++;
-			}
-			return nDecimal;
-		}
-
-		private static decimal Pow(decimal basis, int power)
-		{
-			return pow(basis, power);
-		}
-		
-		private static decimal pow(decimal basis, int power)
-		{
-			decimal res = 1;
-			for (int i = 0; i < power; i++, res *= basis);
-			return res;
-		}
-
-		public static int DifferenceInDays (string periodStart, string periodEnd)
-		{
-			DateTime periodStartDate;
-			DateTime periodEndDate;
-
-			try
-			{
-				periodStartDate = XmlConvert.ToDateTime(periodStart);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorPeriodStartInvalid"), ex);
-			}
-
-			try
-			{
-				periodEndDate = XmlConvert.ToDateTime(periodEnd);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorPeriodEndInvalid"), ex);
-			}
-
-			TimeSpan span = (periodEndDate - periodStartDate);
-
-			return span.Days;
-
-		}
-
-		public static double DifferenceInSeconds(
-            string periodStart, string periodEnd)
-		{
-			DateTime periodStartDate;
-			DateTime periodEndDate;
-			try
-			{
-				periodStartDate = XmlConvert.ToDateTime(periodStart);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(
-                    ResourceUtils.GetString("ErrorPeriodStartInvalid"), ex);
-			}
-			try
-			{
-				periodEndDate = XmlConvert.ToDateTime(periodEnd);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(
-                    ResourceUtils.GetString("ErrorPeriodEndInvalid"), ex);
-			}
-			TimeSpan span = (periodEndDate - periodStartDate);
-			return span.TotalSeconds;
 		}
 
 		public decimal CalculatePrice(string monthlyPrice, string periodStart, string periodEnd, string serviceBillingStart, string serviceBillingEnd, string endingService)
@@ -1116,33 +898,33 @@ namespace Origam.Rule
 		public string LookupValue(string lookupId, string recordId)
 		{
 			object result = _lookupService.GetDisplayText(new Guid(lookupId), recordId, false, false, this.TransactionId);
-
-			return FormatXmlString(result);
+		
+			return XmlTools.FormatXmlString(result);
 		}
-
+		
 		public string LookupValue(string lookupId, string paramName1, string param1, string paramName2, string param2)
 		{
 			Hashtable parameters = new Hashtable(3);
 			parameters[paramName1] = param1;
 			parameters[paramName2] = param2;
-
+		
 			object result = _lookupService.GetDisplayText(new Guid(lookupId), parameters, false, false, this.TransactionId);
-
-			return FormatXmlString(result);
+		
+			return XmlTools.FormatXmlString(result);
 		}
-
+		
 		public string LookupValue(string lookupId, string paramName1, string param1, string paramName2, string param2, string paramName3, string param3)
 		{
 			Hashtable parameters = new Hashtable(3);
 			parameters[paramName1] = param1;
 			parameters[paramName2] = param2;
 			parameters[paramName3] = param3;
-
+		
 			object result = _lookupService.GetDisplayText(new Guid(lookupId), parameters, false, false, this.TransactionId);
-
-			return FormatXmlString(result);
+		
+			return XmlTools.FormatXmlString(result);
 		}
-
+		
 		public string LookupValue(string lookupId, string paramName1, string param1, string paramName2, string param2, string paramName3, string param3, string paramName4, string param4)
 		{
 			Hashtable parameters = new Hashtable(4);
@@ -1150,10 +932,10 @@ namespace Origam.Rule
 			parameters[paramName2] = param2;
 			parameters[paramName3] = param3;
 			parameters[paramName4] = param4;
-
+		
 			object result = _lookupService.GetDisplayText(new Guid(lookupId), parameters, false, false, this.TransactionId);
-
-			return FormatXmlString(result);
+		
+			return XmlTools.FormatXmlString(result);
 		}
 
 		public string LookupValueEx(string lookupId, XPathNavigator parameters)
@@ -1161,7 +943,7 @@ namespace Origam.Rule
             Hashtable lookupParameters = RetrieveParameters(parameters);
             object result = _lookupService.GetDisplayText(
                 new Guid(lookupId), lookupParameters, false, false, this.TransactionId);
-            return FormatXmlString(result);
+            return XmlTools.FormatXmlString(result);
         }
 
         public string LookupOrCreate(string lookupId, string recordId,
@@ -1184,7 +966,7 @@ namespace Origam.Rule
         {
             if (result == string.Empty)
             {
-                result = FormatXmlString(_lookupService.CreateRecord(
+                result = XmlTools.FormatXmlString(_lookupService.CreateRecord(
                     new Guid(lookupId), RetrieveParameters(createParameters), TransactionId));
             }
             return result;
@@ -1325,50 +1107,9 @@ namespace Origam.Rule
 			return core.DataService.ReferenceCount(new Guid(entityId), value, this.TransactionId);
 		}
 
-		public static double DifferenceInMinutes(string periodStart, string periodEnd)
-		{
-			DateTime dateFrom;
-			DateTime dateTo;
-			// check input parameters format
-
-			try
-			{
-				dateFrom = XmlConvert.ToDateTime(periodStart);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorPeriodStartInvalid"), ex);
-			}
-
-			try
-			{
-				dateTo = XmlConvert.ToDateTime(periodEnd);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorPeriodEndInvalid"), ex);
-			}
-
-			TimeSpan span = (dateTo - dateFrom);
-
-			return span.TotalMinutes;
-		}
-
 		public string GenerateId()
 		{
 			return Guid.NewGuid().ToString();
-		}
-
-		public string GenerateSerial(string counterCode)
-		{
-			return _counter.GetNewCounter(counterCode, DateTime.MinValue, this.TransactionId);
-		}
-
-		public string GenerateSerial(string counterCode, string dateString)
-		{
-			DateTime date = XmlConvert.ToDateTime(dateString);
-
-			return _counter.GetNewCounter(counterCode, date, this.TransactionId);
 		}
 
 		public void Trace(string trace)
@@ -1377,31 +1118,6 @@ namespace Origam.Rule
 			{
 				log.Debug(trace);
 			}
-		}
-
-
-		public static string EncodeDataForUri(string input)
-		{
-			return MyUri.EscapeDataString(input);
-		}
-
-		public static string DecodeDataFromUri(string input)
-		{
-			return MyUri.UnescapeDataString(input);
-		}
-
-
-		public static string AddDays(string date, string days)
-		{
-			string result;
-
-			result = FormatXmlDateTime(XmlConvert.ToDateTime(date).AddDays(XmlConvert.ToDouble(days)));
-
-			if(log.IsDebugEnabled)
-			{
-				if(result == "" | result == null) log.Debug("AddDays: empty");
-			}
-			return result;
 		}
 
 		public static XPathNodeIterator ListDays(string startDate, string endDate)
@@ -1481,7 +1197,7 @@ namespace Origam.Rule
 				}
 			}
 
-			return FormatXmlDateTime(result);
+			return XmlTools.FormatXmlDateTime(result);
 		}
 		
 		private bool IsWorkingDay(DateTime date, CalendarDataset.OrigamCalendarRow calendar)
@@ -1522,92 +1238,6 @@ namespace Origam.Rule
 			}
 
 			return true;
-		}
-					
-		public static string AddHours(string date, string hours)
-		{
-			string result;
-
-			result = FormatXmlDateTime(XmlConvert.ToDateTime(date).AddHours(XmlConvert.ToDouble(hours)));
-
-			if(log.IsDebugEnabled)
-			{
-				if(result == "" | result == null) log.Debug("AddHours: empty");
-			}
-			return result;
-		}
-
-		public static string AddMinutes(string date, string minutes)
-		{
-			string result;
-
-			result = FormatXmlDateTime(XmlConvert.ToDateTime(date).AddMinutes(XmlConvert.ToDouble(minutes)));
-
-			if(log.IsDebugEnabled)
-			{
-				if(result == "" | result == null) log.Debug("AddMinutes: empty");
-			}
-			return result;
-		}
-
-		public static string AddYears(string date, string years)
-		{
-			string result;
-
-			result = FormatXmlDateTime(XmlConvert.ToDateTime(date).AddYears(XmlConvert.ToInt32(years)));
-
-			if(log.IsDebugEnabled)
-			{
-				if(result == "" | result == null) log.Debug("AddYears: empty");
-			}
-			return result;
-		}
-
-		public static string AddSeconds(string date, string seconds)
-		{
-			string result;
-
-			result = FormatXmlDateTime(XmlConvert.ToDateTime(date).AddSeconds(XmlConvert.ToDouble(seconds)));
-
-			if(log.IsDebugEnabled)
-			{
-				if(result == "" | result == null) log.Debug("AddSeconds: empty");
-			}
-			return result;
-		}
-
-		public static string AddMonths(string date, string months)
-		{
-			System.DateTime testDate;
-			int numMonth;
-			string retVal;
-
-			try
-			{
-				testDate = XmlConvert.ToDateTime(date);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorAddMonthsDateInvalid"), ex);
-			}
-
-			try
-			{
-				numMonth = XmlConvert.ToInt32(months);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorAddMonthsMonthsInvalid"), ex);
-			}
-			
-			
-			retVal = FormatXmlDateTime(testDate.AddMonths(numMonth));
-			
-			if(log.IsDebugEnabled)
-			{
-				if(retVal == "" | retVal == null) log.Debug("AddMonths: empty");
-			}
-			return retVal;
 		}
 
 		public string FirstDayNextMonthDate(string date)
@@ -1653,17 +1283,6 @@ namespace Origam.Rule
 			return XmlConvert.ToDateTime(date).ToString("MM");;
 		}
 
-        public static string UTCDateTime()
-        {
-            return XmlConvert.ToString(
-                DateTime.Now, XmlDateTimeSerializationMode.Utc);
-        }
-        public static string LocalDateTime()
-        {
-            return XmlConvert.ToString(
-                DateTime.Now, XmlDateTimeSerializationMode.Local);
-        }
-
 		public string DecimalNumber(string number)
 		{
 			decimal num1;
@@ -1678,95 +1297,6 @@ namespace Origam.Rule
 			}
 
 			return XmlConvert.ToString(num1);
-		}
-
-        public string Plus(string number1, string number2)
-        {
-            return NumberOperand(number1, number2, "PLUS");
-        }
-        public string Minus(string number1, string number2)
-        {
-            return NumberOperand(number1, number2, "MINUS");
-        }
-        public string Mul(string number1, string number2)
-        {
-            return NumberOperand(number1, number2, "MUL");
-        }
-        public string Mod(string number1, string number2)
-        {
-            return NumberOperand(number1, number2, "MOD");
-        }
-        public string Div(string number1, string number2)
-        {
-            return NumberOperand(number1, number2, "DIV");
-        }
-
-		public string NumberOperand(string number1, string number2, string operand)
-		{
-			decimal num1;
-			decimal num2;
-
-			try
-			{
-				try
-				{
-					num1 = XmlConvert.ToDecimal(number1);
-				}
-				catch
-				{
-					double dnum1 = Double.Parse(number1, NumberStyles.Float, CultureInfo.InvariantCulture);
-					num1 = Convert.ToDecimal(dnum1);
-				}
-				try
-				{
-					num2 = XmlConvert.ToDecimal(number2);
-				}
-				catch
-				{
-					double dnum2 = Double.Parse(number2, NumberStyles.Float, CultureInfo.InvariantCulture);
-					num2 = Convert.ToDecimal(dnum2);
-				}
-			}
-			catch
-			{
-				return NotANumber;
-			}
-
-			switch(operand)
-			{
-				case "PLUS":
-					return XmlConvert.ToString(num1 + num2);
-				case "MINUS":
-					return XmlConvert.ToString(num1 - num2);
-				case "MUL":
-					return XmlConvert.ToString(num1 * num2);
-				case "MOD":
-					return XmlConvert.ToString(num1 % num2);
-				case "DIV":
-					return XmlConvert.ToString(num1 / num2);
-				default:
-					throw new ArgumentOutOfRangeException("operand", operand, ResourceUtils.GetString("ErrorUnsupportedOperator"));
-			}
-		}
-
-		public string FormatDate(string date, string format)
-		{
-            if(String.IsNullOrWhiteSpace(date))
-            {
-                return "";
-            }
-			DateTime d = XmlConvert.ToDateTime(date);
-			return d.ToString(format);
-		}
-
-		public string FormatNumber(string number, string format)
-		{
-            if(String.IsNullOrWhiteSpace(number))
-            {
-                return "";
-            }
-			decimal d = XmlConvert.ToDecimal(number);
-			return d.ToString(format);
 		}
 		
 		/// <summary>
@@ -1897,32 +1427,6 @@ namespace Origam.Rule
 			return XmlConvert.ToString(result);
 		}
 
-		public string MinString(XPathNodeIterator iterator)
-		{
-			if(iterator.Count == 0)
-			{
-				return "";
-			}
-			else
-			{
-				ArrayList sorted = SortedArray(iterator);
-				return (string)sorted[0];
-			}
-		}
-
-		public string MaxString(XPathNodeIterator iterator)
-		{
-			if(iterator.Count == 0)
-			{
-				return "";
-			}
-			else
-			{
-				ArrayList sorted = SortedArray(iterator);
-				return (string)sorted[sorted.Count-1];
-			}
-		}
-
 		public string Uppercase(string text)
 		{
 			return text.ToUpper();
@@ -1952,78 +1456,6 @@ namespace Origam.Rule
 			}
 
 			return text;
-		}
-
-		private ArrayList SortedArray(XPathNodeIterator iterator)
-		{
-			ArrayList result = new ArrayList();
-
-			while(iterator.MoveNext())
-			{
-				result.Add(iterator.Current.Value);
-			}
-
-			result.Sort();
-
-			return result;
-		}
-
-		public static string isnull(string value1, string value2)
-		{
-			return (value1 == "" ? value2 : value1);
-		}
-
-		public static string isnull(string value1, string value2, string value3)
-		{
-			string part1 = isnull(value1, value2);
-
-			return (part1 == "" ? value3 : part1);
-		}
-
-		public static string isnull(string value1, string value2, string value3, string value4)
-		{
-			string part1 = isnull(value1, value2, value3);
-
-			return (part1 == "" ? value4 : part1);
-		}
-
-		public static string iif(object condition, string trueResult, string falseResult)
-		{
-			bool boolCondition = false;
-
-			if(condition is bool)
-			{
-				boolCondition = (bool)condition;
-			}
-			else
-			{
-				string s = condition.ToString().Trim();
-				if ((s == "1") || (s == "true"))
-				{
-					boolCondition = true;
-				}
-				if (!(s == "0") && !(s == "false"))
-				{
-					boolCondition = (condition.ToString() == "" ? false : true);
-				}
-			}
-
-			return (boolCondition ? trueResult : falseResult);
-		}
-
-		public bool IsFeatureOn(string featureCode)
-		{
-			return _parameterService.IsFeatureOn(featureCode);
-		}
-
-		public bool IsInRole(string roleName)
-		{
-			return _authorizationProvider.Authorize(SecurityManager.CurrentPrincipal, roleName);
-		}
-
-		public bool IsInState(string entityId, string fieldId, string currentStateValue, string targetStateId)
-		{
-			return _stateMachineService.IsInState(new Guid(entityId), new Guid(fieldId), currentStateValue, new Guid(targetStateId));
 		}
 
 		public XPathNodeIterator NextStates(string entityId, string fieldId, string currentStateValue, XPathNodeIterator row)
@@ -2075,24 +1507,6 @@ namespace Origam.Rule
 			return result;
 		}
 
-		public static XPathNodeIterator ToXml(string value)
-		{
-			return ToXml(value, "/");
-		}
-
-		public static XPathNodeIterator ToXml(string value, string xpath)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.PreserveWhitespace = true;
-			doc.LoadXml(value);
-
-			XPathNavigator nav = doc.CreateNavigator();
-
-			XPathNodeIterator result = nav.Select(xpath);
-
-			return result;
-		}
-
 		public static XPathNodeIterator NodeSet(XPathNavigator nav)
 		{
 			XPathNodeIterator result = nav.Select("/");
@@ -2118,25 +1532,7 @@ namespace Origam.Rule
             xtw.WriteNode(node.Current);
 			return sb.ToString();
 		}
-
-		/*
-		public static string DataToJson(XPathNodeIterator it)
-		{
-			XmlDocument resultDoc = new XmlDocument();
-			it.MoveNext();
-			resultDoc.ImportNode(it.Current., true);
-
-			XmlDocument xmlData = GetXmlDocumentFromData(data);
-			xmlData =
-
-			if (rule is XPathRule) return EvaluateRule(rule as XPathRule, xmlData, contextPosition);
-			if (rule is XslRule) return EvaluateRule(rule as XslRule, xmlData);
-
-			return null;
-			
-		}
-		*/
-
+        
 		public static string DecodeTextFromBase64(string input, string encoding)
 		{
 			byte[] blob = Convert.FromBase64String(input);
@@ -2303,11 +1699,6 @@ namespace Origam.Rule
 			{
 				throw new ArgumentOutOfRangeException("result", result, "Unknown http request result type");
 			}
-		}
-
-		public static string FormatLink(string url, string text)
-		{
-			return "<a href=\"" + url + "\" target=\"_blank\"><u><font color=\"#0000ff\">" + text + "</font></u></a>";
 		}
 
         public static string ProcessMarkdown(string text)
@@ -2511,38 +1902,7 @@ namespace Origam.Rule
 				throw new ArgumentOutOfRangeException("item", item, ResourceUtils.GetString("ErrorRuleInvalidType"));
 			}
 		}
-
-		public string GetConstant(string name)
-		{
-			return (string)_parameterService.GetParameterValue(name, OrigamDataType.String);
-		}
-
-		public string GetString(string name) {return _parameterService.GetString(name);	}
-		public string GetString(string name, string arg1) {	return _parameterService.GetString(name, arg1);	}
-		public string GetString(string name, string arg1, string arg2) {	return _parameterService.GetString(name, arg1, arg2);	}
-		public string GetString(string name, string arg1, string arg2, string arg3) {	return _parameterService.GetString(name, arg1, arg2, arg3);	}
-		public string GetString(string name, string arg1, string arg2, string arg3, string arg4) {	return _parameterService.GetString(name, arg1, arg2, arg3, arg4);	}
-		public string GetString(string name, string arg1, string arg2, string arg3, string arg4, string arg5) {	return _parameterService.GetString(name, arg1, arg2, arg3, arg4, arg5);	}
-		public string GetString(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6) {	return _parameterService.GetString(name, arg1, arg2, arg3, arg4, arg5, arg6);	}
-		public string GetString(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7) {	return _parameterService.GetString(name, arg1, arg2, arg3, arg4, arg5, arg6, arg7);	}
-		public string GetString(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7, string arg8) {	return _parameterService.GetString(name, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);	}
-		public string GetString(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7, string arg8, string arg9) {	return _parameterService.GetString(name, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);	}
-		public string GetString(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7, string arg8, string arg9, string arg10) {	return _parameterService.GetString(name, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);	}
-
-        public string GetStringOrEmpty(string name) { return _parameterService.GetString(name, false); }
-        public string GetStringOrEmpty(string name, string arg1) { return _parameterService.GetString(name, false, arg1); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2) { return _parameterService.GetString(name, false, arg1, arg2); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3) { return _parameterService.GetString(name, false, arg1, arg2, arg3); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3, string arg4) { return _parameterService.GetString(name, false, arg1, arg2, arg3, arg4); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3, string arg4, string arg5) { return _parameterService.GetString(name, false, arg1, arg2, arg3, arg4, arg5); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6) { return _parameterService.GetString(name, false, arg1, arg2, arg3, arg4, arg5, arg6); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7) { return _parameterService.GetString(name, false, arg1, arg2, arg3, arg4, arg5, arg6, arg7); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7, string arg8) { return _parameterService.GetString(name, false, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7, string arg8, string arg9) { return _parameterService.GetString(name, false, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9); }
-        public string GetStringOrEmpty(string name, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7, string arg8, string arg9, string arg10) { return _parameterService.GetString(name, false, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10); }
-
-        public string GetStringVariadic(string name, bool throwException, params Object[] args) { return _parameterService.GetString(name, throwException, args); }
-
+		
 		public bool Merge(DataSet inout_dsTarget, DataSet in_dsSource, bool in_bTrueDelete, bool in_bPreserveChanges, bool in_bSourceIsFragment, bool preserveNewRowState)
 		{
 			bool result;
@@ -2611,7 +1971,7 @@ namespace Origam.Rule
 					return context;
 				}
 
-				OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable(), this);
+				OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable());
 				XPathNavigator nav = ((XmlDocument)context).CreateNavigator();
 				XPathExpression expr = nav.Compile(xpath);
 				expr.SetContext(ctx);
@@ -4166,38 +3526,7 @@ namespace Origam.Rule
 #endregion
 
 #region Private Functions
-		private string FormatXmlString(object value)
-		{
-			if(value is DateTime)
-			{
-				return FormatXmlDateTime((DateTime)value);
-			}
-			else if(value is decimal)
-			{
-				return XmlConvert.ToString((decimal)value);
-			}
-			else if(value is float)
-			{
-				return XmlConvert.ToString((float)value);
-			}
-			else if(value is double)
-			{
-				return XmlConvert.ToString((double)value);
-			}
-			else if(value is bool)
-			{
-				return XmlConvert.ToString((bool)value);
-			}
-			else if(value == null || value == DBNull.Value)
-			{
-				return String.Empty;
-			}
-			else
-			{
-				return value.ToString();
-			}
-		}
-
+		
 		public object GetContext(Key key)
 		{
 			return _contextStores [key];
@@ -4221,73 +3550,81 @@ namespace Origam.Rule
 			}
 		}
 
-        public IXmlContainer GetXmlDocumentFromData(object inputData)
+		public IXmlContainer GetXmlDocumentFromData(object inputData)
 		{
-		    IXmlContainer doc = inputData as XmlContainer;
-            if (doc != null)
-            {
-                return doc;
-            }
+			IXmlContainer doc = inputData as XmlContainer;
+			if (doc != null)
+			{
+				return doc;
+			}
+
 			object data = inputData;
 			IContextStore contextStore = data as IContextStore;
-			if (contextStore != null) {
+			if (contextStore != null)
+			{
 				// Get the rule's context store
 				data = GetContext(contextStore);
 			}
-		    IXmlContainer xmlDocument = data as IXmlContainer;
-			if(xmlDocument != null)
+
+			IXmlContainer xmlDocument = data as IXmlContainer;
+			if (xmlDocument != null)
 			{
 				doc = xmlDocument;
-                return doc;
+				return doc;
 			}
-            
-            System.Xml.XmlDocument xmlDoc = data as XmlDocument;
-            if (xmlDoc != null)
-            {
-                // this shouldn't happen. XmlContainer should be as and input all the time.
-                // But if it was XmlDocument, we convert it here and log it.
-                log.ErrorFormat("GetXmlDocumentFromData called with System.Xml.XmlDataDocuement." +
-                    "This isn't expected. Refactor code to be called with IXmlContainer. (documentElement:{0})",
-                    xmlDoc.DocumentElement.Name);
-                return new XmlContainer(xmlDoc);
-            }            
-			
-			if(data is int)
+
+			System.Xml.XmlDocument xmlDoc = data as XmlDocument;
+			if (xmlDoc != null)
+			{
+				// this shouldn't happen. XmlContainer should be as and input all the time.
+				// But if it was XmlDocument, we convert it here and log it.
+				log.ErrorFormat(
+					"GetXmlDocumentFromData called with System.Xml.XmlDataDocuement." +
+					"This isn't expected. Refactor code to be called with IXmlContainer. (documentElement:{0})",
+					xmlDoc.DocumentElement.Name);
+				return new XmlContainer(xmlDoc);
+			}
+
+			if (data is int)
 			{
 				data = XmlConvert.ToString((int)data);
 			}
-			else if(data is Guid)
+			else if (data is Guid)
 			{
 				data = XmlConvert.ToString((Guid)data);
 			}
-			else if(data is long)
+			else if (data is long)
 			{
 				data = XmlConvert.ToString((long)data);
 			}
-			else if(data is decimal)
+			else if (data is decimal)
 			{
 				data = XmlConvert.ToString((decimal)data);
 			}
-			else if(data is bool)
+			else if (data is bool)
 			{
 				data = XmlConvert.ToString((bool)data);
 			}
-			else if(data is DateTime)
+			else if (data is DateTime)
 			{
 				data = XmlConvert.ToString((DateTime)data);
 			}
-			else if(data == null)
+			else if (data == null)
 			{
-				return  new XmlContainer("<ROOT/>");
+				return new XmlContainer("<ROOT/>");
 			}
 			else if (data is ArrayList)
 			{
 				doc = new XmlContainer();
-				XmlElement root = (XmlElement)doc.Xml.AppendChild(doc.Xml.CreateElement("ROOT"));
+				XmlElement root =
+					(XmlElement)doc.Xml.AppendChild(
+						doc.Xml.CreateElement("ROOT"));
 				foreach (object item in data as ArrayList)
 				{
-					root.AppendChild(doc.Xml.CreateElement("value")).InnerText = item.ToString();
+					root.AppendChild(doc.Xml.CreateElement("value")).InnerText =
+						item.ToString();
 				}
+
 				return doc;
 			}
 			else
@@ -4297,30 +3634,9 @@ namespace Origam.Rule
 
 			doc = new XmlContainer();
 			doc.Xml.LoadXml("<ROOT><value /></ROOT>");
-            doc.Xml.FirstChild.FirstChild.InnerText = (string)data;
+			doc.Xml.FirstChild.FirstChild.InnerText = (string)data;
 
 			return doc;
-		}
-
-		private static string FormatXmlDateTime(DateTime date)
-		{
-			if(date.Hour == 0 & date.Minute == 0 & date.Second == 0 & date.Millisecond == 0)
-			{
-				TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(date);
-				int daylight = TimeZone.CurrentTimeZone.GetDaylightChanges(date.Year).Delta.Hours;
-				int hours = offset.Duration().Hours;
-				int finalHours = hours; // + daylight;
-
-				string sign = finalHours >= 0 ? "+" : "-";
-
-				string result = date.ToString("yyyy-MM-dd") + "T00:00:00.0000000" + sign + finalHours.ToString("00") + ":" + offset.Minutes.ToString("00");
-
-				return result;
-			}
-			else
-			{
-				return date.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
-			}
 		}
 
 		private DataSet LoadData(DataStructureQuery query)
@@ -4407,7 +3723,7 @@ namespace Origam.Rule
 			//			}
 			//#endif
 
-			OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable(), this);
+			OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable());
 			expr.SetContext(ctx);
 
 			object result;
@@ -4588,1692 +3904,8 @@ namespace Origam.Rule
 		}
 	}
 
-#region XPath Functions
-
-	class NullFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public NullFunction(XPathResultType[] argTypes)
-		{
-			
-		}
-		public int Minargs    
-		{ 
-			get { return 0; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 0; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.Any; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return null;
-		}
-	}
-
-	class ActiveProfileBusinessUnitIdFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public ActiveProfileBusinessUnitIdFunction(XPathResultType[] argTypes)
-		{
-			
-		}
-		public int Minargs    
-		{ 
-			get { return 0; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 0; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return this.Engine.ActiveProfileBusinessUnitId();
-		}
-	}
-
-	class ActiveProfileIdFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public ActiveProfileIdFunction(XPathResultType[] argTypes)
-		{
-			
-		}
-		public int Minargs    
-		{ 
-			get { return 0; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 0; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return this.Engine.ActiveProfileId();
-		}
-	}
-
-	class ActiveProfileOrganizationIdFunction : IXsltContextFunction
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public ActiveProfileOrganizationIdFunction(XPathResultType[] argTypes)
-		{
-
-		}
-		public int Minargs
-		{
-			get { return 0; }
-		}
-		public int Maxargs
-		{
-			get { return 0; }
-		}
-		public XPathResultType ReturnType
-		{
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext,
-			object[] args, XPathNavigator docContext)
-		{
-			return this.Engine.ActiveProfileOrganizationId();
-		}
-	}
-
-	class NormalRoundFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public NormalRoundFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.Number)
-					throw new Exception(
-						ResourceUtils.GetString("ErrorNumberExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.Number; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.NormalRound(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-	class DecodeSignedOverpunchFunction : IXsltContextFunction 
-	{
-		public RuleEngine Engine;
-
-		public DecodeSignedOverpunchFunction(XPathResultType[] argTypes)
-		{
-			ArgTypes = argTypes;
-			if (argTypes[0] != XPathResultType.String)
-			{
-				throw new Exception(
-					ResourceUtils.GetString("ErrorStringExpected"));
-			}
-			if (argTypes[1] != XPathResultType.Number)
-			{
-				throw new Exception(
-					ResourceUtils.GetString("ErrorNumberExpected"));
-			}
-		}
-		
-		public int Minargs => 2;
-		public int Maxargs => 2;
-		public XPathResultType ReturnType => XPathResultType.Number;
-		public XPathResultType[] ArgTypes { get; } 
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.DecodeSignedOverpunch(
-				XmlTools.XPathArgToString(args[0]),
-				int.Parse(XmlTools.XPathArgToString(args[1])));
-		}
-	}
-	class ResizeImageFunction : IXsltContextFunction
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public ResizeImageFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach (XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(
-						ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs
-		{
-			get { return 3; }
-		}
-		public int Maxargs
-		{
-			get { return 3; }
-		}
-		public XPathResultType ReturnType
-		{
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext,
-			object[] args, XPathNavigator docContext)
-		{
-
-			return RuleEngine.ResizeImage(XmlTools.XPathArgToString(args[0]),
-				Convert.ToInt32(args[1]), Convert.ToInt32(args[2]));
-		}
-	}
-
-
-
-
-	class OrigamRoundFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public OrigamRoundFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return Engine.OrigamRound(Convert.ToDecimal(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class IifFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public IifFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-
-			if(argTypes[0] != XPathResultType.String & argTypes[0] != XPathResultType.Boolean) throw new Exception("Incorrect argument type: String or Boolean expected");
-		}
-		public int Minargs    
-		{ 
-			get { return 3; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 3; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.iif(args[0], XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]));
-		}
-	}
-
-	class IsNullFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public IsNullFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-//			foreach(XPathResultType t in argTypes)
-//				if (t != XPathResultType.String)
-//					throw new Exception(
-//						"incorrect argument type: string expected");
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 4; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			switch(args.Length)
-			{
-				case 2:
-					return RuleEngine.isnull(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-
-				case 3:
-					return RuleEngine.isnull(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]));
-
-				case 4:
-					return RuleEngine.isnull(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]));
-
-				default:
-					throw new Exception(ResourceUtils.GetString("ErrorInvalidNumberArguments"));
-			}
-		}
-	}
-
-	class EncodeDataForUriFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public EncodeDataForUriFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 1; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-		public object Invoke(XsltContext xsltContext,
-			object[] args, XPathNavigator docContext)
-		{
-			return RuleEngine.EncodeDataForUri(XmlTools.XPathArgToString(args[0]));
-		}
-	}
-
-
-	class DecodeDataFromUriFunction : IXsltContextFunction
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public DecodeDataFromUriFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs
-		{
-			get { return 1; }
-		}
-		public int Maxargs
-		{
-			get { return 1; }
-		}
-		public XPathResultType ReturnType
-		{
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{
-			get { return _argTypes; }
-		}
-		public object Invoke(XsltContext xsltContext,
-			object[] args, XPathNavigator docContext)
-		{
-			return RuleEngine.DecodeDataFromUri(XmlTools.XPathArgToString(args[0]));
-		}
-	}
-
-
-	class AddDaysFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public AddDaysFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.AddDays(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class AddYearsFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public AddYearsFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.AddYears(XmlTools.XPathArgToString(
-				args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-    class FormatNumberFunction : IXsltContextFunction
-    {
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public FormatNumberFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-        public object Invoke(
-            XsltContext xsltContext, object[] args, XPathNavigator docContext)
-        {
-			return Engine.FormatNumber(XmlTools.XPathArgToString(
-				args[0]), XmlTools.XPathArgToString(args[1]));
-        }
-    }
-
-    class FormatLinkFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public FormatLinkFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.FormatLink(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class AddMonthsFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public AddMonthsFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.AddMonths(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-
-	class AddHoursFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public AddHoursFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.AddHours(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class AddMinutesFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public AddMinutesFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.AddMinutes(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class DifferenceInDaysFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public DifferenceInDaysFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.DifferenceInDays(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class DifferenceInMinutesFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public DifferenceInMinutesFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.DifferenceInMinutes(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class DifferenceInSecondsFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public DifferenceInSecondsFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.DifferenceInSeconds(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-		}
-	}
-
-	class GetConstantFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public GetConstantFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 1; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return Engine.GetConstant((string)args[0]);
-		}
-	}
-
-    class GetStringFunction : IXsltContextFunction
-    {
-        private XPathResultType[] _argTypes = null;
-        private bool _throwException;
-        public RuleEngine Engine = null;
-
-        public GetStringFunction(XPathResultType[] argTypes, bool throwException)
-		{
-			_argTypes = argTypes;
-            _throwException = throwException;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 9; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-            switch (args.Length)
-            {
-                case 1:
-                    return Engine.GetStringVariadic((string)args[0], _throwException);
-                case 2:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]));
-                case 3:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]));
-                case 4:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]));
-                case 5:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]));
-                case 6:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]));
-                case 7:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]));
-                case 8:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]), XmlTools.XPathArgToString(args[7]));
-                case 9:
-                    return Engine.GetStringVariadic((string)args[0], _throwException, XmlTools.XPathArgToString(args[1]),XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]), XmlTools.XPathArgToString(args[7]), XmlTools.XPathArgToString(args[8]));
-                default:
-                    throw new Exception(ResourceUtils.GetString("ErrorInvalidNumberArguments"));
-            }        
-		}
-	}
-
-	class GenerateSerialFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public GenerateSerialFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 2; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			switch(args.Length)
-			{
-				case 1:
-					return Engine.GenerateSerial((string)args[0]);
-				case 2:
-					return Engine.GenerateSerial((string)args[0], (string)args[1]);
-			}
-
-			throw new InvalidOperationException();
-		}
-	}
-
-	class IsFeatureOnFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine { get; set; }
-		
-		public IsFeatureOnFunction (XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 1; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.Boolean; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return Engine.IsFeatureOn((string)args[0]);
-		}
-	}
-
-	class IsInRoleFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine { get; set; }
-		
-		public IsInRoleFunction (XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 1; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.Boolean; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return Engine.IsInRole((string)args[0]);
-		}
-	}
-
-    class IsInStateFunction : IXsltContextFunction
-    {
-        private XPathResultType[] _argTypes = null;
-        public RuleEngine Engine { get; set; }
-        public IsInStateFunction(XPathResultType[] argTypes)
-        {
-            _argTypes = argTypes;
-            foreach (XPathResultType t in argTypes)
-                if (t != XPathResultType.String)
-                    throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-        }
-        public int Minargs
-        {
-            get { return 4; }
-        }
-        public int Maxargs
-        {
-            get { return 4; }
-        }
-        public XPathResultType ReturnType
-        {
-            get { return XPathResultType.Boolean; }
-        }
-        public XPathResultType[] ArgTypes
-        {
-            get { return _argTypes; }
-        }
-
-        public object Invoke(XsltContext xsltContext,
-            object[] args, XPathNavigator docContext)
-        {
-            return Engine.IsInState((string)args[0], (string)args[1], (string)args[2], (string)args[3]);
-        }
-    }
-
-	class IsUserLockedOutFunction : IXsltContextFunction
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine { get; set; }
-		
-		public IsUserLockedOutFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach (XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs
-		{
-			get { return 1; }
-		}
-		public int Maxargs
-		{
-			get { return 1; }
-		}
-		public XPathResultType ReturnType
-		{
-			get { return XPathResultType.Boolean; }
-		}
-		public XPathResultType[] ArgTypes
-		{
-			get { return _argTypes; }
-		}
-		public object Invoke(XsltContext xsltContext,
-			object[] args, XPathNavigator docContext)
-		{
-			return Engine.IsUserLockedOut((string)args[0]);
-		}
-	}
-
-	class IsUserEmailConfirmedFunction : IXsltContextFunction
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine { get; set; }
-		
-		public IsUserEmailConfirmedFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach (XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs
-		{
-			get { return 1; }
-		}
-		public int Maxargs
-		{
-			get { return 1; }
-		}
-		public XPathResultType ReturnType
-		{
-			get { return XPathResultType.Boolean; }
-		}
-		public XPathResultType[] ArgTypes
-		{
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext,
-			object[] args, XPathNavigator docContext)
-		{
-			return Engine.IsUserEmailConfirmed((string)args[0]);
-		}
-	}
-
-	class NumberOperandFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-        public string _operation = null;
-
-		public NumberOperandFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-        public NumberOperandFunction(XPathResultType[] argTypes, string operation)
-        {
-            _argTypes = argTypes;
-            _operation = operation;
-        }
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 3; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.Number; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-            if (_operation == null)
-            {
-                return Engine.NumberOperand(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]));
-            }
-            else
-            {
-                return Engine.NumberOperand(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]), _operation);
-            }
-		}
-	}
-
-	class MaxStringFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public MaxStringFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.NodeSet)
-					throw new Exception(
-						ResourceUtils.GetString("ErrorNodeSetExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 1; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return Engine.MaxString((XPathNodeIterator)args[0]);
-		}
-	}
-
-	class MinStringFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public MinStringFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.NodeSet)
-					throw new Exception(
-						ResourceUtils.GetString("ErrorNodeSetExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 1; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return Engine.MinString((XPathNodeIterator)args[0]);
-		}
-	}
-
-
-	class ToXmlFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-
-		public ToXmlFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-			foreach(XPathResultType t in argTypes)
-				if (t != XPathResultType.String)
-					throw new Exception(
-						ResourceUtils.GetString("ErrorStringExpected"));
-		}
-		public int Minargs    
-		{ 
-			get { return 1; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 1; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.NodeSet; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			return RuleEngine.ToXml((string)args[0]);
-		}
-	}
-
-
-	class LookupValueFunction : IXsltContextFunction 
-	{
-		private XPathResultType[] _argTypes = null;
-		public RuleEngine Engine = null;
-
-		public LookupValueFunction(XPathResultType[] argTypes)
-		{
-			_argTypes = argTypes;
-		}
-		public int Minargs    
-		{ 
-			get { return 2; }
-		}
-		public int Maxargs    
-		{ 
-			get { return 9; }
-		}
-		public XPathResultType ReturnType 
-		{ 
-			get { return XPathResultType.String; }
-		}
-		public XPathResultType[] ArgTypes
-		{ 
-			get { return _argTypes; }
-		}
-
-		public object Invoke(XsltContext xsltContext, 
-			object[] args, XPathNavigator docContext) 
-		{
-			switch(args.Length)
-			{
-				case 2:
-					return Engine.LookupValue(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]));
-
-				case 5:
-					return Engine.LookupValue(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]));
-
-				case 7:
-					return Engine.LookupValue(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]));
-
-				case 9:
-					return Engine.LookupValue(XmlTools.XPathArgToString(args[0]), XmlTools.XPathArgToString(args[1]), XmlTools.XPathArgToString(args[2]), XmlTools.XPathArgToString(args[3]), XmlTools.XPathArgToString(args[4]), XmlTools.XPathArgToString(args[5]), XmlTools.XPathArgToString(args[6]), XmlTools.XPathArgToString(args[7]), XmlTools.XPathArgToString(args[8]));
-
-				default:
-					throw new Exception(ResourceUtils.GetString("ErrorInvalidNumberArguments"));
-			}
-		}
-	}
-
-    class Is2FAEnforcedFunction : IXsltContextFunction
-    {
-        private XPathResultType[] _argTypes = null;
-        public RuleEngine Engine { get; set; }
-
-        public Is2FAEnforcedFunction(XPathResultType[] argTypes)
-        {
-            _argTypes = argTypes;
-            foreach (XPathResultType t in argTypes)
-                if (t != XPathResultType.String)
-                    throw new Exception(ResourceUtils.GetString("ErrorStringExpected"));
-        }
-        public int Minargs
-        {
-            get { return 1; }
-        }
-        public int Maxargs
-        {
-            get { return 1; }
-        }
-        public XPathResultType ReturnType
-        {
-            get { return XPathResultType.Boolean; }
-        }
-        public XPathResultType[] ArgTypes
-        {
-            get { return _argTypes; }
-        }
-
-        public object Invoke(XsltContext xsltContext,
-            object[] args, XPathNavigator docContext)
-        {
-            return Engine.Is2FAEnforced((string)args[0]);
-        }
-    }
-
-    class UTCDateTimeFunction : IXsltContextFunction
-    {
-        private XPathResultType[] _argTypes = null;
-
-        public UTCDateTimeFunction(XPathResultType[] argTypes)
-        {
-        }
-        public int Minargs
-        {
-            get { return 0; }
-        }
-        public int Maxargs
-        {
-            get { return 0; }
-        }
-        public XPathResultType ReturnType
-        {
-            get { return XPathResultType.String; }
-        }
-        public XPathResultType[] ArgTypes
-        {
-            get { return _argTypes; }
-        }
-
-        public object Invoke(XsltContext xsltContext,
-            object[] args, XPathNavigator docContext)
-        {
-            return RuleEngine.UTCDateTime();
-        }
-    }
-    class LocalDateTimeFunction : IXsltContextFunction
-    {
-        private XPathResultType[] _argTypes = null;
-
-        public LocalDateTimeFunction(XPathResultType[] argTypes)
-        {
-        }
-        public int Minargs
-        {
-            get { return 0; }
-        }
-        public int Maxargs
-        {
-            get { return 0; }
-        }
-        public XPathResultType ReturnType
-        {
-            get { return XPathResultType.String; }
-        }
-        public XPathResultType[] ArgTypes
-        {
-            get { return _argTypes; }
-        }
-
-        public object Invoke(XsltContext xsltContext,
-            object[] args, XPathNavigator docContext)
-        {
-            return RuleEngine.LocalDateTime();
-        }
-    }
-
-#endregion
-
 #region XPath Helper Classes
-    public class RuleFunctionContext : XsltContext
-	{
-		private ExsltContext _exslt;
-		public RuleEngine Engine;
-
-		public RuleFunctionContext(NameTable table) : base (table)
-		{
-			_exslt = new ExsltContext(table);
-		}
-
-		public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
-		{
-			if (name == "GetConstant")
-			{
-				GetConstantFunction f = new GetConstantFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-            else if (name == "GetString")
-            {
-                GetStringFunction f = new GetStringFunction(ArgTypes, true);
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "GetStringOrEmpty")
-            {
-                GetStringFunction f = new GetStringFunction(ArgTypes, false);
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "NumberOperand")
-            {
-                NumberOperandFunction f = new NumberOperandFunction(ArgTypes);
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "Plus")
-            {
-                NumberOperandFunction f = new NumberOperandFunction(ArgTypes, "PLUS");
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "Minus")
-            {
-                NumberOperandFunction f = new NumberOperandFunction(ArgTypes, "MINUS");
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "Div")
-            {
-                NumberOperandFunction f = new NumberOperandFunction(ArgTypes, "DIV");
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "Mul")
-            {
-                NumberOperandFunction f = new NumberOperandFunction(ArgTypes, "MUL");
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "Mod")
-            {
-                NumberOperandFunction f = new NumberOperandFunction(ArgTypes, "MOD");
-                f.Engine = this.Engine;
-                return f;
-            }
-			else if (name == "FormatNumber")
-			{
-				FormatNumberFunction f = new FormatNumberFunction(ArgTypes);
-                f.Engine = this.Engine;
-				return f;
-			}
-            else if (name == "MinString")
-            {
-                MinStringFunction f = new MinStringFunction(ArgTypes);
-                f.Engine = this.Engine;
-
-                return f;
-            }
-            else if (name == "MaxString")
-            {
-                MaxStringFunction f = new MaxStringFunction(ArgTypes);
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "LookupValue")
-            {
-                LookupValueFunction f = new LookupValueFunction(ArgTypes);
-                f.Engine = this.Engine;
-
-                return f;
-            }
-            else if (name == "NormalRound")
-            {
-                NormalRoundFunction f = new NormalRoundFunction(ArgTypes);
-                f.Engine = this.Engine;
-                return f;
-            }
-			else if (name == "DecodeSignedOverpunch")
-			{
-				DecodeSignedOverpunchFunction f = new DecodeSignedOverpunchFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "ResizeImage")
-			{
-				ResizeImageFunction f = new ResizeImageFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-            else if (name == "OrigamRound")
-            {
-                OrigamRoundFunction f = new OrigamRoundFunction(ArgTypes);
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "iif")
-            {
-                IifFunction f = new IifFunction(ArgTypes);
-                f.Engine = this.Engine;
-                return f;
-            }
-            else if (name == "isnull")
-            {
-                IsNullFunction f = new IsNullFunction(ArgTypes);
-                f.Engine = this.Engine;
-                return f;
-            }
-			else if (name == "EncodeDataForUri")
-			{
-				EncodeDataForUriFunction f = new EncodeDataForUriFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "DecodeDataFromUri")
-			{
-				DecodeDataFromUriFunction f = new DecodeDataFromUriFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "AddDays")
-			{
-				AddDaysFunction f = new AddDaysFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "AddMonths")
-			{
-				AddMonthsFunction f = new AddMonthsFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "AddHours")
-			{
-				AddHoursFunction f = new AddHoursFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "AddMinutes")
-			{
-				return new AddMinutesFunction(ArgTypes);
-			}
-			else if (name == "AddYears")
-			{
-				AddYearsFunction f = new AddYearsFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "DifferenceInDays")
-			{
-				DifferenceInDaysFunction f = new DifferenceInDaysFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "DifferenceInMinutes")
-			{
-				DifferenceInMinutesFunction f = new DifferenceInMinutesFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "DifferenceInSeconds")
-			{
-				DifferenceInSecondsFunction f = new DifferenceInSecondsFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-            else if (name == "UTCDateTime")
-            {
-                UTCDateTimeFunction f = new UTCDateTimeFunction(ArgTypes);
-                return f;
-            }
-            else if (name == "LocalDateTime")
-            {
-                LocalDateTimeFunction f = new LocalDateTimeFunction(ArgTypes);
-                return f;
-            }
-			else if (name == "IsFeatureOn")
-			{
-				IsFeatureOnFunction f = new IsFeatureOnFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "IsInRole")
-			{
-				IsInRoleFunction f = new IsInRoleFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "ActiveProfileBusinessUnitId")
-			{
-				ActiveProfileBusinessUnitIdFunction f = new ActiveProfileBusinessUnitIdFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "ActiveProfileId")
-			{
-				ActiveProfileIdFunction f = new ActiveProfileIdFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "ActiveProfileOrganizationId")
-			{
-				ActiveProfileOrganizationIdFunction f = new ActiveProfileOrganizationIdFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "null")
-			{
-				NullFunction f = new NullFunction(ArgTypes);
-				return f;
-			}
-			else if (name == "ToXml")
-			{
-				ToXmlFunction f = new ToXmlFunction(ArgTypes);
-				return f;
-			}
-			else if (name == "GenerateSerial")
-			{
-				GenerateSerialFunction f = new GenerateSerialFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "IsInState")
-			{
-				IsInStateFunction f = new IsInStateFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "FormatLink")
-			{
-				FormatLinkFunction f = new FormatLinkFunction(ArgTypes);
-				return f;
-			}
-			else if (name == "IsUserLockedOut")
-			{
-				IsUserLockedOutFunction f = new IsUserLockedOutFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "IsUserEmailConfirmed")
-			{
-				IsUserEmailConfirmedFunction f = new IsUserEmailConfirmedFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else if (name == "Is2FAEnforced")
-			{
-				Is2FAEnforcedFunction f = new Is2FAEnforcedFunction(ArgTypes);
-				f.Engine = this.Engine;
-				return f;
-			}
-			else
-			{
-                throw new XPathException(string.Format("Xsl Function not found: prefix='{0}', name='{1}'",
-                    prefix, name), null);
-			}
-		}
-
-		public override IXsltContextVariable ResolveVariable(string prefix, string name)
-		{
-			return null;
-		}
-
-
-		public override bool PreserveWhitespace(XPathNavigator node)
-		{
-			return false;
-		}
-
-		public override int CompareDocument(string baseUri, string nextbaseUri)
-		{
-			return 0;
-		}
-
-		public override bool Whitespace
-		{
-			get
-			{
-				return false;
-			}
-		}
-	}
-
+    
 	public class XPathNodeList : XmlNodeList
 	{
 		// Methods

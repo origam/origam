@@ -1314,12 +1314,11 @@ namespace Origam.Server
         private static IXmlContainer GetTooltip(object id, ArrayList tooltips)
         {
             tooltips.Sort();
-            RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), null);
             DataServiceDataTooltip tooltip = null;
             foreach (DataServiceDataTooltip tt in tooltips)
             {
-                if (ruleEngine.IsFeatureOn(tt.Features) 
-                    && ruleEngine.IsInRole(tt.Roles))
+                if (IsFeatureOn(tt.Features) 
+                    && IsInRole(tt.Roles))
                 {
                     tooltip = tt;
                 }
@@ -1348,6 +1347,20 @@ namespace Origam.Server
                 new Hashtable(), 
                 RuleEngine.Create(null, null), null, false);
             return result;
+        }
+        
+        private static bool IsFeatureOn(string featureCode)
+        {
+            return ServiceManager.Services
+                .GetService<IParameterService>()
+                .IsFeatureOn(featureCode);
+        }
+
+        private static bool IsInRole(string roleName)
+        {
+            return SecurityManager
+                .GetAuthorizationProvider()
+                .Authorize(SecurityManager.CurrentPrincipal, roleName);
         }
 
         private static XmlDocument DefaultNotificationBoxContent()

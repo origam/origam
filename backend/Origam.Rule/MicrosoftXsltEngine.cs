@@ -25,6 +25,7 @@ using Origam.DA.ObjectPersistence;
 using System.Xml;
 using System.Xml.Xsl;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 using System.IO;
 using System.Xml.XPath;
@@ -53,11 +54,14 @@ namespace Origam.Rule
         internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, Hashtable parameters, 
             RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
         {
-            if (ruleEngine == null) throw new InvalidOperationException("RuleEngine is not set");
-
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            xslArg.AddExtensionObject(XmlTools.AsNameSpace, ruleEngine);
+            IEnumerable<IXsltFunctionContainer> functionContainers = XsltFunctionContainerFactory.Create();
+            foreach (var xsltFunctionContainer in functionContainers)
+            {
+                xslArg.AddExtensionObject(
+                    xsltFunctionContainer.XslNameSpaceUri, xsltFunctionContainer);
+            }
             xslArg.AddExtensionObject("http://xsl.origam.com/crypto", new XslCryptoFunctions());
             xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
@@ -265,14 +269,15 @@ namespace Origam.Rule
             IXPathNavigable input, object xsltEngine, Hashtable parameters, 
             RuleEngine ruleEngine, Stream output)
         {
-            if(ruleEngine == null)
-            {
-                throw new InvalidOperationException("RuleEngine is not set");
-            }
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            xslArg.AddExtensionObject(
-                XmlTools.AsNameSpace, ruleEngine);
+            IEnumerable<IXsltFunctionContainer> functionContainers = XsltFunctionContainerFactory.Create();
+            foreach (var xsltFunctionContainer in functionContainers)
+            {
+                xslArg.AddExtensionObject(
+                    xsltFunctionContainer.XslNameSpaceUri, xsltFunctionContainer);
+            }
+            
             xslArg.AddExtensionObject(
                 ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(

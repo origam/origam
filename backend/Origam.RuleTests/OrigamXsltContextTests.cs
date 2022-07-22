@@ -25,6 +25,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.PerformanceData;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -44,17 +45,19 @@ namespace Origam.Rule.Tests
     [TestFixture]
     public class OrigamXsltContextTests
     {
-        RuleEngine ruleEngine;
         private Mock<IBusinessServicesService> businessServiceMock;
         private Mock<IParameterService> parameterServiceMock;
         private Mock<IDataLookupService> lookupServiceMock;
         private Mock<IOrigamAuthorizationProvider> authorizationProvider;
         private Mock<Func<UserProfile>> userProfileGetterMock;
         private Mock<ICounter> counterMock;
-        private  Mock<IStateMachineService> stateMachineServiceMock;
-
+        private Mock<IStateMachineService> stateMachineServiceMock;
+        private Mock<IDocumentationService> documentationServiceMock;
+        private Mock<ITracingService> tracingServiceMock;
         private Mock<IXsltFunctionSchemaItemProvider> functionSchemaItemProvider;
-
+        private Mock<IPersistenceService> persistenceServiceMock;
+        private List<IXsltFunctionContainer> xsltFunctionContainers;
+        
         [SetUp]
         public void Init()
         {
@@ -64,28 +67,37 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.XslFunctionProviderServiceAgents)
                 .Returns(new  List<IServiceAgent>());
             stateMachineServiceMock = new Mock<IStateMachineService>();
-            var tracingServiceMock = new Mock<ITracingService>();
-            var documentationServiceMock = new Mock<IDocumentationService>();
+            tracingServiceMock = new Mock<ITracingService>();
+            documentationServiceMock = new Mock<IDocumentationService>();
             parameterServiceMock = new Mock<IParameterService>();
             authorizationProvider = new Mock<IOrigamAuthorizationProvider>();
             userProfileGetterMock = new Mock<Func<UserProfile>>();
+            persistenceServiceMock = new Mock<IPersistenceService>();
             counterMock = new Mock<ICounter>();
             functionSchemaItemProvider = new Mock<IXsltFunctionSchemaItemProvider>();
 
-            ruleEngine = new RuleEngine(
-                new Hashtable(), 
-                null,
-                new NullPersistenceService(),
+            var functionCollection = new XsltFunctionCollection();
+            functionCollection.AssemblyName = "Origam.Rule";
+            functionCollection.FullClassName = "Origam.Rule.LegacyXsltFunctionContainer";
+            functionCollection.XslNameSpaceUri = "http://schema.advantages.cz/AsapFunctions";
+            functionCollection.XslNameSpacePrefix = "AS";
+            functionSchemaItemProvider
+                .Setup(x =>
+                    x.ChildItemsByType(XsltFunctionCollection.CategoryConst))
+                .Returns(new ArrayList { functionCollection });
+
+            xsltFunctionContainers = XsltFunctionContainerFactory.Create(
+                businessServiceMock.Object,
+                functionSchemaItemProvider.Object, 
+                persistenceServiceMock.Object,
                 lookupServiceMock.Object,
                 parameterServiceMock.Object,
-                businessServiceMock.Object,
                 stateMachineServiceMock.Object,
                 tracingServiceMock.Object,
                 documentationServiceMock.Object,
-                authorizationProvider.Object,
-                userProfileGetterMock.Object,
-                counterMock.Object
-            );
+                authorizationProvider.Object, 
+                userProfileGetterMock.Object
+            ).ToList();
         }
         
         [Test]
@@ -101,10 +113,9 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.GetParameterValue("constant1", OrigamDataType.String, null))
                 .Returns(expectedResult);
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -128,15 +139,17 @@ namespace Origam.Rule.Tests
             
             XPathNavigator nav = new XmlDocument().CreateNavigator();
             XPathExpression expr = nav.Compile(xpath);
-
+            
             parameterServiceMock
                 .Setup(service => service.GetString(stringName, true, args))
+                .Returns(expectedResult);            
+            parameterServiceMock
+                .Setup(service => service.GetString(stringName, args))
                 .Returns(expectedResult);
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -152,10 +165,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
 
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -176,10 +188,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
 
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -197,10 +208,9 @@ namespace Origam.Rule.Tests
             
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -221,10 +231,9 @@ namespace Origam.Rule.Tests
             
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -277,10 +286,9 @@ namespace Origam.Rule.Tests
             }
 
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -298,10 +306,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -335,10 +342,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -364,10 +370,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -385,10 +390,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -409,10 +413,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -430,10 +433,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -451,10 +453,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -474,10 +475,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -494,10 +494,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -513,10 +512,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -541,10 +539,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -566,10 +563,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -596,10 +592,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -618,10 +613,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -644,10 +638,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -672,12 +665,20 @@ namespace Origam.Rule.Tests
             counterMock
                 .Setup(x => x.GetNewCounter(counterCode, DateTime.MinValue, null))
                 .Returns("result1");
+
+            List<IXsltFunctionContainer> containers = new List<IXsltFunctionContainer>
+            {
+                new LegacyXsltFunctionContainer(counterMock.Object)
+                {
+                    XslNameSpaceUri = "http://schema.advantages.cz/AsapFunctions",
+                    XslNameSpacePrefix = "AS"
+                }
+            };
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                containers
             );
             
             expr.SetContext(sut);
@@ -705,10 +706,9 @@ namespace Origam.Rule.Tests
                 .Returns(true);
 
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -727,10 +727,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -768,10 +767,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -816,10 +814,9 @@ namespace Origam.Rule.Tests
             XPathExpression expr = nav.Compile(xpath);
             
             OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
+                new NameTable(),
                 businessServiceMock.Object,
-                functionSchemaItemProvider.Object
+                xsltFunctionContainers
             );
             
             expr.SetContext(sut);
@@ -831,37 +828,5 @@ namespace Origam.Rule.Tests
             agentMock.Verify();
             agentMock.Verify(x => x.Run(), Times.Once);
         }
-        
-        
-        [Test]
-        public void ShouldTest()
-        {
-            string xpath = "AS1:Test()";
-            string expectedResult = "test";
-
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            var functionCollection = new XsltFunctionCollection();
-            functionCollection.AssemblyName = "Origam.Rule";
-            functionCollection.FullClassName = "Origam.Rule.LegacyXsltFunctionContainer";
-            functionCollection.XslNameSpaceUri = "http://schema.advantages.cz/AsapFunctions1";
-            functionCollection.XslNameSpacePrefix = "AS1";
-            functionSchemaItemProvider
-                .Setup(x =>
-                    x.ChildItemsByType(XsltFunctionCollection.CategoryConst))
-                .Returns(new ArrayList { functionCollection });
-
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(), 
-                ruleEngine, 
-                businessServiceMock.Object,
-                functionSchemaItemProvider.Object
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
-            Assert.That(result, Is.EqualTo(expectedResult));
-        }   
     }
 }
