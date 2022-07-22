@@ -55,7 +55,6 @@ namespace Origam.BI
             }
             var persistence = ServiceManager.Services
                 .GetService<IPersistenceService>();
-            var ruleEngine = RuleEngine.Create(null, null);
             var transformParams = new Hashtable();
             foreach(SchemaItemParameter parameter in report.Parameters)
             {
@@ -100,8 +99,7 @@ namespace Origam.BI
                     xsltParameter.transformationId,
                     Guid.Empty, 
                     transformParams, 
-                    null, 
-                    ruleEngine, 
+                    null,
                     null, 
                     false);
                 var resultNode = result.Xml.SelectSingleNode("/ROOT/value");

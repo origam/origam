@@ -1346,7 +1346,7 @@ namespace Origam.Server
                 DataDocumentFactory.New(data), 
                 tooltip.TooltipTransformationId, 
                 new Hashtable(), 
-                RuleEngine.Create(null, null), null, false);
+                null, false);
             return result;
         }
         

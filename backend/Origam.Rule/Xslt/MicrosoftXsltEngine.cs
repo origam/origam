@@ -50,7 +50,7 @@ namespace Origam.Rule.Xslt
 		#endregion
 
         internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, Hashtable parameters, 
-            RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
+            IDataStructure outputStructure, bool validateOnly)
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
@@ -96,8 +96,6 @@ namespace Origam.Rule.Xslt
                 resultDoc = new XmlContainer();
             }
             else throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransformationSupport"));
-
-            MemoryStream msTransform = new MemoryStream();
 
             try
             {
@@ -255,7 +253,7 @@ namespace Origam.Rule.Xslt
         }
         internal override void Transform(
             IXPathNavigable input, object xsltEngine, Hashtable parameters, 
-            RuleEngine ruleEngine, Stream output)
+             Stream output)
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();

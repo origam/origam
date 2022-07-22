@@ -60,12 +60,11 @@ namespace Origam.BI.PrintIt
 					IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 					IXsltEngine transformer = AsTransform.GetXsltEngine(
                         persistence.SchemaProvider, report.TransformationId);
-					RuleEngine ruleEngine = RuleEngine.Create(null, null);
 					//Hashtable transformParams = new Hashtable();
 					//QueryParameterCollection qparams = new QueryParameterCollection();
 					//Hashtable preprocessorParams = GetPreprocessorParameters(request);
 
-					result = transformer.Transform(xmlDataDoc, report.TransformationId, parameters, ruleEngine, null, false);
+					result = transformer.Transform(xmlDataDoc, report.TransformationId, parameters,  null, false);
 				}
 				else
 				{

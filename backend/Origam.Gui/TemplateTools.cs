@@ -93,7 +93,7 @@ namespace Origam.Gui
 
             IXsltEngine transform = AsTransform.GetXsltEngine(
                 xslt.XsltEngineType, template.PersistenceProvider);
-            IXmlContainer result = transform.Transform(dataSource, xslt.TextStore, null, RuleEngine.Create(null, null), outputStructure, false);
+            IXmlContainer result = transform.Transform(dataSource, xslt.TextStore, null, outputStructure, false);
 
             if (result is IDataDocument)
             {
