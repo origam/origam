@@ -20,15 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using System.Collections;
-using Origam.Schema.EntityModel;
-using Origam.DA.ObjectPersistence;
-using System.Xml.XPath;
 using System.IO;
+using System.Xml.XPath;
+using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
     /// <summary>
     /// Summary description for AsXslTransform.

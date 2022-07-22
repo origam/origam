@@ -29,7 +29,7 @@ using System.Xml.XPath;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
-namespace Origam.Rule;
+namespace Origam.Rule.XsltFunctions;
 
 public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionContainer
 {
@@ -927,7 +927,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return (bool)identityServiceAgent.Result;
     }
 
-    [XsltFunctionAttribute("null")]
+    [XsltFunction("null")]
     public string Null()
     {
         return null;

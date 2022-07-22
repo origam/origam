@@ -28,7 +28,7 @@ using Origam.DA;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 
-namespace Origam.Rule;
+namespace Origam.Rule.XsltFunctions;
 
 public static class XsltFunctionContainerFactory
 {

@@ -1,5 +1,4 @@
 ﻿#region license
-
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -18,13 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #endregion
 
-namespace Origam.Rule;
+using System.IO;
 
-public interface IXsltFunctionContainer
+namespace Origam.Rule.XsltFunctions
 {
-    string XslNameSpacePrefix { get; set; }
-    string XslNameSpaceUri { get; set; }
+    public class FileSystemXsltFunctionContainer : AbstractOrigamDependentXsltFunctionContainer
+    {
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+    }
 }

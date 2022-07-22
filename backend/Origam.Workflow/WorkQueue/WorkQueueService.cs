@@ -43,6 +43,7 @@ using System.Threading;
 using Origam.Services;
 using System.Transactions;
 using Origam.Extensions;
+using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Timer = System.Timers.Timer;
 

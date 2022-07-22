@@ -25,7 +25,7 @@ using System;
 using Origam.DA;
 using Origam.Workbench.Services;
 
-namespace Origam.Rule;
+namespace Origam.Rule.XsltFunctions;
 
 public interface IOrigamDependentXsltFunctionContainer: IXsltFunctionContainer
 {

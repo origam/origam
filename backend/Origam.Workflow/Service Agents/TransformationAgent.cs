@@ -34,6 +34,7 @@ using Origam.Workbench.Services.CoreServices;
 using log4net;
 using Origam.Workbench.Services;
 using System.Collections.Generic;
+using Origam.Rule.Xslt;
 using Origam.Service.Core;
 
 namespace Origam.Workflow

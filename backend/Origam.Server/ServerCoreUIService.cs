@@ -42,6 +42,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using MoreLinq;
 using Origam.Extensions;
+using Origam.Rule.Xslt;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;

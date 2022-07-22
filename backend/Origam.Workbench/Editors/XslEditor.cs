@@ -35,6 +35,7 @@ using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.Gui.UI;
 using Origam.Rule;
+using Origam.Rule.Xslt;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;

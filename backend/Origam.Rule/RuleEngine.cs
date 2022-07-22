@@ -48,6 +48,8 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using Origam.Extensions;
+using Origam.Rule.Xslt;
+using Origam.Rule.XsltFunctions;
 using Origam.Service.Core;
 
 namespace Origam.Rule

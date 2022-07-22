@@ -1,5 +1,4 @@
 ﻿#region license
-
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -18,13 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #endregion
 
-namespace Origam.Rule;
+using System;
 
-public abstract class AbstractXsltFunctionContainer: IXsltFunctionContainer
+namespace Origam.Rule.XsltFunctions;
+
+public class XsltFunctionAttribute : Attribute
 {
-    public string XslNameSpacePrefix { get; set; }
-    public string XslNameSpaceUri { get; set; }
+    public string XsltName { get; }
+
+    public XsltFunctionAttribute(string xsltName)
+    {
+        XsltName = xsltName;
+    }
 }

@@ -26,6 +26,7 @@ using System.Collections;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Rule;
+using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 

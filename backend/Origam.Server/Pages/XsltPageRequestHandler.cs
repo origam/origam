@@ -55,6 +55,7 @@ using System.Collections;
 using Origam.Server;
 using System.Linq;
 using MoreLinq;
+using Origam.Rule.Xslt;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Service.Core;

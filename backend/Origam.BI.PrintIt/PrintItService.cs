@@ -27,6 +27,7 @@ using Origam.Rule;
 
 using Origam.Schema.GuiModel;
 using System.IO;
+using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 

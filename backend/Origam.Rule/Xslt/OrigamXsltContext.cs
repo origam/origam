@@ -24,15 +24,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Security;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using Origam.Services;
-using Origam.Workbench.Services;
 using Mvp.Xml.Exslt;
+using Origam.Rule.XsltFunctions;
+using Origam.Workbench.Services;
 
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
     public class OrigamXsltContext : XsltContext
     {

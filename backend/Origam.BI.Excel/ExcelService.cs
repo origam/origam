@@ -32,6 +32,7 @@ using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Excel;
+using Origam.Rule.Xslt;
 
 namespace Origam.BI.Excel
 {

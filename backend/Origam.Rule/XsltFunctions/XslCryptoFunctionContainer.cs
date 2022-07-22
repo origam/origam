@@ -23,7 +23,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Origam.Rule
+namespace Origam.Rule.XsltFunctions
 {
     public class XslCryptoFunctionContainer: AbstractOrigamDependentXsltFunctionContainer
     {

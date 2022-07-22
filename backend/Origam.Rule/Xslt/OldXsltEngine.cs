@@ -19,17 +19,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.ObjectPersistence;
 using System;
 using System.Collections;
-using System.Xml;
-using System.Xml.Xsl;
 using System.IO;
+using System.Xml;
 using System.Xml.XPath;
+using System.Xml.Xsl;
+using Origam.DA.ObjectPersistence;
 using Origam.Service.Core;
 
-
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
     class OldXsltEngine : MicrosoftXsltEngine
     {

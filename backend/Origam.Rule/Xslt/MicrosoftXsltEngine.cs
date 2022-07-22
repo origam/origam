@@ -20,23 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Text;
-using Origam.DA.ObjectPersistence;
-using System.Xml;
-using System.Xml.Xsl;
 using System.Collections;
 using System.Collections.Generic;
-using Origam.Schema.EntityModel;
-using System.IO;
-using System.Xml.XPath;
-using Mvp.Xml.Exslt;
 using System.Data;
-using Origam.Workbench.Services;
-using Origam.Services;
-using Origam.Extensions;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
+using Mvp.Xml.Exslt;
+using Origam.DA.ObjectPersistence;
+using Origam.Rule.XsltFunctions;
+using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
     public abstract class MicrosoftXsltEngine : AbstractXsltEngine
     {
