@@ -62,7 +62,6 @@ namespace Origam.Rule
                 xslArg.AddExtensionObject(
                     xsltFunctionContainer.XslNameSpaceUri, xsltFunctionContainer);
             }
-            xslArg.AddExtensionObject("http://xsl.origam.com/crypto", new XslCryptoFunctions());
             xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
             xslArg.AddExtensionObject(ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());

@@ -57,7 +57,6 @@ namespace Origam.Rule
             _serviceXslFunctionsDict = new Dictionary<string, object>();
             _exslt = new ExsltContext(nt);
             
-
             foreach (var functionContainer in xsltFunctionContainers)
             {
                 AddNamespace(functionContainer.XslNameSpacePrefix,
