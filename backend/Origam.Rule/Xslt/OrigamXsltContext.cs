@@ -35,27 +35,22 @@ namespace Origam.Rule.Xslt
 {
     public class OrigamXsltContext : XsltContext
     {
-        private ExsltContext _exslt;
         private Dictionary<string, IXsltFunctionContainer> _xslFunctionsDict;
 
         public static OrigamXsltContext Create(XmlNameTable nameTable)
         {
-            var businessService = ServiceManager.Services.GetService<IBusinessServicesService>();
             IEnumerable<IXsltFunctionContainer> functionContainers = XsltFunctionContainerFactory.Create();
             return new OrigamXsltContext(
                 nameTable,
-                businessService,
                 functionContainers
             );
         }
         
-        public OrigamXsltContext(XmlNameTable nt, IBusinessServicesService businessService,
-            IEnumerable<IXsltFunctionContainer> xsltFunctionContainers)
+        public OrigamXsltContext(XmlNameTable nt, IEnumerable<IXsltFunctionContainer> xsltFunctionContainers)
             : base((NameTable)nt)
         {
             _xslFunctionsDict = new Dictionary<string, IXsltFunctionContainer>();
-            _exslt = new ExsltContext(nt);
-            
+
             foreach (var functionContainer in xsltFunctionContainers)
             {
                 AddNamespace(functionContainer.XslNameSpacePrefix,
