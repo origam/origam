@@ -197,6 +197,11 @@ namespace Origam
 
             // new way - a)
             Type classType = ResolveTypeFromAssembly(classname, assembly);
+            if (classType == null)
+            {
+	            throw new Exception($"Class {classname} from assembly {assembly} was not found.");
+            }
+
             return Activator.CreateInstance(classType);
 
             // new way - b)
