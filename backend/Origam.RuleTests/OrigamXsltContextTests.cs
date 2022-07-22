@@ -663,7 +663,7 @@ namespace Origam.Rule.Tests
                 .Setup(x => x.GetNewCounter(counterCode, DateTime.MinValue, null))
                 .Returns("result1");
 
-            List<IXsltFunctionContainer> containers = new List<IXsltFunctionContainer>
+            List<IOrigamDependentXsltFunctionContainer> containers = new List<IOrigamDependentXsltFunctionContainer>
             {
                 new LegacyXsltFunctionContainer(counterMock.Object)
                 {

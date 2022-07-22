@@ -23,7 +23,7 @@ using System.IO;
 
 namespace Origam.Rule
 {
-    public class FileSystemXsltFunctionContainer : AbstractXsltFunctionContainer
+    public class FileSystemXsltFunctionContainer : AbstractOrigamDependentXsltFunctionContainer
     {
         public bool FileExists(string path)
         {

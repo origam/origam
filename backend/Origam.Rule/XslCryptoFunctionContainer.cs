@@ -25,7 +25,7 @@ using System.Text;
 
 namespace Origam.Rule
 {
-    public class XslCryptoFunctionContainer: AbstractXsltFunctionContainer
+    public class XslCryptoFunctionContainer: AbstractOrigamDependentXsltFunctionContainer
     {
         public string Nonce()
         {

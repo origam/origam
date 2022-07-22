@@ -12,7 +12,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Rule;
 
-public class LegacyXsltFunctionContainer : AbstractXsltFunctionContainer
+public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionContainer
 {
     private const string NotANumber = "NaN";
 

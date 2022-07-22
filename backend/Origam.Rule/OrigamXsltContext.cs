@@ -37,7 +37,7 @@ namespace Origam.Rule
     public class OrigamXsltContext : XsltContext
     {
         private ExsltContext _exslt;
-        private Dictionary<string, object> _serviceXslFunctionsDict;
+        private Dictionary<string, IXsltFunctionContainer> _xslFunctionsDict;
 
         public static OrigamXsltContext Create(XmlNameTable nameTable)
         {
@@ -54,14 +54,14 @@ namespace Origam.Rule
             IEnumerable<IXsltFunctionContainer> xsltFunctionContainers)
             : base((NameTable)nt)
         {
-            _serviceXslFunctionsDict = new Dictionary<string, object>();
+            _xslFunctionsDict = new Dictionary<string, IXsltFunctionContainer>();
             _exslt = new ExsltContext(nt);
             
             foreach (var functionContainer in xsltFunctionContainers)
             {
                 AddNamespace(functionContainer.XslNameSpacePrefix,
                     functionContainer.XslNameSpaceUri);
-                _serviceXslFunctionsDict.Add(functionContainer.XslNameSpaceUri,
+                _xslFunctionsDict.Add(functionContainer.XslNameSpaceUri,
                     functionContainer);
             }
         }
@@ -86,14 +86,14 @@ namespace Origam.Rule
 
         public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
         {
-            Object serviceXslFunctions;            
+            IXsltFunctionContainer functionContainer;            
             String ns = LookupNamespace(prefix);
             if (ns != null)
             {
-                if (_serviceXslFunctionsDict.TryGetValue(ns, out serviceXslFunctions))
+                if (_xslFunctionsDict.TryGetValue(ns, out functionContainer))
                 {
                     IXsltContextFunction func = null;
-                    func = GetExtentionMethod(ns, name, ArgTypes, serviceXslFunctions);
+                    func = GetExtentionMethod(ns, name, ArgTypes, functionContainer);
                     if (func == null)
                     {
                         throw new XsltException(String.Format("Unknown Xslt function {0}", name));

@@ -47,15 +47,20 @@ public static class XsltFunctionContainerFactory
                         $"Referenced class {collection.FullClassName} from {collection.AssemblyName} does not implement interface {nameof(IXsltFunctionContainer)}");
                 }
 
-                container.Persistence = persistence;
-                container.LookupService = lookupService;
-                container.ParameterService = parameterService;
-                container.StateMachineService = stateMachineService;
-                container.TracingService = tracingService;
-                container.DocumentationService = documentationService;
-                container.AuthorizationProvider = authorizationProvider;
-                container.UserProfileGetter = userProfileGetter;
-                container.BusinessService = businessService;
+                if (instantiatedObject is IOrigamDependentXsltFunctionContainer
+                    origamContainer)
+                {
+                    origamContainer.Persistence = persistence;
+                    origamContainer.LookupService = lookupService;
+                    origamContainer.ParameterService = parameterService;
+                    origamContainer.StateMachineService = stateMachineService;
+                    origamContainer.TracingService = tracingService;
+                    origamContainer.DocumentationService = documentationService;
+                    origamContainer.AuthorizationProvider = authorizationProvider;
+                    origamContainer.UserProfileGetter = userProfileGetter;
+                    origamContainer.BusinessService = businessService;
+                }
+
                 if (!string.IsNullOrWhiteSpace(collection.XslNameSpacePrefix))
                 {
                     container.XslNameSpacePrefix = collection.XslNameSpacePrefix;
