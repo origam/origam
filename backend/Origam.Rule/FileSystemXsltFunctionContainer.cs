@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -19,16 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Collections.Generic;
+using System.IO;
 
-namespace Origam.Workbench.Services
+namespace Origam.Rule
 {
-	/// <summary>
-	/// Summary description for IBusinessServicesService.
-	/// </summary>
-	public interface IBusinessServicesService : IWorkbenchService
-	{
-		IServiceAgent GetAgent(string serviceType, object ruleEngine, object workflowEngine); 
-		IServiceAgent GetAgent(string serviceType, string instanceName, object ruleEngine, object workflowEngine);
-	}
+    public class FileSystemXsltFunctionContainer : AbstractXsltFunctionContainer
+    {
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+    }
 }

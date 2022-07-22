@@ -35,7 +35,7 @@ namespace Origam.Workflow
 	/// <summary>
 	/// Summary description for FileSystemServiceAgent.
 	/// </summary>
-	public class FileSystemServiceAgent : AbstractServiceAgent, IXslFunctionProvider
+	public class FileSystemServiceAgent : AbstractServiceAgent
 	{
         public void LoadBlob(string path)
         {
@@ -427,42 +427,5 @@ namespace Origam.Workflow
 			}
 		}
 		#endregion
-
-        #region IXslFunctionProvider
-
-        private class XslFunctionsImpl
-        {
-            public bool FileExists(string path)
-            {
-                return File.Exists(path);
-            }
-        }
-
-        private static XslFunctionsImpl xslFunctions = new XslFunctionsImpl();
-
-        public string NameSpaceUri
-        {
-            get 
-            {
-                return "http://xsl.origam.com/filesystem";
-            }
-        }
-
-        public string DefaultPrefix
-        {
-            get 
-            {
-                return "fs";
-            }
-        }
-
-        public object XslFunctions
-        {
-            get 
-            {
-                return xslFunctions;
-            }
-        }
-        #endregion
     }
 }

@@ -63,9 +63,6 @@ namespace Origam.Rule.Tests
         {
             lookupServiceMock = new Mock<IDataLookupService>();
             businessServiceMock = new Mock<IBusinessServicesService>();
-            businessServiceMock
-                .Setup(service => service.XslFunctionProviderServiceAgents)
-                .Returns(new  List<IServiceAgent>());
             stateMachineServiceMock = new Mock<IStateMachineService>();
             tracingServiceMock = new Mock<ITracingService>();
             documentationServiceMock = new Mock<IDocumentationService>();

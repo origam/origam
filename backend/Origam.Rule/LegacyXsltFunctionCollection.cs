@@ -12,7 +12,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Rule;
 
-public class LegacyXsltFunctionContainer : IXsltFunctionContainer
+public class LegacyXsltFunctionContainer : AbstractXsltFunctionContainer
 {
     private const string NotANumber = "NaN";
 
@@ -22,18 +22,6 @@ public class LegacyXsltFunctionContainer : IXsltFunctionContainer
 
     private ICounter counter;
     
-    public IPersistenceService Persistence { get; set; }
-    public IDataLookupService LookupService { get; set; }
-    public IParameterService ParameterService { get; set; }
-    public IBusinessServicesService BusinessService { get; set; }
-    public IStateMachineService StateMachineService { get; set; }
-    public ITracingService TracingService { get; set; }
-    public IDocumentationService DocumentationService { get; set; }
-    public IOrigamAuthorizationProvider AuthorizationProvider { get; set; }
-    public Func<UserProfile> UserProfileGetter { get; set; }
-    public string XslNameSpacePrefix { get; set; }
-    public string XslNameSpaceUri { get; set; }
-
     public string TransactionId { get; set; } = null;
 
     public LegacyXsltFunctionContainer()
@@ -922,30 +910,6 @@ public class LegacyXsltFunctionContainer : IXsltFunctionContainer
 
     [XsltFunctionAttribute("null")]
     public string Null()
-    {
-        return null;
-    }
-}
-
-class XsltFunctionAttribute : Attribute
-{
-    public string XsltName { get; }
-
-    public XsltFunctionAttribute(string xsltName)
-    {
-        XsltName = xsltName;
-    }
-}
-
-class NullFunction : IXsltContextFunction
-{
-    public int Minargs => 0;
-    public int Maxargs => 0;
-    public XPathResultType ReturnType => XPathResultType.Any;
-    public XPathResultType[] ArgTypes => null;
-    
-    public object Invoke(XsltContext xsltContext,
-        object[] args, XPathNavigator docContext)
     {
         return null;
     }

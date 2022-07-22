@@ -65,16 +65,6 @@ namespace Origam.Rule
                 _serviceXslFunctionsDict.Add(functionContainer.XslNameSpaceUri,
                     functionContainer);
             }
-
-            // add function from services  register new schema items
-            foreach (IXslFunctionProvider xslFunctionProvider
-                     in businessService.XslFunctionProviderServiceAgents)
-            {
-                AddNamespace(xslFunctionProvider.DefaultPrefix,
-                    xslFunctionProvider.NameSpaceUri);
-                _serviceXslFunctionsDict.Add(xslFunctionProvider.NameSpaceUri,
-                    xslFunctionProvider.XslFunctions);
-            }
         }
 
         public override bool Whitespace
