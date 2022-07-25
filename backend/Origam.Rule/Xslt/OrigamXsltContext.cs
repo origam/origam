@@ -39,24 +39,24 @@ namespace Origam.Rule.Xslt
 
         public static OrigamXsltContext Create(XmlNameTable nameTable)
         {
-            IEnumerable<IXsltFunctionContainer> functionContainers = XsltFunctionContainerFactory.Create();
+            var functionContainers = XsltFunctionContainerFactory.Create();
             return new OrigamXsltContext(
                 nameTable,
                 functionContainers
             );
         }
         
-        public OrigamXsltContext(XmlNameTable nt, IEnumerable<IXsltFunctionContainer> xsltFunctionContainers)
+        public OrigamXsltContext(XmlNameTable nt, IEnumerable<XsltFunctionsDefinition> xsltFunctionsDefinitions)
             : base((NameTable)nt)
         {
             _xslFunctionsDict = new Dictionary<string, IXsltFunctionContainer>();
 
-            foreach (var functionContainer in xsltFunctionContainers)
+            foreach (var xsltFunctionsDefinition in xsltFunctionsDefinitions)
             {
-                AddNamespace(functionContainer.XslNameSpacePrefix,
-                    functionContainer.XslNameSpaceUri);
-                _xslFunctionsDict.Add(functionContainer.XslNameSpaceUri,
-                    functionContainer);
+                AddNamespace(xsltFunctionsDefinition.NameSpacePrefix,
+                    xsltFunctionsDefinition.NameSpaceUri);
+                _xslFunctionsDict.Add(xsltFunctionsDefinition.NameSpaceUri,
+                    xsltFunctionsDefinition.Container);
             }
         }
 

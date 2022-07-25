@@ -54,11 +54,11 @@ namespace Origam.Rule.Xslt
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            IEnumerable<IXsltFunctionContainer> functionContainers = XsltFunctionContainerFactory.Create();
-            foreach (var xsltFunctionContainer in functionContainers)
+            IEnumerable<XsltFunctionsDefinition> functionsDefinitions = XsltFunctionContainerFactory.Create();
+            foreach (var functionsDefinition in functionsDefinitions)
             {
                 xslArg.AddExtensionObject(
-                    xsltFunctionContainer.XslNameSpaceUri, xsltFunctionContainer);
+                    functionsDefinition.NameSpaceUri, functionsDefinition);
             }
             xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
@@ -257,13 +257,12 @@ namespace Origam.Rule.Xslt
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            IEnumerable<IXsltFunctionContainer> functionContainers = XsltFunctionContainerFactory.Create();
-            foreach (var xsltFunctionContainer in functionContainers)
+            IEnumerable<XsltFunctionsDefinition> functionsDefinitions = XsltFunctionContainerFactory.Create();
+            foreach (var functionsDefinition in functionsDefinitions)
             {
                 xslArg.AddExtensionObject(
-                    xsltFunctionContainer.XslNameSpaceUri, xsltFunctionContainer);
+                    functionsDefinition.NameSpaceUri, functionsDefinition);
             }
-            
             xslArg.AddExtensionObject(
                 ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(

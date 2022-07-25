@@ -32,7 +32,7 @@ namespace Origam.Rule.XsltFunctions;
 
 public static class XsltFunctionContainerFactory
 {
-    public static IEnumerable<IXsltFunctionContainer> Create()
+    public static IEnumerable<XsltFunctionsDefinition> Create()
     {
         return Create(
             ServiceManager.Services.GetService<IBusinessServicesService>(),
@@ -48,7 +48,7 @@ public static class XsltFunctionContainerFactory
             SecurityManager.CurrentUserProfile);
     }
 
-    public static IEnumerable<IXsltFunctionContainer> Create (
+    public static IEnumerable<XsltFunctionsDefinition> Create (
         IBusinessServicesService businessService,
         IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider,
         IPersistenceService persistence, IDataLookupService lookupService,
@@ -83,16 +83,12 @@ public static class XsltFunctionContainerFactory
                     origamContainer.UserProfileGetter = userProfileGetter;
                     origamContainer.BusinessService = businessService;
                 }
-
-                if (!string.IsNullOrWhiteSpace(collection.XslNameSpacePrefix))
-                {
-                    container.XslNameSpacePrefix = collection.XslNameSpacePrefix;
-                }
-                if (!string.IsNullOrWhiteSpace(collection.XslNameSpaceUri))
-                {
-                    container.XslNameSpaceUri = collection.XslNameSpaceUri;
-                }
-                return container;
+                return new XsltFunctionsDefinition(
+                    Container:container,
+                    NameSpacePrefix: collection.XslNameSpacePrefix,
+                    NameSpaceUri: collection.XslNameSpaceUri);
             });
     }
 }
+public record XsltFunctionsDefinition(IXsltFunctionContainer Container, 
+    string NameSpacePrefix, string NameSpaceUri);

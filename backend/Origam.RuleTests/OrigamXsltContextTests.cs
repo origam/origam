@@ -55,7 +55,7 @@ namespace Origam.Rule.Tests
         private Mock<ITracingService> tracingServiceMock;
         private Mock<IXsltFunctionSchemaItemProvider> functionSchemaItemProvider;
         private Mock<IPersistenceService> persistenceServiceMock;
-        private List<IXsltFunctionContainer> xsltFunctionContainers;
+        private List<XsltFunctionsDefinition> xsltFunctionDefinitions;
         
         [SetUp]
         public void Init()
@@ -82,7 +82,7 @@ namespace Origam.Rule.Tests
                     x.ChildItemsByType(XsltFunctionCollection.CategoryConst))
                 .Returns(new ArrayList { functionCollection });
 
-            xsltFunctionContainers = XsltFunctionContainerFactory.Create(
+            xsltFunctionDefinitions = XsltFunctionContainerFactory.Create(
                 businessServiceMock.Object,
                 functionSchemaItemProvider.Object, 
                 persistenceServiceMock.Object,
@@ -110,7 +110,7 @@ namespace Origam.Rule.Tests
                 .Returns(expectedResult);
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -143,7 +143,7 @@ namespace Origam.Rule.Tests
                 .Returns(expectedResult);
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -160,7 +160,7 @@ namespace Origam.Rule.Tests
 
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -182,7 +182,7 @@ namespace Origam.Rule.Tests
 
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -200,7 +200,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -222,7 +222,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -276,7 +276,7 @@ namespace Origam.Rule.Tests
 
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -295,7 +295,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -330,7 +330,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -357,7 +357,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -376,7 +376,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -398,7 +398,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -417,7 +417,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -436,7 +436,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -457,7 +457,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -475,7 +475,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -492,7 +492,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             expr.SetContext(sut);
             object result = nav.Evaluate(expr);
@@ -518,7 +518,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -541,7 +541,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -569,7 +569,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -589,7 +589,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -613,7 +613,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -639,14 +639,15 @@ namespace Origam.Rule.Tests
                 .Setup(x => x.GetNewCounter(counterCode, DateTime.MinValue, null))
                 .Returns("result1");
 
-            List<IOrigamDependentXsltFunctionContainer> containers = new List<IOrigamDependentXsltFunctionContainer>
-            {
-                new LegacyXsltFunctionContainer(counterMock.Object)
+            List<XsltFunctionsDefinition> containers =
+                new List<XsltFunctionsDefinition>
                 {
-                    XslNameSpaceUri = "http://schema.advantages.cz/AsapFunctions",
-                    XslNameSpacePrefix = "AS"
-                }
-            };
+                    new XsltFunctionsDefinition(
+                        Container: new LegacyXsltFunctionContainer(counterMock.Object),
+                        NameSpaceUri:
+                        "http://schema.advantages.cz/AsapFunctions",
+                        NameSpacePrefix: "AS")
+                };
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
@@ -679,7 +680,7 @@ namespace Origam.Rule.Tests
 
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -699,7 +700,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -738,7 +739,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
@@ -784,7 +785,7 @@ namespace Origam.Rule.Tests
             
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
-                xsltFunctionContainers
+                xsltFunctionDefinitions
             );
             
             expr.SetContext(sut);
