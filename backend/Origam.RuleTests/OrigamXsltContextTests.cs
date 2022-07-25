@@ -198,7 +198,6 @@ namespace Origam.Rule.Tests
             XPathNavigator nav = new XmlDocument().CreateNavigator();
             XPathExpression expr = nav.Compile(xpath);
             
-            
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
                 xsltFunctionContainers

@@ -101,8 +101,7 @@ namespace Origam.Rule
 				ServiceManager.Services.GetService<ITracingService>(),
 				ServiceManager.Services.GetService<IDocumentationService>(),
 				SecurityManager.GetAuthorizationProvider(),
-				SecurityManager.CurrentUserProfile,
-				new Counter(businessService)
+				SecurityManager.CurrentUserProfile
 			);
 		}
 		public static RuleEngine Create()
@@ -124,8 +123,7 @@ namespace Origam.Rule
 				ServiceManager.Services.GetService<ITracingService>(),
 				ServiceManager.Services.GetService<IDocumentationService>(),
 				SecurityManager.GetAuthorizationProvider(),
-				SecurityManager.CurrentUserProfile,
-				new Counter(businessService)
+				SecurityManager.CurrentUserProfile
 			);
 		}
 		
@@ -139,11 +137,10 @@ namespace Origam.Rule
 			ITracingService tracingService,
 			IDocumentationService documentationService,
 			IOrigamAuthorizationProvider authorizationProvider,
-			Func<UserProfile> userProfileGetter,
-			ICounter counter) 
+			Func<UserProfile> userProfileGetter) 
 			:this(contextStores, transactionId, persistence, lookupService,
 				parameterService, businessService, stateMachineService,	tracingService,
-				documentationService, authorizationProvider, userProfileGetter, counter
+				documentationService, authorizationProvider, userProfileGetter
 		)
 		{
 			_workflowInstanceId = workflowInstanceId;
@@ -158,8 +155,7 @@ namespace Origam.Rule
 			ITracingService tracingService,
 			IDocumentationService documentationService,
 			IOrigamAuthorizationProvider authorizationProvider,
-			Func<UserProfile> userProfileGetter,
-			ICounter counter)
+			Func<UserProfile> userProfileGetter)
 		{
 			_persistence = persistence;
 			_lookupService = lookupService;
@@ -347,35 +343,7 @@ namespace Origam.Rule
 		{
 			return _lookupService.GetMenuBinding(new Guid(lookupId), value).MenuId;
 		}
-
-		public int GetInventoryAvailability(string inventoryId, string warehouseId)
-		{
-			try
-			{
-				if(warehouseId == "") warehouseId = Guid.Empty.ToString();
-
-				DataStructureQuery query = new DataStructureQuery(new Guid("6543c6c0-e29a-44fc-92f8-d310e179a5fc"), new Guid("782a2fa2-f5fd-4f63-99bc-5e9785d9f9d7"));
-
-				query.Parameters.Add(new QueryParameter("InventoryAvailability_parInventory_Id", new Guid(inventoryId)));
-				query.Parameters.Add(new QueryParameter("InventoryAvailability_parInventoryItem_refWarehouseId", new Guid(warehouseId)));
-
-				DataSet ds = this.LoadData(query);
-
-				if(ds.Tables["InventoryAvailability"].Rows.Count != 1)
-				{
-					return 0;
-				}
-				else
-				{
-					return (int)ds.Tables["InventoryAvailability"].Rows[0]["AvailableQuantity"];
-				}
-			}
-			catch
-			{
-				return 0;
-			}
-		}
-
+		
 		public string ResourceIdByActiveProfile()
 		{
 			DataStructureQuery query = new DataStructureQuery(new Guid("d0d0d847-36dc-4987-95e5-43c4d8d0d78f"), new Guid("84848e4c-129c-4079-95a4-6319e21399af"));
@@ -397,73 +365,7 @@ namespace Origam.Rule
 				return ds.Tables["Resource"].Rows[0]["Id"].ToString();
 			}
 		}
-		
-		public string GetInventoryName(string inventoryId)
-		{
-			DataStructureQuery query = new DataStructureQuery(new Guid("05649ca4-d692-4909-b334-bcf6fae3023b"), new Guid("764f5b79-afd3-474f-97da-2912251cfb88"));
-
-			try
-			{
-				query.Parameters.Add(new QueryParameter("Inventory_parId", new Guid(inventoryId)));
-			}
-			catch
-			{
-				throw new Exception(ResourceUtils.GetString("ErrorInvalidInventoryId"));
-			}
-
-			DataSet ds = this.LoadData(query);
-
-			if(ds.Tables["Inventory"].Rows.Count != 1)
-			{
-				throw new Exception(ResourceUtils.GetString("ErrorInventoryNotFound"));
-			}
-			else
-			{
-				return (string)ds.Tables["Inventory"].Rows[0]["Text"];
-			}
-		}
-
-		public string InventoryEvidenceSerialNumbers (string inventoryId)
-		{
-			DataStructureQuery query = new DataStructureQuery(new Guid("326bc587-9629-4249-a4ac-7605fd149592"), new Guid("f4ac2fc2-978b-454a-989e-4e90badcadea"));
-			string retVal;
-			Guid Id;		
-
-			try
-			{
-				Id = new Guid(inventoryId);
-				query.Parameters.Add(new QueryParameter("Inventory_parId", new Guid(inventoryId)));
-				DataSet ds = this.LoadData(query);
-				retVal = XmlConvert.ToString((bool)ds.Tables["Inventory"].Rows[0]["RecordSerialNumbers"]);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorInventoryIdInvalid"), ex);
-			}
-			return retVal;
-		}
-
-		
-		public string HasInventoryItemMoved(string inventoryItemId, string date)
-		{
-			DataStructureQuery query = new DataStructureQuery(new Guid("4d88ac42-ac55-45df-9362-e2b945632ae9"), new Guid("0a829881-c28c-4279-9b48-0d8a941c4206"));
-
-			query.Parameters.Add(new QueryParameter("InventoryOperationDetailItem_parRefInventoryItemId", new Guid(inventoryItemId)));
-			query.Parameters.Add(new QueryParameter("InventoryOperationDetailItem_parRecordCreated", XmlConvert.ToDateTime(date)));
-
-			DataSet ds = this.LoadData(query);
-
-			if(ds.Tables["InventoryOperationDetailItem"].Rows.Count > 0)
-			{
-				return "true";
-			}
-			else
-			{
-				return "false";
-			}
-		}
-
-
+	
 		public string Round(string amount)
 		{
 			decimal price;
@@ -491,16 +393,6 @@ namespace Origam.Rule
 				throw new FormatException(ResourceUtils.GetString("ErrorRoundAmountInvalid"), ex);
 			}
 			return LegacyXsltFunctionContainer.NormalStaticRound(amount, "0");
-		}
-
-		public string RoundDepreciationPlan(string amount)
-		{
-			return Ceiling(amount);
-		}
-
-		public string RoundPrice(string amount)
-		{
-			return Ceiling(amount);
 		}
 
 		public string Ceiling(string amount)
@@ -535,11 +427,7 @@ namespace Origam.Rule
 			retVal = XmlConvert.ToString(System.Math.Ceiling(price));
 			return retVal;
 		}
-
-		public string RoundAssetValue(string amount)
-		{
-			return Round(amount);
-		}
+		
 		
         /// <summary>
         /// Decodes number in signed overpunch format 
@@ -705,130 +593,6 @@ namespace Origam.Rule
 			XPathNodeIterator result = nav.Select("/");
 
 			return result;
-		}
-
-		public decimal CalculatePrice(string monthlyPrice, string periodStart, string periodEnd, string serviceBillingStart, string serviceBillingEnd, string endingService)
-		{
-			int dayFrom;
-			int dayTo;
-			DateTime periodStartDate;
-			DateTime periodEndDate;
-			DateTime serviceBillingStartDate;
-			DateTime serviceBillingEndDate;
-			bool addDay;
-			decimal price;
-
-			// check input parameters format
-			try
-			{
-				addDay = XmlConvert.ToBoolean(endingService);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorEndingServiceInvalid"), ex);
-			}
-
-			try
-			{
-				periodStartDate = XmlConvert.ToDateTime(periodStart);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorPeriodStartInvalid"), ex);
-			}
-
-			try
-			{
-				periodEndDate = XmlConvert.ToDateTime(periodEnd);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorPeriodEndInvalid"), ex);
-			}
-
-			try
-			{
-				serviceBillingStartDate = XmlConvert.ToDateTime(serviceBillingStart);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorServiceBillingStartInvalid"), ex);
-			}
-
-			try
-			{
-				// if there is no billing end, we bill until the end of this period
-				if(serviceBillingEnd == "")
-				{
-					serviceBillingEndDate = periodEndDate;
-				}
-				else
-				{
-					serviceBillingEndDate = XmlConvert.ToDateTime(serviceBillingEnd);
-				}
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorServiceBillingStartInvalid"), ex);
-			}
-
-			try
-			{
-				price = XmlConvert.ToDecimal(monthlyPrice);
-			}
-			catch(Exception ex)
-			{
-				throw new FormatException(ResourceUtils.GetString("ErrorMonthlyPriceInvalid"), ex);
-			}
-
-			// if service is active for the whole month, we just return the price as it is
-			if(serviceBillingStartDate <= periodStartDate & serviceBillingEndDate >= periodEndDate)
-			{
-				return price;
-			}
-
-			// calculate the actual billing period
-			if(serviceBillingStartDate > periodStartDate)
-			{
-				dayFrom = serviceBillingStartDate.Day;
-			}
-			else
-			{
-				dayFrom = periodStartDate.Day;
-			}
-
-			if(serviceBillingEndDate < periodEndDate)
-			{
-				dayTo = serviceBillingEndDate.Day;
-			}
-			else
-			{
-				if(periodEndDate.Day > 30 & dayFrom > 30)
-				{
-					dayTo = periodEndDate.Day;
-				}
-				else
-				{
-					dayTo = 30;
-				}
-			}
-
-			int days = (dayTo - dayFrom);
-
-			if(days < 0)
-			{
-				return 0;
-			}
-			else
-			{
-				//				if(addDay)
-				//					days += 2;	// we always add 1 day, because the original span is nights
-				//				else
-				//					days += 1;	// we always add 1 day, because the original span is nights
-				//
-				//				return (price / 30) * days;
-				return (price / 30) * (days + 1);
-			}                                   
 		}
 
 		public XPathNodeIterator LookupList(string lookupId)
@@ -1266,13 +1030,6 @@ namespace Origam.Rule
 			
 			retVal = XmlConvert.ToString(testDate, "yyy-MM-dd");
 			return retVal;
-
-				
-
-			//
-			//			string retVal;
-			//			retVal=XmlConvert.ToDateTime(date).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd");
-			//			return retVal;
 		}
 
 		public string Year(string date)
@@ -1577,31 +1334,6 @@ namespace Origam.Rule
 				throw new FormatException(ResourceUtils.GetString("ErrorAbsAmountInvalid"), ex);
 			}
 			return XmlConvert.ToString(Math.Abs(retDecValue));
-		}
-
-		private static void WriteXml(XmlTextWriter xtw, XPathNavigator nav)
-		{
-			if(nav.HasAttributes)
-			{
-				nav.MoveToFirstAttribute();
-				xtw.WriteAttributeString(nav.Prefix, nav.LocalName, nav.NamespaceURI, nav.Value);
-
-				// write attributes
-				while(nav.MoveToNextAttribute())
-				{
-					xtw.WriteAttributeString(nav.Prefix, nav.LocalName, nav.NamespaceURI, nav.Value);
-				}
-
-				// move to the parent node of the attributes
-				nav.MoveToParent();
-			}
-			else
-			{
-				if(nav.NodeType == XPathNodeType.Text)
-				{
-					xtw.WriteString(nav.Value);
-				}
-			}
 		}
 
 		public string EvaluateXPath(object nodeset, string xpath)
@@ -1926,29 +1658,7 @@ namespace Origam.Rule
 
 			return result;
 		}
-	
-		public bool Merge(DataTable inout_dtTarget, DataTable in_dtSource, bool in_bTrueDelete, bool in_bPreserveChanges, bool in_bSourceIsFragment, bool preserveNewRowState)
-		{
-			inout_dtTarget.BeginLoadData();
-			bool result;
-
-			try
-			{
-                MergeParams mergeParams = new MergeParams();
-                mergeParams.TrueDelete = in_bTrueDelete;
-                mergeParams.PreserveChanges = in_bPreserveChanges;
-                mergeParams.SourceIsFragment = in_bSourceIsFragment;
-                mergeParams.PreserveNewRowState = preserveNewRowState;
-                mergeParams.ProfileId = ActiveProfileGuId();
-				result = DatasetTools.MergeDataTable(inout_dtTarget, in_dtSource, null, null, mergeParams);
-			}
-			finally
-			{
-				inout_dtTarget.EndLoadData();
-			}
-
-			return result;
-		}
+		
 		public object EvaluateContext(string xpath, object context, OrigamDataType dataType, AbstractDataStructure targetStructure)
 		{
 			object result = null;
