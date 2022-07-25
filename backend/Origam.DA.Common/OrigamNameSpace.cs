@@ -29,6 +29,7 @@ namespace Origam.DA.Common
 {
     public class OrigamNameSpace
     {
+        private static readonly string firstPart = "http://schemas.origam.com";
         public Version Version { get; }
         public string StringValue { get; }
         public string FullTypeName { get; }
@@ -40,7 +41,12 @@ namespace Origam.DA.Common
 
         private static string MakeNamespaceString(string fullTypeName, Version version)
         {
-            return $"http://schemas.origam.com/{fullTypeName}/{version}";
+            return $"{firstPart}/{fullTypeName}/{version}";
+        }
+        
+        public static bool IsOrigamNamespace(string candidate)
+        {
+            return candidate.StartsWith(firstPart);
         }
 
         public static OrigamNameSpace CreateOrGet(Type type, Version version)
@@ -72,10 +78,10 @@ namespace Origam.DA.Common
             if (xmlNamespace == null)
                 throw new ArgumentNullException(nameof(xmlNamespace));
 
-            if (!xmlNamespace.StartsWith("http://schemas.origam.com"))
+            if (!IsOrigamNamespace(xmlNamespace))
             {
                 throw new ArgumentException(
-                    $" {nameof(OrigamNameSpace)} must start with http://schemas.origam.com. The invalid namespace is: \"{xmlNamespace}\"");
+                    $" {nameof(OrigamNameSpace)} must start with {firstPart}. The invalid namespace is: \"{xmlNamespace}\"");
             }
 
             if (!Uri.IsWellFormedUriString(xmlNamespace, UriKind.Absolute))

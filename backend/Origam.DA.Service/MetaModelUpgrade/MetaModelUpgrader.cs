@@ -59,7 +59,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 if (currentClassVersion == Versions.Last)
                 {
-                    throw new ClassUpgradeException($" No {nameof(ClassMetaVersionAttribute)} was found in on \"{className}\" and no upgrade scripts for that class were found either. May be you meant to add the attribute?");
+                    throw new ClassUpgradeException($" No {nameof(ClassMetaVersionAttribute)} was found on \"{className}\" and no upgrade scripts for that class were found either. May be you meant to add the attribute?");
                 }
                 throw new ClassUpgradeException($"Could not find ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\"");
             }
