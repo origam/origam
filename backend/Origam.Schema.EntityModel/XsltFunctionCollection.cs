@@ -39,7 +39,7 @@ namespace Origam.Schema.EntityModel
 		[XmlAttribute("xslNameSpaceUri")]
 		public string XslNameSpaceUri { get; set; }	
 		
-		[Description("Xslt namespace prefix.")]
+		[Description("Xslt namespace prefix in xpath. Prefix in Xslt transformations will be declares in the Xslt templates.")]
 		[XmlAttribute("xslNameSpacePrefix")]
 		public string XslNameSpacePrefix { get; set; }
 	}
