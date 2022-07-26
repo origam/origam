@@ -183,10 +183,7 @@ namespace Origam.DA.Service
 
         public override void DeleteUser(string user,bool DatabaseIntegratedAuthentication)
         {
-            // changed by fixing: https://community.origam.com/t/origam-architect-create-new-project-with-postgressql-database-fail-on-missing-system-numeric-vectors-dll/1735/6
-            //change owner of object to CURRENT_ROLE - allows delete role and than database in case of Rollback
-            // Rollback didn't work when there was missing postgres user.
-            // This changes the ownership to user configured for connecting postgres database.
+            // Changing the ownership to user configured for connecting the database to allow delete new role.
             ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}\" TO CURRENT_USER", user), null);
             ExecuteUpdate(string.Format("DROP OWNED BY \"{0}\" ", user), null);
             ExecuteUpdate(string.Format("DROP ROLE \"{0}\" ", user), null);
@@ -498,9 +495,6 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
-            // Fix: https://community.origam.com/t/origam-architect-create-new-project-with-postgressql-database-fail-on-missing-system-numeric-vectors-dll/1735/6
-            // Removed IsLockedOut because it has been removed from model => Security package
-            // (Commit by Jindrich Susen: 04a262dfbb1bc844b35d9723b42fc46f55d0b27e)
             return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
                 "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),

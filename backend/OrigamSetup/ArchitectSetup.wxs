@@ -49,9 +49,6 @@
               <File Id="ORIGAMARCHITECT.EXE.CONFIG" Name="OrigamArchitect.exe.config" Source="config\OrigamArchitect.exe.config">
               </File>
             </Component>
-            <!-- PostgreSQL Create new project fix:
-                https://community.origam.com/t/origam-architect-create-new-project-with-postgressql-database-fail-on-missing-system-numeric-vectors-dll/1735
-             -->
             <Component Id="SYSTEM.NUMERICS.VECTORS.DLL" DiskId="1" Guid="EB813AD1-20C7-4F31-99B1-1D330FF9EC40">
               <File Id="SYSTEM.NUMERICS.VECTORS.DLL" Name="System.Numerics.Vectors.dll" Source="source\System.Numerics.Vectors.dll">
               </File>
@@ -80,8 +77,6 @@
               <File Id="ORIGAM.EXCEL.DLL" Name="Origam.Excel.dll" Source="source\Origam.Excel.dll">
               </File>
             </Component>
-            <!-- PostgreSQL End fix #1735 -->
-            
             <Component Id="AEROWIZARD.DLL" DiskId="1" Guid="401981CE-043E-4428-A8C4-6C10FBCA893F">
               <File Id="AEROWIZARD.DLL" Name="AeroWizard.dll" Source="source\AeroWizard.dll">
               </File>
@@ -672,10 +667,6 @@
       </ComponentRef>
       <ComponentRef Id="StartMenuShortcuts">
       </ComponentRef>
-      
-      <!-- PostgreSQL Create new project fix:
-                https://community.origam.com/t/origam-architect-create-new-project-with-postgressql-database-fail-on-missing-system-numeric-vectors-dll/1735
-        -->
       <ComponentRef Id="SYSTEM.NUMERICS.VECTORS.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.THREADING.CHANNELS.DLL"></ComponentRef>
       <ComponentRef Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL"></ComponentRef>
@@ -683,8 +674,6 @@
       <ComponentRef Id="SYSTEM.TEXT.JSON.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL"></ComponentRef>
       <ComponentRef Id="ORIGAM.EXCEL.DLL"></ComponentRef>
-      <!-- PostgreSQL End fix #1735 -->
-
       <ComponentRef Id="AEROWIZARD.DLL">
       </ComponentRef>
       <ComponentRef Id="ANTLR3.RUNTIME.DLL">

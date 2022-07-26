@@ -565,9 +565,6 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
 
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
-            // Fix: https://community.origam.com/t/origam-architect-create-new-project-with-postgressql-database-fail-on-missing-system-numeric-vectors-dll/1735/6
-            // Removed IsLockedOut because it has been removed from model => Security package
-            // (Commit by Jindrich Susen: 04a262dfbb1bc844b35d9723b42fc46f55d0b27e)
             return string.Format("INSERT INTO [dbo].[OrigamUser] " +
                 "([UserName],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
                 "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')", 
