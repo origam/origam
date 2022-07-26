@@ -38,14 +38,24 @@ namespace Origam.Rule.Xslt
 {
     public abstract class MicrosoftXsltEngine : AbstractXsltEngine
     {
+        private readonly IEnumerable<XsltFunctionsDefinition> functionsDefinitions;
+
         #region Constructors
-        public MicrosoftXsltEngine() : base ()
-		{
-		}
+
+        protected MicrosoftXsltEngine()
+        {
+            functionsDefinitions = XsltFunctionContainerFactory.Create();
+        }
+
+        public MicrosoftXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions) : base ()
+        {
+            this.functionsDefinitions = functionsDefinitions ?? XsltFunctionContainerFactory.Create();
+        }
 
         public MicrosoftXsltEngine(IPersistenceProvider persistence)
             : base(persistence)
 		{
+            functionsDefinitions = XsltFunctionContainerFactory.Create();
 		}
 		#endregion
 
@@ -54,11 +64,10 @@ namespace Origam.Rule.Xslt
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            IEnumerable<XsltFunctionsDefinition> functionsDefinitions = XsltFunctionContainerFactory.Create();
             foreach (var functionsDefinition in functionsDefinitions)
             {
                 xslArg.AddExtensionObject(
-                    functionsDefinition.NameSpaceUri, functionsDefinition);
+                    functionsDefinition.NameSpaceUri, functionsDefinition.Container);
             }
             xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
@@ -257,11 +266,10 @@ namespace Origam.Rule.Xslt
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            IEnumerable<XsltFunctionsDefinition> functionsDefinitions = XsltFunctionContainerFactory.Create();
             foreach (var functionsDefinition in functionsDefinitions)
             {
                 xslArg.AddExtensionObject(
-                    functionsDefinition.NameSpaceUri, functionsDefinition);
+                    functionsDefinition.NameSpaceUri, functionsDefinition.Container);
             }
             xslArg.AddExtensionObject(
                 ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());

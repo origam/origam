@@ -95,25 +95,30 @@ namespace Origam.Rule.Tests
                 userProfileGetterMock.Object
             ).ToList();
         }
-        
-        [Test]
-        public void ShouldGetConstant()
+
+        private object RunInXpath(string xsltCall, XmlDocument document = null)
         {
-            string expectedResult = "constant1_value";
-            string xpath = "AS:GetConstant('constant1')";
-            
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            parameterServiceMock
-                .Setup(service => service.GetParameterValue("constant1", OrigamDataType.String, null))
-                .Returns(expectedResult);
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
+            XPathNavigator nav = (document ?? new XmlDocument()).CreateNavigator();
+            XPathExpression expr = nav.Compile(xsltCall);
             OrigamXsltContext sut = new OrigamXsltContext(
                 new NameTable(),
                 xsltFunctionDefinitions
             );
             expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            return nav.Evaluate(expr);
+        }
+
+        [Test]
+        public void ShouldGetConstant()
+        {
+            string expectedResult = "constant1_value";
+            string xsltCall = "AS:GetConstant('constant1')";
+            parameterServiceMock
+                .Setup(service => service.GetParameterValue("constant1", OrigamDataType.String, null))
+                .Returns(expectedResult);
+            
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         } 
         
@@ -130,10 +135,7 @@ namespace Origam.Rule.Tests
                 argsString = ", " + argsString;
             }
 
-            string xpath = $"AS:GetString('{stringName}'{argsString})";
-            
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
+            string xsltCall = $"AS:GetString('{stringName}'{argsString})";
             
             parameterServiceMock
                 .Setup(service => service.GetString(stringName, true, args))
@@ -141,29 +143,19 @@ namespace Origam.Rule.Tests
             parameterServiceMock
                 .Setup(service => service.GetString(stringName, args))
                 .Returns(expectedResult);
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            
+            object result = RunInXpath(xsltCall);
+            
             Assert.That(result, Is.EqualTo(expectedResult));
         }
         
         [Test]
         public void ShouldRunNumberOperand()
         {
-            string xpath = "AS:NumberOperand('1', '1', 'PLUS')";
+            string xsltCall = "AS:NumberOperand('1', '1', 'PLUS')";
             object expectedResult = "2" ;
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         } 
         
@@ -175,36 +167,19 @@ namespace Origam.Rule.Tests
         public void ShouldRunMathFunctions(string functionName, string parameter1,
             string parameter2, string expectedResult)
         {
-            string xpath = $"AS:{functionName}('{parameter1}', '{parameter2}')";
+            string xsltCall = $"AS:{functionName}('{parameter1}', '{parameter2}')";
 
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }
         
         [Test]
         public void ShouldFormatNumber()
         {
-            string xpath = "AS:FormatNumber('1.54876', 'E')";
+            string xsltCall = "AS:FormatNumber('1.54876', 'E')";
             object expectedResult = "1,548760E+000" ;
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }  
         
@@ -212,21 +187,11 @@ namespace Origam.Rule.Tests
         [TestCase("MaxString", "w")]
         public void ShouldTestStringOperationFunctions(string functionName, string expectedResult)
         {
-            string xpath = $"AS:{functionName}(ROOT/N1/@name)";
+            string xsltCall = $"AS:{functionName}(ROOT/N1/@name)";
             
             var document = new XmlDocument();
             document.LoadXml("<ROOT><N1 name=\"w\"></N1><N1 name=\"a\"></N1><N1  name=\"e\"></N1></ROOT>");
-            XPathNavigator nav = document.CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall, document);
             Assert.That(result, Is.EqualTo(expectedResult));
         }   
         
@@ -238,11 +203,8 @@ namespace Origam.Rule.Tests
             string lookupId = "45b07cce-3d02-448c-afca-1b6f1eb158b5";
             var formatArguments = new List<object> { lookupId };
             formatArguments.AddRange(parameters);
-            string xpath = string.Format(xpathTemplate, formatArguments.ToArray());
+            string xsltCall = string.Format(xpathTemplate, formatArguments.ToArray());
             object expectedResult = "lookupResult" ;
-
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
 
             if (parameters.Length == 1)
             {
@@ -274,32 +236,16 @@ namespace Origam.Rule.Tests
                 throw new Exception("Wrong number of test parameters.");
             }
 
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         } 
                 
         [Test]
         public void ShouldRoundNumber()
         {
-            string xpath = "AS:NormalRound(1.54876, 2)";
+            string xsltCall = "AS:NormalRound(1.54876, 2)";
             object expectedResult = "1.55" ;
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }   
         
@@ -316,7 +262,7 @@ namespace Origam.Rule.Tests
                 96, 130, 210, 72, 128, 122, 66, 12, 12, 0, 81, 221, 3, 9, 217, 
                 253, 155, 178, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130};
                 
-            string xpath = $"AS:ResizeImage('{Convert.ToBase64String(image)}', '4', '4')";
+            string xsltCall = $"AS:ResizeImage('{Convert.ToBase64String(image)}', '4', '4')";
             object expectedResult = 
                 "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QA" +
                 "AAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAmSURBVBhXY/" +
@@ -325,23 +271,14 @@ namespace Origam.Rule.Tests
                 "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
                 "AAAAAAAAAAAAAAAAAAAAAAAAAAA==" ;
             
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }  
         
         [Test]
         public void ShouldDoOrigamRound()
         {
-            string xpath = $"AS:OrigamRound('1,569456', 'rounding1')";
+            string xsltCall = $"AS:OrigamRound('1,569456', 'rounding1')";
             object expectedResult = "2" ;
 
             lookupServiceMock
@@ -351,36 +288,17 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.GetDisplayText(Guid.Parse("994608ad-9634-439b-975a-484067f5b5a6"), "rounding1", false, false, null))
                 .Returns("9ecc0d91-f4bd-411e-936d-e4a8066b38dd");
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }    
         
         [Test]
         public void ShouldExecureiif()
         {
-            string xpath = $"AS:iif('true', 1, 0)";
+            string xsltCall = $"AS:iif('true', 1, 0)";
             object expectedResult = "1";
 
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }   
         
@@ -390,57 +308,30 @@ namespace Origam.Rule.Tests
         public void ShouldExecureisnull(object[] arguments)
         {
             var strArguments =  arguments.Select(x=> x == null ? "null" : $"'{x}'");
-            string xpath = $"AS:isnull({string.Join(", ", strArguments)})";
+            string xsltCall = $"AS:isnull({string.Join(", ", strArguments)})";
             object expectedResult = arguments[arguments.Length - 1];
 
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }    
 
         [Test]
         public void ShouldEncodeDataForUri()
         {
-            string xpath = $"AS:EncodeDataForUri('http://test?p=193')";
+            string xsltCall = $"AS:EncodeDataForUri('http://test?p=193')";
             string expectedResult = "http%3A%2F%2Ftest%3Fp%3D193";
 
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }  
         
         [Test]
         public void ShouldDecodeDataFromUri()
         {
-            string xpath = "AS:DecodeDataFromUri('http%3A%2F%2Ftest%3Fp%3D193')";
+            string xsltCall = "AS:DecodeDataFromUri('http%3A%2F%2Ftest%3Fp%3D193')";
             string expectedResult = $"http://test?p=193";
 
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }  
         
@@ -449,53 +340,26 @@ namespace Origam.Rule.Tests
         [TestCase("AS:AddDays('2022-07-13', 1)", "2022-07-14T00:00:00.0000000+02:00")]
         [TestCase("AS:AddMonths('2022-07-13', 1)", "2022-08-13T00:00:00.0000000+02:00")]
         [TestCase("AS:AddYears('2022-07-13', 1)", "2023-07-13T00:00:00.0000000+02:00")]
-        public void ShouldAddTime(string xpath, string expectedResult)
+        public void ShouldAddTime(string xsltCall, string expectedResult)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }             
         
         [TestCase("AS:DifferenceInDays('2022-07-13', '2022-07-14')", 1.0)]
         [TestCase("AS:DifferenceInMinutes('2022-07-13', '2022-07-14')", 1440.0)]
         [TestCase("AS:DifferenceInSeconds('2022-07-13', '2022-07-14')", 86_400.0)]
-        public void ShouldGetTimeDifference(string xpath, double expectedResult)
+        public void ShouldGetTimeDifference(string xsltCall, double expectedResult)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         } 
         
         [TestCase("AS:UTCDateTime()")]
         [TestCase("AS:LocalDateTime()")]
-        public void ShouldGetDateTimeNow(string xpath)
+        public void ShouldGetDateTimeNow(string xsltCall)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             DateTime resultDateTime = DateTime.Parse((string)result);
             DateTime minTestTime = DateTime.Now - new TimeSpan(0,0,0,1);
             DateTime maxTestTime = DateTime.Now + new TimeSpan(0,0,0,1);
@@ -506,53 +370,33 @@ namespace Origam.Rule.Tests
         [Test]
         public void ShouldTestIfFeatureOn()
         {
-            string xpath = "AS:IsFeatureOn('testFeature')";
+            string xsltCall = "AS:IsFeatureOn('testFeature')";
             bool expectedResult = true;
             parameterServiceMock
                 .Setup(service => service.IsFeatureOn("testFeature"))
                 .Returns(true);    
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }   
         
         [Test]
         public void ShouldTestIsInRole()
         {
-            string xpath = "AS:IsInRole('testRole')";
+            string xsltCall = "AS:IsInRole('testRole')";
             bool expectedResult = true;
             authorizationProvider
                 .Setup(service => service.Authorize(SecurityManager.CurrentPrincipal, "testRole"))
                 .Returns(true);    
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }   
                 
         [TestCase("AS:ActiveProfileBusinessUnitId()", "3eed4998-4ca1-445f-a02d-d9851ea978a4")]
         [TestCase("AS:ActiveProfileId()", "e93a81d4-2520-4f14-9af9-574a61c609b0")]
         [TestCase("AS:ActiveProfileOrganizationId()", "4f68699e-6755-4b7d-be93-257ae28f32f5")]
-        public void ShouldGetActiveProfileBusinessUnitId(string xpath, string expectedResult)
+        public void ShouldGetActiveProfileBusinessUnitId(string xsltCall, string expectedResult)
         {
             userProfileGetterMock.
                 Setup(x => x.Invoke())
@@ -563,17 +407,7 @@ namespace Origam.Rule.Tests
                         OrganizationId = Guid.Parse("4f68699e-6755-4b7d-be93-257ae28f32f5")
                     }
                 );
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }
         
@@ -581,19 +415,9 @@ namespace Origam.Rule.Tests
         [Test]
         public void ShouldReturnNull()
         {
-            string xpath = "AS:null()";
+            string xsltCall = "AS:null()";
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = ( XPathNodeIterator)nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             
             Assert.That(result, Is.AssignableTo(typeof(XPathNodeIterator)));
             XPathNodeIterator resultIterator = (XPathNodeIterator)result;
@@ -604,20 +428,10 @@ namespace Origam.Rule.Tests
         public void ShouldRunToXml()
         {
             string testXml = "<TestNode />";
-            string xpath = $"AS:ToXml('{testXml}')";
+            string xsltCall = $"AS:ToXml('{testXml}')";
             string expectedResult = testXml;
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.AssignableTo(typeof(XPathNodeIterator)));
             XPathNodeIterator resultIterator = (XPathNodeIterator)result;
             resultIterator.MoveNext();
@@ -626,14 +440,14 @@ namespace Origam.Rule.Tests
         
         [TestCase("AS:GenerateSerial('counter1')") ]
         [TestCase("AS:GenerateSerial('counter1', '0001-01-01')")]
-        public void ShouldGenerateSerial(string xpath)
+        public void ShouldGenerateSerial(string xsltCall)
         {
             string counterCode = "counter1";
             string expectedResult = "result1";
             
             Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
             XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
+            XPathExpression expr = nav.Compile(xsltCall);
 
             counterMock
                 .Setup(x => x.GetNewCounter(counterCode, DateTime.MinValue, null))
@@ -667,44 +481,24 @@ namespace Origam.Rule.Tests
             string currentState = "testState";
             Guid targetStateId = Guid.Parse("2157eb16-6643-45f7-b304-bd6fea811e16");
             
-            string xpath = $"AS:IsInState('{entityId}', '{fieldId}', '{currentState}', '{targetStateId}')";
+            string xsltCall = $"AS:IsInState('{entityId}', '{fieldId}', '{currentState}', '{targetStateId}')";
             bool expectedResult = true;
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-
             stateMachineServiceMock
                 .Setup(x => x.IsInState(entityId, fieldId, currentState ,targetStateId))
                 .Returns(true);
-
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
             
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }
         
         [Test]
         public void ShouldTestFormatLink()
         {
-            string xpath = $"AS:FormatLink('http://localhost', 'test1')";
+            string xsltCall = $"AS:FormatLink('http://localhost', 'test1')";
             string expectedResult = "<a href=\"http://localhost\" target=\"_blank\"><u><font color=\"#0000ff\">test1</font></u></a>";
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
         }
         
@@ -712,7 +506,7 @@ namespace Origam.Rule.Tests
         public void ShouldTestIsUserLockedOut()
         {
             string userId = "4c738d1f-b0a8-4816-9f06-4d58ef49fcda";
-            string xpath = $"AS:IsUserLockedOut('{userId}')";
+            string xsltCall = $"AS:IsUserLockedOut('{userId}')";
             bool expectedResult = true;
             
             var agentMock = new Mock<IServiceAgent>();
@@ -733,17 +527,7 @@ namespace Origam.Rule.Tests
                 .Setup(x => x.GetAgent("IdentityService", null, null))
                 .Returns(agentMock.Object);
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
             Assert.That(agentParameters, Has.Count.EqualTo(1));
             Assert.That(agentParameters.ContainsKey("UserId"));
@@ -758,7 +542,7 @@ namespace Origam.Rule.Tests
         public void ShouldTestUserInfoMethods(string asMethodName, string methodName)
         {
             string userId = "4c738d1f-b0a8-4816-9f06-4d58ef49fcda";
-            string xpath = $"AS:{asMethodName}('{userId}')";
+            string xsltCall = $"AS:{asMethodName}('{userId}')";
             bool expectedResult = true;
             
             var agentMock = new Mock<IServiceAgent>();
@@ -779,17 +563,7 @@ namespace Origam.Rule.Tests
                 .Setup(x => x.GetAgent("IdentityService", null, null))
                 .Returns(agentMock.Object);
             
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-            XPathNavigator nav = new XmlDocument().CreateNavigator();
-            XPathExpression expr = nav.Compile(xpath);
-            
-            OrigamXsltContext sut = new OrigamXsltContext(
-                new NameTable(),
-                xsltFunctionDefinitions
-            );
-            
-            expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
+            object result = RunInXpath(xsltCall);
             Assert.That(result, Is.EqualTo(expectedResult));
             Assert.That(agentParameters, Has.Count.EqualTo(1));
             Assert.That(agentParameters.ContainsKey("UserId"));
