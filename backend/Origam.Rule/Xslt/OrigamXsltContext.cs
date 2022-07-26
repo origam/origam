@@ -35,7 +35,7 @@ namespace Origam.Rule.Xslt
 {
     public class OrigamXsltContext : XsltContext
     {
-        private Dictionary<string, IXsltFunctionContainer> _xslFunctionsDict;
+        private Dictionary<string, object> _xslFunctionsDict;
 
         public static OrigamXsltContext Create(XmlNameTable nameTable)
         {
@@ -49,7 +49,7 @@ namespace Origam.Rule.Xslt
         public OrigamXsltContext(XmlNameTable nt, IEnumerable<XsltFunctionsDefinition> xsltFunctionsDefinitions)
             : base((NameTable)nt)
         {
-            _xslFunctionsDict = new Dictionary<string, IXsltFunctionContainer>();
+            _xslFunctionsDict = new Dictionary<string, object>();
 
             foreach (var xsltFunctionsDefinition in xsltFunctionsDefinitions)
             {
@@ -80,7 +80,7 @@ namespace Origam.Rule.Xslt
 
         public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
         {
-            IXsltFunctionContainer functionContainer;            
+            object functionContainer;            
             String ns = LookupNamespace(prefix);
             if (ns != null)
             {

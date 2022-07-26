@@ -61,16 +61,10 @@ public static class XsltFunctionContainerFactory
             .Cast<XsltFunctionCollection>()
             .Select(collection =>
             {
-                object instantiatedObject = Reflector.InvokeObject(
+                object container = Reflector.InvokeObject(
                     collection.FullClassName,
                     collection.AssemblyName);
-                if (!(instantiatedObject is IXsltFunctionContainer container))
-                {
-                    throw new Exception(
-                        $"Referenced class {collection.FullClassName} from {collection.AssemblyName} does not implement interface {nameof(IXsltFunctionContainer)}");
-                }
-
-                if (instantiatedObject is IOrigamDependentXsltFunctionContainer
+                if (container is IOrigamDependentXsltFunctionContainer
                     origamContainer)
                 {
                     origamContainer.Persistence = persistence;
@@ -84,11 +78,11 @@ public static class XsltFunctionContainerFactory
                     origamContainer.BusinessService = businessService;
                 }
                 return new XsltFunctionsDefinition(
-                    Container:container,
+                    Container: container,
                     NameSpacePrefix: collection.XslNameSpacePrefix,
                     NameSpaceUri: collection.XslNameSpaceUri);
             });
     }
 }
-public record XsltFunctionsDefinition(IXsltFunctionContainer Container, 
+public record XsltFunctionsDefinition(object Container, 
     string NameSpacePrefix, string NameSpaceUri);

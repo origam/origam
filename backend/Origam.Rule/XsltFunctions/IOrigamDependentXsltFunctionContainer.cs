@@ -27,7 +27,7 @@ using Origam.Workbench.Services;
 
 namespace Origam.Rule.XsltFunctions;
 
-public interface IOrigamDependentXsltFunctionContainer: IXsltFunctionContainer
+public interface IOrigamDependentXsltFunctionContainer
 {
     IPersistenceService Persistence { get; set; }
     IDataLookupService LookupService { get; set; }
