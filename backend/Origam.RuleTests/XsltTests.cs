@@ -26,23 +26,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web;
 using System.Xml;
 using System.Xml.XPath;
 using Moq;
 using NUnit.Framework;
 using Origam.DA;
+using Origam.Rule;
 using Origam.Rule.Xslt;
 using Origam.Rule.XsltFunctions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 using Assert = NUnit.Framework.Assert;
 
-namespace Origam.Rule.Tests
+namespace Origam.RuleTests
 {
     [TestFixture]
-    public class OrigamXsltContextTests
+    public class XsltTests
     {
         private Mock<IBusinessServicesService> businessServiceMock;
         private Mock<IParameterService> parameterServiceMock;
@@ -56,6 +60,24 @@ namespace Origam.Rule.Tests
         private Mock<IXsltFunctionSchemaItemProvider> functionSchemaItemProvider;
         private Mock<IPersistenceService> persistenceServiceMock;
         private List<XsltFunctionsDefinition> xsltFunctionDefinitions;
+        
+        private string xsltScriptTemplate =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"\n" +
+            "	xmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"\n" +
+            "    xmlns:fs=\"http://xsl.origam.com/filesystem\"\n" +
+            "    xmlns:CR=\"http://xsl.origam.com/crypto\"\n" +
+            "	 xmlns:date=\"http://exslt.org/dates-and-times\">\n" +
+            "	<xsl:template match=\"ROOT\">\n" +
+            "		<ROOT>\n" +
+            "			<SD Id=\"05b0209f-8f7d-4759-9814-fa45af953c63\">\n" +
+            "				<xsl:attribute name=\"d1\">\n" +
+            "                  <xsl:value-of select=\"{0}\"/>\n" +
+            "              </xsl:attribute>\n" +
+            "			</SD>\n" +
+            "		</ROOT>\n" +
+            "	</xsl:template>\n" +
+            "</xsl:stylesheet>\n";
         
         [SetUp]
         public void Init()
@@ -109,6 +131,28 @@ namespace Origam.Rule.Tests
             return nav.Evaluate(expr);
         }
 
+        private string RunInXslt(string xsltCall, XmlDocument document=null)
+        {
+            string xslScript = string.Format(xsltScriptTemplate, xsltCall);
+            var transformer = new CompiledXsltEngine(xsltFunctionDefinitions);
+            if (document == null)
+            {
+                document = new XmlDocument();
+                document.LoadXml("<ROOT></ROOT>");
+            }
+
+            XmlContainer xmlContainer = new XmlContainer(document);
+            IXmlContainer resultContainer = transformer.Transform(
+                xmlContainer, xslScript, new Hashtable(),
+                null, false);
+            
+            var regex = new Regex("d1=\"(.*)\"");
+            var match = regex.Match(resultContainer.Xml.OuterXml);
+            return match.Success 
+                ? match.Groups[1].Value 
+                : "";
+        }
+
         [Test]
         public void ShouldGetConstant()
         {
@@ -118,13 +162,24 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.GetParameterValue("constant1", OrigamDataType.String, null))
                 .Returns(expectedResult);
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         } 
         
         [TestCase("string1", new object[0], "string1_value")]
         [TestCase("string1 {0} {1}", new object[]{"1", "2"}, "string1_value 1 2")]
+        [TestCase("string1 {0} {1} {2}", new object[]{"1", "2", "3"}, "string1_value 1 2 3")]
         [TestCase("string1 {0} {1} {2} {3}", new object[]{"1", "2", "3", "4"}, "string1_value 1 2 3 4")]
+        [TestCase("string1 {0} {1} {2} {3} {4}", new object[]{"1", "2", "3", "4", "5"}, "string1_value 1 2 3 4 5")]
+        [TestCase("string1 {0} {1} {2} {3} {4} {5}", new object[]{"1", "2", "3", "4", "5", "6"}, "string1_value 1 2 3 4 5 6")]
+        [TestCase("string1 {0} {1} {2} {3} {4} {5} {6}", new object[]{"1", "2", "3", "4", "5", "6", "7"}, "string1_value 1 2 3 4 5 6 7")]
+        [TestCase("string1 {0} {1} {2} {3} {4} {5} {6} {7}", new object[]{"1", "2", "3", "4", "5", "6", "7", "8"}, "string1_value 1 2 3 4 5 6 7 8")]
+        [TestCase("string1 {0} {1} {2} {3} {4} {5} {6} {7} {8}", new object[]{"1", "2", "3", "4", "5", "6", "7", "8", "9"}, "string1_value 1 2 3 4 5 6 7 8 9")]
+        [TestCase("string1 {0} {1} {2} {3} {4} {5} {6} {7} {8} {9}", new object[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}, "string1_value 1 2 3 4 5 6 7 8 9 10")]
+
         public void ShouldGetString(string stringName, object[] args, string expectedResult)
         {
             string argsString = string.Join(
@@ -144,9 +199,10 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.GetString(stringName, args))
                 .Returns(expectedResult);
             
-            object result = RunInXpath(xsltCall);
-            
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }
         
         [Test]
@@ -155,8 +211,10 @@ namespace Origam.Rule.Tests
             string xsltCall = "AS:NumberOperand('1', '1', 'PLUS')";
             object expectedResult = "2" ;
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         } 
         
         [TestCase("Plus", "1", "1", "2")]
@@ -169,8 +227,10 @@ namespace Origam.Rule.Tests
         {
             string xsltCall = $"AS:{functionName}('{parameter1}', '{parameter2}')";
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }
         
         [Test]
@@ -179,8 +239,10 @@ namespace Origam.Rule.Tests
             string xsltCall = "AS:FormatNumber('1.54876', 'E')";
             object expectedResult = "1,548760E+000" ;
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }  
         
         [TestCase("MinString", "a")]
@@ -191,8 +253,11 @@ namespace Origam.Rule.Tests
             
             var document = new XmlDocument();
             document.LoadXml("<ROOT><N1 name=\"w\"></N1><N1 name=\"a\"></N1><N1  name=\"e\"></N1></ROOT>");
-            object result = RunInXpath(xsltCall, document);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            
+            object xPathResult = RunInXpath(xsltCall, document);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall, document);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }   
         
         [TestCase("AS:LookupValue('{0}', '{1}')", new []{"lookupValue"})]
@@ -236,8 +301,10 @@ namespace Origam.Rule.Tests
                 throw new Exception("Wrong number of test parameters.");
             }
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         } 
                 
         [Test]
@@ -245,8 +312,11 @@ namespace Origam.Rule.Tests
         {
             string xsltCall = "AS:NormalRound(1.54876, 2)";
             object expectedResult = "1.55" ;
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }   
         
         [Test]
@@ -271,8 +341,10 @@ namespace Origam.Rule.Tests
                 "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
                 "AAAAAAAAAAAAAAAAAAAAAAAAAAA==" ;
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }  
         
         [Test]
@@ -288,8 +360,10 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.GetDisplayText(Guid.Parse("994608ad-9634-439b-975a-484067f5b5a6"), "rounding1", false, false, null))
                 .Returns("9ecc0d91-f4bd-411e-936d-e4a8066b38dd");
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }    
         
         [Test]
@@ -298,8 +372,8 @@ namespace Origam.Rule.Tests
             string xsltCall = $"AS:iif('true', 1, 0)";
             object expectedResult = "1";
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
         }   
         
         [TestCase(new object[]{null, "1"})]
@@ -311,8 +385,10 @@ namespace Origam.Rule.Tests
             string xsltCall = $"AS:isnull({string.Join(", ", strArguments)})";
             object expectedResult = arguments[arguments.Length - 1];
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }    
 
         [Test]
@@ -321,8 +397,10 @@ namespace Origam.Rule.Tests
             string xsltCall = $"AS:EncodeDataForUri('http://test?p=193')";
             string expectedResult = "http%3A%2F%2Ftest%3Fp%3D193";
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }  
         
         [Test]
@@ -331,8 +409,10 @@ namespace Origam.Rule.Tests
             string xsltCall = "AS:DecodeDataFromUri('http%3A%2F%2Ftest%3Fp%3D193')";
             string expectedResult = $"http://test?p=193";
 
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }  
         
         [TestCase("AS:AddMinutes('2022-07-13', 10)", "2022-07-13T00:10:00.0000000+02:00")]
@@ -342,8 +422,10 @@ namespace Origam.Rule.Tests
         [TestCase("AS:AddYears('2022-07-13', 1)", "2023-07-13T00:00:00.0000000+02:00")]
         public void ShouldAddTime(string xsltCall, string expectedResult)
         {
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }             
         
         [TestCase("AS:DifferenceInDays('2022-07-13', '2022-07-14')", 1.0)]
@@ -351,20 +433,28 @@ namespace Origam.Rule.Tests
         [TestCase("AS:DifferenceInSeconds('2022-07-13', '2022-07-14')", 86_400.0)]
         public void ShouldGetTimeDifference(string xsltCall, double expectedResult)
         {
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString()));
         } 
         
         [TestCase("AS:UTCDateTime()")]
         [TestCase("AS:LocalDateTime()")]
         public void ShouldGetDateTimeNow(string xsltCall)
         {
-            object result = RunInXpath(xsltCall);
-            DateTime resultDateTime = DateTime.Parse((string)result);
             DateTime minTestTime = DateTime.Now - new TimeSpan(0,0,0,1);
             DateTime maxTestTime = DateTime.Now + new TimeSpan(0,0,0,1);
-            Assert.That(resultDateTime, Is.GreaterThan(minTestTime));
-            Assert.That(resultDateTime, Is.LessThan(maxTestTime));
+            
+            object xPathResult = RunInXpath(xsltCall);
+            DateTime xpathResultDateTime = DateTime.Parse((string)xPathResult);
+            Assert.That(xpathResultDateTime, Is.GreaterThan(minTestTime));
+            Assert.That(xpathResultDateTime, Is.LessThan(maxTestTime)); 
+            
+            string xsltResult = RunInXslt(xsltCall);
+            DateTime xsltResultDateTime = DateTime.Parse((string)xsltResult);
+            Assert.That(xsltResultDateTime, Is.GreaterThan(minTestTime));
+            Assert.That(xsltResultDateTime, Is.LessThan(maxTestTime)); 
         } 
 
         [Test]
@@ -376,8 +466,10 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.IsFeatureOn("testFeature"))
                 .Returns(true);    
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
         }   
         
         [Test]
@@ -389,8 +481,10 @@ namespace Origam.Rule.Tests
                 .Setup(service => service.Authorize(SecurityManager.CurrentPrincipal, "testRole"))
                 .Returns(true);    
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
         }   
                 
         [TestCase("AS:ActiveProfileBusinessUnitId()", "3eed4998-4ca1-445f-a02d-d9851ea978a4")]
@@ -407,8 +501,10 @@ namespace Origam.Rule.Tests
                         OrganizationId = Guid.Parse("4f68699e-6755-4b7d-be93-257ae28f32f5")
                     }
                 );
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }
         
                         
@@ -416,12 +512,12 @@ namespace Origam.Rule.Tests
         public void ShouldReturnNull()
         {
             string xsltCall = "AS:null()";
+            object xPathResult = RunInXpath(xsltCall);
             
-            object result = RunInXpath(xsltCall);
-            
-            Assert.That(result, Is.AssignableTo(typeof(XPathNodeIterator)));
-            XPathNodeIterator resultIterator = (XPathNodeIterator)result;
+            Assert.That(xPathResult, Is.AssignableTo(typeof(XPathNodeIterator)));
+            XPathNodeIterator resultIterator = (XPathNodeIterator)xPathResult;
             Assert.That(resultIterator, Has.Count.EqualTo(0));
+            // this function is not available in the xslt transformations
         } 
         
         [Test]
@@ -431,11 +527,14 @@ namespace Origam.Rule.Tests
             string xsltCall = $"AS:ToXml('{testXml}')";
             string expectedResult = testXml;
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.AssignableTo(typeof(XPathNodeIterator)));
-            XPathNodeIterator resultIterator = (XPathNodeIterator)result;
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.AssignableTo(typeof(XPathNodeIterator)));
+            XPathNodeIterator resultIterator = (XPathNodeIterator)xPathResult;
             resultIterator.MoveNext();
             Assert.That(resultIterator.Current.OuterXml, Is.EqualTo(expectedResult));
+            
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         } 
         
         [TestCase("AS:GenerateSerial('counter1')") ]
@@ -458,8 +557,7 @@ namespace Origam.Rule.Tests
                 {
                     new XsltFunctionsDefinition(
                         Container: new LegacyXsltFunctionContainer(counterMock.Object),
-                        NameSpaceUri:
-                        "http://schema.advantages.cz/AsapFunctions",
+                        NameSpaceUri: "http://schema.advantages.cz/AsapFunctions",
                         NameSpacePrefix: "AS")
                 };
             
@@ -469,8 +567,25 @@ namespace Origam.Rule.Tests
             );
             
             expr.SetContext(sut);
-            object result = nav.Evaluate(expr);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = nav.Evaluate(expr);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+
+            string xslScript = string.Format(xsltScriptTemplate, xsltCall);
+            var transformer = new CompiledXsltEngine(containers);
+            XmlDocument document = new XmlDocument();
+            document.LoadXml("<ROOT></ROOT>");
+            XmlContainer xmlContainer = new XmlContainer(document);
+            IXmlContainer resultContainer = transformer.Transform(
+                xmlContainer, xslScript, new Hashtable(),
+                null, false);
+            
+            var regex = new Regex("d1=\"(.*)\"");
+            var match = regex.Match(resultContainer.Xml.OuterXml);
+            string xsltResult = match.Success 
+                ? match.Groups[1].Value 
+                : "";
+
+            Assert.That(xsltResult, Is.EqualTo(expectedResult));
         }  
         
         [Test]
@@ -488,8 +603,10 @@ namespace Origam.Rule.Tests
                 .Setup(x => x.IsInState(entityId, fieldId, currentState ,targetStateId))
                 .Returns(true);
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
         }
         
         [Test]
@@ -498,8 +615,10 @@ namespace Origam.Rule.Tests
             string xsltCall = $"AS:FormatLink('http://localhost', 'test1')";
             string expectedResult = "<a href=\"http://localhost\" target=\"_blank\"><u><font color=\"#0000ff\">test1</font></u></a>";
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo( HttpUtility.HtmlEncode(expectedResult)));
         }
         
         [Test]
@@ -527,13 +646,22 @@ namespace Origam.Rule.Tests
                 .Setup(x => x.GetAgent("IdentityService", null, null))
                 .Returns(agentMock.Object);
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
             Assert.That(agentParameters, Has.Count.EqualTo(1));
             Assert.That(agentParameters.ContainsKey("UserId"));
             Assert.That(agentParameters["UserId"], Is.EqualTo(Guid.Parse(userId)));
             agentMock.Verify();
             agentMock.Verify(x => x.Run(), Times.Once);
+            
+            agentParameters.Clear();
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
+            Assert.That(agentParameters, Has.Count.EqualTo(1));
+            Assert.That(agentParameters.ContainsKey("UserId"));
+            Assert.That(agentParameters["UserId"], Is.EqualTo(Guid.Parse(userId)));
+            agentMock.Verify();
+            agentMock.Verify(x => x.Run(), Times.Exactly(2));
         }
         
         [TestCase("IsUserLockedOut", "IsLockedOut")]
@@ -563,13 +691,22 @@ namespace Origam.Rule.Tests
                 .Setup(x => x.GetAgent("IdentityService", null, null))
                 .Returns(agentMock.Object);
             
-            object result = RunInXpath(xsltCall);
-            Assert.That(result, Is.EqualTo(expectedResult));
+            object xPathResult = RunInXpath(xsltCall);
+            Assert.That(xPathResult, Is.EqualTo(expectedResult));
             Assert.That(agentParameters, Has.Count.EqualTo(1));
             Assert.That(agentParameters.ContainsKey("UserId"));
             Assert.That(agentParameters["UserId"], Is.EqualTo(Guid.Parse(userId)));
             agentMock.Verify();
             agentMock.Verify(x => x.Run(), Times.Once);
+            
+            agentParameters.Clear();
+            string xsltResult = RunInXslt(xsltCall);
+            Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
+            Assert.That(agentParameters, Has.Count.EqualTo(1));
+            Assert.That(agentParameters.ContainsKey("UserId"));
+            Assert.That(agentParameters["UserId"], Is.EqualTo(Guid.Parse(userId)));
+            agentMock.Verify();
+            agentMock.Verify(x => x.Run(), Times.Exactly(2));
         }
     }
 }

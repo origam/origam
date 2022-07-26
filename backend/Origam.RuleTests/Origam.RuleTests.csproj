@@ -81,7 +81,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="OrigamXsltContextTests.cs" />
+    <Compile Include="XsltTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuleEngineTests.cs" />
   </ItemGroup>

@@ -199,13 +199,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             arg5, arg6, arg7, arg8, arg9, arg10);
     }
 
-    public string GetString(string name, bool throwException,
-        params Object[] args)
-    {
-        return ParameterService.GetString(name, throwException, args);
-    }
-
-
     public string Plus(string number1, string number2)
     {
         return NumberOperand(number1, number2, "PLUS");
