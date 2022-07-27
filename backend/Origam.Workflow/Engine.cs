@@ -1242,7 +1242,7 @@ namespace Origam.Workflow
 								throw new Exception(DebugClass.ListRowErrors(xmlDataDoc.DataSet), ex);
 							}
 
-							object profileId = this.RuleEngine.ActiveProfileGuId();
+							object profileId = SecurityManager.CurrentUserProfile().Id;
 
 							foreach(DataTable t in xmlDataDoc.DataSet.Tables)
 							{
