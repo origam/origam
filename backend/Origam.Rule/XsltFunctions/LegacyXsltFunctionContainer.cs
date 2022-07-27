@@ -23,11 +23,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
+using Origam.DA;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule.XsltFunctions;
 
@@ -40,7 +45,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             .GetCurrentMethod().DeclaringType);
 
     private ICounter counter;
-    
+
     public string TransactionId { get; set; } = null;
 
     public LegacyXsltFunctionContainer()
@@ -389,6 +394,146 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return XmlTools.FormatXmlString(result);
     }
 
+    public XPathNodeIterator LookupList(string lookupId)
+    {
+        return LookupList(lookupId, new Hashtable());
+    }
+
+    public XPathNodeIterator LookupList(string lookupId, string paramName1,
+        string param1)
+    {
+        Hashtable parameters = new Hashtable();
+        parameters.Add(paramName1, param1);
+
+        return LookupList(lookupId, parameters);
+    }
+
+    public XPathNodeIterator LookupList(string lookupId, string paramName1,
+        string param1, string paramName2, string param2)
+    {
+        Hashtable parameters = new Hashtable();
+        parameters.Add(paramName1, param1);
+        parameters.Add(paramName2, param2);
+
+        return LookupList(lookupId, parameters);
+    }
+
+    public XPathNodeIterator LookupList(string lookupId, string paramName1,
+        string param1, string paramName2, string param2, string paramName3,
+        string param3)
+    {
+        Hashtable parameters = new Hashtable();
+        parameters.Add(paramName1, param1);
+        parameters.Add(paramName2, param2);
+        parameters.Add(paramName3, param3);
+
+        return LookupList(lookupId, parameters);
+    }
+
+    private XPathNodeIterator LookupList(string lookupId, Hashtable parameters)
+    {
+        DataView view = LookupService.GetList(new Guid(lookupId), parameters,
+            TransactionId);
+
+        XmlDocument resultDoc = new XmlDocument();
+        XmlElement listElement = resultDoc.CreateElement("list");
+        resultDoc.AppendChild(listElement);
+
+        foreach (DataRowView rowView in view)
+        {
+            XmlElement itemElement = resultDoc.CreateElement("item");
+            listElement.AppendChild(itemElement);
+
+            foreach (DataColumn col in rowView.Row.Table.Columns)
+            {
+                if (col.ColumnMapping == MappingType.Element)
+                {
+                    XmlElement fieldElement =
+                        resultDoc.CreateElement(col.ColumnName);
+                    fieldElement.InnerText =
+                        XmlTools.ConvertToString(rowView[col.ColumnName]);
+                    itemElement.AppendChild(fieldElement);
+                }
+                else if (col.ColumnMapping == MappingType.Attribute)
+                {
+                    itemElement.SetAttribute(col.ColumnName,
+                        XmlTools.ConvertToString(rowView[col.ColumnName]));
+                }
+            }
+        }
+
+        XPathNavigator nav = resultDoc.CreateNavigator();
+        XPathNodeIterator result = nav.Select("/");
+
+        return result;
+    }
+
+    public string LookupValueEx(string lookupId, XPathNavigator parameters)
+    {
+        Hashtable lookupParameters = RetrieveParameters(parameters);
+        object result = LookupService.GetDisplayText(
+            new Guid(lookupId), lookupParameters, false, false, TransactionId);
+        return XmlTools.FormatXmlString(result);
+    }
+
+    public string LookupOrCreate(string lookupId, string recordId,
+        XPathNavigator createParameters)
+    {
+        string result = LookupValue(lookupId, recordId);
+        result = CreateLookupRecord(lookupId, createParameters, result);
+        return result;
+    }
+
+    public string LookupOrCreateEx(string lookupId, XPathNavigator parameters,
+        XPathNavigator createParameters)
+    {
+        string result = LookupValueEx(lookupId, parameters);
+        result = CreateLookupRecord(lookupId, createParameters, result);
+        return result;
+    }
+
+    private string CreateLookupRecord(string lookupId,
+        XPathNavigator createParameters, string result)
+    {
+        if (result == string.Empty)
+        {
+            result = XmlTools.FormatXmlString(LookupService.CreateRecord(
+                new Guid(lookupId), RetrieveParameters(createParameters),
+                TransactionId));
+        }
+
+        return result;
+    }
+
+    private static Hashtable RetrieveParameters(XPathNavigator parameters)
+    {
+        XPathNodeIterator iter =
+            ((XPathNodeIterator)parameters.Evaluate("parameter"));
+        Hashtable lookupParameters = new Hashtable(iter.Count);
+        while (iter.MoveNext())
+        {
+            XPathNodeIterator keyIterator =
+                (XPathNodeIterator)iter.Current.Evaluate("@key");
+            if (keyIterator == null || keyIterator.Count == 0)
+                throw new Exception(
+                    "'key' attribute not present in the parameters.");
+            keyIterator.MoveNext();
+            string key = keyIterator.Current.Value.ToString();
+
+            XPathNodeIterator valueIterator =
+                (XPathNodeIterator)iter.Current.Evaluate("@value");
+            if (valueIterator == null || valueIterator.Count == 0)
+                throw new Exception(
+                    "'value' attribute not present in the parameters.");
+            valueIterator.MoveNext();
+            object value = valueIterator.Current.Value;
+
+            lookupParameters[key] = value;
+        }
+
+        return lookupParameters;
+    }
+
     public string NormalRound(string num, string place)
     {
         return NormalStaticRound(num, place);
@@ -472,6 +617,73 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             ResourceUtils.GetString("ErrorUnknownRoundingType"));
     }
 
+    public string Round(string amount)
+    {
+        decimal price;
+        try
+        {
+            if (amount == "")
+            {
+                return "0";
+            }
+            else
+            {
+                try
+                {
+                    price = XmlConvert.ToDecimal(amount);
+                }
+                catch
+                {
+                    double dnum1 = Double.Parse(amount, NumberStyles.Float,
+                        CultureInfo.InvariantCulture);
+                    price = Convert.ToDecimal(dnum1);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new FormatException(
+                ResourceUtils.GetString("ErrorRoundAmountInvalid"), ex);
+        }
+
+        return NormalStaticRound(amount, "0");
+    }
+
+    public string Ceiling(string amount)
+    {
+        string retVal;
+
+        decimal price;
+        try
+        {
+            if (amount == "")
+            {
+                return "0";
+            }
+            else
+            {
+                try
+                {
+                    price = XmlConvert.ToDecimal(amount);
+                }
+                catch
+                {
+                    double dnum1 = Double.Parse(amount, NumberStyles.Float,
+                        CultureInfo.InvariantCulture);
+                    price = Convert.ToDecimal(dnum1);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new FormatException(
+                ResourceUtils.GetString("ErrorCeilingAmountInvalid"), ex);
+        }
+
+        retVal = XmlConvert.ToString(System.Math.Ceiling(price));
+        return retVal;
+    }
+
     private static decimal RoundUD(bool bRoundUp, decimal dbUnit, decimal dbVal)
     {
         const int ROUND_DP = 10;
@@ -531,6 +743,55 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         );
     }
 
+    public static string ResizeImage(string inputData, int width, int height,
+        string keepAspectRatio, string outFormat)
+    {
+        byte[] inBytes = Convert.FromBase64String(inputData);
+
+        bool keepRatio;
+        // check input parameters format
+        try
+        {
+            keepRatio = XmlConvert.ToBoolean(keepAspectRatio);
+        }
+        catch (Exception ex)
+        {
+            throw new FormatException(
+                "'keepAspectRatio' parameter isn't in a bool format", ex);
+        }
+
+        return Convert.ToBase64String(
+            ImageResizer.ResizeBytesInBytesOut(
+                inBytes, width, height, keepRatio, outFormat
+            )
+        );
+    }
+
+    public static XPathNodeIterator GetImageDimensions(string inputData)
+    {
+        byte[] inBytes = Convert.FromBase64String(inputData);
+        int[] dimensions = ImageResizer.GetImageDimensions(inBytes);
+        XmlDocument resultDoc = new XmlDocument();
+        XmlElement rootElement = resultDoc.CreateElement("ROOT");
+        resultDoc.AppendChild(rootElement);
+        XmlElement dimenstionElement = resultDoc.CreateElement("Dimensions");
+        // width
+        XmlAttribute widthAttr = resultDoc.CreateAttribute("Width");
+        widthAttr.Value = dimensions[0].ToString();
+        dimenstionElement.Attributes.Append(widthAttr);
+        // height
+        XmlAttribute heightAttr = resultDoc.CreateAttribute("Height");
+        heightAttr.Value = dimensions[1].ToString();
+        dimenstionElement.Attributes.Append(heightAttr);
+        // add dimensoun element
+        rootElement.AppendChild(dimenstionElement);
+
+        XPathNavigator nav = resultDoc.CreateNavigator();
+        XPathNodeIterator result = nav.Select("/");
+
+        return result;
+    }
+
     public static string isnull(string value1, string value2)
     {
         return (value1 == "" ? value2 : value1);
@@ -586,8 +847,21 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         return MyUri.UnescapeDataString(input);
     }
+    
+    public bool IsUriValid(string url)
+    {
+        try
+        {
+            Uri u = new Uri(url);
+        }
+        catch
+        {
+            return false;
+        }
 
-
+        return true;
+    }
+    
     public static string AddDays(string date, string days)
     {
         string result;
@@ -839,6 +1113,22 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return profile.Id.ToString();
     }
 
+    public object ActiveProfileGuId()
+    {
+        UserProfile profile = UserProfileGetter();
+        return profile.Id;
+    }
+
+    public bool IsUserAuthenticated()
+    {
+        return SecurityManager.CurrentPrincipal.Identity.IsAuthenticated;
+    }
+
+    public string UserName()
+    {
+        return SecurityManager.CurrentPrincipal.Identity.Name;
+    }
+
     public static XPathNodeIterator ToXml(string value)
     {
         return ToXml(value, "/");
@@ -924,5 +1214,621 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     public string Null()
     {
         return null;
+    }
+
+    private decimal _statusTotal = 0;
+
+    public void SetStatusTotal(decimal total)
+    {
+        _statusTotal = total;
+    }
+
+    private decimal _statusPosition = 0;
+
+    public void IncrementStatusPosition()
+    {
+        _statusPosition++;
+        if (log.IsDebugEnabled)
+        {
+            log.RunHandled(() =>
+            {
+                log.DebugFormat("Percent complete: {0}",
+                    _statusPosition / _statusTotal * 100);
+            });
+        }
+    }
+
+    Hashtable _positions = new Hashtable();
+
+    public void InitPosition(string id, decimal startPosition)
+    {
+        _positions[id] = startPosition;
+    }
+
+    public decimal NextPosition(string id, decimal increment)
+    {
+        if (!_positions.Contains(id))
+        {
+            throw new ArgumentOutOfRangeException("id", id,
+                ResourceUtils.GetString("ErrorIncrementFailure"));
+        }
+
+        decimal result = (decimal)_positions[id];
+        result += increment;
+
+        _positions[id] = result;
+        ;
+
+        return result;
+    }
+
+    public void DestroyPosition(string id)
+    {
+        if (!_positions.Contains(id))
+        {
+            throw new ArgumentOutOfRangeException("id", id,
+                ResourceUtils.GetString("ErrorRemoveFailure"));
+        }
+
+        _positions.Remove(id);
+    }
+
+    public string GetMenuId(string lookupId, string value)
+    {
+        return LookupService.GetMenuBinding(new Guid(lookupId), value).MenuId;
+    }
+
+
+    /// <summary>
+    /// Decodes number in signed overpunch format 
+    /// https://en.wikipedia.org/wiki/Signed_overpunch
+    /// </summary>
+    /// <param name="stringToDecode"></param>
+    /// <param name="decimalPlaces"></param>
+    /// <returns></returns>
+    public static double DecodeSignedOverpunch(string stringToDecode,
+        int decimalPlaces)
+    {
+        CheckIsInSignedOverpunchFormat(stringToDecode, decimalPlaces);
+
+        char codeChar = stringToDecode.ToUpper()[stringToDecode.Length - 1];
+        string numberChars =
+            stringToDecode.Substring(0, stringToDecode.Length - 1);
+
+        string incompleteNumber = AddDecimalPoint(numberChars, decimalPlaces);
+
+        (int sign, char lastDigit) = GetSignAndLastChar(codeChar);
+
+        string resultStr = incompleteNumber + lastDigit;
+        bool parseFailed = !double.TryParse(
+            resultStr,
+            NumberStyles.Any,
+            CultureInfo.InvariantCulture,
+            out var parsedNum);
+        if (parseFailed)
+        {
+            throw new Exception(
+                $"double.Parse failed. Input to DecodeSignedOverpunch: {stringToDecode}");
+        }
+
+        return sign * parsedNum;
+    }
+
+    private static void CheckIsInSignedOverpunchFormat(string stringToDecode,
+        int decimalPlaces)
+    {
+        if (string.IsNullOrEmpty(stringToDecode))
+        {
+            throw new ArgumentException("cannot parse null or empty string");
+        }
+
+        if (stringToDecode.Length < decimalPlaces)
+        {
+            throw new ArgumentException(
+                "Number of decimal places has to be " +
+                "less than total number of characters to parse");
+        }
+
+        var invalidDigitCharFound = stringToDecode
+            .Take(stringToDecode.Length - 1)
+            .Any(numChar => !char.IsDigit(numChar));
+
+        if (invalidDigitCharFound)
+        {
+            throw new ArgumentException(
+                $"\"{stringToDecode}\" is not in Signed Overpunch format");
+        }
+    }
+
+    private static string AddDecimalPoint(string numberChars,
+        int decimalPlaces)
+    {
+        if (decimalPlaces == 0) return numberChars;
+
+        var length = numberChars.Length;
+        var splitIndex =
+            length + 1 -
+            decimalPlaces; // +1 is here because numberChars are one char shorter than the actual number
+        var beforeDecPoint = numberChars.Substring(0, splitIndex);
+        var afterDecPoint = numberChars.Substring(splitIndex);
+        return $"{beforeDecPoint}.{afterDecPoint}";
+    }
+
+    private static (int sign, char lastDigit) GetSignAndLastChar(char codeChar)
+    {
+        const int positiveDiff = 'A' - '1';
+        const int negativeDiff = 'J' - '1';
+
+        int sign;
+        char lastDigit;
+
+        switch (codeChar)
+        {
+            case '}':
+                lastDigit = '0';
+                sign = -1;
+                break;
+            case '{':
+                lastDigit = '0';
+                sign = +1;
+                break;
+            case 'A':
+            case 'B':
+            case 'C':
+            case 'D':
+            case 'E':
+            case 'F':
+            case 'G':
+            case 'H':
+            case 'I':
+                sign = +1;
+                lastDigit = (char)(codeChar - positiveDiff);
+                break;
+            case 'J':
+            case 'K':
+            case 'L':
+            case 'M':
+            case 'N':
+            case 'O':
+            case 'P':
+            case 'Q':
+            case 'R':
+                sign = -1;
+                lastDigit = (char)(codeChar - negativeDiff);
+                break;
+            default:
+                throw new ArgumentException(
+                    $"\"{codeChar}\" is not a valid Signed overpunch character");
+        }
+
+        return (sign, lastDigit);
+    }
+
+    public XPathNodeIterator RandomlyDistributeValues(XPathNavigator parameters)
+    {
+        XPathNodeIterator iter =
+            ((XPathNodeIterator)parameters.Evaluate("/parameter"));
+
+        int total = 0;
+        ArrayList parameterList = new ArrayList(iter.Count);
+
+        while (iter.MoveNext())
+        {
+            XPathNodeIterator keyIterator =
+                (XPathNodeIterator)iter.Current.Evaluate("@value");
+            if (keyIterator == null || keyIterator.Count == 0)
+                throw new Exception(
+                    "'value' attribute not present in the parameters.");
+            keyIterator.MoveNext();
+            string key = keyIterator.Current.Value.ToString();
+
+            XPathNodeIterator valueIterator =
+                (XPathNodeIterator)iter.Current.Evaluate("@quantity");
+            if (valueIterator == null || valueIterator.Count == 0)
+                throw new Exception(
+                    "'quantity' attribute not present in the parameters.");
+            valueIterator.MoveNext();
+            int value = Convert.ToInt32(valueIterator.Current.Value);
+            total += value;
+
+            parameterList.Add(new DictionaryEntry(key, value));
+        }
+
+        string[] result = new string[total];
+        int min = 0;
+        int max = total - 1;
+
+        foreach (DictionaryEntry entry in parameterList)
+        {
+            string key = (string)entry.Key;
+            int quantity = (int)entry.Value;
+            int used = 0;
+
+            while (used < quantity)
+            {
+                int random = RandomNumber(min, max);
+                if (result[random] == null)
+                {
+                    result[random] = key;
+                    used++;
+                    if (random == min && used <= quantity)
+                    {
+                        // set new min
+                        for (int i = min; i <= max; i++)
+                        {
+                            if (result[i] == null)
+                            {
+                                min = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (random == max && used <= quantity)
+                    {
+                        // set new max
+                        for (int i = max; i >= min; i--)
+                        {
+                            if (result[i] == null)
+                            {
+                                max = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        XmlDocument doc = new XmlDocument();
+        XmlNode values = doc.AppendChild(doc.CreateElement("values"));
+        for (int i = 0; i < total; i++)
+        {
+            XmlElement value =
+                (XmlElement)values.AppendChild(doc.CreateElement("value"));
+            value.InnerText = result[i];
+        }
+
+        XPathNavigator nav = doc.CreateNavigator();
+
+        XPathNodeIterator resultIterator = nav.Select("/");
+
+        return resultIterator;
+    }
+
+    private int RandomNumber(int min, int max)
+    {
+        Random rndNum = new Random(int.Parse(
+            Guid.NewGuid().ToString().Substring(0, 8),
+            System.Globalization.NumberStyles.HexNumber));
+        return rndNum.Next(min, max);
+    }
+    
+    public double Random()
+    {
+        Random rndNum = new Random(int.Parse(Guid.NewGuid().ToString().Substring(0, 8), NumberStyles.HexNumber));
+        return rndNum.NextDouble();
+    }
+    
+    public virtual long ReferenceCount(string entityId, string value)
+    {
+        return DataService.ReferenceCount(new Guid(entityId), value, this.TransactionId);
+    }
+    
+    public string GenerateId()
+    {
+    	return Guid.NewGuid().ToString();
+    }
+    
+    public static XPathNodeIterator ListDays(string startDate, string endDate)
+    {
+        DateTime start = XmlConvert.ToDateTime(startDate);
+        DateTime end = XmlConvert.ToDateTime(endDate);
+        XmlDocument resultDoc = new XmlDocument();
+        XmlElement listElement = resultDoc.CreateElement("list");
+        resultDoc.AppendChild(listElement);
+
+        for(DateTime date = start; date.Date <= end.Date; date = date.AddDays(1))
+        {
+            XmlElement itemElement = resultDoc.CreateElement("item");
+            itemElement.InnerText = XmlConvert.ToString(date);
+            listElement.AppendChild(itemElement);
+        }
+
+        XPathNavigator nav = resultDoc.CreateNavigator();
+        XPathNodeIterator result = nav.Select("/");
+
+        return result;
+    }
+    
+    public static bool IsDateBetween(string date, string startDate, string endDate)
+    {
+        DateTime d = XmlConvert.ToDateTime(date);
+        DateTime start = XmlConvert.ToDateTime(startDate);
+        DateTime end = XmlConvert.ToDateTime(endDate);
+
+        return d >= start && d <= end;
+    }
+    
+    public string AddWorkingDays(string date, string days, string calendarId)
+    {
+        Guid calendarGuid = new Guid(calendarId);
+        decimal shift = XmlConvert.ToDecimal(days);
+
+        DateTime result = XmlConvert.ToDateTime(date);
+
+        // load holidays
+        DataStructureQuery q = new DataStructureQuery(
+            new Guid("24b52598-7679-487b-a15c-e0ab3b37b21c"), 
+            new Guid("8225b839-f336-4171-b05d-7b9aa5d39afc"));
+
+        q.Parameters.Add(new QueryParameter("OrigamCalendar_parId", calendarGuid));
+
+        DataSet ds = LoadData(q);
+        CalendarDataset calendar = new CalendarDataset();
+        calendar.Merge(ds);
+        ds = null;
+
+        CalendarDataset.OrigamCalendarRow calendarRow = null;
+
+        if(calendar.OrigamCalendar.Rows.Count > 0) calendarRow = calendar.OrigamCalendar[0];
+
+        if(shift == 0)
+        {
+            if(IsWorkingDay(result, calendarRow))
+            {
+                return date;
+            }
+            else
+            {
+                shift = 1;
+            }
+        }
+
+        int direction = shift > 0 ? 1 : -1;
+
+        while(shift != 0)
+        {
+            result = result.AddDays(direction);
+
+            if(IsWorkingDay(result, calendarRow))
+            {
+                shift = shift - direction;
+            }
+        }
+
+        return XmlTools.FormatXmlDateTime(result);
+    }
+    
+    private DataSet LoadData(DataStructureQuery query)
+    {
+        var dataServiceAgent = BusinessService.GetAgent("DataService", null, null);
+        dataServiceAgent.MethodName = "LoadDataByQuery";
+        dataServiceAgent.Parameters.Clear();
+        dataServiceAgent.Parameters.Add("Query", query);
+
+        dataServiceAgent.Run();
+
+        return dataServiceAgent.Result as DataSet;
+    }
+    
+    private bool IsWorkingDay(DateTime date, CalendarDataset.OrigamCalendarRow calendar)
+    {
+        // if there is no calendar, we always return that this is a working day
+        if(calendar == null) return true;
+
+        // if the day is not marked as working day, we return false directly
+        switch(date.DayOfWeek)
+        {
+            case DayOfWeek.Sunday:
+                if(! calendar.IsSundayWorkingDay) return false;
+                break;
+            case DayOfWeek.Monday:
+                if(! calendar.IsMondayWorkingDay) return false;
+                break;
+            case DayOfWeek.Tuesday:
+                if(! calendar.IsTuesdayWorkingDay) return false;
+                break;
+            case DayOfWeek.Wednesday:
+                if(! calendar.IsWednesdayWorkingDay) return false;
+                break;
+            case DayOfWeek.Thursday:
+                if(! calendar.IsThursdayWorkingDay) return false;
+                break;
+            case DayOfWeek.Friday:
+                if(! calendar.IsFridayWorkingDay) return false;
+                break;
+            case DayOfWeek.Saturday:
+                if(! calendar.IsSaturdayWorkingDay) return false;
+                break;
+        }
+
+        // the weekday is working day, so we check if it is a holiday
+        foreach(CalendarDataset.OrigamCalendarDetailRow holiday in calendar.GetOrigamCalendarDetailRows())
+        {
+            if(holiday.Date == date) return false;
+        }
+
+        return true;
+    }
+    
+    public string FirstDayNextMonthDate(string date)
+    {
+        return XmlConvert.ToDateTime(date).AddMonths(1).ToString("yyyy-MM-01");;
+    }
+    
+    public string LastDayOfMonth(string date)
+    {
+        System.DateTime testDate;
+        string retVal;
+
+        try
+        {
+            testDate = XmlConvert.ToDateTime(date);
+        }
+        catch(Exception ex)
+        {
+            throw new FormatException(ResourceUtils.GetString("ErrorDateInvalid"), ex);
+        }
+
+        int daysinMonth = DateTime.DaysInMonth(testDate.Year, testDate.Month);
+        testDate = testDate.AddDays(daysinMonth - testDate.Day);
+			
+        retVal = XmlConvert.ToString(testDate, "yyy-MM-dd");
+        return retVal;
+    }
+    
+    public string Year(string date)
+    {
+        return XmlConvert.ToDateTime(date).ToString("yyyy");;
+    }
+
+    public string Month(string date)
+    {
+        return XmlConvert.ToDateTime(date).ToString("MM");;
+    }
+    
+    public string DecimalNumber(string number)
+    {
+        decimal num1;
+
+        try
+        {
+            num1 = XmlConvert.ToDecimal(number);
+        }
+        catch
+        {
+            return NotANumber;
+        }
+
+        return XmlConvert.ToString(num1);
+    }
+    
+    /// <summary>
+    /// Implements the following function 
+    ///    number avg(node-set)
+    /// </summary>
+    /// <param name="iterator"></param>
+    /// <returns>The average of all the value of all the nodes in the 
+    /// node set</returns>
+    /// <remarks>THIS FUNCTION IS NOT PART OF EXSLT!!!</remarks>
+    public string avg(XPathNodeIterator iterator)
+    {
+
+        decimal sum = 0; 
+        int count = iterator.Count;
+
+        if(count == 0)
+        {
+            return NotANumber;
+        }
+
+        try
+        { 
+            while(iterator.MoveNext())
+            {
+                sum += XmlConvert.ToDecimal(iterator.Current.Value);
+            }
+				
+        }
+        catch(FormatException)
+        {
+            return NotANumber;
+        }			 
+
+        return XmlConvert.ToString(sum / count); 
+    }
+    
+    public string Sum(XPathNodeIterator iterator)
+    {
+        return sum(iterator);
+    }
+
+    public string sum(XPathNodeIterator iterator)
+    {
+        decimal sum = 0; 
+        int count = iterator.Count;
+
+        if(count == 0)
+        {
+            return "0";
+        }
+
+        try
+        { 
+            while(iterator.MoveNext())
+            {
+                sum += XmlConvert.ToDecimal(iterator.Current.Value);
+            }
+				
+        }
+        catch(FormatException)
+        {
+            return NotANumber;
+        }			 
+
+        return XmlConvert.ToString(sum); 
+    }
+    
+    public string Min(XPathNodeIterator iterator)
+    {
+        return min(iterator);
+    }
+
+    public string min(XPathNodeIterator iterator)
+    {
+        decimal result = decimal.MaxValue; 
+        int count = iterator.Count;
+
+        if(count == 0)
+        {
+            return NotANumber;
+        }
+
+        try
+        { 
+            while(iterator.MoveNext())
+            {
+                result = Math.Min(XmlConvert.ToDecimal(iterator.Current.Value), result);
+            }
+				
+        }
+        catch(FormatException)
+        {
+            return NotANumber;
+        }			 
+
+        return XmlConvert.ToString(result);
+    }
+
+    public string Max(XPathNodeIterator iterator)
+    {
+        return max(iterator);
+    }
+
+    public string max(XPathNodeIterator iterator)
+    {
+        decimal result = decimal.MinValue; 
+        int count = iterator.Count;
+
+        if(count == 0)
+        {
+            return NotANumber;
+        }
+
+        try
+        { 
+            while(iterator.MoveNext())
+            {
+                result = Math.Max(XmlConvert.ToDecimal(iterator.Current.Value), result);
+            }
+				
+        }
+        catch(FormatException)
+        {
+            return NotANumber;
+        }			 
+
+        return XmlConvert.ToString(result);
     }
 }
