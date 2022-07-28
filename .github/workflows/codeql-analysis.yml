@@ -43,10 +43,10 @@ jobs:
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
        
     - name: Install NUnit.ConsoleRunner
-      run: nuget install NUnit.ConsoleRunner -Version 3.13.3 -DirectDownload -OutputDirectory .
+      run: nuget install NUnit.ConsoleRunner -Version 3.13.0 -DirectDownload -OutputDirectory .
         
     - name: Run UnitTests
-      run: ./NUnit.ConsoleRunner.3.13.3/tools/nunit3-console.exe backend\Origam.GuiTest\bin\Release\Origam.GuiTest.dll
+      run: ./NUnit.ConsoleRunner.3.13.0/tools/nunit3-console.exe backend\Origam.GuiTest\bin\Release\Origam.GuiTest.dll
         
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
