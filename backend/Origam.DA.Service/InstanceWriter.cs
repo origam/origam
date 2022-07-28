@@ -51,7 +51,8 @@ namespace Origam.DA.Service
                 .Get(instance.GetType())
                 .DeepCopy();
             namespaceMapping.AddNamespacesToDocumentAndAdjustMappings(xmlDocument);
-
+            xmlDocument.UseTopNamespacePrefixesEverywhere();
+            
             XmlElement elementToWriteTo = GetElementToWriteTo(instance, namespaceMapping);
             bool isLocalChild = elementToWriteTo.ParentNode.GetDepth() != 1;
             WriteToNode(elementToWriteTo, instance, namespaceMapping, isLocalChild);
