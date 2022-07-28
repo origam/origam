@@ -49,6 +49,34 @@
               <File Id="ORIGAMARCHITECT.EXE.CONFIG" Name="OrigamArchitect.exe.config" Source="config\OrigamArchitect.exe.config">
               </File>
             </Component>
+            <Component Id="SYSTEM.NUMERICS.VECTORS.DLL" DiskId="1" Guid="EB813AD1-20C7-4F31-99B1-1D330FF9EC40">
+              <File Id="SYSTEM.NUMERICS.VECTORS.DLL" Name="System.Numerics.Vectors.dll" Source="source\System.Numerics.Vectors.dll">
+              </File>
+            </Component>
+            <Component Id="SYSTEM.THREADING.CHANNELS.DLL" DiskId="1" Guid="A0EB56E0-0EA3-43E6-B2C6-BC846DB50526">
+              <File Id="SYSTEM.THREADING.CHANNELS.DLL" Name="System.Threading.Channels.dll" Source="source\System.Threading.Channels.dll">
+              </File>
+            </Component>
+            <Component Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL" DiskId="1" Guid="DB51BAB9-8AE7-4B69-9F51-FEC7AE1363C5">
+              <File Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="source\Microsoft.Bcl.AsyncInterfaces.dll">
+              </File>
+            </Component>
+            <Component Id="MICROSOFT.BCL.HASHCODE.DLL" DiskId="1" Guid="10A69F47-6A2F-4840-AC5E-DB24F734834F">
+              <File Id="MICROSOFT.BCL.HASHCODE.DLL" Name="Microsoft.Bcl.HashCode.dll" Source="source\Microsoft.Bcl.HashCode.dll">
+              </File>
+            </Component>
+            <Component Id="SYSTEM.TEXT.JSON.DLL" DiskId="1" Guid="E3F2FBF8-8D0A-4FEB-9FC3-76707B86AB4E">
+              <File Id="SYSTEM.TEXT.JSON.DLL" Name="System.Text.Json.dll" Source="source\System.Text.Json.dll">
+              </File>
+            </Component>
+            <Component Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL" DiskId="1" Guid="8315A8AE-BA6B-4D8E-B02B-79B5B477A315">
+              <File Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL" Name="System.Diagnostics.DiagnosticSource.dll" Source="source\System.Diagnostics.DiagnosticSource.dll">
+              </File>
+            </Component>
+            <Component Id="ORIGAM.EXCEL.DLL" DiskId="1" Guid="32F0928A-4B26-4A4B-AB80-3564E8AF13A8">
+              <File Id="ORIGAM.EXCEL.DLL" Name="Origam.Excel.dll" Source="source\Origam.Excel.dll">
+              </File>
+            </Component>
             <Component Id="AEROWIZARD.DLL" DiskId="1" Guid="401981CE-043E-4428-A8C4-6C10FBCA893F">
               <File Id="AEROWIZARD.DLL" Name="AeroWizard.dll" Source="source\AeroWizard.dll">
               </File>
@@ -639,6 +667,13 @@
       </ComponentRef>
       <ComponentRef Id="StartMenuShortcuts">
       </ComponentRef>
+      <ComponentRef Id="SYSTEM.NUMERICS.VECTORS.DLL"></ComponentRef>
+      <ComponentRef Id="SYSTEM.THREADING.CHANNELS.DLL"></ComponentRef>
+      <ComponentRef Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL"></ComponentRef>
+      <ComponentRef Id="MICROSOFT.BCL.HASHCODE.DLL"></ComponentRef>
+      <ComponentRef Id="SYSTEM.TEXT.JSON.DLL"></ComponentRef>
+      <ComponentRef Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL"></ComponentRef>
+      <ComponentRef Id="ORIGAM.EXCEL.DLL"></ComponentRef>
       <ComponentRef Id="AEROWIZARD.DLL">
       </ComponentRef>
       <ComponentRef Id="ANTLR3.RUNTIME.DLL">
