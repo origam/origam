@@ -148,6 +148,7 @@ export class CSidebar extends React.Component {
           .filter((folder) => folder.isPinned)
           .map((folder) => (
             <CFavorites
+              key={folder.id}
               ctx={this.workbench}
               folder={folder}
               isActive={true}
@@ -163,6 +164,7 @@ export class CSidebar extends React.Component {
           .filter((folder) => !folder.isPinned)
           .map((folder) => (
             <CFavorites
+              key={folder.id}
               ctx={this.workbench}
               folder={folder}
               isActive={this.sidebarState.activeSection === folder.id}
