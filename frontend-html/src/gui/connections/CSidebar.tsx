@@ -198,7 +198,12 @@ export class CSidebar extends React.Component {
           {favorites.favoriteFolders
             .filter((folder) => folder.isPinned)
             .map((folder) => (
-              <CFavorites ctx={this.workbench} folder={folder} isActive={true} forceOpen={true}/>
+              <CFavorites
+                key={folder.id}
+                ctx={this.workbench}
+                folder={folder}
+                isActive={true}
+                forceOpen={true}/>
             ))}
 
           {showWorkQues ? this.renderWorkQuesSection() : null}
