@@ -566,10 +566,10 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0, 0)",
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
             return string.Format("INSERT INTO [dbo].[OrigamUser] " +
-                "([UserName],[IsLockedOut],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
-                "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')", 
+                "([UserName],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
+                "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')", 
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
-                1,1,
+                1,
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
                Guid.NewGuid().ToString(),0,0);

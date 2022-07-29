@@ -172,7 +172,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return classNode.Attributes()
                 .Select(attr => attr.Name.NamespaceName)
                 .Concat(new[]{classNode.Name.NamespaceName})
-                .Where(name => name != OrigamFile.ModelPersistenceUri)
+                .Where(name => 
+                    OrigamNameSpace.IsOrigamNamespace(name) && 
+                    name != OrigamFile.ModelPersistenceUri)
                 .Distinct()
                 .Select(OrigamNameSpace.CreateOrGet);
         }
