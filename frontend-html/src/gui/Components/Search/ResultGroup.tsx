@@ -23,13 +23,14 @@ import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import S from "gui/Components/Search/ResultGroup.module.scss";
 import { ResultItem } from "gui/Components/Search/ResultItem";
+import { ISearcher } from "model/entities/types/ISearcher";
 
 @observer
 export class ResultGroup extends React.Component<{
   name: string;
   group: ISearchResultGroup;
   onResultItemClick: (result: ISearchResult) => void;
-  selectedResult: ISearchResult | undefined;
+  searcher: ISearcher;
   registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }> {
 
@@ -56,7 +57,7 @@ export class ResultGroup extends React.Component<{
               key={result.id}
               result={result}
               onResultItemClick={() => this.props.onResultItemClick(result)}
-              selected={this.props.selectedResult?.id === result.id}
+              selected={this.props.searcher.selectedResult?.id === result.id}
               registerElementRef={this.props.registerElementRef}
             />)
           }
