@@ -43,8 +43,8 @@ jobs:
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
        
     - name: Create list of testFiles 
-        shell: pwsh
-        run: |
+      shell: pwsh
+      run: |
           Get-ChildItem "backend/*"  -Exclude "*TestAdapter.dll" -Include "*test*.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\" > ../testfiles.txt
           cat .\testfiles.txt
           
