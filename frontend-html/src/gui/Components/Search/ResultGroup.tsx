@@ -34,7 +34,7 @@ export class ResultGroup extends React.Component<{
         <div>
           {this.props.group.isExpanded && this.props.group.results.map(result =>
             <ResultItem
-              key={result.label + result.description + result.iconUrl}
+              key={result.id}
               result={result}
               onResultItemClick={() => this.props.onResultItemClick(result)}
               selected={this.props.selectedResult?.id === result.id}
