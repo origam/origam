@@ -24,9 +24,14 @@ svg.icon {
   overflow-x: auto;
   overflow-y: auto;
   max-height: 35vh;
+  display: flex;
+  flex-direction: column;
+  flex:1;
 }
 
 .resultsContainer{
   float: left;
-  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  flex:1;
 }

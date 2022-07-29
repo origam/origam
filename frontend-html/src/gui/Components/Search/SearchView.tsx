@@ -9,6 +9,7 @@ import { action, observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { ISearcher } from "model/entities/types/ISearcher";
+import Measure from "react-measure";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -17,6 +18,9 @@ export const SEARCH_DIALOG_KEY = "Search Dialog";
 export class SearchView extends React.Component<{
   state: SearchViewState
 }> {
+
+  @observable
+  resultContentHeight = 0;
 
   get viewState() {
     return this.props.state;
@@ -27,6 +31,9 @@ export class SearchView extends React.Component<{
   }
 
   render() {
+    const viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    const maxResultWindowHeight = viewportHeight * 0.35
+
     return (
       <div className={"searchView"}>
         <div className={S.inputRow}>
@@ -40,20 +47,36 @@ export class SearchView extends React.Component<{
           />
         </div>
         {(this.viewState.searcher.resultGroups.length > 0) &&
-          <div className={"resultArea"} ref={this.viewState.scrollDivRef}>
-            <div className={S.resultsContainer}>
-              {this.viewState.searcher.resultGroups
-                .map(group =>
-                  <ResultGroup
-                    key={group.name}
-                    name={group.name}
-                    group={group}
-                    onResultItemClick={result => this.viewState.onResultItemClick(result)}
-                    selectedResult={this.viewState.searcher.selectedResult}
-                    registerElementRef={(id, ref) => this.viewState.resultElementMap.set(id, ref)}
-                  />)
-              }
-            </div>
+          <div
+            className={"resultArea"}
+            ref={this.viewState.scrollDivRef}
+            style={{
+              maxHeight: maxResultWindowHeight + "px",
+              overflowY: this.resultContentHeight > maxResultWindowHeight ? "auto" : "hidden"
+          }}
+          >
+            <Measure
+              bounds
+              onResize={contentRect => {
+                this.resultContentHeight = contentRect.bounds?.height ?? 0;
+              }}
+            >
+              {({measureRef}) => (
+                <div ref={measureRef} className={S.resultsContainer}>
+                  {this.viewState.searcher.resultGroups
+                    .map(group =>
+                      <ResultGroup
+                        key={group.name}
+                        name={group.name}
+                        group={group}
+                        onResultItemClick={result => this.viewState.onResultItemClick(result)}
+                        selectedResult={this.viewState.searcher.selectedResult}
+                        registerElementRef={(id, ref) => this.viewState.resultElementMap.set(id, ref)}
+                      />)
+                  }
+                </div>
+              )}
+            </Measure>
           </div>
         }
       </div>
@@ -78,8 +101,7 @@ export class SearchViewState {
 
   constructor(
     private ctx: any,
-    private onCloseClick: ()=>void)
-  {
+    private onCloseClick: () => void) {
     this.searcher = getSearcher(this.ctx);
     this.searcher.clear();
   }
