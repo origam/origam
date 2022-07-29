@@ -1653,10 +1653,10 @@
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.2.0.tgz#990e216034e84a05950c2323288ea6bdd0267aea"
   integrity sha512-ZHaWRskYiVtl3ngyLGNxgS+LWbvqXd9MbEIhbpIsp1XKuoP0G9j7Fns12SRNLBwiCRaYlzKw8gbqrWVTQU3gog==
 
-"@origam/plugin-interfaces@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-2.1.0.tgz#664625cece416f12b3abdad1c9840183976b2694"
-  integrity sha512-uyMS+QbYlkEzqA55nAynRtwm09uFYHkQnoxLkRi+5Lye00LOEOMQUsB1UfU7wlQIL7z9aQVuiK+VA2diBPBk0w==
+"@origam/plugin-interfaces@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-3.0.0.tgz#fb88e026508fa07a89d6887f12fb5af43216d954"
+  integrity sha512-5BUbSdGFplnfdmttVNJKQ9otWBLEM0gfhzyHvIsvN0MzDWlGfA5EeR4uvgLr7pE5ShS11Rf4wD6KpJ3Th7j1OA==
 
 "@origam/styles@^1.0.0":
   version "1.0.0"
