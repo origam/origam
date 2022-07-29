@@ -89,7 +89,7 @@ export class SearchView extends React.Component<{
                         name={group.name}
                         group={group}
                         onResultItemClick={result => this.viewState.onResultItemClick(result)}
-                        selectedResult={this.viewState.searcher.selectedResult}
+                        searcher={this.viewState.searcher}
                         registerElementRef={(id, ref) => this.viewState.resultElementMap.set(id, ref)}
                       />)
                   }
@@ -189,6 +189,9 @@ export class SearchViewState {
   }
 
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if(event.key === "ArrowDown" || event.key === "ArrowUp"){
+      return;
+    }
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
