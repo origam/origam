@@ -61,7 +61,6 @@ export class SearchView extends React.Component<{
             ref={this.viewState.refInput}
             className={S.input}
             placeholder={T("Search for anything here", "type_search_here")}
-            onKeyDown={(event) => this.viewState.onInputKeyDown(event)}
             onChange={(event) => this.viewState.onInputChange(event)}
           />
         </div>
@@ -188,10 +187,10 @@ export class SearchViewState {
     }
   }
 
-  async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if(event.key === "ArrowDown" || event.key === "ArrowUp"){
-      return;
-    }
+  onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    this.value = event.target.value;
+    this.searcher.onSearchFieldChange(this.value);
+
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
@@ -199,11 +198,6 @@ export class SearchViewState {
       this.timeout = undefined;
       this.searcher.searchOnServer();
     }, DELAY_BEFORE_SERVER_SEARCH_MS)
-  }
-
-  onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    this.value = event.target.value;
-    this.searcher.onSearchFieldChange(this.value);
   }
 
   clear() {
