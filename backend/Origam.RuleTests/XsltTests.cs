@@ -714,6 +714,20 @@ public class XsltTests
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }    
+    
+    [Test]
+    public void ShouldGetActiveProfileGuId()
+    {
+        string xsltCall = "AS:ActiveProfileGuId()";
+        string expectedResult = "e93a81d4-2520-4f14-9af9-574a61c609b0";
+        userProfileGetterMock.Setup(x => x.Invoke())
+            .Returns(new UserProfile { Id =  Guid.Parse(expectedResult) }
+            );
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
     [Test]
@@ -721,6 +735,13 @@ public class XsltTests
     {
         string xsltCall = "AS:IsUserAuthenticated()";
         bool expectedResult = false;
+
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
+    }
+
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
