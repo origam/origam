@@ -1105,6 +1105,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
     yield*refreshRowStates(this)();
     yield*refreshWorkQueues(this)();
+    pluginLibrary.notifyRefresh();
   }
 
   loadInitialData() {

@@ -96,6 +96,12 @@ export class PluginLibrary {
     }
     return pluginFactoryFunctions.get(name)!();
   }
+
+  notifyRefresh() {
+    for (const plugin of this.pluginInstances.values()) {
+      plugin.onSessionRefreshed();
+    }
+  }
 }
 
 export const pluginLibrary = new PluginLibrary();
