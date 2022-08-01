@@ -10,8 +10,12 @@ const envFilePath = ".env.production.local";
 const pluginVersionsVariableName = "REACT_APP_ORIGAM_UI_PLUGINS";
 
 function getPackageName(pluginName, registrationFile) {
-  const pluginPackageRegEx = new RegExp('import\\s*{\\s*' + pluginName + '\\s*}\\s*from\\s*"([/@\\w/\\-]+)";', 'g');
-  return pluginPackageRegEx.exec(registrationFile)[1];
+  const pluginPackageRegEx = new RegExp('import\\s*{\\s*[\\s,\\w]*\\s*' + pluginName + '\\s*[\\s,\\w]*\\s*}\\s*from\\s*"([@\\w\\/\\-]+)', 'g');
+  let packageMatch = pluginPackageRegEx.exec(registrationFile);
+  if(!packageMatch){
+    throw new Error(`Could not find import of plugin ${pluginName}`)
+  }
+  return packageMatch[1];
 }
 
 function findUsedPackageNames(registrationFile) {
