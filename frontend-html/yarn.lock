@@ -1612,12 +1612,12 @@
     react-chartjs-2 "^3.3.0"
     rollup-plugin-postcss "^4.0.1"
 
-"@origam/plugin-chart@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-1.1.0.tgz#57512184f9e509c15e0bf56b4b609f5688b031b6"
-  integrity sha512-FC0y7sCfe5xh5yOgzZGmOkxdYvw2H9nmfIfEvZUFEh9zxWs5KGM0DWZJfyaewpe3BGGmMmoHhWfTF5VPZLqT2Q==
+"@origam/plugin-chart@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-2.0.1.tgz#0e5d5d4b2c62464829c39de814aee27ab7ca0f2b"
+  integrity sha512-RWytZnyb6RakMHtMmfwEKzF54FksR0eCp0r7gsPGPJ5soUBtmxJXVbQoy+MZvQRFZ7Ojxwmaeu9bt4/NYSbMOA==
   dependencies:
-    "@origam/plugin-interfaces" "^1.0.0"
+    "@origam/plugins" "^1.0.2"
     "@origam/styles" "^1.0.0"
     "@origam/utils" "^1.0.0"
     "@types/classnames" "^2.3.1"
@@ -1658,6 +1658,14 @@
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-2.1.0.tgz#664625cece416f12b3abdad1c9840183976b2694"
   integrity sha512-uyMS+QbYlkEzqA55nAynRtwm09uFYHkQnoxLkRi+5Lye00LOEOMQUsB1UfU7wlQIL7z9aQVuiK+VA2diBPBk0w==
 
+"@origam/plugins@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@origam/plugins/-/plugins-1.0.2.tgz#1b95327b86eeddce9efdace2f7e0fafeb0badcc7"
+  integrity sha512-Mut5PsG9JEYBHdQGBbtsy3v/fHW0Aia8+kzeTX4QU/DHi2mRRTBp8EjFQE8Pwy8SnuEi3Lev3L2jQjpKQ538KQ==
+  dependencies:
+    "@origam/utils" "^1.1.1"
+    mobx "5"
+
 "@origam/styles@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-1.0.0.tgz#86f710ddd2294e2e45c2aa9ead5247e9d68ec4b8"
@@ -1668,10 +1676,10 @@
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.2.tgz#505dade3528f969895fdd931391eeae43ae51257"
   integrity sha512-MPp0M+w2f3ovN3O5jnGyvN1gWZvpzeDbOjqAEzN6Xw6lgZZeT+OFUk4Hul/Qpav0EDklDFuqHu66p9JRMhReKQ==
 
-"@origam/utils@^1.0.0", "@origam/utils@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.0.1.tgz#70d9588f01c18b193a09794292807c21d6eca21b"
-  integrity sha512-yuxFuDmdMYJZCZv1Dn5w/7Q8KsKxpICZ/1W6ZntLre4iRZDBRA15NI7jazAX9kCpm6TTZWWyhSWi46dbtO7HhQ==
+"@origam/utils@^1.0.0", "@origam/utils@^1.0.1", "@origam/utils@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.1.1.tgz#b0d4d1bb358b293cfcaf79e0b0ed745be53d91c9"
+  integrity sha512-Kt2Dn8nO2PyJfgeZGeUXKcnn7Gp8vQCDlw91/XLZ9zmN7dRb39vwqRvlBP1L/jCpGQ5NiH2VuebtTuPEvuXo0Q==
   dependencies:
     moment "^2.29.1"
 
