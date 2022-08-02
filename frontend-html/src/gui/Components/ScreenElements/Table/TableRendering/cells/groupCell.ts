@@ -42,8 +42,6 @@ import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSelectedRowId } from "../../../../../../model/selectors/TablePanelView/getSelectedRowId";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ArrayPrototypes } from "@origam/utils"
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;

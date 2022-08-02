@@ -55,7 +55,7 @@ import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
-import { EventHandler } from "utils/EventHandler";
+import { EventHandler } from "@origam/utils";
 import { hexToRgb } from "utils/colorUtils";
 
 export enum IRefreshOnReturnType {
