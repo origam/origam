@@ -1596,19 +1596,19 @@
   dependencies:
     react-inlinesvg "^2.3.0"
 
-"@origam/plugin-audit@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-audit/-/plugin-audit-1.0.0.tgz#64ff3f6dc08dcf701c6dfe089fae15f86b2a8649"
-  integrity sha512-yx0STkScnrFk+K/eAuTWtYS1V10DuAjhsAdCyMMcwflQvISVj7vy9FHFBnSDqUfLR7JKZqkyYCeKpri2M8cEOA==
+"@origam/plugin-audit@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-audit/-/plugin-audit-2.0.0.tgz#d75b38e014ee366382c788c0c5acd8e87a42fb72"
+  integrity sha512-uVkmSvYTe7DZIfyuidbu3xuW425j7Rt5wo4Q3rHXCWz2cKr7VZddPZQfzN4lgeusyIOJPZNHhdTTADebLu1W7A==
   dependencies:
-    "@origam/plugin-interfaces" "^1.0.0"
+    "@origam/plugins" "^1.0.2"
     "@origam/styles" "^1.0.0"
     "@types/classnames" "^2.3.1"
     mobx "5"
     mobx-react "6"
     moment "^2.29.1"
     node-sass "5"
-    postcss "^8.3.11"
+    postcss "^8.4.5"
     react-chartjs-2 "^3.3.0"
     rollup-plugin-postcss "^4.0.1"
 
@@ -1658,6 +1658,14 @@
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-2.1.0.tgz#664625cece416f12b3abdad1c9840183976b2694"
   integrity sha512-uyMS+QbYlkEzqA55nAynRtwm09uFYHkQnoxLkRi+5Lye00LOEOMQUsB1UfU7wlQIL7z9aQVuiK+VA2diBPBk0w==
 
+"@origam/plugins@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@origam/plugins/-/plugins-1.0.2.tgz#1b95327b86eeddce9efdace2f7e0fafeb0badcc7"
+  integrity sha512-Mut5PsG9JEYBHdQGBbtsy3v/fHW0Aia8+kzeTX4QU/DHi2mRRTBp8EjFQE8Pwy8SnuEi3Lev3L2jQjpKQ538KQ==
+  dependencies:
+    "@origam/utils" "^1.1.1"
+    mobx "5"
+
 "@origam/styles@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-1.0.0.tgz#86f710ddd2294e2e45c2aa9ead5247e9d68ec4b8"
@@ -1672,6 +1680,13 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.0.1.tgz#70d9588f01c18b193a09794292807c21d6eca21b"
   integrity sha512-yuxFuDmdMYJZCZv1Dn5w/7Q8KsKxpICZ/1W6ZntLre4iRZDBRA15NI7jazAX9kCpm6TTZWWyhSWi46dbtO7HhQ==
+  dependencies:
+    moment "^2.29.1"
+
+"@origam/utils@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.1.1.tgz#b0d4d1bb358b293cfcaf79e0b0ed745be53d91c9"
+  integrity sha512-Kt2Dn8nO2PyJfgeZGeUXKcnn7Gp8vQCDlw91/XLZ9zmN7dRb39vwqRvlBP1L/jCpGQ5NiH2VuebtTuPEvuXo0Q==
   dependencies:
     moment "^2.29.1"
 
@@ -8670,10 +8685,10 @@ nan@^2.12.1, nan@^2.13.2:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.15.0.tgz#3f34a473ff18e15c1b5626b62903b5ad6e665fee"
   integrity sha512-8ZtvEnA2c5aYCZYd1cvgdnU6cqwixRoYg70xPLWUws5ORTa/lnw+u4amixRS/Ac5U5mQVgp9pnlSUnbNWFaWZQ==
 
-nanoid@^3.1.30:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.1.tgz#6347a18cac88af88f58af0b3594b723d5e99bb35"
-  integrity sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==
+nanoid@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
+  integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -10477,14 +10492,14 @@ postcss@^7, postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.14, postcss@^7.0.17, po
     picocolors "^0.2.1"
     source-map "^0.6.1"
 
-postcss@^8.1.0, postcss@^8.3.11:
-  version "8.3.11"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.3.11.tgz#c3beca7ea811cd5e1c4a3ec6d2e7599ef1f8f858"
-  integrity sha512-hCmlUAIlUiav8Xdqw3Io4LcpA1DOt7h3LSTAC4G6JGHFFaWzI6qvFt9oilvl8BmkbBRX1IhM90ZAmpk68zccQA==
+postcss@^8.1.0, postcss@^8.3.11, postcss@^8.4.5:
+  version "8.4.14"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.14.tgz#ee9274d5622b4858c1007a74d76e42e56fd21caf"
+  integrity sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==
   dependencies:
-    nanoid "^3.1.30"
+    nanoid "^3.3.4"
     picocolors "^1.0.0"
-    source-map-js "^0.6.2"
+    source-map-js "^1.0.2"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
@@ -11998,15 +12013,10 @@ source-list-map@^2.0.0:
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
   integrity sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==
 
-"source-map-js@>=0.6.2 <2.0.0":
+"source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
-
-source-map-js@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-0.6.2.tgz#0bb5de631b41cfbda6cfba8bd05a80efdfd2385e"
-  integrity sha512-/3GptzWzu0+0MBQFrDKzw/DvvMTUORvgY6k6jd/VS6iCR4RDTKWH6v6WPwQoUO8667uQEf9Oe38DxAYWY5F/Ug==
 
 source-map-resolve@^0.5.0, source-map-resolve@^0.5.2:
   version "0.5.3"
