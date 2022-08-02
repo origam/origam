@@ -1653,10 +1653,13 @@
   resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.2.0.tgz#990e216034e84a05950c2323288ea6bdd0267aea"
   integrity sha512-ZHaWRskYiVtl3ngyLGNxgS+LWbvqXd9MbEIhbpIsp1XKuoP0G9j7Fns12SRNLBwiCRaYlzKw8gbqrWVTQU3gog==
 
-"@origam/plugin-interfaces@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-2.1.0.tgz#664625cece416f12b3abdad1c9840183976b2694"
-  integrity sha512-uyMS+QbYlkEzqA55nAynRtwm09uFYHkQnoxLkRi+5Lye00LOEOMQUsB1UfU7wlQIL7z9aQVuiK+VA2diBPBk0w==
+"@origam/plugins@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@origam/plugins/-/plugins-1.0.1.tgz#7f78e8d7ca8f6558fd6b858c7cdf88a0d58fc13d"
+  integrity sha512-KVUGPoml4d6ByacY8NwHe9T6ud4TNfeSCypVriYdKr9ILVbjubowsA0cXHKsbsvJsRqSfuf+A7QBQu9j9FvkdA==
+  dependencies:
+    "@origam/utils" "^1.1.1"
+    mobx "5"
 
 "@origam/styles@^1.0.0":
   version "1.0.0"
@@ -1668,10 +1671,17 @@
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.2.tgz#505dade3528f969895fdd931391eeae43ae51257"
   integrity sha512-MPp0M+w2f3ovN3O5jnGyvN1gWZvpzeDbOjqAEzN6Xw6lgZZeT+OFUk4Hul/Qpav0EDklDFuqHu66p9JRMhReKQ==
 
-"@origam/utils@^1.0.0", "@origam/utils@^1.0.1":
+"@origam/utils@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.0.1.tgz#70d9588f01c18b193a09794292807c21d6eca21b"
   integrity sha512-yuxFuDmdMYJZCZv1Dn5w/7Q8KsKxpICZ/1W6ZntLre4iRZDBRA15NI7jazAX9kCpm6TTZWWyhSWi46dbtO7HhQ==
+  dependencies:
+    moment "^2.29.1"
+
+"@origam/utils@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.1.1.tgz#b0d4d1bb358b293cfcaf79e0b0ed745be53d91c9"
+  integrity sha512-Kt2Dn8nO2PyJfgeZGeUXKcnn7Gp8vQCDlw91/XLZ9zmN7dRb39vwqRvlBP1L/jCpGQ5NiH2VuebtTuPEvuXo0Q==
   dependencies:
     moment "^2.29.1"
 

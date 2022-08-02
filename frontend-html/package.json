@@ -10,9 +10,9 @@
     "@origam/plugin-audit": "^1.0.0",
     "@origam/plugin-chart": "^1.1.0",
     "@origam/plugin-filter": "^1.0.0",
-    "@origam/plugin-interfaces": "^3.0.0",
+    "@origam/plugins": "^1.0.1",
     "@origam/styles": "^2.0.2",
-    "@origam/utils": "^1.0.1",
+    "@origam/utils": "^1.1.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.2.1",
@@ -55,7 +55,6 @@
     "mobx": "5",
     "mobx-react": "6",
     "moment": "^2.29.4",
-    "sass": "^1.53.0",
     "numeral": "^2.0.6",
     "oidc-client": "^1.11.5",
     "react": "^17.0.2",
@@ -70,6 +69,7 @@
     "react-scripts": "4.0.3",
     "react-socks": "^2.2.0",
     "react-virtualized": "^9.22.3",
+    "sass": "^1.53.0",
     "string-strip-html": "^8.3.0",
     "typescript": "^4.7.4",
     "uuid": "^8.3.2",
@@ -82,7 +82,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "node ./custom-scripts/updateVersions.js && react-scripts build",
-    "test":  "react-scripts test src/tests",
+    "test": "react-scripts test src/tests",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

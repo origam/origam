@@ -83,7 +83,7 @@ import { onFieldBlur } from "../../actions-ui/DataView/TableView/onFieldBlur";
 import { getRowStates } from "../../selectors/RowState/getRowStates";
 import { getIsAddButtonVisible } from "../../selectors/DataView/getIsAddButtonVisible";
 import { pluginLibrary } from "plugins/tools/PluginLibrary";
-import { isIScreenPlugin, isISectionPlugin } from "@origam/plugin-interfaces";
+import { isIScreenPlugin, isISectionPlugin } from "@origam/plugins";
 import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
 import {T} from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
