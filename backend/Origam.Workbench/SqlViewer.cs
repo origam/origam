@@ -70,7 +70,7 @@ namespace Origam.Workbench
             {
                 return;
             }
-            var dataService = core.DataService.GetDataService(Platform);
+            var dataService = core.DataServiceFactory.GetDataService(Platform);
             string result = dataService.ExecuteUpdate(editor.Text, null);
             OutputPad outputPad = WorkbenchSingleton.Workbench.GetPad(
                 typeof(OutputPad)) as OutputPad;

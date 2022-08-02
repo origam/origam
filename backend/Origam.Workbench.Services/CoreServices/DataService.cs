@@ -21,11 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using Origam.DA;
-using Origam.DA.Service;
 
 namespace Origam.Workbench.Services.CoreServices
 {
@@ -34,88 +31,7 @@ namespace Origam.Workbench.Services.CoreServices
 	/// </summary>
 	public class DataService
 	{
-        //private static IDataService _dataService = null;
-        private static IDictionary<string, IDataService> _dataServiceDictionary = new Dictionary<string, IDataService>();
 
-        public static IDataService GetDataService()
-        {
-            return GetDataService(null);
-        }
-        public static IDataService GetDataService(Platform deployPlatform)
-        {
-            string dictionarykey = "primary";
-            if (deployPlatform != null && ! deployPlatform.IsPrimary)
-            {
-                dictionarykey = deployPlatform.Name;
-            }
-            KeyValuePair<string, IDataService> keyValue = 
-                _dataServiceDictionary.Where(dict => dict.Key == dictionarykey)
-                .FirstOrDefault();
-            if (string.IsNullOrEmpty(keyValue.Key))
-            {
-                _dataServiceDictionary.Add(dictionarykey, CreateDataService(deployPlatform));
-            }
-            return _dataServiceDictionary.Where(dict => dict.Key == dictionarykey).First().Value;
-        }
-
-        private static IDataService CreateDataService(Platform deployPlatform)
-        {
-            IDataService dataService = null;
-            IPersistenceService persistence = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-            OrigamSettings settings
-                = ConfigurationManager.GetActiveConfiguration();
-            if (settings == null)
-            {
-                throw new NullReferenceException(
-                    ResourceUtils.GetString("ErrorSettingsNotFound"));
-            }
-            string assembly = settings.DataDataService
-                .Split(",".ToCharArray())[0].Trim();
-            string classname = settings.DataDataService
-                .Split(",".ToCharArray())[1].Trim();
-
-            if (deployPlatform != null)
-            {
-                assembly = deployPlatform.DataService
-                .Split(",".ToCharArray())[0].Trim();
-                classname = deployPlatform.DataService
-                    .Split(",".ToCharArray())[1].Trim();
-            }
-            dataService
-            = Reflector.InvokeObject(assembly, classname) as IDataService;
-            dataService.ConnectionString = settings.DataConnectionString;
-            dataService.BulkInsertThreshold = settings.DataBulkInsertThreshold;
-            dataService.UpdateBatchSize = settings.DataUpdateBatchSize;
-            dataService.StateMachine = ServiceManager.Services.GetService(
-                typeof(IStateMachineService)) as IStateMachineService;
-            dataService.AttachmentService = ServiceManager.Services.GetService(
-                typeof(IAttachmentService)) as IAttachmentService;
-            dataService.UserDefinedParameters = true;
-            (dataService as AbstractDataService).PersistenceProvider
-                = persistence.SchemaProvider;
-            if (deployPlatform != null)
-            {
-                dataService.ConnectionString = deployPlatform.DataConnectionString;
-            }
-            return dataService;
-        }
-
-        
-        public static void ClearDataService()
-        {
-            foreach (var keyValue in _dataServiceDictionary)
-            {
-                IDataService dataService = keyValue.Value;
-                dataService?.Dispose();
-                dataService = null;
-            }
-            _dataServiceDictionary.Clear();
-        }
-
-        internal DataService()
-		{
-		}
 
 		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId)
 		{

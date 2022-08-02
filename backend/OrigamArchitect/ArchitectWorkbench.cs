@@ -2027,7 +2027,7 @@ namespace OrigamArchitect
 		private void _schema_ActiveNodeChanged(object sender, EventArgs e)
 		{
 			UpdateToolbar();
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator abstractSqlCommandGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
             if (_schema.ActiveSchemaItem != null)
 			{
@@ -2612,7 +2612,7 @@ namespace OrigamArchitect
 
         private static bool TestConnectionToApplicationDataDatabase()
         {
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             try
             {
                 abstractSqlDataService.ExecuteUpdate("SELECT 1",null);

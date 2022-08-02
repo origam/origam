@@ -1831,4 +1831,43 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         return XmlConvert.ToString(result);
     }
+    
+    public void Trace(string trace)
+    {
+        if(log.IsDebugEnabled)
+        {
+            log.Debug(trace);
+        }
+    }
+    
+    public string Uppercase(string text)
+    {
+        return text.ToUpper();
+    }
+
+    public string Lowercase(string text)
+    {
+        return text.ToLower();
+    }
+    
+    public string Translate(string dictionaryId, string text)
+    {
+        string result = text;
+
+        DataSet dictionary = DataService.LoadData(
+            new Guid("9268abd0-a08e-4c97-b5f7-219eacf171c0"), 
+            new Guid("c2cd04cd-9a47-49d8-aa03-2e07044b3c7c"), 
+            Guid.Empty, 
+            new Guid("26b8f31b-a6ce-4a0a-905d-0915855cd934"), 
+            this.TransactionId, 
+            "OrigamCharacterTranslationDetail_parOrigamCharacterTranslationId", 
+            new Guid(dictionaryId));
+
+        foreach(DataRow row in dictionary.Tables[0].Rows)
+        {
+            text = text.Replace((string)row["Source"], (string)row["Target"]);
+        }
+
+        return text;
+    }
 }

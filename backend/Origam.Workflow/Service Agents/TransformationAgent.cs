@@ -205,7 +205,7 @@ namespace Origam.Workflow
                         entry.Key as string, entry.Value));
                 }
             }
-            IDataService dataService = DataService.GetDataService();
+            IDataService dataService = DataServiceFactory.GetDataService();
             return dataService.ExecuteDataReader(
                 query, SecurityManager.CurrentPrincipal, TransactionId);
         }

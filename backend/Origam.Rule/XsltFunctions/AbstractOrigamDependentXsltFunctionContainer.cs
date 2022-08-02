@@ -32,6 +32,7 @@ public abstract class AbstractOrigamDependentXsltFunctionContainer:
 {
     public IPersistenceService Persistence { get; set; }
     public IDataLookupService LookupService { get; set; }
+    // public IDataService DataService { get; set; }
     public IParameterService ParameterService { get; set; }
     public IBusinessServicesService BusinessService { get; set; }
     public IStateMachineService StateMachineService { get; set; }

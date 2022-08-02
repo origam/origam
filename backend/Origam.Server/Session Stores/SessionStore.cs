@@ -1468,7 +1468,7 @@ namespace Origam.Server
 
         private DataRowCollection LoadMissingRows(string entity, Dictionary<string, object> idsNotFoundInStore)
         {
-            var dataService = core.DataService.GetDataService();
+            var dataService = core.DataServiceFactory.GetDataService();
             var dataStructureEntityId =
                 (Guid) Data.Tables[entity].ExtendedProperties["Id"];
             var dataStructureEntity = Workbench.Services.ServiceManager.Services

@@ -50,7 +50,7 @@ namespace Origam.Gui.Win.Commands
 
         public override void Run()
         {
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             DataStructureFilterSet filterSet = Owner as DataStructureFilterSet;
             generator.PrettyFormat = true;

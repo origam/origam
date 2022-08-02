@@ -715,20 +715,6 @@ public class XsltTests
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }    
-    
-    [Test]
-    public void ShouldGetActiveProfileGuId()
-    {
-        string xsltCall = "AS:ActiveProfileGuId()";
-        string expectedResult = "e93a81d4-2520-4f14-9af9-574a61c609b0";
-        userProfileGetterMock.Setup(x => x.Invoke())
-            .Returns(new UserProfile { Id =  Guid.Parse(expectedResult) }
-            );
-        object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }
 
     [Test]
     public void ShouldTestIsUserAuthenticated()
@@ -741,14 +727,6 @@ public class XsltTests
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
     }
-
-
-        object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
-    }
-
 
     [Test]
     public void ShouldReturnNull()
@@ -1252,6 +1230,18 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall, document);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall, document);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }
+    
+    
+        
+    [TestCase("AS:Uppercase('test')", "TEST")]
+    [TestCase("AS:Lowercase('TEST')", "test")]
+    public void ShouldTestStringManipulationFunctions(string xsltCall, string expectedResult)
+    {
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 }

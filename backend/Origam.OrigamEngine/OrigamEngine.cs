@@ -37,6 +37,7 @@ using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Security.Principal;
 using Origam.Extensions;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.OrigamEngine
 {
@@ -109,7 +110,7 @@ namespace Origam.OrigamEngine
         public static void UnloadConnectedServices()
         {
             standardServiceFactory.UnloadServices();
-            Workbench.Services.CoreServices.DataService.ClearDataService();
+            DataServiceFactory.ClearDataService();
         }
 
 		public static void ConnectRuntime(

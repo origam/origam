@@ -64,7 +64,7 @@ namespace Origam.Server.Controller
         {
             this.log = log;
             this.sessionObjects = sessionObjects;
-            dataService = DataService.GetDataService();
+            dataService = DataServiceFactory.GetDataService();
         }
         protected static MenuLookupIndex MenuLookupIndex {
             get
