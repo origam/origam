@@ -1596,28 +1596,28 @@
   dependencies:
     react-inlinesvg "^2.3.0"
 
-"@origam/plugin-audit@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-audit/-/plugin-audit-1.0.0.tgz#64ff3f6dc08dcf701c6dfe089fae15f86b2a8649"
-  integrity sha512-yx0STkScnrFk+K/eAuTWtYS1V10DuAjhsAdCyMMcwflQvISVj7vy9FHFBnSDqUfLR7JKZqkyYCeKpri2M8cEOA==
+"@origam/plugin-audit@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-audit/-/plugin-audit-2.0.0.tgz#d75b38e014ee366382c788c0c5acd8e87a42fb72"
+  integrity sha512-uVkmSvYTe7DZIfyuidbu3xuW425j7Rt5wo4Q3rHXCWz2cKr7VZddPZQfzN4lgeusyIOJPZNHhdTTADebLu1W7A==
   dependencies:
-    "@origam/plugin-interfaces" "^1.0.0"
+    "@origam/plugins" "^1.0.2"
     "@origam/styles" "^1.0.0"
     "@types/classnames" "^2.3.1"
     mobx "5"
     mobx-react "6"
     moment "^2.29.1"
     node-sass "5"
-    postcss "^8.3.11"
+    postcss "^8.4.5"
     react-chartjs-2 "^3.3.0"
     rollup-plugin-postcss "^4.0.1"
 
-"@origam/plugin-chart@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-1.1.0.tgz#57512184f9e509c15e0bf56b4b609f5688b031b6"
-  integrity sha512-FC0y7sCfe5xh5yOgzZGmOkxdYvw2H9nmfIfEvZUFEh9zxWs5KGM0DWZJfyaewpe3BGGmMmoHhWfTF5VPZLqT2Q==
+"@origam/plugin-chart@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-2.0.1.tgz#0e5d5d4b2c62464829c39de814aee27ab7ca0f2b"
+  integrity sha512-RWytZnyb6RakMHtMmfwEKzF54FksR0eCp0r7gsPGPJ5soUBtmxJXVbQoy+MZvQRFZ7Ojxwmaeu9bt4/NYSbMOA==
   dependencies:
-    "@origam/plugin-interfaces" "^1.0.0"
+    "@origam/plugins" "^1.0.2"
     "@origam/styles" "^1.0.0"
     "@origam/utils" "^1.0.0"
     "@types/classnames" "^2.3.1"
@@ -1630,28 +1630,23 @@
     react-chartjs-2 "^4.0.0"
     rollup-plugin-postcss "^4.0.1"
 
-"@origam/plugin-filter@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-filter/-/plugin-filter-1.0.0.tgz#ce0defa0e833fd3018744868e36c620e5b16ea79"
-  integrity sha512-Di6x/GLpffOihKdvL8zZhp0SrkJkiR2xzx1LIAWxQ7i64vs+IwSgmafM45oM0ltqHwZ2QANpituzleDDHKANAg==
+"@origam/plugin-filter@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-filter/-/plugin-filter-2.0.1.tgz#f9da15f2e827472cac41648059faf38f450935ac"
+  integrity sha512-E4C+xFKzKfqJg/m8SFhUMMYV1cEgy8LsK7fKsaHV906awr/AgCpcNvg7SsroI+Yx9aDkT4mDvnVjSzXRdWwm/A==
   dependencies:
     "@origam/components" "^1.0.0"
-    "@origam/plugin-interfaces" "^1.0.0"
-    "@origam/styles" "^1.0.0"
-    "@origam/utils" "^1.0.0"
+    "@origam/plugins" "^1.0.2"
+    "@origam/styles" "^2.0.0"
+    "@origam/utils" "^1.0.1"
     "@types/classnames" "^2.3.1"
     mobx "5"
     mobx-react "6"
     moment "^2.29.1"
     node-sass "5"
-    postcss "^8.3.11"
+    postcss "^8.4.5"
     react-chartjs-2 "^3.3.0"
-    rollup-plugin-postcss "^4.0.1"
-
-"@origam/plugin-interfaces@^1.0.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-interfaces/-/plugin-interfaces-1.2.0.tgz#990e216034e84a05950c2323288ea6bdd0267aea"
-  integrity sha512-ZHaWRskYiVtl3ngyLGNxgS+LWbvqXd9MbEIhbpIsp1XKuoP0G9j7Fns12SRNLBwiCRaYlzKw8gbqrWVTQU3gog==
+    rollup-plugin-postcss "^4.0.2"
 
 "@origam/plugins@^1.0.1":
   version "1.0.1"
@@ -1661,12 +1656,20 @@
     "@origam/utils" "^1.1.1"
     mobx "5"
 
+"@origam/plugins@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@origam/plugins/-/plugins-1.0.2.tgz#1b95327b86eeddce9efdace2f7e0fafeb0badcc7"
+  integrity sha512-Mut5PsG9JEYBHdQGBbtsy3v/fHW0Aia8+kzeTX4QU/DHi2mRRTBp8EjFQE8Pwy8SnuEi3Lev3L2jQjpKQ538KQ==
+  dependencies:
+    "@origam/utils" "^1.1.1"
+    mobx "5"
+
 "@origam/styles@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-1.0.0.tgz#86f710ddd2294e2e45c2aa9ead5247e9d68ec4b8"
   integrity sha512-3rHnSKIkApTZlnlP0BDQDEoCXfSWGD/NwQP8vKgB/oBzVj6iNTwK2UpHPL5XTRjcDQSqCjsh1KEWy8XQbNSnqA==
 
-"@origam/styles@^2.0.2":
+"@origam/styles@^2.0.0", "@origam/styles@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.2.tgz#505dade3528f969895fdd931391eeae43ae51257"
   integrity sha512-MPp0M+w2f3ovN3O5jnGyvN1gWZvpzeDbOjqAEzN6Xw6lgZZeT+OFUk4Hul/Qpav0EDklDFuqHu66p9JRMhReKQ==
@@ -1678,7 +1681,7 @@
   dependencies:
     moment "^2.29.1"
 
-"@origam/utils@^1.1.1":
+"@origam/utils@^1.0.1", "@origam/utils@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.1.1.tgz#b0d4d1bb358b293cfcaf79e0b0ed745be53d91c9"
   integrity sha512-Kt2Dn8nO2PyJfgeZGeUXKcnn7Gp8vQCDlw91/XLZ9zmN7dRb39vwqRvlBP1L/jCpGQ5NiH2VuebtTuPEvuXo0Q==
@@ -8685,6 +8688,11 @@ nanoid@^3.1.30:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.1.tgz#6347a18cac88af88f58af0b3594b723d5e99bb35"
   integrity sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==
 
+nanoid@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
+  integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -10496,6 +10504,15 @@ postcss@^8.1.0, postcss@^8.3.11:
     picocolors "^1.0.0"
     source-map-js "^0.6.2"
 
+postcss@^8.4.5:
+  version "8.4.14"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.14.tgz#ee9274d5622b4858c1007a74d76e42e56fd21caf"
+  integrity sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==
+  dependencies:
+    nanoid "^3.3.4"
+    picocolors "^1.0.0"
+    source-map-js "^1.0.2"
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -11560,6 +11577,25 @@ rollup-plugin-postcss@^4.0.1:
     safe-identifier "^0.4.2"
     style-inject "^0.3.0"
 
+rollup-plugin-postcss@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-postcss/-/rollup-plugin-postcss-4.0.2.tgz#15e9462f39475059b368ce0e49c800fa4b1f7050"
+  integrity sha512-05EaY6zvZdmvPUDi3uCcAQoESDcYnv8ogJJQRp6V5kZ6J6P7uAVJlrTZcaaA20wTH527YTnKfkAoPxWI/jPp4w==
+  dependencies:
+    chalk "^4.1.0"
+    concat-with-sourcemaps "^1.1.0"
+    cssnano "^5.0.1"
+    import-cwd "^3.0.0"
+    p-queue "^6.6.2"
+    pify "^5.0.0"
+    postcss-load-config "^3.0.0"
+    postcss-modules "^4.0.0"
+    promise.series "^0.2.0"
+    resolve "^1.19.0"
+    rollup-pluginutils "^2.8.2"
+    safe-identifier "^0.4.2"
+    style-inject "^0.3.0"
+
 rollup-plugin-terser@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/rollup-plugin-terser/-/rollup-plugin-terser-5.3.1.tgz#8c650062c22a8426c64268548957463bf981b413"
@@ -12008,7 +12044,7 @@ source-list-map@^2.0.0:
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
   integrity sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==
 
-"source-map-js@>=0.6.2 <2.0.0":
+"source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
