@@ -1304,7 +1304,7 @@ namespace Origam.Server
                             pms.Add(new QueryParameter(col.ColumnName, rowId));
                         }
                         DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
-                        core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
+                        core.DataService.Instance.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
                         if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
                         {
                             throw new ArgumentOutOfRangeException(string.Format(

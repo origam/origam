@@ -80,7 +80,7 @@ namespace Origam.Server.Session_Stores
                 }
             }
             // load list entity
-            DataSet result = DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+            DataSet result = DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                 Guid.Empty, _menuItem.ListSortSetId, null, queryParameter, data, listEntity, initialColumns);
             // load all array field child entities - there is no way how to read
             // only children of a specific record (inside LazyLoadListRowData) so
@@ -108,7 +108,7 @@ namespace Origam.Server.Session_Stores
                     {
                         DataColumn col = dataset.Tables[entity].Columns[column];
                         string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
-                        DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+                        DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                             Guid.Empty, _menuItem.ListSortSetId, null, qparams, dataset, relationName,
                             null);
                         DataListLoadedColumns.Add(column);

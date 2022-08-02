@@ -91,7 +91,7 @@ namespace Origam.UI
         public void FieldsScripts(FieldMappingItem fk, FieldMappingItem baseField, IDataEntity baseEntity)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            string[] fkDdl = DataService.FieldDdl(fk.Id);
+            string[] fkDdl = DataService.Instance.FieldDdl(fk.Id);
             int i = 0;
             foreach (string ddl in fkDdl)
             {

@@ -116,7 +116,7 @@ namespace Origam.Server.Pages
             }
             else
             {
-                data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
+                data = core.DataService.Instance.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
                 if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
                     if (xsltPage.ProcessReadFieldRowLevelRulesForGETRequests)
@@ -305,7 +305,7 @@ namespace Origam.Server.Pages
             
             Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationAfterMerge);
 
-            core.DataService.StoreData(xsltPage.DataStructureId, data.DataSet, false, null);
+            core.DataService.Instance.StoreData(xsltPage.DataStructureId, data.DataSet, false, null);
             return;
         }
 
@@ -322,7 +322,7 @@ namespace Origam.Server.Pages
                     row.Delete();
                 }
             }
-            core.DataService.StoreData(xsltPage.DataStructureId, data, false, null);
+            core.DataService.Instance.StoreData(xsltPage.DataStructureId, data, false, null);
             return;
         }
     }

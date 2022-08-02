@@ -77,7 +77,7 @@ namespace Origam.Server.Controller
                                 string transactionId, 
                                 QueryParameterCollection parameters)
         {
-            return DataService.LoadData(dataStructureId,
+            return DataService.Instance.LoadData(dataStructureId,
                      methodId,
                      defaultSetId,
                      sortSetId,

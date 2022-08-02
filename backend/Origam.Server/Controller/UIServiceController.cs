@@ -1045,7 +1045,7 @@ namespace Origam.Server.Controller
         {
             try
             {
-                DataService.StoreData(
+                DataService.Instance.StoreData(
                     dataStructureId: rowData.Entity.RootEntity.ParentItemId,
                     data: rowData.Row.Table.DataSet,
                     loadActualValuesAfterUpdate: false,

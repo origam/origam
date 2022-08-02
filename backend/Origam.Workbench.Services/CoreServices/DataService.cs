@@ -29,16 +29,16 @@ namespace Origam.Workbench.Services.CoreServices
 	/// <summary>
 	/// Summary description for DataService.
 	/// </summary>
-	public class DataService
+	public class DataService : ICoreDataService
 	{
+		public static DataService Instance { get; } = new ();
 
-
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId)
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId)
 		{
             return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, null);
 		}
 
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1)
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1)
 		{
 			if (paramName1 == null)
 			{
@@ -50,7 +50,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
 		}
 
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1, string paramName2, object paramValue2)
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1, string paramName2, object paramValue2)
 		{
 			QueryParameterCollection p = new QueryParameterCollection();
 			p.Add(new QueryParameter(paramName1, paramValue1));
@@ -59,20 +59,20 @@ namespace Origam.Workbench.Services.CoreServices
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
 		}
 
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId,
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId,
             Guid sortSetId, string transactionId, QueryParameterCollection parameters)
 		{
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, parameters, null);
 		}
 
-        public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
+        public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
             Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData)
         {
             return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId,
                 parameters, currentData, null, null);
         }
 
-        public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
+        public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
             Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData,
             string entity, string columnName)
 		{
@@ -102,7 +102,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static DataSet LoadRow(Guid dataStructureEntityId, 
+		public DataSet LoadRow(Guid dataStructureEntityId, 
             Guid filterSetId, QueryParameterCollection parameters, 
             DataSet currentData, string transactionId)
 		{
@@ -128,7 +128,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static DataSet StoreData(Guid dataStructureId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
+		public DataSet StoreData(Guid dataStructureId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
 		{
 			var dataStructureQuery = new DataStructureQuery
 			{
@@ -139,7 +139,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return StoreData(dataStructureQuery, data,transactionId);
 		}
 
-		public static DataSet StoreData(DataStructureQuery dataStructureQuery, DataSet data, string transactionId)
+		public DataSet StoreData(DataStructureQuery dataStructureQuery, DataSet data, string transactionId)
 		{
 			IServiceAgent dataServiceAgent = ServiceManager.Services
 				.GetService<IBusinessServicesService>()
@@ -158,7 +158,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static DataSet ExecuteProcedure(string procedureName, QueryParameterCollection parameters, string transactionId)
+		public DataSet ExecuteProcedure(string procedureName, QueryParameterCollection parameters, string transactionId)
 		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
@@ -181,7 +181,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static long ReferenceCount(Guid entityId, object value, string transactionId)
+		public long ReferenceCount(Guid entityId, object value, string transactionId)
 		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
@@ -198,7 +198,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return result;
 		}
 
-        public static string EntityDdl(Guid entityId)
+        public string EntityDdl(Guid entityId)
         {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
             dataServiceAgent.MethodName = "EntityDdl";
@@ -209,7 +209,7 @@ namespace Origam.Workbench.Services.CoreServices
             return result;
         }
 
-        public static string[] FieldDdl(Guid fieldId)
+        public string[] FieldDdl(Guid fieldId)
         {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
             dataServiceAgent.MethodName = "FieldDdl";
@@ -220,7 +220,7 @@ namespace Origam.Workbench.Services.CoreServices
             return result;
         }
 
-        public static string ExecuteSql(string command)
+        public string ExecuteSql(string command)
         {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(
                 typeof(IBusinessServicesService)) 

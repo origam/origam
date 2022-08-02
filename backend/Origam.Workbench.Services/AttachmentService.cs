@@ -68,7 +68,7 @@ namespace Origam.Workbench.Services
 
 			data.Tables["Attachment"].Rows.Add(r);
 
-			CoreServices.DataService.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), data, false, transactionId);
+			core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), data, false, transactionId);
 		}
 
         public void RemoveAttachment(Guid recordId, string transactionId)
@@ -77,7 +77,7 @@ namespace Origam.Workbench.Services
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
             // fetch Attachment by refParentRecordId
-            DataSet attachmentDataSet = core.DataService.LoadData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
+            DataSet attachmentDataSet = core.DataService.Instance.LoadData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"),
                 new Guid("b3624c91-526d-4b2b-a282-6d99e62a1eb5"), Guid.Empty, Guid.Empty, transactionId,
                 "Attachment_parRefParentRecordId", recordId);
             if (attachmentDataSet.Tables[0].Rows.Count == 0)
@@ -87,7 +87,7 @@ namespace Origam.Workbench.Services
             }
             // delete the record           
             attachmentDataSet.Tables[0].Rows[0].Delete();
-            core.DataService.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), attachmentDataSet, false, transactionId);
+            core.DataService.Instance.StoreData(new Guid("04a07967-4b59-4c14-8320-e6d073f6f77f"), attachmentDataSet, false, transactionId);
             if (log.IsDebugEnabled)
             {
                 log.Debug(string.Format("Attachment with refParentRecordId `{0}' has been successfully removed.",

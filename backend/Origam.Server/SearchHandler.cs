@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Origam.Schema.MenuModel;
 using Origam.Server.Model.Search;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Server
 {
@@ -27,7 +28,7 @@ namespace Origam.Server
         
         private IEnumerable<SearchResult> AttachResultsToResponse(SearchDataSource dataSource, string searchTerm)
         {
-            var results = Workbench.Services.CoreServices.DataService.LoadData(
+            var results = DataService.Instance.LoadData(
                 dataSource.DataStructureId, dataSource.DataStructureMethodId, 
                 Guid.Empty, Guid.Empty, null, dataSource.FilterParameter, 
                 searchTerm);

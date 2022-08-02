@@ -164,7 +164,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				parentNode.SetAttribute("TextRotationMember", renderData.MapTextRotationMember);
 
 				// MapViewLayers
-				DataSet layers = core.DataService.LoadData(new Guid("29aa47ff-98f6-4dba-8e02-ab5ebad08162"),
+				DataSet layers = core.DataService.Instance.LoadData(new Guid("29aa47ff-98f6-4dba-8e02-ab5ebad08162"),
 					new Guid("d0556499-6859-4459-a239-04bd6359a862"), Guid.Empty, new Guid("368729ca-44af-4f25-8894-44353068ed04")
 					, null,	"OrigamMap_parReferenceCode", renderData.MapLayers);
 			

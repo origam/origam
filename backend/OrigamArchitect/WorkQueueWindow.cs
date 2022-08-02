@@ -186,7 +186,7 @@ namespace OrigamArchitect
 
 		private void BuildCommands()
 		{
-			DataSet data = DataService.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, "WorkQueueCommand_parWorkQueueId", this.QueueId);
+			DataSet data = DataService.Instance.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, "WorkQueueCommand_parWorkQueueId", this.QueueId);
 
 			int x = 8;
 			int y = 32;

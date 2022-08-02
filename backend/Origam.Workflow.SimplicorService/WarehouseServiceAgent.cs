@@ -316,7 +316,7 @@ namespace Origam.Workflow.SimplicorService
 			}
 			else
 			{
-				DataSet balance = core.DataService.LoadData(new Guid("d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
+				DataSet balance = core.DataService.Instance.LoadData(new Guid("d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
 					new Guid("a36bef1a-1a8f-45cd-9085-df9e7ac0b6b6"), Guid.Empty, Guid.Empty,
 					null, "InventoryBalance_parId", balanceId);
 

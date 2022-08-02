@@ -1512,7 +1512,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     
     public virtual long ReferenceCount(string entityId, string value)
     {
-        return DataService.ReferenceCount(new Guid(entityId), value, this.TransactionId);
+        return DataService.Instance.ReferenceCount(new Guid(entityId), value, this.TransactionId);
     }
     
     public string GenerateId()
@@ -1854,7 +1854,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
     {
         string result = text;
 
-        DataSet dictionary = DataService.LoadData(
+        DataSet dictionary = DataService.Instance.LoadData(
             new Guid("9268abd0-a08e-4c97-b5f7-219eacf171c0"), 
             new Guid("c2cd04cd-9a47-49d8-aa03-2e07044b3c7c"), 
             Guid.Empty, 

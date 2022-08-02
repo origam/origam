@@ -256,7 +256,7 @@ namespace Origam.BI
                         }
                     }
                     return DataDocumentFactory.New(
-                        core.DataService.LoadData(
+                        core.DataService.Instance.LoadData(
                             report.DataStructureId,
                             report.DataStructureMethodId, 
                             Guid.Empty, 
