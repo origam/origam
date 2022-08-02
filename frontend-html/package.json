@@ -12,7 +12,7 @@
     "@origam/plugin-filter": "^1.0.0",
     "@origam/plugin-interfaces": "^2.1.0",
     "@origam/styles": "^2.0.2",
-    "@origam/utils": "^1.0.1",
+    "@origam/utils": "^1.1.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.2.1",
