@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React, { CSSProperties, useState } from "react";
 import S from "gui/connections/MobileComponents/Form/MobileSimpleDropdown.module.scss";
 import CS from "@origam/components/src/components/Dropdown/Dropdown.module.scss";
-import { IOption } from "@origam/plugin-interfaces";
+import { IOption } from "@origam/plugins";
 import { observer } from "mobx-react";
 import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 import { getMobileState } from "model/selectors/getMobileState";
