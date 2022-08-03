@@ -1116,12 +1116,6 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         return profile.Id.ToString();
     }
 
-    public object ActiveProfileGuId()
-    {
-        UserProfile profile = UserProfileGetter();
-        return profile.Id;
-    }
-
     public bool IsUserAuthenticated()
     {
         return SecurityManager.CurrentPrincipal.Identity.IsAuthenticated;
