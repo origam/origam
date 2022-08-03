@@ -48,7 +48,7 @@ namespace Origam.Rule
 
 		public string EvaluateExpression(string expression)
 		{
-			return RuleEngine.Create().EvaluateXPath(new XmlDocument().CreateNavigator(), expression);
+			return XpathEvaluator.Instance.Evaluate(new XmlDocument().CreateNavigator(), expression);
 		}
 
 		#endregion

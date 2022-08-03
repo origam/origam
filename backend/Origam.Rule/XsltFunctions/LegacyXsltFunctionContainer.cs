@@ -25,12 +25,15 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Schema;
+using Origam.Service.Core;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -1870,4 +1873,128 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
         return text;
     }
+    public XPathNodeIterator NextStates(string entityId, string fieldId, string currentStateValue, XPathNodeIterator row)
+    {
+        IXmlContainer doc = new XmlContainer();
+        XmlElement el = doc.Xml.CreateElement("row");
+        doc.Xml.AppendChild(el);
+			
+        // child atributes
+        XPathNodeIterator attributes = row.Clone();
+        if(attributes.Current.MoveToFirstAttribute())
+        {
+            do
+            {
+                el.SetAttribute(attributes.Current.Name, attributes.Current.Value);
+            } while(attributes.Current.MoveToNextAttribute());
+        }
+
+        // child elements
+        if(row.Current.MoveToFirstChild())
+        {
+            do
+            {
+                if(row.Current.NodeType == XPathNodeType.Element)
+                {
+                    XmlElement childElement = doc.Xml.CreateElement(row.Current.Name);
+                    childElement.InnerText = row.Current.Value;
+                    el.AppendChild(childElement);
+                }
+            } while(row.Current.MoveToNext());
+        }
+			
+        object[] states = StateMachineService.AllowedStateValues(new Guid(entityId), new Guid(fieldId), currentStateValue, doc, null);
+
+        XmlDocument resultDoc = new XmlDocument();
+        XmlElement statesElement = resultDoc.CreateElement("states");
+        resultDoc.AppendChild(statesElement);
+
+        foreach(object state in states)
+        {
+            XmlElement stateElement = resultDoc.CreateElement("state");
+            stateElement.SetAttribute("id", state.ToString());
+            statesElement.AppendChild(stateElement);
+        }
+
+        XPathNavigator nav = resultDoc.CreateNavigator();
+        XPathNodeIterator result = nav.Select("/");
+
+        return result;
+    }
+    
+    public static XPathNodeIterator NodeSet(XPathNavigator nav)
+    {
+        XPathNodeIterator result = nav.Select("/");
+
+        return result;
+    }
+    
+    public static string NodeToString(XPathNodeIterator node)
+    {
+        return NodeToString(node, true);
+    }
+    
+    public static string NodeToString(XPathNodeIterator node, bool indent)
+    {
+        node.MoveNext();
+        StringBuilder sb = new StringBuilder();
+        StringWriter sw = new StringWriter(sb);
+        AsXmlTextWriter xtw = new AsXmlTextWriter(sw);
+        if (indent)
+        {
+            xtw.Formatting = Formatting.Indented;
+        }
+        xtw.WriteNode(node.Current);
+        return sb.ToString();
+    }
+    
+    public static string DecodeTextFromBase64(string input, string encoding)
+    {
+        byte[] blob = Convert.FromBase64String(input);
+			
+        if(encoding.ToUpper() != "UTF-8")
+        {
+            blob = Encoding.Convert(Encoding.GetEncoding(encoding), Encoding.UTF8, blob);
+        }
+        return Encoding.UTF8.GetString(blob);
+    }
+    
+    public static string PointFromJtsk(double x, double y)
+    {
+        Origam.Geo.JtskConverter.Wgs84 wgs;
+        Origam.Geo.JtskConverter.Jtsk jtsk = new Origam.Geo.JtskConverter.Jtsk();
+        jtsk.X = x;
+        jtsk.Y = y;
+        wgs = Origam.Geo.JtskConverter.JTSKtoWGS84(jtsk);
+
+        return string.Format("POINT({0} {1})", XmlConvert.ToString(wgs.Longitude), XmlConvert.ToString(wgs.Latitude));			
+    }
+    
+    public static string abs(string num)
+    {
+        decimal retDecValue;
+        try
+        {	
+            try
+            {
+                retDecValue = XmlConvert.ToDecimal(num);
+            }
+            catch
+            {
+                double dnum1 = Double.Parse(num, NumberStyles.Float, CultureInfo.InvariantCulture);
+                retDecValue = Convert.ToDecimal(dnum1);
+            }				
+        }
+        catch (Exception ex)
+        {
+            throw new FormatException(ResourceUtils.GetString("ErrorAbsAmountInvalid"), ex);
+        }
+        return XmlConvert.ToString(Math.Abs(retDecValue));
+    }
+    
+    public string EvaluateXPath(object nodeset, string xpath)
+    {
+        return XpathEvaluator.Evaluate(nodeset, xpath);
+    }
+    
 }

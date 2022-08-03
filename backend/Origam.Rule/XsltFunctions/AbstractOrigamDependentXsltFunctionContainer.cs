@@ -41,4 +41,5 @@ public abstract class AbstractOrigamDependentXsltFunctionContainer:
     public IDocumentationService DocumentationService { get; set; }
     public IOrigamAuthorizationProvider AuthorizationProvider { get; set; }
     public Func<UserProfile> UserProfileGetter { get; set; }
+    public IXpathEvaluator XpathEvaluator { get; set; }
 }

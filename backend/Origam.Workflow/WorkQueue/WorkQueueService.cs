@@ -1674,9 +1674,7 @@ namespace Origam.Workflow.WorkQueue
                 nav.MoveToFirstChild();	// /ROOT/
                 nav.MoveToFirstChild();	// WorkQueueEntry/
 
-                RuleEngine re = RuleEngine.Create(new Hashtable(), transactionId);
-
-                string evaluationResult = re.EvaluateXPath(nav, condition);
+                string evaluationResult = XpathEvaluator.Instance.Evaluate(nav, condition);
 
                 if (log.IsDebugEnabled)
                 {

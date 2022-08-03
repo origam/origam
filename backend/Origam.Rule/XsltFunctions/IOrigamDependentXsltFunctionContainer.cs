@@ -40,5 +40,5 @@ public interface IOrigamDependentXsltFunctionContainer
     IDocumentationService DocumentationService { get; set; }
     IOrigamAuthorizationProvider AuthorizationProvider { get; set; }
     Func<UserProfile> UserProfileGetter { get; set; }
-
+    IXpathEvaluator XpathEvaluator { get; set; }
 }

@@ -60,13 +60,13 @@ namespace Origam.Server.Pages
             RuleEngine re = RuleEngine.Create(new Hashtable(), null);
             IXmlContainer doc = re.GetXmlDocumentFromData(workflowResult);
             XPathNavigator nav = doc.Xml.CreateNavigator();
-            string url = re.EvaluateXPath(nav, redirectAction.XPath);
+            string url = XpathEvaluator.Instance.Evaluate(nav, redirectAction.XPath);
 
             Hashtable parameters = new Hashtable();
 
             foreach (WorkflowPageActionParameter actionParameter in action.ChildItemsByType(WorkflowPageActionParameter.CategoryConst))
             {
-                string parameterResult = re.EvaluateXPath(nav, actionParameter.XPath);
+                string parameterResult = XpathEvaluator.Instance.Evaluate(nav, actionParameter.XPath);
                 parameters.Add(actionParameter.Name, parameterResult);
             }
 

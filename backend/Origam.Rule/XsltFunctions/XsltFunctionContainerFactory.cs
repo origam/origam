@@ -47,7 +47,8 @@ public static class XsltFunctionContainerFactory
             ServiceManager.Services.GetService<IDocumentationService>(),
             DataService.Instance, 
             SecurityManager.GetAuthorizationProvider(),
-            SecurityManager.CurrentUserProfile);
+            SecurityManager.CurrentUserProfile,
+            XpathEvaluator.Instance);
     }
 
     public static IEnumerable<XsltFunctionsDefinition> Create (
@@ -57,7 +58,8 @@ public static class XsltFunctionContainerFactory
         IParameterService parameterService, IStateMachineService stateMachineService ,
         ITracingService tracingService, IDocumentationService documentationService,
         ICoreDataService dataService, IOrigamAuthorizationProvider authorizationProvider, 
-        Func<UserProfile> userProfileGetter)
+        Func<UserProfile> userProfileGetter,
+        IXpathEvaluator xpathEvaluator)
     {
         return xsltFunctionSchemaItemProvider
             .ChildItemsByType(XsltFunctionCollection.CategoryConst)
@@ -80,6 +82,7 @@ public static class XsltFunctionContainerFactory
                     origamContainer.UserProfileGetter = userProfileGetter;
                     origamContainer.BusinessService = businessService;
                     origamContainer.DataService = dataService;
+                    origamContainer.XpathEvaluator = xpathEvaluator;
                 }
                 return new XsltFunctionsDefinition(
                     Container: container,
