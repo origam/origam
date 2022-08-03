@@ -24,6 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.DA;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule.XsltFunctions;
 
@@ -31,6 +32,7 @@ public interface IOrigamDependentXsltFunctionContainer
 {
     IPersistenceService Persistence { get; set; }
     IDataLookupService LookupService { get; set; }
+    ICoreDataService DataService  { get; set; }
     IParameterService ParameterService { get; set; }
     IBusinessServicesService BusinessService { get; set; }
     IStateMachineService StateMachineService { get; set; }

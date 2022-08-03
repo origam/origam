@@ -43,6 +43,7 @@ using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 using Origam.Workbench;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 using Assert = NUnit.Framework.Assert;
 
 namespace Origam.RuleTests;
@@ -61,6 +62,7 @@ public class XsltTests
     private Mock<ITracingService> tracingServiceMock;
     private Mock<IXsltFunctionSchemaItemProvider> functionSchemaItemProvider;
     private Mock<IPersistenceService> persistenceServiceMock;
+    private Mock<ICoreDataService> dataServiceMock;
     private List<XsltFunctionsDefinition> xsltFunctionDefinitions;
 
     private string xsltScriptTemplate =
@@ -93,6 +95,7 @@ public class XsltTests
         authorizationProvider = new Mock<IOrigamAuthorizationProvider>();
         userProfileGetterMock = new Mock<Func<UserProfile>>();
         persistenceServiceMock = new Mock<IPersistenceService>();
+        dataServiceMock = new Mock<ICoreDataService>();
         counterMock = new Mock<ICounter>();
         functionSchemaItemProvider =
             new Mock<IXsltFunctionSchemaItemProvider>();
@@ -118,6 +121,7 @@ public class XsltTests
             stateMachineServiceMock.Object,
             tracingServiceMock.Object,
             documentationServiceMock.Object,
+            dataServiceMock.Object,
             authorizationProvider.Object,
             userProfileGetterMock.Object
         ).ToList();
@@ -1051,7 +1055,7 @@ public class XsltTests
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
     } 
-
+    
     [Test]
     public void ShouldTestReferenceCount()
     {
@@ -1060,51 +1064,16 @@ public class XsltTests
         string xsltCall = $"AS:ReferenceCount('{entityId}', '{value}')";
         long expectedResult = 1;
 
-        
-        Thread.CurrentThread.CurrentCulture = new CultureInfo("cs-CZ");
-        XPathNavigator nav = new XmlDocument().CreateNavigator();
-        XPathExpression expr = nav.Compile(xsltCall);
-
-        var containerMock = new Mock<LegacyXsltFunctionContainer>();
-        containerMock
-            .Setup(x => x.ReferenceCount(entityId, value))
+        dataServiceMock
+            .Setup(x => x.ReferenceCount(Guid.Parse(entityId), value, null))
             .Returns(expectedResult);
-        List<XsltFunctionsDefinition> containers =
-            new List<XsltFunctionsDefinition>
-            {
-                new XsltFunctionsDefinition(
-                    Container: containerMock.Object,
-                    NameSpaceUri: "http://schema.advantages.cz/AsapFunctions",
-                    NameSpacePrefix: "AS")
-            };
-
-        OrigamXsltContext sut = new OrigamXsltContext(
-            new NameTable(),
-            containers
-        );
-
-        expr.SetContext(sut);
-        object xPathResult = nav.Evaluate(expr);
+        
+        object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
-
-        string xslScript = string.Format(xsltScriptTemplate, xsltCall);
-        var transformer = new CompiledXsltEngine(containers);
-        XmlDocument document = new XmlDocument();
-        document.LoadXml("<ROOT></ROOT>");
-        XmlContainer xmlContainer = new XmlContainer(document);
-        IXmlContainer resultContainer = transformer.Transform(
-            xmlContainer, xslScript, new Hashtable(),
-            null, false);
-
-        var regex = new Regex("d1=\"(.*)\"");
-        var match = regex.Match(resultContainer.Xml.OuterXml);
-        string xsltResult = match.Success
-            ? match.Groups[1].Value
-            : "";
-
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString()));
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
     }
-    
+
     [Test]
     public void ShouldTestGenerateId()
     {

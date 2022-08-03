@@ -27,6 +27,7 @@ using System.Linq;
 using Origam.DA;
 using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule.XsltFunctions;
 
@@ -44,6 +45,7 @@ public static class XsltFunctionContainerFactory
             ServiceManager.Services.GetService<IStateMachineService>(),
             ServiceManager.Services.GetService<ITracingService>(),
             ServiceManager.Services.GetService<IDocumentationService>(),
+            DataService.Instance, 
             SecurityManager.GetAuthorizationProvider(),
             SecurityManager.CurrentUserProfile);
     }
@@ -54,7 +56,8 @@ public static class XsltFunctionContainerFactory
         IPersistenceService persistence, IDataLookupService lookupService,
         IParameterService parameterService, IStateMachineService stateMachineService ,
         ITracingService tracingService, IDocumentationService documentationService,
-        IOrigamAuthorizationProvider authorizationProvider, Func<UserProfile> userProfileGetter)
+        ICoreDataService dataService, IOrigamAuthorizationProvider authorizationProvider, 
+        Func<UserProfile> userProfileGetter)
     {
         return xsltFunctionSchemaItemProvider
             .ChildItemsByType(XsltFunctionCollection.CategoryConst)
@@ -76,6 +79,7 @@ public static class XsltFunctionContainerFactory
                     origamContainer.AuthorizationProvider = authorizationProvider;
                     origamContainer.UserProfileGetter = userProfileGetter;
                     origamContainer.BusinessService = businessService;
+                    origamContainer.DataService = dataService;
                 }
                 return new XsltFunctionsDefinition(
                     Container: container,
