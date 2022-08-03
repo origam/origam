@@ -42,7 +42,6 @@ import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getSelectedRowId } from "../../../../../../model/selectors/TablePanelView/getSelectedRowId";
 
-
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
 
