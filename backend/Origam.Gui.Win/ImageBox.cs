@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -104,7 +105,7 @@ namespace Origam.Gui.Win
 								string path = svalue;
 								if (svalue.StartsWith("http"))
 								{
-									stream = HttpTools.SendRequest(
+									stream = HttpTools.Instance.SendRequest(
 										path, "GET", null, null, null, null, null, null, true, null) as Stream;
 								}
 								{

@@ -70,7 +70,7 @@ namespace Origam.Server.Pages
                 parameters.Add(actionParameter.Name, parameterResult);
             }
 
-            string result = HttpTools.BuildUrl(url, parameters, false, "http", redirectAction.IsUrlEscaped);
+            string result = HttpTools.Instance.BuildUrl(url, parameters, false, "http", redirectAction.IsUrlEscaped);
 
             response.Redirect(result);
         }

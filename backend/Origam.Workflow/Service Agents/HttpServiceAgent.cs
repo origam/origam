@@ -61,7 +61,7 @@ namespace Origam.Workflow
                     {
                         timeout = (int)this.Parameters["Timeout"];
                     }
-                    _result = HttpTools.SendRequest(
+                    _result = HttpTools.Instance.SendRequest(
 						(string)this.Parameters["Url"], 
 						this.Parameters["Method"] as string,
                         GetContent(this.Parameters["Content"]) as string,

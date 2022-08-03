@@ -65,6 +65,7 @@ public class XsltTests
     private Mock<ICoreDataService> dataServiceMock;
     private List<XsltFunctionsDefinition> xsltFunctionDefinitions;
     private Mock<IXpathEvaluator> xPathEvaluatorMock;
+    private Mock<IHttpTools> httpToolsMock;
 
     private string xsltScriptTemplate =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -101,6 +102,7 @@ public class XsltTests
         functionSchemaItemProvider =
             new Mock<IXsltFunctionSchemaItemProvider>();
         xPathEvaluatorMock = new Mock<IXpathEvaluator>();
+        httpToolsMock = new Mock<IHttpTools>();
 
         var functionCollection = new XsltFunctionCollection();
         functionCollection.AssemblyName = "Origam.Rule";
@@ -126,7 +128,8 @@ public class XsltTests
             dataServiceMock.Object,
             authorizationProvider.Object,
             userProfileGetterMock.Object,
-            xPathEvaluatorMock.Object
+            xPathEvaluatorMock.Object,
+            httpToolsMock.Object
         ).ToList();
     }
 
@@ -1366,6 +1369,25 @@ public class XsltTests
         xPathEvaluatorMock
             .Setup(x => x.Evaluate("nodes", "path"))
             .Returns("testResult");
+            
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }  
+
+    [Test]
+    public void ShouldTestHttpRequest()
+    {
+        string url = "http://localhost";
+        string xsltCall = $"AS:HttpRequest('{url}')";
+        string expectedResult = "testResult";
+
+        httpToolsMock
+            .Setup(x => x.SendRequest(url, null, null, null,
+                new Hashtable(), null, null, null, false,
+                null))
+            .Returns(expectedResult);
             
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));

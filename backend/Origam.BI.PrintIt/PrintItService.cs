@@ -85,13 +85,13 @@ namespace Origam.BI.PrintIt
 						StreamReader reader = new StreamReader(stream);
 						string jsonString = reader.ReadToEnd();
 						TraceReportData(jsonString, report.ReportFileName);
-						postData = string.Format("jargs={0}", HttpTools.EscapeDataStringLong(jsonString));
+						postData = string.Format("jargs={0}", HttpTools.Instance.EscapeDataStringLong(jsonString));
 					}
 
 					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
 					string serviceUrl = settings.PrintItServiceUrl;
 					// send request to PrintIt service
-					return HttpTools.SendRequest(serviceUrl, "POST", postData, "application/x-www-form-urlencoded", null, null);
+					return HttpTools.Instance.SendRequest(serviceUrl, "POST", postData, "application/x-www-form-urlencoded", null, null);
 				}
 			}
 		}

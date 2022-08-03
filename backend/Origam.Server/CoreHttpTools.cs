@@ -37,7 +37,7 @@ namespace Origam.Server
         public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
             string fileName, bool isPreview, string overrideContentType)
         {
-            response.ContentType = overrideContentType ?? HttpTools.GetMimeType(fileName);
+            response.ContentType = overrideContentType ?? HttpTools.Instance.GetMimeType(fileName);
             string disposition = GetFileDisposition(request, fileName);
             if (!isPreview)
             {
