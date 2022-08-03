@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.10&#xD;&#xA;255eec22-89c5-479a-b48d-e7bc9baa564a, 1.0.0"
+    x:id="e63a8818-396b-492c-a96a-2b7930c5671d"
+    asi:name="5.4.1"
+    dv:version="5.4.1">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.4.1.origam___commandText___4fd137a4-da5b-43df-8cb5-7db83de4f4b4.txt"
+      x:id="4fd137a4-da5b-43df-8cb5-7db83de4f4b4"
+      asi:name="00010_Database_Field_OrganizationOrigamRoleOrigamApplicationRole.IsInitialScreen"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.4.1.origam___commandText___60c09f16-b777-4de7-abc8-7a0b6346921e.txt"
+      x:id="60c09f16-b777-4de7-abc8-7a0b6346921e"
+      asi:name="00020_PG_Database_Field_OrganizationOrigamRoleOrigamApplicationRole.IsInitialScreen"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

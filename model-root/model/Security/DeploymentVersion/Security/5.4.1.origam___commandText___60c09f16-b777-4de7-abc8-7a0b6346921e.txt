@@ -1,0 +1,1 @@
+﻿ALTER TABLE "OrganizationOrigamRoleOrigamApplicationRole" ADD COLUMN  "IsInitialScreen" Boolean  NOT NULL DEFAULT false;
