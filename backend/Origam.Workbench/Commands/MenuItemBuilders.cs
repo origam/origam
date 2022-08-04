@@ -121,7 +121,6 @@ namespace Origam.Workbench.Commands
                         new SchemaItemEditorNamesBuilder(nameableTypes, name, factory, showDialog);
                     AddNewSubmenu(name, builder, items);
                 }
-                
             }
 
             return items.ToArray();
