@@ -11,7 +11,7 @@
     asi:name="ScreenLevelPlugin"
     ci:namespace="Origam.Gui.Win"
     ci:requestSaveAfterChangeAllowed="false"
-    ci:toolboxVisibility="Nowhere"
+    ci:toolboxVisibility="FormDesigner"
     ci:typeName="Origam.Gui.Win.ScreenLevelPlugin">
     <cpi:ControlPropertyItem
       asi:abstract="true"

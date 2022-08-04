@@ -11,7 +11,7 @@
     asi:name="SectionLevelPlugin"
     ci:namespace="Origam.Gui.Win"
     ci:requestSaveAfterChangeAllowed="false"
-    ci:toolboxVisibility="Nowhere"
+    ci:toolboxVisibility="FormDesigner"
     ci:typeName="Origam.Gui.Win.SectionLevelPlugin">
     <cpi:ControlPropertyItem
       asi:abstract="true"
