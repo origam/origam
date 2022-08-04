@@ -66,6 +66,7 @@ public class XsltTests
     private List<XsltFunctionsDefinition> xsltFunctionDefinitions;
     private Mock<IXpathEvaluator> xPathEvaluatorMock;
     private Mock<IHttpTools> httpToolsMock;
+    private Mock<IResourceTools> resourceToolsMock;
 
     private string xsltScriptTemplate =
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -103,6 +104,7 @@ public class XsltTests
             new Mock<IXsltFunctionSchemaItemProvider>();
         xPathEvaluatorMock = new Mock<IXpathEvaluator>();
         httpToolsMock = new Mock<IHttpTools>();
+        resourceToolsMock = new Mock<IResourceTools>();
 
         var functionCollection = new XsltFunctionCollection();
         functionCollection.AssemblyName = "Origam.Rule";
@@ -129,7 +131,8 @@ public class XsltTests
             authorizationProvider.Object,
             userProfileGetterMock.Object,
             xPathEvaluatorMock.Object,
-            httpToolsMock.Object
+            httpToolsMock.Object,
+            resourceToolsMock.Object
         ).ToList();
     }
 
@@ -296,8 +299,10 @@ public class XsltTests
     }
 
     [TestCase("AS:LookupValue('{0}', '{1}')", new[] { "lookupValue" })]
-    [TestCase("AS:LookupValue('{0}', '{1}', '{2}', '{3}', '{4}')", new[] { "par1", "val1", "par2", "val2" })]
-    [TestCase("AS:LookupValue('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", new[] { "par1", "val1", "par2", "val2", "par3", "val3" })]
+    [TestCase("AS:LookupValue('{0}', '{1}', '{2}', '{3}', '{4}')",
+        new[] { "par1", "val1", "par2", "val2" })]
+    [TestCase("AS:LookupValue('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')",
+        new[] { "par1", "val1", "par2", "val2", "par3", "val3" })]
     public void ShouldLookupValue(string xpathTemplate, string[] args)
     {
         string lookupId = "45b07cce-3d02-448c-afca-1b6f1eb158b5";
@@ -308,11 +313,14 @@ public class XsltTests
         object expectedResult = "lookupResult";
 
         var paramTable = new Hashtable(3);
-        if(args.Length >= 4){
+        if (args.Length >= 4)
+        {
             paramTable[args[0]] = args[1];
             paramTable[args[2]] = args[3];
-        }        
-        if(args.Length >= 6){
+        }
+
+        if (args.Length >= 6)
+        {
             paramTable[args[4]] = args[5];
         }
 
@@ -344,15 +352,17 @@ public class XsltTests
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
-    
+
     [TestCase("AS:LookupList('{0}')", new string[0])]
-    [TestCase("AS:LookupList('{0}', '{1}', '{2}')", new []{"par1", "val1"})]
-    [TestCase("AS:LookupList('{0}', '{1}', '{2}', '{3}', '{4}')", new []{"par1", "val1", "par2", "val2"})]
-    [TestCase("AS:LookupList('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", new []{"par1", "val1", "par2", "val2", "par3", "val3"})]
+    [TestCase("AS:LookupList('{0}', '{1}', '{2}')", new[] { "par1", "val1" })]
+    [TestCase("AS:LookupList('{0}', '{1}', '{2}', '{3}', '{4}')",
+        new[] { "par1", "val1", "par2", "val2" })]
+    [TestCase("AS:LookupList('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')",
+        new[] { "par1", "val1", "par2", "val2", "par3", "val3" })]
     public void ShouldTestLookupList(string xsltTemplate, string[] args)
     {
         string lookupId = "f62d6323-92ec-4c67-8fed-0e48d30dae8f";
-        var argList = new List<object>{lookupId};
+        var argList = new List<object> { lookupId };
         argList.AddRange(args);
 
         string xsltCall = string.Format(xsltTemplate, argList.ToArray());
@@ -366,21 +376,27 @@ public class XsltTests
         dataTable.Rows.Add(dataRow);
         dataTable.AcceptChanges();
         var dataView = new DataView(dataTable);
-        
+
         var parameters = new Hashtable();
-        if(args.Length >= 2){
+        if (args.Length >= 2)
+        {
             parameters[args[0]] = args[1];
-        }        
-        if(args.Length >= 4){
+        }
+
+        if (args.Length >= 4)
+        {
             parameters[args[2]] = args[3];
-        }        
-        if(args.Length >= 6){
+        }
+
+        if (args.Length >= 6)
+        {
             parameters[args[4]] = args[5];
         }
+
         lookupServiceMock
             .Setup(x => x.GetList(new Guid(lookupId), parameters, null))
             .Returns(dataView);
-        
+
         object xPathResult = RunInXpath(xsltCall);
         XPathNodeIterator iterator = (XPathNodeIterator)xPathResult;
         iterator.MoveNext();
@@ -392,8 +408,8 @@ public class XsltTests
 
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }   
-    
+    }
+
     [TestCase("AS:LookupValueEx('{0}', $parameters1)")]
     [TestCase("AS:LookupOrCreateEx('{0}', $parameters1, $parameters1)")]
     public void ShouldTestLookupValueEx(string xsltCallTemplate)
@@ -401,7 +417,7 @@ public class XsltTests
         string lookupId = "f62d6323-92ec-4c67-8fed-0e48d30dae8f";
         string xsltCall = string.Format(xsltCallTemplate, lookupId);
         string expectedResult = "testValue";
-        
+
         string xsltScriptTemplate =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"\n" +
@@ -410,12 +426,12 @@ public class XsltTests
             "    xmlns:CR=\"http://xsl.origam.com/crypto\"\n" +
             "	 xmlns:date=\"http://exslt.org/dates-and-times\">\n" +
             "	<xsl:template match=\"ROOT\">\n" +
-            "       <xsl:variable name=\"parameters1\">"+
-            "           <parameter key=\"par1\" value=\"val1\"/>\n"+
-            "       </xsl:variable>\n"+
+            "       <xsl:variable name=\"parameters1\">" +
+            "           <parameter key=\"par1\" value=\"val1\"/>\n" +
+            "       </xsl:variable>\n" +
             "		<ROOT>\n" +
             "			<SD Id=\"05b0209f-8f7d-4759-9814-fa45af953c63\">\n" +
-            "				<xsl:attribute name=\"d1\">\n" + 
+            "				<xsl:attribute name=\"d1\">\n" +
             $"                  <xsl:value-of select=\"{xsltCall}\"/>\n" +
             "              </xsl:attribute>\n" +
             "			</SD>\n" +
@@ -432,19 +448,20 @@ public class XsltTests
             .Setup(service => service.GetDisplayText(Guid.Parse(lookupId),
                 parameters, false, false, null))
             .Returns(expectedResult);
-        
+
         // Xpath test is omitted because this function is not useful in xpath.
 
         string xsltResult = RunInXslt("", document, xsltScriptTemplate);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
-    
+
     [Test]
     public void ShouldTestLookupOrCreate()
     {
         string recordId = "f6fe6efe-8b95-4c78-8bb2-bd8d6eadc780";
         string lookupId = "45b07cce-3d02-448c-afca-1b6f1eb158b5";
-        string xsltCall = $"AS:LookupOrCreate('{lookupId}', '{recordId}', /ROOT)";
+        string xsltCall =
+            $"AS:LookupOrCreate('{lookupId}', '{recordId}', /ROOT)";
         object expectedResult = "1";
 
         lookupServiceMock
@@ -455,9 +472,9 @@ public class XsltTests
                 false,
                 null))
             .Returns(expectedResult);
-        
+
         // Xpath test is omitted because this function is not useful in xpath.
-        
+
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
@@ -474,52 +491,77 @@ public class XsltTests
     }
 
     // ResizeImage(string inputData, int width, int height, string keepAspectRatio, string outFormat)
-        
-   private const string resizedImage1 =
+
+    private const string resizedImage1 =
         "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QA" +
         "AAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAmSURBVBhXY/" +
         "j3798KID4PwyCBm/+RAEjgIpQNBiCBy1A2EPz/DwAwcj5F+ErgqwAAAABJRU5Er" +
         "kJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAA==";   
-   private const string resizedImage2 =
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+
+    private const string resizedImage2 =
         "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAAXNSR0IArs4c6QAA" +
         "AARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAAlSURBVBhXY1ixY" +
         "sV5GGC4efPmfxhguHjxIpQJ5Fy+fBnK/P8fADtAK5y4oNB3AAAAAElFTkSuQmCCAA" +
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
         "AAAAAAAAAAAAAAAA==";
-   
-   // white square 6x6, png format.
-   private byte[] image = 
-   {
-       137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73,
-       72, 68, 82, 0, 0, 0, 6, 0, 0, 0, 6, 8, 2, 0, 0, 0, 111, 174, 120,
-       31, 0, 0, 0, 1, 115, 82, 71, 66, 0, 174, 206, 28, 233, 0, 0, 0,
-       4, 103, 65, 77, 65, 0, 0, 177, 143, 11, 252, 97, 5, 0, 0, 0, 9,
-       112, 72, 89, 115, 0, 0, 22, 37, 0, 0, 22, 37, 1, 73, 82, 36, 240,
-       0, 0, 0, 23, 73, 68, 65, 84, 24, 87, 99, 252, 255, 255, 63, 3, 42,
-       96, 130, 210, 72, 128, 122, 66, 12, 12, 0, 81, 221, 3, 9, 217,
-       253, 155, 178, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130
-   };
-    
+
+    // white square 6x6, png format.
+    private byte[] image =
+    {
+        137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73,
+        72, 68, 82, 0, 0, 0, 6, 0, 0, 0, 6, 8, 2, 0, 0, 0, 111, 174, 120,
+        31, 0, 0, 0, 1, 115, 82, 71, 66, 0, 174, 206, 28, 233, 0, 0, 0,
+        4, 103, 65, 77, 65, 0, 0, 177, 143, 11, 252, 97, 5, 0, 0, 0, 9,
+        112, 72, 89, 115, 0, 0, 22, 37, 0, 0, 22, 37, 1, 73, 82, 36, 240,
+        0, 0, 0, 23, 73, 68, 65, 84, 24, 87, 99, 252, 255, 255, 63, 3, 42,
+        96, 130, 210, 72, 128, 122, 66, 12, 12, 0, 81, 221, 3, 9, 217,
+        253, 155, 178, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130
+    };
+
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
     [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
-    public void ShouldConvertImage(string xsltCallTemplate, string expectedResult)
+    public void ShouldConvertImage(string xsltCallTemplate,
+        string expectedResult)
     {
-        string xsltCall = string.Format(xsltCallTemplate, Convert.ToBase64String(image));
+        string xsltCall =
+            string.Format(xsltCallTemplate, Convert.ToBase64String(image));
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }  
-    
+    }
+
     [Test]
     public void ShouldGetImageDimensions()
     {
-        string xsltCall = $"AS:GetImageDimensions('{Convert.ToBase64String(image)}')";
+        string xsltCall =
+            $"AS:GetImageDimensions('{Convert.ToBase64String(image)}')";
         string expectedResult = "6";
-        
+
+        string xsltScriptTemplate =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"\n" +
+            "	xmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"\n" +
+            "    xmlns:fs=\"http://xsl.origam.com/filesystem\"\n" +
+            "    xmlns:CR=\"http://xsl.origam.com/crypto\"\n" +
+            "	 xmlns:date=\"http://exslt.org/dates-and-times\">\n" +
+            "	<xsl:template match=\"ROOT\">\n" +
+            "		<ROOT>\n" +
+            "			<SD Id=\"05b0209f-8f7d-4759-9814-fa45af953c63\">\n" +
+            "				<xsl:attribute name=\"d1\">\n" +
+            $"                  <xsl:value-of select=\"{xsltCall}/ROOT/Dimensions/@Width\"/>\n" +
+            "              </xsl:attribute>\n" +
+            "			</SD>\n" +
+            "		</ROOT>\n" +
+            "	</xsl:template>\n" +
+            "</xsl:stylesheet>\n";
+
+        var document = new XmlDocument();
+        document.LoadXml("<ROOT></ROOT>");
+
         object xPathResult = RunInXpath(xsltCall);
         XPathNodeIterator iterator = (XPathNodeIterator)xPathResult;
         iterator.MoveNext();
@@ -529,7 +571,7 @@ public class XsltTests
         Assert.That(match.Success, Is.True);
         Assert.That(match.Groups[1].Value, Is.EqualTo(expectedResult));
         Assert.That(match.Groups[2].Value, Is.EqualTo(expectedResult));
-        string xsltResult = RunInXslt(xsltCall);
+        string xsltResult = RunInXslt("", document, xsltScriptTemplate);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
@@ -685,7 +727,8 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
+        Assert.That(xsltResult,
+            Is.EqualTo(expectedResult.ToString().ToLower()));
     }
 
     [TestCase("AS:ActiveProfileBusinessUnitId()",
@@ -710,8 +753,8 @@ public class XsltTests
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }    
-    
+    }
+
     [Test]
     public void ShouldTestIsUserAuthenticated()
     {
@@ -721,7 +764,8 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
+        Assert.That(xsltResult,
+            Is.EqualTo(expectedResult.ToString().ToLower()));
     }
 
     [Test]
@@ -739,19 +783,44 @@ public class XsltTests
     [Test]
     public void ShouldRunToXml()
     {
-        string testXml = "<TestNode />";
+        string testXml = "<TestNode>test</TestNode>";
         string xsltCall = $"AS:ToXml('{testXml}')";
-        string expectedResult = testXml;
+        string xsltCallXslt =
+            $"AS:ToXml('&lt;TestNode&gt;test&lt;/TestNode&gt;')";
+        // string xsltCallXslt = $"AS:ToXml('bla')";
+        string expectedResultXpath = testXml;
+        string expectedResultXslt = "test";
+
+        string xsltScriptTemplate =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"\n" +
+            "	xmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"\n" +
+            "    xmlns:fs=\"http://xsl.origam.com/filesystem\"\n" +
+            "    xmlns:CR=\"http://xsl.origam.com/crypto\"\n" +
+            "	 xmlns:date=\"http://exslt.org/dates-and-times\">\n" +
+            "	<xsl:template match=\"ROOT\">\n" +
+            "		<ROOT>\n" +
+            "			<SD Id=\"05b0209f-8f7d-4759-9814-fa45af953c63\">\n" +
+            "				<xsl:attribute name=\"d1\">\n" +
+            $"                  <xsl:value-of select=\"{xsltCallXslt}/TestNode\"/>\n" +
+            "              </xsl:attribute>\n" +
+            "			</SD>\n" +
+            "		</ROOT>\n" +
+            "	</xsl:template>\n" +
+            "</xsl:stylesheet>\n";
+
+        var document = new XmlDocument();
+        document.LoadXml("<ROOT></ROOT>");
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.AssignableTo(typeof(XPathNodeIterator)));
         XPathNodeIterator resultIterator = (XPathNodeIterator)xPathResult;
         resultIterator.MoveNext();
         Assert.That(resultIterator.Current.OuterXml,
-            Is.EqualTo(expectedResult));
+            Is.EqualTo(expectedResultXpath));
 
-        string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt("", document, xsltScriptTemplate);
+        Assert.That(xsltResult, Is.EqualTo(expectedResultXslt));
     }
 
     [TestCase("AS:GenerateSerial('counter1')")]
@@ -826,7 +895,8 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
+        Assert.That(xsltResult,
+            Is.EqualTo(expectedResult.ToString().ToLower()));
     }
 
     [Test]
@@ -839,7 +909,8 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(HttpUtility.HtmlEncode(expectedResult)));
+        Assert.That(xsltResult,
+            Is.EqualTo(HttpUtility.HtmlEncode(expectedResult)));
     }
 
     [Test]
@@ -932,7 +1003,7 @@ public class XsltTests
         agentMock.Verify();
         agentMock.Verify(x => x.Run(), Times.Exactly(2));
     }
-    
+
     [Test]
     public void ShouldTestInitPosition()
     {
@@ -941,14 +1012,15 @@ public class XsltTests
         string xsltCallNext = $"AS:NextPosition('{id}', 1)";
         decimal expectedResult1 = 2;
         decimal expectedResult2 = 3;
-            
+
         RunInXpath(xsltCallInit);
         object xPathResult = RunInXpath(xsltCallNext);
         Assert.That(xPathResult, Is.EqualTo(expectedResult1));
         string xsltResult = RunInXslt(xsltCallNext);
-        Assert.That(xsltResult, Is.EqualTo( HttpUtility.HtmlEncode(expectedResult2)));
-    }  
-    
+        Assert.That(xsltResult,
+            Is.EqualTo(HttpUtility.HtmlEncode(expectedResult2)));
+    }
+
     [Test]
     public void ShouldTestGetMenuId()
     {
@@ -965,26 +1037,29 @@ public class XsltTests
             .Setup(service =>
                 service.GetMenuBinding(Guid.Parse(lookupId), value))
             .Returns(bindingResultMock.Object);
-        
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo( HttpUtility.HtmlEncode(expectedResult)));
+        Assert.That(xsltResult,
+            Is.EqualTo(HttpUtility.HtmlEncode(expectedResult)));
     }
-    
+
     [Test]
     public void ShouldDecodeSignedOverpunch()
     {
         string xsltCall = "AS:DecodeSignedOverpunch('0000000000{', 2)";
         double expectedResult = 0.0;
-        
+
         object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult).Within(0.000000000000001));
+        Assert.That(xPathResult,
+            Is.EqualTo(expectedResult).Within(0.000000000000001));
         string xsltResult = RunInXslt(xsltCall);
         double xsltResultDouble = double.Parse(xsltResult);
-        Assert.That(xsltResultDouble, Is.EqualTo(expectedResult).Within(0.000000000000001));
-    }  
-    
+        Assert.That(xsltResultDouble,
+            Is.EqualTo(expectedResult).Within(0.000000000000001));
+    }
+
     [Test]
     public void ShouldRandomlyDistributeValues()
     {
@@ -996,14 +1071,14 @@ public class XsltTests
             "    xmlns:CR=\"http://xsl.origam.com/crypto\"\n" +
             "	 xmlns:date=\"http://exslt.org/dates-and-times\">\n" +
             "	<xsl:template match=\"ROOT\">\n" +
-            "       <xsl:variable name=\"parameters1\">\n"+
-            "           <parameter value=\"val0\" quantity=\"0\"/>\n"+
-            "           <parameter value=\"val1\" quantity=\"1\"/>\n"+
-            "           <parameter value=\"val2\" quantity=\"2\"/>\n"+
-            "       </xsl:variable>\n"+
+            "       <xsl:variable name=\"parameters1\">\n" +
+            "           <parameter value=\"val0\" quantity=\"0\"/>\n" +
+            "           <parameter value=\"val1\" quantity=\"1\"/>\n" +
+            "           <parameter value=\"val2\" quantity=\"2\"/>\n" +
+            "       </xsl:variable>\n" +
             "		<ROOT>\n" +
             "			<SD Id=\"05b0209f-8f7d-4759-9814-fa45af953c63\">\n" +
-            "				<xsl:attribute name=\"d1\">\n" + 
+            "				<xsl:attribute name=\"d1\">\n" +
             $"                  <xsl:value-of select=\"AS:RandomlyDistributeValues($parameters1)\"/>\n" +
             "              </xsl:attribute>\n" +
             "			</SD>\n" +
@@ -1013,7 +1088,7 @@ public class XsltTests
 
         var document = new XmlDocument();
         document.LoadXml("<ROOT></ROOT>");
-        
+
         // Xpath test is omitted because this function is not useful in xpath.
 
         string xsltResult = RunInXslt("", document, xsltScriptTemplate);
@@ -1024,30 +1099,31 @@ public class XsltTests
     public void ShouldTestRandom()
     {
         string xsltCall = "AS:Random()";
-       
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.LessThanOrEqualTo(1));
         Assert.That(xPathResult, Is.GreaterThanOrEqualTo(0));
-        
+
         string xsltResult = RunInXslt(xsltCall);
         double xsltDoubleResult = double.Parse(
             xsltResult, NumberStyles.Any, CultureInfo.InvariantCulture);
         Assert.That(xsltDoubleResult, Is.LessThanOrEqualTo(1));
         Assert.That(xsltDoubleResult, Is.GreaterThanOrEqualTo(0));
     }
-    
+
     [Test]
     public void ShouldTestIsUriValid()
     {
         string xsltCall = "AS:IsUriValid('https://www.google.com/')";
         bool expectedResult = true;
-        
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
-    } 
-    
+        Assert.That(xsltResult,
+            Is.EqualTo(expectedResult.ToString().ToLower()));
+    }
+
     [Test]
     public void ShouldTestReferenceCount()
     {
@@ -1059,18 +1135,19 @@ public class XsltTests
         dataServiceMock
             .Setup(x => x.ReferenceCount(Guid.Parse(entityId), value, null))
             .Returns(expectedResult);
-        
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
+        Assert.That(xsltResult,
+            Is.EqualTo(expectedResult.ToString().ToLower()));
     }
 
     [Test]
     public void ShouldTestGenerateId()
     {
         string xsltCall = "AS:GenerateId()";
-        
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.InstanceOf<string>());
         bool xPathResultIsGuid = Guid.TryParse((string)xPathResult, out _);
@@ -1078,47 +1155,52 @@ public class XsltTests
         string xsltResult = RunInXslt(xsltCall);
         bool xsltResultIsGuid = Guid.TryParse(xsltResult, out _);
         Assert.That(xsltResultIsGuid);
-    }  
-    
+    }
+
     [Test]
     public void ShouldListDays()
     {
         string xsltCall = "AS:ListDays('2022-01-01', '2022-01-03')";
-        string expectedResultXpath = "<list>\r\n"+
-            "  <item>2022-01-01T00:00:00.0000000+01:00</item>\r\n" +
-            "  <item>2022-01-02T00:00:00.0000000+01:00</item>\r\n" +
-            "  <item>2022-01-03T00:00:00.0000000+01:00</item>\r\n" +
-            "</list>";       
-        string expectedResultXslt = "2022-01-01T00:00:00.0000000+01:002022-01-02T00:00:00.0000000+01:002022-01-03T00:00:00.0000000+01:00";
-        
-        object xPathResult = RunInXpath(xsltCall) ;
+        string expectedResultXpath = "<list>\r\n" +
+                                     "  <item>2022-01-01T00:00:00.0000000+01:00</item>\r\n" +
+                                     "  <item>2022-01-02T00:00:00.0000000+01:00</item>\r\n" +
+                                     "  <item>2022-01-03T00:00:00.0000000+01:00</item>\r\n" +
+                                     "</list>";
+        string expectedResultXslt =
+            "2022-01-01T00:00:00.0000000+01:002022-01-02T00:00:00.0000000+01:002022-01-03T00:00:00.0000000+01:00";
+
+        object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.InstanceOf<XPathNodeIterator>());
         var nodeIterator = xPathResult as XPathNodeIterator;
         nodeIterator.MoveNext();
-        Assert.That(nodeIterator.Current.OuterXml, Is.EqualTo(expectedResultXpath));
+        Assert.That(nodeIterator.Current.OuterXml,
+            Is.EqualTo(expectedResultXpath));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResultXslt));
-    }   
+    }
 
     [Test]
     public void ShouldTestIsDateBetween()
     {
-        string xsltCall = "AS:IsDateBetween('2022-01-02', '2022-01-01', '2022-01-03')";
+        string xsltCall =
+            "AS:IsDateBetween('2022-01-02', '2022-01-01', '2022-01-03')";
         bool expectedResult = true;
-        
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult.ToString().ToLower()));
-    } 
-    
+        Assert.That(xsltResult,
+            Is.EqualTo(expectedResult.ToString().ToLower()));
+    }
+
     [Test]
     public void ShouldTestAddWorkingDays()
     {
         Guid calendarId = Guid.Parse("186ec5ec-7877-4204-8323-2ffdd816332d");
-        string xsltCall = $"AS:AddWorkingDays('2022-01-02', '2', '{calendarId}')";
+        string xsltCall =
+            $"AS:AddWorkingDays('2022-01-02', '2', '{calendarId}')";
         string expectedResult = "2022-01-04T00:00:00.0000000+01:00";
-        
+
         var agentMock = new Mock<IServiceAgent>();
         var agentParameters = new Hashtable();
         agentMock
@@ -1134,47 +1216,47 @@ public class XsltTests
         businessServiceMock
             .Setup(x => x.GetAgent("DataService", null, null))
             .Returns(agentMock.Object);
-        
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         Assert.That(agentParameters, Has.Count.EqualTo(1));
         Assert.That(agentParameters.ContainsKey("Query"));
         agentMock.Verify();
         agentMock.Verify(x => x.Run(), Times.Once);
-        
+
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
         Assert.That(agentParameters, Has.Count.EqualTo(1));
         Assert.That(agentParameters.ContainsKey("Query"));
         agentMock.Verify();
         agentMock.Verify(x => x.Run(), Times.Exactly(2));
-    } 
-    
-    [TestCase( "AS:LastDayOfMonth('2022-01-02')",  "2022-01-31")]
-    [TestCase( "AS:FirstDayNextMonthDate('2022-01-02')",  "2022-02-01")]
-    [TestCase( "AS:Year('2022-01-02')",  "2022")]
-    [TestCase( "AS:Month('2022-01-02')",  "01")]
+    }
+
+    [TestCase("AS:LastDayOfMonth('2022-01-02')", "2022-01-31")]
+    [TestCase("AS:FirstDayNextMonthDate('2022-01-02')", "2022-02-01")]
+    [TestCase("AS:Year('2022-01-02')", "2022")]
+    [TestCase("AS:Month('2022-01-02')", "01")]
     public void ShouldTestDateFunctions(string xsltCall, string expectedResult)
     {
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }    
-    
+    }
+
     [Test]
     public void ShouldTestDecimalNumber()
     {
         string xsltCall = "AS:DecimalNumber('5')";
         string expectedResult = "5";
-            
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
-    
-    
+
+
     [TestCase("AS:avg(/ROOT/N1/@count)", "2")]
     [TestCase("AS:sum(/ROOT/N1/@count)", "6")]
     [TestCase("AS:Sum(/ROOT/N1/@count)", "6")]
@@ -1187,23 +1269,24 @@ public class XsltTests
         var document = new XmlDocument();
         document.LoadXml(
             "<ROOT><N1 count=\"1\"></N1><N1 count=\"2\"></N1><N1  count=\"3\"></N1></ROOT>");
-    
+
         object xPathResult = RunInXpath(xsltCall, document);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall, document);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }   
-  
+    }
+
     [TestCase("AS:Uppercase('test')", "TEST")]
     [TestCase("AS:Lowercase('TEST')", "test")]
-    public void ShouldTestStringManipulationFunctions(string xsltCall, string expectedResult)
+    public void ShouldTestStringManipulationFunctions(string xsltCall,
+        string expectedResult)
     {
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
-    
+
     [Test]
     public void ShouldTestTranslate()
     {
@@ -1231,69 +1314,113 @@ public class XsltTests
             null,
             "OrigamCharacterTranslationDetail_parOrigamCharacterTranslationId",
             new Guid(dictionaryId))).Returns(dataSet);
-        
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
-    
+
+    class TestXmlContainer : XmlContainer
+    {
+        protected bool Equals(XmlContainer other)
+        {
+            return Equals(Xml.OuterXml, other.Xml.OuterXml);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (!(obj is XmlContainer)) return false;
+            return Equals((XmlContainer)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Xml != null ? Xml.GetHashCode() : 0);
+        }
+    }
+
     [Test]
     public void ShouldTestNextStates()
     {
         string entityId = "cdb8611a-8e38-4613-bc4f-959225ff21f7";
         string fieldId = "cc8a9da4-8833-4c27-9b0c-a1d2eef3f078";
         string currentStateValue = "1";
-        string xsltCall = $"AS:NextStates('{entityId}', '{fieldId}', '{currentStateValue}', /ROOT)";
-        string expectedResult = "<states />";
-        
+        string xsltCall =
+            $"AS:NextStates('{entityId}', '{fieldId}', '{currentStateValue}', /ROOT/TestNode[1])";
+        string expectedResultXpath = "<states />";
+        string expectedResultXslt = "";
+
         IXmlContainer doc = new XmlContainer();
-        doc.LoadXml("<ROOT>test</ROOT>");
+        doc.LoadXml("<ROOT><TestNode name=\"testNode\"></TestNode></ROOT>");
 
         // Mocking AllowedStateValues does not work here because XmlContainer does not override Equals
-        // IXmlContainer document = new XmlContainer();
-        // document.LoadXml("<row><ROOT>test</ROOT></row>");
+        // IXmlContainer document = new TestXmlContainer();
+        // document.LoadXml("<row name=\"testNode\" />");
         // stateMachineServiceMock
         //     .Setup(x => x.AllowedStateValues(new Guid(entityId), new Guid(fieldId), currentStateValue, document, null))
         //     .Returns(new object[]{"1", "2", "3"});
-        
+
         object xPathResult = RunInXpath(xsltCall, doc.Xml);
         Assert.That(xPathResult, Is.InstanceOf<XPathNodeIterator>());
         var nodeIterator = xPathResult as XPathNodeIterator;
         nodeIterator.MoveNext();
-        Assert.That(nodeIterator.Current.OuterXml, Is.EqualTo(expectedResult));
+        Assert.That(nodeIterator.Current.OuterXml,
+            Is.EqualTo(expectedResultXpath));
 
         string xsltResult = RunInXslt(xsltCall, doc.Xml);
-        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+        Assert.That(xsltResult, Is.EqualTo(expectedResultXslt));
     }
-    
+
     [Test]
     public void ShouldTestNodeSet()
     {
-        string xsltCall = "AS:NodeSet(/ROOT)";
-        string expectedResult = "3";
+        string xsltCall = "AS:NodeSet(<TestNode>test</TestNode>)/TestNode";
+        string expectedResult = "test";
+
+        string xsltScript =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"\n" +
+            "	xmlns:AS=\"http://schema.advantages.cz/AsapFunctions\"\n" +
+            "    xmlns:fs=\"http://xsl.origam.com/filesystem\"\n" +
+            "    xmlns:CR=\"http://xsl.origam.com/crypto\"\n" +
+            "	 xmlns:date=\"http://exslt.org/dates-and-times\">\n" +
+            "	<xsl:template match=\"ROOT\">\n" +
+            "       <xsl:variable name=\"testInput\"><TestNode>test</TestNode></xsl:variable>" +
+            "		<ROOT>\n" +
+            "			<SD Id=\"05b0209f-8f7d-4759-9814-fa45af953c63\">\n" +
+            "				<xsl:attribute name=\"d1\">\n" +
+            $"                  <xsl:value-of select=\"AS:NodeSet($testInput)/TestNode\"/>\n" +
+            "              </xsl:attribute>\n" +
+            "			</SD>\n" +
+            "		</ROOT>\n" +
+            "	</xsl:template>\n" +
+            "</xsl:stylesheet>\n";
+
+        // Xpath test is omitted because this function is not useful in xpath.
+
         var document = new XmlDocument();
-        document.LoadXml(
-            "<ROOT><N1 count=\"1\"></N1><N1 count=\"2\"></N1><N1  count=\"3\"></N1></ROOT>");
-    
-        // object xPathResult = RunInXpath(xsltCall, document);
-        // Assert.That(xPathResult, Is.EqualTo(expectedResult));
-        string xsltResult = RunInXslt(xsltCall, document);
+        document.LoadXml("<ROOT></ROOT>");
+
+
+        string xsltResult = RunInXslt("", document, xsltScript);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    } 
-    
+    }
+
     [Test]
     public void ShouldTestNodeToString()
     {
         string xsltCall = "AS:NodeToString(/ROOT)";
         string expectedResultXpath = "<ROOT>\r\n" +
-                                "  <N1 count=\"1\">\r\n" +
-                                "  </N1>\r\n" +
-                                "  <N1 count=\"2\">\r\n" +
-                                "  </N1>\r\n" +
-                                "  <N1 count=\"3\">\r\n" +
-                                "  </N1>\r\n" +
-                                "</ROOT>";
+                                     "  <N1 count=\"1\">\r\n" +
+                                     "  </N1>\r\n" +
+                                     "  <N1 count=\"2\">\r\n" +
+                                     "  </N1>\r\n" +
+                                     "  <N1 count=\"3\">\r\n" +
+                                     "  </N1>\r\n" +
+                                     "</ROOT>";
 
         string expectedResultXslt =
             "&lt;ROOT&gt;&#xD;&#xA;  &lt;N1 count=&quot;1&quot;&gt;&#xD;&#xA;  " +
@@ -1303,7 +1430,7 @@ public class XsltTests
         var document = new XmlDocument();
         document.LoadXml(
             "<ROOT><N1 count=\"1\"></N1><N1 count=\"2\"></N1><N1  count=\"3\"></N1></ROOT>");
-    
+
         object xPathResult = RunInXpath(xsltCall, document);
         Assert.That(xPathResult, Is.EqualTo(expectedResultXpath));
         string xsltResult = RunInXslt(xsltCall, document);
@@ -1315,37 +1442,37 @@ public class XsltTests
     {
         string xsltCall = "AS:DecodeTextFromBase64('dGVzdA==', 'UTF-8')";
         string expectedResult = "test";
-            
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
-    
+
     [Test]
     public void ShouldTestPointFromJtsk()
     {
         string xsltCall = "AS:PointFromJtsk(1, 1)";
         string expectedResult = "POINT(19.55554477337343 54.55554477337342)";
-            
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    } 
-    
+    }
+
     [Test]
     public void ShouldTestAbs()
     {
         string xsltCall = "AS:abs(-1)";
         string expectedResult = "1";
-            
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }   
-    
+    }
+
     [Test]
     public void ShouldTestEvaluateXPath()
     {
@@ -1355,12 +1482,12 @@ public class XsltTests
         xPathEvaluatorMock
             .Setup(x => x.Evaluate("nodes", "path"))
             .Returns("testResult");
-            
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
-    }  
+    }
 
     [Test]
     public void ShouldTestHttpRequest()
@@ -1374,7 +1501,57 @@ public class XsltTests
                 new Hashtable(), null, null, null, false,
                 null))
             .Returns(expectedResult);
-            
+
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }
+
+    [Test]
+    public void ShouldTestProcessMarkdown()
+    {
+        string xsltCall = $"AS:ProcessMarkdown('# test')";
+        string expectedXpathResult = "<h1>test</h1>\n";
+        string expectedXsltResult = "&lt;h1&gt;test&lt;/h1&gt;&#xA;";
+
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedXpathResult));
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedXsltResult));
+    }
+
+    [Test]
+    public void ShouldTestDiff()
+    {
+        string xsltCall = $"AS:Diff('old text', 'new text')";
+        string expectedXpathResult = "<lines>\r\n" +
+                                     "  <line changeType=\"Deleted\">old text</line>\r\n" +
+                                     "  <line changeType=\"Inserted\" position=\"1\">new text</line>\r\n" +
+                                     "</lines>";
+        string expectedXsltResult = "old textnew text";
+
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.InstanceOf<XPathNodeIterator>());
+        var nodeIterator = xPathResult as XPathNodeIterator;
+        nodeIterator.MoveNext();
+        Assert.That(nodeIterator.Current.OuterXml,
+            Is.EqualTo(expectedXpathResult));
+
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedXsltResult));
+    }
+
+    [Test]
+    public void ShouldTestResourceIdByActiveProfile()
+    {
+        string xsltCall = $"AS:ResourceIdByActiveProfile()";
+        string expectedResult = "testId";
+
+        resourceToolsMock
+            .Setup(x => x.ResourceIdByActiveProfile())
+            .Returns(expectedResult);
+
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);

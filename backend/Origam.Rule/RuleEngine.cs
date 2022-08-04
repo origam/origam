@@ -20,17 +20,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.IO;
-using System.Text;
 using System.Xml;
-using System.Xml.Xsl;
 using System.Xml.XPath;
 using System.Data;
 using System.Collections;
 using System.Drawing;
-using Origam.Services;
 using Origam.UI.Common;
-using Mvp.Xml.Exslt;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
@@ -38,19 +33,14 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Schema.GuiModel;
-using Origam.Workbench;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Collections.Generic;
-using DiffPlex;
-using DiffPlex.DiffBuilder;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using Origam.Extensions;
 using Origam.Rule.Xslt;
-using Origam.Rule.XsltFunctions;
 using Origam.Service.Core;
+using Origam.Workbench;
 
 namespace Origam.Rule
 {
@@ -274,27 +264,27 @@ namespace Origam.Rule
 			return profile.Id.ToString();
 		}
 		
-		public string ResourceIdByActiveProfile()
-		{
-			DataStructureQuery query = new DataStructureQuery(new Guid("d0d0d847-36dc-4987-95e5-43c4d8d0d78f"), new Guid("84848e4c-129c-4079-95a4-6319e21399af"));
-
-			query.Parameters.Add(new QueryParameter("Resource_parBusinessPartnerId", _userProfileGetter().Id));
-
-			DataSet ds = this.LoadData(query);
-
-			if(ds.Tables["Resource"].Rows.Count == 0)
-			{
-				throw new Exception(ResourceUtils.GetString("ErrorNoResource"));
-			}
-			else if(ds.Tables["Resource"].Rows.Count > 1)
-			{
-				throw new Exception(ResourceUtils.GetString("ErrorMoreResources", _userProfileGetter().Id));
-			}
-			else
-			{
-				return ds.Tables["Resource"].Rows[0]["Id"].ToString();
-			}
-		}
+		// public string ResourceIdByActiveProfile()
+		// {
+		// 	DataStructureQuery query = new DataStructureQuery(new Guid("d0d0d847-36dc-4987-95e5-43c4d8d0d78f"), new Guid("84848e4c-129c-4079-95a4-6319e21399af"));
+		//
+		// 	query.Parameters.Add(new QueryParameter("Resource_parBusinessPartnerId", _userProfileGetter().Id));
+		//
+		// 	DataSet ds = this.LoadData(query);
+		//
+		// 	if(ds.Tables["Resource"].Rows.Count == 0)
+		// 	{
+		// 		throw new Exception(ResourceUtils.GetString("ErrorNoResource"));
+		// 	}
+		// 	else if(ds.Tables["Resource"].Rows.Count > 1)
+		// 	{
+		// 		throw new Exception(ResourceUtils.GetString("ErrorMoreResources", _userProfileGetter().Id));
+		// 	}
+		// 	else
+		// 	{
+		// 		return ds.Tables["Resource"].Rows[0]["Id"].ToString();
+		// 	}
+		// }
 
 		private string LookupValue(string lookupId, string recordId)
 		{
@@ -303,34 +293,6 @@ namespace Origam.Rule
 			return XmlTools.FormatXmlString(result);
 		}
 
-		public static string ProcessMarkdown(string text)
-        {
-            MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
-            return md.Transform(text);
-        }
-
-        public static XPathNodeIterator Diff(string oldText, string newText)
-        {
-            var diffBuilder = new InlineDiffBuilder(new Differ());
-            var diff = diffBuilder.BuildDiffModel(oldText, newText);
-            XmlDocument resultDoc = new XmlDocument();
-            XmlElement linesElement = resultDoc.CreateElement("lines");
-            resultDoc.AppendChild(linesElement);
-            foreach (var line in diff.Lines)
-            {
-                XmlElement lineElement = resultDoc.CreateElement("line");
-                lineElement.SetAttribute("changeType", line.Type.ToString());
-                if (line.Position.HasValue)
-                {
-                    lineElement.SetAttribute("position", line.Position.ToString());
-                }
-                lineElement.InnerText = XmlTools.ConvertToString(line.Text);
-                linesElement.AppendChild(lineElement);
-            }
-            XPathNavigator nav = resultDoc.CreateNavigator();
-            XPathNodeIterator result = nav.Select("/");
-            return result;
-        }
         #endregion
 
         #region Other Functions
@@ -2218,17 +2180,17 @@ namespace Origam.Rule
 
 			return doc;
 		}
-
-		private DataSet LoadData(DataStructureQuery query)
-		{
-			_dataServiceAgent.MethodName = "LoadDataByQuery";
-			_dataServiceAgent.Parameters.Clear();
-			_dataServiceAgent.Parameters.Add("Query", query);
-
-			_dataServiceAgent.Run();
-
-			return _dataServiceAgent.Result as DataSet;
-		}
+		//
+		// private DataSet LoadData(DataStructureQuery query)
+		// {
+		// 	_dataServiceAgent.MethodName = "LoadDataByQuery";
+		// 	_dataServiceAgent.Parameters.Clear();
+		// 	_dataServiceAgent.Parameters.Add("Query", query);
+		//
+		// 	_dataServiceAgent.Run();
+		//
+		// 	return _dataServiceAgent.Result as DataSet;
+		// }
 #endregion
 
 #region Evaluators
@@ -2241,7 +2203,7 @@ namespace Origam.Rule
 					return this.ActiveProfileId();
 
 				case SystemFunction.ResourceIdByActiveProfile:
-					return this.ResourceIdByActiveProfile();
+					return ResourceTools.Instance.ResourceIdByActiveProfile();
 
 				default:
 					throw new ArgumentOutOfRangeException("Function", functionCall.Function, ResourceUtils.GetString("ErrorUnsupportedFunction"));

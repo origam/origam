@@ -30,12 +30,13 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
+using DiffPlex;
+using DiffPlex.DiffBuilder;
 using Origam.DA;
 using Origam.Extensions;
 using Origam.Schema;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
-using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Rule.XsltFunctions;
 
@@ -2064,4 +2065,38 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 			throw new ArgumentOutOfRangeException("result", result, "Unknown http request result type");
 		}
 	}
+    
+    public string ProcessMarkdown(string text)
+    {
+        MarkdownSharp.Markdown md = new MarkdownSharp.Markdown();
+        return md.Transform(text);
+    }
+    
+    public static XPathNodeIterator Diff(string oldText, string newText)
+    {
+        var diffBuilder = new InlineDiffBuilder(new Differ());
+        var diff = diffBuilder.BuildDiffModel(oldText, newText);
+        XmlDocument resultDoc = new XmlDocument();
+        XmlElement linesElement = resultDoc.CreateElement("lines");
+        resultDoc.AppendChild(linesElement);
+        foreach (var line in diff.Lines)
+        {
+            XmlElement lineElement = resultDoc.CreateElement("line");
+            lineElement.SetAttribute("changeType", line.Type.ToString());
+            if (line.Position.HasValue)
+            {
+                lineElement.SetAttribute("position", line.Position.ToString());
+            }
+            lineElement.InnerText = XmlTools.ConvertToString(line.Text);
+            linesElement.AppendChild(lineElement);
+        }
+        XPathNavigator nav = resultDoc.CreateNavigator();
+        XPathNodeIterator result = nav.Select("/");
+        return result;
+    }
+
+    public string ResourceIdByActiveProfile()
+    {
+        return ResourceTools.ResourceIdByActiveProfile();
+    }
 }

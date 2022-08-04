@@ -49,7 +49,8 @@ public static class XsltFunctionContainerFactory
             SecurityManager.GetAuthorizationProvider(),
             SecurityManager.CurrentUserProfile,
             XpathEvaluator.Instance,
-            HttpTools.Instance);
+            HttpTools.Instance,
+            ResourceTools.Instance);
     }
 
     public static IEnumerable<XsltFunctionsDefinition> Create (
@@ -60,7 +61,7 @@ public static class XsltFunctionContainerFactory
         ITracingService tracingService, IDocumentationService documentationService,
         ICoreDataService dataService, IOrigamAuthorizationProvider authorizationProvider, 
         Func<UserProfile> userProfileGetter, IXpathEvaluator xpathEvaluator,
-        IHttpTools httpTools)
+        IHttpTools httpTools, IResourceTools resourceTools)
     {
         return xsltFunctionSchemaItemProvider
             .ChildItemsByType(XsltFunctionCollection.CategoryConst)
@@ -85,6 +86,7 @@ public static class XsltFunctionContainerFactory
                     origamContainer.DataService = dataService;
                     origamContainer.XpathEvaluator = xpathEvaluator;
                     origamContainer.HttpTools = httpTools;
+                    origamContainer.ResourceTools = resourceTools;
                 }
                 return new XsltFunctionsDefinition(
                     Container: container,

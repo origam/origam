@@ -42,4 +42,5 @@ public interface IOrigamDependentXsltFunctionContainer
     Func<UserProfile> UserProfileGetter { get; set; }
     IXpathEvaluator XpathEvaluator { get; set; }
     IHttpTools HttpTools { get; set; }
+    IResourceTools ResourceTools { get; set; }
 }
