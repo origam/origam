@@ -59,13 +59,19 @@ namespace Origam.Rule.Xslt
 		}
 		#endregion
 
-        internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, Hashtable parameters, 
+        internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, 
+            Hashtable parameters, string transactionId, 
             IDataStructure outputStructure, bool validateOnly)
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
             foreach (var functionsDefinition in functionsDefinitions)
             {
+                if (functionsDefinition.Container is
+                    IOrigamDependentXsltFunctionContainer origamContainer)
+                {
+                    origamContainer.TransactionId = transactionId;
+                }
                 xslArg.AddExtensionObject(
                     functionsDefinition.NameSpaceUri, functionsDefinition.Container);
             }
@@ -262,12 +268,17 @@ namespace Origam.Rule.Xslt
         }
         internal override void Transform(
             IXPathNavigable input, object xsltEngine, Hashtable parameters, 
-             Stream output)
+            string transactionId, Stream output)
         {
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
             foreach (var functionsDefinition in functionsDefinitions)
             {
+                if (functionsDefinition.Container is
+                    IOrigamDependentXsltFunctionContainer origamContainer)
+                {
+                    origamContainer.TransactionId = transactionId;
+                }
                 xslArg.AddExtensionObject(
                     functionsDefinition.NameSpaceUri, functionsDefinition.Container);
             }

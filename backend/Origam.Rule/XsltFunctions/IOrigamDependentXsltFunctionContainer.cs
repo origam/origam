@@ -43,4 +43,5 @@ public interface IOrigamDependentXsltFunctionContainer
     IXpathEvaluator XpathEvaluator { get; set; }
     IHttpTools HttpTools { get; set; }
     IResourceTools ResourceTools { get; set; }
+    string TransactionId { set; get; }
 }

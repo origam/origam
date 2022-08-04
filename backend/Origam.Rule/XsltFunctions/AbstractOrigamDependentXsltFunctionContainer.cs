@@ -44,4 +44,5 @@ public abstract class AbstractOrigamDependentXsltFunctionContainer:
     public IXpathEvaluator XpathEvaluator { get; set; }
     public IHttpTools HttpTools { get; set; }
     public IResourceTools ResourceTools { get; set; }
+    public string TransactionId { get; set; }
 }

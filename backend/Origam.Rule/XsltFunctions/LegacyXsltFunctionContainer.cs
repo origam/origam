@@ -49,9 +49,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
             .GetCurrentMethod().DeclaringType);
 
     private ICounter counter;
-
-    public string TransactionId { get; set; } = null;
-
+    
     public LegacyXsltFunctionContainer()
     {
     }

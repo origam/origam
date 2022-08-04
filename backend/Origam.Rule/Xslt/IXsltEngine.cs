@@ -40,15 +40,15 @@ namespace Origam.Rule.Xslt
         Guid TraceWorkflowId {get; set;}
         bool Trace { get; set; }
 
-        IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, 
+        IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, string transactionId,
             IDataStructure outputStructure, bool validateOnly);
         IXmlContainer Transform(IXmlContainer data, Guid transformationId, 
-            Guid retransformationId, Hashtable parameters, Hashtable retransformationParameters,
+            Guid retransformationId, Hashtable parameters, string transactionId, Hashtable retransformationParameters,
             IDataStructure outputStructure, bool validateOnly);
         IXmlContainer Transform(IXmlContainer data, string xsl, Hashtable parameters,
-            IDataStructure outputStructure, bool validateOnly);
+            string transactionId, IDataStructure outputStructure, bool validateOnly);
         void Transform(
             IXPathNavigable input, Guid transformationId, Hashtable parameters, 
-            Stream output);
+            string transactionId, Stream output);
     }
 }

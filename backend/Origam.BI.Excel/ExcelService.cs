@@ -223,7 +223,7 @@ namespace Origam.BI.Excel
                 IXsltEngine transformer = AsTransform.GetXsltEngine(
                     persistence.SchemaProvider, report.TransformationId);
                 IDataDocument resultDoc = transformer.Transform(xmlDataDoc,
-                    report.TransformationId, parameters, outputDs, false)
+                    report.TransformationId, parameters, null, outputDs, false)
                     as IDataDocument;
                 spreadsheetData = resultDoc.DataSet as OrigamSpreadsheet;
             }

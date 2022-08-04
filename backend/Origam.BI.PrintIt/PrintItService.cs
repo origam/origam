@@ -64,7 +64,7 @@ namespace Origam.BI.PrintIt
 					//QueryParameterCollection qparams = new QueryParameterCollection();
 					//Hashtable preprocessorParams = GetPreprocessorParameters(request);
 
-					result = transformer.Transform(xmlDataDoc, report.TransformationId, parameters,  null, false);
+					result = transformer.Transform(xmlDataDoc, report.TransformationId, parameters, null,  null, false);
 				}
 				else
 				{

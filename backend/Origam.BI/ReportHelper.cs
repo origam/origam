@@ -100,6 +100,7 @@ namespace Origam.BI
                     Guid.Empty, 
                     transformParams, 
                     null,
+                    null,
                     null, 
                     false);
                 var resultNode = result.Xml.SelectSingleNode("/ROOT/value");

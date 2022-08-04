@@ -167,7 +167,7 @@ namespace Origam.Server.Pages
                     result = transformer.Transform(xmlData,
                         xsltPage.TransformationId,
                         new Guid("5b4f2532-a0e1-4ffc-9486-3f35d766af71"),
-                        transformParams, preprocessorParams,
+                        transformParams, null, preprocessorParams,
                         xsltPage.TransformationOutputStructure, false);
 
                     IDataDocument resultDataDocument = result as IDataDocument;
@@ -221,7 +221,9 @@ namespace Origam.Server.Pages
                 Type type = this.GetType();
                 IXsltEngine logTransformer = AsTransform.GetXsltEngine(
                     persistence.SchemaProvider, xsltPage.LogTransformationId);
-                IXmlContainer log = logTransformer.Transform(xmlData, xsltPage.LogTransformationId, transformParams, null, false);
+                IXmlContainer log = logTransformer.Transform(
+                    xmlData, xsltPage.LogTransformationId, transformParams, 
+                    null, null, false);
 
                 XPathNavigator nav = log.Xml.CreateNavigator();
                 XPathNodeIterator iter = nav.Select("/ROOT/LogContext");

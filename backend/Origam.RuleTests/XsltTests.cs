@@ -163,7 +163,7 @@ public class XsltTests
 
         XmlContainer xmlContainer = new XmlContainer(document);
         IXmlContainer resultContainer = transformer.Transform(
-            xmlContainer, xsltScript, new Hashtable(),
+            xmlContainer, xsltScript, new Hashtable(), null,
             null, false);
 
         var regex = new Regex("d1=\"(.*)\"");
@@ -863,7 +863,7 @@ public class XsltTests
         document.LoadXml("<ROOT></ROOT>");
         XmlContainer xmlContainer = new XmlContainer(document);
         IXmlContainer resultContainer = transformer.Transform(
-            xmlContainer, xslScript, new Hashtable(),
+            xmlContainer, xslScript, new Hashtable(), null,
             null, false);
 
         var regex = new Regex("d1=\"(.*)\"");

@@ -88,6 +88,7 @@ namespace Origam.Workflow
 						_transformer.Transform(this.Parameters["Data"] as IXmlContainer, 
 						(Guid)this.Parameters["XslScript"],
 						this.Parameters["Parameters"] as Hashtable,
+						(RuleEngine as RuleEngine).TransactionId,
 						this.OutputStructure as AbstractDataStructure,
 						validateOnly);
 
@@ -129,6 +130,7 @@ namespace Origam.Workflow
                 Parameters["Data"] as IXmlContainer, 
                 (string)Parameters["XslScript"],
                 Parameters["Parameters"] as Hashtable,
+                (RuleEngine as RuleEngine).TransactionId,
                 OutputStructure as AbstractDataStructure,
                 validateOnly);
         }
@@ -167,6 +169,7 @@ namespace Origam.Workflow
                 InitializeTransformer((Guid)Parameters["XslScript"]);
                 _transformer.Transform(navigator, (Guid)Parameters["XslScript"],
                         Parameters["XslParameters"] as Hashtable,
+                        (RuleEngine as RuleEngine).TransactionId,
                         output);
                 if(log.IsDebugEnabled)
                 {

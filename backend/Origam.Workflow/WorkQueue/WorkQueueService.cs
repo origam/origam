@@ -534,7 +534,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     parameters["WorkQueueRow"] = DatasetTools.GetRowXml(workQueueRow, DataRowVersion.Default);
                 }
-                IDataDocument notificationData = (IDataDocument)transform.Transform(notificationSource, template, parameters, resultStructure, false);
+                IDataDocument notificationData = (IDataDocument)transform.Transform(notificationSource, template, parameters, transactionId, resultStructure, false);
 
                 // return result
                 return notificationData;

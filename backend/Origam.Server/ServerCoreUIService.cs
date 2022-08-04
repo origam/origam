@@ -1345,7 +1345,7 @@ namespace Origam.Server
             IXmlContainer result = transformer.Transform(
                 DataDocumentFactory.New(data), 
                 tooltip.TooltipTransformationId, 
-                new Hashtable(), 
+                new Hashtable(), null,
                 null, false);
             return result;
         }

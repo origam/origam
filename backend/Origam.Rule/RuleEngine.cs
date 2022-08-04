@@ -346,12 +346,12 @@ namespace Origam.Rule
 				if(rule is XslRule)
 				{
 					XslRule xslRule = rule as XslRule;
-					result = _transformer.Transform(context, xslRule.Id, parameters, new XsdDataStructure(), false);
+					result = _transformer.Transform(context, xslRule.Id, parameters, _transactionId, new XsdDataStructure(), false);
 				}
 				else if(rule is XPathRule)
 				{
 					string ruleText = (string)this.EvaluateRule(rule, context, null);
-					result = _transformer.Transform(context, ruleText, parameters, new XsdDataStructure(), false);
+					result = _transformer.Transform(context, ruleText, parameters, TransactionId, new XsdDataStructure(), false);
 				}
 				else
 				{
@@ -2195,7 +2195,7 @@ namespace Origam.Rule
 		{
 			try
 			{
-			    IXmlContainer result = _transformer.Transform(context, rule.Id, null, rule.Structure, false);
+			    IXmlContainer result = _transformer.Transform(context, rule.Id, null, _transactionId, rule.Structure, false);
 
 				return result;
 			}
