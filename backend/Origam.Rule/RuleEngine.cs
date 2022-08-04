@@ -59,26 +59,17 @@ namespace Origam.Rule
 		private Color NullColor = Color.FromArgb(0, 0, 0, 0);
 
 		IXsltEngine _transformer;
-		// ICounter _counter;
 		private IPersistenceService _persistence;
 		private IDataLookupService _lookupService;
 		private IParameterService _parameterService;
-		private IBusinessServicesService _businessService;
-		private IStateMachineService _stateMachineService;
 		private ITracingService _tracingService;
 		private IDocumentationService _documentationService;
 		private IOrigamAuthorizationProvider _authorizationProvider;
-		private IServiceAgent _dataServiceAgent;
 		private Func<UserProfile> _userProfileGetter;
-
-#if ORIGAM_CLIENT
-		private static Hashtable _xpathRulesCache = new Hashtable();
-#endif
-
+		
 		public static RuleEngine Create(Hashtable contextStores, string transactionId,
 			Guid workflowInstanceId)
 		{
-			var businessService = ServiceManager.Services.GetService<IBusinessServicesService>();
 			return new RuleEngine(
 				contextStores, 
 				transactionId,
@@ -86,8 +77,6 @@ namespace Origam.Rule
 				ServiceManager.Services.GetService<IPersistenceService>(),
 				ServiceManager.Services.GetService<IDataLookupService>(),
 				ServiceManager.Services.GetService<IParameterService>(),
-				businessService,
-				ServiceManager.Services.GetService<IStateMachineService>(),
 				ServiceManager.Services.GetService<ITracingService>(),
 				ServiceManager.Services.GetService<IDocumentationService>(),
 				SecurityManager.GetAuthorizationProvider(),
@@ -101,15 +90,12 @@ namespace Origam.Rule
 
 		public static RuleEngine Create(Hashtable contextStores, string transactionId)
 		{
-			var businessService = ServiceManager.Services.GetService<IBusinessServicesService>();
 			return new RuleEngine(
 				contextStores, 
 				transactionId, 
 				ServiceManager.Services.GetService<IPersistenceService>(),
 				ServiceManager.Services.GetService<IDataLookupService>(),
 				ServiceManager.Services.GetService<IParameterService>(),
-				businessService,
-				ServiceManager.Services.GetService<IStateMachineService>(),
 				ServiceManager.Services.GetService<ITracingService>(),
 				ServiceManager.Services.GetService<IDocumentationService>(),
 				SecurityManager.GetAuthorizationProvider(),
@@ -117,20 +103,17 @@ namespace Origam.Rule
 			);
 		}
 		
-
 		private RuleEngine(Hashtable contextStores, string transactionId,
 			Guid workflowInstanceId, IPersistenceService persistence,
 			IDataLookupService lookupService,
 			IParameterService parameterService,
-			IBusinessServicesService businessService,
-			IStateMachineService stateMachineService,
 			ITracingService tracingService,
 			IDocumentationService documentationService,
 			IOrigamAuthorizationProvider authorizationProvider,
 			Func<UserProfile> userProfileGetter) 
 			:this(contextStores, transactionId, persistence, lookupService,
-				parameterService, businessService, stateMachineService,	tracingService,
-				documentationService, authorizationProvider, userProfileGetter
+				parameterService, tracingService, documentationService, 
+				authorizationProvider, userProfileGetter
 		)
 		{
 			_workflowInstanceId = workflowInstanceId;
@@ -140,8 +123,6 @@ namespace Origam.Rule
 			IPersistenceService persistence,
 			IDataLookupService lookupService,
 			IParameterService parameterService,
-			IBusinessServicesService businessService,
-			IStateMachineService stateMachineService,
 			ITracingService tracingService,
 			IDocumentationService documentationService,
 			IOrigamAuthorizationProvider authorizationProvider,
@@ -150,8 +131,6 @@ namespace Origam.Rule
 			_persistence = persistence;
 			_lookupService = lookupService;
 			_parameterService = parameterService;
-			_businessService = businessService;
-			_stateMachineService = stateMachineService;
 			_tracingService = tracingService;
 			_documentationService = documentationService;
 			_authorizationProvider = authorizationProvider;
@@ -174,7 +153,6 @@ namespace Origam.Rule
 
             _transformer = AsTransform.GetXsltEngine(
                 xsltEngineType, _persistence.SchemaProvider);
-			_dataServiceAgent = _businessService.GetAgent("DataService", null, null);
 		}
 
 		#region Properties
@@ -263,28 +241,6 @@ namespace Origam.Rule
             UserProfile profile = _userProfileGetter();
 			return profile.Id.ToString();
 		}
-		
-		// public string ResourceIdByActiveProfile()
-		// {
-		// 	DataStructureQuery query = new DataStructureQuery(new Guid("d0d0d847-36dc-4987-95e5-43c4d8d0d78f"), new Guid("84848e4c-129c-4079-95a4-6319e21399af"));
-		//
-		// 	query.Parameters.Add(new QueryParameter("Resource_parBusinessPartnerId", _userProfileGetter().Id));
-		//
-		// 	DataSet ds = this.LoadData(query);
-		//
-		// 	if(ds.Tables["Resource"].Rows.Count == 0)
-		// 	{
-		// 		throw new Exception(ResourceUtils.GetString("ErrorNoResource"));
-		// 	}
-		// 	else if(ds.Tables["Resource"].Rows.Count > 1)
-		// 	{
-		// 		throw new Exception(ResourceUtils.GetString("ErrorMoreResources", _userProfileGetter().Id));
-		// 	}
-		// 	else
-		// 	{
-		// 		return ds.Tables["Resource"].Rows[0]["Id"].ToString();
-		// 	}
-		// }
 
 		private string LookupValue(string lookupId, string recordId)
 		{
@@ -2180,18 +2136,7 @@ namespace Origam.Rule
 
 			return doc;
 		}
-		//
-		// private DataSet LoadData(DataStructureQuery query)
-		// {
-		// 	_dataServiceAgent.MethodName = "LoadDataByQuery";
-		// 	_dataServiceAgent.Parameters.Clear();
-		// 	_dataServiceAgent.Parameters.Add("Query", query);
-		//
-		// 	_dataServiceAgent.Run();
-		//
-		// 	return _dataServiceAgent.Result as DataSet;
-		// }
-#endregion
+		#endregion
 
 #region Evaluators
 
