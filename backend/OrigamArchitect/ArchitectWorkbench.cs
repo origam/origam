@@ -2545,7 +2545,7 @@ namespace OrigamArchitect
 
 			try
 			{
-				using (WebResponse webResponse = HttpTools.GetResponse(url,
+				using (WebResponse webResponse = HttpTools.Instance.GetResponse(url,
 					"GET", null, null,
 					new Hashtable()
 					{ { "Accept-Encoding", "gzip,deflate"} }
@@ -2553,7 +2553,7 @@ namespace OrigamArchitect
 				{
 					string output;
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 
 					int newestBuildVersion = int.Parse(((string)jResult["ROOT"]

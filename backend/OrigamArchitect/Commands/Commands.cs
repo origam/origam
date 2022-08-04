@@ -265,7 +265,7 @@ namespace OrigamArchitect.Commands
 				{
 					Origam.BI.ReportHelper.PopulateDefaultValues(reportRef.Report, parameters);
                     Origam.BI.ReportHelper.ComputeXsltValueParameters(reportRef.Report, parameters);
-                    OpenBrowser(HttpTools.BuildUrl(webReport.Url, parameters, webReport.ForceExternalUrl, webReport.ExternalUrlScheme, webReport.IsUrlEscaped));
+                    OpenBrowser(HttpTools.Instance.BuildUrl(webReport.Url, parameters, webReport.ForceExternalUrl, webReport.ExternalUrlScheme, webReport.IsUrlEscaped));
 				}
                 else
                 {

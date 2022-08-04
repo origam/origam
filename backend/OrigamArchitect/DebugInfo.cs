@@ -246,9 +246,7 @@ namespace Origam.Workflow
 			AddHeader("Resource Management Information", result);
 			try
 			{
-				Rule.RuleEngine engine = RuleEngine.Create(null, null);
-
-				AddInfo("Active Resource Id", engine.ResourceIdByActiveProfile(), result);
+				AddInfo("Active Resource Id", ResourceTools.Instance.ResourceIdByActiveProfile(), result);
 			}
 			catch(Exception ex)
 			{

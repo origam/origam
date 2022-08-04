@@ -31,7 +31,7 @@ public interface IResourceTools
     string ResourceIdByActiveProfile();
 }
 
-class ResourceTools : IResourceTools
+public class ResourceTools : IResourceTools
 {
     public static ResourceTools Instance { get; } = new ();
     private readonly IBusinessServicesService businessService;
