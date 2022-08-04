@@ -25,7 +25,7 @@ using System.Text;
 
 namespace Origam.Rule.XsltFunctions
 {
-    public class XslCryptoFunctionContainer
+    public class XsltCryptoFunctionContainer
     {
         public string Nonce()
         {
