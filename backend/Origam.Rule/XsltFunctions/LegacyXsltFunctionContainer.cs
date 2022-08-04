@@ -1875,6 +1875,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 			
         // child atributes
         XPathNodeIterator attributes = row.Clone();
+        attributes.MoveNext();
         if(attributes.Current.MoveToFirstAttribute())
         {
             do
@@ -1884,6 +1885,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
         }
 
         // child elements
+        row.MoveNext();
         if(row.Current.MoveToFirstChild())
         {
             do
