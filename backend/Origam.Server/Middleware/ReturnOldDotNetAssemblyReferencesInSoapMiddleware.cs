@@ -34,26 +34,6 @@ namespace Origam.Server.Middleware
     public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
     {
         private readonly RequestDelegate next;
-        private string coreLibVersion;
-
-        public string CoreLibVersion
-        {
-            get
-            {
-                if (coreLibVersion == null)
-                {
-                    var coreLibAssembly =
-                        System.Reflection.Assembly.Load(
-                            "System.Private.CoreLib");
-                    var regex = new Regex(@"Version=([\d\.]+), Culture");
-                    coreLibVersion = regex.Match(coreLibAssembly.FullName)
-                        .Groups[1].Value;
-                    return coreLibVersion;
-                }
-
-                return coreLibVersion;
-            }
-        }
 
         public ReturnOldDotNetAssemblyReferencesInSoapMiddleware(RequestDelegate next)
         {
@@ -81,8 +61,12 @@ namespace Origam.Server.Middleware
             using (var streamReader = new StreamReader(response.Body))
             {
                 var responseContent = await streamReader.ReadToEndAsync();
+                var regex = new Regex(@"System.Private.CoreLib, Version=([\d\.]+), Culture=neutral, PublicKeyToken=([a-z0-9]+)");
+                Match match = regex.Match(responseContent);
+                var coreLibVersion = match.Groups[1].Value;
+                var coreLibKey = match.Groups[2].Value;
                 responseContent = responseContent.Replace(
-                    $"System.Private.CoreLib, Version={CoreLibVersion}, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                    $"System.Private.CoreLib, Version={coreLibVersion}, Culture=neutral, PublicKeyToken={coreLibKey}",
                     "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 var responseData = Encoding.UTF8.GetBytes(responseContent);
                 return new MemoryStream(responseData);
