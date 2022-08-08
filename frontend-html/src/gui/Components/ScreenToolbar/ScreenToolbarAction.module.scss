@@ -43,6 +43,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
         &:global(.isHoverGreen) {
           stroke: var(--ok1);
         }
+        &:global(.isHoverBlue) {
+          stroke: var(--foreground1);
+        }
       }
     }
     .label {
@@ -92,6 +95,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 :global(.isHoverGreen):hover .label {
   color: var(--ok1);
+}
+
+:global(.isHoverBlue):hover .label {
+  color: var(--foreground1);
 }
 
 :global(.dropdownItem) .root {
