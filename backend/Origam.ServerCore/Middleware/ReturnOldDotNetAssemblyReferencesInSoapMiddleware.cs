@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -33,6 +34,26 @@ namespace Origam.ServerCore.Middleware
     public class ReturnOldDotNetAssemblyReferencesInSoapMiddleware
     {
         private readonly RequestDelegate next;
+        private string coreLibVersion;
+
+        public string CoreLibVersion
+        {
+            get
+            {
+                if (coreLibVersion == null)
+                {
+                    var coreLibAssembly =
+                        System.Reflection.Assembly.Load(
+                            "System.Private.CoreLib");
+                    var regex = new Regex(@"Version=([\d\.]+), Culture");
+                    coreLibVersion = regex.Match(coreLibAssembly.FullName)
+                        .Groups[1].Value;
+                    return coreLibVersion;
+                }
+
+                return coreLibVersion;
+            }
+        }
 
         public ReturnOldDotNetAssemblyReferencesInSoapMiddleware(RequestDelegate next)
         {
@@ -61,7 +82,7 @@ namespace Origam.ServerCore.Middleware
             {
                 var responseContent = await streamReader.ReadToEndAsync();
                 responseContent = responseContent.Replace(
-                    "System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                    $"System.Private.CoreLib, Version={CoreLibVersion}, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
                     "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 var responseData = Encoding.UTF8.GetBytes(responseContent);
                 return new MemoryStream(responseData);
