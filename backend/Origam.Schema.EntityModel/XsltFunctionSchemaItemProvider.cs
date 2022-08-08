@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using Origam.DA;
-using Origam.Workbench.Services;
 
 namespace Origam.Schema.EntityModel
 {
@@ -18,6 +13,7 @@ namespace Origam.Schema.EntityModel
 		
         public XsltFunctionSchemaItemProvider()
         {
+            ChildItemTypes.Add(typeof(XsltFunctionCollection));
         }
 
         #region ISchemaItemProvider Members
@@ -42,34 +38,7 @@ namespace Origam.Schema.EntityModel
         #endregion
 
         #region ISchemaItemFactory Members
-
-        public override Type[] NewItemTypes
-        {
-            get
-            {
-                return new Type[1] {typeof(XsltFunctionCollection)};
-            }
-        }
-
-        public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-        {
-            AbstractSchemaItem item;
-
-            if(type == typeof(XsltFunctionCollection))
-            {
-                item = new XsltFunctionCollection(schemaExtensionId);
-                item.Name = "NewCollection";
-            }
-            else
-                throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorServiceModelUnknownType"));
-
-            item.Group = group;
-            item.PersistenceProvider = this.PersistenceProvider;
-            item.RootProvider = this;
-            this.ChildItems.Add(item);
-            return item;
-        }
-
+        
         #endregion
     }
 }
