@@ -30,6 +30,7 @@ using NUnit.Framework;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.DA.Service_net2Tests;
 using Origam.TestCommon;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
@@ -160,6 +161,7 @@ namespace Origam.DA.ServiceTests
                 FileParentId = new Guid("147775f5-451d-4efd-8634-7f27a2cf50a6"),
                 PersistenceProvider = persistor.GetPersistenceProvider()
             };
+            PropertyToNamespaceMapping.AddMapping(typeof(TestItem));
             persistor.Persist(new List<IFilePersistent>{testObj1, testObj2});
             
             XmlNode rootNode = LoadXml(testObj1.RelativeFilePath).ChildNodes[1];
