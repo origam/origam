@@ -143,8 +143,6 @@ namespace Origam.Rule
 				throw new InvalidOperationException(ResourceUtils.GetString("ErrorInitializeEngine"));
 			}
 
-			// _counter = counter;
-
 #if NETSTANDARD
             XsltEngineType xsltEngineType = XsltEngineType.XslCompiledTransform;
 #else
