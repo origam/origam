@@ -195,7 +195,7 @@ namespace Origam.Workbench.Pads
                     {
                         _lastPosition = Convert.ToInt32(range.Substring(range.IndexOf("/") + 1));
                     }
-                    string result = HttpTools.ReadResponseText(response, responseStream);
+                    string result = HttpTools.Instance.ReadResponseText(response, responseStream);
                     AddText(result);
                     if (_isFirst)
                     {

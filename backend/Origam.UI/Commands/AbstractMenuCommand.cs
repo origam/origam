@@ -50,13 +50,13 @@ namespace Origam.UI
 
         public ServiceCommandUpdateScriptActivity CreateTableScript(string name, Guid guid)
         {
-            AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataService.GetDataService();
+            AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataServiceFactory.GetDataService();
             string script = abstractSqlData.EntityDdl(guid);
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
 
             settings.DeployPlatforms?.ForEach(platform =>
             {
-                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
                 string platformscript = DsPlatform.EntityDdl(guid);
                 ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateDatabaseScript(name, platformscript, DsPlatform.PlatformName);
             });
@@ -78,11 +78,11 @@ namespace Origam.UI
         public IDictionary<AbstractSqlDataService, StringBuilder> InitDictionary()
         {
             IDictionary<AbstractSqlDataService, StringBuilder> dict = new Dictionary<AbstractSqlDataService, StringBuilder>();
-            AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataService.GetDataService();
+            AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataServiceFactory.GetDataService();
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
             settings.DeployPlatforms?.ForEach(platform =>
             {
-                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
                 dict.Add(DsPlatform, new StringBuilder());
             });
             dict.Add(abstractSqlData, new StringBuilder());
@@ -91,7 +91,7 @@ namespace Origam.UI
         public void FieldsScripts(FieldMappingItem fk, FieldMappingItem baseField, IDataEntity baseEntity)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            string[] fkDdl = DataService.FieldDdl(fk.Id);
+            string[] fkDdl = DataService.Instance.FieldDdl(fk.Id);
             int i = 0;
             foreach (string ddl in fkDdl)
             {
@@ -100,7 +100,7 @@ namespace Origam.UI
                 if (baseField == null || i == 1)
                 {
                     var script3 = DeploymentHelper.CreateDatabaseScript(baseEntity.Name + "_" + fk.Name, ddl,
-                        ((AbstractSqlDataService)DataService.GetDataService()).PlatformName);
+                        ((AbstractSqlDataService)DataServiceFactory.GetDataService()).PlatformName);
                     GeneratedModelElements.Add(script3);
                 }
                 i++;
@@ -108,7 +108,7 @@ namespace Origam.UI
 
             settings.DeployPlatforms?.ForEach(platform =>
             {
-                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
                 fkDdl = DsPlatform.FieldDdl(fk.Id);
                 i = 0;
                 foreach (string ddl in fkDdl)
@@ -137,10 +137,10 @@ namespace Origam.UI
         public ServiceCommandUpdateScriptActivity CreateRole(string role)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-            AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataService.GetDataService();
+            AbstractSqlDataService abstractSqlData = (AbstractSqlDataService)DataServiceFactory.GetDataService();
             settings.DeployPlatforms?.ForEach(platform =>
             {
-                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+                AbstractSqlDataService DsPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
                 ServiceCommandUpdateScriptActivity _create = DeploymentHelper.CreateSystemRole(role, DsPlatform);
             });
             return DeploymentHelper.CreateSystemRole(role,abstractSqlData);

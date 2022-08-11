@@ -76,7 +76,7 @@ namespace Origam.Server
             UserTools.AddToOrigamUserRow(user ,origamUserRow);
             origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
 
-            DataService.StoreData(ORIGAM_USER_DATA_STRUCTURE,
+            DataService.Instance.StoreData(ORIGAM_USER_DATA_STRUCTURE,
                 origamUserDataSet, false, user.TransactionId);
 
             return Task.FromResult(IdentityResult.Success);
@@ -90,7 +90,7 @@ namespace Origam.Server
                 throw new Exception($"User {user.UserName} already doesn't have access to the system.");
             }
             origamUserRow.Delete();
-            DataService.StoreData(
+            DataService.Instance.StoreData(
                 ORIGAM_USER_DATA_STRUCTURE,
                 origamUserRow.Table.DataSet, 
                 false, 
@@ -167,7 +167,7 @@ namespace Origam.Server
                              new IdentityError{Description = localizer["ErrorUserNotFound"]}));
             }
             UserTools.UpdateOrigamUserRow(user, origamUserRow);
-            DataService.StoreData(ORIGAM_USER_DATA_STRUCTURE,
+            DataService.Instance.StoreData(ORIGAM_USER_DATA_STRUCTURE,
                 origamUserRow.Table.DataSet,
                 false, null);
             return Task.FromResult(IdentityResult.Success);
@@ -332,7 +332,7 @@ namespace Origam.Server
             Guid methodId, string paramName, object paramValue, 
             string transactionId)
         {
-            return DataService.LoadData(
+            return DataService.Instance.LoadData(
                 ORIGAM_USER_DATA_STRUCTURE,
                 methodId,
                 Guid.Empty,
@@ -353,7 +353,7 @@ namespace Origam.Server
             Guid methodId, string paramName, object paramValue,
             string transactionId)
         {
-            return DataService.LoadData(
+            return DataService.Instance.LoadData(
                 BUSINESS_PARTNER_DATA_STRUCTURE,
                 methodId,
                 Guid.Empty,

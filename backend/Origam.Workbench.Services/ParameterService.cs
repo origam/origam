@@ -520,7 +520,7 @@ namespace Origam.Workbench.Services
 				// lazily initialize resolver dict from db
 				languageResolveDict = new Hashtable();
 				
-				DataSet result = core.DataService.LoadData(new Guid("a406c361-3f02-4947-90ef-f9d73228ed60"), Guid.Empty, Guid.Empty, Guid.Empty, null);
+				DataSet result = core.DataService.Instance.LoadData(new Guid("a406c361-3f02-4947-90ef-f9d73228ed60"), Guid.Empty, Guid.Empty, Guid.Empty, null);
 				DataTable table = result.Tables["Language"];
 
 				if (table == null) throw new NullReferenceException(ResourceUtils.GetString("ErrorRoleListNotLoaded"));

@@ -89,7 +89,7 @@ namespace OrigamArchitect
 			string output = null;
 			try
 			{				
-				using (WebResponse webResponse = HttpTools.GetResponse(
+				using (WebResponse webResponse = HttpTools.Instance.GetResponse(
 					string.Format("{0}public/RegisterDownloadsUser", frmMain.ORIGAM_COM_API_BASEURL),
 				"POST", jobj.ToString(), "application/json",
 				new Hashtable()
@@ -98,7 +98,7 @@ namespace OrigamArchitect
 				frmMain.IgnoreHTTPSErrors))
 				{
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 					if (httpWebResponse.StatusCode == HttpStatusCode.OK)
 					{
 						MessageBox.Show(string.Format(
@@ -130,7 +130,7 @@ namespace OrigamArchitect
 				{
 					if (httpWebResponse != null && httpWebResponse.StatusCode == HttpStatusCode.BadRequest)
 					{
-						errorInfo = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+						errorInfo = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 						JObject jResult = (JObject)JsonConvert.DeserializeObject(errorInfo);
 
 						if (jResult["ClassName"] != null)

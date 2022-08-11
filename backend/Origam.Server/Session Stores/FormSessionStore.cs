@@ -185,7 +185,7 @@ namespace Origam.Server
 
             DataSet data;
             QueryParameterCollection qparams = Request.QueryParameters;
-            data = core.DataService.LoadData(DataStructureId, _menuItem.MethodId, 
+            data = core.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
                 _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
             return data;
         }
@@ -224,7 +224,7 @@ namespace Origam.Server
                     {
                         DataColumn col = dataset.Tables[entity].Columns[column];
                         string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
-                        core.DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+                        core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                             Guid.Empty, _menuItem.ListSortSetId, null, qparams, dataset, relationName,
                             null);
                         DataListLoadedColumns.Add(column);
@@ -244,7 +244,7 @@ namespace Origam.Server
                 finalColumns.Add(ListPrimaryKeyColumns(this.DataList, this.DataListEntity));
                 DataSet columnData = DatasetTools.CloneDataSet(DataList);
                 DataTable listTable = DataList.Tables[DataListEntity];
-                core.DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+                core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                     Guid.Empty, _menuItem.ListSortSetId, null, qparams, columnData,
                     this.DataListEntity,
                     string.Join(";", (string[])finalColumns.ToArray(typeof(string))));
@@ -283,7 +283,7 @@ namespace Origam.Server
             // We use the RecordEdit filter set for single record editing.
             ResolveFormMethodParameters(_menuItem.RecordEditMethod);
             QueryParameterCollection qparams = Request.QueryParameters;
-            data = core.DataService.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
+            data = core.DataService.Instance.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
                 _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
             return data;
         }
@@ -529,7 +529,7 @@ namespace Origam.Server
 
         private DataSet LoadDataPiece(object parentId)
         {
-            return core.DataService.LoadData(DataStructureId, _menuItem.MethodId, 
+            return core.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
                 _menuItem.DefaultSetId, Guid.Empty, null, 
                 DelayedLoadingParameterName, parentId);
         }

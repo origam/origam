@@ -197,7 +197,7 @@ namespace Origam.Gui
                 // we have to clone the dataset, because we need to return DataSet without XmlDataDocument bound to it
                 IDataDocument dataDoc = DataDocumentFactory.New(DatasetTools.CloneDataSet(sdData));
                 IDataDocument inputDoc = DataDocumentFactory.New(new DataSet("ROOT"));
-                IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", new RuleEngine(new System.Collections.Hashtable(), null), null);
+                IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", RuleEngine.Create(new System.Collections.Hashtable(), null), null);
                 transformer.MethodName = "Transform";
                 transformer.Parameters.Add("XslScript", transformationBeforeId);
                 transformer.Parameters.Add("Data", inputDoc);
@@ -287,7 +287,7 @@ namespace Origam.Gui
             // TRANSFORMATION - AFTER
             if (transformationAfterId != Guid.Empty)
             {
-                IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", new RuleEngine(new System.Collections.Hashtable(), null), null);
+                IServiceAgent transformer = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataTransformationService", RuleEngine.Create(new System.Collections.Hashtable(), null), null);
                 transformer.MethodName = "Transform";
                 transformer.Parameters.Add("XslScript", transformationAfterId);
                 transformer.Parameters.Add("Data", dataDoc);
