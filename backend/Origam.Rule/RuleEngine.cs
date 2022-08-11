@@ -54,8 +54,7 @@ namespace Origam.Rule
 		private static System.Xml.Serialization.XmlSerializer _ruleExceptionSerializer = 
 			new System.Xml.Serialization.XmlSerializer(typeof(RuleExceptionDataCollection),
 			new System.Xml.Serialization.XmlRootAttribute("RuleExceptionDataCollection"));
-
-		private const string  NotANumber = "NaN";
+		
 		private Color NullColor = Color.FromArgb(0, 0, 0, 0);
 
 		IXsltEngine _transformer;
@@ -402,14 +401,6 @@ namespace Origam.Rule
 			else if(item is DataConstantReference)
 			{
 				return _parameterService.GetParameterValue((item as DataConstantReference).DataConstant.Id);
-				//				if((item as DataConstantReference).DataConstant.DataType == OrigamDataType.Integer)
-				//				{
-				//					return (item as DataConstantReference).DataConstant.Value;
-				//				}
-				//				else
-				//				{
-				//					return (item as DataConstantReference).DataConstant.Value.ToString();
-				//				}
 			}
 			else if(item is WorkflowReference)
 			{
@@ -2156,7 +2147,6 @@ namespace Origam.Rule
 		private object Evaluate(DataStructureReference reference)
 		{
 			return reference;
-			//return reference.DataStructure.PrimaryKey;
 		}
 
 		private Guid Evaluate(TransformationReference reference)
