@@ -94,7 +94,6 @@
     <Compile Update="WorkQueue\WorkQueueData.Designer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Remove="NullStateMachineService.cs" />
   </ItemGroup>
 
  
