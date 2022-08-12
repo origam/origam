@@ -67,13 +67,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       if(!isLazyLoading(this)){
         return;
       }
-      const dataView = getDataView(this);
       try {
         this.monitor.inFlow++;
         if (getIsBindingRoot(this)) {
-          if (!getFormScreenLifecycle(this).rowSelectedReactionsDisabled(dataView)) {
-            yield*this.changeMasterRow();
-          }
+          yield*this.changeMasterRow();
           yield*this.navigateChildren();
         } else if (getIsBindingParent(this)) {
           yield*this.navigateChildren();
@@ -149,6 +146,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const api = getApi(this);
       this.changeMasterRowCanceller && this.changeMasterRowCanceller();
       this.changeMasterRowCanceller = api.createCanceller();
+      // console.log("getSelectedRowId: "+  getSelectedRowId(this));
       const crudResult = yield api.setMasterRecord(
         {
           SessionFormIdentifier: getSessionId(this),
