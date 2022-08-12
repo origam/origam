@@ -33,6 +33,7 @@ using Origam.Schema.MenuModel;
 using System.Collections.Generic;
 using Origam.DA.Service;
 using log4net;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.Workbench.Services
 {
@@ -916,7 +917,7 @@ namespace Origam.Workbench.Services
                 row[(string)item.Key] = value;
             }
             table.Rows.Add(row);
-            CoreServices.DataService.StoreData(lookup.ListDataStructureId, data, false, transactionId);
+            DataService.Instance.StoreData(lookup.ListDataStructureId, data, false, transactionId);
             return newId;
         }
 

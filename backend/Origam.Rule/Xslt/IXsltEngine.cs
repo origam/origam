@@ -20,15 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Xml;
 using System.Collections;
-using Origam.Schema.EntityModel;
-using Origam.DA.ObjectPersistence;
-using System.Xml.XPath;
 using System.IO;
+using System.Xml.XPath;
+using Origam.DA.ObjectPersistence;
+using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
     /// <summary>
     /// Summary description for AsXslTransform.
@@ -41,11 +40,15 @@ namespace Origam.Rule
         Guid TraceWorkflowId {get; set;}
         bool Trace { get; set; }
 
-        IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly);
-        IXmlContainer Transform(IXmlContainer data, Guid transformationId, Guid retransformationId, Hashtable parameters, Hashtable retransformationParameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly);
-        IXmlContainer Transform(IXmlContainer data, string xsl, Hashtable parameters, RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly);
+        IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, string transactionId,
+            IDataStructure outputStructure, bool validateOnly);
+        IXmlContainer Transform(IXmlContainer data, Guid transformationId, 
+            Guid retransformationId, Hashtable parameters, string transactionId, Hashtable retransformationParameters,
+            IDataStructure outputStructure, bool validateOnly);
+        IXmlContainer Transform(IXmlContainer data, string xsl, Hashtable parameters,
+            string transactionId, IDataStructure outputStructure, bool validateOnly);
         void Transform(
             IXPathNavigable input, Guid transformationId, Hashtable parameters, 
-            RuleEngine ruleEngine, Stream output);
+            string transactionId, Stream output);
     }
 }

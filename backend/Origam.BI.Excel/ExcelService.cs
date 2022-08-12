@@ -32,6 +32,7 @@ using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Excel;
+using Origam.Rule.Xslt;
 
 namespace Origam.BI.Excel
 {
@@ -221,9 +222,8 @@ namespace Origam.BI.Excel
                     as DataStructure;
                 IXsltEngine transformer = AsTransform.GetXsltEngine(
                     persistence.SchemaProvider, report.TransformationId);
-                RuleEngine ruleEngine = new RuleEngine(null, null);
                 IDataDocument resultDoc = transformer.Transform(xmlDataDoc,
-                    report.TransformationId, parameters, ruleEngine, outputDs, false)
+                    report.TransformationId, parameters, null, outputDs, false)
                     as IDataDocument;
                 spreadsheetData = resultDoc.DataSet as OrigamSpreadsheet;
             }

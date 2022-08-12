@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Data;
 using Origam.DA;
 using Origam.Rule;
+using Origam.Rule.Xslt;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Service.Core;
@@ -92,7 +93,7 @@ namespace Origam.Gui
 
             IXsltEngine transform = AsTransform.GetXsltEngine(
                 xslt.XsltEngineType, template.PersistenceProvider);
-            IXmlContainer result = transform.Transform(dataSource, xslt.TextStore, null, new RuleEngine(null, null), outputStructure, false);
+            IXmlContainer result = transform.Transform(dataSource, xslt.TextStore, null, null, outputStructure, false);
 
             if (result is IDataDocument)
             {

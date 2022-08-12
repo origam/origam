@@ -105,7 +105,7 @@ namespace Origam.Server
                 }
             }
             DataTable selectedRows = copy.Tables[processData.DataTable.TableName];
-            DataSet command = DataService.LoadData(
+            DataSet command = DataService.Instance.LoadData(
                 new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), 
                 new Guid("6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"), 
                 Guid.Empty, Guid.Empty, null, "WorkQueueCommand_parId", 

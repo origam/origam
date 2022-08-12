@@ -27,51 +27,38 @@ using System.Security;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using Origam.Services;
-using Origam.Workbench.Services;
 using Mvp.Xml.Exslt;
+using Origam.Rule.XsltFunctions;
+using Origam.Workbench.Services;
 
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
     public class OrigamXsltContext : XsltContext
     {
-        private ExsltContext _exslt;
-        private static readonly RuleFunctionContext _ruleCtx =
-            new RuleFunctionContext(new NameTable());        
-        // store reference to internal nametable
-        //private XmlNameTable _nt;
-        private Dictionary<string, object> _serviceXslFunctionsDict;
+        private Dictionary<string, object> _xslFunctionsDict;
 
-        public OrigamXsltContext(XmlNameTable nt)
+        public static OrigamXsltContext Create(XmlNameTable nameTable)
+        {
+            var functionContainers = XsltFunctionContainerFactory.Create();
+            return new OrigamXsltContext(
+                nameTable,
+                functionContainers
+            );
+        }
+        
+        public OrigamXsltContext(XmlNameTable nt, IEnumerable<XsltFunctionsDefinition> xsltFunctionsDefinitions)
             : base((NameTable)nt)
         {
-            _serviceXslFunctionsDict = new Dictionary<string, object>();
-            //_nt = nt;
-            _exslt = new ExsltContext(nt);
+            _xslFunctionsDict = new Dictionary<string, object>();
 
-            // add function from services
-            IBusinessServicesService bsService =
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-            
-            foreach (IXslFunctionProvider xslFunctionProvider
-                in bsService.XslFunctionProviderServiceAgents)
+            foreach (var xsltFunctionsDefinition in xsltFunctionsDefinitions)
             {
-                AddNamespace(xslFunctionProvider.DefaultPrefix,
-                    xslFunctionProvider.NameSpaceUri);
-                _serviceXslFunctionsDict.Add(xslFunctionProvider.NameSpaceUri,
-                    xslFunctionProvider.XslFunctions);
+                AddNamespace(xsltFunctionsDefinition.NameSpacePrefix,
+                    xsltFunctionsDefinition.NameSpaceUri);
+                _xslFunctionsDict.Add(xsltFunctionsDefinition.NameSpaceUri,
+                    xsltFunctionsDefinition.Container);
             }
         }
-
-        /// <summary>
-        /// Creates new ExsltContext instance.
-        /// </summary>        
-        public OrigamXsltContext(NameTable nt, RuleEngine ruleEngine)
-            : this(nt)
-        {
-            _ruleCtx.Engine = ruleEngine;
-        }
-
 
         public override bool Whitespace
         {
@@ -93,19 +80,14 @@ namespace Origam.Rule
 
         public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] ArgTypes)
         {
-            if (prefix.ToUpper() == "AS" || string.IsNullOrEmpty(prefix))
-            {
-                return _ruleCtx.ResolveFunction(prefix, name, ArgTypes);
-            }
-            // now try to finalize with services
-            Object serviceXslFunctions;            
+            object functionContainer;            
             String ns = LookupNamespace(prefix);
             if (ns != null)
             {
-                if (_serviceXslFunctionsDict.TryGetValue(ns, out serviceXslFunctions))
+                if (_xslFunctionsDict.TryGetValue(ns, out functionContainer))
                 {
                     IXsltContextFunction func = null;
-                    func = GetExtentionMethod(ns, name, ArgTypes, serviceXslFunctions);
+                    func = GetExtentionMethod(ns, name, ArgTypes, functionContainer);
                     if (func == null)
                     {
                         throw new XsltException(String.Format("Unknown Xslt function {0}", name));
@@ -118,8 +100,8 @@ namespace Origam.Rule
                     return func;
                 }
             }
-            // prefix not found in services, continue with exslt
-            return _exslt.ResolveFunction(prefix, name, ArgTypes);
+            throw new XPathException(string.Format("Xsl Function not found: prefix='{0}', name='{1}'",
+                prefix, name), null);
         }
 
         public override IXsltContextVariable ResolveVariable(string prefix, string name)
@@ -128,16 +110,31 @@ namespace Origam.Rule
         }
 
         #region private functions
-        
+
+        private bool Equals(string a, string b, bool ignoreCase)
+        {
+            return string.Compare(a, b,
+                ignoreCase
+                    ? StringComparison.OrdinalIgnoreCase
+                    : StringComparison.Ordinal) == 0;
+        }
+
+        private string GetNameFromAttribute(MethodInfo method)
+        {
+            var xsltFunctionAttribute = method.GetCustomAttribute(typeof(XsltFunctionAttribute)) 
+                as XsltFunctionAttribute;
+            return xsltFunctionAttribute?.XsltName;
+        }
 
         private MethodInfo FindBestMethod(MethodInfo[] methods, bool ignoreCase, bool publicOnly, string name, XPathResultType[] argTypes)
         {
             int length = methods.Length;
             int free = 0;
-            // restrict search to methods with the same name and requiested protection attribute
+            // restrict search to methods with the same name and requested protection attribute
             for (int i = 0; i < length; i++)
             {
-                if (string.Compare(name, methods[i].Name, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0)
+                if (Equals(name, methods[i].Name, ignoreCase) ||
+                    Equals(name, GetNameFromAttribute(methods[i]), ignoreCase))
                 {
                     if (!publicOnly || methods[i].GetBaseDefinition().IsPublic)
                     {
@@ -414,8 +411,8 @@ namespace Origam.Rule
                 switch (xt)
                 {
                     case XPathResultType.String:
-                        // Unfortunetely XPathResultType.String == XPathResultType.Navigator (This is wrong but cant be changed in Everett) 
-                        // Fortunetely we have typeCode hare so let's discriminate by typeCode
+                        // Unfortunately XPathResultType.String == XPathResultType.Navigator (This is wrong but cant be changed in Everett) 
+                        // Fortunately we have typeCode hare so let's discriminate by typeCode
                         if (typeCode == TypeCode.String)
                         {
                             return ToString(val);

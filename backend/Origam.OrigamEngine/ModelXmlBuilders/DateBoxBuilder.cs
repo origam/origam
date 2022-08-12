@@ -35,7 +35,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			string pattern;
 			CultureInfo culture = CultureInfo.CurrentCulture;
 
-			if(customFormat != null && customFormat != String.Empty)
+			if(format == "Custom" && !string.IsNullOrEmpty(customFormat))
 			{
 				switch(customFormat)
 				{

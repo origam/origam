@@ -19,21 +19,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Services
+using System.IO;
+
+namespace Origam.Rule.XsltFunctions
 {
-    /// <summary>
-    /// If service implements this interface, all XslFunctions will be
-    /// available in xsl transformations and xpath functions with
-    /// given prefix. (If not overriden within xsl declaration)
-    /// As Xpath function the defail prefix is used.
-    /// </summary>
-    public interface IXslFunctionProvider
+    public class FileSystemXsltFunctionContainer
     {
-        // Namespace URI, something world-unique - e.g. http://schema.advantages.cz/AsapFunctions
-        string NameSpaceUri { get; }
-        // Prefix for xsl functions - used for XPath
-        string DefaultPrefix { get; }
-        // Instance of object with public functions to be exposed to XSL and XPath
-        object XslFunctions { get; }
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
     }
 }

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections;
 using System.Data;
@@ -140,7 +141,7 @@ namespace Origam.BI.CrystalReports
                     ser.WriteObject(xmlWriter, request);
                 }
             }
-            var result = HttpTools.SendRequest(baseUrl +
+            var result = HttpTools.Instance.SendRequest(baseUrl +
                 $"api/{method}?report={fileName}{paramString}",
                 "POST",
                 stringBuilder.ToString().Replace(

@@ -53,7 +53,7 @@ namespace Origam.Server.Controller
             {
                 return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
             }
-            return File(imageBytes, HttpTools.GetMimeType(userRow.Field<string>("AvatarFilename")));
+            return File(imageBytes, HttpTools.Instance.GetMimeType(userRow.Field<string>("AvatarFilename")));
         }
 
         private static string MakeInitialsSvg(DataRow userRow)
@@ -77,7 +77,7 @@ namespace Origam.Server.Controller
                                 string transactionId, 
                                 QueryParameterCollection parameters)
         {
-            return DataService.LoadData(dataStructureId,
+            return DataService.Instance.LoadData(dataStructureId,
                      methodId,
                      defaultSetId,
                      sortSetId,

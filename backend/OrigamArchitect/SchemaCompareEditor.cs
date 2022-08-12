@@ -404,10 +404,10 @@ namespace OrigamArchitect
 		private void DisplayResults()
 		{
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			AbstractSqlDataService da = (AbstractSqlDataService)DataService.GetDataService();
+			AbstractSqlDataService da = (AbstractSqlDataService)DataServiceFactory.GetDataService();
             da.PersistenceProvider = persistence.SchemaProvider;
             Platform platform = (Platform)cboDatabaseType.SelectedItem;
-            AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+            AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataServiceFactory.GetDataService(platform);
             DaPlatform.PersistenceProvider = persistence.SchemaProvider;
             _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
             _results.ToArray().Select(x => ((SchemaDbCompareResult)x).Platform = platform).ToList();

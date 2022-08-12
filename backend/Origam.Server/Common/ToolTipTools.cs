@@ -38,7 +38,7 @@ namespace Origam.Server
             UserProfile profile = SecurityTools.CurrentUserProfile();
 
             // get list of all unused tooltips
-            DataSet list = core.DataService.LoadData(
+            DataSet list = core.DataService.Instance.LoadData(
                 new Guid("80529593-5e54-4d16-b7a8-be400aaaa41b"), 
                 new Guid("4b9c5b97-f81f-4859-b2ac-3067da68e47a"), 
                 Guid.Empty, 
@@ -65,7 +65,7 @@ namespace Origam.Server
 
             if (tooltipId == Guid.Empty) return null;
 
-            DataSet data = core.DataService.LoadData(new Guid("e341c510-d6c4-4bf5-b59a-a349e8984162"), new Guid("7eaf8cd8-e6a5-418d-b4e3-c7549e8080b4"), Guid.Empty, Guid.Empty, null, "OrigamTooltipHelp_parId", tooltipId);
+            DataSet data = core.DataService.Instance.LoadData(new Guid("e341c510-d6c4-4bf5-b59a-a349e8984162"), new Guid("7eaf8cd8-e6a5-418d-b4e3-c7549e8080b4"), Guid.Empty, Guid.Empty, null, "OrigamTooltipHelp_parId", tooltipId);
             DataRow row = data.Tables[0].Rows[0];
 
             HelpTooltip tt = new HelpTooltip();

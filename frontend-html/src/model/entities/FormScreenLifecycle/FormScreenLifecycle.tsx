@@ -392,6 +392,23 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         _steadyDebounceTimeout = undefined;
       }
     );
+    this.disposers.push(
+      reaction(
+        () => getFormScreen(this).dataViews.every((dv) => !dv.isWorking) && !this.isWorking,
+        (workFinished) => {
+          const rootDataViews = getFormScreen(this).rootDataViews;
+          if(rootDataViews.length !== 1){
+            return;
+          }
+          const rootDataView = rootDataViews[0];
+          const filtersDisplayed = getTablePanelView(rootDataView).filterConfiguration
+            .isFilterControlsDisplayed
+          if(workFinished && filtersDisplayed && rootDataView.isTableViewActive()){
+              rootDataView.formFocusManager.refocusLast();
+          }
+        }
+      ),
+    );
     try {
       const openedScreen = getOpenedScreen(this);
       if(!openedScreen){

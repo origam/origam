@@ -30,6 +30,5 @@ namespace Origam.Workbench.Services
 	{
 		IServiceAgent GetAgent(string serviceType, object ruleEngine, object workflowEngine); 
 		IServiceAgent GetAgent(string serviceType, string instanceName, object ruleEngine, object workflowEngine);
-        List<IServiceAgent> XslFunctionProviderServiceAgents { get; }
-    }
+	}
 }

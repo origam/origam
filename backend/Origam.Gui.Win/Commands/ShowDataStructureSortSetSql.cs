@@ -52,7 +52,7 @@ namespace Origam.Gui.Win.Commands
         public override void Run()
         {
             StringBuilder builder = new StringBuilder();
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             generator.PrettyFormat = true;
             generator.GenerateConsoleUseSyntax = true;
