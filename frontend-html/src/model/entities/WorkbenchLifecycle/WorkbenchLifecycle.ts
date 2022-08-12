@@ -437,10 +437,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         requestParameters,
         isSingleRecordEdit
       );
-      yield*newFormScreen.start({
-        initUIResult: initUIResult,
-        isWorkQueueScreen: type === IMainMenuItemType.WorkQueue
-      });
+      yield*newFormScreen.start({initUIResult: initUIResult});
       const rowIdToSelect = parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
@@ -594,8 +591,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           yield*screenToOpen.content.start(
             {
               initUIResult: initUIResult,
-              preloadIsDirty: screenToOpen.isSleepingDirty,
-              isWorkQueueScreen: screenToOpen.menuItemType === IMainMenuItemType.WorkQueue
+              preloadIsDirty: screenToOpen.isSleepingDirty
             }
           );
         }

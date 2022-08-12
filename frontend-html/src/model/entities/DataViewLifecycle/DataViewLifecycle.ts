@@ -37,12 +37,11 @@ import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { IDataView } from "../types/IDataView";
 import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getDataStructureEntityId } from "../../selectors/DataView/getDataStructureEntityId";
-import { SCROLL_ROW_CHUNK } from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { SCROLL_ROW_CHUNK } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { getColumnNamesToLoad } from "../../selectors/DataView/getColumnNamesToLoad";
 import { joinWithAND, toFilterItem } from "../OrigamApiHelpers";
-import { FlowBusyMonitor } from "../../../utils/flow";
+import { FlowBusyMonitor } from "utils/flow";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 
 export class DataViewLifecycle implements IDataViewLifecycle {

@@ -368,7 +368,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
-  *start(initUIResult: any, isWorkQueueScreen?: boolean): Generator {
+  *start(initUIResult: any): Generator {
     let _steadyDebounceTimeout: any;
     this.disposers.push(
       reaction(
@@ -420,10 +420,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
-        yield*this.loadData({
-          keepCurrentData: false,
-          loadRootPropertyColumnsOnly: isWorkQueueScreen
-        });
+        yield*this.loadData({keepCurrentData: false});
         yield*this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -709,7 +706,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  *loadData(args: { keepCurrentData: boolean, loadRootPropertyColumnsOnly?: boolean }) {
+  *loadData(args: { keepCurrentData: boolean }) {
     const formScreen = getFormScreen(this);
     try {
       this.monitor.inFlow++;
@@ -726,8 +723,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           yield this.updateTotalRowCount(rootDataView);
           yield*this.readFirstChunkOfRows({
             rootDataView: rootDataView,
-            keepCurrentData: args.keepCurrentData,
-            loadRootPropertyColumnsOnly: args.loadRootPropertyColumnsOnly
+            keepCurrentData: args.keepCurrentData
           });
         }
       }
@@ -878,8 +874,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *readFirstChunkOfRows(args: {
     keepCurrentData: boolean;
-    rootDataView: IDataView,
-    loadRootPropertyColumnsOnly?: boolean
+    rootDataView: IDataView
   }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
@@ -887,8 +882,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     rootDataView.lifecycle.stopSelectedRowReaction();
     try {
       this.monitor.inFlow++;
+      const openedScreen = getOpenedScreen(rootDataView);
       let loadedData;
-      if(args.loadRootPropertyColumnsOnly){
+      if(openedScreen.menuItemType === IMainMenuItemType.WorkQueue){
         loadedData = yield*this.getRowsForWorkQueue(rootDataView);
       }
       else
@@ -1162,11 +1158,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         getFormScreen(this).setDirty(false);
         getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
       } else {
-        const openedScreen = getOpenedScreen(this);
-        yield*this.loadData({
-          keepCurrentData: false,
-          loadRootPropertyColumnsOnly: openedScreen.menuItemType === IMainMenuItemType.WorkQueue
-        });
+        yield*this.loadData({keepCurrentData: false});
       }
       getFormScreen(this).setDirty(false);
       yield*this.refreshLookups();

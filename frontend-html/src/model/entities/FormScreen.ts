@@ -267,8 +267,8 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     this.formScreen = formScreen;
   }
 
-  *start(args: {initUIResult: any, preloadIsDirty?: boolean, isWorkQueueScreen?: boolean}): Generator {
-    yield*this.formScreenLifecycle.start(args.initUIResult, args.isWorkQueueScreen);
+  *start(args: {initUIResult: any, preloadIsDirty?: boolean}): Generator {
+    yield*this.formScreenLifecycle.start(args.initUIResult);
     if (this.formScreen) {
       this.formScreen.setDirty(!!args.preloadIsDirty);
       if(args.preloadIsDirty && isLazyLoading(this.formScreen)){
