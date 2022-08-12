@@ -420,7 +420,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
-        yield*this.loadData({keepCurrentData: false});
+        yield*this.loadData();
         yield*this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -706,7 +706,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  *loadData(args: { keepCurrentData: boolean }) {
+  *loadData() {
     const formScreen = getFormScreen(this);
     try {
       this.monitor.inFlow++;
@@ -722,8 +722,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         } else {
           yield this.updateTotalRowCount(rootDataView);
           yield*this.readFirstChunkOfRows({
-            rootDataView: rootDataView,
-            keepCurrentData: args.keepCurrentData
+            rootDataView: rootDataView
           });
         }
       }
@@ -873,7 +872,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *readFirstChunkOfRows(args: {
-    keepCurrentData: boolean;
     rootDataView: IDataView
   }): any {
     const rootDataView = args.rootDataView;
@@ -903,12 +901,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           ColumnNames: getColumnNamesToLoad(rootDataView),
         });
       }
-
-      if (args.keepCurrentData) {
-        rootDataView.appendRecords(loadedData);
-      } else {
-        yield rootDataView.setRecords(loadedData);
-      }
+      yield rootDataView.setRecords(loadedData);
       if (this.initialSelectedRowId) {
         rootDataView.setSelectedRowId(this.initialSelectedRowId);
       } else {
@@ -934,8 +927,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       do {
         this._readFirstChunkOfRowsScheduled = false;
         yield*this.readFirstChunkOfRows({
-          rootDataView: rootDataView,
-          keepCurrentData: false,
+          rootDataView: rootDataView
         });
       } while (this._readFirstChunkOfRowsScheduled);
     } finally {
@@ -1158,7 +1150,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         getFormScreen(this).setDirty(false);
         getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
       } else {
-        yield*this.loadData({keepCurrentData: false});
+        yield*this.loadData();
       }
       getFormScreen(this).setDirty(false);
       yield*this.refreshLookups();
@@ -1179,7 +1171,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const self = this;
       flow(function*() {
         yield*self.clearTotalCounts();
-        yield*self.loadData({keepCurrentData: false});
+        yield*self.loadData();
         yield*self.updateTotalRowCounts();
       })();
     }
