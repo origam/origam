@@ -90,6 +90,7 @@ import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -1161,7 +1162,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         getFormScreen(this).setDirty(false);
         getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
       } else {
-        yield*this.loadData({keepCurrentData: false});
+        const openedScreen = getOpenedScreen(this);
+        yield*this.loadData({
+          keepCurrentData: false,
+          loadRootPropertyColumnsOnly: openedScreen.menuItemType === IMainMenuItemType.WorkQueue
+        });
       }
       getFormScreen(this).setDirty(false);
       yield*this.refreshLookups();
