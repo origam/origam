@@ -130,7 +130,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             undefined,
             args.isSingleRecordEdit
           );
-          yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+          yield*openedScreen.content!.start({
+            initUIResult: initUIResult,
+            preloadIsDirty: openedScreen.isSleepingDirty
+          });
         } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
@@ -235,7 +238,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         if (openedScreen.isSleeping) {
           openedScreen.isSleeping = false;
           const initUIResult = yield*this.initUIForScreen(openedScreen, false, undefined);
-          yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+          yield*openedScreen.content!.start({
+            initUIResult: initUIResult,
+            preloadIsDirty: openedScreen.isSleepingDirty
+          });
         } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
@@ -247,10 +253,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        yield*this.openNewForm(id, type, label, false, dialogInfo, {});
+        yield*this.openNewForm(id, type, label, true, dialogInfo, {});
       }
     } else {
-      yield*this.openNewForm(id, type, label, false, dialogInfo, {});
+      yield*this.openNewForm(id, type, label, true, dialogInfo, {});
     }
   }
 
@@ -267,7 +273,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (openedScreen.isSleeping) {
         openedScreen.isSleeping = false;
         const initUIResult = yield*this.initUIForScreen(openedScreen, false);
-        yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+        yield*openedScreen.content!.start({
+          initUIResult: initUIResult,
+          preloadIsDirty: openedScreen.isSleepingDirty
+        });
       } else if (
         openedScreen.content &&
         openedScreen.content.formScreen &&
@@ -290,7 +299,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if (openedScreen.isSleeping) {
       openedScreen.isSleeping = false;
       const initUIResult = yield*this.initUIForScreen(openedScreen, false);
-      yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+      yield*openedScreen.content!.start({
+        initUIResult: initUIResult,
+        preloadIsDirty: openedScreen.isSleepingDirty
+      });
     } else if (
       openedScreen.content &&
       openedScreen.content.formScreen &&
@@ -323,7 +335,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           if (screenToActivate.isSleeping) {
             screenToActivate.isSleeping = false;
             const initUIResult = yield*this.initUIForScreen(screenToActivate, false);
-            yield*screenToActivate.content!.start(initUIResult, screenToActivate.isSleepingDirty);
+            yield*screenToActivate.content!.start({
+              initUIResult: initUIResult,
+              preloadIsDirty: screenToActivate.isSleepingDirty
+            });
           }
         }
       }
@@ -335,7 +350,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           if (screenToActivate.isSleeping) {
             screenToActivate.isSleeping = false;
             const initUIResult = yield*this.initUIForScreen(screenToActivate, false);
-            yield*screenToActivate.content!.start(initUIResult, screenToActivate.isSleepingDirty);
+            yield*screenToActivate.content!.start({
+              initUIResult: initUIResult,
+              preloadIsDirty: screenToActivate.isSleepingDirty
+            });
           } else if (
             screenToActivate.content &&
             screenToActivate.content.formScreen &&
@@ -419,7 +437,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         requestParameters,
         isSingleRecordEdit
       );
-      yield*newFormScreen.start(initUIResult);
+      yield*newFormScreen.start({
+        initUIResult: initUIResult,
+        isWorkQueueScreen: type === IMainMenuItemType.WorkQueue
+      });
       const rowIdToSelect = parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
@@ -540,7 +561,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const menuItem = getMainMenuItemById(this, session.objectId);
         const lazyLoading = menuItem
           ? menuItem?.attributes?.lazyLoading === "true"
-          : false;
+          : session.type === IMainMenuItemType.WorkQueue;
         yield*this.openNewForm(
           session.objectId,
           session.type,
@@ -571,8 +592,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const initUIResult = yield*this.initUIForScreen(screenToOpen, false);
         if (screenToOpen.content) {
           yield*screenToOpen.content.start(
-            initUIResult,
-            screenToOpen.isSleepingDirty
+            {
+              initUIResult: initUIResult,
+              preloadIsDirty: screenToOpen.isSleepingDirty,
+              isWorkQueueScreen: screenToOpen.menuItemType === IMainMenuItemType.WorkQueue
+            }
           );
         }
       }

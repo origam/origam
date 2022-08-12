@@ -242,6 +242,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 				foreach(DataColumn c in table.Columns)
 				{
+					// if (c.ColumnName == "Data")
+					// {
+					// 	continue;
+					// }
+
 					dataSourceElement.AppendChild(CreateDataSourceField(dataSourceElement.OwnerDocument, c.ColumnName, c.Ordinal));
 				}
 

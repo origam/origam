@@ -85,7 +85,7 @@ import { getIsAddButtonVisible } from "../../selectors/DataView/getIsAddButtonVi
 import { pluginLibrary } from "plugins/tools/PluginLibrary";
 import { isIScreenPlugin, isISectionPlugin } from "@origam/plugins";
 import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
-import {T} from "utils/translation";
+import { T } from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
@@ -367,7 +367,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
-  *start(initUIResult: any): Generator {
+  *start(initUIResult: any, isWorkQueueScreen?: boolean): Generator {
     let _steadyDebounceTimeout: any;
     this.disposers.push(
       reaction(
@@ -419,7 +419,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
-        yield*this.loadData({keepCurrentData: false});
+        yield*this.loadData({
+          keepCurrentData: false,
+          loadRootPropertyColumnsOnly: isWorkQueueScreen
+        });
         yield*this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -705,7 +708,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  *loadData(args: { keepCurrentData: boolean }) {
+  *loadData(args: { keepCurrentData: boolean, loadRootPropertyColumnsOnly?: boolean }) {
     const formScreen = getFormScreen(this);
     try {
       this.monitor.inFlow++;
@@ -723,6 +726,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           yield*this.readFirstChunkOfRows({
             rootDataView: rootDataView,
             keepCurrentData: args.keepCurrentData,
+            loadRootPropertyColumnsOnly: args.loadRootPropertyColumnsOnly
           });
         }
       }
@@ -835,26 +839,74 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     return false;
   }
 
-  *readFirstChunkOfRows(args: { keepCurrentData: boolean; rootDataView: IDataView }): any {
+  *getRowsForWorkQueue(rootDataView: IDataView): Generator {
+    let columnNamesToLoad = getColumnNamesToLoad(rootDataView);
+    let propertyIds = rootDataView.properties.map(prop => prop.id);
+    const columnIndicesToExclude = columnNamesToLoad
+      .filter(column => !propertyIds.includes(column) && column !== "Id")
+      .map(column => columnNamesToLoad.indexOf(column));
+
+    for (const column of Array.from(columnNamesToLoad)) {
+      if(!propertyIds.includes(column) && column !== "Id"){
+        const index = columnNamesToLoad.indexOf(column);
+        columnNamesToLoad.splice(index, 1)
+      }
+    }
+
+    const api = getApi(this);
+    const loadedData = yield api.getRows({
+      MenuId: getMenuItemId(rootDataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(rootDataView),
+      Filter: getUserFilters({ctx: rootDataView}),
+      FilterLookups: getUserFilterLookups(rootDataView),
+      Ordering: getUserOrdering(rootDataView),
+      RowLimit: SCROLL_ROW_CHUNK,
+      MasterRowId: undefined,
+      Parameters: this.parameters,
+      RowOffset: 0,
+      ColumnNames: columnNamesToLoad,
+    });
+    for (let row of loadedData as any[][]) {
+      for (let index of columnIndicesToExclude) {
+        row.splice(index,0, null)
+      }
+    }
+    return loadedData;
+  }
+
+  *readFirstChunkOfRows(args: {
+    keepCurrentData: boolean;
+    rootDataView: IDataView,
+    loadRootPropertyColumnsOnly?: boolean
+  }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
     try {
       this.monitor.inFlow++;
-      const loadedData = yield api.getRows({
-        MenuId: getMenuItemId(rootDataView),
-        SessionFormIdentifier: getSessionId(this),
-        DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: getUserFilters({ctx: rootDataView}),
-        FilterLookups: getUserFilterLookups(rootDataView),
-        Ordering: getUserOrdering(rootDataView),
-        RowLimit: SCROLL_ROW_CHUNK,
-        MasterRowId: undefined,
-        Parameters: this.parameters,
-        RowOffset: 0,
-        ColumnNames: getColumnNamesToLoad(rootDataView),
-      });
+      let loadedData;
+      if(args.loadRootPropertyColumnsOnly){
+        loadedData = yield*this.getRowsForWorkQueue(rootDataView);
+      }
+      else
+      {
+        loadedData = yield api.getRows({
+          MenuId: getMenuItemId(rootDataView),
+          SessionFormIdentifier: getSessionId(this),
+          DataStructureEntityId: getDataStructureEntityId(rootDataView),
+          Filter: getUserFilters({ctx: rootDataView}),
+          FilterLookups: getUserFilterLookups(rootDataView),
+          Ordering: getUserOrdering(rootDataView),
+          RowLimit: SCROLL_ROW_CHUNK,
+          MasterRowId: undefined,
+          Parameters: this.parameters,
+          RowOffset: 0,
+          ColumnNames: getColumnNamesToLoad(rootDataView),
+        });
+      }
+
       if (args.keepCurrentData) {
         rootDataView.appendRecords(loadedData);
       } else {
