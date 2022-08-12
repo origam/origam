@@ -610,7 +610,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 								formatPattern = "dd. MM. yyyy HH:mm:ss";
 							}
 
-							DateBoxBuilder.Build(propertyElement, null, formatPattern);
+							DateBoxBuilder.Build(propertyElement, "Custom", formatPattern);
 							break;
 
 						case OrigamDataType.Boolean:
