@@ -45,9 +45,9 @@ jobs:
     - name: Create list of testFiles 
       shell: pwsh
       run: |
-          Get-ChildItem "backend/*"  -Exclude "*TestAdapter.dll" -Include "*test*.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\" > testfiles.txt
-          echo "./NUnit.ConsoleRunner.3.13.0/tools/nunit3-console.exe " > runtest.bat
-          (Get-Content testfiles.txt) -join " " >> runtest.bat
+          echo "./NUnit.ConsoleRunner.3.13.0/tools/nunit3-console.exe " > t.txt
+          Get-ChildItem "backend/*"  -Exclude "*TestAdapter.dll" -Include "*test*.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\" >> t.txt
+          (Get-Content t.txt) -join " " >> runtest.bat
           cat .\runtest.bat
           
     - name: Install NUnit.ConsoleRunner
