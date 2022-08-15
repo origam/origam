@@ -45,7 +45,7 @@ jobs:
     - name: Run tests
       uses: microsoft/vstest-action@v1.0.0
       with:
-          searchFolder: backend/
+          searchFolder: ./backend/
           runInParallel: true
           platform: 'x64'
         
