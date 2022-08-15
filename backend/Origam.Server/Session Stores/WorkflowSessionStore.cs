@@ -231,7 +231,7 @@ namespace Origam.Server
             Guid sortSetId = Guid.Empty;
             if (this.SortSet != null) sortSetId = this.SortSet.Id;
 
-            data = core.DataService.LoadData(_dataStructure.Id, methodId, Guid.Empty, sortSetId, null, qparams);
+            data = core.DataService.Instance.LoadData(_dataStructure.Id, methodId, Guid.Empty, sortSetId, null, qparams);
             return data;
         }
 

@@ -473,7 +473,7 @@ namespace Origam.Workflow
 				Hashtable stores = new Hashtable();
 
 				// Initialize RuleEngine for this session
-				_ruleEngine = new RuleEngine(stores, this.TransactionId, WorkflowInstanceId);
+				_ruleEngine = RuleEngine.Create(stores, this.TransactionId, WorkflowInstanceId);
 
 				foreach (IContextStore store in this.WorkflowBlock.ChildItemsByType(
 					ContextStore.CategoryConst))
@@ -1242,7 +1242,7 @@ namespace Origam.Workflow
 								throw new Exception(DebugClass.ListRowErrors(xmlDataDoc.DataSet), ex);
 							}
 
-							object profileId = this.RuleEngine.ActiveProfileGuId();
+							object profileId = SecurityManager.CurrentUserProfile().Id;
 
 							foreach(DataTable t in xmlDataDoc.DataSet.Tables)
 							{

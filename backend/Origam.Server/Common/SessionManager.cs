@@ -268,7 +268,7 @@ namespace Origam.Server
                         {
                             wf = wfMenuItem.Workflow;
                             // set default workflow menu item parameters (assigned constants to the menu item)
-                            RuleEngine ruleEngine = new RuleEngine(null, null);
+                            RuleEngine ruleEngine = RuleEngine.Create(null, null);
                             foreach (AbstractSchemaItem parameter in wfMenuItem.ChildItems)
                             {
                                 if (parameter != null)

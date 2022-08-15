@@ -72,6 +72,7 @@ namespace Origam.OrigamEngine
                     providers.Add(new KeyboardShortcutsSchemaItemProvider());
                     providers.Add(new SearchSchemaItemProvider());
                     providers.Add(new DeepLinkCategorySchemaItemProvider());
+                    providers.Add(new XsltFunctionSchemaItemProvider());
         }
         public List<AbstractSchemaItemProvider> GetAll()
         {

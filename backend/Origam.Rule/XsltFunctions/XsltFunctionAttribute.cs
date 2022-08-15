@@ -1,5 +1,6 @@
+﻿#region license
 /*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+Copyright 2005 - 2022 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -16,27 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+#endregion
 
+using System;
 
-export class EventHandler {
+namespace Origam.Rule.XsltFunctions;
 
-  callBacks: (() => void)[] = [];
+public class XsltFunctionAttribute : Attribute
+{
+    public string XsltName { get; }
 
-  add(callBack: () => void){
-    if(!this.callBacks.includes(callBack)){
-      this.callBacks.push(callBack);
+    public XsltFunctionAttribute(string xsltName)
+    {
+        XsltName = xsltName;
     }
-  }
-
-  remove(callBack: () => void){
-    this.callBacks.remove(callBack);
-  }
-
-  call(){
-    for (const callBack of this.callBacks) {
-      callBack();
-    }
-  }
 }
-
-

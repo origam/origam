@@ -51,6 +51,7 @@ using System.Collections;
 using Origam.Rule;
 using System.Xml;
 using Origam.Service.Core;
+using Origam.Workbench.Services;
 
 namespace Origam.Server.Pages
 {
@@ -78,7 +79,7 @@ namespace Origam.Server.Pages
 			}
 
 
-			RuleEngine ruleEngine = new RuleEngine(null, null);
+			RuleEngine ruleEngine = RuleEngine.Create(null, null);
 			Validate(null, transformParams, ruleEngine, workflowPage.InputValidationRule);
 			if (workflowPage.DisableConstraintForInputValidation)
 			{
@@ -98,7 +99,7 @@ namespace Origam.Server.Pages
             ArrayList actions = workflowPage.ChildItemsByType(AbstractWorkflowPageAction.CategoryConst);
             actions.Sort();
 
-            RuleEngine re = new RuleEngine(new Hashtable(), null);
+            RuleEngine re = RuleEngine.Create(new Hashtable(), null);
 
             foreach (AbstractWorkflowPageAction action in actions)
             {
@@ -108,7 +109,7 @@ namespace Origam.Server.Pages
                     conditionResult = (bool)re.EvaluateRule(action.ConditionRule, workflowResult, null);
                 }
 
-                if (conditionResult && RuleEngine.IsInRole(action.Roles) && RuleEngine.IsFeatureOn(action.Features))
+                if (conditionResult && IsInRole(action.Roles) && IsFeatureOn(action.Features))
                 {
                     IWorkflowPageActionHandler handler;
                     if (action is RedirectWorkflowPageAction)
@@ -135,6 +136,20 @@ namespace Origam.Server.Pages
                     response.Redirect(request.UrlReferrerAbsoluteUri);
                 }
             }
+        }
+
+        private bool IsFeatureOn(string featureCode)
+        {
+	        return ServiceManager.Services
+		        .GetService<IParameterService>()
+		        .IsFeatureOn(featureCode);
+        }
+
+        private bool IsInRole(string roleName)
+        {
+	        return SecurityManager
+		        .GetAuthorizationProvider()
+		        .Authorize(SecurityManager.CurrentPrincipal, roleName);
         }
     }
 }

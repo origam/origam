@@ -41,7 +41,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("UI Action", "UI Actions", 5)]
 	[XmlModelRoot(CategoryConst)]
 	[ClassMetaVersion("6.2.0")]
-	public abstract class EntityUIAction : AbstractSchemaItem, IComparable
+	public abstract class EntityUIAction : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntityUIAction";
 
@@ -57,6 +57,13 @@ namespace Origam.Schema.GuiModel
 			ChildItemTypes.Add(typeof(ScreenCondition));
 			ChildItemTypes.Add(typeof(ScreenSectionCondition));
 		}
+		
+		#region Overriden AbstractSchemaItem members
+
+		public override Type[] NameableTypes
+			=> new[] { typeof(EntityUIActionParameterMapping) };
+		
+		#endregion
 
 		#region Overriden AbstractDataEntityColumn Members
 		

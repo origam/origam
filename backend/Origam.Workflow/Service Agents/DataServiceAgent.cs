@@ -50,7 +50,7 @@ namespace Origam.Workflow
 
 		public DataServiceAgent()
 		{
-            _dataService = core.DataService.GetDataService();
+            _dataService = core.DataServiceFactory.GetDataService();
 		}
 
 		public IDataService DataService
