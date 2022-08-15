@@ -30,7 +30,6 @@ import {
   DateEditorModel,
   IEditorState
 } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
-import cx from "classnames";
 
 
 class DesktopEditorState implements IEditorState{
@@ -257,7 +256,7 @@ export class DateTimeEditor extends React.Component<{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
                     }}
-                    className={cx(S.input, this.props.className)}
+                    className={S.input +" "+ this.props.className + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
                     type="text"
                     onBlur={this.handleInputBlur}
                     onFocus={this.handleFocus}
