@@ -43,9 +43,8 @@ jobs:
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
        
     - name: Run tests
-      uses: microsoft-approved-actions/vstest@master
+      uses: microsoft/vstest-action@v1.0.0
       with:
-          testAssembly: '**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**'
           searchFolder: backend/
           runInParallel: true
           platform: 'x64'
