@@ -652,17 +652,20 @@ public class XsltTests
     }
 
     [TestCase("AS:AddMinutes('2022-07-13', 10)",
-        "2022-07-13T00:10:00.0000000+02:00")]
+        "2022-07-13T00:10:00.0000000")]
     [TestCase("AS:AddHours('2022-07-13', 1)",
-        "2022-07-13T01:00:00.0000000+02:00")]
+        "2022-07-13T01:00:00.0000000")]
     [TestCase("AS:AddDays('2022-07-13', 1)",
-        "2022-07-14T00:00:00.0000000+02:00")]
+        "2022-07-14T00:00:00.0000000")]
     [TestCase("AS:AddMonths('2022-07-13', 1)",
-        "2022-08-13T00:00:00.0000000+02:00")]
+        "2022-08-13T00:00:00.0000000")]
     [TestCase("AS:AddYears('2022-07-13', 1)",
-        "2023-07-13T00:00:00.0000000+02:00")]
-    public void ShouldAddTime(string xsltCall, string expectedResult)
+        "2023-07-13T00:00:00.0000000")]
+    public void ShouldAddTime(string xsltCall, string expectedResultWithoutTimeZone)
     {
+        var dateTime = DateTime.Parse("2022-07-13");
+        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
+        string expectedResult = expectedResultWithoutTimeZone + $"+{offset:hh}:00";
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
@@ -1160,14 +1163,16 @@ public class XsltTests
     [Test]
     public void ShouldListDays()
     {
+        var dateTime = DateTime.Parse("2022-01-01");
+        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
         string xsltCall = "AS:ListDays('2022-01-01', '2022-01-03')";
         string expectedResultXpath = "<list>\r\n" +
-                                     "  <item>2022-01-01T00:00:00.0000000+01:00</item>\r\n" +
-                                     "  <item>2022-01-02T00:00:00.0000000+01:00</item>\r\n" +
-                                     "  <item>2022-01-03T00:00:00.0000000+01:00</item>\r\n" +
+                                     $"  <item>2022-01-01T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
+                                     $"  <item>2022-01-02T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
+                                     $"  <item>2022-01-03T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
                                      "</list>";
         string expectedResultXslt =
-            "2022-01-01T00:00:00.0000000+01:002022-01-02T00:00:00.0000000+01:002022-01-03T00:00:00.0000000+01:00";
+            $"2022-01-01T00:00:00.0000000+{offset:hh}:002022-01-02T00:00:00.0000000+{offset:hh}:002022-01-03T00:00:00.0000000+{offset:hh}:00";
 
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.InstanceOf<XPathNodeIterator>());
@@ -1199,7 +1204,10 @@ public class XsltTests
         Guid calendarId = Guid.Parse("186ec5ec-7877-4204-8323-2ffdd816332d");
         string xsltCall =
             $"AS:AddWorkingDays('2022-01-02', '2', '{calendarId}')";
-        string expectedResult = "2022-01-04T00:00:00.0000000+01:00";
+
+        var expectedDate = DateTime.Parse("2022-01-04");
+        TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(expectedDate);
+        string expectedResult = $"2022-01-04T00:00:00.0000000+{offset:hh}:00";
 
         var agentMock = new Mock<IServiceAgent>();
         var agentParameters = new Hashtable();
