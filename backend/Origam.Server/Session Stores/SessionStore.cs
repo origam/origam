@@ -1107,7 +1107,7 @@ namespace Origam.Server
         }
         internal static string ConvertTextToUnixStyle(string text)
         {
-            return text.Replace("\r\n", "\r");
+            return text.Replace("\r\n", "\n");
         }
 
         public static ArrayList GetRowData(DataRow row, string[] columns)
@@ -1224,11 +1224,6 @@ namespace Origam.Server
                     value = ConvertTextToUnixStyle(text);
                 }
             }
-            //else if (o is Guid)
-            //{
-            //    value = ShortGuid(guid.Value);
-            //    value = new FlashGuid((Guid)o);
-            //}
             else
             {
                 value = o;
