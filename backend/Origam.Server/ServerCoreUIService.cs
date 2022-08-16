@@ -470,6 +470,12 @@ namespace Origam.Server
             }
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
+            if (sessionStore.IsDelayedLoading && 
+                action is EntityWorkflowAction workflowAction && 
+                workflowAction.MergeType != ServiceOutputMethod.Ignore)
+            {
+                throw new Exception("Only actions with merge type Ignore can be invoked in lazily loaded screens.");
+            }
             List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedItems);
             IXmlContainer xml 
                 = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
