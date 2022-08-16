@@ -476,7 +476,7 @@ namespace Origam.Server
             {
                 throw new Exception("Only actions with merge type Ignore can be invoked in lazily loaded screens.");
             }
-            List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedItems);
+            List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedIds);
             IXmlContainer xml 
                 = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
             var result = sessionStore.RuleEngine.EvaluateEndRule(
@@ -514,7 +514,7 @@ namespace Origam.Server
                 input.ActionType,
                 input.ActionId, 
                 input.ParameterMappings,
-                input.SelectedItems, 
+                input.SelectedIds, 
                 input.InputParameters);
         }
         private static EntityUIAction GetAction(string actionId)

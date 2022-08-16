@@ -1257,7 +1257,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           ActionType: action.type,
           ActionId: action.id,
           ParameterMappings: parameters,
-          SelectedItems: selectedItems,
+          SelectedIds: selectedItems,
           InputParameters: {},
         })) as IQueryInfo[];
         const processQueryInfoResult = yield*processActionQueryInfo(this)(
@@ -1273,7 +1273,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           ActionType: action.type,
           ActionId: action.id,
           ParameterMappings: parameters,
-          SelectedItems: selectedItems,
+          SelectedIds: selectedItems,
           InputParameters: {},
           RequestingGrid: gridId,
         });
