@@ -41,6 +41,8 @@ import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./T
 import { IGridDimensions, ITableProps } from "./types";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { IFocusable } from "model/entities/FormFocusManager";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(
@@ -391,6 +393,13 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     );
   }
 
+  onFocus(event: any){
+    if(event.target){
+      let dataView = getDataView(this.context.tablePanelView);
+      dataView.formFocusManager.setLastFocused(event.target! as IFocusable);
+    }
+  }
+
   render() {
     const editorCellRectangle =
       this.props.editingRowIndex !== undefined && this.props.editingColumnIndex !== undefined
@@ -416,7 +425,9 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                 <>
                   {this.props.headerContainers &&
                   (contentRect.bounds!.width ? (
-                    <div className={S.headers}>
+                    <div
+                      onFocus={(event) => this.onFocus(event)}
+                      className={S.headers}>
                       {this.hasFixedColumns ? (
                         <Scrollee
                           scrollOffsetSource={this.props.scrollState}

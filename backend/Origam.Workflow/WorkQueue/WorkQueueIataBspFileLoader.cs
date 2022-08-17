@@ -28,6 +28,7 @@ using System.Text;
 using System.Xml;
 using Origam.Workbench.Services;
 using log4net;
+using Origam.Extensions;
 
 namespace Origam.Workflow.WorkQueue
 {
@@ -108,7 +109,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 if(log.IsErrorEnabled)
                 {
-                    log.Error("Failed to open hash index file.", ex);
+                    log.LogOrigamError("Failed to open hash index file.", ex);
                 }
                 throw;
             }

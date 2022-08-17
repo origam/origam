@@ -64,7 +64,7 @@ namespace Origam.Server.Controller
         {
             this.log = log;
             this.sessionObjects = sessionObjects;
-            dataService = DataService.GetDataService();
+            dataService = DataServiceFactory.GetDataService();
         }
         protected static MenuLookupIndex MenuLookupIndex {
             get
@@ -109,8 +109,7 @@ namespace Origam.Server.Controller
                 {
                     return StatusCode(420, ex);
                 }
-
-                log.LogError(ex, ex.Message);
+                log.LogOrigamError(ex, ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -181,7 +180,7 @@ namespace Origam.Server.Controller
         {
             try
             {
-                DataService.StoreData(
+                DataService.Instance.StoreData(
                     dataStructureId: rowData.Entity.RootEntity.ParentItemId,
                     data: rowData.Row.Table.DataSet,
                     loadActualValuesAfterUpdate: false,

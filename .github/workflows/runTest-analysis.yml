@@ -132,9 +132,6 @@ jobs:
         mkdir test/model
         cp -r model-tests test/model
         
-    - name: Copy Commandline.dll
-      run: cp backend/EnterpriseLibrary/CommandLine.dll test/HTML5
-        
     - name: Start containers
       run: |
         cd test

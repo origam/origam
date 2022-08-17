@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -60,8 +61,12 @@ namespace Origam.Server.Middleware
             using (var streamReader = new StreamReader(response.Body))
             {
                 var responseContent = await streamReader.ReadToEndAsync();
+                var regex = new Regex(@"System.Private.CoreLib, Version=([\d\.]+), Culture=neutral, PublicKeyToken=([a-z0-9]+)");
+                Match match = regex.Match(responseContent);
+                var coreLibVersion = match.Groups[1].Value;
+                var coreLibKey = match.Groups[2].Value;
                 responseContent = responseContent.Replace(
-                    "System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+                    $"System.Private.CoreLib, Version={coreLibVersion}, Culture=neutral, PublicKeyToken={coreLibKey}",
                     "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 var responseData = Encoding.UTF8.GetBytes(responseContent);
                 return new MemoryStream(responseData);

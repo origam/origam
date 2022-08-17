@@ -230,7 +230,7 @@ namespace Origam.Workbench.Services
 			IBusinessServicesService service = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
             IServiceAgent agent = service.GetAgent(activity.Service.Name, null, null);
             string result = "";
-            if (activity.DatabaseType != ((AbstractSqlDataService)DataService.GetDataService()).PlatformName)
+            if (activity.DatabaseType != ((AbstractSqlDataService)DataServiceFactory.GetDataService()).PlatformName)
             {
                 OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
                 settings.DeployPlatforms?.ForEach(platform =>
@@ -239,7 +239,7 @@ namespace Origam.Workbench.Services
                         (DA.Common.Enums.DatabaseType)Enum.Parse(typeof(DA.Common.Enums.DatabaseType), platform.GetParseEnum(platform.DataService));
                     if (databaseType == activity.DatabaseType)
                     {
-                        agent.SetDataService(DataService.GetDataService(platform));
+                        agent.SetDataService(DataServiceFactory.GetDataService(platform));
                         result = agent.ExecuteUpdate(activity.CommandText, _transactionId);
                     }
                 });

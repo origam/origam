@@ -256,7 +256,7 @@ namespace Origam.Gui
             if((scriptCall.Rule != null) 
             && (processData.Action.Mode != PanelActionMode.Always))
             {
-                RuleEngine ruleEngine = new RuleEngine(new Hashtable(), null);
+                RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), null);
                 XmlContainer rowXml = DatasetTools.GetRowXml(
                     processData.Rows[0], DataRowVersion.Current);
                 object result = ruleEngine.EvaluateRule(

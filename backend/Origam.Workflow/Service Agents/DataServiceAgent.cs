@@ -27,6 +27,7 @@ using System.IO;
 using System.Security.Principal;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -49,7 +50,7 @@ namespace Origam.Workflow
 
 		public DataServiceAgent()
 		{
-            _dataService = core.DataService.GetDataService();
+            _dataService = core.DataServiceFactory.GetDataService();
 		}
 
 		public IDataService DataService
@@ -345,7 +346,7 @@ namespace Origam.Workflow
 			{
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Updating references failed.", ex);
+	                log.LogOrigamError("Updating references failed.", ex);
                 }
 				if(this.TransactionId == null)
 				{

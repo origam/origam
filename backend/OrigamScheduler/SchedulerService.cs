@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Collections;
 using Origam;
+using Origam.Extensions;
 using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.OrigamEngine;
@@ -214,7 +215,7 @@ namespace OrigamScheduler
 				engine.WorkflowBlock = workflow;
 
 				// input parameters
-				RuleEngine ruleEngine = new RuleEngine(null, null);
+				RuleEngine ruleEngine = RuleEngine.Create(null, null);
 				foreach(AbstractSchemaItem parameter in schedule.ChildItems)
 				{
 					if(parameter != null)
@@ -248,7 +249,7 @@ namespace OrigamScheduler
 			{
                 if (log.IsErrorEnabled)
                 {
-                    log.Error(string.Format("Error occured while running the workflow {0}", workflow?.Name), ex);
+                    log.LogOrigamError(string.Format("Error occured while running the workflow {0}", workflow?.Name), ex);
                 }
 			}
 			finally

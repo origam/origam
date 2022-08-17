@@ -117,7 +117,7 @@ namespace Origam.Server
             this.Request = request;
             this.IsModalDialog = request.IsModalDialog;
             _ruleHandler = new DatasetRuleHandler();
-            _ruleEngine = new RuleEngine(null, null);
+            _ruleEngine = RuleEngine.Create(null, null);
             this.CacheExpiration = DateTime.Now.AddMinutes(5);
             dataRequested = request.DataRequested || request.IsSingleRecordEdit;
         }
@@ -1304,7 +1304,7 @@ namespace Origam.Server
                             pms.Add(new QueryParameter(col.ColumnName, rowId));
                         }
                         DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
-                        core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
+                        core.DataService.Instance.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
                         if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
                         {
                             throw new ArgumentOutOfRangeException(string.Format(
@@ -1468,7 +1468,7 @@ namespace Origam.Server
 
         private DataRowCollection LoadMissingRows(string entity, Dictionary<string, object> idsNotFoundInStore)
         {
-            var dataService = core.DataService.GetDataService();
+            var dataService = core.DataServiceFactory.GetDataService();
             var dataStructureEntityId =
                 (Guid) Data.Tables[entity].ExtendedProperties["Id"];
             var dataStructureEntity = Workbench.Services.ServiceManager.Services

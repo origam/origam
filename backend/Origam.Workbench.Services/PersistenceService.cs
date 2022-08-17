@@ -32,6 +32,7 @@ using Origam.DA.Service;
 using Origam.Schema;
 using System.IO;
 using System.Text;
+using Origam.Extensions;
 
 namespace Origam.Workbench.Services
 {
@@ -314,7 +315,7 @@ namespace Origam.Workbench.Services
                 }
                 catch (Exception ex)
                 {
-                    log.Error("Failed to initialize repository...", ex);
+                    log.LogOrigamError("Failed to initialize repository...", ex);
                     ResourceMonitor.Rollback(transactionId);
                 }
             }

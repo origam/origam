@@ -244,9 +244,13 @@ export class CScreenToolbar extends React.Component<{}> {
                   onClick={onRefreshSessionClick(actionButtonsState.formScreen)}
                   onShortcut={onRefreshSessionClick(actionButtonsState.formScreen)}
                   id={"refreshButton"}
+                  className={"isHoverBlue"}
                   shortcutPredicate={isRefreshShortcut}
                   icon={
-                    <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")}/>
+                    <Icon
+                      src="./icons/refresh.svg"
+                      className={"isHoverBlue"}
+                      tooltip={T("Refresh", "refresh_tool_tip")}/>
                   }
                   label={T("Refresh", "refresh_tool_tip")}
                 />

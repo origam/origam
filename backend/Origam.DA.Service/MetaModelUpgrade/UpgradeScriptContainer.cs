@@ -59,7 +59,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 if (namespaceMapping == null)
                 {
                     Type classType = Reflector.GetTypeByName(FullTypeName);
-                    namespaceMapping = PropertyToNamespaceMapping.CreateOrGet(classType);
+                    namespaceMapping = PropertyToNamespaceMapping.Get(classType);
                 }
                 return namespaceMapping;
             }

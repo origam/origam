@@ -27,6 +27,7 @@ using Origam.Rule;
 
 using Origam.Schema.GuiModel;
 using System.IO;
+using Origam.Rule.Xslt;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 
@@ -59,12 +60,11 @@ namespace Origam.BI.PrintIt
 					IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 					IXsltEngine transformer = AsTransform.GetXsltEngine(
                         persistence.SchemaProvider, report.TransformationId);
-					RuleEngine ruleEngine = new RuleEngine(null, null);
 					//Hashtable transformParams = new Hashtable();
 					//QueryParameterCollection qparams = new QueryParameterCollection();
 					//Hashtable preprocessorParams = GetPreprocessorParameters(request);
 
-					result = transformer.Transform(xmlDataDoc, report.TransformationId, parameters, ruleEngine, null, false);
+					result = transformer.Transform(xmlDataDoc, report.TransformationId, parameters, null,  null, false);
 				}
 				else
 				{
@@ -85,13 +85,13 @@ namespace Origam.BI.PrintIt
 						StreamReader reader = new StreamReader(stream);
 						string jsonString = reader.ReadToEnd();
 						TraceReportData(jsonString, report.ReportFileName);
-						postData = string.Format("jargs={0}", HttpTools.EscapeDataStringLong(jsonString));
+						postData = string.Format("jargs={0}", HttpTools.Instance.EscapeDataStringLong(jsonString));
 					}
 
 					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
 					string serviceUrl = settings.PrintItServiceUrl;
 					// send request to PrintIt service
-					return HttpTools.SendRequest(serviceUrl, "POST", postData, "application/x-www-form-urlencoded", null, null);
+					return HttpTools.Instance.SendRequest(serviceUrl, "POST", postData, "application/x-www-form-urlencoded", null, null);
 				}
 			}
 		}

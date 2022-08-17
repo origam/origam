@@ -419,7 +419,7 @@ namespace Origam.Server
                 if (!grid.GetAttribute("DataMember").Contains(".") &&
                     grid.GetAttribute("ShowAddButton") == "true")
                 {
-                    RuleEngine re = new RuleEngine(new Hashtable(), null);
+                    RuleEngine re = RuleEngine.Create(new Hashtable(), null);
                     XmlContainer newRecordData = new XmlContainer();
                     newRecordData.Xml.AppendChild(
                         newRecordData.Xml.CreateElement("ROOT"));
@@ -545,7 +545,7 @@ namespace Origam.Server
 
             IPrincipal principal = SecurityManager.CurrentPrincipal;
 
-            DataSet data = core.DataService.LoadData(
+            DataSet data = core.DataService.Instance.LoadData(
                 new Guid("e6b7e890-032c-4837-b3e1-592f9d6f9d0f"),
                 new Guid("916f8028-9d89-49b2-bb66-97548bde8b7d"), Guid.Empty,
                 Guid.Empty, null,

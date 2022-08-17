@@ -27,6 +27,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 using System.Globalization;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -109,7 +110,7 @@ namespace Origam.Workflow
 					this.WorkflowFinished(this, new WorkflowHostEventArgs(engine, exception));
                     if(exception != null)
                     {
-                        log.Error(exception);
+	                    log.LogOrigamError(exception);
                     }
 				}
 			}

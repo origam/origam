@@ -76,7 +76,7 @@ namespace Origam.Server.Authorization
             origamUserRow["RecordUpdated"] = DateTime.Now;
             origamUserRow["RecordUpdatedBy"] 
                 = SecurityManager.CurrentUserProfile().Id;
-            DataService.StoreData(UserStore.ORIGAM_USER_DATA_STRUCTURE, 
+            DataService.Instance.StoreData(UserStore.ORIGAM_USER_DATA_STRUCTURE, 
                 origamUserDataSet, false, 
                 user.TransactionId);
             return IdentityResult.Success;

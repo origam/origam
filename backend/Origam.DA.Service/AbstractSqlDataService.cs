@@ -154,7 +154,7 @@ namespace Origam.DA.Service
 		{
 			if (log.IsErrorEnabled && !logAsDebug)
 			{
-				log.Error(
+				log.LogOrigamError(
 					$"{ex.Message}, SQL: {commandText}",
 					ex);
 			}
@@ -413,7 +413,7 @@ namespace Origam.DA.Service
 				{
 					try
 					{
-						log.Error(DebugClass.ListRowErrors(dataset), ex);
+						log.LogOrigamError(DebugClass.ListRowErrors(dataset), ex);
 						using(System.IO.StreamWriter w = System.IO.File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"\debug\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-") + DateTime.Now.Ticks.ToString() + "___" + "MsSqlDataService_error.txt"))
 						{
 							w.WriteLine(DebugClass.ListRowErrors(dataset));
@@ -639,7 +639,7 @@ namespace Origam.DA.Service
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Update failed", e);
+	                log.LogOrigamError("Update failed", e);
                 }
                 if (newTransaction)
                 {
@@ -1154,7 +1154,7 @@ namespace Origam.DA.Service
 			{
 				if(log.IsErrorEnabled)
 				{
-					log.Error("Stored Procedure Call failed", e);
+					log.LogOrigamError("Stored Procedure Call failed", e);
 				}
 
 				throw;

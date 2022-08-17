@@ -1570,7 +1570,7 @@ namespace OrigamArchitect
 			        .Any(x => !(x is OperationCanceledException));
 		        if (actualExceptionsExist)
 	            {
-	                log.Error(ae);
+	                log.LogOrigamError(ae);
 	                this.RunWithInvoke(() => AsMessageBox.ShowError(
 		                this, ae.Message, strings.GenericError_Title, ae));
 	            }
@@ -1717,7 +1717,7 @@ namespace OrigamArchitect
 			}
 			catch (Exception ex)
 			{
-				log.Error(ex);
+				log.LogOrigamError(ex);
 				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK,
 					MessageBoxIcon.Error);
 			}
@@ -2027,7 +2027,7 @@ namespace OrigamArchitect
 		private void _schema_ActiveNodeChanged(object sender, EventArgs e)
 		{
 			UpdateToolbar();
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             AbstractSqlCommandGenerator abstractSqlCommandGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
             if (_schema.ActiveSchemaItem != null)
 			{
@@ -2545,7 +2545,7 @@ namespace OrigamArchitect
 
 			try
 			{
-				using (WebResponse webResponse = HttpTools.GetResponse(url,
+				using (WebResponse webResponse = HttpTools.Instance.GetResponse(url,
 					"GET", null, null,
 					new Hashtable()
 					{ { "Accept-Encoding", "gzip,deflate"} }
@@ -2553,7 +2553,7 @@ namespace OrigamArchitect
 				{
 					string output;
 					HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
-					output = HttpTools.ReadResponseTextRespectionContentEncoding(httpWebResponse);
+					output = HttpTools.Instance.ReadResponseTextRespectionContentEncoding(httpWebResponse);
 					JObject jResult = (JObject)JsonConvert.DeserializeObject(output);
 
 					int newestBuildVersion = int.Parse(((string)jResult["ROOT"]
@@ -2612,7 +2612,7 @@ namespace OrigamArchitect
 
         private static bool TestConnectionToApplicationDataDatabase()
         {
-            AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
+            AbstractSqlDataService abstractSqlDataService = DataServiceFactory.GetDataService() as AbstractSqlDataService;
             try
             {
                 abstractSqlDataService.ExecuteUpdate("SELECT 1",null);

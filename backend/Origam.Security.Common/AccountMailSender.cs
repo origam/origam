@@ -28,6 +28,7 @@ using System.Linq;
 using System.Net.Mail;
 using log4net;
 using Origam.DA;
+using Origam.Extensions;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -129,7 +130,7 @@ namespace Origam.Security.Common
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Failed to send new user registration mail", ex);
+                    log.LogOrigamError("Failed to send new user registration mail", ex);
                 }
 
                 throw new Exception(Resources.FailedToSendNewUserRegistrationMail);
@@ -264,7 +265,7 @@ namespace Origam.Security.Common
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Failed to send multi factor authentication mail", ex);
+                    log.LogOrigamError("Failed to send multi factor authentication mail", ex);
                 }
 
                 throw new Exception(Resources.FailedToSendMultiFactorAuthCode);
@@ -373,7 +374,7 @@ namespace Origam.Security.Common
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error(string.Format("Failed to send password reset "
+                    log.LogOrigamError(string.Format("Failed to send password reset "
                                             + "mail for username `{0}', email `{1}'",
                         username, email), ex);
                 }
