@@ -244,7 +244,10 @@ namespace Origam.DA.Service
 
             if (param.DbType == DbType.String)
             {
-                result += "(" + param.Size + ")";
+                string size = param.Size == -1
+                    ? "MAX" 
+                    :  param.Size.ToString();
+                result += $"({size})";
             }
 
             return result;
