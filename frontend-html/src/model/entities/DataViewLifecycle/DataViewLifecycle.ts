@@ -145,7 +145,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const api = getApi(this);
       this.changeMasterRowCanceller && this.changeMasterRowCanceller();
       this.changeMasterRowCanceller = api.createCanceller();
-      // console.log("getSelectedRowId: "+  getSelectedRowId(this));
       const crudResult = yield api.setMasterRecord(
         {
           SessionFormIdentifier: getSessionId(this),
@@ -160,8 +159,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       if (Axios.isCancel(error)) {
         return;
       }
-      /*console.error(error);
-      yield errDialogPromise(this)(error);*/
       throw error;
     } finally {
       this.monitor.inFlow--;

@@ -67,6 +67,7 @@ namespace Origam.Server.Controller
         private readonly CustomAssetsConfig customAssetsConfig;
         private readonly HtmlClientConfig htmlClientConfig;
         private readonly ChatConfig chatConfig;
+        private readonly string workQueueEntity = "WorkQueueEntry";
 
         public UIServiceController(
             SessionObjects sessionObjects,
@@ -902,8 +903,6 @@ namespace Origam.Server.Controller
                 .All(colName => actualColumnNames.Contains(colName));
         }
 
-        private readonly string workQueueEntity = "WorkQueueEntry";
-        
         private Result<DataStructureQuery, IActionResult>
             WorkQueueGetRowsGetAggregationQuery(GetGroupsAggregations input,
                 WorkQueueSessionStore sessionStore)
