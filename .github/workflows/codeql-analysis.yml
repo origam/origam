@@ -5,7 +5,7 @@ on:
     branches: [ master ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master,NUnit-tests-github  ]
+    branches: [ master,20*  ]
   schedule:
     - cron: '40 23 * * 2'
 
@@ -26,8 +26,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      with:
-          ref: NUnit-tests-github
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2

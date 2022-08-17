@@ -13,7 +13,7 @@ name: "RunTests"
 
 on:
   push:
-    branches: [ master, 20*,testenviroment ]
+    branches: [ master, 20* ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master, 20* ]
