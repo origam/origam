@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.Data;
 using Origam.DA;
+using Origam.Extensions;
 using Origam.Workbench.Services;
 
 namespace Origam.Security
@@ -145,7 +146,7 @@ namespace Origam.Security
 				{
 					if(log.IsErrorEnabled)
 					{
-						log.Error(ex.Message, ex);
+						log.LogOrigamError(ex.Message, ex);
 					}
 					throw;
 				}
@@ -153,7 +154,7 @@ namespace Origam.Security
 				{
 					if(log.IsErrorEnabled)
 					{
-						log.Error(ex.Message, ex);
+						log.LogOrigamError(ex.Message, ex);
 					}
 					throw new Exception(
 						ResourceUtils.GetString("ErrorUnableToLoadProfile0") 

@@ -183,8 +183,8 @@ namespace Origam.DA.Service
 
         public override void DeleteUser(string user,bool DatabaseIntegratedAuthentication)
         {
-            //change owner of object  to postgres. it is not good , but for testing is ok.
-            ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}\" TO postgres", user), null);
+            // Changing the ownership to user configured for connecting the database to allow delete new role.
+            ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}\" TO CURRENT_USER", user), null);
             ExecuteUpdate(string.Format("DROP OWNED BY \"{0}\" ", user), null);
             ExecuteUpdate(string.Format("DROP ROLE \"{0}\" ", user), null);
         }
@@ -196,6 +196,7 @@ namespace Origam.DA.Service
         {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("DROP DATABASE \"{0}\"", name), null);
+
         }
 
         public override void CreateDatabase(string name)
@@ -494,10 +495,10 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
-            return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"IsLockedOut\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
-                "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')",
+            return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
+                "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
-                "true", "true",
+                "true",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
                 Guid.NewGuid().ToString(),0,"false");

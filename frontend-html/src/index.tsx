@@ -36,6 +36,8 @@ import moment from "moment";
 import "moment/min/locales";
 import { preventDoubleclickSelect } from "utils/mouse";
 import { RootError } from "RootError";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ArrayPrototypes } from "@origam/utils"
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -46,8 +48,9 @@ if (process.env.NODE_ENV === "development") {
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
 }
 
-(window as any).ORIGAM_CLIENT_REVISION_HASH = process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
-(window as any).ORIGAM_CLIENT_REVISION_DATE = process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
+(window as any).ORIGAM_CUSTOM_CLIENT_BUILD = process.env.REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD;
+(window as any).ORIGAM_UI_PLUGINS = process.env.REACT_APP_ORIGAM_UI_PLUGINS;
+(window as any).ORIGAM_SERVER_PLUGINS = process.env.REACT_APP_ORIGAM_SERVER_PLUGINS;
 
 function disableAutoZoomingOnIPhone(){
   const safariDerivedBrowser = navigator.vendor && navigator.vendor.indexOf('Apple') > -1;

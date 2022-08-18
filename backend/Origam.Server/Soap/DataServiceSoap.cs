@@ -45,7 +45,7 @@ namespace Origam.Server
                 : new Guid(sortSetId);
 
             var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-            var dataSet = core.DataService.LoadData(dsId, fId, dId, sId, null,
+            var dataSet = core.DataService.Instance.LoadData(dsId, fId, dId, sId, null,
                 parameterCollection);
             return Task.FromResult(dataSet);
         }
@@ -68,7 +68,7 @@ namespace Origam.Server
                 ? Guid.Empty 
                 : new Guid(sortSetId);
 
-            var dataSet = core.DataService.LoadData(dsId, fId, dId, sId, null);
+            var dataSet = core.DataService.Instance.LoadData(dsId, fId, dId, sId, null);
             return Task.FromResult(dataSet);
         }
 
@@ -90,7 +90,7 @@ namespace Origam.Server
                 ? Guid.Empty 
                 : new Guid(sortSetId);
 
-            var dataSet = core.DataService.LoadData(dsId, fId, dId,
+            var dataSet = core.DataService.Instance.LoadData(dsId, fId, dId,
                 sId, null, paramName1, paramValue1);
             return Task.FromResult(dataSet);
         }
@@ -115,7 +115,7 @@ namespace Origam.Server
                 ? Guid.Empty 
                 : new Guid(sortSetId);
 
-            var dataSet = core.DataService.LoadData(
+            var dataSet = core.DataService.Instance.LoadData(
                 dsId, fId, dId, sId, null,
                 paramName1, paramValue1, paramName2, paramValue2);
             return Task.FromResult(dataSet);
@@ -126,7 +126,7 @@ namespace Origam.Server
             log.Log(LogLevel.Information,"ExecuteProcedure");
             
             var parameterCollection = ParameterUtils.ToQueryParameterCollection(parameters);
-            var dataSet = core.DataService.ExecuteProcedure(procedureName,
+            var dataSet = core.DataService.Instance.ExecuteProcedure(procedureName,
                 parameterCollection, null);
             return Task.FromResult(dataSet);
         }
@@ -169,7 +169,7 @@ namespace Origam.Server
                 }
             }
 
-            DataSet returnDataSet = core.DataService.StoreData(guid, data, loadActualValuesAfterUpdate, null);
+            DataSet returnDataSet = core.DataService.Instance.StoreData(guid, data, loadActualValuesAfterUpdate, null);
             return Task.FromResult(returnDataSet);
         }
 
@@ -207,7 +207,7 @@ namespace Origam.Server
                 log.Log(LogLevel.Debug, set2.GetXml());
             }
 
-            DataSet dataSet = core.DataService.StoreData(guid, set2, loadActualValuesAfterUpdate, null);
+            DataSet dataSet = core.DataService.Instance.StoreData(guid, set2, loadActualValuesAfterUpdate, null);
             return Task.FromResult(dataSet);
         }
     }

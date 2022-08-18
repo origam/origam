@@ -26,6 +26,7 @@ using System.Collections;
 using Origam.Services;
 using Origam.Schema;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 using Origam.UI;
 
@@ -314,7 +315,7 @@ namespace Origam.Workbench.Services
 		
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
-
+			PropertyToNamespaceMapping.Init();
 			Package extension = persistence.LoadSchema(schemaExtensionId, extraExtensionId, loadDocumentation, loadDeploymentScripts, null);
 			
 			_activeSchemaExtensionId = (Guid)extension.PrimaryKey["Id"];

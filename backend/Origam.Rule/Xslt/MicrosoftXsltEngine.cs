@@ -20,57 +20,64 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Text;
-using Origam.DA.ObjectPersistence;
-using System.Xml;
-using System.Xml.Xsl;
 using System.Collections;
-using Origam.Schema.EntityModel;
-using System.IO;
-using System.Xml.XPath;
-using Mvp.Xml.Exslt;
+using System.Collections.Generic;
 using System.Data;
-using Origam.Workbench.Services;
-using Origam.Services;
-using Origam.Extensions;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
+using Mvp.Xml.Exslt;
+using Origam.DA.ObjectPersistence;
+using Origam.Rule.XsltFunctions;
+using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
     public abstract class MicrosoftXsltEngine : AbstractXsltEngine
     {
+        private readonly IEnumerable<XsltFunctionsDefinition> functionsDefinitions;
+
         #region Constructors
-        public MicrosoftXsltEngine() : base ()
-		{
-		}
+
+        protected MicrosoftXsltEngine()
+        {
+            functionsDefinitions = XsltFunctionContainerFactory.Create();
+        }
+
+        public MicrosoftXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions) : base ()
+        {
+            this.functionsDefinitions = functionsDefinitions ?? XsltFunctionContainerFactory.Create();
+        }
 
         public MicrosoftXsltEngine(IPersistenceProvider persistence)
             : base(persistence)
 		{
+            functionsDefinitions = XsltFunctionContainerFactory.Create();
 		}
 		#endregion
 
-        internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, Hashtable parameters, 
-            RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
+        internal override IXmlContainer Transform(IXmlContainer data, object xsltEngine, 
+            Hashtable parameters, string transactionId, 
+            IDataStructure outputStructure, bool validateOnly)
         {
-            if (ruleEngine == null) throw new InvalidOperationException("RuleEngine is not set");
-
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            xslArg.AddExtensionObject(XmlTools.AsNameSpace, ruleEngine);
-            xslArg.AddExtensionObject("http://xsl.origam.com/crypto", new XslCryptoFunctions());
+            foreach (var functionsDefinition in functionsDefinitions)
+            {
+                if (functionsDefinition.Container is
+                    IOrigamDependentXsltFunctionContainer origamContainer)
+                {
+                    origamContainer.TransactionId = transactionId;
+                }
+                xslArg.AddExtensionObject(
+                    functionsDefinition.NameSpaceUri, functionsDefinition.Container);
+            }
             xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
             xslArg.AddExtensionObject(ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());
-            // add xsl function from services
-            IBusinessServicesService bsService =
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-            foreach (IXslFunctionProvider xslFunctionProvider
-                in bsService.XslFunctionProviderServiceAgents)
-            {
-                xslArg.AddExtensionObject(xslFunctionProvider.NameSpaceUri,
-                    xslFunctionProvider.XslFunctions);                
-            }
 
             // If source xml is completely empty (not even a root element), we add one
             // with a name of dataset.datasetname (that's how root element looks like when
@@ -104,8 +111,6 @@ namespace Origam.Rule
                 resultDoc = new XmlContainer();
             }
             else throw new InvalidOperationException(ResourceUtils.GetString("ErrorTransformationSupport"));
-
-            MemoryStream msTransform = new MemoryStream();
 
             try
             {
@@ -263,16 +268,20 @@ namespace Origam.Rule
         }
         internal override void Transform(
             IXPathNavigable input, object xsltEngine, Hashtable parameters, 
-            RuleEngine ruleEngine, Stream output)
+            string transactionId, Stream output)
         {
-            if(ruleEngine == null)
-            {
-                throw new InvalidOperationException("RuleEngine is not set");
-            }
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
-            xslArg.AddExtensionObject(
-                XmlTools.AsNameSpace, ruleEngine);
+            foreach (var functionsDefinition in functionsDefinitions)
+            {
+                if (functionsDefinition.Container is
+                    IOrigamDependentXsltFunctionContainer origamContainer)
+                {
+                    origamContainer.TransactionId = transactionId;
+                }
+                xslArg.AddExtensionObject(
+                    functionsDefinition.NameSpaceUri, functionsDefinition.Container);
+            }
             xslArg.AddExtensionObject(
                 ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(
@@ -280,17 +289,6 @@ namespace Origam.Rule
             xslArg.AddExtensionObject(
                 ExsltNamespaces.RegularExpressions, 
                 new ExsltRegularExpressions());
-            // add xsl function from services
-            IBusinessServicesService bsService =
-                ServiceManager.Services.GetService(
-                    typeof(IBusinessServicesService)) as IBusinessServicesService;
-            foreach(IXslFunctionProvider xslFunctionProvider
-                in bsService.XslFunctionProviderServiceAgents)
-            {
-                xslArg.AddExtensionObject(xslFunctionProvider.NameSpaceUri,
-                    xslFunctionProvider.XslFunctions);
-            }
-            MemoryStream msTransform = new MemoryStream();
             try
             {
                 StringBuilder traceParameters = new StringBuilder();

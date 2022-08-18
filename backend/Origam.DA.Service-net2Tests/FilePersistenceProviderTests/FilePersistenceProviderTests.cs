@@ -30,6 +30,7 @@ using NUnit.Framework;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.DA.Service_net2Tests;
 using Origam.TestCommon;
 using static Origam.DA.ObjectPersistence.ExternalFileExtension;
@@ -139,6 +140,8 @@ namespace Origam.DA.ServiceTests
         [Test]
         public void ShouldMoveItemInFileWhenParentChangedToAnItemTheFile()
         {
+            PropertyToNamespaceMapping.Init();
+            PropertyToNamespaceMapping.AddMapping(typeof(TestItem));
             ConfigurationManager.SetActiveConfiguration(GetTestOrigamSettings());
             ClearTestDir();
             var persistor = new PersitHelper(TestFilesDir.FullName);

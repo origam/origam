@@ -33,7 +33,7 @@ namespace Origam.Workbench.Editors
 
         private void InitializeComponent()
 		{
-            this.propertyGrid1 = new Origam.Workbench.PropertyGrid.PropertyGridEx();
+            this.propertyGrid1 = new PropertyGridEx(Close);
             this.SuspendLayout();
             // 
             // propertyGrid1

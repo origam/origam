@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0">
   <p:package
     p:copyright="(c) 2005-2007 Advantage Solutions, s. r. o."
     x:id="147fa70d-6519-4393-b5d0-87931f9fd609"
     x:isFolder="true"
     p:name="Root"
-    p:version="5.1.10" />
+    p:version="5.2" />
 </x:file>

@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Origam.Extensions;
 
 namespace Origam.Workbench.Pads
 {
@@ -178,7 +179,7 @@ namespace Origam.Workbench.Pads
                 SetOutputText(message);
                 if(log.IsErrorEnabled)
                 {
-                    log.Error(message, ex);
+                    log.LogOrigamError(message, ex);
                 }
             }
         }
@@ -194,7 +195,7 @@ namespace Origam.Workbench.Pads
                     {
                         _lastPosition = Convert.ToInt32(range.Substring(range.IndexOf("/") + 1));
                     }
-                    string result = HttpTools.ReadResponseText(response, responseStream);
+                    string result = HttpTools.Instance.ReadResponseText(response, responseStream);
                     AddText(result);
                     if (_isFirst)
                     {

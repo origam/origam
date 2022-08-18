@@ -30,7 +30,7 @@ import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshS
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
-import { IActionMode } from "model/entities/types/IAction";
+import { IAction, IActionMode } from "model/entities/types/IAction";
 import { computed } from "mobx";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
@@ -83,6 +83,35 @@ export class BottomToolBar extends React.Component<{
     return screenActions.concat(sectionActions);
   }
 
+  getActionGroups(): IAction[][] {
+    const groupMap = this.getActions().groupBy(action => action.groupId);
+    if(groupMap.size === 0){
+      return [];
+    }
+    const noGroupActions = groupMap.get("");
+    if(!noGroupActions){
+      return []
+    }
+    let groups = [];
+    for (let action of noGroupActions) {
+      if(groupMap.has(action.id)){
+        groups.push(groupMap.get(action.id)!)
+      }
+      else
+      {
+        let lastGroup = groups[groups.length -1];
+        if(lastGroup && (lastGroup.length === 0 || lastGroup[0].groupId === "")) {
+          lastGroup.push(action);
+        }
+        else
+        {
+          groups.push([action])
+        }
+      }
+    }
+    return groups;
+  }
+
   showNextButton() {
     return this.activeScreen && this.activeScreen.showWorkflowNextButton;
   }
@@ -119,7 +148,7 @@ export class BottomToolBar extends React.Component<{
       buttons.push(
         <ActionDropUp
           key={"actions"}
-          actions={actions}
+          actionGroups={this.getActionGroups()}
         />
       );
     }

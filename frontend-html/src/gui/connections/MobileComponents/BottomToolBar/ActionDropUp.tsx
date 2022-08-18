@@ -26,17 +26,18 @@ import { Dropdown } from "gui/Components/Dropdown/Dropdown";
 import { DropdownItem } from "gui/Components/Dropdown/DropdownItem";
 import uiActions from "model/actions-ui-tree";
 import { IAction } from "model/entities/types/IAction";
+import { DropdownDivider } from "gui/Components/Dropdown/DropdownDivider";
 
 export class ActionDropUp extends React.Component<{
   hidden?: boolean;
-  actions: IAction[]
+  actionGroups: IAction[][]
 }> {
 
   render() {
     return (
       <div className={S.root}>
-        {!this.props.hidden && this.props.actions.length > 0
-          ?<Dropdowner
+        {!this.props.hidden && this.props.actionGroups.length > 0
+          ? <Dropdowner
             trigger={({refTrigger, setDropped}) => (
               <div
                 className={S.clickArea}
@@ -51,21 +52,32 @@ export class ActionDropUp extends React.Component<{
             )}
             content={({setDropped}) => (
               <Dropdown>
-                {this.props.actions.map(action =>
-                  <DropdownItem
-                    key={action.id}
-                    onClick={(event: any) => {
-                      setDropped(false);
-                      uiActions.actions.onActionClick(action)(event, action)}
-                    }
-                  >
-                    {action.caption}
-                  </DropdownItem>
-                )}
+                <div className={S.dropDownContainer}>
+                  {this.props.actionGroups
+                    .filter(actions => actions.length > 0)
+                    .map(actions =>
+                      <>
+                        {actions.map(action =>
+                          <DropdownItem
+                            key={action.id}
+                            onClick={(event: any) => {
+                              setDropped(false);
+                              uiActions.actions.onActionClick(action)(event, action)
+                            }
+                            }
+                          >
+                            {action.caption}
+                          </DropdownItem>
+                        )}
+                        {actions !== this.props.actionGroups[this.props.actionGroups.length - 1] &&
+                          <DropdownDivider key={"group_" + actions[0].id}/>}
+                      </>
+                    )}
+                </div>
               </Dropdown>
             )}
           />
-          :<div className={S.placeholder}/>
+          : <div className={S.placeholder}/>
         }
       </div>
     );

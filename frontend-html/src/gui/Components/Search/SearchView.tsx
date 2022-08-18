@@ -1,3 +1,22 @@
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { observer } from "mobx-react";
 import React, { RefObject } from "react";
 import S from "gui/Components/Search/SearchView.module.scss";
@@ -9,6 +28,7 @@ import { action, observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { ISearcher } from "model/entities/types/ISearcher";
+import Measure from "react-measure";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -17,6 +37,9 @@ export const SEARCH_DIALOG_KEY = "Search Dialog";
 export class SearchView extends React.Component<{
   state: SearchViewState
 }> {
+
+  @observable
+  resultContentHeight = 0;
 
   get viewState() {
     return this.props.state;
@@ -27,6 +50,9 @@ export class SearchView extends React.Component<{
   }
 
   render() {
+    const viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    const maxResultWindowHeight = viewportHeight * 0.35
+
     return (
       <div className={"searchView"}>
         <div className={S.inputRow}>
@@ -35,25 +61,40 @@ export class SearchView extends React.Component<{
             ref={this.viewState.refInput}
             className={S.input}
             placeholder={T("Search for anything here", "type_search_here")}
-            onKeyDown={(event) => this.viewState.onInputKeyDown(event)}
             onChange={(event) => this.viewState.onInputChange(event)}
           />
         </div>
         {(this.viewState.searcher.resultGroups.length > 0) &&
-          <div className={"resultArea"} ref={this.viewState.scrollDivRef}>
-            <div className={S.resultsContainer}>
-              {this.viewState.searcher.resultGroups
-                .map(group =>
-                  <ResultGroup
-                    key={group.name}
-                    name={group.name}
-                    group={group}
-                    onResultItemClick={result => this.viewState.onResultItemClick(result)}
-                    selectedResult={this.viewState.searcher.selectedResult}
-                    registerElementRef={(id, ref) => this.viewState.resultElementMap.set(id, ref)}
-                  />)
-              }
-            </div>
+          <div
+            className={"resultArea"}
+            ref={this.viewState.scrollDivRef}
+            style={{
+              maxHeight: maxResultWindowHeight + "px",
+              overflowY: this.resultContentHeight > maxResultWindowHeight ? "auto" : "hidden"
+          }}
+          >
+            <Measure
+              bounds
+              onResize={contentRect => {
+                this.resultContentHeight = contentRect.bounds?.height ?? 0;
+              }}
+            >
+              {({measureRef}) => (
+                <div ref={measureRef} className={S.resultsContainer}>
+                  {this.viewState.searcher.resultGroups
+                    .map(group =>
+                      <ResultGroup
+                        key={group.name}
+                        name={group.name}
+                        group={group}
+                        onResultItemClick={result => this.viewState.onResultItemClick(result)}
+                        searcher={this.viewState.searcher}
+                        registerElementRef={(id, ref) => this.viewState.resultElementMap.set(id, ref)}
+                      />)
+                  }
+                </div>
+              )}
+            </Measure>
           </div>
         }
       </div>
@@ -78,8 +119,7 @@ export class SearchViewState {
 
   constructor(
     private ctx: any,
-    private onCloseClick: ()=>void)
-  {
+    private onCloseClick: () => void) {
     this.searcher = getSearcher(this.ctx);
     this.searcher.clear();
   }
@@ -147,7 +187,10 @@ export class SearchViewState {
     }
   }
 
-  async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+  onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    this.value = event.target.value;
+    this.searcher.onSearchFieldChange(this.value);
+
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
@@ -155,11 +198,6 @@ export class SearchViewState {
       this.timeout = undefined;
       this.searcher.searchOnServer();
     }, DELAY_BEFORE_SERVER_SEARCH_MS)
-  }
-
-  onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    this.value = event.target.value;
-    this.searcher.onSearchFieldChange(this.value);
   }
 
   clear() {

@@ -17,7 +17,7 @@ variables:
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2022.2
+  value: 2022.2.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
@@ -86,10 +86,11 @@ jobs:
        inputs:
          testSelector: 'testAssemblies'
          testAssemblyVer2: |
-           **\*test*.dll
+           **\*Tests.dll
            !**\*TestAdapter.dll
            !**\obj\**
          searchFolder: '$(Agent.BuildDirectory)\s\backend\'
+         runInParallel: false
      - task: CopyFiles@2
        displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-architect'
        inputs:

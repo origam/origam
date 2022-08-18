@@ -36,6 +36,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Security.Principal;
+using Origam.Extensions;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.OrigamEngine
 {
@@ -108,7 +110,7 @@ namespace Origam.OrigamEngine
         public static void UnloadConnectedServices()
         {
             standardServiceFactory.UnloadServices();
-            Workbench.Services.CoreServices.DataService.ClearDataService();
+            DataServiceFactory.ClearDataService();
         }
 
 		public static void ConnectRuntime(
@@ -246,7 +248,7 @@ namespace Origam.OrigamEngine
                 RestartTimer.Interval *= 10;
                 if(log.IsErrorEnabled)
                 {
-                    log.Error("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
+                    log.LogOrigamError("Could not get restart status. Will retry in " + RestartTimer.Interval / 1000 + "seconds.", ex);
                 }
             }
 		}

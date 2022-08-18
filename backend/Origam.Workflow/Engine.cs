@@ -40,6 +40,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using Origam.Extensions;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -472,7 +473,7 @@ namespace Origam.Workflow
 				Hashtable stores = new Hashtable();
 
 				// Initialize RuleEngine for this session
-				_ruleEngine = new RuleEngine(stores, this.TransactionId, WorkflowInstanceId);
+				_ruleEngine = RuleEngine.Create(stores, this.TransactionId, WorkflowInstanceId);
 
 				foreach (IContextStore store in this.WorkflowBlock.ChildItemsByType(
 					ContextStore.CategoryConst))
@@ -650,7 +651,7 @@ namespace Origam.Workflow
 			SetStepStatus(step, WorkflowStepResult.Failure);
 			if(log.IsErrorEnabled)
 			{
-				log.Error(step?.GetType().Name + " " + step?.Name + " failed.");
+				log.Error($"{step?.GetType().Name} {(step as AbstractSchemaItem)?.Path} failed.");
 			}
 			// Trace the error
 			if(IsTrace(step))
@@ -732,7 +733,7 @@ namespace Origam.Workflow
 
             if (log.IsErrorEnabled)
             {
-                log.Error(ex.Message, ex);
+	            log.LogOrigamError(ex.Message, ex);
             }
 
 			FinishWorkflow(ex);
@@ -1241,7 +1242,7 @@ namespace Origam.Workflow
 								throw new Exception(DebugClass.ListRowErrors(xmlDataDoc.DataSet), ex);
 							}
 
-							object profileId = this.RuleEngine.ActiveProfileGuId();
+							object profileId = SecurityManager.CurrentUserProfile().Id;
 
 							foreach(DataTable t in xmlDataDoc.DataSet.Tables)
 							{

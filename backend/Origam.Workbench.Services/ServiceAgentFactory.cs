@@ -41,46 +41,7 @@ namespace Origam.Workbench.Services
             = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);   
         private IPersistenceService _persistence;
-        List<IServiceAgent> _xslFunctionProviderServices = null;
-        object mutex = new object();
-
-        public List<IServiceAgent> XslFunctionProviderServiceAgents
-        {
-            get
-            {
-                lock (mutex) // we are possibily writing into singleton when using this method
-                {
-                    if (_xslFunctionProviderServices == null)
-                    {
-                        _xslFunctionProviderServices = new List<IServiceAgent>();
-                        SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-                        ServiceSchemaItemProvider serviceItemProvider = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
-                        foreach (Origam.Schema.WorkflowModel.Service service in serviceItemProvider.ChildItemsByType(Origam.Schema.WorkflowModel.Service.CategoryConst))
-                        {
-                            try
-                            {
-                                IServiceAgent resultAgent = this.GetAgent(service.Name, null, null);
-                                if (resultAgent is IXslFunctionProvider)
-                                {
-                                    _xslFunctionProviderServices.Add(resultAgent);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                if (log.IsDebugEnabled)
-                                {
-                                    log.DebugFormat("Can't load service {0}, skipping {1}", service?.Name,
-                                        e.Message);
-                                }
-                                continue;
-                            }
-                        }
-                    }
-                }
-                return _xslFunctionProviderServices;
-            }
-        }
-
+        
         public ServiceAgentFactory(Func<IExternalServiceAgent, IServiceAgent> fromExternalAgent)
         {
             this.fromExternalAgent = fromExternalAgent;

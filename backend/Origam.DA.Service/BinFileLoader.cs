@@ -153,7 +153,7 @@ namespace Origam.DA.Service
                     }
                     catch (IOException ex)
                     {
-                        log.Error($"Could not remove {indexFile}", ex);
+                        log.LogOrigamError($"Could not remove {indexFile}", ex);
                     }
                 }
             }

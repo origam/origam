@@ -36,9 +36,15 @@ using Origam.Service.Core;
 
 namespace Origam
 {
-	public static class HttpTools
+	public class HttpTools : IHttpTools
 	{
-		private static void FixCookies(HttpWebRequest request,
+		public static HttpTools Instance { get; set; } = new();
+
+		private HttpTools()
+		{
+		}
+
+		private void FixCookies(HttpWebRequest request,
 			HttpWebResponse response)
 		{			
 			for (int i = 0; i < response.Headers.Count; i++)
@@ -60,7 +66,7 @@ namespace Origam
 			}
 		}
 
-		private static List<Cookie> CookiesFromStrings(string host,
+		public List<Cookie> CookiesFromStrings(string host,
 			List<string> singleCookies)
 		{
 			List<Cookie> cookies = new List<Cookie>();
@@ -80,7 +86,7 @@ namespace Origam
 			return cookies;
 		}
 
-		private static List<string> SplitCookiesHeaderToSingleCookies(
+		public List<string> SplitCookiesHeaderToSingleCookies(
 			string setCookieHeader)
 		{
 			string[] cookieSegments = setCookieHeader.Split(',');
@@ -127,7 +133,7 @@ namespace Origam
 //			return disposition;
 //		}
 
-		public static string BuildUrl(string sURL, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped)
+		public string BuildUrl(string sURL, Hashtable parameters, bool forceExternal, string externalScheme, bool isUrlEscaped)
 		{
 			Hashtable urlParameters = new Hashtable();
 
@@ -211,12 +217,12 @@ namespace Origam
 			return result;
 		}
 
-		public static object SendRequest(string url, string method)
+		public object SendRequest(string url, string method)
 		{
 			return SendRequest(url, method, null, null, null, null);
 		}
 
-		public static object SendRequest(string url, string method, string content,
+		public object SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, int? timeout)
 		{
 			Uri myUrl = new Uri(url);
@@ -237,7 +243,7 @@ namespace Origam
 			return SendRequest(url, method, content, contentType,
 				headers, null, null, null, false, timeout);
 		}
-		public static object SendRequest(string url, string method, string content,
+		public object SendRequest(string url, string method, string content,
 			string contentType, Hashtable headers, string authenticationType,
 			string userName, string password, bool returnAsStream,
             int? timeout)
@@ -323,7 +329,7 @@ namespace Origam
 			}
 		}
 
-		public static WebResponse GetResponse(string url, string method, string content,
+		public WebResponse GetResponse(string url, string method, string content,
 			string contentType, Hashtable headers)
 		{
 			return GetResponse(url, method, content, contentType, headers,
@@ -331,7 +337,7 @@ namespace Origam
 		}
 
 
-		public static WebResponse GetResponse(string url, string method, string content,
+		public WebResponse GetResponse(string url, string method, string content,
 			string contentType, Hashtable headers, string authenticationType,
 			string userName, string password, int? timeoutMs, CookieCollection cookies,
 			bool ignoreHTTPSErrors)
@@ -411,7 +417,7 @@ namespace Origam
 		}
 
 
-		public static string ReadResponseText(HttpWebResponse httpResponse, Stream responseStream)
+		public string ReadResponseText(HttpWebResponse httpResponse, Stream responseStream)
 		{
 			using (StreamReader sr = new StreamReader(responseStream, EncodingFromResponse(httpResponse)))
 			{
@@ -419,7 +425,7 @@ namespace Origam
 			}
 		}
 
-		public static string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
+		public string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
 		{
 			//HttpWebResponse httpResponse = response as HttpWebResponse;
 			string encodingString = httpResponse.ContentEncoding==null?"": httpResponse.ContentEncoding.ToLower();
@@ -438,7 +444,7 @@ namespace Origam
 			}
 		}
 
-		public static Encoding EncodingFromResponse(HttpWebResponse response)
+		public Encoding EncodingFromResponse(HttpWebResponse response)
 		{
 			/*
 			if(response.ContentEncoding != String.Empty)
@@ -491,14 +497,14 @@ namespace Origam
 //			response.OutputStream.Write(file, 0, file.Length);
 //		}
 
-		public static string GetMimeType(string fileName)
+		public string GetMimeType(string fileName)
 		{
 			new FileExtensionContentTypeProvider()
 				.TryGetContentType(fileName, out string contentType);
 			return contentType ?? "application/unknown";
 		}
 
-		public static string GetDefaultExtension(string mimeType)
+		public string GetDefaultExtension(string mimeType)
 		{
 			var extensionMimeTypePair = new FileExtensionContentTypeProvider()
 				                            .Mappings
@@ -512,7 +518,7 @@ namespace Origam
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		public static string EscapeDataStringLong(string value)
+		public string EscapeDataStringLong(string value)
 		{
 			int limit = 2000;
 

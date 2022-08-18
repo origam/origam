@@ -56,7 +56,7 @@ namespace Origam.Server
             {
                 Dictionary<string, int> result = new Dictionary<string, int>();
 
-                DataSet ds = core.DataService.LoadData(new Guid("5a98c98f-d930-4a94-a13e-82685bb6dc29"), Guid.Empty, Guid.Empty, Guid.Empty, null);
+                DataSet ds = core.DataService.Instance.LoadData(new Guid("5a98c98f-d930-4a94-a13e-82685bb6dc29"), Guid.Empty, Guid.Empty, Guid.Empty, null);
 
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {

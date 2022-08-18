@@ -127,7 +127,7 @@ namespace Origam.Server.Controller
         {
             ReportHelper.PopulateDefaultValues(
                 webReport, reportRequest.Parameters);
-            var url = HttpTools.BuildUrl(
+            var url = HttpTools.Instance.BuildUrl(
                 webReport.Url, reportRequest.Parameters, 
                 webReport.ForceExternalUrl,
                 webReport.ExternalUrlScheme, webReport.IsUrlEscaped);
@@ -145,7 +145,7 @@ namespace Origam.Server.Controller
             {
                 return NotFound();
             }
-            var mimeType = HttpTools.GetMimeType(filePath);
+            var mimeType = HttpTools.Instance.GetMimeType(filePath);
             var fileName = Path.GetFileName(filePath);
             Response.Headers.Add(
                 HeaderNames.ContentDisposition,

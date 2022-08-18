@@ -48,7 +48,7 @@ namespace Origam.Server
         public static void CreateUpdateOrigamOnlineUser(
             string username, SessionStats stats)
         {
-            DataSet data = core.DataService.LoadData(
+            DataSet data = core.DataService.Instance.LoadData(
                 new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
                 new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"), 
                 Guid.Empty, 
@@ -75,7 +75,7 @@ namespace Origam.Server
                 row["DirtyScreens"] = stats.DirtyScreens;
                 row["RunningWorkflows"] = stats.RunningWorkflows;
             }
-            core.DataService.StoreData(
+            core.DataService.Instance.StoreData(
                 new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
                 data,
                 false,
@@ -85,7 +85,7 @@ namespace Origam.Server
        
         public static void RemoveOrigamOnlineUser(string username)
         {
-            DataSet data = core.DataService.LoadData(
+            DataSet data = core.DataService.Instance.LoadData(
                 new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
                 new Guid("ece8b03a-f378-4026-b3b3-588cb58317b6"),
                 Guid.Empty,
@@ -97,7 +97,7 @@ namespace Origam.Server
             {
                 data.Tables[0].Rows[0].Delete();
             }
-            core.DataService.StoreData(
+            core.DataService.Instance.StoreData(
                 new Guid("aa4c9df9-d6da-408e-a095-fd377ffcc319"),
                 data,
                 false,

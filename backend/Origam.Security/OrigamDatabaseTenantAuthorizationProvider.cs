@@ -34,18 +34,6 @@ namespace Origam.Security
 	/// </summary>
 	public class OrigamDatabaseTenantAuthorizationProvider : IOrigamAuthorizationProvider
 	{
-		private class Credential
-		{
-			public string RoleName;
-			public bool IsReadOnly;
-
-			public Credential(string roleName, bool isReadOnly)
-			{
-				RoleName = roleName;
-				IsReadOnly = isReadOnly;
-			}
-		}
-
 		public OrigamDatabaseTenantAuthorizationProvider()
 		{
 		}
@@ -94,6 +82,10 @@ namespace Origam.Security
 					if(rolePart.Length == 2 && rolePart[1] == SecurityManager.READ_ONLY_ROLE_SUFFIX)
 					{
 						process = c.IsReadOnly;
+					}
+					else if(rolePart.Length == 2 && rolePart[1] == SecurityManager.INITIAL_SCREEN_ROLE_SUFFIX)
+					{
+						process = c.IsInitialScreen;
 					}
 
 					bool result = false;
@@ -200,36 +192,25 @@ namespace Origam.Security
 			for(int i = 0; i < table.Rows.Count; i++)
 			{
 				DataRow row = table.Rows[i];
-				
-				bool isReadOnly = false;
-				if(table.Columns.Contains("IsFormReadOnly"))
-				{
-					isReadOnly = (bool)row["IsFormReadOnly"];
-				}
-
-				array[i] = new Credential((string)row["OrigamApplicationRole_Name"], isReadOnly);
+				array[i] = new Credential(
+					RoleName: (string)row["OrigamApplicationRole_Name"],
+					IsReadOnly: table.Columns.Contains("IsFormReadOnly")
+					            && (bool)row["IsFormReadOnly"],
+					IsInitialScreen: table.Columns.Contains("IsInitialScreen")
+					                 && (bool)row["IsInitialScreen"]);
 			}
 
 			for(int i = table.Rows.Count; i < array.Length; i++)
 			{
 				DataRow row = table2.Rows[i-table.Rows.Count];
 				
-				bool isReadOnly = false;
-				if(table.Columns.Contains("IsFormReadOnly"))
-				{
-					isReadOnly = (bool)row["IsFormReadOnly"];
-				}
-
-				array[i] = new Credential((string)row["OrigamApplicationRole_Name"], isReadOnly);
+				array[i] = new Credential(
+					RoleName: (string)row["OrigamApplicationRole_Name"],
+					IsReadOnly: table.Columns.Contains("IsFormReadOnly")
+					            && (bool)row["IsFormReadOnly"],
+					IsInitialScreen: table.Columns.Contains("IsInitialScreen")
+					                 && (bool)row["IsInitialScreen"]);
 			}
-
-			
-			
-
-
-			// -------------------------
-
-
 
 			cache[name] = array;
 

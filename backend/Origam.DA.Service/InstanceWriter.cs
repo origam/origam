@@ -48,10 +48,11 @@ namespace Origam.DA.Service
         public void Write(IFilePersistent instance)
         {
             var namespaceMapping = PropertyToNamespaceMapping
-                .CreateOrGet(instance.GetType())
+                .Get(instance.GetType())
                 .DeepCopy();
             namespaceMapping.AddNamespacesToDocumentAndAdjustMappings(xmlDocument);
-
+            xmlDocument.UseTopNamespacePrefixesEverywhere();
+            
             XmlElement elementToWriteTo = GetElementToWriteTo(instance, namespaceMapping);
             bool isLocalChild = elementToWriteTo.ParentNode.GetDepth() != 1;
             WriteToNode(elementToWriteTo, instance, namespaceMapping, isLocalChild);

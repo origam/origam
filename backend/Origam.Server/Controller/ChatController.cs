@@ -226,7 +226,7 @@ namespace Origam.Server.Controller
             var roomInfo = GetChatRoom(requestChatRoomId);
             var dataRow = roomInfo.Tables[0].Rows[0];
             dataRow["Name"] = topic.Topic;
-            DataService.StoreData(
+            DataService.Instance.StoreData(
                 OrigamChatRoomDatastructureId, roomInfo, false, null);
             return Ok();
         }
@@ -259,7 +259,7 @@ namespace Origam.Server.Controller
             row["RecordCreated"] = DateTime.Now;
             row["RecordCreatedBy"] = profile.Id;
             dataset.Tables["OrigamChatRoom"].Rows.Add(row);
-            DataService.StoreData(OrigamChatRoomDatastructureId, dataset, 
+            DataService.Instance.StoreData(OrigamChatRoomDatastructureId, dataset, 
                 false, null);
             newChatRoom.InviteUsers.Add(new InviteUser(profile.Id));
             AddUsersIntoChatRoom(newChatRoomId, newChatRoom.InviteUsers);
@@ -290,7 +290,7 @@ namespace Origam.Server.Controller
                 row["RecordCreatedBy"] = profile.Id;
                 dataSet.Tables["OrigamChatRoomBusinessPartner"].Rows.Add(row);
             }
-            DataService.StoreData(OrigamChatRoomBusinessPartnerId, dataSet, 
+            DataService.Instance.StoreData(OrigamChatRoomBusinessPartnerId, dataSet, 
                 false, null);
         }
         private IActionResult PostRoomAbandon(
@@ -301,7 +301,7 @@ namespace Origam.Server.Controller
             if(datasetUsersForInvite != null)
             {
                 datasetUsersForInvite.Tables[0].Rows[0].Delete();
-                DataService.StoreData(OrigamChatRoomBusinessPartnerId, 
+                DataService.Instance.StoreData(OrigamChatRoomBusinessPartnerId, 
                     datasetUsersForInvite, false, null);
             }
             return Ok();
@@ -555,7 +555,7 @@ namespace Origam.Server.Controller
             messageRow["refBusinessPartnerId"] = profile.Id;
             messageRow["Mentions"] = chatMessages.Mentions.Count;
             messageDataset.Tables["OrigamChatMessage"].Rows.Add(messageRow);
-            DataService.StoreData(
+            DataService.Instance.StoreData(
                 OrigamChatMessageDataStructureId, messageDataset, false, null);
             var messageBusinessPartnerDataStructure 
                 = (DataStructure)persistenceService.SchemaProvider
@@ -579,7 +579,7 @@ namespace Origam.Server.Controller
                     "OrigamChatMessageBusinessPartner"].Rows.Add(
                     messageBusinessPartnerRow);
             }
-            DataService.StoreData(
+            DataService.Instance.StoreData(
                 OrigamChatMessageBusinessPartnerDataStructureId, 
                 messageBusinessPartnerDataSet, 
                 false, null);
@@ -616,7 +616,7 @@ namespace Origam.Server.Controller
                 requestChatRoomId, inviteUser);
             var userRow = userDataset.Tables[0].Rows[0];
             userRow["LastSeen"] = DateTime.Now;
-            DataService.StoreData(
+            DataService.Instance.StoreData(
                 OrigamChatRoomBusinessPartnerId, userDataset, false, null);
         }
         private List<OrigamChatMessage> GetMessages(
@@ -672,7 +672,7 @@ namespace Origam.Server.Controller
             Guid sortSetId, string transactionId, 
             QueryParameterCollection parameters)
         {
-            return DataService.LoadData(
+            return DataService.Instance.LoadData(
                 dataStructureId, 
                 methodId, 
                 defaultSetId, 

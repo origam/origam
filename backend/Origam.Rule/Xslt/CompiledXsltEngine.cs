@@ -19,22 +19,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using Origam.DA.ObjectPersistence;
-using System.Xml;
-using System.Xml.Xsl;
-using System.IO;
-using System.Xml.XPath;
-using System.Collections;
 using System;
-using Origam.Extensions;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
+using Origam.DA.ObjectPersistence;
+using Origam.Rule.XsltFunctions;
+using Origam.Schema.EntityModel;
 using Origam.Service.Core;
 
-namespace Origam.Rule
+namespace Origam.Rule.Xslt
 {
-    class CompiledXsltEngine : MicrosoftXsltEngine
+    public class CompiledXsltEngine : MicrosoftXsltEngine
     {
         #region Constructors
-        public CompiledXsltEngine() : base ()
+
+        public CompiledXsltEngine()
+        {
+        }
+
+        public CompiledXsltEngine(IEnumerable<XsltFunctionsDefinition> functionsDefinitions) 
+            : base (functionsDefinitions)
 		{
 		}
 
