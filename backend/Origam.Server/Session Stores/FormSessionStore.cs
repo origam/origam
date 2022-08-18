@@ -146,17 +146,7 @@ namespace Origam.Server
             }
             else
             {
-                // delayed data loading - save after each move
-                // we initialize the full structure
-                data = InitializeFullStructure(_menuItem.DefaultSet);
-                DataSet listData = GetDataSetBuilder().InitializeListStructure(data, _menuItem.ListEntity.Name,true);
-                // we only read the list and leave the full structure empty (it will be loaded later)
-                SetDataList(
-                    GetDataSetBuilder().LoadListData(DataListLoadedColumns, listData, _menuItem.ListEntity.Name, _menuItem.ListSortSet, _menuItem, Request.QueryParameters), 
-                    _menuItem.ListEntity.Name, _menuItem.ListDataStructure, _menuItem.ListMethod);
-                this.IsDelayedLoading = true;
-                if (_menuItem.Method == null) throw new ArgumentNullException("FormReferenceMenuItem.FilterSet", "For delayed data loading you have to specify FilterSet for the main data.");
-                SetDelayedLoadingParameter(_menuItem.Method);
+                throw new Exception("Data is lazy loaded without record edit method.");
             }
             if (data != null)
             {
