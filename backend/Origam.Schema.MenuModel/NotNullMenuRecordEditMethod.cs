@@ -18,12 +18,12 @@ namespace Origam.Schema.MenuModel
             if (memberName == String.Empty || memberName == null) CheckRule(instance);
             object value = Reflector.GetValue(instance.GetType(), instance, memberName);
             if(value is FormReferenceMenuItem)
-            {
-                FormReferenceMenuItem formReferenceMenuItem = (FormReferenceMenuItem)value;
-                if(formReferenceMenuItem.ListDataStructure != null &&
-                    formReferenceMenuItem.RecordEditMethod == null)
+                if (value is FormReferenceMenuItem formReferenceMenuItem)
                 {
-                    return new DataException("MenuItem has to have property RecordEditMethod.");
+                    if(formReferenceMenuItem.ListDataStructure != null &&
+                       formReferenceMenuItem.RecordEditMethod == null)
+                {
+                    return new DataException("The target menu item has to have a property RecordEditMethod set.");
                 }
             }
             return null;

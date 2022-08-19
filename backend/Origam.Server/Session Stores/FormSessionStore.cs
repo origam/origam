@@ -146,7 +146,10 @@ namespace Origam.Server
             }
             else
             {
-                throw new Exception("Data is lazy loaded without record edit method.");
+                throw new Exception("A screen is lazy loaded but the client requested session data on InitUI " +
+                    "call by setting DataRequested=true. Instead the client should set DataRequested=false " +
+                    "and call GetRows in order to get the list data and then MasterRecord to load " +
+                    "one of the records and GetData to request entity data.");
             }
             if (data != null)
             {
