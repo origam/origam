@@ -15,13 +15,15 @@ namespace Origam.Schema.MenuModel
 
         public override Exception CheckRule(object instance, string memberName)
         {
-            if (memberName == String.Empty || memberName == null) CheckRule(instance);
+            if (memberName == String.Empty || memberName == null)
+            {
+                CheckRule(instance);
+            }
             object value = Reflector.GetValue(instance.GetType(), instance, memberName);
-            if(value is FormReferenceMenuItem)
-                if (value is FormReferenceMenuItem formReferenceMenuItem)
-                {
-                    if(formReferenceMenuItem.ListDataStructure != null &&
-                       formReferenceMenuItem.RecordEditMethod == null)
+            if (value is FormReferenceMenuItem formReferenceMenuItem)
+            {
+                if(formReferenceMenuItem.ListDataStructure != null &&
+                    formReferenceMenuItem.RecordEditMethod == null)
                 {
                     return new DataException("The target menu item has to have a property RecordEditMethod set.");
                 }
