@@ -110,7 +110,7 @@ async function main() {
     const application = createApplication();
     getApi(application).setAccessToken(user.access_token);
     sessionStorage.setItem("origamAuthToken", user.access_token);
-    userManager.events.addUserLoaded((user) => {
+    userManager.events.addUserLoaded((user: any) => {
       getApi(application).setAccessToken(user.access_token);
       sessionStorage.setItem("origamAuthToken", user.access_token);
     });
