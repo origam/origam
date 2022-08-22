@@ -58,7 +58,7 @@
 
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions">
-      <Version>2.20.4</Version>
+      <Version>2.33.1</Version>
     </PackageReference>
     <PackageReference Include="MailKit">
       <Version>3.3.0</Version>
