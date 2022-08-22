@@ -516,8 +516,35 @@ namespace Origam.DA.Service
 											}
 										}
 										break;
-
-									case DbType.Decimal:
+                                    case DbType.Int32:
+                                        if (param.Value == DBNull.Value)
+                                        {
+                                            value = DBNull.Value;
+                                        }
+                                        else if (param.Value is string)
+                                        {
+                                            value = System.Xml.XmlConvert.ToInt32(param.Value as string);
+                                        }
+                                        else
+                                        {
+                                            value = param.Value;
+                                        }
+                                        break;
+                                    case DbType.Int64:
+                                        if (param.Value == DBNull.Value)
+                                        {
+                                            value = DBNull.Value;
+                                        }
+                                        else if (param.Value is string)
+                                        {
+                                            value = System.Xml.XmlConvert.ToInt64(param.Value as string);
+                                        }
+                                        else
+                                        {
+                                            value = param.Value;
+                                        }
+                                        break;
+                                    case DbType.Decimal:
 									case DbType.Currency:
 										if(param.Value == DBNull.Value)
 										{
