@@ -85,11 +85,12 @@ import { getIsAddButtonVisible } from "../../selectors/DataView/getIsAddButtonVi
 import { pluginLibrary } from "plugins/tools/PluginLibrary";
 import { isIScreenPlugin, isISectionPlugin } from "@origam/plugins";
 import { refreshRowStates } from "model/actions/RowStates/refreshRowStates";
-import {T} from "utils/translation";
+import { T } from "utils/translation";
 import { askYesNoQuestion } from "gui/Components/Dialog/DialogUtils";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -419,7 +420,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
-        yield*this.loadData({keepCurrentData: false});
+        yield*this.loadData();
         yield*this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -705,7 +706,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  *loadData(args: { keepCurrentData: boolean }) {
+  *loadData() {
     const formScreen = getFormScreen(this);
     try {
       this.monitor.inFlow++;
@@ -721,8 +722,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         } else {
           yield this.updateTotalRowCount(rootDataView);
           yield*this.readFirstChunkOfRows({
-            rootDataView: rootDataView,
-            keepCurrentData: args.keepCurrentData,
+            rootDataView: rootDataView
           });
         }
       }
@@ -835,31 +835,73 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     return false;
   }
 
-  *readFirstChunkOfRows(args: { keepCurrentData: boolean; rootDataView: IDataView }): any {
+  *getRowsForWorkQueue(rootDataView: IDataView): Generator {
+    let columnNamesToLoad = getColumnNamesToLoad(rootDataView);
+    let propertyIds = rootDataView.properties.map(prop => prop.id);
+    const columnIndicesToExclude = columnNamesToLoad
+      .filter(column => !propertyIds.includes(column) && column !== "Id")
+      .map(column => columnNamesToLoad.indexOf(column));
+
+    for (const column of Array.from(columnNamesToLoad)) {
+      if(!propertyIds.includes(column) && column !== "Id"){
+        const index = columnNamesToLoad.indexOf(column);
+        columnNamesToLoad.splice(index, 1)
+      }
+    }
+
+    const api = getApi(this);
+    const loadedData = yield api.getRows({
+      MenuId: getMenuItemId(rootDataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(rootDataView),
+      Filter: getUserFilters({ctx: rootDataView}),
+      FilterLookups: getUserFilterLookups(rootDataView),
+      Ordering: getUserOrdering(rootDataView),
+      RowLimit: SCROLL_ROW_CHUNK,
+      MasterRowId: undefined,
+      Parameters: this.parameters,
+      RowOffset: 0,
+      ColumnNames: columnNamesToLoad,
+    });
+    for (let row of loadedData as any[][]) {
+      for (let index of columnIndicesToExclude) {
+        row.splice(index,0, null)
+      }
+    }
+    return loadedData;
+  }
+
+  *readFirstChunkOfRows(args: {
+    rootDataView: IDataView
+  }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
     try {
       this.monitor.inFlow++;
-      const loadedData = yield api.getRows({
-        MenuId: getMenuItemId(rootDataView),
-        SessionFormIdentifier: getSessionId(this),
-        DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: getUserFilters({ctx: rootDataView}),
-        FilterLookups: getUserFilterLookups(rootDataView),
-        Ordering: getUserOrdering(rootDataView),
-        RowLimit: SCROLL_ROW_CHUNK,
-        MasterRowId: undefined,
-        Parameters: this.parameters,
-        RowOffset: 0,
-        ColumnNames: getColumnNamesToLoad(rootDataView),
-      });
-      if (args.keepCurrentData) {
-        rootDataView.appendRecords(loadedData);
-      } else {
-        yield rootDataView.setRecords(loadedData);
+      const openedScreen = getOpenedScreen(rootDataView);
+      let loadedData;
+      if(openedScreen.menuItemType === IMainMenuItemType.WorkQueue){
+        loadedData = yield*this.getRowsForWorkQueue(rootDataView);
       }
+      else
+      {
+        loadedData = yield api.getRows({
+          MenuId: getMenuItemId(rootDataView),
+          SessionFormIdentifier: getSessionId(this),
+          DataStructureEntityId: getDataStructureEntityId(rootDataView),
+          Filter: getUserFilters({ctx: rootDataView}),
+          FilterLookups: getUserFilterLookups(rootDataView),
+          Ordering: getUserOrdering(rootDataView),
+          RowLimit: SCROLL_ROW_CHUNK,
+          MasterRowId: undefined,
+          Parameters: this.parameters,
+          RowOffset: 0,
+          ColumnNames: getColumnNamesToLoad(rootDataView),
+        });
+      }
+      yield rootDataView.setRecords(loadedData);
       if (this.initialSelectedRowId) {
         rootDataView.setSelectedRowId(this.initialSelectedRowId);
       } else {
@@ -885,8 +927,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       do {
         this._readFirstChunkOfRowsScheduled = false;
         yield*this.readFirstChunkOfRows({
-          rootDataView: rootDataView,
-          keepCurrentData: false,
+          rootDataView: rootDataView
         });
       } while (this._readFirstChunkOfRowsScheduled);
     } finally {
@@ -1109,7 +1150,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         getFormScreen(this).setDirty(false);
         getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
       } else {
-        yield*this.loadData({keepCurrentData: false});
+        yield*this.loadData();
       }
       getFormScreen(this).setDirty(false);
       yield*this.refreshLookups();
@@ -1130,7 +1171,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const self = this;
       flow(function*() {
         yield*self.clearTotalCounts();
-        yield*self.loadData({keepCurrentData: false});
+        yield*self.loadData();
         yield*self.updateTotalRowCounts();
       })();
     }
@@ -1216,7 +1257,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           ActionType: action.type,
           ActionId: action.id,
           ParameterMappings: parameters,
-          SelectedItems: selectedItems,
+          SelectedIds: selectedItems,
           InputParameters: {},
         })) as IQueryInfo[];
         const processQueryInfoResult = yield*processActionQueryInfo(this)(
@@ -1232,7 +1273,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           ActionType: action.type,
           ActionId: action.id,
           ParameterMappings: parameters,
-          SelectedItems: selectedItems,
+          SelectedIds: selectedItems,
           InputParameters: {},
           RequestingGrid: gridId,
         });

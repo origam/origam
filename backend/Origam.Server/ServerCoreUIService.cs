@@ -470,7 +470,13 @@ namespace Origam.Server
             }
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
-            List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedItems);
+            if (sessionStore.IsDelayedLoading && 
+                action is EntityWorkflowAction workflowAction && 
+                workflowAction.MergeType != ServiceOutputMethod.Ignore)
+            {
+                throw new Exception("Only actions with merge type Ignore can be invoked in lazily loaded screens.");
+            }
+            List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedIds);
             IXmlContainer xml 
                 = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
             var result = sessionStore.RuleEngine.EvaluateEndRule(
@@ -508,7 +514,7 @@ namespace Origam.Server
                 input.ActionType,
                 input.ActionId, 
                 input.ParameterMappings,
-                input.SelectedItems, 
+                input.SelectedIds, 
                 input.InputParameters);
         }
         private static EntityUIAction GetAction(string actionId)

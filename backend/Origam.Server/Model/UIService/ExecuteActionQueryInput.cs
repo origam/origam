@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Origam.Server.Model.UIService
 {
@@ -31,7 +32,7 @@ namespace Origam.Server.Model.UIService
         public string ActionType { get; set; }
         public string ActionId { get; set; }
         public Hashtable ParameterMappings { get; set; }
-        public IList SelectedItems { get; set; }
+        public List<string> SelectedIds { get; set; }
         public Hashtable InputParameters { get; set; }
     }
 }

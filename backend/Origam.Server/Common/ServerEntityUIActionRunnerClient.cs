@@ -57,7 +57,7 @@ namespace Origam.Server
 
         public ExecuteActionProcessData CreateExecuteActionProcessData(
             string sessionFormIdentifier, string requestingGrid, 
-            string actionType, string entity, IList selectedItems, 
+            string actionType, string entity, List<string> selectedIds, 
             string actionId, Hashtable parameterMappings, 
             Hashtable inputParameters)
         {
@@ -67,15 +67,14 @@ namespace Origam.Server
             processData.ActionId = actionId;
             processData.IsModalDialog = this.sessionStore.IsModalDialog;
             processData.Entity = entity;
-            processData.SelectedItems = selectedItems;
+            processData.SelectedIds = selectedIds;
             processData.Type = (PanelActionType)Enum.Parse(
                 typeof(PanelActionType), actionType);
             SessionStore sessionStore 
                 = sessionManager.GetSession(new Guid(sessionFormIdentifier));
             processData.DataTable = sessionStore.GetTable(
                 entity, sessionStore.Data);
-            List<DataRow> rows = sessionStore.GetRows(entity, selectedItems);
-            processData.Rows = rows;
+            processData.SelectedRows = sessionStore.GetRows(entity, selectedIds);
             processData.ParameterService = ServiceManager.Services.GetService(
                 typeof(IParameterService)) as IParameterService;
             if ((processData.Type != PanelActionType.QueueAction) 
@@ -87,7 +86,7 @@ namespace Origam.Server
                 ArrayList originalDataParameters 
                     = UIActionTools.GetOriginalParameters(processData.Action);
                 processData.Parameters = DatasetTools.RetrieveParemeters(
-                    parameterMappings, processData.Rows, originalDataParameters,
+                    parameterMappings, processData.SelectedRows, originalDataParameters,
                     processData.DataTable.DataSet);
                 // add input parameters
                 foreach (DictionaryEntry inputParameter in inputParameters)
