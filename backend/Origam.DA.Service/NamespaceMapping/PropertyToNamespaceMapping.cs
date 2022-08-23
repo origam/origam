@@ -67,7 +67,6 @@ namespace Origam.DA.Service.NamespaceMapping
                             stringBuilder.AppendLine(exFileNotFound.FusionLog);
                         }
                     }
-
                     stringBuilder.AppendLine();
                 }
 
