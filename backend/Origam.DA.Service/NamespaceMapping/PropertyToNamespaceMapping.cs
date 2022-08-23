@@ -69,7 +69,6 @@ namespace Origam.DA.Service.NamespaceMapping
                     }
                     stringBuilder.AppendLine();
                 }
-
                 string errorMessage = stringBuilder.ToString();
                 throw new Exception(errorMessage, ex);
             }
