@@ -86,10 +86,11 @@ jobs:
        inputs:
          testSelector: 'testAssemblies'
          testAssemblyVer2: |
-           **\*test*.dll
+           **\*Tests.dll
            !**\*TestAdapter.dll
            !**\obj\**
          searchFolder: '$(Agent.BuildDirectory)\s\backend\'
+         runInParallel: false
      - task: CopyFiles@2
        displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-architect'
        inputs:
