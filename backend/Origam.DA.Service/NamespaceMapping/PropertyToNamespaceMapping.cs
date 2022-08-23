@@ -31,7 +31,7 @@ namespace Origam.DA.Service.NamespaceMapping
             var allTypes = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .SelectMany(x=>x.GetReferencedAssemblies())
-                .Where(x=>x.Name.Contains("Origam"))
+                .Where(x=>x.Name.Contains("Origam.Schema"))
                 .DistinctBy(x=>x.FullName)
                 .Select(Assembly.Load)
                 .SelectMany(assembly => assembly.GetTypes());
