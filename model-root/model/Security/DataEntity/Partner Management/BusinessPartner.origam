@@ -544,6 +544,7 @@
   <sip:Parameter
     asi:abstract="true"
     sip:allowNulls="true"
+    sip:dataLength="255"
     sip:dataType="String"
     x:id="118a16a2-f31e-40f4-9eff-8deaf1dd4a89"
     asi:name="parUserEmail"
