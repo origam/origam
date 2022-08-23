@@ -87,7 +87,7 @@
   },
   "resolutions": {
     "//": "See https://github.com/facebook/create-react-app/issues/11773",
-    "react-error-overlay": "6.0.9",
+    "react-error-overlay": "6.0.11",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2"
   },
@@ -105,6 +105,6 @@
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/uuid": "^8.3.4",
-    "react-error-overlay": "6.0.9"
+    "react-error-overlay": "6.0.11"
   }
 }
