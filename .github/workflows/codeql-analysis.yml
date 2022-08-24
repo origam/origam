@@ -5,7 +5,7 @@ on:
     branches: [ master ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master,20*  ]
+    branches: [ master, 20*, NUnit-tests-github  ]
   schedule:
     - cron: '40 23 * * 2'
 
@@ -46,7 +46,7 @@ jobs:
     - name: Create list of testFiles 
       shell: pwsh
       run: |
-          (Get-ChildItem "backend/*"  -Exclude "*TestAdapter.dll" -Include "*test*.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\") | where {$_ -ne ""} | Set-Content r.bat
+          (Get-ChildItem "backend/*" -Include "*Tests.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\") | where {$_ -ne ""} | Set-Content r.bat
           (Get-Content r.bat) -replace "^",'vstest.console.exe /Platform:x86 /Framework:Framework45 /TestAdapterPath:backend /Logger:"trx" ' > runtest.bat
           cat .\runtest.bat
           
