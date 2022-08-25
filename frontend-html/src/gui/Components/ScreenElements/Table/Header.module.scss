@@ -94,14 +94,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   height: 20px;
 }
 
-.middleSeparator{
-  width: 5px;
-  border-width: 0 2px;
-}
-
 .rightSeparator{
   width: 3px;
   border-width: 0 0 0 2px;
+}
+
+.leftSeparator{
+  width: 2px;
+  background: var(--background2);
 }
 
 .columnWidthHandle {
