@@ -3,6 +3,7 @@ import {IDataView} from "./IDataView";
 import {IAggregationInfo} from "./IAggregationInfo";
 import {IOrdering} from "./IOrderingConfiguration";
 import { IGroupingSettings } from "./IGroupingConfiguration";
+import { UpdateRequestAggregator } from "model/entities/FormScreenLifecycle/UpdateRequestAggregator";
 
 export interface IFormScreenLifecycleData {}
 
@@ -38,6 +39,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   isWorkingDelayed: boolean;
   isWorking: boolean;
 
+  updateRequestAggregator: UpdateRequestAggregator;
   rowSelectedReactionsDisabled(dataView: IDataView): boolean;
 
   onFlushData(): Generator;
