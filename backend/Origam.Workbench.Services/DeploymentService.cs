@@ -508,7 +508,11 @@ namespace Origam.Workbench.Services
             {
                 DataSet versionDataFromAsapModelVersion =
                     LoadVersionDataFrom(asapModelVersionQueryId, "AsapModelVersion", localTransaction);
-
+                if (versionDataFromAsapModelVersion == null)
+                {
+	                _versionsLoaded = true;
+	                return;
+                }
                 if (versionDataFromAsapModelVersion != null &&
                     versionDataFromAsapModelVersion.Tables.Count != 0)
                 {
