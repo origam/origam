@@ -3,16 +3,14 @@ import {getDataView} from "../../selectors/DataView/getDataView";
 import {getSessionId} from "../../selectors/getSessionId";
 import {getApi} from "../../selectors/getApi";
 import {runInFlowWithHandler} from "../../../utils/runInFlowWithHandler";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
-export function onTextFieldAutoUpdate(property: IProperty, value: string) {
-
+export async function onTextFieldAutoUpdate(property: IProperty, value: string) {
     const dataView = getDataView(property);
     if (!dataView.selectedRowId) {
         return;
     }
     const sessionId = getSessionId(dataView);
-    let api = getApi(dataView);
-
     const valueObj = {} as any;
     valueObj[property.id] = value;
 
@@ -22,14 +20,10 @@ export function onTextFieldAutoUpdate(property: IProperty, value: string) {
             Values: valueObj,
         }
     ];
-    runInFlowWithHandler({
-        ctx: dataView,
-        action: async () => {
-            await api.updateObject({
-                SessionFormIdentifier: sessionId,
-                Entity: dataView.entity,
-                UpdateData: updateData,
-            });
-        }
+    const formScreenLifecycle = getFormScreenLifecycle(property);
+    await formScreenLifecycle.updateRequestAggregator.enqueue({
+        SessionFormIdentifier: sessionId,
+        Entity: dataView.entity,
+        UpdateData: updateData,
     });
 }
