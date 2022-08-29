@@ -105,6 +105,9 @@ export class Header extends React.Component<{
   private renderHeader(provided?: DraggableProvided) {
     return <div className={S.root} ref={provided?.innerRef} {...provided?.draggableProps}>
       <div
+        className={S.leftSeparator}
+      />
+      <div
         {...provided?.dragHandleProps}
         className={S.header}
         style={this.makeHeaderStyle()}
@@ -135,7 +138,7 @@ export class Header extends React.Component<{
       </div>
       <div
         onMouseDown={this.handleHeaderWidthHandleMouseDown}
-        className={S.columnWidthHandle + " " + (this.props.isLast ? S.rightSeparator : S.middleSeparator)}
+        className={S.columnWidthHandle + " " + S.rightSeparator}
       />
     </div>;
   }

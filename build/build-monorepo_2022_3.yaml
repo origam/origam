@@ -7,21 +7,21 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: master
+  value: 2022.3
 - name: VERSION_NUMBER # version number of the build
-  value: 2022.4.0.$(Build.BuildId)
+  value: 2022.3.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 22.4.0.$(Build.BuildId)
+  value: 22.3.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2022.4-alpha.1
-- name: TAG_LATEST # tag to be used
-  value: master-latest
-- name: TAG_PREVIOUS # tag to compare changelog to
   value: 2022.3.0
+- name: TAG_LATEST # tag to be used
+  value: 2022.3.0
+- name: TAG_PREVIOUS # tag to compare changelog to
+  value: 2022.2.0
 - name: IS_PRERELASE
-  value: true
+  value: false
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2022.4
+  value: 2022.3
 
 
 resources:
@@ -446,39 +446,6 @@ jobs:
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub $(TAG) release
-     # ------------------------------------
-     # RELEASE ORIGAM_ORIGAM - TAG_LATEST
-     # ------------------------------------
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam'
-         action: 'create'
-         target: $(ORIGAM_ORIGAM_COMMIT_ID)
-         tagSource: 'userSpecifiedTag'
-         tag: '$(TAG_LATEST)'
-         title: '$(TAG_LATEST)'
-         isPreRelease: $(IS_PRERELASE)
-         releaseNotesSource: 'inline'
-         releaseNotesInline: |
-           The latest $(BRANCH) build. Version $(VERSION_NUMBER).
-           
-           ---
-           
-           Docker image
-           ```
-           docker pull origam/server:$(TAG_LATEST)
-           ```
-           Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG_LATEST)) 
-         assets: |
-           $(Build.ArtifactStagingDirectory)/origam-model.zip
-           $(Build.ArtifactStagingDirectory)/origam-html.zip
-           $(Build.ArtifactStagingDirectory)/origam-setup/OrigamSetup.msi
-         addChangeLog: true
-         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
-         changeLogType: 'commitBased'
-       displayName: Create new GitHub $(TAG_LATEST) release
      - task: DeleteFiles@1
        inputs:
          SourceFolder: '$(Build.ArtifactStagingDirectory)'
@@ -508,28 +475,6 @@ jobs:
          changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
          changeLogType: 'commitBased'
        displayName: Create new GitHub origam-html-chat/$(TAG) release
-     # ------------------------------------
-     # RELEASE ORIGAM_HTML_CHAT - TAG_LATEST
-     # ------------------------------------
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-html-chat'
-         action: 'create'
-         target: $(ORIGAM_HTML_CHAT_COMMIT_ID)
-         tagSource: 'userSpecifiedTag'
-         tag: '$(TAG_LATEST)'
-         title: '$(TAG_LATEST)'
-         isPreRelease: $(IS_PRERELASE)
-         releaseNotesSource: 'inline'
-         releaseNotesInline: |
-           The latest $(BRANCH) build. Version $(VERSION_NUMBER).
-           Downloads at <a href="https://github.com/origam/origam-source/releases/tag/$(TAG_LATEST)">origam-source/$(TAG_LATEST)</a>
-         addChangeLog: true
-         changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-         changeLogCompareToReleaseTag: '$(TAG_PREVIOUS)'
-         changeLogType: 'commitBased'
-       displayName: Create new GitHub origam-html-chat/$(TAG_LATEST) release
   # ------------------------------------
   # DOCKER
   # ------------------------------------
@@ -561,5 +506,5 @@ jobs:
          Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
-           $(TAG).$(Build.BuildId)
-           $(TAG_LATEST)
+            $(TAG).$(Build.BuildId)
+            $(TAG)
