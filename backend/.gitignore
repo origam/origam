@@ -24,3 +24,4 @@ _Resharper*/
 /Origam.Mail/MailData.xss
 /Origam.ServerCore/log4net.config
 /Origam.ServerCore/appsettings.Development.json
+/Origam.Server/Properties/launchSettings.json
