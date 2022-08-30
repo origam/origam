@@ -95,11 +95,13 @@
             <div class="input-row">
                 @foreach (var provider in Model.VisibleExternalProviders)
                 {
-                    <a class="btn btn-default"
-                       asp-controller="External"
-                       asp-action="Challenge"
-                       asp-route-provider="@provider.AuthenticationScheme"
-                       asp-route-returnUrl="@Model.ReturnUrl">
+                    <a 
+                        id="loginButton-@provider.AuthenticationScheme"
+                        class="btn btn-default" 
+                        asp-controller="External"
+                        asp-action="Challenge"
+                        asp-route-provider="@provider.AuthenticationScheme"
+                        asp-route-returnUrl="@Model.ReturnUrl">
                         @SharedLocalizer[provider.DisplayName]
                     </a>
                 }

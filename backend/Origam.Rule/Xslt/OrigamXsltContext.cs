@@ -36,7 +36,7 @@ namespace Origam.Rule.Xslt
     public class OrigamXsltContext : XsltContext
     {
         private Dictionary<string, object> _xslFunctionsDict;
-
+        private ExsltContext _exslt;
         public static OrigamXsltContext Create(XmlNameTable nameTable)
         {
             var functionContainers = XsltFunctionContainerFactory.Create();
@@ -49,6 +49,7 @@ namespace Origam.Rule.Xslt
         public OrigamXsltContext(XmlNameTable nt, IEnumerable<XsltFunctionsDefinition> xsltFunctionsDefinitions)
             : base((NameTable)nt)
         {
+            _exslt = new ExsltContext(nt);
             _xslFunctionsDict = new Dictionary<string, object>();
 
             foreach (var xsltFunctionsDefinition in xsltFunctionsDefinitions)
@@ -100,8 +101,11 @@ namespace Origam.Rule.Xslt
                     return func;
                 }
             }
-            throw new XPathException(string.Format("Xsl Function not found: prefix='{0}', name='{1}'",
-                prefix, name), null);
+            if (string.IsNullOrEmpty(prefix))
+            {
+                throw new Exception($"Could not resolve xslt function \"{name}\" with namespace prefix \"{prefix}\"");
+            }
+            return _exslt.ResolveFunction(prefix, name, ArgTypes);
         }
 
         public override IXsltContextVariable ResolveVariable(string prefix, string name)

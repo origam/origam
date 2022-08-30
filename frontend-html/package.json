@@ -27,7 +27,7 @@
     "@types/numeral": "^2.0.2",
     "@types/react": "^17.0.40",
     "@types/react-color": "^3.0.6",
-    "@types/react-dom": "^18.0.3",
+    "@types/react-dom": "17.0.2",
     "@types/react-draft-wysiwyg": "^1.13.4",
     "@types/react-highlight-words": "^0.16.4",
     "@types/react-inlinesvg": "^1.0.0",
@@ -83,26 +83,26 @@
     "test": "react-scripts test src/tests",
     "eject": "react-scripts eject"
   },
+  "resolutions": {
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9",
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
+  "browserslist": [
       ">0.2%",
       "not dead",
       "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  ],
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.2",
-    "@types/uuid": "^8.3.4"
+    "@types/uuid": "^8.3.4",
+    "react-error-overlay": "6.0.9"
   }
 }

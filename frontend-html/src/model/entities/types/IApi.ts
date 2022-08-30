@@ -228,7 +228,7 @@ export interface IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
   }): Promise<any>;
 
@@ -238,7 +238,7 @@ export interface IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
   }): Promise<any>;

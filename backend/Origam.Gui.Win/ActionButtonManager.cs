@@ -223,22 +223,21 @@ namespace Origam.Gui.Win
                 actionType: actionButton.GetAction().ActionType.ToString(),
                 actionId: actionButton.GetAction().Id.ToString(),
                 parameterMappings: actionButton.GetAction().ParameterMappings,
-                selectedItems: GetSelectedItemsForAction(),
+                selectedIds: GetSelectedItemsForAction(),
                 inputParameters: new Hashtable());
         }
 
-        private ArrayList GetSelectedItemsForAction()
+        private List<string> GetSelectedItemsForAction()
         {
             var currencyManager = bindingManagerGetter.Invoke();
-            ArrayList selectedItems = new ArrayList();
-            if ((currencyManager.Current is DataRowView)
-                && ((currencyManager.Current as DataRowView).Row.Table
+            var selectedItems = new List<string>();
+            if ((currencyManager.Current is DataRowView dataRowView)
+                && (dataRowView.Row.Table
                     .PrimaryKey
                     .Length > 0))
             {
-                selectedItems.Add((currencyManager.Current as DataRowView)
-                    .Row[(currencyManager.Current as DataRowView).Row.Table
-                        .PrimaryKey[0]]);
+                selectedItems.Add(dataRowView
+                    .Row[dataRowView.Row.Table.PrimaryKey[0]].ToString());
             }
 
             return selectedItems;

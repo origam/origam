@@ -91,7 +91,11 @@ export class FormViewEditor extends React.Component<{
     const rowId = getSelectedRowId(this.props.property);
     const row = getSelectedRow(this.props.property);
     const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
-    const readOnly = !row || isReadOnly(this.props.property!, rowId);
+    const  dataView = getDataView(this.props.property);
+    const readOnly =
+      !row ||
+      isReadOnly(this.props.property!, rowId) ||
+      (dataView.orderProperty !== undefined && this.props.property?.name === dataView.orderProperty.name);
     const backgroundColor = readOnly
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
