@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "node ./custom-scripts/updateVersions.cjs && tsc && vite build",
     "preview": "vite preview",
     "postinstall": "patch-package"
   },
@@ -91,5 +91,9 @@
     "@vitejs/plugin-react": "^2.0.1",
     "react-error-overlay": "6.0.9",
     "vite": "^3.0.7"
+  },
+  "resolutions": {
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2"
   }
 }
