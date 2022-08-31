@@ -38,7 +38,7 @@ import { preventDoubleclickSelect } from "utils/mouse";
 import { RootError } from "RootError";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ArrayPrototypes } from "@origam/utils"
-import 'vite/client'
+// import 'vite/client'
 
 // if (import.meta.env.REACT_APP_SELENIUM_KICK) {
 //   axios.post("http://127.0.0.1:3500/app-reload");
