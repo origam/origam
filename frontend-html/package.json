@@ -108,8 +108,10 @@
     "setupFilesAfterEnv": [
       "<rootDir>/jest-setup.ts"
     ],
+    "testMatch": ["**/tests/*.test.ts"],
     "moduleNameMapper": {
-      "\\.(css|less)$": "identity-obj-proxy"
-    }
+      "\\.(css|less|scss)$": "identity-obj-proxy"
+    },
+    "moduleDirectories": ["node_modules", "src"]
   }
 }
