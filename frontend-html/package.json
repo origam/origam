@@ -96,7 +96,6 @@
     "@types/uuid": "^8.3.4",
     "@vitejs/plugin-react": "^2.0.1",
     "identity-obj-proxy": "^3.0.0",
-    "react-error-overlay": "6.0.9",
     "vite": "^3.0.7"
   },
   "resolutions": {
