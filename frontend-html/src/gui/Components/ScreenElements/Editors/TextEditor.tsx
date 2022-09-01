@@ -24,12 +24,12 @@ import { useCallback, useEffect, useState } from "react";
 import S from "./TextEditor.module.scss";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 
-// import { ContentState, convertToRaw, EditorState } from "draft-js";
-// import { Editor } from "react-draft-wysiwyg";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
-// import htmlToDraft from "html-to-draftjs";
+import htmlToDraft from "html-to-draftjs";
 
-// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IDockType } from "model/entities/types/IProperty";
 
 const autoUpdateUntervalMs = 60_000;
@@ -255,20 +255,20 @@ function RichTextEditor(props: {
   onFocus?: (event: any) => void;
   refInput?: (elm: any) => void;
 }) {
-  // const [internalEditorState, setInternalEditorState] = useState(() => EditorState.createEmpty());
+  const [internalEditorState, setInternalEditorState] = useState(() => EditorState.createEmpty());
   const [internalEditorStateHtml, setInternalEditorStateHtml] = useState("");
 
 
-  // const onEditorStateChange = useCallback(
-  //   (newEditorState: any) => {
-  //     setInternalEditorState(newEditorState);
-  //     const html = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
-  //     setInternalEditorStateHtml(html);
-  //     props.onChange?.(html);
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [setInternalEditorState, setInternalEditorStateHtml, props.onChange]
-  // );
+  const onEditorStateChange = useCallback(
+    (newEditorState: any) => {
+      setInternalEditorState(newEditorState);
+      const html = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
+      setInternalEditorStateHtml(html);
+      props.onChange?.(html);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setInternalEditorState, setInternalEditorStateHtml, props.onChange]
+  );
 
   useEffect(() => {
     if (props.refInput) {
@@ -278,23 +278,22 @@ function RichTextEditor(props: {
 
   useEffect(() => {
     if (props.value !== internalEditorStateHtml) {
-      // const blocksFromHtml = htmlToDraft(props.value);
-      // const {contentBlocks, entityMap} = blocksFromHtml;
-      // const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-      // const editorState = EditorState.createWithContent(contentState);
+      const blocksFromHtml = htmlToDraft(props.value);
+      const {contentBlocks, entityMap} = blocksFromHtml;
+      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      const editorState = EditorState.createWithContent(contentState);
       setInternalEditorStateHtml(props.value);
-      // setInternalEditorState(editorState);
+      setInternalEditorState(editorState);
     }
   }, [props.value, internalEditorStateHtml]);
 
   return (
-        // <Editor
-        //   // editorState={internalEditorState}
-        //   wrapperClassName={S.richTextWrappStyle}
-        //   editorClassName={S.richTextEditorStyle}
-        //   // onEditorStateChange={onEditorStateChange}
-        //   onBlur={props.onBlur}
-        // />
-    <div>ERROR</div>
+        <Editor
+          editorState={internalEditorState}
+          wrapperClassName={S.richTextWrappStyle}
+          editorClassName={S.richTextEditorStyle}
+          onEditorStateChange={onEditorStateChange}
+          onBlur={props.onBlur}
+        />
   );
 }

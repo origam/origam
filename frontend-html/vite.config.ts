@@ -86,6 +86,9 @@ export default defineConfig({
 				secure: false
 			}
 		}
+	},
+	define: {
+		global: 'window',
 	}
 })
 
