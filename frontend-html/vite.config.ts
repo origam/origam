@@ -27,6 +27,10 @@ export default defineConfig({
 				find: /^~(.*)$/,
 				replacement: '$1',
 			},
+			{
+				find: 'stream',
+				replacement: `stream-browserify`,
+			},
 		],
 	},
 	build: {
