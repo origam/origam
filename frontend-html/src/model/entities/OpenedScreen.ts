@@ -99,4 +99,5 @@ export class OpenedScreen implements IOpenedScreen {
   }
 
   parent?: any;
+  canRefresh = true;
 }

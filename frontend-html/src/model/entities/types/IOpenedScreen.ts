@@ -50,6 +50,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   stackPosition: number;
   isBeingClosed: boolean;
   formTitle: string;
+  canRefresh: boolean;
 
   setActive(state: boolean): void;
   activationHandler: EventHandler;
