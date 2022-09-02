@@ -28,7 +28,6 @@ beforeEach(async () => {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   page = await browser.newPage();
-  // await installMouseHelper(page);
   await page.goto(backEndUrl);
   await page.evaluate(() => {
     localStorage.setItem("debugCloseAllForms", "1");
