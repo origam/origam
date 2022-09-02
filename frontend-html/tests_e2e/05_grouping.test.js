@@ -154,7 +154,7 @@ describe("Html client", () => {
     await sleep(2000);
 
     const rowHeight = 30;
-    const tableArea = await page.$(`#${dataViewId}  [class*='Table_cellAreaContainer']`);
+    const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
 
     // open first group on the first level
@@ -207,7 +207,7 @@ describe("Html client", () => {
     await sleep(1000);
 
     const rowHeight = 30;
-    const tableArea = await page.$(`#${dataViewId}  [class*='Table_cellAreaContainer']`);
+    const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
 
     // open first group on the first level
