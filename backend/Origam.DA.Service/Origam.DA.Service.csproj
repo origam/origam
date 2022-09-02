@@ -59,7 +59,7 @@
 
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.33.2" />
       <PackageReference Include="morelinq" Version="3.3.2" />
       <PackageReference Include="Npgsql" Version="6.0.5" />
     </ItemGroup>
