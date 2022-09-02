@@ -1,11 +1,11 @@
 const fs = require("fs");
 
-const pluginRegistrationFilePath = "src/plugins/tools/PluginRegistration.ts"
-const envFilePath = ".env.production.local";
+// const pluginRegistrationFilePath = "src/plugins/tools/PluginRegistration.ts"
+// const envFilePath = ".env.production.local";
 
 // for debugging:
-// const pluginRegistrationFilePath = "../src/plugins/tools/PluginRegistration.ts"
-// const envFilePath = "../.env.production.local";
+const pluginRegistrationFilePath = "../src/plugins/tools/PluginRegistration.ts"
+const envFilePath = "../.env.production.local";
 
 const pluginVersionsVariableName = "REACT_APP_ORIGAM_UI_PLUGINS";
 
@@ -44,7 +44,7 @@ const packageNamesAndVersions = usedPluginNames
   .map(pluginName => {
     const packageName = getPackageName(pluginName, registrationFile);
     const packageReference = require(`../node_modules/${packageName}/package.json`);
-    return `${packageName}: ${packageReference.version}`;
+    return `${pluginName} - ${packageName}: ${packageReference.version}`;
   })
   .join(";")
 
