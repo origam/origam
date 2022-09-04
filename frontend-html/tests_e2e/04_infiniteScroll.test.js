@@ -94,6 +94,5 @@ describe("Html client", () => {
     expect(lastRow["Text1"]).toBe("txt2109");
 
     // await sleep(60000);
-
   });
 });

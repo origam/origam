@@ -7,21 +7,21 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: 2022.1
+  value: 2022.3
 - name: VERSION_NUMBER # version number of the build
-  value: 2022.1.0.$(Build.BuildId)
+  value: 2022.3.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 22.1.0.$(Build.BuildId)
+  value: 22.3.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2022.1.0
+  value: 2022.3.0
 - name: TAG_LATEST # tag to be used
-  value: 2022.1.0
+  value: 2022.3.0
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2021.1
+  value: 2022.2.0
 - name: IS_PRERELASE
   value: false
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2022.1
+  value: 2022.3
 
 
 resources:
@@ -72,7 +72,7 @@ jobs:
         $filename | %{
          (gc $_) -replace "<Version>0.0.0.0</Version>", "<Version>$(VERSION_NUMBER)</Version>" |Set-Content $_.fullname
         }
-        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\Controller\AboutController.cs") -replace "Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
        displayName: 'Build Number'
      - task: VSBuild@1
        displayName: 'Build architect'
@@ -157,7 +157,7 @@ jobs:
      - powershell: |
         ren $(build.artifactstagingdirectory)\origam-client\OrigamArchitect.exe.config OrigamArchitect.exe.config.template
         ren $(build.artifactstagingdirectory)\origam-client\OrigamScheduler.exe.config OrigamScheduler.exe.config.template
-       displayName: 'Rename Config files'       
+       displayName: 'Rename Config files'
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-client'
        inputs:
@@ -213,12 +213,12 @@ jobs:
      - script: |
         set MsBuildEmitSolution=1
         "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /pp -v:m
-        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_ServerCore:Publish -v:m
+        "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64\msbuild.exe" $(Agent.BuildDirectory)\s\backend\Origam.sln /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
        displayName: 'Build HTML Server'
      - task: CopyFiles@2
        displayName: 'Copy HTML server to: $(build.artifactstagingdirectory)\origam-html'
        inputs:
-         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.ServerCore\bin\Release\net6.0\publish\'
+         SourceFolder: '$(Agent.BuildDirectory)\s\backend\Origam.Server\bin\Release\net6.0\publish\'
          Contents: |
            **\*.*
            !*.config
@@ -374,10 +374,26 @@ jobs:
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam'
+         action: 'delete'
+         tag: '$(TAG_LATEST)'
+       displayName: Delete previous GitHub origam/$(TAG_LATEST) release
+       continueOnError: true
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
          repositoryName: 'origam/origam-html-chat'
          action: 'delete'
          tag: '$(TAG)'
        displayName: Delete previous GitHub origam-html-chat/$(TAG) release
+       continueOnError: true
+     - task: GitHubRelease@1
+       inputs:
+         gitHubConnection: 'https://github.com/origam/'
+         repositoryName: 'origam/origam-html-chat'
+         action: 'delete'
+         tag: '$(TAG_LATEST)'
+       displayName: Delete previous GitHub origam-html-chat/$(TAG_LATEST) release
        continueOnError: true
      - script: |
         git tag -f $(TAG)
@@ -418,8 +434,6 @@ jobs:
            Docker image
            ```
            docker pull origam/server:$(TAG).$(Build.BuildId)
-           
-           docker pull origam/server:$(TAG)
            ```
            Related change logs: [HTML Chat](https://github.com/origam/origam-html-chat/releases/tag/$(TAG)) 
          assets: |
@@ -492,5 +506,5 @@ jobs:
          Dockerfile: '$(Agent.BuildDirectory)/s/docker/Dockerfile'
          buildContext: '$(Agent.BuildDirectory)/s/docker'
          tags: |
-           $(TAG).$(Build.BuildId)
-           $(TAG)
+            $(TAG).$(Build.BuildId)
+            $(TAG)

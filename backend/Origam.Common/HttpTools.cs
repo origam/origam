@@ -66,7 +66,7 @@ namespace Origam
 			}
 		}
 
-		private List<Cookie> CookiesFromStrings(string host,
+		public List<Cookie> CookiesFromStrings(string host,
 			List<string> singleCookies)
 		{
 			List<Cookie> cookies = new List<Cookie>();
@@ -86,7 +86,7 @@ namespace Origam
 			return cookies;
 		}
 
-		private List<string> SplitCookiesHeaderToSingleCookies(
+		public List<string> SplitCookiesHeaderToSingleCookies(
 			string setCookieHeader)
 		{
 			string[] cookieSegments = setCookieHeader.Split(',');

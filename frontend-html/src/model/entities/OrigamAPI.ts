@@ -435,7 +435,7 @@ export class OrigamAPI implements IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
   }): Promise<any> {
     return (await this.axiosInstance.post("/UIService/ExecuteActionQuery", data)).data;
@@ -447,7 +447,7 @@ export class OrigamAPI implements IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
   }): Promise<any> {

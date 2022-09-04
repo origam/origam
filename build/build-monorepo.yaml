@@ -9,19 +9,19 @@ variables:
 - name: BRANCH # branch to be used
   value: master
 - name: VERSION_NUMBER # version number of the build
-  value: 2022.3.0.$(Build.BuildId)
+  value: 2022.4.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
-  value: 22.3.0.$(Build.BuildId)
+  value: 22.4.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2022.3-alpha.1
+  value: 2022.4-alpha.1
 - name: TAG_LATEST # tag to be used
   value: master-latest
 - name: TAG_PREVIOUS # tag to compare changelog to
-  value: 2022.2.0
+  value: 2022.3.0
 - name: IS_PRERELASE
   value: true
 - name: PRODUCT_VERSION # used in setup to differentiate the version of architect
-  value: 2022.3
+  value: 2022.4
 
 
 resources:
@@ -86,10 +86,11 @@ jobs:
        inputs:
          testSelector: 'testAssemblies'
          testAssemblyVer2: |
-           **\*test*.dll
+           **\*Tests.dll
            !**\*TestAdapter.dll
            !**\obj\**
          searchFolder: '$(Agent.BuildDirectory)\s\backend\'
+         runInParallel: false
      - task: CopyFiles@2
        displayName: 'Copy OrigamScheduler to: $(build.artifactstagingdirectory)\origam-architect'
        inputs:

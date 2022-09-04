@@ -1,21 +1,13 @@
 const puppeteer = require("puppeteer");
 const { backEndUrl} = require('./additionalConfig');
-const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount,
-  waitForRowCountData, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus,
+const { sleep, openMenuItem, login, waitForRowCountData, switchToFormPerspective,
+  inputByPressingKeys, switchLanguageTo, waitForFocus,
   switchToTablePerspective
 } = require('./testTools');
-const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader,
+const {widgetsMenuItemId,topMenuHeader,
   allDataTypesLazyMenuItemsId} = require("./modelIds");
 const { putNumericTestDataToAllDataTypes, clearScreenConfiguration,
   restoreAllDataTypesTable} = require("./dbTools");
-const {
-  openFilters,
-  setFilter,
-  setTwoFieldFilter,
-  setDateFilter,
-  setTwoFieldDateFilter,
-  setComboFilter
-} = require("./filterTestTools");
 
 let browser;
 let page;

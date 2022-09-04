@@ -38,7 +38,7 @@ namespace Origam.Gui
 
         public string Entity { get; set; }
 
-        public IList SelectedItems { get; set; }
+        public List<string> SelectedIds { get; set; }
 
         public PanelActionType Type { get; set; }
 
@@ -46,7 +46,7 @@ namespace Origam.Gui
 
         public DataTable DataTable { get; set; }
 
-        public IList<DataRow> Rows { get; set; }
+        public IList<DataRow> SelectedRows { get; set; }
 
         public IParameterService ParameterService { get; set; }
 

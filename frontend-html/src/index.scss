@@ -37,6 +37,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+input {
+  margin: 0;
+}
+
 input,
 textarea {
   font-family: "IBM Plex Sans", sans-serif;

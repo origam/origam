@@ -332,50 +332,6 @@ describe("Html client", () => {
       aPropertyId: date1PropertyId
     });
 
-    // await setDateFilter({
-    //   page: page,
-    //   propertyId: date1PropertyId ,
-    //   comboOptionText: "=",
-    //   value: "03.07.2021"
-    // })
-    //
-    // await waitForRowCountData(page, dataViewId,1);
-    //
-    // await setDateFilter({
-    //   page: page,
-    //   propertyId: date1PropertyId ,
-    //   comboOptionText: "≠",
-    //   value: "03.07.2021"
-    // })
-    // await waitForRowCountData(page, dataViewId,29);
-    //
-    // await setDateFilter({
-    //   page: page,
-    //   propertyId: date1PropertyId ,
-    //   comboOptionText: "≤",
-    //   value: "03.07.2021"
-    // })
-    //
-    // await waitForRowCountData(page, dataViewId,11);
-    //
-    // await setDateFilter({
-    //   page: page,
-    //   propertyId: date1PropertyId ,
-    //   comboOptionText: "≥",
-    //   value: "03.07.2021"
-    // })
-    //
-    // await waitForRowCountData(page, dataViewId,20);
-    //
-    // await setDateFilter({
-    //   page: page,
-    //   propertyId: date1PropertyId ,
-    //   comboOptionText: "<",
-    //   value: "03.07.2021"
-    // })
-    //
-    // await waitForRowCountData(page, dataViewId,10);
-
     await setDateFilter({
       page: page,
       propertyId: date1PropertyId ,

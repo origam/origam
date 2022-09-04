@@ -267,11 +267,11 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     this.formScreen = formScreen;
   }
 
-  *start(initUIResult: any, preloadIsDirty?: boolean): Generator {
-    yield*this.formScreenLifecycle.start(initUIResult);
+  *start(args: {initUIResult: any, preloadIsDirty?: boolean}): Generator {
+    yield*this.formScreenLifecycle.start(args.initUIResult);
     if (this.formScreen) {
-      this.formScreen.setDirty(!!preloadIsDirty);
-      if(preloadIsDirty && isLazyLoading(this.formScreen)){
+      this.formScreen.setDirty(!!args.preloadIsDirty);
+      if(args.preloadIsDirty && isLazyLoading(this.formScreen)){
        yield*this.loadDirtyRow(this.formScreen);
       }
     }
