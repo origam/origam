@@ -318,4 +318,7 @@
   <data name="MenuNotAuthorized" xml:space="preserve">
     <value>You don't have access to {0}</value>
   </data>
+  <data name="ContinueAnyway" xml:space="preserve">
+    <value>Continue Anyway</value>
+  </data>
 </root>

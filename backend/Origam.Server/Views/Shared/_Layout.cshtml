@@ -13,8 +13,8 @@
         name = Context.User?.GetDisplayName();
     }
     CustomAssetsConfig config = ConfigOptions.Value;
-    var logoUrl = string.IsNullOrWhiteSpace(config.IdentityGuiLogoUrl) 
-        ? "/assets/identity/icons/origam.png" 
+    var logoUrl = string.IsNullOrWhiteSpace(config.IdentityGuiLogoUrl)
+        ? "/assets/identity/icons/origam.png"
         : config.IdentityGuiLogoUrl;
 
     OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
@@ -22,23 +22,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@string.Format(SharedLocalizer.GetString("IdentityServerTitle"), settings.TitleText )</title>
-    <link rel="stylesheet" href="~/assets/identity/css/css.css" />
-    <link rel="stylesheet" href="~/assets/identity/css/main.css" />
-    <link rel="stylesheet" href="~/assets/identity/css/login.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@string.Format(SharedLocalizer.GetString("IdentityServerTitle"), settings.TitleText)</title>
+    <link rel="stylesheet" href="~/assets/identity/css/css.css"/>
+    <link rel="stylesheet" href="~/assets/identity/css/main.css"/>
+    <link rel="stylesheet" href="~/assets/identity/css/login.css"/>
 </head>
 <body>
-
+<div id="overlay" class="page-content">
+    <h3>
+        @SharedLocalizer["BrowserNotCompatible"]
+    </h3>
+    <div id="browserLinks">
+        <a class="btn normal-size primary" href="https://www.google.com/chrome/">Chrome</a>
+        <a class="btn normal-size primary" href="https://www.mozilla.org/firefox/new/">Firefox</a>
+        <a class="btn normal-size primary" id="edgeLink" href="https://www.microsoft.com/edge/">Edge</a>
+        <a class="btn normal-size primary" id="safariLink" href="https://www.apple.com/safari/">Safari</a>
+    </div>
+    <div class="input-row">
+        <a id="continueAnywayLink">@SharedLocalizer["ContinueAnyway"]</a>
+    </div>
+</div>
 <div id="page-container" class="page-content">
-        <div class="logo-container centered">
-            <img src=@logoUrl />
-        </div>
+    <div class="logo-container centered">
+        <img src=@logoUrl/>
+    </div>
     @RenderBody()
 </div>
-
+<script src="~/supportedBrowserRegEx.js"></script>
+<script src="~/assets/identity/js/browser-check.js"></script>
 <script src="~/assets/identity/js/form-sumbit.js"></script>
 <script src="~/assets/identity/js/custom.js"></script>
 @RenderSection("scripts", required: false)

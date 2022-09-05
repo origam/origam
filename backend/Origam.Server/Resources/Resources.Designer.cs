@@ -106,6 +106,15 @@ namespace Origam.Server {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Continue Anyway.
+        /// </summary>
+        public static string ContinueAnyway {
+            get {
+                return ResourceManager.GetString("ContinueAnyway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Record has not been changed yet..
         /// </summary>
         public static string DefaultTooltipNoChange {

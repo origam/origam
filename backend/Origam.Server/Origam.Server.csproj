@@ -53,8 +53,10 @@
 
   <ItemGroup>
     <Folder Include="assets\identity\lib" />
+    <Folder Include="IdentityServerGui\Browser" />
     <Folder Include="logs" />
     <Folder Include="Model\Data\" />
+    <Folder Include="Views\Browser" />
   </ItemGroup>
 
   <ItemGroup>

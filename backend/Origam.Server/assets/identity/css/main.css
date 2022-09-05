@@ -270,3 +270,31 @@ div.input-row a.btn{
   border: 1px solid transparent;
   border-radius: 4px;
 }
+
+#browserLinks{
+  display: flex;
+  flex-direction: column;
+}
+
+#overlay{
+  display: none;
+}
+
+#page-container{
+  display: none;
+}
+
+#browserLinks a{
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+#continueAnywayLink{
+  display: block;
+  margin-top: 12px;
+}
