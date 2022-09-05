@@ -503,7 +503,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const api = getApi(this);
       const reportInfo = (yield api.getReportInfo({ReportId: reportId})) as any;
       return reportInfo.isWebReport === "true";
-    }else {
+    }else{
       return true;
     }
   }
