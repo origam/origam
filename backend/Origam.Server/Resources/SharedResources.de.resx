@@ -437,4 +437,13 @@
   <data name="SignInWithAzureAd" xml:space="preserve">
     <value>Melden Sie sich mit Ihrem Azure AD an</value>
   </data>
+  <data name="ContinueAnyway" xml:space="preserve">
+    <value>Trotzdem fortfahren</value>
+  </data>
+  <data name="BrowserNotCompatible" xml:space="preserve">
+    <value>Ihr Browser ist nicht mit unserer Anwendung kompatibel. Bitte installieren Sie die neueste Version eines der folgenden Browser:
+
+
+</value>
+  </data>
 </root>
