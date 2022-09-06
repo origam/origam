@@ -168,7 +168,7 @@ export function processActionResult2(dep: {
             // eslint-disable-next-line no-new-func
             const actionScript = new Function("getPanel", actionResultItem.script);
             actionScript(dep.getPanelFunc);
-          } catch (e) {
+          } catch (e: any) {
             let message = "An error occurred while executing custom script: " + actionResultItem.script + ", \n" + e.message;
             if (e.stackTrace)
               message += (", \n" + e.stackTrace);

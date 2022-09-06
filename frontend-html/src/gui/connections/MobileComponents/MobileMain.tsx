@@ -41,6 +41,7 @@ import {
 } from "model/entities/MobileState/MobileLayoutState";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { CDialogContent } from "gui/connections/CDialogContent";
+import "gui/connections/MobileComponents/mobile.module.scss"
 
 @observer
 export class MobileMain extends React.Component<{}> {

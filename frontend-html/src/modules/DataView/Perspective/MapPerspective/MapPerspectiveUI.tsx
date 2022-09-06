@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import cx from "classnames";
 import L from "leaflet";
+import "leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
 import { action, autorun, computed, observable, reaction, runInAction } from "mobx";
-import qs from "querystring";
 import React from "react";
 import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
@@ -31,13 +31,16 @@ import { MapLayer } from "./stores/MapSetupStore";
 import Measure, { ContentRect } from "react-measure";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
 import { ring as area } from "@mapbox/geojson-area";
+import marker2xIcon from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+  iconRetinaUrl: marker2xIcon,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
 });
 
 interface IMapPerspectiveComProps {
@@ -250,7 +253,12 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         switch (obj.type) {
           case IMapObjectType.POINT: {
             const iconUrl = obj.icon || "img/map/marker-icon.png#anchor=[12,41]";
-            const pq = iconUrl ? qs.parse(iconUrl.split("#")[1] || "") : null;
+            const urlParams = new URLSearchParams(iconUrl.split("#")[1] || "");
+            const urlQuery: {[key: string]: any} = {};
+            for (let key of urlParams.keys()){
+              urlQuery[key] = urlParams.get(key);
+            }
+            const pq = iconUrl ? urlQuery : null;
             const anchor = pq?.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
             const iconAnchor: [number, number] = anchor;
             const iconRotation = obj.azimuth || 0;
