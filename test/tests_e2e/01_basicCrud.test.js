@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const { backEndUrl} = require('./additionalConfig');
 const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount} = require('./testTools');
 const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader} = require("./modelIds");
-const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
+const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./consoleTools");
 
 let browser;
 let page;
@@ -21,7 +21,12 @@ beforeEach(async () => {
       width: 1024,
       height: 768,
     },
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+    ]
   });
   page = await browser.newPage();
   await page.goto(backEndUrl);
@@ -102,7 +107,7 @@ async function refreshAndThrowChangesAway() {
 
 async function selectMasterRow(rowIndex) {
   const rowHeight = 30;
-  const tableArea = await page.$(`#${masterDataViewId}  [class*='_cellAreaContainer']`);
+  const tableArea = await page.$(`#${masterDataViewId}  [class*='Table_cellAreaContainer']`);
   const box = await tableArea.boundingBox();
   await page.mouse.click(
     box.x + 50,
@@ -132,14 +137,22 @@ describe("Html client", () => {
     await addRowToMaster("str21", "str22");
     await addRowToMaster("str31", "str32");
 
+    // await page.$eval("#saveButton", elem => elem .click())
+    // await page.waitForSelector('#saveButton :not(.isRed)');
+
     await sleep(300);
     const rowCountData = await getRowCountData(page, masterDataViewId);
     expect(rowCountData.selectedRow).toBe("3");
     expect(rowCountData.rowCount).toBe("3");
 
+    // const scroller = await page.$(`#${masterDataViewId}  [class*='Table_cellAreaContainer']`);
+    // const imageAfterAdding = await getImage(page, scroller)
+    // expect(imageAfterAdding).toMatchImageSnapshot();
+
+
     // remove the second row
     await sleep(500);
-    const tableArea = await page.$(`#${masterDataViewId}  [class*='_cellAreaContainer']`);
+    const tableArea = await page.$(`#${masterDataViewId}  [class*='Table_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
     await page.mouse.click(
       box.x + 50,
@@ -160,10 +173,16 @@ describe("Html client", () => {
     );
     await yesRowButton.click();
 
+    // await page.$eval("#saveButton", elem => elem .click())
+    // await page.waitForSelector('#saveButton :not(.isRed)');
+
     await sleep(300);
     const rowCountDataAfterDelete = await getRowCountData(page, masterDataViewId);
     expect(rowCountDataAfterDelete.selectedRow).toBe("2");
     expect(rowCountDataAfterDelete.rowCount).toBe("2");
+    // const imageAfterDeleting = await getImage(page, scroller);
+    // expect(imageAfterDeleting).toMatchImageSnapshot();
+
 
     //duplicate first row
     await page.mouse.click(
@@ -181,10 +200,13 @@ describe("Html client", () => {
     const rowCountDataAfterDuplication = await getRowCountData(page, masterDataViewId);
     expect(rowCountDataAfterDuplication.selectedRow).toBe("3");
     expect(rowCountDataAfterDuplication.rowCount).toBe("3");
+    // const imageAfterCopying = await getImage(page, scroller);
+    // expect(imageAfterCopying).toMatchImageSnapshot();
 
     await refreshAndThrowChangesAway();
     await sleep(500);
 
+    // await sleep(120 * 1000);
   });
   it("Should perform basic master detail interaction", async () => {
     await login(page);
