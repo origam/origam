@@ -58,7 +58,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: htmlfrontendbuild
-        path: "frontend-html/build"   
+        path: "frontend-html/dist"   
 
     
   analyze:
