@@ -217,7 +217,9 @@ namespace Origam.Server
                 .GetService<SchemaService>()
                 .GetProvider<MenuSchemaItemProvider>();
             return menuProvider.ChildItemsRecursive
-                .OfType<FormReferenceMenuItem>()
+                .OfType<AbstractMenuItem>()
+                .Where(x => 
+                    x is ReportReferenceMenuItem || x is FormReferenceMenuItem)
                 .FirstOrDefault(FormTools.IsFormMenuInitialScreen)
                 ?.Id.ToString();
         }

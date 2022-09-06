@@ -57,7 +57,7 @@ namespace Origam.Gui
             return result;
         }        
         
-        public static bool IsFormMenuInitialScreen(FormReferenceMenuItem formRef)
+        public static bool IsFormMenuInitialScreen(AbstractMenuItem formRef)
         {
             if (formRef.AuthorizationContext == "*")
             {

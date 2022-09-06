@@ -167,6 +167,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           );
         }
       }
+    }
+    else if (type === IMainMenuItemType.ReportReferenceMenuItem) {
+      const url = (yield this.getReportTabUrl(id)) as string;
+      yield*this.openNewUrl(url, args.item.attributes["label"]);
+      return;
     } else {
       yield*this.openNewForm(
         id,
