@@ -1,11 +1,7 @@
 const fs = require("fs");
 
-// const pluginRegistrationFilePath = "src/plugins/tools/PluginRegistration.ts"
-// const envFilePath = ".env.production.local";
-
-// for debugging:
-const pluginRegistrationFilePath = "../src/plugins/tools/PluginRegistration.ts"
-const envFilePath = "../.env.production.local";
+const pluginRegistrationFilePath = "src/plugins/tools/PluginRegistration.ts"
+const envFilePath = ".env.production.local";
 
 const pluginVersionsVariableName = "REACT_APP_ORIGAM_UI_PLUGINS";
 
