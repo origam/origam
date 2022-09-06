@@ -125,7 +125,7 @@ namespace Origam.Server.Controller
                     parentSession: null,
                     basicUIService: sessionObjects.UIService)));
         }
-        [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        [HttpPost("[action]")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
