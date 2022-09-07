@@ -1419,10 +1419,10 @@
     react-chartjs-2 "^3.3.0"
     rollup-plugin-postcss "^4.0.2"
 
-"@origam/plugins@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@origam/plugins/-/plugins-1.0.2.tgz#1b95327b86eeddce9efdace2f7e0fafeb0badcc7"
-  integrity sha512-Mut5PsG9JEYBHdQGBbtsy3v/fHW0Aia8+kzeTX4QU/DHi2mRRTBp8EjFQE8Pwy8SnuEi3Lev3L2jQjpKQ538KQ==
+"@origam/plugins@^1.0.2", "@origam/plugins@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@origam/plugins/-/plugins-1.1.0.tgz#4bf6e9a3c408633809b6f1810da13eb1f00d47af"
+  integrity sha512-celtwEjZcs8p9ZDmATw1r7yAvXmDKUc+Y6xkNfObTin4kOQxEMNqCw1DT/FriW20sUOeYq71DN3v36JdoMJ5uA==
   dependencies:
     "@origam/utils" "^1.1.1"
     mobx "5"
