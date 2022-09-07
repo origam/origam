@@ -234,15 +234,17 @@ namespace Origam.Gui.Designer
 				.FirstOrDefault(item =>
 					item.ControlType == type.FullName);
 			ControlItem refControl = controlItem;
-			if (refControl == null && 
-			    ToolboxPane.DragAndDropControl != null &&
-			    ToolboxPane.DragAndDropControl.ControlType == type.ToString())
+			if (refControl == null)
 			{
-				refControl = ToolboxPane.DragAndDropControl;
-			}
-			else
-			{
-				refControl = baseControl;
+				if( ToolboxPane.DragAndDropControl != null &&
+				    ToolboxPane.DragAndDropControl.ControlType == type.ToString())
+				{
+					refControl = ToolboxPane.DragAndDropControl;
+				}
+				else
+				{
+					refControl = baseControl;
+				}
 			}
 			
 			var missingPropertyItems = refControl?
