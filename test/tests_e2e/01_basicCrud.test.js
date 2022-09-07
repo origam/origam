@@ -107,7 +107,7 @@ async function refreshAndThrowChangesAway() {
 
 async function selectMasterRow(rowIndex) {
   const rowHeight = 30;
-  const tableArea = await page.$(`#${masterDataViewId}  [class*='Table_cellAreaContainer']`);
+  const tableArea = await page.$(`#${masterDataViewId}  [class*='_cellAreaContainer']`);
   const box = await tableArea.boundingBox();
   await page.mouse.click(
     box.x + 50,
@@ -152,7 +152,7 @@ describe("Html client", () => {
 
     // remove the second row
     await sleep(500);
-    const tableArea = await page.$(`#${masterDataViewId}  [class*='Table_cellAreaContainer']`);
+    const tableArea = await page.$(`#${masterDataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
     await page.mouse.click(
       box.x + 50,

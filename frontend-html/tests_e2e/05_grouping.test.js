@@ -28,7 +28,6 @@ beforeEach(async () => {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   page = await browser.newPage();
-  // await installMouseHelper(page);
   await page.goto(backEndUrl);
   await page.evaluate(() => {
     localStorage.setItem("debugCloseAllForms", "1");
@@ -154,7 +153,7 @@ describe("Html client", () => {
     await sleep(2000);
 
     const rowHeight = 30;
-    const tableArea = await page.$(`#${dataViewId}  [class*='Table_cellAreaContainer']`);
+    const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
 
     // open first group on the first level
@@ -207,7 +206,7 @@ describe("Html client", () => {
     await sleep(1000);
 
     const rowHeight = 30;
-    const tableArea = await page.$(`#${dataViewId}  [class*='Table_cellAreaContainer']`);
+    const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
 
     // open first group on the first level

@@ -39,18 +39,14 @@ import { RootError } from "RootError";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ArrayPrototypes } from "@origam/utils"
 
-if (process.env.REACT_APP_SELENIUM_KICK) {
-  axios.post("http://127.0.0.1:3500/app-reload");
-}
-
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
   axios.defaults.timeout = 3600000;
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
 }
 
-(window as any).ORIGAM_CUSTOM_CLIENT_BUILD = process.env.REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD;
-(window as any).ORIGAM_UI_PLUGINS = process.env.REACT_APP_ORIGAM_UI_PLUGINS;
-(window as any).ORIGAM_SERVER_PLUGINS = process.env.REACT_APP_ORIGAM_SERVER_PLUGINS;
+(window as any).ORIGAM_CUSTOM_CLIENT_BUILD = import.meta.env.VITE_REACT_APP_ORIGAM_CUSTOM_CLIENT_BUILD;
+(window as any).ORIGAM_UI_PLUGINS = import.meta.env.VITE_REACT_APP_ORIGAM_UI_PLUGINS;
+(window as any).ORIGAM_SERVER_PLUGINS = import.meta.env.VITE_REACT_APP_ORIGAM_SERVER_PLUGINS;
 
 function disableAutoZoomingOnIPhone(){
   const safariDerivedBrowser = navigator.vendor && navigator.vendor.indexOf('Apple') > -1;
@@ -110,7 +106,7 @@ async function main() {
     const application = createApplication();
     getApi(application).setAccessToken(user.access_token);
     sessionStorage.setItem("origamAuthToken", user.access_token);
-    userManager.events.addUserLoaded((user) => {
+    userManager.events.addUserLoaded((user: any) => {
       getApi(application).setAccessToken(user.access_token);
       sessionStorage.setItem("origamAuthToken", user.access_token);
     });

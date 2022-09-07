@@ -7,7 +7,7 @@ const envFilePath = ".env.production.local";
 // const pluginRegistrationFilePath = "../src/plugins/tools/PluginRegistration.ts"
 // const envFilePath = "../.env.production.local";
 
-const pluginVersionsVariableName = "REACT_APP_ORIGAM_UI_PLUGINS";
+const pluginVersionsVariableName = "VITE_REACT_APP_ORIGAM_UI_PLUGINS";
 
 function getPackageName(pluginName, registrationFile) {
   const pluginPackageRegEx = new RegExp('import\\s*{\\s*[\\s,\\w]*\\s*' + pluginName + '\\s*[\\s,\\w]*\\s*}\\s*from\\s*"([@\\w\\/\\-]+)', 'g');
