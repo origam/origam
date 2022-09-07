@@ -58,9 +58,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             string modelId = Guid.NewGuid().ToString();
             parentNode.SetAttribute("type", "http://www.w3.org/2001/XMLSchema-instance", "UIElement");
             parentNode.SetAttribute("Type", "ScreenLevelPluginData");
+            parentNode.SetAttribute("HasPanelConfiguration", XmlConvert.ToString (true));
             parentNode.SetAttribute("Name", entity.Name);
             parentNode.SetAttribute("Entity", entity.Name);
             parentNode.SetAttribute("ModelId", modelId);
+            parentNode.SetAttribute("ModelInstanceId", modelId);
             parentNode.SetAttribute("DataMember", dataMember);
 
             FormXmlBuilder.AddDataSource(dataSources, table, modelId, false);
