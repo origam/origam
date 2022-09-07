@@ -241,6 +241,10 @@ namespace Origam.Server.IdentityServerGui.Account
                        == AuthenticationType.Email 
                 ? userManager.FindByEmailAsync(checkedClaim.Value).Result 
                 : userManager.FindByNameAsync(checkedClaim.Value).Result;
+            if (user == null)
+            {
+                return (null, provider, providerUserId, claims);
+            }
             // time for authentication post-processing
             // the default post processor returns always true 
             var postProcessorResult = authenticationPostProcessor.Validate(
