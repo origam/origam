@@ -44,11 +44,12 @@ export class MapPerspectiveDirector implements IIId {
     public mapPerspective = IMapPerspective(),
     public perspective = IPerspective()
   ) {
+    this.toolbarActionsExtension = new ToolbarActionsExtension(this.mapPerspective, () => this.rootStore);
   }
 
   rootStore: MapRootStore = null!;
 
-  toolbarActionsExtension = new ToolbarActionsExtension(this.mapPerspective, () => this.rootStore);
+  toolbarActionsExtension: ToolbarActionsExtension;
 
   @action.bound
   setup() {

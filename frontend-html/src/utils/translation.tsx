@@ -30,7 +30,7 @@ export async function translationsInit(ctx: any) {
   try {
     const result = await axios.get(`locale/localization_${locale}.json`, {});
     translations = result.data
-  } catch (error) {
+  } catch (error: any) {
     if (error.response.status === 404) {
       const localeParent = locale.split("-")[0]
       axios.get(`locale/localization_${localeParent}.json`, {})
