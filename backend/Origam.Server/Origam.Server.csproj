@@ -54,7 +54,6 @@
   <ItemGroup>
     <Folder Include="assets\identity\lib" />
     <Folder Include="logs" />
-    <Folder Include="Model\Data\" />
   </ItemGroup>
 
   <ItemGroup>

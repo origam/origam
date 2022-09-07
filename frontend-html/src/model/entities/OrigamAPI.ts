@@ -454,6 +454,12 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
   }
 
+  async getReportInfo(data: {
+    ReportId: string
+  }): Promise<any> {
+    return (await this.axiosInstance.get(`/Report/GetReportInfo?reportRequestId=` + data.ReportId)).data;
+  }
+
   async getFilterListValues(data: {
     MenuId: string;
     DataStructureEntityId: string;
