@@ -43,6 +43,8 @@ import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileF
 import { MobileCheckBox } from "gui/connections/MobileComponents/Form/CheckBox";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { findStrings } from "xmlInterpreters/xmlUtils";
+import { ExtraButtonsContext } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
+import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 
 
 @inject(({dataView}) => {
@@ -111,6 +113,19 @@ export class MobileFormBuilder extends React.Component<{
                 .sort(compareTabIndexOwners)
                 .map((item: FormItem) => item.element)
             }
+            <ExtraButtonsContext.Consumer>
+              {
+                extraButtons =>(
+                  (extraButtons && (!extraButtons.node.dataView || extraButtons.node.dataView.isFormViewActive())) &&
+                    extraButtons.node.children.map(node =>
+                      <NavigationButton
+                        key={node.name}
+                        label={node.name}
+                        onClick={() => extraButtons!.onNodeClick(node)}
+                      />)
+                )
+              }
+            </ExtraButtonsContext.Consumer>
           </FormRoot>
         )];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
