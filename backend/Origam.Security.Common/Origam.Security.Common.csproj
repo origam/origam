@@ -51,7 +51,7 @@
 
     <ItemGroup>
       <PackageReference Include="CSharpFunctionalExtensions">
-        <Version>2.20.4</Version>
+        <Version>2.34.0</Version>
       </PackageReference>
     </ItemGroup>
 
