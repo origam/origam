@@ -24,6 +24,9 @@ import { INavigationNode, NavigatorState } from "gui/connections/MobileComponent
 import { MobileState } from "model/entities/MobileState/MobileState";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
+import SN from "gui/connections/MobileComponents/Navigation/NavigationButton.module.scss";
+import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
+
 
 @observer
 export class StandaloneDetailNavigator extends React.Component<{
@@ -67,15 +70,15 @@ export class StandaloneDetailNavigator extends React.Component<{
   }
 }
 
-class ExtraButtons{
+class ExtraButtons {
   constructor(
     public node: INavigationNode,
-    public onNodeClick:(node: INavigationNode) => void
+    public onNodeClick: (node: INavigationNode) => void
   ) {
   }
 }
 
-export const ExtraButtonsContext = createContext<ExtraButtons|null>(null);
+export const ExtraButtonsContext = createContext<ExtraButtons | null>(null);
 
 @observer
 export class DetailNavigator extends React.Component<{
@@ -95,19 +98,39 @@ export class DetailNavigator extends React.Component<{
     }
   }
 
+  renderElement() {
+    return (
+      <ExtraButtonsContext.Provider value={new ExtraButtons(this.props.node, this.props.onNodeClick)}>
+        {this.props.node.element}
+      </ExtraButtonsContext.Provider>
+    );
+  }
+
+  renderNavigationButtonList() {
+    return (
+      <div className={SN.navigationButtonContainer}>
+        {this.props.node.children.map(node =>
+          <NavigationButton
+            key={node.name}
+            label={node.name}
+            onClick={() => this.props.onNodeClick(node)}
+          />)}
+      </div>
+    );
+  }
+
   render() {
     if (!this.props.node) {
       return <div/>;
     }
     return (
       <div className={S.root}>
-        <ExtraButtonsContext.Provider value={new ExtraButtons(this.props.node, this.props.onNodeClick)}>
-          {this.props.node.element
-            ? this.props.node.element
-            : <div className={S.contentPlaceholder}/>
-          }
-        </ExtraButtonsContext.Provider>
+        {this.props.node.element
+          ? this.renderElement()
+          : this.renderNavigationButtonList()
+        }
       </div>
     );
   }
 }
+
