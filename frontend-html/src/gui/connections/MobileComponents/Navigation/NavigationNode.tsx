@@ -166,7 +166,9 @@ export class NavigatorState{
       return;
     }
     this.onNodeClick(node);
-    this.currentNode.dataView?.activateTableView?.();
+    if(!node.dataView?.isHeadless){
+      this.currentNode.dataView?.activateTableView?.();
+    }
   }
 
   @action
@@ -174,7 +176,15 @@ export class NavigatorState{
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
     const nodes = this.currentNode.parentChain
-      .map(navNode => new BreadCrumbNode(navNode.name, navNode.id, () => this.onBreadCrumbClick(navNode)));
+      .map(navNode =>
+        new BreadCrumbNode(
+          navNode.name,
+          navNode.id,
+          () => this.onBreadCrumbClick(navNode),
+          false));
+    if(node.dataView?.isHeadless && nodes.length > 1){
+      nodes[nodes.length - 1 ].disabled = true;
+    }
     this.mobileState.breadCrumbsState.setActiveBreadCrumbList(nodes);
     if(this.currentNode.element){
       this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);

@@ -58,6 +58,9 @@ export class BreadCrumbsState {
     if ((activeFormScreen?.rootDataViews?.length ?? 0) > 0 && activeFormScreen?.uiRootType !== "Tab") {
       const dataView = activeFormScreen?.rootDataViews[0]!;
       this.addDetailBreadCrumbNodeToRoot(dataView);
+      if(dataView.isHeadless && this.activeBreadCrumbList?.length === 2){
+        this.activeBreadCrumbList[0].disabled = true;
+      }
     }
   }
 
@@ -73,6 +76,7 @@ export class BreadCrumbsState {
   removeDetailNode(){
     if (this.activeBreadCrumbList?.length === 2 && this.activeBreadCrumbList[1].id === detailId) {
       this.activeBreadCrumbList.pop();
+      this.activeBreadCrumbList[0].disabled = false;
     }
   }
 
@@ -82,8 +86,8 @@ export class BreadCrumbsState {
       caption: T("Detail", "mobile_detail_navigation"),
       id: detailId,
       isVisible: () => dataView?.isFormViewActive()!,
-      onClick: () => {
-      }
+      onClick: () => {},
+      disabled: false
     });
   }
 
