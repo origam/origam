@@ -51,13 +51,6 @@ class MockComponentFactory implements IComponentFactory{
       node: masterNavigationNode,
       props: {id: undefined}};
   }
-
-  getTabNavigator(masterNode: INavigationNode): React.ReactNode {
-    return {
-      name: "MockTabNavigatorComponent",
-      node: masterNode,
-      props: {id: undefined}};
-  }
 }
 
 Array.prototype.remove = function (item) {

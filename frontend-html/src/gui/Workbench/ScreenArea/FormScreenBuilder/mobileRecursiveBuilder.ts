@@ -115,7 +115,7 @@ export function mobileRecursiveBuilder(args:{
       tabNodes.forEach(tabNode => masterNode.addChild(tabNode));
       if (isRootLevelNavigationNode) {
         return {
-          navigatorElement: args.componentFactory.getTabNavigator(masterNode),
+          navigatorElement: args.componentFactory.getDetailNavigator(masterNode),
           nodes: tabNodes
         };
       } else {
