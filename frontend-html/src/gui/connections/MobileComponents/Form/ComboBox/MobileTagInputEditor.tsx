@@ -114,6 +114,6 @@ export function getTagInputValues(property: IProperty): any[]{
     return [];
   }
 
-  const cellValue = dataTable.getCellValue(row, property);
+  const cellValue = dataTable.getCellValue(row, property) ?? [];
   return (Array.isArray(cellValue) ? [...cellValue] : cellValue) as any[];
 }
