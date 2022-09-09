@@ -94,7 +94,11 @@ export class DetailNavigator extends React.Component<{
 
   componentDidMount() {
     if (this.props.node.dataView?.isTableViewActive && !this.props.node.parent) {
-      this.breadCrumbsState.addDetailBreadCrumbNodeToRoot(this.props.node.dataView);
+      if(this.props.node.element){
+        this.breadCrumbsState.addDetailBreadCrumbNodeToRoot(this.props.node.dataView);
+      }else{
+        this.breadCrumbsState.removeDetailNode();
+      }
     }
   }
 

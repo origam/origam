@@ -176,7 +176,9 @@ export class NavigatorState{
     const nodes = this.currentNode.parentChain
       .map(navNode => new BreadCrumbNode(navNode.name, navNode.id, () => this.onBreadCrumbClick(navNode)));
     this.mobileState.breadCrumbsState.setActiveBreadCrumbList(nodes);
-    this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
+    if(this.currentNode.element){
+      this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
+    }
   }
 
   @action

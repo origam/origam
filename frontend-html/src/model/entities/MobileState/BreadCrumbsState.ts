@@ -6,6 +6,8 @@ import { IDataView } from "model/entities/types/IDataView";
 import { T } from "utils/translation";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 
+const detailId = "Detail";
+
 export class BreadCrumbsState {
 
   workbench: IWorkbench | undefined;
@@ -68,10 +70,17 @@ export class BreadCrumbsState {
   }
 
   @action
+  removeDetailNode(){
+    if (this.activeBreadCrumbList?.length === 2 && this.activeBreadCrumbList[1].id === detailId) {
+      this.activeBreadCrumbList.pop();
+    }
+  }
+
+  @action
   addDetailBreadCrumbNode(dataView: IDataView) {
     this.activeBreadCrumbList?.push({
       caption: T("Detail", "mobile_detail_navigation"),
-      id: "Detail",
+      id: detailId,
       isVisible: () => dataView?.isFormViewActive()!,
       onClick: () => {
       }
