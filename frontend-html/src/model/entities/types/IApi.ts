@@ -243,6 +243,10 @@ export interface IApi {
     RequestingGrid: string;
   }): Promise<any>;
 
+  getReportInfo(data: {
+    ReportId: string
+  }): Promise<any>
+
   getRows(data: {
     MenuId: string;
     SessionFormIdentifier: string;

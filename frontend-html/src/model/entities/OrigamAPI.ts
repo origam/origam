@@ -161,7 +161,7 @@ export class OrigamAPI implements IApi {
   }
 
   async destroyUI(data: { FormSessionId: string }) {
-    return (await this.axiosInstance.get(`/UIService/DestroyUI/${data.FormSessionId}`)).data;
+    return (await this.axiosInstance.post(`/UIService/DestroyUI`, data)).data;
   }
 
   async getEntities(query: {
@@ -452,6 +452,12 @@ export class OrigamAPI implements IApi {
     RequestingGrid: string;
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
+  }
+
+  async getReportInfo(data: {
+    ReportId: string
+  }): Promise<any> {
+    return (await this.axiosInstance.get(`/Report/GetReportInfo?reportRequestId=` + data.ReportId)).data;
   }
 
   async getFilterListValues(data: {

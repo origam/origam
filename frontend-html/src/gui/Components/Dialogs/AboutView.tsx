@@ -48,7 +48,7 @@ export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
         {pluginVersionList.length > 0 &&
           <>
             <div>{T("Used Origam plugins:","used_origam_plugins")}</div>
-            {pluginVersionList.map(x => <div className={S.version}>{x}</div>)}
+            {pluginVersionList.map(x => <div key={x} className={S.version}>{x}</div>)}
             <br/>
           </>
         }

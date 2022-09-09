@@ -35,7 +35,8 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
     title: string,
     public screenUrl: string,
     public menuItemId: string,
-    public order: number
+    public order: number,
+    public canRefresh: boolean
   ) {
     this.tabTitle = title;
     this.formTitle = title;

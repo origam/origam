@@ -262,7 +262,7 @@ jobs:
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-client'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\build'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam\frontend-html\dist'
          ArtifactName: origam-html-client
        condition: succeededOrFailed()
      - script: |

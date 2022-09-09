@@ -491,9 +491,21 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   *openNewUrl(url: string, title: string) {
     const openedScreens = getOpenedScreens(this);
-    const newScreen = new WebScreen(title, url, url, 0);
+    const canRefresh = yield*this.canRefresh(url);
+    const newScreen = new WebScreen(title, url, url, 0, canRefresh);
     openedScreens.pushItem(newScreen);
     openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+  }
+
+  *canRefresh(url: string): Generator<any, boolean> {
+    if(url.startsWith("internalApi/Report")){
+      const reportId = url.split("/")[2];
+      const api = getApi(this);
+      const reportInfo = (yield api.getReportInfo({ReportId: reportId})) as any;
+      return reportInfo.isWebReport === "true";
+    }else{
+      return true;
+    }
   }
 
   assignColors(colors: {[key: string]: string}){
