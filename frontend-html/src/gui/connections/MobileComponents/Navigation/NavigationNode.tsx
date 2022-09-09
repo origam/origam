@@ -39,17 +39,18 @@ export interface INavigationNode {
 
   equals(other: INavigationNode): boolean;
   addChild(node: INavigationNode): void;
+  addChildren(nodes: (INavigationNode | undefined)[]): void;
   removeChild(node: INavigationNode): void;
   merge(other: INavigationNode): void;
   readonly navigationDisabled: boolean;
 }
 
 export class NavigationNode implements INavigationNode {
-  private _children: NavigationNode[] = [];
+  private _children: INavigationNode[] = [];
   private _name: string = "";
   private _dataView: IDataView | undefined;
   formScreen: IFormScreen | undefined;
-  parent: NavigationNode | undefined;
+  parent: INavigationNode | undefined;
 
   get dataView(): IDataView | undefined {
     if(this._dataView){
@@ -109,12 +110,20 @@ export class NavigationNode implements INavigationNode {
       .some(prop => getFieldErrorMessage(prop!)(this.dataView!.selectedRow!, prop!))
   }
 
-  addChild(node: NavigationNode) {
+  addChild(node: INavigationNode) {
     this._children.push(node);
     node.parent = this;
   }
 
-  removeChild(node: NavigationNode) {
+  addChildren(nodes: (INavigationNode | undefined)[]) {
+    for (const node of nodes) {
+      if(node){
+        this.addChild(node);
+      }
+    }
+  }
+
+  removeChild(node: INavigationNode) {
     this._children.remove(node);
     node.parent = undefined;
   }

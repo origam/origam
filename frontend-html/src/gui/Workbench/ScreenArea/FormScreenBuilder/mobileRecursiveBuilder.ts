@@ -24,6 +24,10 @@ import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { IComponentFactory } from "gui/Workbench/ScreenArea/FormScreenBuilder/IComponentFactory";
 import { findBoxes, findUIChildren } from "xmlInterpreters/xmlUtils";
 
+interface IParsingResult {
+  navigatorElement: any | undefined,
+  nodes: (INavigationNode | undefined)[]
+}
 
 export function mobileRecursiveBuilder(args:{
   formScreen: IFormScreen;
@@ -33,7 +37,7 @@ export function mobileRecursiveBuilder(args:{
   componentFactory: IComponentFactory;
 }) {
 
-  function run(xso: any, currentNavigationNode: INavigationNode | undefined): any {
+  function run(xso: any, currentNavigationNode: INavigationNode | undefined): IParsingResult {
     const isRootLevelNavigationNode = !currentNavigationNode;
     if (xso.attributes.Type === "VSplit" ||
       xso.attributes.Type === "HSplit" ||
@@ -44,22 +48,30 @@ export function mobileRecursiveBuilder(args:{
       let detailNavigationNode = new NavigationNode();
 
       const [masterXmlNode, detailXmlNode] = findUIChildren(xso);
-      const masterReactElement = run(masterXmlNode, masterNavigationNode);
+      const masterReactElement = run(masterXmlNode, masterNavigationNode).navigatorElement;
       if (!detailXmlNode) {
         if (masterReactElement) {
           return masterReactElement;
         } else {
-          return args.componentFactory.getDetailNavigator(masterNavigationNode);
+          return {
+            navigatorElement: args.componentFactory.getDetailNavigator(masterNavigationNode),
+            nodes:  [masterNavigationNode]
+          };
         }
       }
-      const detailReactElement = run(detailXmlNode, detailNavigationNode);
+      const detailResult = run(detailXmlNode, detailNavigationNode);
+      const detailReactElement = detailResult.navigatorElement;
+      const detailNodes = detailResult.nodes;
 
       if (!masterReactElement) {
         // Happens if the top element is a splitPanel with tabControls in both master and detail slots.
-        return wrapInNavigator(masterNavigationNode, detailNavigationNode,
-          args.formScreen, masterXmlNode,  xso);
+        return {
+          navigatorElement: wrapInNavigator(masterNavigationNode, detailNavigationNode,
+            args.formScreen, masterXmlNode,  xso),
+          nodes:  [masterNavigationNode]
+        };
       }
-      masterNavigationNode.addChild(detailNavigationNode);
+      masterNavigationNode.addChildren(detailNodes);
       assignMasterNavigationNodeProperties(masterNavigationNode, masterReactElement, masterXmlNode, xso);
 
       if (detailReactElement) {
@@ -67,10 +79,16 @@ export function mobileRecursiveBuilder(args:{
       }
 
       if (isRootLevelNavigationNode) {
-        return args.componentFactory.getDetailNavigator(masterNavigationNode);
+        return {
+          navigatorElement: args.componentFactory.getDetailNavigator(masterNavigationNode),
+          nodes:  [masterNavigationNode]
+        };
       } else {
         currentNavigationNode!.merge(masterNavigationNode);
-        return masterReactElement;
+        return {
+          navigatorElement: masterReactElement,
+          nodes:  [masterNavigationNode]
+        };
       }
     }
 
@@ -78,14 +96,14 @@ export function mobileRecursiveBuilder(args:{
       const tabNodes = findBoxes(xso).map(box => {
         const childXmlNode = findUIChildren(box)[0];
         const tabNode = new NavigationNode();
-        const element = run(childXmlNode, tabNode);
-        if (element) {
-          tabNode.element = element;
+        const {navigatorElement} = run(childXmlNode, tabNode);
+        if (navigatorElement) {
+          tabNode.element = navigatorElement;
           tabNode.id = childXmlNode.attributes.Id;
           tabNode.name = box.attributes.Name
             ? box.attributes.Name
             : childXmlNode.attributes.Name;
-          tabNode.dataView = getDataViewById(args.formScreen, element.props.id);
+          tabNode.dataView = getDataViewById(args.formScreen, navigatorElement.props.id);
         }
         return tabNode;
       });
@@ -96,22 +114,35 @@ export function mobileRecursiveBuilder(args:{
       masterNode.formScreen = args.formScreen;
       tabNodes.forEach(tabNode => masterNode.addChild(tabNode));
       if (isRootLevelNavigationNode) {
-        return args.componentFactory.getTabNavigator(masterNode);
+        return {
+          navigatorElement: args.componentFactory.getTabNavigator(masterNode),
+          nodes: tabNodes
+        };
       } else {
         mergeNodesToParentView(currentNavigationNode, masterNode, tabNodes);
-        return undefined;
+        return {
+          navigatorElement: undefined,
+          nodes: tabNodes
+        };
       }
     }
     if (xso.attributes.Type === "TreePanel" || xso.attributes.Type === "Grid") {
-      return args.componentFactory.getDataView(
+      const dataView = args.componentFactory.getDataView(
         {
           key: xso.$iid,
           id:xso.attributes.Id,
           modelInstanceId: xso.attributes.ModelInstanceId,
           isHeadless: xso.attributes.IsHeadless === "true"
         });
+      return {
+        navigatorElement: dataView,
+        nodes: [currentNavigationNode]
+      };
     }
-    return args.desktopRecursiveBuilder(args.formScreen, xso);
+    return {
+      navigatorElement: args.desktopRecursiveBuilder(args.formScreen, xso),
+      nodes: [currentNavigationNode]
+    };
   }
 
   function wrapInNavigator(childNode1: NavigationNode, childNode2: NavigationNode,
@@ -153,9 +184,10 @@ export function mobileRecursiveBuilder(args:{
       parent.removeChild(currentNavigationNode);
       tabNodes.forEach(tabNode => parent.addChild(tabNode));
     } else {
+      // tabNodes.forEach(tabNode => currentNavigationNode.addChild(tabNode));
       currentNavigationNode.merge(masterNode);
     }
   }
 
-  return run(args.uiRoot, undefined);
+  return run(args.uiRoot, undefined).navigatorElement;
 }
