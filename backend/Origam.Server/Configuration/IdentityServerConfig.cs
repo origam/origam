@@ -40,6 +40,7 @@ namespace Origam.Server.Configuration
     public static class IdentityServerDefaults
     {
         public const string AzureAdScheme = "AzureAd";
+        public const string WindowsAdScheme = "Windows";
     }
     
     public class IdentityServerConfig
@@ -200,6 +201,8 @@ namespace Origam.Server.Configuration
                     return MicrosoftLogin;
                 case IdentityServerDefaults.AzureAdScheme:
                     return AzureAdLogin;
+                case  IdentityServerDefaults.WindowsAdScheme:
+                    return new WindowsLogin();
                 default:
                     throw new ArgumentOutOfRangeException(
                         nameof(authenticationScheme),
@@ -240,6 +243,10 @@ namespace Origam.Server.Configuration
             ClaimType = configurationSection.GetValue(
                 "ClaimType", ClaimTypes.Email);
         }
+
+        protected ExternalCallbackProcessingInfo()
+        {
+        }
     }
     
     public class GoogleLogin : ExternalCallbackProcessingInfo
@@ -272,6 +279,20 @@ namespace Origam.Server.Configuration
         public AzureAdLogin(IConfigurationSection configurationSection) 
             : base(configurationSection)
         {
+        }
+    }
+
+    public class WindowsLogin : ExternalCallbackProcessingInfo
+    {
+        public WindowsLogin(IConfigurationSection configurationSection) 
+            : base(configurationSection)
+        {
+        }
+
+        public WindowsLogin()
+        {
+            AuthenticationType = AuthenticationType.Username;
+            ClaimType = "name";
         }
     }
 }
