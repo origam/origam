@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
@@ -10,9 +19,21 @@
     tmi:mappedObjectName="OrigamSyncProvider"
     asi:name="OrigamSyncProvider"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="2339b5d2-f8e4-493a-858a-da400255d8d4" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="1d59ae19-5f91-4a1e-93ae-d5109a521a22"
+      asi:name="OrigamSyncProviderConfig"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Root/DataEntity/Synchronization/OrigamSyncProviderConfig.origam#OrigamSyncProviderConfig/442f364a-bb1a-4664-a299-09a02f30a77a"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="0f630cd6-b123-4c79-bfe4-6af81134b02b"
+        asi:name="OrigamSyncProviderConfigKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncProviderConfig.origam#OrigamSyncProviderConfig/refOrigamSyncProviderId/109af2b1-9ba8-456b-9c41-bb26806413a4" />
+    </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -45,20 +66,8 @@
       asi:name="refOrigamSyncSystemId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
-    <eri:EntityRelation
-      asi:abstract="false"
-      x:id="1d59ae19-5f91-4a1e-93ae-d5109a521a22"
-      asi:name="OrigamSyncProviderConfig"
-      eri:or="false"
-      eri:parentChild="false"
-      eri:relatedEntity="Root/DataEntity/Synchronization/OrigamSyncProviderConfig.origam#OrigamSyncProviderConfig/442f364a-bb1a-4664-a299-09a02f30a77a"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="0f630cd6-b123-4c79-bfe4-6af81134b02b"
-        asi:name="OrigamSyncProviderConfigKey1"
-        ercpi:relatedEntityField="Root/DataEntity/Synchronization/OrigamSyncProviderConfig.origam#OrigamSyncProviderConfig/refOrigamSyncProviderId/109af2b1-9ba8-456b-9c41-bb26806413a4" />
-    </eri:EntityRelation>
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="2339b5d2-f8e4-493a-858a-da400255d8d4" />
   </tmi:DataEntity>
 </x:file>

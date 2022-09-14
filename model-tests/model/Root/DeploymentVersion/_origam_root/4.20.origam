@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="d05e8b56-9b57-4b0d-b129-6c6df3e91669"
     asi:name="4.20"
     dv:version="4.20">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:4.20.origam___commandText___bfcac618-6a8e-4f02-b52d-80a60e65dd7a.txt"
+      x:id="bfcac618-6a8e-4f02-b52d-80a60e65dd7a"
+      asi:name="00020_WorkQueueCommandType_Add_RunNotificaitons"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="10"
@@ -19,14 +32,6 @@
       scusa:commandText="-***-ExternalFile:4.20.origam___commandText___f3861f2c-419e-4041-9865-71828e80e189.txt"
       x:id="f3861f2c-419e-4041-9865-71828e80e189"
       asi:name="00030_Database_Field_WorkQueueNotification.SendAttachments"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:4.20.origam___commandText___bfcac618-6a8e-4f02-b52d-80a60e65dd7a.txt"
-      x:id="bfcac618-6a8e-4f02-b52d-80a60e65dd7a"
-      asi:name="00020_WorkQueueCommandType_Add_RunNotificaitons"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

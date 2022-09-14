@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="11fea1be-b62c-4c6c-81bc-afd6bb0b102d"
@@ -7,11 +20,12 @@
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="UniqueIdentifier"
+      cs:dataType="Xml"
       cs:disableConstraints="false"
-      x:id="fbc56e89-1910-4bbb-9018-2ab144703f8b"
+      x:id="041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
       cs:isReturnValue="false"
-      asi:name="BusinessPartnerId" />
+      asi:name="UserProfile_New"
+      cs:structure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="String"
@@ -21,12 +35,11 @@
       asi:name="UserName" />
     <cs:ContextStore
       asi:abstract="false"
-      cs:dataType="Xml"
+      cs:dataType="UniqueIdentifier"
       cs:disableConstraints="false"
-      x:id="041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
+      x:id="fbc56e89-1910-4bbb-9018-2ab144703f8b"
       cs:isReturnValue="false"
-      asi:name="UserProfile_New"
-      cs:structure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34" />
+      asi:name="BusinessPartnerId" />
     <smct:WorkflowTask
       asi:abstract="false"
       aws:features="IDENTITY_USER_MANAGEMENT"
@@ -41,6 +54,18 @@
       aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserName/c4f88bdf-adac-4e39-8e1c-4a4b2cf5c77b">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
+        x:id="a1de4822-962b-4d8f-910a-c1175cc81dfe"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34"
+          x:id="968db1b7-26f6-4dff-9f75-0a02694a9d9f"
+          dsr:method="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/GetId/f1b68611-ea24-4c41-a109-5090ecc7c19a"
+          asi:name="UserProfile_New" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
         x:id="b492813d-6a6f-4073-9701-bd340822b213"
         asi:name="Parameters"
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
@@ -52,18 +77,51 @@
           asi:name="BusinessPartner_parId"
           cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="8c8759f4-967d-4d7b-a064-e8be634ab07c"
+      asi:name="02_Transform_UserProfile_New"
+      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="a1de4822-962b-4d8f-910a-c1175cc81dfe"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
-        <dsr:DataStructureReference
+        x:id="13d34e9c-61b2-4c49-8d85-0885fdc749f2"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="20ccc6d8-c25d-48f6-accc-9fff04c4ccce"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
           asi:abstract="false"
-          dsr:dataStructure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34"
-          x:id="968db1b7-26f6-4dff-9f75-0a02694a9d9f"
-          dsr:method="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/GetId/f1b68611-ea24-4c41-a109-5090ecc7c19a"
-          asi:name="UserProfile_New" />
+          cr:castToDataType="String"
+          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
+          x:id="d1145159-55ea-4bfb-b352-8448f77a10be"
+          asi:name="UserProfile_New"
+          cr:xPath="/" />
       </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="be0f6a9b-1f6c-424c-90ad-0096ff31d8bf"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="40b4433a-ab87-4fff-9ed4-f73328d789ce"
+          asi:name="UserProfile_New__DeleteUserName"
+          tr:transformation="Security/Transformation/Security/UserProfile_New__DeleteUserName.origam#UserProfile_New__DeleteUserName/199df411-9b36-4d40-b0db-83f43002005a" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="046c22d6-e57c-4aaa-915c-a20a88c5f533"
+        asi:name="After_01_LoadData_UserProfile_New"
+        wtd:startEvent="Success"
+        wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/01_LoadData_UserProfile_New/4ea4e27d-9528-4b36-9476-3bf4f669303f" />
     </smct:WorkflowTask>
     <twb:WorkflowTask
       asi:abstract="false"
@@ -74,7 +132,7 @@
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="076f7547-170c-421a-ac97-439f941743d7"
-        asi:name="11_Call_MembershipService_DeleteUser"
+        asi:name="10_Call_MembershipService_DeleteUser"
         wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/BusinessPartnerId/fbc56e89-1910-4bbb-9018-2ab144703f8b"
         wt:outputMethod="Ignore"
         aws:roles="*"
@@ -93,17 +151,11 @@
             asi:name="UserName"
             cr:xPath="/" />
         </smcp:ServiceMethodCallParameter>
-        <wtd:WorkflowTaskDependency
-          asi:abstract="false"
-          x:id="1d0381c5-c29f-467f-b51b-e7376d84f2b4"
-          asi:name="After_10_StoreData_UserProfile_New"
-          wtd:startEvent="Success"
-          wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/03_StoreToDBAndCallMembership/10_StoreData_UserProfile_New/fcad2ddf-a6f4-4bb8-9bd2-4dfecf4a70c3" />
       </smct:WorkflowTask>
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="fcad2ddf-a6f4-4bb8-9bd2-4dfecf4a70c3"
-        asi:name="10_StoreData_UserProfile_New"
+        asi:name="11_StoreData_UserProfile_New"
         wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
@@ -133,6 +185,12 @@
             asi:name="UserProfile_New"
             cr:xPath="/" />
         </smcp:ServiceMethodCallParameter>
+        <wtd:WorkflowTaskDependency
+          asi:abstract="false"
+          x:id="2aa72347-82f8-4111-913d-dfbc4d6ce8ae"
+          asi:name="After_10_Call_MembershipService_DeleteUser"
+          wtd:startEvent="Success"
+          wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/03_StoreToDBAndCallMembership/10_Call_MembershipService_DeleteUser/076f7547-170c-421a-ac97-439f941743d7" />
       </smct:WorkflowTask>
       <wtd:WorkflowTaskDependency
         asi:abstract="false"
@@ -141,50 +199,5 @@
         wtd:startEvent="Success"
         wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/02_Transform_UserProfile_New/8c8759f4-967d-4d7b-a064-e8be634ab07c" />
     </twb:WorkflowTask>
-    <smct:WorkflowTask
-      asi:abstract="false"
-      x:id="8c8759f4-967d-4d7b-a064-e8be634ab07c"
-      asi:name="02_Transform_UserProfile_New"
-      wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
-      wt:outputMethod="AppendMergeExisting"
-      aws:roles="*"
-      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
-      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="be0f6a9b-1f6c-424c-90ad-0096ff31d8bf"
-        asi:name="XslScript"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
-        <tr:TransformationReference
-          asi:abstract="false"
-          x:id="40b4433a-ab87-4fff-9ed4-f73328d789ce"
-          asi:name="UserProfile_New__DeleteUserName"
-          tr:transformation="Security/Transformation/Security/UserProfile_New__DeleteUserName.origam#UserProfile_New__DeleteUserName/199df411-9b36-4d40-b0db-83f43002005a" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="13d34e9c-61b2-4c49-8d85-0885fdc749f2"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="20ccc6d8-c25d-48f6-accc-9fff04c4ccce"
-        asi:name="Data"
-        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
-          x:id="d1145159-55ea-4bfb-b352-8448f77a10be"
-          asi:name="UserProfile_New"
-          cr:xPath="/" />
-      </smcp:ServiceMethodCallParameter>
-      <wtd:WorkflowTaskDependency
-        asi:abstract="false"
-        x:id="046c22d6-e57c-4aaa-915c-a20a88c5f533"
-        asi:name="After_01_LoadData_UserProfile_New"
-        wtd:startEvent="Success"
-        wtd:task="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/01_LoadData_UserProfile_New/4ea4e27d-9528-4b36-9476-3bf4f669303f" />
-    </smct:WorkflowTask>
   </w:Workflow>
 </x:file>

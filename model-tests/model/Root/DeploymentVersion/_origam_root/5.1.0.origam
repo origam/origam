@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     dv:deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.0.2"
     x:id="5fc878d0-13c7-4329-9341-ece208455cf2"
     asi:name="5.1.0"
     dv:version="5.1.0">
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:5.1.0.origam___commandText___ec0791ea-5cef-46e9-97d5-125e8f4d74c6.txt"
-      x:id="ec0791ea-5cef-46e9-97d5-125e8f4d74c6"
-      asi:name="00010_Database_Field_OrigamDataAuditLog.SecondReferenceKey"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="11"
-      scusa:commandText="-***-ExternalFile:5.1.0.origam___commandText___cffb9573-ab9d-4cb4-a938-8ba0972c7e18.txt"
-      x:id="cffb9573-ab9d-4cb4-a938-8ba0972c7e18"
-      asi:name="00011_PG_Database_Field_OrigamDataAuditLog.SecondReferenceKey"
-      scusa:platform="PgSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
       ausa:activityOrder="21"
@@ -37,6 +26,22 @@
       x:id="b0e0abc6-c3d5-428a-a926-d9c3a4e998ac"
       asi:name="00021_PG_OrigamDataAuditLog_ix_SecondReferenceKey"
       scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="11"
+      scusa:commandText="-***-ExternalFile:5.1.0.origam___commandText___cffb9573-ab9d-4cb4-a938-8ba0972c7e18.txt"
+      x:id="cffb9573-ab9d-4cb4-a938-8ba0972c7e18"
+      asi:name="00011_PG_Database_Field_OrigamDataAuditLog.SecondReferenceKey"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.1.0.origam___commandText___ec0791ea-5cef-46e9-97d5-125e8f4d74c6.txt"
+      x:id="ec0791ea-5cef-46e9-97d5-125e8f4d74c6"
+      asi:name="00010_Database_Field_OrigamDataAuditLog.SecondReferenceKey"
+      scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>

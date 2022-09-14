@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     dv:deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.1.1"
@@ -8,114 +13,10 @@
     dv:version="5.1.2">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___0d645202-6bce-4542-ad17-853cb8b5e81c.txt"
-      x:id="0d645202-6bce-4542-ad17-853cb8b5e81c"
-      asi:name="00010_Database_Field_Attachment.Data"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___134e9daf-e4c3-49fd-bd7b-3426a682f35a.txt"
-      x:id="134e9daf-e4c3-49fd-bd7b-3426a682f35a"
-      asi:name="00020_Database_Field_BusinessPartner.AvatarFile"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="30"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a8d89236-b419-4178-a605-d0ca3fb95b43.txt"
-      x:id="a8d89236-b419-4178-a605-d0ca3fb95b43"
-      asi:name="00030_Database_Field_Mail.Recipient"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___da87071b-754f-4761-9270-70c0c5ec52de.txt"
-      x:id="da87071b-754f-4761-9270-70c0c5ec52de"
-      asi:name="00040_Database_Field_Mail.MessageBody"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="50"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___607be348-74ac-485d-ad3e-310226fcafaa.txt"
-      x:id="607be348-74ac-485d-ad3e-310226fcafaa"
-      asi:name="00050_Database_Field_OrigamDashboardView.ConfigXml"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="60"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___0d23965e-566e-48ec-a3ed-1dd1081b29a1.txt"
-      x:id="0d23965e-566e-48ec-a3ed-1dd1081b29a1"
-      asi:name="00060_Database_Field_OrigamDataAuditLog.OldValue"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="70"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___ca60ba9a-75ef-460a-8818-78e59e0b4293.txt"
-      x:id="ca60ba9a-75ef-460a-8818-78e59e0b4293"
-      asi:name="00070_Database_Field_OrigamDataAuditLog.NewValue"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="80"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___1aa79f74-7664-426d-95a5-a8e457a74a5e.txt"
-      x:id="1aa79f74-7664-426d-95a5-a8e457a74a5e"
-      asi:name="00080_Database_Field_OrigamFavoritesTemplate.ConfigXml"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="90"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___dae6f953-c345-4476-9ef9-bf6b6950248d.txt"
-      x:id="dae6f953-c345-4476-9ef9-bf6b6950248d"
-      asi:name="00090_Database_Field_OrigamFavoritesUserConfig.ConfigXml"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="100"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___62ba5dd9-c7a1-4647-9c99-e1805dbee5a0.txt"
-      x:id="62ba5dd9-c7a1-4647-9c99-e1805dbee5a0"
-      asi:name="00100_Database_Field_OrigamFeatureList.Description"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="110"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___cae97ba1-a682-4eaf-88ff-df29d4f5a4a8.txt"
-      x:id="cae97ba1-a682-4eaf-88ff-df29d4f5a4a8"
-      asi:name="00110_Database_Field_OrigamFormPanelConfig.SettingsData"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="120"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a933ac8c-ffd8-4e1d-929c-0144d4e10a52.txt"
-      x:id="a933ac8c-ffd8-4e1d-929c-0144d4e10a52"
-      asi:name="00120_Database_Field_OrigamMapLayerParameter.Value"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="130"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___3b439249-f92f-4c0f-aa5b-3f7b13e745f5.txt"
-      x:id="3b439249-f92f-4c0f-aa5b-3f7b13e745f5"
-      asi:name="00130_Database_Field_OrigamNotificationTemplate.Template"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="140"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___36075d89-7bb2-41f9-8ca3-26c6b8a9ad47.txt"
-      x:id="36075d89-7bb2-41f9-8ca3-26c6b8a9ad47"
-      asi:name="00140_Database_Field_OrigamNotificationTemplate_l10n.Template"
+      ausa:activityOrder="290"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___0156160b-9363-4324-9fe6-4c82e534ef34.txt"
+      x:id="0156160b-9363-4324-9fe6-4c82e534ef34"
+      asi:name="00290_Database_Field_WorkQueueEntry.blob1"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -128,34 +29,18 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="160"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a263746d-c289-4ae2-bb3d-5f1a421ef705.txt"
-      x:id="a263746d-c289-4ae2-bb3d-5f1a421ef705"
-      asi:name="00160_Database_Field_OrigamStyleColor.Description"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___0d23965e-566e-48ec-a3ed-1dd1081b29a1.txt"
+      x:id="0d23965e-566e-48ec-a3ed-1dd1081b29a1"
+      asi:name="00060_Database_Field_OrigamDataAuditLog.OldValue"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="170"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___fc5485ed-d421-489a-a3d7-fd706d1fac6d.txt"
-      x:id="fc5485ed-d421-489a-a3d7-fd706d1fac6d"
-      asi:name="00170_Database_Field_OrigamSyncRunLog.ErrorText"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="180"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___eff964f1-7116-49d6-8c91-272cbd662c64.txt"
-      x:id="eff964f1-7116-49d6-8c91-272cbd662c64"
-      asi:name="00180_Database_Field_OrigamTooltipHelp.Text"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="190"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___e9e0e866-5efe-4917-9b6f-8da07ba124af.txt"
-      x:id="e9e0e866-5efe-4917-9b6f-8da07ba124af"
-      asi:name="00190_Database_Field_OrigamTraceWorkflowStep.WorkflowStepPath"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___0d645202-6bce-4542-ad17-853cb8b5e81c.txt"
+      x:id="0d645202-6bce-4542-ad17-853cb8b5e81c"
+      asi:name="00010_Database_Field_Attachment.Data"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -168,50 +53,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="210"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___8340ba0b-5641-4111-908b-d8bce59e699c.txt"
-      x:id="8340ba0b-5641-4111-908b-d8bce59e699c"
-      asi:name="00210_Database_Field_OrigamTraceWorkflowStep.Data2"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="220"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___d72bf297-3fc1-4f0a-bb20-5eb84c66cf01.txt"
-      x:id="d72bf297-3fc1-4f0a-bb20-5eb84c66cf01"
-      asi:name="00220_Database_Field_OrigamTraceWorkflowStep.Message"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="230"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___f57adda6-5e65-44b2-865f-a1e5f97a9bab.txt"
-      x:id="f57adda6-5e65-44b2-865f-a1e5f97a9bab"
-      asi:name="00230_Database_Field_OrigamValidationRule.Rule"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="240"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___677bbc22-0a3d-4cf9-9d9b-66c3c7f16307.txt"
-      x:id="677bbc22-0a3d-4cf9-9d9b-66c3c7f16307"
-      asi:name="00240_Database_Field_WorkQueue.ExternalSourceLastMessage"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="250"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___4b369fc4-5b43-4f51-9402-7203436f63c3.txt"
-      x:id="4b369fc4-5b43-4f51-9402-7203436f63c3"
-      asi:name="00250_Database_Field_WorkQueue.ExternalSourceState"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="260"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___766e24a7-d2a1-4c6b-b7b7-eae81ed12867.txt"
-      x:id="766e24a7-d2a1-4c6b-b7b7-eae81ed12867"
-      asi:name="00260_Database_Field_WorkQueue.CreationCondition"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___134e9daf-e4c3-49fd-bd7b-3426a682f35a.txt"
+      x:id="134e9daf-e4c3-49fd-bd7b-3426a682f35a"
+      asi:name="00020_Database_Field_BusinessPartner.AvatarFile"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -224,42 +69,82 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="280"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___f6241305-3558-40c6-8818-3283a2166362.txt"
-      x:id="f6241305-3558-40c6-8818-3283a2166362"
-      asi:name="00280_Database_Field_WorkQueueCommand.AutoProcessingConditionXPath"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___1aa79f74-7664-426d-95a5-a8e457a74a5e.txt"
+      x:id="1aa79f74-7664-426d-95a5-a8e457a74a5e"
+      asi:name="00080_Database_Field_OrigamFavoritesTemplate.ConfigXml"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="290"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___0156160b-9363-4324-9fe6-4c82e534ef34.txt"
-      x:id="0156160b-9363-4324-9fe6-4c82e534ef34"
-      asi:name="00290_Database_Field_WorkQueueEntry.blob1"
+      ausa:activityOrder="140"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___36075d89-7bb2-41f9-8ca3-26c6b8a9ad47.txt"
+      x:id="36075d89-7bb2-41f9-8ca3-26c6b8a9ad47"
+      asi:name="00140_Database_Field_OrigamNotificationTemplate_l10n.Template"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="300"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___bba42685-fe5b-4625-918d-9fc77270adb8.txt"
-      x:id="bba42685-fe5b-4625-918d-9fc77270adb8"
-      asi:name="00300_Database_Field_WorkQueueEntry.ErrorText"
+      ausa:activityOrder="350"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___393840a8-a950-41a7-819b-0749137bd871.txt"
+      x:id="393840a8-a950-41a7-819b-0749137bd871"
+      asi:name="00350_Database_Field_WorkQueueEntry.m1"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="310"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___8ed3129e-4c85-4cd1-bd9f-2e0e94ab2b8c.txt"
-      x:id="8ed3129e-4c85-4cd1-bd9f-2e0e94ab2b8c"
-      asi:name="00310_Database_Field_WorkQueueEntry.m4"
+      ausa:activityOrder="130"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___3b439249-f92f-4c0f-aa5b-3f7b13e745f5.txt"
+      x:id="3b439249-f92f-4c0f-aa5b-3f7b13e745f5"
+      asi:name="00130_Database_Field_OrigamNotificationTemplate.Template"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="320"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a3408a73-4ea9-4869-80d0-fe7fc476adb0.txt"
-      x:id="a3408a73-4ea9-4869-80d0-fe7fc476adb0"
-      asi:name="00320_Database_Field_WorkQueueEntry.m3"
+      ausa:activityOrder="250"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___4b369fc4-5b43-4f51-9402-7203436f63c3.txt"
+      x:id="4b369fc4-5b43-4f51-9402-7203436f63c3"
+      asi:name="00250_Database_Field_WorkQueue.ExternalSourceState"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___607be348-74ac-485d-ad3e-310226fcafaa.txt"
+      x:id="607be348-74ac-485d-ad3e-310226fcafaa"
+      asi:name="00050_Database_Field_OrigamDashboardView.ConfigXml"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="100"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___62ba5dd9-c7a1-4647-9c99-e1805dbee5a0.txt"
+      x:id="62ba5dd9-c7a1-4647-9c99-e1805dbee5a0"
+      asi:name="00100_Database_Field_OrigamFeatureList.Description"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="240"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___677bbc22-0a3d-4cf9-9d9b-66c3c7f16307.txt"
+      x:id="677bbc22-0a3d-4cf9-9d9b-66c3c7f16307"
+      asi:name="00240_Database_Field_WorkQueue.ExternalSourceLastMessage"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="260"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___766e24a7-d2a1-4c6b-b7b7-eae81ed12867.txt"
+      x:id="766e24a7-d2a1-4c6b-b7b7-eae81ed12867"
+      asi:name="00260_Database_Field_WorkQueue.CreationCondition"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="210"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___8340ba0b-5641-4111-908b-d8bce59e699c.txt"
+      x:id="8340ba0b-5641-4111-908b-d8bce59e699c"
+      asi:name="00210_Database_Field_OrigamTraceWorkflowStep.Data2"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -272,6 +157,22 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="310"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___8ed3129e-4c85-4cd1-bd9f-2e0e94ab2b8c.txt"
+      x:id="8ed3129e-4c85-4cd1-bd9f-2e0e94ab2b8c"
+      asi:name="00310_Database_Field_WorkQueueEntry.m4"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="160"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a263746d-c289-4ae2-bb3d-5f1a421ef705.txt"
+      x:id="a263746d-c289-4ae2-bb3d-5f1a421ef705"
+      asi:name="00160_Database_Field_OrigamStyleColor.Description"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="340"
       scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a2a22cc4-b2e7-4c60-b443-6d1c769b4381.txt"
       x:id="a2a22cc4-b2e7-4c60-b443-6d1c769b4381"
@@ -280,10 +181,114 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="350"
-      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___393840a8-a950-41a7-819b-0749137bd871.txt"
-      x:id="393840a8-a950-41a7-819b-0749137bd871"
-      asi:name="00350_Database_Field_WorkQueueEntry.m1"
+      ausa:activityOrder="320"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a3408a73-4ea9-4869-80d0-fe7fc476adb0.txt"
+      x:id="a3408a73-4ea9-4869-80d0-fe7fc476adb0"
+      asi:name="00320_Database_Field_WorkQueueEntry.m3"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a8d89236-b419-4178-a605-d0ca3fb95b43.txt"
+      x:id="a8d89236-b419-4178-a605-d0ca3fb95b43"
+      asi:name="00030_Database_Field_Mail.Recipient"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="120"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___a933ac8c-ffd8-4e1d-929c-0144d4e10a52.txt"
+      x:id="a933ac8c-ffd8-4e1d-929c-0144d4e10a52"
+      asi:name="00120_Database_Field_OrigamMapLayerParameter.Value"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="300"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___bba42685-fe5b-4625-918d-9fc77270adb8.txt"
+      x:id="bba42685-fe5b-4625-918d-9fc77270adb8"
+      asi:name="00300_Database_Field_WorkQueueEntry.ErrorText"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___ca60ba9a-75ef-460a-8818-78e59e0b4293.txt"
+      x:id="ca60ba9a-75ef-460a-8818-78e59e0b4293"
+      asi:name="00070_Database_Field_OrigamDataAuditLog.NewValue"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="110"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___cae97ba1-a682-4eaf-88ff-df29d4f5a4a8.txt"
+      x:id="cae97ba1-a682-4eaf-88ff-df29d4f5a4a8"
+      asi:name="00110_Database_Field_OrigamFormPanelConfig.SettingsData"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="220"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___d72bf297-3fc1-4f0a-bb20-5eb84c66cf01.txt"
+      x:id="d72bf297-3fc1-4f0a-bb20-5eb84c66cf01"
+      asi:name="00220_Database_Field_OrigamTraceWorkflowStep.Message"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___da87071b-754f-4761-9270-70c0c5ec52de.txt"
+      x:id="da87071b-754f-4761-9270-70c0c5ec52de"
+      asi:name="00040_Database_Field_Mail.MessageBody"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___dae6f953-c345-4476-9ef9-bf6b6950248d.txt"
+      x:id="dae6f953-c345-4476-9ef9-bf6b6950248d"
+      asi:name="00090_Database_Field_OrigamFavoritesUserConfig.ConfigXml"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="190"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___e9e0e866-5efe-4917-9b6f-8da07ba124af.txt"
+      x:id="e9e0e866-5efe-4917-9b6f-8da07ba124af"
+      asi:name="00190_Database_Field_OrigamTraceWorkflowStep.WorkflowStepPath"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="180"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___eff964f1-7116-49d6-8c91-272cbd662c64.txt"
+      x:id="eff964f1-7116-49d6-8c91-272cbd662c64"
+      asi:name="00180_Database_Field_OrigamTooltipHelp.Text"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="230"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___f57adda6-5e65-44b2-865f-a1e5f97a9bab.txt"
+      x:id="f57adda6-5e65-44b2-865f-a1e5f97a9bab"
+      asi:name="00230_Database_Field_OrigamValidationRule.Rule"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="280"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___f6241305-3558-40c6-8818-3283a2166362.txt"
+      x:id="f6241305-3558-40c6-8818-3283a2166362"
+      asi:name="00280_Database_Field_WorkQueueCommand.AutoProcessingConditionXPath"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="170"
+      scusa:commandText="-***-ExternalFile:5.1.2.origam___commandText___fc5485ed-d421-489a-a3d7-fd706d1fac6d.txt"
+      x:id="fc5485ed-d421-489a-a3d7-fd706d1fac6d"
+      asi:name="00170_Database_Field_OrigamSyncRunLog.ErrorText"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="115f418f-a000-4a0d-a38e-76c9fbb7c045"
@@ -7,18 +12,18 @@
     dv:version="3.2">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="50"
-      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___1c703840-5910-4946-8811-45983fb96f5c.txt"
-      x:id="1c703840-5910-4946-8811-45983fb96f5c"
-      asi:name="00050_Database_Field_OrigamUser.FailedPasswordAttemptWindowStart"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___08a48556-8c51-42a9-9569-d063dc24f39e.txt"
+      x:id="08a48556-8c51-42a9-9569-d063dc24f39e"
+      asi:name="00040_Database_Field_OrigamUser.FailedPasswordAttemptCount"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="60"
-      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___513f2165-c74e-4c44-b172-8c2cb7e421a0.txt"
-      x:id="513f2165-c74e-4c44-b172-8c2cb7e421a0"
-      asi:name="00060_Database_Field_OrigamUser.UserName"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___1c703840-5910-4946-8811-45983fb96f5c.txt"
+      x:id="1c703840-5910-4946-8811-45983fb96f5c"
+      asi:name="00050_Database_Field_OrigamUser.FailedPasswordAttemptWindowStart"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -31,18 +36,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="40"
-      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___08a48556-8c51-42a9-9569-d063dc24f39e.txt"
-      x:id="08a48556-8c51-42a9-9569-d063dc24f39e"
-      asi:name="00040_Database_Field_OrigamUser.FailedPasswordAttemptCount"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="10"
-      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___7c65c1fc-f0ae-44f2-aa31-dc21713507cd.txt"
-      x:id="7c65c1fc-f0ae-44f2-aa31-dc21713507cd"
-      asi:name="00010_Database_Field_OrigamUser.IsLockedOut"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___513f2165-c74e-4c44-b172-8c2cb7e421a0.txt"
+      x:id="513f2165-c74e-4c44-b172-8c2cb7e421a0"
+      asi:name="00060_Database_Field_OrigamUser.UserName"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -51,6 +48,14 @@
       scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___5620aa0f-c5bf-425d-8490-f2d01fa54931.txt"
       x:id="5620aa0f-c5bf-425d-8490-f2d01fa54931"
       asi:name="00030_Database_Field_OrigamUser.LastLockoutDate"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:3.2_Origam_user_lockout.origam___commandText___7c65c1fc-f0ae-44f2-aa31-dc21713507cd.txt"
+      x:id="7c65c1fc-f0ae-44f2-aa31-dc21713507cd"
+      asi:name="00010_Database_Field_OrigamUser.IsLockedOut"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
