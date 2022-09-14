@@ -4,7 +4,7 @@ const { sleep, openMenuItem, login, waitForRowCountData, catchRequests, clickAnd
   getTableData
 } = require('./testTools');
 const {widgetsMenuItemId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
-const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./consoleTools");
+const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
 let browser;
 let page;
@@ -24,12 +24,7 @@ beforeEach(async () => {
       height: 800, // to make all 30 lines visible and avoid the need for scrolling
     },
     // slowMo: 50,
-    args: [
-        "--disable-gpu",
-        "--disable-dev-shm-usage",
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-    ]
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   page = await browser.newPage();
 
@@ -88,7 +83,6 @@ describe("Html client", () => {
       `#${dataViewId} .horiz-scrollbar`,
       { visible: true, timeout: 3000 }
     );
-    console.log("table: " + table);
     await sleep(500);
     await waitForRequests
 
@@ -100,6 +94,5 @@ describe("Html client", () => {
     expect(lastRow["Text1"]).toBe("txt2109");
 
     // await sleep(60000);
-
   });
 });

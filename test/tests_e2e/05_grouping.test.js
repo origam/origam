@@ -3,9 +3,9 @@ const { backEndUrl } = require('./additionalConfig');
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
   catchRequests, waitForRowSelected
 } = require('./testTools');
-const {installMouseHelper} = require('./instalMouseHelper_');
+// const {installMouseHelper} = require('./instalMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
-const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./consoleTools");
+const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
 let browser;
 let page;
@@ -25,15 +25,9 @@ beforeEach(async () => {
       height: 1000,
     },
     // slowMo: 50,
-    args: [
-        "--disable-gpu",
-        "--disable-dev-shm-usage",
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-    ]
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   page = await browser.newPage();
-  await installMouseHelper(page);
   await page.goto(backEndUrl);
   await page.evaluate(() => {
     localStorage.setItem("debugCloseAllForms", "1");
@@ -161,7 +155,6 @@ describe("Html client", () => {
     const rowHeight = 30;
     const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
-    console.log(box)
 
     // open first group on the first level
     await page.mouse.click(
@@ -215,7 +208,6 @@ describe("Html client", () => {
     const rowHeight = 30;
     const tableArea = await page.$(`#${dataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
-    console.log(box)
 
     // open first group on the first level
     await page.mouse.click(
