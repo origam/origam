@@ -31,8 +31,6 @@ import { useCallback, useEffect, useState } from "react";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const autoUpdateUntervalMs = 60_000;
-
 @observer
 export class TextEditor extends React.Component<{
   value: string | null;
@@ -55,7 +53,6 @@ export class TextEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  onAutoUpdate?(value: string): void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
   disposers: any[] = [];
@@ -65,9 +62,6 @@ export class TextEditor extends React.Component<{
 
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
-    if (this.props.isMultiline) {
-      this.disposers.push(this.startAutoUpdate());
-    }
     this.updateTextOverflowState();
     this.makeFocusedIfNeeded();
   }
@@ -78,16 +72,6 @@ export class TextEditor extends React.Component<{
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
     this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
-  }
-
-  private startAutoUpdate() {
-    this.updateInterval = setInterval(() => {
-      if (this.lastAutoUpdatedValue !== this.currentValue) {
-        this.props.onAutoUpdate?.(this.currentValue ?? "");
-        this.lastAutoUpdatedValue = this.currentValue;
-      }
-    }, autoUpdateUntervalMs);
-    return () => this.updateInterval && clearTimeout(this.updateInterval);
   }
 
   componentWillUnmount() {

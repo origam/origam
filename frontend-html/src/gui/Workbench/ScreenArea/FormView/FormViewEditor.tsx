@@ -27,7 +27,6 @@ import {getIsFormScreenDirty} from "model/selectors/FormScreen/getisFormScreenDi
 import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import {flashColor2htmlColor, htmlColor2FlashColor} from "utils/flashColorFormat";
-import {onTextFieldAutoUpdate} from "../../../../model/actions-ui/DataView/OnTextFieldAutoUpdate";
 
 
 @inject(({ property, formPanelView }) => {
@@ -135,7 +134,6 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             wrapText={true}
             onEditorBlur={this.props.onEditorBlur}
-            onAutoUpdate={value => onTextFieldAutoUpdate(this.props.property!, value)}
             isRichText={this.props.isRichText}
             onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
