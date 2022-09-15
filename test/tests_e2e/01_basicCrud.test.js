@@ -32,7 +32,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   let pages = await browser.pages();
-  await Promise.all(pages.map(page =>page.close()));
+  await Promise.all(pages.map(async page => await page.close()));
   await sleep(200);
   if(browser) await browser.close();
   browser = undefined;
@@ -63,8 +63,8 @@ async function addRowToMaster(firstColumnValue, secondColumnValue) {
   await page.waitForFunction(`document.activeElement == document.getElementById("${secondColumnEditorId}")`);
 
   await page.focus(`#${secondColumnEditorId}`)
-  await page.keyboard.type(secondColumnValue)
   await waitForRequests;
+  await page.keyboard.type(secondColumnValue)
   await sleep(100);
 }
 
@@ -149,6 +149,7 @@ describe("Html client", () => {
       `//div[@id='${masterDataViewId}']//div[${xPathContainsClass("deleteRow")}]`,
       { visible: true }
     );
+    await sleep(300);
     const rowCountDataBeforeDelete = await getRowCountData(page, masterDataViewId);
     expect(rowCountDataBeforeDelete.selectedRow).toBe("2");
     expect(rowCountDataBeforeDelete.rowCount).toBe("3");

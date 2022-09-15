@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const { backEndUrl} = require('./additionalConfig');
 const { sleep, openMenuItem, login, waitForRowCountData, switchToFormPerspective,
   inputByPressingKeys, switchLanguageTo, waitForFocus,
-  switchToTablePerspective
+  switchToTablePerspective, catchRequests
 } = require('./testTools');
 const {widgetsMenuItemId,topMenuHeader,
   allDataTypesLazyMenuItemsId} = require("./modelIds");
@@ -36,7 +36,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   let pages = await browser.pages();
-  await Promise.all(pages.map(page => page.close()));
+  await Promise.all(pages.map(async page => await page.close()));
   await sleep(200);
   if(browser) await browser.close();
   browser = undefined;
@@ -52,6 +52,7 @@ describe("Html client", () => {
     await restoreAllDataTypesTable();
     await switchLanguageTo({locale: "cs-CZ", page: page});
     await login(page);
+    const waitForRequests = catchRequests(page);
     await openMenuItem(
       page,
       [
@@ -61,7 +62,6 @@ describe("Html client", () => {
       ]);
 
     await waitForRowCountData(page, dataViewId,2099);
-
     await sleep(300);
 
     await switchToFormPerspective({
@@ -75,6 +75,7 @@ describe("Html client", () => {
     await page.evaluate(x => x.focus(), numberEditor);
     await sleep(500);
 
+    await waitForRequests;
     await inputByPressingKeys({page: page, value: `-123456${decimalSeparator}789`})
 
     await sleep(200);

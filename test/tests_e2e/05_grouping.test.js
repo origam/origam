@@ -36,7 +36,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   let pages = await browser.pages();
-  await Promise.all(pages.map(page =>page.close()));
+  await Promise.all(pages.map(async page => await page.close()));
   await sleep(200);
   if(browser) await browser.close();
   browser = undefined;
