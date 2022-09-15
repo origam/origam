@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="01e5fa6a-347d-4a72-bc3b-ac7ff7fa18a2"
+    x:isFolder="true"
+    g:name="AutomaticTests"
+    g:rootItemType="FormControlSet" />
+</x:file>

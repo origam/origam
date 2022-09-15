@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0">
+  <p:package
+    x:id="c130ecd2-3b61-48fe-bac0-b721f86b0a0f"
+    x:isFolder="true"
+    p:name="AutomaticTests"
+    p:version="1.0.0">
+    <pr:packageReference
+      x:id="db733777-7509-40bd-a910-a2cfc2219857"
+      pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
+    <pr:packageReference
+      x:id="db67be0a-ccca-4869-a2ea-426d7669c73e"
+      pr:referencedPackage="Widgets/.origamPackage#f17329d6-3143-420a-a2e6-30e431eea51d" />
+  </p:package>
+</x:file>

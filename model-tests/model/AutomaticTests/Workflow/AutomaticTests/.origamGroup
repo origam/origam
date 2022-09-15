@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="f5a93620-af53-47c1-a9b2-9c918801e800"
+    x:isFolder="true"
+    g:name="AutomaticTests"
+    g:rootItemType="Workflow" />
+</x:file>
