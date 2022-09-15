@@ -163,16 +163,28 @@ async function typeAndWaitForSelector(args){
 }
 
 async function clickAndWaitForSelector(args){
-  await args.clickable.click();
+  try{
+    await args.clickable.click();
+  }catch(error){
+    console.log(error);
+    await sleep(200);
+  }
   for (let i = 0; i < 3; i++) {
     try{
       return await args.page.waitForSelector(
         args.selector,
-        {visible: true, timeout: 3000}
+        {visible: true, timeout: 5000}
       )
     }catch(error){
-      console.log(error);
-      await args.clickable.click();
+      if(error.name !== "TimeoutError"){
+        console.log(error);
+      }
+      try {
+        await args.clickable.click();
+      }catch(error){
+        console.log(error)
+        await args.page.evaluate(x => x.click(), args.clickable);
+      }
     }
   }
   throw Error(`${args.selector} did not appear before timeout`);
@@ -187,7 +199,9 @@ async function clickAndWaitForXPath(args){
         { visible: true, timeout: 3000 }
       );
     }catch(error){
-      console.log(error);
+      if(error.name !== "TimeoutError"){
+        console.log(error);
+      }
       await args.clickable.click();
     }
   }
