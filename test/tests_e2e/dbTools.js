@@ -31,10 +31,6 @@ async function restoreAllDataTypesTable(){
   await executeProcedure("dbo.restoreAllDataTypes");
 }
 
-async function putNumericTestDataToAllDataTypes(){
-  await executeProcedure("dbo.putNumericTestDataToAllDataTypes");
-}
-
 async function clearScreenConfiguration(){
   await executeProcedure("dbo.clearScreenConfiguration");
 }
@@ -44,5 +40,4 @@ async function restoreWidgetSectionTestMaster(){
   await executeProcedure("dbo.restoreWidgetSectionTestMaster");
 }
 
-module.exports = { restoreAllDataTypesTable, restoreWidgetSectionTestMaster, clearScreenConfiguration,
-  putNumericTestDataToAllDataTypes }
+module.exports = { restoreAllDataTypesTable, restoreWidgetSectionTestMaster, clearScreenConfiguration }
