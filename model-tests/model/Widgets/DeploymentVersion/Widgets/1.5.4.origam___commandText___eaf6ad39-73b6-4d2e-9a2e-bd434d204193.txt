@@ -1,5 +1,5 @@
 ﻿ INSERT INTO "OrigamApplicationRole" ("Id", "Name", "WelcomeScreen", "IsSystemRole" , "RecordCreated")
  VALUES ('3f132ce4-90d2-4cd1-a925-ccc8fdd3b392', 'InitialScreen', 'InitialScreen', true, now()); 
 -- add to the built-in SuperUser role 
- INSERT INTO "OrigamRoleOrigamApplicationRole" ("Id", "refOrigamRoleId", "refOrigamApplicationRoleId", "RecordCreated", "IsFormReadOnly") 
- VALUES (gen_random_uuid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', '3f132ce4-90d2-4cd1-a925-ccc8fdd3b392', now(), false)
+ INSERT INTO "OrigamRoleOrigamApplicationRole" ("Id", "refOrigamRoleId", "refOrigamApplicationRoleId", "RecordCreated", "IsFormReadOnly", "IsInitialScreen") 
+ VALUES (gen_random_uuid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', '3f132ce4-90d2-4cd1-a925-ccc8fdd3b392', now(), false, false)
