@@ -288,24 +288,7 @@ namespace Origam.Schema.WorkflowModel
 				this.EntityStructurePkMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-//		[EntityColumn("G13")]  
-//		public Guid WorkQueueStructurePkFilterId;
-//
-//		[TypeConverter(typeof(WorkQueueClassDataStructureFilterConverter))]
-//		[RefreshProperties(RefreshProperties.Repaint)]
-//		public DataStructureFilterSet WorkQueueStructurePrimaryKeyFilter
-//		{
-//			get
-//			{
-//				return (DataStructureFilterSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(WorkQueueStructurePkFilterId));
-//			}
-//			set
-//			{
-//				this.WorkQueueStructurePkFilterId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-//			}
-//		}
-//
+        
 		[EntityColumn("G14")]  
 		public Guid WorkQueueStructureUserListMethodId;
 
@@ -326,6 +309,7 @@ namespace Origam.Schema.WorkflowModel
 
 		[TypeConverter(typeof(WorkQueueClassWQDataStructureSortSetConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
+        [NotNullModelElementRule]
 		[XmlReference("workQueueStructureSortSet", "WorkQueueStructureSortSetId")]
 		public DataStructureSortSet WorkQueueStructureSortSet
 		{
