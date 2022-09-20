@@ -82,7 +82,8 @@ namespace Origam.Workflow.Tasks
                     ResourceUtils.GetString("ErrorSourceContextNotXmlDocument"));
             }
 			XPathNavigator navigator = xmlContainer.Xml.CreateNavigator();
-			OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable());
+			OrigamXsltContext ctx = OrigamXsltContext.Create(
+				new NameTable(), Engine.TransactionId);
 			XPathExpression expr = navigator.Compile(block.IteratorXPath);
 			expr.SetContext(ctx);
             // code might fail and this handler doesn't get cleared
