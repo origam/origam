@@ -30,5 +30,5 @@ public interface IXpathEvaluator
 
     object Evaluate(string xpath, bool isPathRelative,
         OrigamDataType returnDataType, XPathNavigator nav,
-        XPathNodeIterator contextPosition);
+        XPathNodeIterator contextPosition, string transactionId);
 }
