@@ -55,7 +55,8 @@ public static class XsltFunctionContainerFactory
             transactionId);
     }
 
-    private static IEnumerable<XsltFunctionsDefinition> Create (
+    // the method is public because of tests
+    public static IEnumerable<XsltFunctionsDefinition> Create (
         IBusinessServicesService businessService,
         IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider,
         IPersistenceService persistence, IDataLookupService lookupService,
