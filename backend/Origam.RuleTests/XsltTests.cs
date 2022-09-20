@@ -132,7 +132,8 @@ public class XsltTests
             userProfileGetterMock.Object,
             xPathEvaluatorMock.Object,
             httpToolsMock.Object,
-            resourceToolsMock.Object
+            resourceToolsMock.Object,
+            null
         ).ToList();
     }
 
