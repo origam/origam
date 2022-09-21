@@ -37,9 +37,11 @@ namespace Origam.Rule.Xslt
     {
         private Dictionary<string, object> _xslFunctionsDict;
         private ExsltContext _exslt;
-        public static OrigamXsltContext Create(XmlNameTable nameTable)
+        public static OrigamXsltContext Create(
+            XmlNameTable nameTable, string transactionId)
         {
-            var functionContainers = XsltFunctionContainerFactory.Create();
+            var functionContainers = XsltFunctionContainerFactory.Create(
+                transactionId);
             return new OrigamXsltContext(
                 nameTable,
                 functionContainers
@@ -88,7 +90,7 @@ namespace Origam.Rule.Xslt
                 if (_xslFunctionsDict.TryGetValue(ns, out functionContainer))
                 {
                     IXsltContextFunction func = null;
-                    func = GetExtentionMethod(ns, name, ArgTypes, functionContainer);
+                    func = GetExtensionMethod(ns, name, ArgTypes, functionContainer);
                     if (func == null)
                     {
                         throw new XsltException(String.Format("Unknown Xslt function {0}", name));
@@ -206,7 +208,7 @@ namespace Origam.Rule.Xslt
         }
 
         private const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
-        private IXsltContextFunction GetExtentionMethod(string ns, string name, XPathResultType[] argTypes, object extension)
+        private IXsltContextFunction GetExtensionMethod(string ns, string name, XPathResultType[] argTypes, object extension)
         {
             MethodInfo method = FindBestMethod(extension.GetType().GetMethods(bindingFlags), /*ignoreCase:*/false, /*publicOnly:*/true, name, argTypes);
                 if (method != null)

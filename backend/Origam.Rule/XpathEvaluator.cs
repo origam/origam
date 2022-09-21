@@ -58,17 +58,18 @@ public class XpathEvaluator : IXpathEvaluator
 
     private string Evaluate(XPathNavigator navigator, string xpath)
     {
-        return (string)Evaluate(xpath, false, OrigamDataType.String, navigator, null);
+        return (string)Evaluate(xpath, false, OrigamDataType.String, navigator, 
+            null, null);
     }
     
     public object Evaluate(string xpath, bool isPathRelative,
         OrigamDataType returnDataType, XPathNavigator nav,
-        XPathNodeIterator contextPosition)
+        XPathNodeIterator contextPosition, string transactionId)
     {
         XPathExpression expr;
         expr = nav.Compile(xpath);
-
-        OrigamXsltContext ctx = OrigamXsltContext.Create(new NameTable());
+        OrigamXsltContext ctx = OrigamXsltContext.Create(
+            new NameTable(), transactionId);
         expr.SetContext(ctx);
 
         object result;

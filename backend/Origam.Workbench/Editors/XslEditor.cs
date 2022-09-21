@@ -1084,7 +1084,8 @@ namespace Origam.Workbench.Editors
 
 				XPathNavigator nav = doc.CreateNavigator();
 				XPathExpression expr = nav.Compile(xpath);
-				OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable());
+				OrigamXsltContext ctx = OrigamXsltContext.Create(
+					new NameTable(), null);
 				expr.SetContext(ctx);
 
 				object result = nav.Evaluate(expr);

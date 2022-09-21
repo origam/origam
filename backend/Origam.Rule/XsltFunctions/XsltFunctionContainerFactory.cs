@@ -33,7 +33,8 @@ namespace Origam.Rule.XsltFunctions;
 
 public static class XsltFunctionContainerFactory
 {
-    public static IEnumerable<XsltFunctionsDefinition> Create()
+    public static IEnumerable<XsltFunctionsDefinition> Create(
+        string transactionId = null)
     {
         return Create(
             ServiceManager.Services.GetService<IBusinessServicesService>(),
@@ -50,9 +51,11 @@ public static class XsltFunctionContainerFactory
             SecurityManager.CurrentUserProfile,
             XpathEvaluator.Instance,
             HttpTools.Instance,
-            ResourceTools.Instance);
+            ResourceTools.Instance,
+            transactionId);
     }
 
+    // the method is public because of tests
     public static IEnumerable<XsltFunctionsDefinition> Create (
         IBusinessServicesService businessService,
         IXsltFunctionSchemaItemProvider xsltFunctionSchemaItemProvider,
@@ -61,7 +64,8 @@ public static class XsltFunctionContainerFactory
         ITracingService tracingService, IDocumentationService documentationService,
         ICoreDataService dataService, IOrigamAuthorizationProvider authorizationProvider, 
         Func<UserProfile> userProfileGetter, IXpathEvaluator xpathEvaluator,
-        IHttpTools httpTools, IResourceTools resourceTools)
+        IHttpTools httpTools, IResourceTools resourceTools,
+        string transactionId)
     {
         return xsltFunctionSchemaItemProvider
             .ChildItemsByType(XsltFunctionCollection.CategoryConst)
@@ -87,6 +91,7 @@ public static class XsltFunctionContainerFactory
                     origamContainer.XpathEvaluator = xpathEvaluator;
                     origamContainer.HttpTools = httpTools;
                     origamContainer.ResourceTools = resourceTools;
+                    origamContainer.TransactionId = transactionId;
                 }
                 return new XsltFunctionsDefinition(
                     Container: container,
