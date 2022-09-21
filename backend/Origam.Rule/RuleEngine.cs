@@ -458,7 +458,8 @@ namespace Origam.Rule
 					return context;
 				}
 
-				OrigamXsltContext ctx =  OrigamXsltContext.Create(new NameTable());
+				OrigamXsltContext ctx = OrigamXsltContext.Create(
+					new NameTable(), _transactionId);
 				XPathNavigator nav = ((XmlDocument)context).CreateNavigator();
 				XPathExpression expr = nav.Compile(xpath);
 				expr.SetContext(ctx);
@@ -2176,7 +2177,9 @@ namespace Origam.Rule
 
 			XPathNavigator nav = context.Xml.CreateNavigator();
 
-			return XpathEvaluator.Instance.Evaluate(rule.XPath, rule.IsPathRelative, rule.DataType, nav, contextPosition);
+			return XpathEvaluator.Instance.Evaluate(
+				rule.XPath, rule.IsPathRelative, rule.DataType, nav, 
+				contextPosition, _transactionId);
 		}
 		
 		private object EvaluateRule(XslRule rule, IXmlContainer context)
