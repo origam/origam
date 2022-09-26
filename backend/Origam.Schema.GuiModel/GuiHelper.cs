@@ -27,9 +27,6 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.GuiModel
 {
-	/// <summary>
-	/// Summary description for GuiHelper.
-	/// </summary>
 	public class GuiHelper
 	{
 		public const string CONTROL_NAME_PANEL = "AsPanel";
@@ -42,35 +39,36 @@ namespace Origam.Schema.GuiModel
 
 		public static FormControlSet CreateForm(DataStructure dataSource, string groupName, PanelControlSet defaultPanel)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			FormSchemaItemProvider formProvider = schema.GetProvider(typeof(FormSchemaItemProvider)) as FormSchemaItemProvider;
-
-			SchemaItemGroup group = formProvider.GetGroup(groupName);
-
-			FormControlSet form = formProvider.NewItem(typeof(FormControlSet), schema.ActiveSchemaExtensionId, null) as FormControlSet;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var formSchemaItemProvider 
+				= schemaService.GetProvider<FormSchemaItemProvider>();
+			var schemaItemGroup = formSchemaItemProvider.GetGroup(groupName);
+			var form = formSchemaItemProvider.NewItem<FormControlSet>(
+				schemaService.ActiveSchemaExtensionId, null);
 			form.Name = dataSource.Name;
-			form.Group = group;
+			form.Group = schemaItemGroup;
 			form.DataStructure = dataSource;
-
-			ControlSetItem rootControl = CreateControl(form, GetFormControl());
-
-			Hashtable formProperties = new Hashtable();
-			formProperties["Width"] = 700;
-			formProperties["Height"] = 400;
-
+			var rootControl = CreateControl(form, GetFormControl());
+			var formProperties = new Hashtable
+			{
+				["Width"] = 700,
+				["Height"] = 400
+			};
 			PopulateControlProperties(rootControl, formProperties);
-
 			if(defaultPanel != null)
 			{
-				ControlSetItem panelControl = CreateControl(rootControl, defaultPanel.PanelControl);
-
+				var panelControl = CreateControl(rootControl, 
+					defaultPanel.PanelControl);
 				// clone the panel's properties
-				foreach(PropertyValueItem originalProperty in defaultPanel.ChildItems[0].ChildItemsByType(PropertyValueItem.CategoryConst))
+				foreach(PropertyValueItem originalProperty 
+				        in defaultPanel.ChildItems[0].ChildItemsByType(
+					        PropertyValueItem.CategoryConst))
 				{
-					PropertyValueItem property = panelControl.NewItem(typeof(PropertyValueItem), schema.ActiveSchemaExtensionId, null) as PropertyValueItem;
-
-					property.ControlPropertyItem = originalProperty.ControlPropertyItem;
-
+					var property = panelControl.NewItem<PropertyValueItem>(
+						schemaService.ActiveSchemaExtensionId, null);
+					property.ControlPropertyItem 
+						= originalProperty.ControlPropertyItem;
 					if(property.ControlPropertyItem.Name == "DataMember")
 					{
 						property.Value = defaultPanel.DataEntity.Name;
@@ -84,73 +82,80 @@ namespace Origam.Schema.GuiModel
 					}
 				}
 			}
-
 			form.Persist();
-
 			return form;
 		}
 
-        public static PanelControlSet CreatePanel(string groupName, IDataEntity entity, Hashtable fieldsToPopulate)
+        public static PanelControlSet CreatePanel(
+	        string groupName, IDataEntity entity, Hashtable fieldsToPopulate)
         {
-            return CreatePanel(groupName,entity,fieldsToPopulate,entity.Name);
+            return CreatePanel(groupName, entity, fieldsToPopulate,
+	            entity.Name);
         }
 
-        public static PanelControlSet CreatePanel(string groupName, IDataEntity entity, Hashtable fieldsToPopulate,string name)
+        public static PanelControlSet CreatePanel(
+	        string groupName, 
+	        IDataEntity entity, 
+	        Hashtable fieldsToPopulate,
+	        string name)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			PanelSchemaItemProvider panelProvider = schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
-
-			SchemaItemGroup group = panelProvider.GetGroup(groupName);
-
-			PanelControlSet panel = panelProvider.NewItem(typeof(PanelControlSet), schema.ActiveSchemaExtensionId, null) as PanelControlSet;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var panelSchemaItemProvider 
+				= schemaService.GetProvider<PanelSchemaItemProvider>();
+			var schemaItemGroup = panelSchemaItemProvider.GetGroup(groupName);
+			var panel = panelSchemaItemProvider.NewItem<PanelControlSet>(
+				schemaService.ActiveSchemaExtensionId, null);
 			panel.Name = name;
-			panel.Group = group;
+			panel.Group = schemaItemGroup;
 			panel.DataEntity = entity;
-
-			ControlSetItem rootControl = CreateControl(panel, GetPanelControl());
-
-			Hashtable panelProperties = new Hashtable();
-			panelProperties["PanelTitle"] = entity.Caption;
-			panelProperties["Width"] = 600;
-			panelProperties["Height"] = 300;
-			panelProperties["GridVisible"] = true;
-			panelProperties["ShowNewButton"] = true;
-			panelProperties["ShowDeleteButton"] = true;
-
+			var rootControl = CreateControl(panel, GetPanelControl());
+			var panelProperties = new Hashtable
+			{
+				["PanelTitle"] = entity.Caption,
+				["Width"] = 600,
+				["Height"] = 300,
+				["GridVisible"] = true,
+				["ShowNewButton"] = true,
+				["ShowDeleteButton"] = true
+			};
 			PopulateControlProperties(rootControl, panelProperties);
-
-			int x = 108;
-			int y = 36;
-			int i = 0;
-
+			var x = 108;
+			var y = 36;
+			var i = 0;
 			foreach(IDataEntityColumn column in entity.EntityColumns)
 			{
-				if(fieldsToPopulate.Contains(column.Name))
+				if(!fieldsToPopulate.Contains(column.Name))
 				{
-					BuildDefaultControl(rootControl, entity, column, x, y, i);
-					y+= 18;
-					i++;
+					continue;
 				}
+				BuildDefaultControl(rootControl, entity, column, x, y, i);
+				y+= 18;
+				i++;
 			}
-
 			panel.Persist();
-
 			CreatePanelControl(panel);
-
 			return panel;
 		}
 
-		private static void BuildDefaultControl(ControlSetItem parentControl, IDataEntity entity, IDataEntityColumn column, int x, int y, int tabIndex)
+		private static void BuildDefaultControl(
+			ControlSetItem parentControl, 
+			IDataEntity entity, 
+			IDataEntityColumn column, 
+			int x, 
+			int y, 
+			int tabIndex)
 		{
-			Hashtable properties = new Hashtable();
-			properties["Left"] = x;
-			properties["Top"] = y;
-			properties["Height"] = 19;
-			properties["Width"] = 400;
-			properties["Caption"] = "";
-			properties["CaptionLength"] = 100;
-			properties["TabIndex"] = tabIndex;
-
+			var properties = new Hashtable
+			{
+				["Left"] = x,
+				["Top"] = y,
+				["Height"] = 19,
+				["Width"] = 400,
+				["Caption"] = "",
+				["CaptionLength"] = 100,
+				["TabIndex"] = tabIndex
+			};
 			switch(column.DataType)
 			{
 				case OrigamDataType.Integer:
@@ -160,91 +165,112 @@ namespace Origam.Schema.GuiModel
 				case OrigamDataType.Memo:
 				case OrigamDataType.Geography:
 				case OrigamDataType.String:
-					ControlSetItem textBox = CreateControl(parentControl, GetTextBoxControl());
-					textBox.Name = textBox.ControlItem.Name + tabIndex.ToString();
+				{
+					var textBox = CreateControl(
+						parentControl, GetTextBoxControl());
+					textBox.Name = textBox.ControlItem.Name + tabIndex;
 					PopulateControlProperties(textBox, properties);
-					PopulateControlBindings(textBox, entity.Name, column.Name, "Value");
+					PopulateControlBindings(
+						textBox, entity.Name, column.Name, "Value");
 					break;
-
+				}
 				case OrigamDataType.Boolean:
+				{
 					properties["Text"] = column.Caption;
 					properties["Left"] = x - (int)properties["CaptionLength"]; //checkbox starts on the left
-					ControlSetItem checkBox = CreateControl(parentControl, GetCheckBoxControl());
-					checkBox.Name = checkBox.ControlItem.Name + tabIndex.ToString();
+					var checkBox = CreateControl(
+						parentControl, GetCheckBoxControl());
+					checkBox.Name = checkBox.ControlItem.Name + tabIndex;
 					PopulateControlProperties(checkBox, properties);
-					PopulateControlBindings(checkBox, entity.Name, column.Name, "Value");
+					PopulateControlBindings(
+						checkBox, entity.Name, column.Name, "Value");
 					break;
-
+				}
 				case OrigamDataType.Date:
-					ControlSetItem dateBox = CreateControl(parentControl, GetDateBoxControl());
-					dateBox.Name = dateBox.ControlItem.Name + tabIndex.ToString();
+				{
+					var dateBox = CreateControl(
+						parentControl, GetDateBoxControl());
+					dateBox.Name = dateBox.ControlItem.Name + tabIndex;
 					PopulateControlProperties(dateBox, properties);
-					PopulateControlBindings(dateBox, entity.Name, column.Name, "DateValue");
+					PopulateControlBindings(
+						dateBox, entity.Name, column.Name, "DateValue");
 					break;
-
+				}
 				case OrigamDataType.UniqueIdentifier:
+				{
 					if(column.DefaultLookup == null)
 					{
-						throw new Exception(ResourceUtils.GetString("ErrorLookupNotSet", entity.Name + "/" + column.Name));
+						throw new Exception(ResourceUtils.GetString(
+							"ErrorLookupNotSet", 
+							entity.Name + "/" + column.Name));
 					}
-
-					properties["LookupId"] = column.DefaultLookup.PrimaryKey["Id"];
-					ControlSetItem comboBox = CreateControl(parentControl, GetComboBoxControl());
-					comboBox.Name = comboBox.ControlItem.Name + tabIndex.ToString();
+					properties["LookupId"] 
+						= column.DefaultLookup.PrimaryKey["Id"];
+					var comboBox = CreateControl(
+						parentControl, GetComboBoxControl());
+					comboBox.Name = comboBox.ControlItem.Name + tabIndex;
 					PopulateControlProperties(comboBox, properties);
-					PopulateControlBindings(comboBox, entity.Name, column.Name, "LookupValue");
+					PopulateControlBindings(
+						comboBox, entity.Name, column.Name, "LookupValue");
 					break;
-
+				}
 				case OrigamDataType.Object:
-					ControlSetItem multiColumnAdapterFieldWrapper 
-						= CreateControl(parentControl, GetMultiColumnAdapterFieldWrapperControl());
+				{
+					var multiColumnAdapterFieldWrapper = CreateControl(
+						parentControl, 
+						GetMultiColumnAdapterFieldWrapperControl());
 					multiColumnAdapterFieldWrapper.Name 
-						= multiColumnAdapterFieldWrapper.ControlItem.Name + tabIndex.ToString();
-					PopulateControlProperties(multiColumnAdapterFieldWrapper, properties);
+						= multiColumnAdapterFieldWrapper.ControlItem.Name 
+						  + tabIndex;
+					PopulateControlProperties(
+						multiColumnAdapterFieldWrapper, properties);
 					PopulateControlBindings(multiColumnAdapterFieldWrapper, 
 						entity.Name, column.Name, "Value");
 					break;
-
-
+				}
 				default:
-					throw new ArgumentOutOfRangeException("DataType", column.DataType, "Default control of this data type is not supported by the control builder.");
+					throw new ArgumentOutOfRangeException("DataType", 
+						column.DataType, 
+						"Default control of this data type is not supported by the control builder.");
 			}
 		}
 
-		public static ControlSetItem CreateControl(AbstractSchemaItem parentControl, ControlItem controlType)
+		public static ControlSetItem CreateControl(
+			AbstractSchemaItem parentControl, 
+			ControlItem controlType)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			ControlSetItem control = ((ControlSetItem)parentControl.NewItem(typeof(ControlSetItem), schema.ActiveSchemaExtensionId, null));
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var control = parentControl.NewItem<ControlSetItem>(
+				schemaService.ActiveSchemaExtensionId, null);
 			control.ControlItem = controlType;
-
 			return control;
 		}
 
 		public static ControlItem CreatePanelControl(PanelControlSet panel)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			UserControlSchemaItemProvider controls = schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
-
-			ControlItem newControl = controls.NewItem(typeof(ControlItem), schema.ActiveSchemaExtensionId, null) as ControlItem;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var userControlSchemaItemProvider 
+				= schemaService.GetProvider<UserControlSchemaItemProvider>();
+			var newControl = userControlSchemaItemProvider.NewItem<ControlItem>(
+				schemaService.ActiveSchemaExtensionId, null);
 			newControl.Name = panel.Name;
 			newControl.IsComplexType = true;
-			Type t = typeof(PanelControlSet);
-			newControl.ControlType = t.ToString();
-			newControl.ControlNamespace = t.Namespace;
+			var panelControlSetType = typeof(PanelControlSet);
+			newControl.ControlType = panelControlSetType.ToString();
+			newControl.ControlNamespace = panelControlSetType.Namespace;
 			newControl.PanelControlSet = panel;
-			newControl.ControlToolBoxVisibility = ControlToolBoxVisibility.FormDesigner;
-			SchemaItemAncestor ancestor = new SchemaItemAncestor();
+			newControl.ControlToolBoxVisibility 
+				= ControlToolBoxVisibility.FormDesigner;
+			var ancestor = new SchemaItemAncestor();
 			ancestor.SchemaItem = newControl;
 			ancestor.Ancestor = GetPanelControl();
 			ancestor.PersistenceProvider = newControl.PersistenceProvider;
-
 			newControl.ThrowEventOnPersist = false;
 			newControl.Persist();
 			ancestor.Persist();
-			//				newControl.ClearCacheOnPersist = true;
-			//				newControl.Persist();
 			newControl.ThrowEventOnPersist = true;
-			
 			return newControl;
 		}
 
@@ -285,36 +311,42 @@ namespace Origam.Schema.GuiModel
 		
 		public static ControlItem GetControlByName(string name)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			UserControlSchemaItemProvider controls = schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
-
-			return controls.GetChildByName(name, ControlItem.CategoryConst) as ControlItem;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var userControlSchemaItemProvider 
+				= schemaService.GetProvider<UserControlSchemaItemProvider>();
+			return userControlSchemaItemProvider.GetChildByName(
+				name, ControlItem.CategoryConst) as ControlItem;
 		}
 
 		private static void PopulateControlBindings(ControlSetItem control, string entity, string field, string property)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			PropertyBindingInfo binding = control.NewItem(typeof(PropertyBindingInfo), schema.ActiveSchemaExtensionId, null) as PropertyBindingInfo;
-
-			binding.ControlPropertyItem = control.ControlItem.GetChildByName(property) as ControlPropertyItem;
-			binding.Value = field;
-			binding.DesignDataSetPath = entity + "." + field;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var propertyBindingInfo = control.NewItem<PropertyBindingInfo>(
+				schemaService.ActiveSchemaExtensionId, null);
+			propertyBindingInfo.ControlPropertyItem 
+				= control.ControlItem.GetChildByName(property) 
+					as ControlPropertyItem;
+			propertyBindingInfo.Value = field;
+			propertyBindingInfo.DesignDataSetPath = entity + "." + field;
 		}
 
-		private static void PopulateControlProperties(ControlSetItem control, Hashtable properties)
+		private static void PopulateControlProperties(
+			ControlSetItem control, Hashtable properties)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			foreach(ControlPropertyItem propertyDef in control.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
+			var schema 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			foreach(ControlPropertyItem propertyDef 
+			        in control.ControlItem.ChildItemsByType(
+				        ControlPropertyItem.CategoryConst))
 			{
-				PropertyValueItem property = control.NewItem(typeof(PropertyValueItem), schema.ActiveSchemaExtensionId, null) as PropertyValueItem;
-
-				property.ControlPropertyItem = propertyDef;
-				
+				var propertyValueItem = control.NewItem<PropertyValueItem>(
+					schema.ActiveSchemaExtensionId, null);
+				propertyValueItem.ControlPropertyItem = propertyDef;
 				if(properties.Contains(propertyDef.Name))
 				{
-					property.SetValue(properties[propertyDef.Name]);
+					propertyValueItem.SetValue(properties[propertyDef.Name]);
 				}
 			}
 		}

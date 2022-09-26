@@ -2291,8 +2291,9 @@ namespace Origam.DA.Service
                         foreach (DataRow columnRow in columns.Tables[0].Select(
                             "TABLE_NAME = '" + entity.Name + "'"))
                         {
-                            FieldMappingItem field = entity.NewItem(typeof(FieldMappingItem), 
-                                schema.ActiveSchemaExtensionId, null) as FieldMappingItem;
+                            FieldMappingItem field = entity
+	                            .NewItem<FieldMappingItem>(
+		                            schema.ActiveSchemaExtensionId, null);
                             field.Name = (string)columnRow["COLUMN_NAME"];
                             field.AllowNulls = (string)columnRow["IS_NULLABLE"] == "YES";
                             // find a specific data type

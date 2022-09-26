@@ -24,20 +24,18 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Collections;
+using System.Reflection;
 using System.Xml.Serialization;
 using Origam.DA.EntityModel;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for DetachedField.
-	/// </summary>
 	[SchemaItemDescription("Virtual Field", "Fields", "icon_virtual-field.png")]
     [HelpTopic("Virtual+Field")]
     [ClassMetaVersion("6.0.0")]
 	public class DetachedField : AbstractDataEntityColumn, IRelationReference
 	{
-		public DetachedField() : base() {}
+		public DetachedField() {}
 
 		public DetachedField(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -65,14 +63,14 @@ namespace Origam.Schema.EntityModel
         [XmlReference("arrayRelation", "ArrayRelationId")]
 		public IAssociation ArrayRelation
 		{
-			get
-			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ArrayRelationId)) as IAssociation;
-			}
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ArrayRelationId)) 
+				as IAssociation;
 			set
 			{
-				this.ArrayRelationId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-				this.ArrayValueField = null;
+				ArrayRelationId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+				ArrayValueField = null;
 			}
 		}
 
@@ -80,14 +78,11 @@ namespace Origam.Schema.EntityModel
 			// only for IReference needs, for public access we have ArrayRelation
 		public IAssociation Relation
 		{
-			get
-			{
-				return this.ArrayRelation;
-			}
+			get => ArrayRelation;
 			set
 			{
-				this.ArrayRelation = value;
-                this.ArrayValueField = null;
+				ArrayRelation = value;
+                ArrayValueField = null;
 			}
 		}
 
@@ -100,39 +95,33 @@ namespace Origam.Schema.EntityModel
         [XmlReference("arrayValueField", "ArrayValueFieldId")]
 		public IDataEntityColumn ArrayValueField
 		{
-			get
-			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ArrayValueFieldId)) as IDataEntityColumn;
-			}
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(ArrayValueFieldId)) as IDataEntityColumn;
 			set
 			{
-				this.ArrayValueFieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-
-				if(value != null)
+				ArrayValueFieldId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+				if(value == null)
 				{
-					this.DataType = OrigamDataType.Array;
-					this.DefaultLookup = this.ArrayValueField.DefaultLookup;
-					this.Caption = this.ArrayValueField.Caption;
+					return;
 				}
+				DataType = OrigamDataType.Array;
+				DefaultLookup = ArrayValueField.DefaultLookup;
+				Caption = ArrayValueField.Caption;
 			}
 		}
 		#endregion
 
 		#region Overriden AbstractDataEntityColumn Members
 
-		public override string FieldType { get; } = "DetachedField";
+		public override string FieldType => "DetachedField";
 
-		public override bool ReadOnly
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool ReadOnly => false;
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		public override void GetParameterReferences(
+			AbstractSchemaItem parentItem, Hashtable list)
 		{
-			return;
 		}
 
         public override void GetExtraDependencies(ArrayList dependencies)
@@ -150,21 +139,19 @@ namespace Origam.Schema.EntityModel
 
         public override void UpdateReferences()
         {
-            if (this.ArrayRelation != null)
+            if(ArrayRelation != null)
             {
-                foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+                foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
                 {
-                    if (item.OldPrimaryKey != null)
-                    {
-                        if (item.OldPrimaryKey.Equals(this.ArrayRelation.PrimaryKey))
-                        {
-                            // store the old field because setting an entity will reset the field
-                            IDataEntityColumn oldField = this.ArrayValueField;
-                            this.ArrayRelation = item as IAssociation;
-                            this.ArrayValueField = oldField;
-                            break;
-                        }
-                    }
+	                if(item.OldPrimaryKey?.Equals(ArrayRelation.PrimaryKey) 
+	                   == true)
+	                {
+		                // store the old field because setting an entity will reset the field
+		                var oldField = ArrayValueField;
+		                ArrayRelation = item as IAssociation;
+		                ArrayValueField = oldField;
+		                break;
+	                }
                 }
             }
             base.UpdateReferences();
@@ -174,39 +161,27 @@ namespace Origam.Schema.EntityModel
 		#region Convert
 		public override bool CanConvertTo(Type type)
 		{
-			return
-				(
-				(
-				type == typeof(FieldMappingItem)
-				)
-				&
-				(
-				this.ParentItem is IDataEntity
-				)
-				);
+			return (type == typeof(FieldMappingItem)) 
+			       && (ParentItem is IDataEntity);
 		}
 
-		public override ISchemaItem ConvertTo(Type type)
+		protected override ISchemaItem ConvertTo<T>()
 		{
-			AbstractSchemaItem converted = this.ParentItem.NewItem(type, this.SchemaExtensionId, this.Group) as AbstractSchemaItem;
-
-			if(converted is AbstractDataEntityColumn)
+			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+			if(converted is AbstractDataEntityColumn abstractDataEntityColumn)
 			{
-				AbstractDataEntityColumn.CopyFieldMembers(this, converted as AbstractDataEntityColumn);
+				CopyFieldMembers(this, abstractDataEntityColumn);
 			}
-
-			if(converted is FieldMappingItem)
+			if(converted is FieldMappingItem fieldMappingItem)
 			{
-				(converted as FieldMappingItem).MappedColumnName = this.Name;
+				fieldMappingItem.MappedColumnName = Name;
 			}
 			else
 			{
-				return base.ConvertTo(type);
+				return base.ConvertTo<T>();
 			}
-
 			// does the common conversion tasks and persists both this and converted objects
-			AbstractSchemaItem.FinishConversion(this, converted);
-
+			FinishConversion(this, converted);
 			return converted;
 		}
 		#endregion

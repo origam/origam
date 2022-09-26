@@ -24,23 +24,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for DataQuery.
-	/// </summary>
 	[SchemaItemDescription("Rule Set", "Rule Sets", "icon_rule-set.png")]
     [HelpTopic("Rule+Sets")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class DataStructureRuleSet : AbstractSchemaItem, ISchemaItemFactory
+	public class DataStructureRuleSet : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureRuleSet";
         private object _lock = new object();
 
-		public DataStructureRuleSet() : base() {}
+		public DataStructureRuleSet() {}
 
 		public DataStructureRuleSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -49,11 +45,13 @@ namespace Origam.Schema.EntityModel
 		#region Public Methods
 		public ArrayList Rules()
 		{
-            ArrayList result = this.ChildItemsByType(DataStructureRule.CategoryConst);
-            // add all child rulesets
-            foreach (DataStructureRuleSetReference childRuleSet in this.ChildItemsByType(DataStructureRuleSetReference.CategoryConst))
+            var result = ChildItemsByType(DataStructureRule.CategoryConst);
+            // add all child rule sets
+            foreach(DataStructureRuleSetReference childRuleSet 
+                     in ChildItemsByType(
+	                     DataStructureRuleSetReference.CategoryConst))
             {
-                if (childRuleSet.RuleSet != null)
+                if(childRuleSet.RuleSet != null)
                 {
                     result.AddRange(childRuleSet.RuleSet.Rules());
                 }
@@ -61,61 +59,62 @@ namespace Origam.Schema.EntityModel
             return result;
         }
 
-        public void AddUniqueRuleSetIds(HashSet<Guid> ruleSetUniqIds, DataStructureRuleSetReference curRuleSetReference)
+        public void AddUniqueRuleSetIds(
+	        HashSet<Guid> ruleSetUniqIds, 
+	        DataStructureRuleSetReference curRuleSetReference)
         {
-            if (!ruleSetUniqIds.Add(this.Id))
+            if(!ruleSetUniqIds.Add(Id))
             {
-                throw new NullReferenceException(String.Format(
-                    "Ruleset `{0}' ({1}) found twice. Circular ruleset reference found.",
-                     this.Name, this.Id));
+                throw new NullReferenceException(
+	                $"Ruleset `{Name}' ({Id}) found twice. Circular ruleset reference found.");
             }
-            //
-            ArrayList references = this.ChildItemsByType(DataStructureRuleSetReference.CategoryConst);
-            bool addCurrent = true;
-            foreach (DataStructureRuleSetReference ruleSetReference
-                in this.ChildItemsByType(DataStructureRuleSetReference.CategoryConst))
+            var addCurrent = true;
+            foreach(DataStructureRuleSetReference ruleSetReference
+                in ChildItemsByType(DataStructureRuleSetReference.CategoryConst))
             {
-                if (curRuleSetReference != null && curRuleSetReference.Id == ruleSetReference.Id)
+                if(curRuleSetReference != null 
+				&& curRuleSetReference.Id == ruleSetReference.Id)
                 {
                     // current already processed
                     addCurrent = false;
                 }
-                ruleSetReference.RuleSet.AddUniqueRuleSetIds(ruleSetUniqIds, curRuleSetReference);
+                ruleSetReference.RuleSet.AddUniqueRuleSetIds(
+	                ruleSetUniqIds, curRuleSetReference);
             }
             // add current ruleset virtually - if we are in proper parent ruleset
-            if (curRuleSetReference != null && curRuleSetReference.ParentItemId == this.Id && addCurrent)
+            if(curRuleSetReference != null 
+			&& curRuleSetReference.ParentItemId == Id && addCurrent)
             {
-                curRuleSetReference.RuleSet.AddUniqueRuleSetIds(ruleSetUniqIds, curRuleSetReference);
+                curRuleSetReference.RuleSet.AddUniqueRuleSetIds(
+	                ruleSetUniqIds, curRuleSetReference);
             }
         }
 
-    public ArrayList Rules(string entityName)
+		public ArrayList Rules(string entityName)
 		{
-			ArrayList result = new ArrayList();
-
-			foreach(DataStructureRule rule in this.Rules())
+			var result = new ArrayList();
+			foreach(DataStructureRule rule in Rules())
 			{
-				if(rule.Entity.Name == entityName & rule.RuleDependencies.Count == 0)
+				if(rule.Entity.Name == entityName 
+				&& rule.RuleDependencies.Count == 0)
 				{
 					result.Add(rule);
 				}
 			}
-
 			return result;
 		}
 
 		public Hashtable RulesDepending(string entityName)
 		{
-			Hashtable result = new Hashtable();
-
-			foreach(DataStructureRule rule in this.Rules())
+			var result = new Hashtable();
+			foreach(DataStructureRule rule in Rules())
 			{
-				if(rule.Entity.Name == entityName & rule.RuleDependencies.Count > 0)
+				if(rule.Entity.Name == entityName 
+				&& rule.RuleDependencies.Count > 0)
 				{
 					result[rule.PrimaryKey] = rule;
 				}
 			}
-
 			return result;
 		}
 
@@ -136,11 +135,16 @@ namespace Origam.Schema.EntityModel
                 }
 #endif
                 result = new ArrayList();
-                foreach (DataStructureRule rule in this.Rules())
+                foreach(DataStructureRule rule in Rules())
                 {
-                    foreach (DataStructureRuleDependency dep in rule.RuleDependencies)
+                    foreach(DataStructureRuleDependency dep 
+                            in rule.RuleDependencies)
                     {
-                        if (((includeOtherEntities == false & rule.Entity.Name == entityName) | includeOtherEntities) && dep.Entity.Name == entityName && dep.FieldId == fieldId)
+                        if(((includeOtherEntities == false 
+						&& rule.Entity.Name == entityName) 
+						|| includeOtherEntities) 
+						&& dep.Entity.Name == entityName 
+						&& dep.FieldId == fieldId)
                         {
                             result.Add(rule);
                         }
@@ -177,38 +181,24 @@ namespace Origam.Schema.EntityModel
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(DataStructureRule), typeof(DataStructureRuleSetReference)};
-			}
-		}
+			typeof(DataStructureRule), typeof(DataStructureRuleSetReference)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(DataStructureRule))
+			string itemName = null;
+			if(typeof(T) == typeof(DataStructureRule))
 			{
-				item = new DataStructureRule(schemaExtensionId);
-				item.Name = "NewRule";
-
+				itemName = "NewRule";
 			}
-            else if (type == typeof(DataStructureRuleSetReference))
-            {
-                item = new DataStructureRuleSetReference(schemaExtensionId);
-                item.Name = "NewRuleSetReference";
-            }
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataStructureRuleSetUnknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			else if(typeof(T) == typeof(DataStructureRuleSetReference))
+			{
+				itemName = "NewRuleSetReference";
+			}
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion

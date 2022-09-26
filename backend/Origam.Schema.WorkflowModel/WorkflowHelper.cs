@@ -55,10 +55,9 @@ namespace Origam.Schema.WorkflowModel
 					nameof(methodName), methodName,
 					$@"Method not found for service {serviceName}.");
 			}
-			var serviceMethodCallTask = contextStore.ParentItem.NewItem(
-				typeof(ServiceMethodCallTask), 
-				schemaService.ActiveSchemaExtensionId, null) 
-				as ServiceMethodCallTask;
+			var serviceMethodCallTask = contextStore.ParentItem
+				.NewItem<ServiceMethodCallTask>(
+					schemaService.ActiveSchemaExtensionId, null); 
 			serviceMethodCallTask.Name = methodName + "_" + contextStore.Name;
 			serviceMethodCallTask.OutputContextStore = contextStore;
 			serviceMethodCallTask.Service = service;
@@ -78,9 +77,8 @@ namespace Origam.Schema.WorkflowModel
 		{
 			var schemaService = ServiceManager.Services
 				.GetService<ISchemaService>();
-			var contextReference = parentItem.NewItem(typeof(ContextReference), 
-				schemaService.ActiveSchemaExtensionId, null) 
-				as ContextReference;
+			var contextReference = parentItem.NewItem<ContextReference>(
+					schemaService.ActiveSchemaExtensionId, null);
 			contextReference.ContextStore = contextStore;
 			contextReference.XPath = xpath;
 			if(persist)
@@ -97,10 +95,8 @@ namespace Origam.Schema.WorkflowModel
 		{
 			var schemaService 
 				= ServiceManager.Services.GetService<ISchemaService>();
-			var workflowTaskDependency = step.NewItem(
-				typeof(WorkflowTaskDependency), 
-				schemaService.ActiveSchemaExtensionId, null) 
-				as WorkflowTaskDependency;
+			var workflowTaskDependency = step.NewItem<WorkflowTaskDependency>(
+					schemaService.ActiveSchemaExtensionId, null);
 			workflowTaskDependency.Task = dependencyStep;
 			if(persist)
 			{
@@ -192,10 +188,8 @@ namespace Origam.Schema.WorkflowModel
 				= ServiceManager.Services.GetService<ISchemaService>();
 			var workQueueProvider = schemaService
 					.GetProvider<WorkQueue.WorkQueueClassSchemaItemProvider>();
-			var workQueueClass = workQueueProvider.NewItem(
-				typeof(WorkQueueClass), 
-				schemaService.ActiveSchemaExtensionId, null) 
-				as WorkQueueClass;
+			var workQueueClass = workQueueProvider.NewItem<WorkQueueClass>(
+					schemaService.ActiveSchemaExtensionId, null);
 			workQueueClass.Name = entity.Name;
 			workQueueClass.Entity = entity;
 			workQueueClass.EntityStructure = EntityHelper
@@ -329,10 +323,9 @@ namespace Origam.Schema.WorkflowModel
 				.WorkQueueStructure.Entities[0];
 			foreach(var column in dataStructureEntity.Columns)
 			{
-				var newMapping = workQueueClass.NewItem(
-					typeof(WorkQueueClassEntityMapping), 
-					schemaService.ActiveSchemaExtensionId, null) 
-					as WorkQueueClassEntityMapping;
+				var newMapping = workQueueClass
+					.NewItem<WorkQueueClassEntityMapping>(
+						schemaService.ActiveSchemaExtensionId, null);
 				if(column.Name == "refId")
 				{
 					newMapping.Name = column.Name;

@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
@@ -32,80 +31,42 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("OR Expression", 2)]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class DataStructureFilterSetOrExpression : AbstractSchemaItem, ISchemaItemFactory
+	public class DataStructureFilterSetOrExpression : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureFilterSetFilter";
 
-		public DataStructureFilterSetOrExpression() : base() {}
+		public DataStructureFilterSetOrExpression() {}
 
-		public DataStructureFilterSetOrExpression(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public DataStructureFilterSetOrExpression(Key primaryKey) : base(primaryKey)	{}
+		public DataStructureFilterSetOrExpression(Key primaryKey) 
+			: base(primaryKey) {}
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override string Icon
-		{
-			get
-			{
-				return "2";
-			}
-		}
+		public override string Icon => "2";
 
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
-			return (newNode as ISchemaItem).PrimaryKey.Equals(this.ParentItem.PrimaryKey);
-		}
-
+		public override bool CanMove(UI.IBrowserNode2 newNode) 
+			=> ((ISchemaItem)newNode).PrimaryKey.Equals(ParentItem.PrimaryKey);
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(DataStructureFilterSetFilter)};
-			}
-		}
+			typeof(DataStructureFilterSetFilter)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(DataStructureFilterSetFilter))
-			{
-				item = new DataStructureFilterSetFilter(schemaExtensionId);
-				item.Name = "NewDataStructureFilterSetFilter";
-
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataStructureFilterUnknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(DataStructureDefaultSetDefault) ?
+				"NewDataStructureDefaultSetDefault" : null);
 		}
 
 		#endregion

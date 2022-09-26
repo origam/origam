@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Origam.DA;
@@ -40,7 +41,6 @@ namespace Origam.Schema
     [EntityName("SchemaItem", "TargetType")]
     [ClassMetaVersion("6.0.0")]
 	public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem, 
-        IBrowserNode2, ISchemaItemFactory, ICloneable, IComparable, 
         ISchemaItemConvertible, INotifyPropertyChanged, IFilePersistent
     {
         //public const string NAMESPACE = "http://schemas.origam.com/*.*.*/model-element";
@@ -1637,21 +1637,37 @@ namespace Origam.Schema
 			}
 		}
 
-		public virtual AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public virtual T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
+			where T : AbstractSchemaItem
 		{
-			AbstractSchemaItem item;
+			return NewItem<T>(schemaExtensionId, group, null);
+		}
 
-			if(_childItemTypes.Contains(type))
+		protected T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group, string itemName) 
+			where T : AbstractSchemaItem
+		{
+			T item;
+			if(((IList)NewItemTypes).Contains(typeof(T)))
 			{
-				item = (AbstractSchemaItem)type.GetConstructor(new Type[] {typeof(Guid)}).Invoke(new object[] {schemaExtensionId});;
+				item = (T)typeof(T).GetConstructor(new[] {typeof(Guid)})
+					.Invoke(new object[] {schemaExtensionId});
 			}
 			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTypeNotSupported", this.GetType().Name));
-
+			{
+				throw new ArgumentOutOfRangeException("type", typeof(T), 
+					ResourceUtils.GetString(
+						"ErrorTypeNotSupported", GetType().Name));
+			}
 			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			item.IsAbstract = this.IsAbstract;
-			this.ChildItems.Add(item);
+			item.PersistenceProvider = PersistenceProvider;
+			item.IsAbstract = IsAbstract;
+			if(!string.IsNullOrEmpty(itemName))
+			{
+				item.Name = itemName;
+			}
+			ChildItems.Add(item);
 #if ORIGAM_CLIENT
 			AddItemToTypeCache(item);
 #endif
@@ -1665,13 +1681,7 @@ namespace Origam.Schema
 		}
 
 		[Browsable(false)]
-		public virtual Type[] NewItemTypes
-		{
-			get
-			{
-				return (Type[])_childItemTypes.ToArray(typeof(Type));
-			}
-		}
+		public virtual Type[] NewItemTypes => new Type[] { };
 
 		[Browsable(false)]
 		public virtual IList<string> NewTypeNames
@@ -1697,54 +1707,6 @@ namespace Origam.Schema
 
 		public event Action<ISchemaItem> ItemCreated;
 
-		#endregion
-
-		#region Events
-//		public event EventHandler SchemaItemDeleted;
-//		void OnSchemaItemDeleted(EventArgs e)
-//		{
-//			if (SchemaItemDeleted != null) 
-//			{
-//				SchemaItemDeleted(this, e);
-//			}
-//		}
-
-//		public event EventHandler SchemaItemChanged;
-//		void OnSchemaItemChanged(EventArgs e)
-//		{
-//			if (SchemaItemChanged != null) 
-//			{
-//				if(this.Group == null)
-//				{
-//					SchemaItemChanged(this, e);
-//				}
-//				else
-//				{
-//					SchemaItemChanged(this.Group, e);
-//				}
-//			}
-//		}
-		#endregion
-
-		#region Event Handlers
-//		private void AbstractSchemaItem_Changed(object sender, EventArgs e)
-//		{
-//			OnSchemaItemChanged(e);
-//		}
-
-//		private void AbstractSchemaItem_Deleted(object sender, EventArgs e)
-//		{
-//			OnSchemaItemDeleted(e);
-//		}
-//		private void _childItems_AfterItemAdded(object sender, SchemaItemCollectionEventArgs e)
-//		{
-//			OnSchemaItemChanged(e);
-//		}
-//
-//		private void _childItems_AfterItemRemoved(object sender, SchemaItemCollectionEventArgs e)
-//		{
-//			OnSchemaItemChanged(e);
-//		}
 		#endregion
 
 		#region ICloneable Members
@@ -1840,7 +1802,10 @@ namespace Origam.Schema
 
 		public virtual ISchemaItem ConvertTo(Type type)
 		{
-			throw new Exception(ResourceUtils.GetString("ErrorConvertTo", type.ToString()));
+			var methodInfo = typeof(AbstractSchemaItem).GetMethod(
+				"ConvertTo", BindingFlags.NonPublic);
+			var genericMethodInfo = methodInfo.MakeGenericMethod(type);
+			return (ISchemaItem)genericMethodInfo.Invoke(this, null);
 		}
 
 		public virtual bool CanConvertTo(Type type)
@@ -1849,6 +1814,13 @@ namespace Origam.Schema
 		}
 
 		#endregion
+
+		protected virtual ISchemaItem ConvertTo<T>()
+			where T : AbstractSchemaItem
+		{
+			throw new Exception(ResourceUtils.GetString(
+				"ErrorConvertTo", typeof(T).ToString()));
+		}
 
 		public void Dump()
 		{
