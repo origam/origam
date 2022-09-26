@@ -103,7 +103,7 @@ namespace Origam.Workbench.Commands
 			var newItemGenericMethodInfo
 				= newItemMethodInfo.MakeGenericMethod(Owner as Type);
 			var item = newItemGenericMethodInfo.Invoke(
-				_schema.LastAddedNodeParent,
+				ParentElement,
 				new object[] { _schema.ActiveSchemaExtensionId, null });
 			var abstractSchemaItem = (AbstractSchemaItem)item;
 			if(_name != null)
