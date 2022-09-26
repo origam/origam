@@ -103,7 +103,8 @@ namespace TestSqlCommandGenerator
             package.Persist();
 
             // add IOrigamEntity2 because creating new table entities adds it as an ancestor by default
-            DetachedEntity entity = entityProvider.NewItem(typeof(DetachedEntity), _testPackageId, null) as DetachedEntity;
+            DetachedEntity entity = entityProvider.NewItem<DetachedEntity>(
+	            _testPackageId, null);
             entity.Name = EntityHelper.DefaultAncestorName;
             entity.Persist();
             // add primary key to IOrigamEntity2
@@ -171,7 +172,8 @@ namespace TestSqlCommandGenerator
             AbstractSqlCommandGenerator target = CreateAbstractSqlCommandGenerator();
             DataStructureEntity entity = ds.Entities[0] as DataStructureEntity;
 
-			DataStructureEntity languageDSEntity = entity.NewItem(typeof(DataStructureEntity), _testPackageId, null) as DataStructureEntity;
+			DataStructureEntity languageDSEntity = entity
+				.NewItem<DataStructureEntity>(_testPackageId, null);
 			languageDSEntity.RelationType = RelationType.LeftJoin;
 			languageDSEntity.Entity = table1.LocalizationRelation;
 			languageDSEntity.Persist();
