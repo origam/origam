@@ -29,21 +29,18 @@ using Origam.DA.EntityModel;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Maps a physical database field to an entity column.
-	/// </summary>
 	[SchemaItemDescription("Database Field", "Fields", 
         "icon_database-field.png")]
     [HelpTopic("Database+Field")]
     [ClassMetaVersion("6.0.0")]
-	public class FieldMappingItem : AbstractDataEntityColumn, ISchemaItemFactory,
+	public class FieldMappingItem : AbstractDataEntityColumn,
         IDatabaseDataTypeMapping
 	{
-		public FieldMappingItem() : base() {}
+		public FieldMappingItem() {}
 
 		public FieldMappingItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public FieldMappingItem(Key primaryKey) : base(primaryKey)	{}
+		public FieldMappingItem(Key primaryKey) : base(primaryKey) {}
 
 		#region Properties
 		
@@ -67,16 +64,8 @@ namespace Origam.Schema.EntityModel
         [DisplayName("Mapped Column Name")]
 		public string MappedColumnName
 		{
-			get
-			{
-				if(_sourceFieldName == null) return null;
-
-				return _sourceFieldName.Trim();
-			}
-			set
-			{
-				_sourceFieldName = value;
-			}
+			get => _sourceFieldName?.Trim();
+			set => _sourceFieldName = value;
 		}
 
         [EntityColumn("G10")]
@@ -89,18 +78,13 @@ namespace Origam.Schema.EntityModel
         [XmlReference("mappedDataType", "dataTypeMappingId")]
         public DatabaseDataType MappedDataType
         {
-            get
-            {
-                return (DatabaseDataType)PersistenceProvider.RetrieveInstance(
-                    typeof(DatabaseDataType), new ModelElementKey(dataTypeMappingId)) 
-                    as DatabaseDataType;
-            }
-            set
-            {
-                dataTypeMappingId = (value == null ? Guid.Empty 
-                    : (Guid)value.PrimaryKey["Id"]);
-            }
-
+            get =>
+	            (DatabaseDataType)PersistenceProvider.RetrieveInstance(
+		            typeof(DatabaseDataType), 
+		            new ModelElementKey(dataTypeMappingId));
+            set =>
+	            dataTypeMappingId = (value == null) 
+		            ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
         }
 		#endregion
 
@@ -113,45 +97,32 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("excludeFromAuditing")]
         public override bool ExcludeFromAuditing
 		{
-			get
-			{
-				return _excludeFromAuditing;
-			}
-			set
-			{
-				_excludeFromAuditing = value;
-			}
+			get => _excludeFromAuditing;
+			set => _excludeFromAuditing = value;
 		}
 
         public override string FieldType { get; } = "FieldMappingItem";
 
         [Browsable(false)]
-		public override bool ReadOnly
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool ReadOnly => false;
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		public override void GetParameterReferences(
+			AbstractSchemaItem parentItem, System.Collections.Hashtable list)
 		{
-			return;
 		}
 
 		public override void OnNameChanged(string originalName)
 		{
-			if(MappedColumnName == "" 
-				|| MappedColumnName == null
-				|| MappedColumnName == originalName)
+			if(string.IsNullOrEmpty(MappedColumnName) 
+			|| MappedColumnName == originalName)
 			{
-				MappedColumnName = this.Name;
+				MappedColumnName = Name;
 			}
 		}
 
         public override void OnPropertyChanged(string propertyName)
         {
-            if (propertyName == "DataType")
+            if(propertyName == "DataType")
             {
                 MappedDataType = null;
             }
@@ -162,66 +133,49 @@ namespace Origam.Schema.EntityModel
 		#region Convert
 		public override bool CanConvertTo(Type type)
 		{
-			return
-				(
-				(
-					type == typeof(DetachedField)
-				)
-				&
-				(
-				this.ParentItem is IDataEntity
-				)
-				);
+			return (type == typeof(DetachedField)) 
+			       && (ParentItem is IDataEntity);
 		}
 
-		public override ISchemaItem ConvertTo(Type type)
+		protected override ISchemaItem ConvertTo<T>()
 		{
-			AbstractSchemaItem converted = this.ParentItem.NewItem(type, this.SchemaExtensionId, this.Group) as AbstractSchemaItem;
-
-			if(converted is AbstractDataEntityColumn)
+			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+			if(converted is AbstractDataEntityColumn abstractDataEntityColumn)
 			{
-				AbstractDataEntityColumn.CopyFieldMembers(this, converted as AbstractDataEntityColumn);
+				CopyFieldMembers(this, abstractDataEntityColumn);
 			}
-
-			if(type == typeof(DetachedField))
+			if(typeof(T) == typeof(DetachedField))
 			{
 			}
 			else
 			{
-				return base.ConvertTo(type);
+				return base.ConvertTo<T>();
 			}
-
 			// does the common conversion tasks and persists both this and converted objects
-			AbstractSchemaItem.FinishConversion(this, converted);
-
+			FinishConversion(this, converted);
 			return converted;
 		}
 		#endregion
 
-		public static IDataEntity GetLocalizationTable(TableMappingItem tmi)
+		public static IDataEntity GetLocalizationTable(
+			TableMappingItem tableMappingItem)
 		{
-			if (tmi == null) return null;
-			if (tmi.LocalizationRelation != null)
-			{
-				return tmi.LocalizationRelation.AssociatedEntity;
-			}
-			return null;
+			return tableMappingItem?.LocalizationRelation?.AssociatedEntity;
 		}
 
 		[Browsable(false)]
-		public FieldMappingItem GetLocalizationField(TableMappingItem tmi)
+		public FieldMappingItem GetLocalizationField(
+			TableMappingItem tableMappingItem)
 		{
-			if (this.DataType != OrigamDataType.String && this.DataType != OrigamDataType.Memo)
+			if((DataType != OrigamDataType.String) 
+			&& (DataType != OrigamDataType.Memo))
 			{
 				// non-string data types couldn't be localized
 				return null;
 			}
-			IDataEntity localizationTable = GetLocalizationTable(tmi);
-			if (localizationTable == null) return null;
-
+			var localizationTable = GetLocalizationTable(tableMappingItem);
 			// find column in localization table
-			FieldMappingItem col = localizationTable.GetChildByName(this.Name) as FieldMappingItem;
-			return col;			
+			return localizationTable?.GetChildByName(Name) as FieldMappingItem;
 		}
 	}
 }

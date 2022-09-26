@@ -23,6 +23,7 @@ using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
@@ -38,9 +39,6 @@ namespace Origam.Schema.WorkflowModel
 		Group = 4
 	}
 
-	/// <summary>
-	/// Summary description for StateMachineState.
-	/// </summary>
 	[SchemaItemDescription("State", "States", "state.png")]
     [HelpTopic("State")]
 	[XmlModelRoot(CategoryConst)]
@@ -49,7 +47,7 @@ namespace Origam.Schema.WorkflowModel
 	{
 		public const string CategoryConst = "StateMachineState";
 
-		public StateMachineState() : base() {}
+		public StateMachineState() {}
 
 		public StateMachineState(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -58,19 +56,13 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
 		public override string Icon
 		{
 			get
 			{
-				switch(this.Type)
+				switch(Type)
 				{
 					case StateMachineStateType.Initial:
 						return "state-initial.png";
@@ -86,62 +78,55 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(ArrayList dependencies)
 		{
-			if(this.DefaultSubstate != null)	dependencies.Add(this.DefaultSubstate);
-
+			if(DefaultSubstate != null)
+			{
+				dependencies.Add(DefaultSubstate);
+			}
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 newNode)
 		{
 			// move between same parent type withing the same state machine
-			return ((AbstractSchemaItem)newNode).RootItem.PrimaryKey.Equals(this.RootItem.PrimaryKey)
-				&& (((AbstractSchemaItem)newNode).ItemType == "WorkflowStateMachine"
-					|| (((AbstractSchemaItem)newNode).ItemType == "StateMachineState")
-				);
+			return ((AbstractSchemaItem)newNode).RootItem.PrimaryKey.Equals(
+				       RootItem.PrimaryKey)
+				&& (((AbstractSchemaItem)newNode).ItemType 
+				    == "WorkflowStateMachine"
+				|| (((AbstractSchemaItem)newNode).ItemType 
+				    == "StateMachineState"));
 		}
 
 		#endregion
 
 		#region Properties
 		[Browsable(false)]
-		public ArrayList Operations
-		{
-			get
-			{
-				return this.ChildItemsByType(StateMachineOperation.CategoryConst);
-			}
-		}
+		public ArrayList Operations => ChildItemsByType(
+			StateMachineOperation.CategoryConst);
 
 		[Browsable(false)]
 		public ArrayList SubStates
 		{
 			get
 			{
-				ArrayList result = new ArrayList();
-				foreach(AbstractSchemaItem item in this.ChildItemsRecursive)
+				var result = new ArrayList();
+				foreach(AbstractSchemaItem item in ChildItemsRecursive)
 				{
 					if(item is StateMachineState)
 					{
 						result.Add(item);
 					}
 				}
-
 				return result;
 			}
 		}
 
 		public bool IsState(object value)
 		{
-			if(this.Value.Equals(value)) return true;
- 
-			foreach(StateMachineState state in this.SubStates)
-			{
-				if(state.Value.Equals(value)) return true;
-			}
-
-			return false;
+			return Value.Equals(value) 
+			       || SubStates.Cast<StateMachineState>().Any(state 
+				       => state.Value.Equals(value));
 		}
 
 		private StateMachineStateType _type;
@@ -149,14 +134,8 @@ namespace Origam.Schema.WorkflowModel
         [XmlAttribute("type")]
 		public StateMachineStateType Type
 		{
-			get
-			{
-				return _type;
-			}
-			set
-			{
-				_type = value;
-			}
+			get => _type;
+			set => _type = value;
 		}
 
 		private int _intValue;
@@ -164,14 +143,8 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public int IntValue
 		{
-			get
-			{
-				return _intValue;
-			}
-			set
-			{
-				_intValue = value;
-			}
+			get => _intValue;
+			set => _intValue = value;
 		}
 
 		private Guid _guidValue;
@@ -179,14 +152,8 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public Guid GuidValue
 		{
-			get
-			{
-				return _guidValue;
-			}
-			set
-			{
-				_guidValue = value;
-			}
+			get => _guidValue;
+			set => _guidValue = value;
 		}
 
 		private string _stringValue;
@@ -194,14 +161,8 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public string StringValue
 		{
-			get
-			{
-				return _stringValue;
-			}
-			set
-			{
-				_stringValue = value;
-			}
+			get => _stringValue;
+			set => _stringValue = value;
 		}
 
 		bool _booleanValue = false;
@@ -209,14 +170,8 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public bool BooleanValue
 		{
-			get
-			{
-				return _booleanValue;
-			}
-			set
-			{
-				_booleanValue = value;
-			}
+			get => _booleanValue;
+			set => _booleanValue = value;
 		}
 
 		decimal _currencyValue = 0;
@@ -224,14 +179,8 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public decimal CurrencyValue
 		{
-			get
-			{
-				return _currencyValue;
-			}
-			set
-			{
-				_currencyValue = value;
-			}
+			get => _currencyValue;
+			set => _currencyValue = value;
 		}
 
 		decimal _floatValue = 0;
@@ -239,14 +188,8 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public decimal FloatValue
 		{
-			get
-			{
-				return _floatValue;
-			}
-			set
-			{
-				_floatValue = value;
-			}
+			get => _floatValue;
+			set => _floatValue = value;
 		}
 
 		object _dateValue = null;
@@ -254,19 +197,18 @@ namespace Origam.Schema.WorkflowModel
 		[Browsable(false)]
 		public object DateValue
 		{
-			get
-			{
-				return _dateValue;
-			}
+			get => _dateValue;
 			set
 			{
-				if(value == null | value is DateTime)
+				if((value == null) || (value is DateTime))
 				{
 					_dateValue = value;
 				}
 				else
 				{
-					throw new ArgumentOutOfRangeException("DateValue", value, ResourceUtils.GetString("ErrorNotDateTime"));
+					throw new ArgumentOutOfRangeException(
+						"DateValue", value, 
+						ResourceUtils.GetString("ErrorNotDateTime"));
 				}
 			}
 		}
@@ -277,83 +219,90 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				StateMachine sm = this.RootItem as StateMachine;
 				// state machine can be null if the element was not added to the state yet
 				// while designing the state machine in Architect
-				if(sm != null && sm.Field != null)
+				if(RootItem is StateMachine stateMachine 
+				&& stateMachine.Field != null)
 				{
-					StateMachineState targetState = this;
-					if(this.Type == StateMachineStateType.Group)
+					var targetState = this;
+					if(Type == StateMachineStateType.Group)
 					{
-						if(this.DefaultSubstate == null)
+						if(DefaultSubstate == null)
 						{
-							throw new ArgumentNullException("DefaultSubstate", ResourceUtils.GetString("ErrorDefaultSubstateNotSet", sm.Name, this.Name));
+							throw new ArgumentNullException("DefaultSubstate", 
+								ResourceUtils.GetString(
+									"ErrorDefaultSubstateNotSet", 
+									stateMachine.Name, Name));
 						}
-
-						targetState = this.DefaultSubstate;
+						targetState = DefaultSubstate;
 					}
-
-					return DataConstant.ConvertValue(sm.Field.DataType, targetState.StringValue, targetState.IntValue, targetState.GuidValue, targetState.CurrencyValue, targetState.FloatValue, targetState.BooleanValue, targetState.DateValue);
+					return DataConstant.ConvertValue(
+						stateMachine.Field.DataType, targetState.StringValue, 
+						targetState.IntValue, targetState.GuidValue, 
+						targetState.CurrencyValue, targetState.FloatValue, 
+						targetState.BooleanValue, targetState.DateValue);
 				}
-				else
-				{
-					return null;
-				}
+				return null;
 			}
 			set
 			{
-				if(this.Type == StateMachineStateType.Group)
+				if(Type == StateMachineStateType.Group)
 				{
                     return;
 				}
-
-				StateMachine sm = this.RootItem as StateMachine;
-				if(sm.Field != null)
+				var stateMachine = RootItem as StateMachine;
+				if(stateMachine.Field != null)
 				{
-					switch(sm.Field.DataType)
+					switch(stateMachine.Field.DataType)
 					{
 						case OrigamDataType.Xml:
 						case OrigamDataType.Memo:
 						case OrigamDataType.String:
-							string stringValue = Convert.ToString(value);
-							this.StringValue = stringValue;
+						{
+							var stringValue = Convert.ToString(value);
+							StringValue = stringValue;
 							break;
-
+						}
 						case OrigamDataType.Integer:
-							int intValue = Convert.ToInt32(value);
-							this.IntValue = intValue;
+						{
+							var intValue = Convert.ToInt32(value);
+							IntValue = intValue;
 							break;
-
+						}
 						case OrigamDataType.Currency:
-							decimal currencyValue = Convert.ToDecimal(value);
-							this.CurrencyValue = currencyValue;
+						{
+							var currencyValue = Convert.ToDecimal(value);
+							CurrencyValue = currencyValue;
 							break;
-
+						}
 						case OrigamDataType.Float:
-							decimal floatValue = Convert.ToDecimal(value);
-							this.FloatValue = floatValue;
+						{
+							var floatValue = Convert.ToDecimal(value);
+							FloatValue = floatValue;
 							break;
-
+						}
 						case OrigamDataType.Boolean:
-							bool booleanValue = Convert.ToBoolean(value);
-							this.BooleanValue = booleanValue;
+						{
+							var booleanValue = Convert.ToBoolean(value);
+							BooleanValue = booleanValue;
 							break;
-
+						}
 						case OrigamDataType.Date:
+						{
 							if(value == null)
 							{
-								this.DateValue = null;
+								DateValue = null;
 							}
 							else
 							{
-								DateTime dateValue = Convert.ToDateTime(value);
-								this.DateValue = dateValue;
+								var dateValue = Convert.ToDateTime(value);
+								DateValue = dateValue;
 							}
 							break;
-
+						}
 						case OrigamDataType.UniqueIdentifier:
+						{
 							Guid guidValue;
-
 							if(value == null)
 							{
 								guidValue = Guid.Empty;
@@ -369,12 +318,15 @@ namespace Origam.Schema.WorkflowModel
 										guidValue = (Guid)value;
 										break;
 									default:
-										throw new ArgumentOutOfRangeException("value", value, ResourceUtils.GetString("ErrorConvertToGuid"));
+										throw new ArgumentOutOfRangeException(
+											"value", value, 
+											ResourceUtils.GetString(
+												"ErrorConvertToGuid"));
 								}
 							}
-
-							this.GuidValue = guidValue;
+							GuidValue = guidValue;
 							break;
+						}
 					}
 				}
 			}
@@ -390,20 +342,22 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.DefaultSubstateId;
-
-				return (StateMachineState)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				var key = new ModelElementKey
+				{
+					Id = DefaultSubstateId
+				};
+				return (StateMachineState)PersistenceProvider.RetrieveInstance(
+					typeof(AbstractSchemaItem), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.DefaultSubstateId = Guid.Empty;
+					DefaultSubstateId = Guid.Empty;
 				}
 				else
 				{
-					this.DefaultSubstateId = (Guid)value.PrimaryKey["Id"];
+					DefaultSubstateId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
 		}
@@ -411,43 +365,33 @@ namespace Origam.Schema.WorkflowModel
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] 
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(StateMachineState),
-									  typeof(StateMachineOperation)
-								  };
-			}
-		}
+			typeof(StateMachineState),
+			typeof(StateMachineOperation)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(StateMachineState))
+			if(typeof(T) == typeof(StateMachineState))
 			{
-				if(this.Type != StateMachineStateType.Group)
+				if(Type != StateMachineStateType.Group)
 				{
-					throw new ArgumentOutOfRangeException("Type", this.Type, ResourceUtils.GetString("ErrorAddSubstate"));
+					throw new ArgumentOutOfRangeException("Type", Type,
+						ResourceUtils.GetString("ErrorAddSubstate"));
 				}
-
-				item = new StateMachineState(schemaExtensionId);
-				item.Name = "NewSubState";
 			}
-			else if(type == typeof(StateMachineOperation))
+			string itemName = null;
+			if(typeof(T) == typeof(StateMachineState))
 			{
-				item = new StateMachineOperation(schemaExtensionId);
-				item.Name = "NewOperation";
+				itemName = "NewSubState";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorStateMachineStateUknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			else if(typeof(T) == typeof(StateMachineOperation))
+			{
+				itemName = "NewOperation";
+			}
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion

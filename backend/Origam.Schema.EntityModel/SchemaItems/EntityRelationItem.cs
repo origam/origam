@@ -27,21 +27,18 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for EntityRelationItem.
-	/// </summary>
 	[SchemaItemDescription("Relationship", "Relationships", "icon_relationship.png")]
     [HelpTopic("Relationships")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("RelatedEntity")]
     [ClassMetaVersion("6.0.0")]
-    public class EntityRelationItem : AbstractSchemaItem, IAssociation, ISchemaItemFactory
+    public class EntityRelationItem : AbstractSchemaItem, IAssociation
 	{
-		public EntityRelationItem() : base(){}
+		public EntityRelationItem() {}
 		
 		public EntityRelationItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public EntityRelationItem(Key primaryKey) : base(primaryKey)	{}
+		public EntityRelationItem(Key primaryKey) : base(primaryKey) {}
 
 		public const string CategoryConst = "EntityRelation";
 
@@ -51,32 +48,33 @@ namespace Origam.Schema.EntityModel
 
 		[TypeConverter(typeof(EntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
-		[NotNullModelElementRuleAttribute()]
+		[NotNullModelElementRule()]
         [XmlReference("relatedEntity", "RelatedEntityId")]
         public IDataEntity RelatedEntity
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.RelatedEntityId;
-
-				return (IDataEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				var key = new ModelElementKey
+				{
+					Id = RelatedEntityId
+				};
+				return (IDataEntity)PersistenceProvider.RetrieveInstance(
+					typeof(AbstractSchemaItem), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.RelatedEntityId = Guid.Empty;
-					this.Name = "";
+					RelatedEntityId = Guid.Empty;
+					Name = "";
 				}
 				else
 				{
-					this.RelatedEntityId = (Guid)value.PrimaryKey["Id"];
-					this.Name = this.RelatedEntity.Name;
+					RelatedEntityId = (Guid)value.PrimaryKey["Id"];
+					Name = RelatedEntity.Name;
 				}
-
 				// We have to delete all child items
-				this.ChildItems.Clear();
+				ChildItems.Clear();
 			}
 		}
 
@@ -86,14 +84,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("parentChild")]
         public bool IsParentChild
 		{
-			get
-			{
-				return _isParentChild;
-			}
-			set
-			{
-				_isParentChild = value;
-			}
+			get => _isParentChild;
+			set => _isParentChild = value;
 		}
 
 
@@ -108,53 +100,39 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("or")]
         public bool IsOR
 		{
-			get
-			{
-				return _isOR;
-			}
-			set
-			{
-				_isOR = value;
-			}
+			get => _isOR;
+			set => _isOR = value;
 		}
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
 			try
 			{
-				dependencies.Add(this.RelatedEntity);
+				dependencies.Add(RelatedEntity);
 			}
 			catch
 			{
-				throw new ArgumentOutOfRangeException("RelatedEntityId", this.RelatedEntityId, ResourceUtils.GetString("ErrorRelatedEntity", this.Name, this.BaseEntity.Name));
+				throw new ArgumentOutOfRangeException(
+					"RelatedEntityId", RelatedEntityId, 
+					ResourceUtils.GetString("ErrorRelatedEntity", Name, 
+						BaseEntity.Name));
 			}
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 newNode)
 		{
-			ISchemaItem item = newNode as ISchemaItem;
-
-			return item != null && item.PrimaryKey.Equals(this.ParentItem.PrimaryKey);
+			var item = newNode as ISchemaItem;
+			return (item != null) 
+			       && item.PrimaryKey.Equals(ParentItem.PrimaryKey);
 		}
 
 		#endregion
@@ -162,60 +140,34 @@ namespace Origam.Schema.EntityModel
 		#region IAssociation Members
 
 		[Browsable(false)]
-		public IDataEntity BaseEntity
-		{
-			get
-			{
-				return this.ParentItem as IDataEntity;
-			}
-		}
+		public IDataEntity BaseEntity => ParentItem as IDataEntity;
 
 		[Browsable(false)]
-		public IDataEntity AssociatedEntity
-		{
-			get
-			{
-				return this.RelatedEntity;
-			}
-		}
+		public IDataEntity AssociatedEntity => RelatedEntity;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
-		{
-			get
-			{
-				return new Type[] {typeof(EntityRelationColumnPairItem),
-									  typeof(EntityRelationFilter)
-								  };
-			}
-		}
+		public override Type[] NewItemTypes => new[] {
+			typeof(EntityRelationColumnPairItem), 
+			typeof(EntityRelationFilter)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(EntityRelationColumnPairItem))
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{ 
+			string itemName = null;
+			if(typeof(T) == typeof(EntityRelationColumnPairItem))
 			{
-				item = new EntityRelationColumnPairItem(schemaExtensionId);
-				item.Name = this.Name + "Key" + (this.ChildItems.Count + 1);
+				itemName = Name + "Key" + (ChildItems.Count + 1);
 			}
-			else if(type == typeof(EntityRelationFilter))
+			else if(typeof(T) == typeof(EntityRelationFilter))
 			{
-				item = new EntityRelationFilter(schemaExtensionId);
-				item.Name = "NewEntityRelationFilter";
+				itemName = "NewEntityRelationFilter";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTableMappingItemUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			item.IsAbstract = this.IsAbstract;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion

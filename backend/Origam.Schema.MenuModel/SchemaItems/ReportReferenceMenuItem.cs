@@ -33,32 +33,42 @@ using System.Collections.Generic;
 
 namespace Origam.Schema.MenuModel
 {
-	/// <summary>
-	/// Summary description for FormReferenceMenuItem.
-	/// </summary>
 	[SchemaItemDescription("Report Reference", "menu_report.png")]
     [HelpTopic("Report+Menu+Item")]
     [ClassMetaVersion("6.0.0")]
 	public class ReportReferenceMenuItem : AbstractMenuItem
 	{
-		public ReportReferenceMenuItem() : base() {}
+		public ReportReferenceMenuItem() {}
 
-		public ReportReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public ReportReferenceMenuItem(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
-		public ReportReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
+		public ReportReferenceMenuItem(Key primaryKey) : base(primaryKey) {}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.Report);
-			if(this.SelectionDialogEndRule != null) dependencies.Add(this.SelectionDialogEndRule);
-			if(this.SelectionDialogPanel != null) dependencies.Add(this.SelectionDialogPanel);
-			if(this.TransformationBeforeSelection != null) dependencies.Add(this.TransformationBeforeSelection);
-			if(this.TransformationAfterSelection != null) dependencies.Add(this.TransformationAfterSelection);
-
-			base.GetExtraDependencies (dependencies);
+			dependencies.Add(Report);
+			if(SelectionDialogEndRule != null)
+			{
+				dependencies.Add(SelectionDialogEndRule);
+			}
+			if(SelectionDialogPanel != null)
+			{
+				dependencies.Add(SelectionDialogPanel);
+			}
+			if(TransformationBeforeSelection != null)
+			{
+				dependencies.Add(TransformationBeforeSelection);
+			}
+			if(TransformationAfterSelection != null)
+			{
+				dependencies.Add(TransformationAfterSelection);
+			}
+			base.GetExtraDependencies(dependencies);
 		}
 
-		public override Origam.UI.BrowserNodeCollection ChildNodes()
+		public override UI.BrowserNodeCollection ChildNodes()
 		{
 #if ORIGAM_CLIENT
 			return new Origam.UI.BrowserNodeCollection();
@@ -76,14 +86,10 @@ namespace Origam.Schema.MenuModel
         [XmlReference("report", "ReportId")]
 		public AbstractReport Report
 		{
-			get
-			{
-				return (AbstractReport)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ReportId));
-			}
-			set
-			{
-				this.ReportId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (AbstractReport)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ReportId));
+			set => ReportId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		[EntityColumn("G03")]  
@@ -94,14 +100,11 @@ namespace Origam.Schema.MenuModel
         [XmlReference("selectionDialogScreenSection", "SelectionPanelId")]
 		public PanelControlSet SelectionDialogPanel
 		{
-			get
-			{
-				return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionPanelId));
-			}
-			set
-			{
-				this.SelectionPanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (PanelControlSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionPanelId));
+			set => SelectionPanelId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		[EntityColumn("G04")]  
@@ -113,14 +116,11 @@ namespace Origam.Schema.MenuModel
             "SelectionPanelBeforeTransformationId")]
 		public AbstractTransformation TransformationBeforeSelection
 		{
-			get
-			{
-				return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionPanelBeforeTransformationId));
-			}
-			set
-			{
-				this.SelectionPanelBeforeTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionPanelBeforeTransformationId));
+			set => SelectionPanelBeforeTransformationId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		[EntityColumn("G05")]  
@@ -132,14 +132,11 @@ namespace Origam.Schema.MenuModel
             "SelectionPanelAfterTransformationId")]
         public AbstractTransformation TransformationAfterSelection
 		{
-			get
-			{
-				return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionPanelAfterTransformationId));
-			}
-			set
-			{
-				this.SelectionPanelAfterTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionPanelAfterTransformationId));
+			set => SelectionPanelAfterTransformationId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		[EntityColumn("G06")]  
@@ -150,14 +147,11 @@ namespace Origam.Schema.MenuModel
         [XmlReference("selectionDialogEndRule", "SelectionEndRuleId")]
 		public IEndRule SelectionDialogEndRule
 		{
-			get
-			{
-				return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionEndRuleId));
-			}
-			set
-			{
-				this.SelectionEndRuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (IEndRule)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionEndRuleId));
+			set => SelectionEndRuleId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		private DataReportExportFormatType _exportFormatType;
@@ -167,45 +161,24 @@ namespace Origam.Schema.MenuModel
         [XmlAttribute("exportFormatType")]
 		public DataReportExportFormatType ExportFormatType
 		{
-			get
-			{
-				return _exportFormatType;
-			}
-			set
-			{
-				_exportFormatType = value;
-			}
+			get => _exportFormatType;
+			set => _exportFormatType = value;
 		}
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] 
+		{ 
+			typeof(SelectionDialogParameterMapping)
+		};
+
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(SelectionDialogParameterMapping)
-								  };
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(SelectionDialogParameterMapping))
-			{
-				item = new SelectionDialogParameterMapping(schemaExtensionId);
-				item.Name = "NewSelectionDialogParameterMapping";
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorMenuUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(SelectionDialogParameterMapping) ?
+					"NewSelectionDialogParameterMapping" : null);
 		}
 
 		public override IList<string> NewTypeNames
@@ -214,9 +187,12 @@ namespace Origam.Schema.MenuModel
 			{
 				try
 				{
-					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-					IServiceAgent agent = agents.GetAgent("DataService", null, null);
-					return agent.ExpectedParameterNames(this.Report, "LoadData", "Parameters");
+					var businessServicesService = ServiceManager.Services
+						.GetService<IBusinessServicesService>();
+					var serviceAgent = businessServicesService.GetAgent(
+						"DataService", null, null);
+					return serviceAgent.ExpectedParameterNames(
+						Report, "LoadData", "Parameters");
 				}
 				catch
 				{

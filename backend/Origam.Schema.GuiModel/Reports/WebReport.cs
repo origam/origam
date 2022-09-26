@@ -27,15 +27,12 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	/// <summary>
-	/// Summary description for CrystalReport.
-	/// </summary>
 	[SchemaItemDescription("Web Report", "icon_web-report.png")]
     [HelpTopic("Web+Report")]
     [ClassMetaVersion("6.0.1")]
 	public class WebReport : AbstractReport
 	{	
-		public WebReport() : base(){}
+		public WebReport() {}
 		
 		public WebReport(Guid schemaExtensionId) : base(schemaExtensionId) {}
 

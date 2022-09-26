@@ -27,22 +27,20 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.LookupModel
 {
-	/// <summary>
-	/// Summary description for DataQuery.
-	/// </summary>
 	[SchemaItemDescription("Notification Box", "icon_notification-box.png")]
     [HelpTopic("Notification+Boxes+And+Tooltips")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-    public class NotificationBox : AbstractSchemaItem, ISchemaItemFactory
+    public class NotificationBox : AbstractSchemaItem
 	{
 		public const string CategoryConst = "NotificationBox";
 
-		public NotificationBox() : base() {}
+		public NotificationBox() {}
 
-		public NotificationBox(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public NotificationBox(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
-		public NotificationBox(Key primaryKey) : base(primaryKey)	{}
+		public NotificationBox(Key primaryKey) : base(primaryKey) {}
 	
 		#region Properties
 		private NotificationBoxType _type = NotificationBoxType.Logo;
@@ -51,14 +49,8 @@ namespace Origam.Schema.LookupModel
         [XmlAttribute("type")]
 		public NotificationBoxType Type
 		{
-			get
-			{
-				return _type;
-			}
-			set
-			{
-				_type = value;
-			}
+			get => _type;
+			set => _type = value;
 		}
 
 		private int _refreshInterval = 0;
@@ -67,69 +59,33 @@ namespace Origam.Schema.LookupModel
         [XmlAttribute("refreshInterval")]
         public int RefreshInterval
 		{
-			get
-			{
-				return _refreshInterval;
-			}
-			set
-			{
-				_refreshInterval = value;
-			}
+			get => _refreshInterval;
+			set => _refreshInterval = value;
 		}
 		#endregion
 
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] 
 		{
-			get
-			{
-				return new Type[] {typeof(DataServiceDataTooltip)
-								//	, typeof(DataStructureFilterSetOrExpression)
-								  };
-			}
-		}
+			typeof(DataServiceDataTooltip)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractDataTooltip item;
-
-			if(type == typeof(DataServiceDataTooltip))
-			{
-				item = new DataServiceDataTooltip(schemaExtensionId);
-				item.Name = "NewDataServiceDataTooltip";
-
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataLookupUknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(DataServiceDataTooltip) ?
+					"NewDataServiceDataTooltip" : null);
 		}
 
 		#endregion

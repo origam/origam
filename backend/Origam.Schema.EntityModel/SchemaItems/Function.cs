@@ -33,18 +33,15 @@ namespace Origam.Schema.EntityModel
 		Database = 1
 	}
 
-	/// <summary>
-	/// Summary description for FilterExpression.
-	/// </summary>
 	[SchemaItemDescription("Function", "icon_10_functions.png")]
     [HelpTopic("Functions")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class Function : AbstractSchemaItem, ISchemaItemFactory
+	public class Function : AbstractSchemaItem
 	{
 		public const string CategoryConst = "Function";
 
-		public Function() : base() {}
+		public Function() {}
 
 		public Function(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -53,32 +50,19 @@ namespace Origam.Schema.EntityModel
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
 		[Browsable(false)]
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		public override string Icon
 		{
 			get
 			{
-				switch(this.FunctionType) 
+				switch(FunctionType) 
 				{
 					case OrigamFunctionType.Database:
 						return "55";
-
 					default:
 						return "icon_10_functions.png";
 				}
@@ -90,29 +74,17 @@ namespace Origam.Schema.EntityModel
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(FunctionParameter)};
-			}
-		}
+			typeof(FunctionParameter)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(FunctionParameter))
-			{
-				FunctionParameter item = new FunctionParameter(schemaExtensionId);
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewFunctionParameter";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorFunctionUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(FunctionParameter) ?
+					"NewFunctionParameter" : null);
 		}
 
 		#endregion
@@ -123,14 +95,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("dataType")]
 		public OrigamDataType DataType
 		{
-			get
-			{
-				return _dataType;
-			}
-			set
-			{
-				_dataType = value;
-			}
+			get => _dataType;
+			set => _dataType = value;
 		}
 
 		private OrigamFunctionType _functionType;
@@ -138,14 +104,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("type")]
         public OrigamFunctionType FunctionType
 		{
-			get
-			{
-				return _functionType;
-			}
-			set
-			{
-				_functionType = value;
-			}
+			get => _functionType;
+			set => _functionType = value;
 		}
 		#endregion
 	}
