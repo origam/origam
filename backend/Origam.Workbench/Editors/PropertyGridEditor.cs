@@ -29,11 +29,19 @@ namespace Origam.Workbench.Editors
 {
 	public class PropertyGridEditor : AbstractEditor
     {
-        private PropertyGridEx propertyGrid1;
+	    private readonly bool closeOnLinkClick;
+	    private PropertyGridEx propertyGrid1;
 
         private void InitializeComponent()
 		{
-            this.propertyGrid1 = new PropertyGridEx(Close);
+            this.propertyGrid1 = new PropertyGridEx();
+            propertyGrid1.LinkClicked += (sender, args) =>
+            {
+	            if (closeOnLinkClick)
+	            {
+					Close();
+	            }
+            };
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -62,8 +70,9 @@ namespace Origam.Workbench.Editors
 
 		}
 
-        public PropertyGridEditor()
+        public PropertyGridEditor(bool closeOnLinkClick)
 		{
+			this.closeOnLinkClick = closeOnLinkClick;
 			InitializeComponent();
             this.ContentLoaded += new EventHandler(PropertyGridEditor_ContentLoaded);
 			this.BackColor = OrigamColorScheme.FormBackgroundColor;
