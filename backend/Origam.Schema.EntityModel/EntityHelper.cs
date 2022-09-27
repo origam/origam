@@ -144,6 +144,47 @@ namespace Origam.Schema.EntityModel
 			return fsf;
 		}
 
+		public static DataStructureSortSet CreateSortSet(
+			DataStructure dataStructure, string name, bool persist)
+		{
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var sortSet = dataStructure.NewItem(
+					typeof(DataStructureSortSet), 
+					schemaService.ActiveSchemaExtensionId, null) 
+				as DataStructureSortSet;
+			sortSet.Name = name;
+			if(persist)
+			{
+				sortSet.Persist();
+			}
+			return sortSet;
+		}
+
+		public static DataStructureSortSetItem CreateSortSetItem(
+			DataStructureSortSet sortSet,
+			DataStructureEntity entity,
+			string fieldName,
+			DataStructureColumnSortDirection direction,
+			bool persist
+			)
+		{
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var sortSetItem = sortSet.NewItem(
+					typeof(DataStructureSortSetItem),
+					schemaService.ActiveSchemaExtensionId, null)
+				as DataStructureSortSetItem;
+			sortSetItem.Entity = entity;
+			sortSetItem.FieldName = fieldName;
+			sortSetItem.SortDirection = direction;
+			if(persist)
+			{
+				sortSetItem.Persist();
+			}
+			return sortSetItem;
+		}
+
         public static TableMappingItem CreateTable(string name, SchemaItemGroup group,
             bool persist)
         {

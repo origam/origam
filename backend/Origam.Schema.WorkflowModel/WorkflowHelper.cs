@@ -186,6 +186,11 @@ namespace Origam.Schema.WorkflowModel
 			wqStructure.ClearCacheOnPersist = false;
 			wqStructure.ThrowEventOnPersist = false;
 			wqStructure.Persist();
+			DataStructureSortSet sortSet = EntityHelper.CreateSortSet(
+				wqStructure, "Default", true);
+			EntityHelper.CreateSortSetItem(sortSet,
+				wqStructure.Entities[0] as DataStructureEntity, "RecordCreated",
+				DataStructureColumnSortDirection.Ascending, true);
 			wqStructure.UpdateReferences();
 			wqStructure.ClearCacheOnPersist = true;
 			wqStructure.ThrowEventOnPersist = true;
@@ -214,7 +219,10 @@ namespace Origam.Schema.WorkflowModel
 			}
 
 			wqc.WorkQueueStructure = wqStructure; 
-			wqc.WorkQueueStructureUserListMethod = wqStructure.GetChildByName("GetByQueueId", DataStructureMethod.CategoryConst) as DataStructureMethod;
+			wqc.WorkQueueStructureUserListMethod = wqStructure.GetChildByName(
+				"GetByQueueId", DataStructureMethod.CategoryConst) 
+				as DataStructureMethod;
+			wqc.WorkQueueStructureSortSet = sortSet;
 			wqc.Persist();
 
 			GenerateWorkQueueClassEntityMappings(wqc);
