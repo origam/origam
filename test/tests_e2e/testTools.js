@@ -73,7 +73,7 @@ async function waitForRowCountData(page, dataViewId, expectedRowCount) {
     }
     await sleep(50);
   }
-  throw new Error("Row count did not change before timeout");
+  throw new Error(`Row count did not change before timeout, expectedRowCount: ${expectedRowCount}, countData.rowCount ${countData.rowCount}`);
 }
 
 async function getTableData(page, dataViewId){
