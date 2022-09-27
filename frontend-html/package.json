@@ -145,6 +145,10 @@
       "last 1 safari version"
     ]
   },
+  "resolutions": {
+    "@types/react": "16.9.0",
+    "@types/react-dom": "16.9.0"
+  },
   "jest": {
     "roots": [
       "<rootDir>/src"
