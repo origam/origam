@@ -59,7 +59,6 @@ namespace Origam.Schema.GuiModel
 
 		private ControlToolBoxVisibility _controlToolBoxVisibility;
 
-		[EntityColumn("I01")] 
         [XmlAttribute("toolboxVisibility")]
 		public ControlToolBoxVisibility ControlToolBoxVisibility
 		{
@@ -76,7 +75,6 @@ namespace Origam.Schema.GuiModel
 
 		private string _controlType;
 
-		[EntityColumn("SS01")] 
         [XmlAttribute("typeName")]
 		public string ControlType
 		{
@@ -92,7 +90,6 @@ namespace Origam.Schema.GuiModel
 
 		private string _controlNamespace;
 
-		[EntityColumn("SS02")] 
         [XmlAttribute("namespace")]
 		public string ControlNamespace
 		{
@@ -108,7 +105,6 @@ namespace Origam.Schema.GuiModel
 
 		private bool _isComplexType;
 
-		[EntityColumn("B01")] 
         [XmlAttribute("isComplex")]
 		public bool IsComplexType
 		{
@@ -122,7 +118,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid PanelControlSetId;
 
         [XmlReference("screenSection", "PanelControlSetId")]
@@ -157,7 +152,6 @@ namespace Origam.Schema.GuiModel
 
         private bool _requestSaveAfterChangeAllowed;
 
-        [EntityColumn("B03")]
         [XmlAttribute("requestSaveAfterChangeAllowed")]
         public bool RequestSaveAfterChangeAllowed
         {
@@ -188,7 +182,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

@@ -42,7 +42,6 @@ namespace Origam.Schema.TestModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -111,8 +110,7 @@ namespace Origam.Schema.TestModel
 
 		#region Properties
 		private string _role;
-
-		[EntityColumn("LS01")]
+		
 		public string Role
 		{
 			get

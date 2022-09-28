@@ -52,7 +52,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G11")]
 		public Guid ServiceMethodId;	
 
 		[TypeConverter(typeof(ServiceMethodConverter))]
@@ -96,8 +95,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G10")]  
+		
 		public Guid ServiceId;
 
 		[TypeConverter(typeof(ServiceConverter))]

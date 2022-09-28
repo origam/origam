@@ -80,7 +80,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G02")]  
 		public Guid WorkflowId;
 
 		[TypeConverter(typeof(WorkflowConverter))]

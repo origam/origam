@@ -50,7 +50,6 @@ namespace Origam.Schema.EntityModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -125,7 +124,6 @@ namespace Origam.Schema.EntityModel
 
 		private string _roles = "";
 		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("LS01")]
 		[StringNotEmptyModelElementRule()]
         [XmlAttribute("roles")]
         public string Roles
@@ -141,8 +139,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("I01")]
+        
 		[Browsable(false)]
         [XmlAttribute("backgroundColor")]
         public int _backColorInt;
@@ -161,8 +158,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("I02")]
+		
 		[Browsable(false)]
         [XmlAttribute("foregroundColor")]
         public int _foreColorInt;
@@ -184,8 +180,7 @@ namespace Origam.Schema.EntityModel
 
 		private int _level = 100;
 		[Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I03")]
-        [XmlAttribute("level")]
+		[XmlAttribute("level")]
         public int Level
 		{
 			get
@@ -200,7 +195,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid RuleId;
 
 		[TypeConverter(typeof(EntityRuleConverter))]
@@ -220,8 +214,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("G02")]  
+        
 		public Guid ForeColorLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -238,8 +231,7 @@ namespace Origam.Schema.EntityModel
 				this.ForeColorLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G03")]  
+        
 		public Guid BackColorLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -257,7 +249,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G04")]  
 		public Guid DynamicColorLookupFieldId;
 
 		[TypeConverter(typeof(EntityColumnReferenceConverter))]

@@ -61,15 +61,12 @@ namespace Origam.Schema
 		public override string ToString() => this.Name;
 
 		#region Properties
-		[EntityColumn("RootItemType")]
-        [XmlAttribute(AttributeName = "rootItemType")] 
+		[XmlAttribute(AttributeName = "rootItemType")] 
 		public string RootItemType { get; set; }
 
-		[EntityColumn("Name")]
         [XmlAttribute(AttributeName = "name")]
         public string Name { get; set; }
 
-		[EntityColumn("refSchemaExtensionId")]
         [XmlParent(typeof(Package))]
         public Guid SchemaExtensionId;
 
@@ -86,11 +83,9 @@ namespace Origam.Schema
 			set => this.SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
         }
 
-		[EntityColumn("refParentItem", true)] 
 		[Browsable(false)]
 		public AbstractSchemaItem ParentItem { get; set; }
 
-		[EntityColumn("refParentGroupId")]
         [XmlParent(typeof(SchemaItemGroup))]
         public Guid ParentGroupId;
 

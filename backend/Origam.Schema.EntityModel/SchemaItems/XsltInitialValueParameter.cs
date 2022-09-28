@@ -70,7 +70,6 @@ namespace Origam.Schema.EntityModel
 
         #region Properties
         //protected OrigamDataType _dataType;
-        [EntityColumn("I01")]
         [XmlAttribute("dataType")]
         [TypeConverter(typeof(TransformOutputScalarOrigamDataTypeConverter))]
         public override OrigamDataType DataType
@@ -84,8 +83,7 @@ namespace Origam.Schema.EntityModel
                 _dataType = value;
             }
         }
-
-        [EntityColumn("G05")]
+        
         public Guid transformationId;
 
         [Category("Reference")]

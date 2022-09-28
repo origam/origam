@@ -51,8 +51,7 @@ namespace Origam.Schema.EntityModel
 		public Function(Key primaryKey) : base(primaryKey)	{}
 	
 		#region Overriden AbstractDataEntityColumn Members
-		
-		[EntityColumn("ItemType")]
+
 		public override string ItemType
 		{
 			get
@@ -119,8 +118,7 @@ namespace Origam.Schema.EntityModel
 
 		#region Properties
 		private OrigamDataType _dataType;
-		[EntityColumn("I01")] 
-        [XmlAttribute("dataType")]
+		[XmlAttribute("dataType")]
 		public OrigamDataType DataType
 		{
 			get
@@ -134,8 +132,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private OrigamFunctionType _functionType;
-		[EntityColumn("I02")]
-        [XmlAttribute("type")]
+		[XmlAttribute("type")]
         public OrigamFunctionType FunctionType
 		{
 			get

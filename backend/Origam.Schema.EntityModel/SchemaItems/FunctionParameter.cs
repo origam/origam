@@ -44,8 +44,7 @@ namespace Origam.Schema.EntityModel
 		public FunctionParameter(Key primaryKey) : base(primaryKey)	{}
 	
 		#region Overriden AbstractDataEntityColumn Members
-		
-		[EntityColumn("ItemType")]
+	
 		public override string ItemType
 		{
 			get
@@ -72,8 +71,7 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		private int _ordinalPosition;
-		[EntityColumn("I01")]
-        [XmlAttribute("ordinalPosition")]
+		[XmlAttribute("ordinalPosition")]
         public int OrdinalPosition
 		{
 			get

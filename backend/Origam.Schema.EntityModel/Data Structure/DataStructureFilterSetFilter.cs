@@ -48,7 +48,6 @@ namespace Origam.Schema.EntityModel
 		public DataStructureFilterSetFilter(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
@@ -70,8 +69,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("G02")]  
+        
 		public Guid FilterId;
 
 		[TypeConverter(typeof(DataQueryEntityFilterConverter))]
@@ -93,7 +91,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G03")]  
 		public Guid IgnoreFilterConstantId;
 
 		[TypeConverter(typeof(DataConstantConverter))]
@@ -113,7 +110,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private string _ignoreFilterParameterName;
-		[EntityColumn("SS01")]
+
 		[Category("Condition")]
 		[Description("Name of the parameter that will be evaluated. If it matches with the IgnoreFilterConstant this filter will be ignored (or not ignored if PassWhenParameterMatch = true).")]
         [XmlAttribute("ignoreFilterParameterName")]
@@ -132,7 +129,7 @@ namespace Origam.Schema.EntityModel
 
 		private bool _passWhenParameterMatch = false;
 		[Category("Condition")]
-		[EntityColumn("B01"), DefaultValue(false)]
+		[DefaultValue(false)]
 		[Description("Applies the filter condition instead of ignoring it (revert condition).")]
         [XmlAttribute("passWhenParameterMatch")]
         public bool PassWhenParameterMatch
@@ -149,7 +146,6 @@ namespace Origam.Schema.EntityModel
 
 		private string _roles = "";
 		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("LS01")]
 		[Description("An Application role. This filter will be used only if a user has this role assigned. If * or empty the filter will be always applied.")]
         [XmlAttribute("roles")]
         public string Roles
@@ -166,7 +162,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

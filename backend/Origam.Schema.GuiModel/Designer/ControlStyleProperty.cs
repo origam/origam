@@ -40,7 +40,6 @@ namespace Origam.Schema.GuiModel
         public ControlStyleProperty(Key primaryKey) : base(primaryKey) { }
 
         #region Overriden AbstractSchemaItem Members
-        [EntityColumn("ItemType")]
         public override string ItemType
         {
             get

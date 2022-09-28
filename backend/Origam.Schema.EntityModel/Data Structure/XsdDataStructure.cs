@@ -48,8 +48,7 @@ namespace Origam.Schema.EntityModel
 
 		#region Properties
 		private string _xsd = "";
-
-		[EntityColumn("M01")]
+		
         [XmlAttribute("xsd")]
 		public string Xsd
 		{

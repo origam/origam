@@ -42,8 +42,7 @@ namespace Origam.Schema.EntityModel
 		public AbstractDataStructure(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractSchemaItem Members
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get

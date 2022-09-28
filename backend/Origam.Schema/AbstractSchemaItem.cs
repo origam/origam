@@ -542,7 +542,6 @@ namespace Origam.Schema
 
 		private string _name;
 
-		[EntityColumn("Name")] 
 		[Category("(Schema Item)")]
 		[StringNotEmptyModelElementRule]
 		[RefreshProperties(RefreshProperties.Repaint)]
@@ -582,7 +581,6 @@ namespace Origam.Schema
 		}
 
 		private bool _isAbstract;
-		[EntityColumn("IsAbstract")]
 		[Browsable(false)]
         [XmlAttribute("abstract")]
 		public bool IsAbstract
@@ -597,7 +595,6 @@ namespace Origam.Schema
 			}
 		}
 
-	    [EntityColumn("refParentItemId")]
         [Browsable(false)]
 	    public Guid ParentItemId { get; set; }
 
@@ -646,7 +643,6 @@ namespace Origam.Schema
 				return GetRootItem(parentItem.ParentItem);
 		}
 
-	    [EntityColumn("refSchemaExtensionId")]
 	    [XmlParent(typeof(Package))]
         [Browsable(false)]
 	    public Guid SchemaExtensionId { get; set; }
@@ -1129,11 +1125,9 @@ namespace Origam.Schema
 		}
 
 		[Category("(Info)")]
-		[EntityColumn("ItemType")]
 		[Description("Type of the model element.")]
 		public abstract string ItemType{get;}
 
-		[EntityColumn("refSchemaItemGroupId")]
         [XmlParent(typeof(SchemaItemGroup))]
         public Guid GroupId;
 

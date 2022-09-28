@@ -257,200 +257,201 @@ namespace Origam.DA.ObjectPersistence.Providers
 
         private object RetrieveInstance(Type type, Key primaryKey, bool useCache, IPersistent objectToRefresh, bool throwNotFoundException)
         {
-            CheckStatus();
-
-            object instance = null;
-            string locale = GetLocale();
-
-            lock (this)
-            {
-                // We test if primary key is not an initialized Guid
-                if (primaryKey[primaryKey.KeyArray[0]].Equals(Guid.Empty))
-                    return null;
-
-                if (useCache & primaryKey.ContainsKey("Id"))
-                {
-                    if (_objectCache.Contains(locale))
-                    {
-                        Hashtable cache = _objectCache[locale] as Hashtable;
-
-                        // We test if object is already in cache
-                        if (cache.Contains(primaryKey["Id"]))
-                        {
-                            // it is, so we retrieve it from the cache and return it
-                            return cache[primaryKey["Id"]];
-                        }
-                    }
-                }
-
-                // object is not in cache, we try to load it using compiled model
-                if (this.CompiledModel != null)
-                {
-                    //instance = this.CompiledModel.RetrieveItem(primaryKey["Id"].ToString());
-                    try
-                    {
-                        instance = this.CompiledModel.GetType().InvokeMember("GetId_" + primaryKey["Id"].ToString().Replace("-", "_"),
-                            BindingFlags.DeclaredOnly |
-                            BindingFlags.Public | BindingFlags.NonPublic |
-                            BindingFlags.Instance | BindingFlags.InvokeMethod
-                            , null, this.CompiledModel, null);
-                    }
-                    catch
-                    {
-                    }
-
-                    if (instance != null)
-                    {
-                        (instance as IPersistent).IsPersisted = true;
-                    }
-                }
-
-                // object has not been found in the cache, so we restore it from the data source
-
-                if (instance == null)
-                {
-                    Hashtable derivedRows = new Hashtable();
-
-                    //Find entity attribute
-                    EntityNameAttribute entity = this.Entity(type);
-
-                    if (entity != null)
-                    {
-                        string entityName = entity.Name;
-
-                        //Filter the row out by primary key
-                        DataRow row = _dataSet.Tables[entityName].Rows.Find(this.FilterKey(primaryKey, _dataSet.Tables[entityName]));
-
-                        if (row != null)
-                        {
-                            if (objectToRefresh == null)
-                            {
-                                string typeName = type.FullName;
-                                string assemblyName = type.Assembly.FullName;
-
-                                if (entity.InheritanceColumn != null)
-                                {
-                                    // Our entity supports inheritance, so we have to load the derived entity
-                                    typeName = row[entity.InheritanceColumn].ToString();
-                                    assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
-                                }
-
-                                object[] constructorArray = new object[1] { primaryKey };
-
-                                // Construct the object
-                                // Objects must have a constructor with parameter Key, otherwise we crash
-                                instance = Reflector.InvokeObject(assemblyName, typeName, constructorArray);
-                                // Set the persistence provider, so the object can persist itself later on
-                                type = instance.GetType();
-                                (instance as IPersistent).PersistenceProvider = this;
-                            }
-                            else
-                            {
-                                instance = objectToRefresh;
-                            }
-
-                            // Mark the object as persisted, because we have just read it from the database
-                            (instance as IPersistent).IsPersisted = true;
-
-                            // Set all the remaining properties
-                            IList members = Reflector.FindMembers(type, typeof(EntityColumnAttribute), new Type[0]);
-                            foreach (MemberAttributeInfo mi in members)
-                            {
-                                EntityColumnAttribute column = mi.Attribute as EntityColumnAttribute;
-
-                                // Skip reading foreign keys
-                                // TODO: Support reading foreign keys
-                                if (!column.IsForeignKey)
-                                {
-                                    DataRow propertyRow = row;
-
-                                    if (column.OverridenEntityName != null)
-                                    {
-                                        if (derivedRows.ContainsKey(column.OverridenEntityName))
-                                            // We check if we already used this derived entity
-                                            propertyRow = derivedRows[column.OverridenEntityName] as DataRow;
-                                        else
-                                        {
-                                            // We did not get the derived row, yet, so we get one
-                                            // First we try to look it up in the data
-                                            if (!_dataSet.Relations.Contains(column.OverridenEntityName))
-                                            {
-                                                throw new InvalidOperationException(res.ResourceUtils.GetString("EntityNotInDataSet", column.OverridenEntityName));
-                                            }
-
-                                            propertyRow = _dataSet.Relations[column.OverridenEntityName].ChildTable.Rows.Find(this.FilterKey(((IPersistent)instance).PrimaryKey, _dataSet.Relations[column.OverridenEntityName].ChildTable));
-
-                                            if (propertyRow == null)
-                                                throw new Exception(res.ResourceUtils.GetString("NoRowsForDerived", column.OverridenEntityName));
-                                            else
-                                                derivedRows.Add(column.OverridenEntityName, propertyRow);
-                                        }
-                                    }
-
-                                    // Get the column name
-                                    string columnName = column.Name;
-
-                                    object value = propertyRow[columnName];
-
-                                    // Handle NULL values
-                                    if (value == DBNull.Value)
-                                        value = null;
-
-                                    Type memberType;
-                                    if (mi.MemberInfo is PropertyInfo)
-                                        memberType = (mi.MemberInfo as PropertyInfo).PropertyType;
-                                    else
-                                        memberType = (mi.MemberInfo as FieldInfo).FieldType;
-
-                                    // If member is enum, we have to convert
-                                    if (memberType.IsEnum)
-                                        value = Enum.ToObject(memberType, Convert.ToInt32(value));
-
-                                    // localization
-                                    if (LocalizationCache != null && value is String)
-                                    {
-                                        value = LocalizationCache.GetLocalizedString((Guid)primaryKey["Id"], mi.MemberInfo.Name, (string)value, locale);
-                                    }
-
-                                    Reflector.SetValue(mi.MemberInfo, instance, value);
-                                }
-                            }
-
-                        }
-                        else
-                        {
-                            if (throwNotFoundException)
-                            {
-                                throw new Exception(res.ResourceUtils.GetString("NoDataForPrimaryKey", primaryKey.ValueArray));
-                            }
-                            else
-                            {
-                                return null;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception(res.ResourceUtils.GetString("NoEntityNameForClass"));
-                    }
-                }
-
-                if (useCache)
-                {
-                    AddObjectToCache(instance as IPersistent, locale);
-                }
-
-                // only set UseObjectCache if we are not refreshing
-                if (objectToRefresh == null)
-                {
-                    (instance as IPersistent).UseObjectCache = useCache;
-                }
-
-                System.Diagnostics.Debug.Assert((instance as IPersistent).IsPersisted);
-            }
-
-            //Return!
-            return instance;
+            // CheckStatus();
+            //
+            // object instance = null;
+            // string locale = GetLocale();
+            //
+            // lock (this)
+            // {
+            //     // We test if primary key is not an initialized Guid
+            //     if (primaryKey[primaryKey.KeyArray[0]].Equals(Guid.Empty))
+            //         return null;
+            //
+            //     if (useCache & primaryKey.ContainsKey("Id"))
+            //     {
+            //         if (_objectCache.Contains(locale))
+            //         {
+            //             Hashtable cache = _objectCache[locale] as Hashtable;
+            //
+            //             // We test if object is already in cache
+            //             if (cache.Contains(primaryKey["Id"]))
+            //             {
+            //                 // it is, so we retrieve it from the cache and return it
+            //                 return cache[primaryKey["Id"]];
+            //             }
+            //         }
+            //     }
+            //
+            //     // object is not in cache, we try to load it using compiled model
+            //     if (this.CompiledModel != null)
+            //     {
+            //         //instance = this.CompiledModel.RetrieveItem(primaryKey["Id"].ToString());
+            //         try
+            //         {
+            //             instance = this.CompiledModel.GetType().InvokeMember("GetId_" + primaryKey["Id"].ToString().Replace("-", "_"),
+            //                 BindingFlags.DeclaredOnly |
+            //                 BindingFlags.Public | BindingFlags.NonPublic |
+            //                 BindingFlags.Instance | BindingFlags.InvokeMethod
+            //                 , null, this.CompiledModel, null);
+            //         }
+            //         catch
+            //         {
+            //         }
+            //
+            //         if (instance != null)
+            //         {
+            //             (instance as IPersistent).IsPersisted = true;
+            //         }
+            //     }
+            //
+            //     // object has not been found in the cache, so we restore it from the data source
+            //
+            //     if (instance == null)
+            //     {
+            //         Hashtable derivedRows = new Hashtable();
+            //
+            //         //Find entity attribute
+            //         EntityNameAttribute entity = this.Entity(type);
+            //
+            //         if (entity != null)
+            //         {
+            //             string entityName = entity.Name;
+            //
+            //             //Filter the row out by primary key
+            //             DataRow row = _dataSet.Tables[entityName].Rows.Find(this.FilterKey(primaryKey, _dataSet.Tables[entityName]));
+            //
+            //             if (row != null)
+            //             {
+            //                 if (objectToRefresh == null)
+            //                 {
+            //                     string typeName = type.FullName;
+            //                     string assemblyName = type.Assembly.FullName;
+            //
+            //                     if (entity.InheritanceColumn != null)
+            //                     {
+            //                         // Our entity supports inheritance, so we have to load the derived entity
+            //                         typeName = row[entity.InheritanceColumn].ToString();
+            //                         assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
+            //                     }
+            //
+            //                     object[] constructorArray = new object[1] { primaryKey };
+            //
+            //                     // Construct the object
+            //                     // Objects must have a constructor with parameter Key, otherwise we crash
+            //                     instance = Reflector.InvokeObject(assemblyName, typeName, constructorArray);
+            //                     // Set the persistence provider, so the object can persist itself later on
+            //                     type = instance.GetType();
+            //                     (instance as IPersistent).PersistenceProvider = this;
+            //                 }
+            //                 else
+            //                 {
+            //                     instance = objectToRefresh;
+            //                 }
+            //
+            //                 // Mark the object as persisted, because we have just read it from the database
+            //                 (instance as IPersistent).IsPersisted = true;
+            //
+            //                 // Set all the remaining properties
+            //                 IList members = Reflector.FindMembers(type, typeof(EntityColumnAttribute), new Type[0]);
+            //                 foreach (MemberAttributeInfo mi in members)
+            //                 {
+            //                     EntityColumnAttribute column = mi.Attribute as EntityColumnAttribute;
+            //
+            //                     // Skip reading foreign keys
+            //                     // TODO: Support reading foreign keys
+            //                     if (!column.IsForeignKey)
+            //                     {
+            //                         DataRow propertyRow = row;
+            //
+            //                         if (column.OverridenEntityName != null)
+            //                         {
+            //                             if (derivedRows.ContainsKey(column.OverridenEntityName))
+            //                                 // We check if we already used this derived entity
+            //                                 propertyRow = derivedRows[column.OverridenEntityName] as DataRow;
+            //                             else
+            //                             {
+            //                                 // We did not get the derived row, yet, so we get one
+            //                                 // First we try to look it up in the data
+            //                                 if (!_dataSet.Relations.Contains(column.OverridenEntityName))
+            //                                 {
+            //                                     throw new InvalidOperationException(res.ResourceUtils.GetString("EntityNotInDataSet", column.OverridenEntityName));
+            //                                 }
+            //
+            //                                 propertyRow = _dataSet.Relations[column.OverridenEntityName].ChildTable.Rows.Find(this.FilterKey(((IPersistent)instance).PrimaryKey, _dataSet.Relations[column.OverridenEntityName].ChildTable));
+            //
+            //                                 if (propertyRow == null)
+            //                                     throw new Exception(res.ResourceUtils.GetString("NoRowsForDerived", column.OverridenEntityName));
+            //                                 else
+            //                                     derivedRows.Add(column.OverridenEntityName, propertyRow);
+            //                             }
+            //                         }
+            //
+            //                         // Get the column name
+            //                         string columnName = column.Name;
+            //
+            //                         object value = propertyRow[columnName];
+            //
+            //                         // Handle NULL values
+            //                         if (value == DBNull.Value)
+            //                             value = null;
+            //
+            //                         Type memberType;
+            //                         if (mi.MemberInfo is PropertyInfo)
+            //                             memberType = (mi.MemberInfo as PropertyInfo).PropertyType;
+            //                         else
+            //                             memberType = (mi.MemberInfo as FieldInfo).FieldType;
+            //
+            //                         // If member is enum, we have to convert
+            //                         if (memberType.IsEnum)
+            //                             value = Enum.ToObject(memberType, Convert.ToInt32(value));
+            //
+            //                         // localization
+            //                         if (LocalizationCache != null && value is String)
+            //                         {
+            //                             value = LocalizationCache.GetLocalizedString((Guid)primaryKey["Id"], mi.MemberInfo.Name, (string)value, locale);
+            //                         }
+            //
+            //                         Reflector.SetValue(mi.MemberInfo, instance, value);
+            //                     }
+            //                 }
+            //
+            //             }
+            //             else
+            //             {
+            //                 if (throwNotFoundException)
+            //                 {
+            //                     throw new Exception(res.ResourceUtils.GetString("NoDataForPrimaryKey", primaryKey.ValueArray));
+            //                 }
+            //                 else
+            //                 {
+            //                     return null;
+            //                 }
+            //             }
+            //         }
+            //         else
+            //         {
+            //             throw new Exception(res.ResourceUtils.GetString("NoEntityNameForClass"));
+            //         }
+            //     }
+            //
+            //     if (useCache)
+            //     {
+            //         AddObjectToCache(instance as IPersistent, locale);
+            //     }
+            //
+            //     // only set UseObjectCache if we are not refreshing
+            //     if (objectToRefresh == null)
+            //     {
+            //         (instance as IPersistent).UseObjectCache = useCache;
+            //     }
+            //
+            //     System.Diagnostics.Debug.Assert((instance as IPersistent).IsPersisted);
+            // }
+            //
+            // //Return!
+            // return instance;
+            throw new NotImplementedException();
         }
 
         private void AddObjectToCache(IPersistent instance, string locale)
@@ -624,267 +625,268 @@ namespace Origam.DA.ObjectPersistence.Providers
 
         public override void Persist(IPersistent instance)
 		{
-			CheckStatus();
-
-			if(! instance.IsDeleted)
-			{
-			    RuleTools.DoOnFirstViolation(
-			        objectToCheck: instance, 
-			        action: ex => throw ex);
-			}
-
-			Type type = instance.GetType();
-			DataRow row;
-			DataTable table;
-			Hashtable derivedRows = new Hashtable();
-
-			//Find entity attribute
-			EntityNameAttribute entity = this.Entity(type);
-
-			if(entity != null)
-			{
-				string entityName = entity.Name;
-
-				// Filter the row out by primary key
-				table = _dataSet.Tables[entityName];
-				row = table.Rows.Find(this.FilterKey(instance.PrimaryKey, table));
-				
-				if(row != null)
-				{
-					// In case of deleting, we go through all the routine, updating the rows, but
-					// at the end we delete the rows. This is because we have to find out all the
-					// derived tables. Could be done better, but this was the faster way now.
-
-
-//					// Row was found
-//					if(instance.IsDeleted)
-//					{
-//						// And we have to delete it, because the object is marked for removal
-//						row.Delete();
-//						// We do not really have to remove any child items, because underlying dataset
-//						// will take care.
+// 			CheckStatus();
 //
-//						return;
-//					}
-//					else
-//					{
-						if(!instance.IsPersisted)
-							// Object is marked as new, but we have found the row. Object is a duplicate
-							throw new ArgumentException(res.ResourceUtils.GetString("ObjectWithSameKey"));
-//					}
-				}
-				else
-				{
-					// Row was not found
-
-					if(instance.IsDeleted)
-					{
-						// but it has been deleted already, so we exit
-						return;
-					}
-
-//					if(instance.IsPersisted)
-//						// But the object says it has been persisted before, this is an error.
-//						throw new Exception("Data not found by provided primary key");
-//					else
-//					{
-						// The object is new, so we create a new row
-						row = table.NewRow();
-
-						// And we set the primary key
-						foreach(string key in instance.PrimaryKey.Keys)
-						{
-							row[key] = instance.PrimaryKey[key];
-						}
-//					}
-				}
-			}
-			else
-			{
-				throw new Exception(res.ResourceUtils.GetString("NoEntityNameForClass"));
-			}
-
-			// We have to check, if this entity supports row inheritance
-			if(entity.InheritanceColumn != null)
-			{
-				// It does, so we fill the column with a type of ourselves
-				row[entity.InheritanceColumn] = instance.GetType();
-			}
-
-			// Set all the remaining properties
-			IList members = Reflector.FindMembers(type, typeof(EntityColumnAttribute), new Type[0]);
-			foreach(MemberAttributeInfo mi in members)
-			{
-				DataRow propertyRow = row;
-
-				// Get the column
-				EntityColumnAttribute column = mi.Attribute as EntityColumnAttribute;
-
-				// Check if we are digging into a derived entity
-				if(column.OverridenEntityName != null)
-				{
-					if(derivedRows.ContainsKey(column.OverridenEntityName))
-					{
-						// We check if we already used this derived entity
-						propertyRow = derivedRows[column.OverridenEntityName] as DataRow;
-					}
-					else
-					{
-						// We did not get the derived row, yet, so we get one
-						// First we try to look it up in the data
-						if(! _dataSet.Relations.Contains(column.OverridenEntityName))
-						{
-							throw new InvalidOperationException(res.ResourceUtils.GetString("EntityNotInDataSet", column.OverridenEntityName));
-						}
-
-						propertyRow = _dataSet.Relations[column.OverridenEntityName].ChildTable.Rows.Find(this.FilterKey(instance.PrimaryKey, _dataSet.Relations[column.OverridenEntityName].ChildTable));
-						if(propertyRow == null)
-						{
-							// It was not stored, yet, we have to create a new row
-							propertyRow = _dataSet.Relations[column.OverridenEntityName].ChildTable.NewRow();
-
-							// And we set the primary key
-							foreach(string key in instance.PrimaryKey.Keys)
-							{
-								propertyRow[key] = instance.PrimaryKey[key];
-							}
-						}
-
-						// We add the row to the cache
-						derivedRows.Add(column.OverridenEntityName, propertyRow);
-					}
-				}
-
-				// Set the value
-				if(mi.MemberInfo is PropertyInfo)
-				{
-					PropertyInfo pi = mi.MemberInfo as PropertyInfo;
-
-					if(column.IsForeignKey)
-					{
-						// If this is a foreign key, we have to store all the keys in the reffered object
-						// to the parent table. Naming = column name + key name.
-						if(pi.GetValue(instance, new object[0]) != null)
-						{
-							// There is something stored, so we save the columns
-							Key primaryKey = (pi.GetValue(instance, new object[0]) as IPersistent).PrimaryKey;
-							foreach(string key in primaryKey.Keys)
-							{
-								SetValue(propertyRow, column.Name + key, primaryKey[key]);
-							}
-						}
-						else
-						{
-							// Nothing is stored in the foreign key, we must store NULLs
-							Key primaryKey = this.DummyKey(pi.DeclaringType);
-							foreach(string key in primaryKey.Keys)
-							{
-								SetValue(propertyRow, column.Name + key, DBNull.Value);
-							}
-						}
-					}
-					else
-					{
-						SetValue(propertyRow, column.Name, pi.GetValue(instance, new object[0]));
-					}
-				}
-				else
-				{
-					FieldInfo fi = mi.MemberInfo as FieldInfo;
-
-					if(column.IsForeignKey)
-					{
-						// If this is a foreign key, we have to store all the keys in the reffered object
-						// to the parent table. Naming = column name + key name.
-						if(fi.GetValue(instance) != null)
-						{
-							// There is something stored, so we save the columns
-							Key primaryKey = (fi.GetValue(instance) as IPersistent).PrimaryKey;
-							foreach(string key in primaryKey.Keys)
-							{
-								SetValue(propertyRow, column.Name + key, primaryKey[key]);
-							}
-						}
-						else
-						{
-							// Nothing is stored in the foreign key, we must store NULLs
-							Key primaryKey = this.DummyKey(fi.DeclaringType);
-							foreach(string key in primaryKey.Keys)
-							{
-								SetValue(propertyRow, column.Name + key, DBNull.Value);
-							}
-						}
-					}
-					else
-					{
-						SetValue(propertyRow, column.Name, fi.GetValue(instance));
-					}
-				}
-			}
-
-			try
-			{
-				if(instance.IsDeleted)
-				{
-					row.Delete();
-				}
-				else
-				{
-					// Finally we add the rows to the dataset
-					if(row.RowState == DataRowState.Detached)
-					{
-						table.Rows.Add(row);
-					}
-				}
-
-				foreach(string key in derivedRows.Keys)
-				{
-					DataRow derivedRow = derivedRows[key] as DataRow;
-
-					if(instance.IsDeleted)
-					{
-						derivedRow.Delete();
-					}
-					else
-					{
-						if(derivedRow.RowState == DataRowState.Detached)
-						{
-							_dataSet.Relations[key].ChildTable.Rows.Add(derivedRow);
-						}
-					}
-				}
-			}
-			catch(Exception)
-			{
-				// If we have added some rows already, we have to roll back, otherwise
-				// data will be corrupted.
-
-				if(row.RowState == DataRowState.Added) row.Delete();
-
-				foreach(string key in derivedRows.Keys)
-				{
-					DataRow derivedRow = derivedRows[key] as DataRow;
-
-					if(derivedRow.RowState == DataRowState.Added) row.Delete();
-				}
-
-				// Now we re-throw an exception, so the user sees something
-
-				throw;
-			}
-
-			// after saving we always invalidate the cache
-			RemoveFromCache(instance);
-
-			// In case the object was new, we set a flag that it has just been persisted and we add it to cache, too
-			if(! instance.IsPersisted)
-			{
-				//AddObjectToCache(instance, locale);
-				instance.IsPersisted = true;
-			}
-
-            // OnInstancePersisted(instance);
-		    base.Persist(instance);
+// 			if(! instance.IsDeleted)
+// 			{
+// 			    RuleTools.DoOnFirstViolation(
+// 			        objectToCheck: instance, 
+// 			        action: ex => throw ex);
+// 			}
+//
+// 			Type type = instance.GetType();
+// 			DataRow row;
+// 			DataTable table;
+// 			Hashtable derivedRows = new Hashtable();
+//
+// 			//Find entity attribute
+// 			EntityNameAttribute entity = this.Entity(type);
+//
+// 			if(entity != null)
+// 			{
+// 				string entityName = entity.Name;
+//
+// 				// Filter the row out by primary key
+// 				table = _dataSet.Tables[entityName];
+// 				row = table.Rows.Find(this.FilterKey(instance.PrimaryKey, table));
+// 				
+// 				if(row != null)
+// 				{
+// 					// In case of deleting, we go through all the routine, updating the rows, but
+// 					// at the end we delete the rows. This is because we have to find out all the
+// 					// derived tables. Could be done better, but this was the faster way now.
+//
+//
+// //					// Row was found
+// //					if(instance.IsDeleted)
+// //					{
+// //						// And we have to delete it, because the object is marked for removal
+// //						row.Delete();
+// //						// We do not really have to remove any child items, because underlying dataset
+// //						// will take care.
+// //
+// //						return;
+// //					}
+// //					else
+// //					{
+// 						if(!instance.IsPersisted)
+// 							// Object is marked as new, but we have found the row. Object is a duplicate
+// 							throw new ArgumentException(res.ResourceUtils.GetString("ObjectWithSameKey"));
+// //					}
+// 				}
+// 				else
+// 				{
+// 					// Row was not found
+//
+// 					if(instance.IsDeleted)
+// 					{
+// 						// but it has been deleted already, so we exit
+// 						return;
+// 					}
+//
+// //					if(instance.IsPersisted)
+// //						// But the object says it has been persisted before, this is an error.
+// //						throw new Exception("Data not found by provided primary key");
+// //					else
+// //					{
+// 						// The object is new, so we create a new row
+// 						row = table.NewRow();
+//
+// 						// And we set the primary key
+// 						foreach(string key in instance.PrimaryKey.Keys)
+// 						{
+// 							row[key] = instance.PrimaryKey[key];
+// 						}
+// //					}
+// 				}
+// 			}
+// 			else
+// 			{
+// 				throw new Exception(res.ResourceUtils.GetString("NoEntityNameForClass"));
+// 			}
+//
+// 			// We have to check, if this entity supports row inheritance
+// 			if(entity.InheritanceColumn != null)
+// 			{
+// 				// It does, so we fill the column with a type of ourselves
+// 				row[entity.InheritanceColumn] = instance.GetType();
+// 			}
+//
+// 			// Set all the remaining properties
+// 			IList members = Reflector.FindMembers(type, typeof(EntityColumnAttribute), new Type[0]);
+// 			foreach(MemberAttributeInfo mi in members)
+// 			{
+// 				DataRow propertyRow = row;
+//
+// 				// Get the column
+// 				EntityColumnAttribute column = mi.Attribute as EntityColumnAttribute;
+//
+// 				// Check if we are digging into a derived entity
+// 				if(column.OverridenEntityName != null)
+// 				{
+// 					if(derivedRows.ContainsKey(column.OverridenEntityName))
+// 					{
+// 						// We check if we already used this derived entity
+// 						propertyRow = derivedRows[column.OverridenEntityName] as DataRow;
+// 					}
+// 					else
+// 					{
+// 						// We did not get the derived row, yet, so we get one
+// 						// First we try to look it up in the data
+// 						if(! _dataSet.Relations.Contains(column.OverridenEntityName))
+// 						{
+// 							throw new InvalidOperationException(res.ResourceUtils.GetString("EntityNotInDataSet", column.OverridenEntityName));
+// 						}
+//
+// 						propertyRow = _dataSet.Relations[column.OverridenEntityName].ChildTable.Rows.Find(this.FilterKey(instance.PrimaryKey, _dataSet.Relations[column.OverridenEntityName].ChildTable));
+// 						if(propertyRow == null)
+// 						{
+// 							// It was not stored, yet, we have to create a new row
+// 							propertyRow = _dataSet.Relations[column.OverridenEntityName].ChildTable.NewRow();
+//
+// 							// And we set the primary key
+// 							foreach(string key in instance.PrimaryKey.Keys)
+// 							{
+// 								propertyRow[key] = instance.PrimaryKey[key];
+// 							}
+// 						}
+//
+// 						// We add the row to the cache
+// 						derivedRows.Add(column.OverridenEntityName, propertyRow);
+// 					}
+// 				}
+//
+// 				// Set the value
+// 				if(mi.MemberInfo is PropertyInfo)
+// 				{
+// 					PropertyInfo pi = mi.MemberInfo as PropertyInfo;
+//
+// 					if(column.IsForeignKey)
+// 					{
+// 						// If this is a foreign key, we have to store all the keys in the reffered object
+// 						// to the parent table. Naming = column name + key name.
+// 						if(pi.GetValue(instance, new object[0]) != null)
+// 						{
+// 							// There is something stored, so we save the columns
+// 							Key primaryKey = (pi.GetValue(instance, new object[0]) as IPersistent).PrimaryKey;
+// 							foreach(string key in primaryKey.Keys)
+// 							{
+// 								SetValue(propertyRow, column.Name + key, primaryKey[key]);
+// 							}
+// 						}
+// 						else
+// 						{
+// 							// Nothing is stored in the foreign key, we must store NULLs
+// 							Key primaryKey = this.DummyKey(pi.DeclaringType);
+// 							foreach(string key in primaryKey.Keys)
+// 							{
+// 								SetValue(propertyRow, column.Name + key, DBNull.Value);
+// 							}
+// 						}
+// 					}
+// 					else
+// 					{
+// 						SetValue(propertyRow, column.Name, pi.GetValue(instance, new object[0]));
+// 					}
+// 				}
+// 				else
+// 				{
+// 					FieldInfo fi = mi.MemberInfo as FieldInfo;
+//
+// 					if(column.IsForeignKey)
+// 					{
+// 						// If this is a foreign key, we have to store all the keys in the reffered object
+// 						// to the parent table. Naming = column name + key name.
+// 						if(fi.GetValue(instance) != null)
+// 						{
+// 							// There is something stored, so we save the columns
+// 							Key primaryKey = (fi.GetValue(instance) as IPersistent).PrimaryKey;
+// 							foreach(string key in primaryKey.Keys)
+// 							{
+// 								SetValue(propertyRow, column.Name + key, primaryKey[key]);
+// 							}
+// 						}
+// 						else
+// 						{
+// 							// Nothing is stored in the foreign key, we must store NULLs
+// 							Key primaryKey = this.DummyKey(fi.DeclaringType);
+// 							foreach(string key in primaryKey.Keys)
+// 							{
+// 								SetValue(propertyRow, column.Name + key, DBNull.Value);
+// 							}
+// 						}
+// 					}
+// 					else
+// 					{
+// 						SetValue(propertyRow, column.Name, fi.GetValue(instance));
+// 					}
+// 				}
+// 			}
+//
+// 			try
+// 			{
+// 				if(instance.IsDeleted)
+// 				{
+// 					row.Delete();
+// 				}
+// 				else
+// 				{
+// 					// Finally we add the rows to the dataset
+// 					if(row.RowState == DataRowState.Detached)
+// 					{
+// 						table.Rows.Add(row);
+// 					}
+// 				}
+//
+// 				foreach(string key in derivedRows.Keys)
+// 				{
+// 					DataRow derivedRow = derivedRows[key] as DataRow;
+//
+// 					if(instance.IsDeleted)
+// 					{
+// 						derivedRow.Delete();
+// 					}
+// 					else
+// 					{
+// 						if(derivedRow.RowState == DataRowState.Detached)
+// 						{
+// 							_dataSet.Relations[key].ChildTable.Rows.Add(derivedRow);
+// 						}
+// 					}
+// 				}
+// 			}
+// 			catch(Exception)
+// 			{
+// 				// If we have added some rows already, we have to roll back, otherwise
+// 				// data will be corrupted.
+//
+// 				if(row.RowState == DataRowState.Added) row.Delete();
+//
+// 				foreach(string key in derivedRows.Keys)
+// 				{
+// 					DataRow derivedRow = derivedRows[key] as DataRow;
+//
+// 					if(derivedRow.RowState == DataRowState.Added) row.Delete();
+// 				}
+//
+// 				// Now we re-throw an exception, so the user sees something
+//
+// 				throw;
+// 			}
+//
+// 			// after saving we always invalidate the cache
+// 			RemoveFromCache(instance);
+//
+// 			// In case the object was new, we set a flag that it has just been persisted and we add it to cache, too
+// 			if(! instance.IsPersisted)
+// 			{
+// 				//AddObjectToCache(instance, locale);
+// 				instance.IsPersisted = true;
+// 			}
+//
+//             // OnInstancePersisted(instance);
+// 		    base.Persist(instance);
+			throw new NotImplementedException();
 		}
 
         public string DebugInfo()

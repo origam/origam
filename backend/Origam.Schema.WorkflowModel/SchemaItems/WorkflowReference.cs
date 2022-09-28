@@ -46,8 +46,7 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowReference(Key primaryKey) : base(primaryKey)	{}
 	
 		#region Overriden AbstractDataEntityColumn Members
-		
-		[EntityColumn("ItemType")]
+	
 		public override string ItemType => CategoryConst;
 
 		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
@@ -67,7 +66,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid WorkflowId;
 
 		[Category("Reference")]

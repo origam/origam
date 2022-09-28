@@ -69,7 +69,6 @@ namespace Origam.Schema.GuiModel
 
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid ScreenId;
 
 		[Category("Screen Reference")]
@@ -88,7 +87,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G02")]  
 		public Guid EntityId;
 
 		[Category("Screen Reference")]
@@ -107,7 +105,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

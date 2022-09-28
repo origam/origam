@@ -100,26 +100,22 @@ namespace Origam.Schema.EntityModel
 		}
 
 		[Category("Entity Column"), DefaultValue(true)]
-		[EntityColumn("B01")]
 		[XmlAttribute ("allowNulls")]
 		[Description("Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record.")]
 		public bool AllowNulls { get; set; } = true;
 
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B02")]
 		[XmlAttribute ("isPrimaryKey")]
 		[Description("Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys.")]
 		public bool IsPrimaryKey { get; set; } = false;
 
 		[Category("Entity Column")]
-		[EntityColumn("SS01")]
 		[XmlAttribute ("caption")]
 		[Localizable(true)]
 		[Description("Default label for the field in a GUI. Audit log viewer also gets the field names from here.")]
 		public string Caption { get; set; } = "";
 
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B04")]
 		[XmlAttribute ("excludeFromAllFields")]
 		[Description("If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms.")]
 		public bool ExcludeFromAllFields { get; set; } = false;
@@ -145,7 +141,6 @@ namespace Origam.Schema.EntityModel
 			set => throw new NotSupportedException();
 		}
 
-		[EntityColumn("G01")]  
 		public Guid DefaultLookupId;
 
 		[Browsable(false)]
@@ -219,7 +214,6 @@ namespace Origam.Schema.EntityModel
 
 
 		[Category("Entity Column"), DefaultValue(EntityColumnXmlMapping.Attribute)]
-		[EntityColumn("I03")]
 		[XmlAttribute ("xmlMappingType")]
 		public EntityColumnXmlMapping XmlMappingType { get; set; } = EntityColumnXmlMapping.Attribute;
 
@@ -241,7 +235,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid FieldId;
 
 		[TypeConverter(typeof(EntityColumnReferenceConverter))]
@@ -267,8 +260,7 @@ namespace Origam.Schema.EntityModel
 		public bool ReadOnly => false;
 
 		public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode is IDataEntity;
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType => AbstractDataEntityColumn.CategoryConst;
 
 		public override void GetExtraDependencies(ArrayList dependencies)

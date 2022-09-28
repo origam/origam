@@ -51,7 +51,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G10")]  
 		public Guid WorkflowId;
 
 		[TypeConverter(typeof(WorkflowConverter))]

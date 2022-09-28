@@ -47,7 +47,6 @@ namespace Origam.Schema.MenuModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		[XmlAttribute(AttributeName = "itemType")] 
 		public override string ItemType
 		{
@@ -77,7 +76,6 @@ namespace Origam.Schema.MenuModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")] 
 		public Guid EntityFieldId;
 
 		[TypeConverter(typeof(MenuSelectionDialogFieldConverter))]

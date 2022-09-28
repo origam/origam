@@ -54,7 +54,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -69,12 +68,10 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("I01")] 
 		[XmlAttribute ("wfParameterType")]
 		public WorkflowEntityParameterMappingType Type { get; set; } = 
 			WorkflowEntityParameterMappingType.Current;
-
-		[EntityColumn("G01")]  
+		
 		public Guid FieldId;
 
 		[TypeConverter(typeof(StateMachineAllFieldConverter))]
@@ -89,8 +86,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			set => this.FieldId = (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid ContextStoreId;
 
 		[TypeConverter(typeof(StateMachineEventParameterMappingContextStoreConverter))]

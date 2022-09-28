@@ -48,7 +48,6 @@ namespace Origam.Schema
 		public SchemaItemAncestor(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray)	{}
 
 		private AbstractSchemaItem _schemaItem;
-		[EntityColumn("refSchemaItem", true)] 
 		[Browsable(false)]
 		public AbstractSchemaItem SchemaItem
 		{
@@ -64,7 +63,6 @@ namespace Origam.Schema
 
 		private Guid _ancestorId;
 
-		[EntityColumn("refAncestorId")] 
 		[Browsable(false)]
 		public Guid AncestorId
 		{

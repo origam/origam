@@ -49,7 +49,6 @@ namespace Origam.Schema.EntityModel
 		#region Properties
 		private DataEntityIndexSortOrder _sortOrder = DataEntityIndexSortOrder.Ascending;
 		
-		[EntityColumn("I01")]
 		[NotNullModelElementRule()]
         [XmlAttribute("sortOrder")]
         public DataEntityIndexSortOrder SortOrder
@@ -65,7 +64,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private int _ordinalPosition;
-		[EntityColumn("I02")] 
 		[NotNullModelElementRule()]
         [XmlAttribute("ordinalPosition")]
         public int OrdinalPosition
@@ -80,8 +78,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("G01")]  
+        
 		public Guid ColumnId;
 
 		[TypeConverter(typeof(EntityColumnReferenceConverter))]
@@ -115,8 +112,7 @@ namespace Origam.Schema.EntityModel
 				return false;
 			}
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get

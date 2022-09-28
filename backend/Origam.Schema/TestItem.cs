@@ -37,7 +37,6 @@ namespace Origam.Schema
 
 		public TestItem(ModelElementKey primaryKey) : base(primaryKey)	{}
 
-		[EntityColumn("TestField", "TestItem")]
 		public string TestField = "";
 
 		#region Overriden AbstractSchemaItem Methods

@@ -47,7 +47,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _field = "";
 		[Category("Series")]
-		[EntityColumn("SS01"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("field")]
 		public string Field
 		{
@@ -63,7 +63,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _caption = "";
 		[Category("Series")]
-		[EntityColumn("SS02"), Localizable(true)]
+		[Localizable(true)]
         [XmlAttribute("label")]
         public string Caption
 		{
@@ -79,8 +79,7 @@ namespace Origam.Schema.GuiModel
 
 		private AggregationType _aggregation = AggregationType.Sum;
 		[Category("Series"), DefaultValue(AggregationType.Sum)]
-		[EntityColumn("I01")]
-        [XmlAttribute("aggregation")]
+		[XmlAttribute("aggregation")]
         public AggregationType Aggregation
 		{
 			get
@@ -93,7 +92,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid ColorsLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -113,7 +111,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

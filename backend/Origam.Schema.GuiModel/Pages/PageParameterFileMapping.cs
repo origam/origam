@@ -44,8 +44,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private PageParameterFileInfo _fileInfoType = PageParameterFileInfo.FileContent;
 		[Category("File Info")]
-		[EntityColumn("I03")]
-        [XmlAttribute("fileInfoType")]
+		[XmlAttribute("fileInfoType")]
 		public PageParameterFileInfo FileInfoType
 		{
 			get
@@ -61,7 +60,6 @@ namespace Origam.Schema.GuiModel
 		private int _thumbnailWidth = 0;
 
 		[Category("File Info")]
-		[EntityColumn("I04")]
 		[DefaultValue(0)]
         [XmlAttribute("thumbnailWidth")]
         public int ThumbnailWidth
@@ -79,7 +77,6 @@ namespace Origam.Schema.GuiModel
 		private int _thumbnailHeight = 0;
 
 		[Category("File Info")]
-		[EntityColumn("I05")]
 		[DefaultValue(0)]
         [XmlAttribute("thumbnailHeight")]
         public int ThumbnailHeight

@@ -54,8 +54,7 @@ namespace Origam.Schema.LookupModel
 				return false;
 			}
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get
@@ -121,7 +120,6 @@ namespace Origam.Schema.LookupModel
 		#region List
 		private string _listValueMember;
 		[Category("List")]
-		[EntityColumn("SS03")]
 		[NotNullModelElementRule()]
         [XmlAttribute("listValueMember")]
 		public string ListValueMember
@@ -138,7 +136,6 @@ namespace Origam.Schema.LookupModel
 
 		private string _listDisplayMember;
 		[Category("List")]
-		[EntityColumn("SS01")]
 		[NotNullModelElementRule()]
         [XmlAttribute("listDisplayMember")]
         public string ListDisplayMember
@@ -155,7 +152,7 @@ namespace Origam.Schema.LookupModel
 
 		private bool _isTree;
 		[Category("List")]
-		[EntityColumn("B01"), DefaultValue(false)]
+		[DefaultValue(false)]
         [XmlAttribute("isTree")]
         public bool IsTree
 		{
@@ -171,8 +168,7 @@ namespace Origam.Schema.LookupModel
 
 		private string _treeParentMember = "";
 		[Category("List")]
-		[EntityColumn("SS02")]
-        [XmlAttribute("treeParentMember")]
+		[XmlAttribute("treeParentMember")]
         public string TreeParentMember
 		{
 			get
@@ -184,8 +180,7 @@ namespace Origam.Schema.LookupModel
 				_treeParentMember = value;
 			}
 		}
-
-		[EntityColumn("G01")]  
+        
 		public Guid ListDataStructureId;
 
 		[Category("List")]
@@ -213,7 +208,7 @@ namespace Origam.Schema.LookupModel
 
 		private bool _suppressEmptyColumns;
 		[Category("List")]
-		[EntityColumn("B02"), DefaultValue(false)]
+		[DefaultValue(false)]
         [XmlAttribute("suppressEmptyColumns")]
         public bool SuppressEmptyColumns
 		{
@@ -229,7 +224,7 @@ namespace Origam.Schema.LookupModel
 
 		private bool _alwaysAllowReturnToForm;
 		[Category("List")]
-		[EntityColumn("B03"), DefaultValue(false)]
+		[DefaultValue(false)]
         [XmlAttribute("alwaysAllowReturnToForm")]
         public bool AlwaysAllowReturnToForm
 		{
@@ -245,7 +240,7 @@ namespace Origam.Schema.LookupModel
 
 		private bool _isFilteredServerside;
 		[Category("List")]
-		[EntityColumn("B04"), DefaultValue(false)]
+		[DefaultValue(false)]
         [XmlAttribute("isFilteredServerside")]
         public bool IsFilteredServerside
 		{
@@ -261,7 +256,6 @@ namespace Origam.Schema.LookupModel
 
         private string _serversideFilterParameter;
         [Category("List")]
-        [EntityColumn("M02")]
         [LookupServerSideFilterModelElementRule()]
         [XmlAttribute("serversideFilterParameter")]
         public string ServersideFilterParameter
@@ -278,7 +272,7 @@ namespace Origam.Schema.LookupModel
 
 		private bool _searchByFirstColumnOnly;
 		[Category("List")]
-		[EntityColumn("B05"), DefaultValue(false)]
+		[DefaultValue(false)]
         [XmlAttribute("searchByFirstColumnOnly")]
         public bool SearchByFirstColumnOnly
 		{
@@ -296,7 +290,6 @@ namespace Origam.Schema.LookupModel
 		#region Value
 		private string _valueValueMember;
 		[Category("Value")]
-		[EntityColumn("SS05")]
 		[NotNullModelElementRule("ValueDataStructure")]
         [XmlAttribute("valueValueMember")]
         [RefreshProperties(RefreshProperties.Repaint)]
@@ -314,7 +307,6 @@ namespace Origam.Schema.LookupModel
 
 		private string _valueDisplayMember;
 		[Category("Value")]
-		[EntityColumn("SS04")]
 		[NotNullModelElementRule("ValueDataStructure")]
         [XmlAttribute("valueDisplayMember")]
         [RefreshProperties(RefreshProperties.Repaint)]
@@ -330,7 +322,6 @@ namespace Origam.Schema.LookupModel
 			}
 		}
 
-		[EntityColumn("G02")]  
 		public Guid ValueDataStructureId;
 
 		[Category("Value")]
@@ -408,8 +399,7 @@ namespace Origam.Schema.LookupModel
 		#region Filters
 		private string _roleFilterMember;
 		[Category("Filter")]
-		[EntityColumn("LS01")]
-        [XmlAttribute("roleFilterMember")]
+		[XmlAttribute("roleFilterMember")]
         public string RoleFilterMember
 		{
 			get
@@ -424,8 +414,7 @@ namespace Origam.Schema.LookupModel
 
 		private string _featureFilterMember;
 		[Category("Filter")]
-		[EntityColumn("M01")]
-        [XmlAttribute("featureFilterMember")]
+		[XmlAttribute("featureFilterMember")]
         public string FeatureFilterMember
 		{
 			get
@@ -438,8 +427,7 @@ namespace Origam.Schema.LookupModel
 			}
 		}
 		#endregion
-
-		[EntityColumn("G03")]  
+		
 		public Guid ListDataStructureMethodId;
 
 		[TypeConverter(typeof(DataServiceDataLookupListMethodConverter))]
@@ -458,7 +446,6 @@ namespace Origam.Schema.LookupModel
 			}
 		}
 
-		[EntityColumn("G04")]  
 		public Guid ValueDataStructureMethodId;
 
 		[TypeConverter(typeof(DataServiceDataLookupValueFilterConverter))]
@@ -476,7 +463,6 @@ namespace Origam.Schema.LookupModel
 			}
 		}
 
-		[EntityColumn("G05")]  
 		public Guid ValueDataStructureSortSetId;
 
 		[TypeConverter(typeof(DataServiceDataLookupValueSortSetConverter))]
@@ -494,7 +480,6 @@ namespace Origam.Schema.LookupModel
 			}
 		}
 
-		[EntityColumn("G06")]  
 		public Guid ListDataStructureSortSetId;
 
 		[TypeConverter(typeof(DataServiceDataLookupListSortSetConverter))]

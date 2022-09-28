@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.Schema;
 using System;
 using System.Collections;

@@ -44,8 +44,7 @@ namespace Origam.Schema
 
 		#region Properties
 		protected OrigamDataType _dataType;
-		[EntityColumn("I01")]
-        [XmlAttribute("dataType")]
+		[XmlAttribute("dataType")]
 		public virtual OrigamDataType DataType
 		{
 			get
@@ -58,8 +57,7 @@ namespace Origam.Schema
 			}
 		}
 		private int _dataLength = 0;
-		[EntityColumn("I02")]
-        [XmlAttribute("dataLength")]
+		[XmlAttribute("dataLength")]
         public int DataLength
 		{
 			get
@@ -80,8 +78,7 @@ namespace Origam.Schema
 		}
 
 		private bool _allowNulls = true;
-		[EntityColumn("B01")]
-        [XmlAttribute("allowNulls")]
+		[XmlAttribute("allowNulls")]
         public bool AllowNulls
 		{
 			get
@@ -96,7 +93,6 @@ namespace Origam.Schema
 		#endregion
 
 		#region Overriden AbstractDataEntityColumn Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

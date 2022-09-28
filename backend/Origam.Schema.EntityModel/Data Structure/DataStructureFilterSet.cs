@@ -43,7 +43,7 @@ namespace Origam.Schema.EntityModel
 	
 		#region Properties
 		private bool _isDynamic = false;
-		[EntityColumn("B01"), DefaultValue(false)]
+		[DefaultValue(false)]
         [XmlAttribute("dynamic")]
         public bool IsDynamic
 		{
