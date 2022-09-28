@@ -338,7 +338,7 @@ describe("Html client", () => {
       comboOptionText: ">",
       value: "03.07.2021"
     })
-
+    await sleep(300);
     await waitForRowCountData(page, dataViewId,19);
 
     await setTwoFieldDateFilter({
