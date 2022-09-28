@@ -66,8 +66,9 @@ async function waitForRowCount(page, dataViewId, expectedRowCount){
 }
 
 async function waitForRowCountData(page, dataViewId, expectedRowCount) {
+  let countData;
   for (let i = 0; i < 200; i++) {
-    const countData = await getRowCountData(page, dataViewId)
+    countData = await getRowCountData(page, dataViewId)
     if(countData.rowCount === expectedRowCount.toString()){
       return countData;
     }
