@@ -78,6 +78,15 @@ namespace Origam.Rule.Xslt
             xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
             xslArg.AddExtensionObject(ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());
+            xslArg.AddExtensionObject(ExsltNamespaces.Math, new ExsltMath());
+            xslArg.AddExtensionObject(ExsltNamespaces.Random, new ExsltRandom());
+            xslArg.AddExtensionObject(ExsltNamespaces.Sets, new ExsltSets());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnDatesAndTimes, new GdnDatesAndTimes());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnMath, new GdnMath());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnRegularExpressions, new GdnRegularExpressions());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnSets, new GdnSets());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnStrings, new GdnStrings());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnDynamic, new GdnDynamic());
 
             // If source xml is completely empty (not even a root element), we add one
             // with a name of dataset.datasetname (that's how root element looks like when
@@ -282,13 +291,18 @@ namespace Origam.Rule.Xslt
                 xslArg.AddExtensionObject(
                     functionsDefinition.NameSpaceUri, functionsDefinition.Container);
             }
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.Strings, new ExsltStrings());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.RegularExpressions, 
-                new ExsltRegularExpressions());
+            xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
+            xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
+            xslArg.AddExtensionObject(ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());
+            xslArg.AddExtensionObject(ExsltNamespaces.Math, new ExsltMath());
+            xslArg.AddExtensionObject(ExsltNamespaces.Random, new ExsltRandom());
+            xslArg.AddExtensionObject(ExsltNamespaces.Sets, new ExsltSets());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnDatesAndTimes, new GdnDatesAndTimes());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnMath, new GdnMath());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnRegularExpressions, new GdnRegularExpressions());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnSets, new GdnSets());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnStrings, new GdnStrings());
+            xslArg.AddExtensionObject(ExsltNamespaces.GdnDynamic, new GdnDynamic());
             try
             {
                 StringBuilder traceParameters = new StringBuilder();
