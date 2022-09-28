@@ -27,12 +27,11 @@ using System.Security.Principal;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
-
+using Origam.DA.Service;
 using Origam.UI;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.OrigamEngine;
 using Origam.Rule;
 
@@ -75,15 +74,6 @@ namespace Origam.Workflow
 			if(persistence == null)
 			{
 				AddLine("Not logged in to the model repository.", result);
-			}
-			else
-			{
-                DatabasePersistenceProvider databaseProvider = persistence.SchemaProvider as DatabasePersistenceProvider;
-                if (databaseProvider != null)
-                {
-                    AddInfo("Model Data Provider", databaseProvider.DataService.GetType().ToString(), result);
-                    AddLine(databaseProvider.DataService.Info, result);
-                }
 			}
 
 			AddHeader("Loaded Packages (Model Version/Deployed Version)", result);

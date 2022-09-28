@@ -50,7 +50,6 @@ using System.IO;
 using System.Linq;
 using Origam.BI.CrystalReports;
 using MoreLinq;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Gui;
