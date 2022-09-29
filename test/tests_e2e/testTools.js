@@ -1,4 +1,5 @@
 const {userName, password} = require("./additionalConfig");
+const fs = require('fs');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -65,6 +66,23 @@ async function waitForRowCount(page, dataViewId, expectedRowCount){
   expect(rowCount).toBe(expectedRowCount);
 }
 
+async function takeScreenShot(page, name){
+  const screenDir = process.platform === "win32"
+    ? "screenshots"
+    : "/home/origam/HTML5/screenshots";
+  if(!fs.existsSync(screenDir)){
+    fs.mkdirSync(screenDir)
+  }
+  const dateTime =new Date().toISOString()
+    .replace(/T/, ' ')
+    .replace(/Z/, '')
+    .replace(/\./, '_')
+    .replace(/:/, '_')
+    .replace(/:/, '_')
+  console.log("dateTime: "+ dateTime)
+  await page.screenshot({path: `${screenDir}/${name}_${dateTime}.png`});
+}
+
 async function waitForRowCountData(page, dataViewId, expectedRowCount) {
   let countData;
   for (let i = 0; i < 200; i++) {
@@ -74,6 +92,7 @@ async function waitForRowCountData(page, dataViewId, expectedRowCount) {
     }
     await sleep(50);
   }
+  await takeScreenShot(page, `Error expectedRowCount ${expectedRowCount} `);
   throw new Error(`Row count did not change before timeout, expectedRowCount: ${expectedRowCount},  countData.rowCount: ${countData.rowCount}`);
 }
 
