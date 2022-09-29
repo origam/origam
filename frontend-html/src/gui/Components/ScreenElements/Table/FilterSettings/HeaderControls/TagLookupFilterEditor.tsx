@@ -98,9 +98,7 @@ export function TagLookupFilterEditor(props: {
 
     const showUniqueValues = true;
 
-    const cached = getGroupingConfiguration(props.property).isGrouping
-      ? false
-      : props.property.lookup?.cached!
+
 
     const dropdownEditorSetup = new DropdownEditorSetup(
       props.property.id,
@@ -113,7 +111,7 @@ export function TagLookupFilterEditor(props: {
       identifierIndex,
       props.property.parameters,
       props.property.lookup?.dropDownType!,
-      cached,
+      false,
       !props.property.lookup?.searchByFirstColumnOnly,
       drivers
     );
