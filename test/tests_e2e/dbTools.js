@@ -7,6 +7,9 @@ async function executeProcedure(procedureName){
   await exec(script);
 }
 
+// These procedures are defined in the test model deployment scripts in
+// "origam\model-tests\model\AutomaticTests\DeploymentVersion\AutomaticTests"
+// These deployment scripts are run before tests, so it is safe to call the procedures here.
 async function restoreAllDataTypesTable(){
   await executeProcedure("dbo.restoreAllDataTypes");
 }
