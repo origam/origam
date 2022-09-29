@@ -45,12 +45,7 @@ namespace Origam.Workbench.PropertyGrid
         private static readonly Image UIItemEditImage =
             Properties.Resources.Editor_8x;
 
-        private readonly Action closeWindow;
-
-        public PropertyGridEx(Action closeWindow): this()
-        {
-            this.closeWindow = closeWindow;
-        }
+        public event EventHandler LinkClicked;
 
         public PropertyGridEx()
         {
@@ -80,7 +75,9 @@ namespace Origam.Workbench.PropertyGrid
             var element = propDesc.GetValue(context.Instance) as AbstractSchemaItem;
             if (element != null)
             {
-                var editHandler = new ModelElementEditHandler(closeWindow);
+                var editHandler = new ModelElementEditHandler();
+                editHandler.LinkClicked += (sender, args) =>
+                    LinkClicked?.Invoke(this, EventArgs.Empty);
                 valueUIItemList.Add(new
                     PropertyValueUIItem(UIItemEditImage,
                     editHandler.Run, "Double click to open " + element.Path));
@@ -89,12 +86,7 @@ namespace Origam.Workbench.PropertyGrid
 
         class ModelElementEditHandler
         {
-            private readonly Action closeWindow;
-
-            public ModelElementEditHandler(Action closeWindow)
-            {
-                this.closeWindow = closeWindow;
-            }
+            public event EventHandler LinkClicked;
 
             public void Run(ITypeDescriptorContext context,
                 PropertyDescriptor descriptor, PropertyValueUIItem invokedItem)
@@ -110,7 +102,7 @@ namespace Origam.Workbench.PropertyGrid
                     EditSchemaItem cmdEdit = new Commands.EditSchemaItem();
                     cmdEdit.Owner = descriptor.GetValue(context.Instance);
                     cmdEdit.Run();
-                    closeWindow?.Invoke();
+                    LinkClicked?.Invoke(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
