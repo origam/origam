@@ -393,11 +393,9 @@ namespace Origam.Rule.Xslt
                 {
                     origamContainer.TransactionId = transactionId;
                 }
-
                 xslArg.AddExtensionObject(
                     functionsDefinition.NameSpaceUri, functionsDefinition.Container);
             }
-
             xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes,
                 new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
