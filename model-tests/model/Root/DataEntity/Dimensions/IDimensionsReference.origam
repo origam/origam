@@ -1,83 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0">
   <de:DataEntity
     asi:abstract="true"
     ade:audit="None"
     x:id="dcd5d6c9-0e2e-4ba4-b4f4-b0b2792eaed0"
     asi:name="IDimensionsReference"
     ade:readOnly="false">
-    <fmi:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension4_Universal.origam#Dimension4_Universal/67cf76b3-7160-4e8a-928a-287ae2ea62f7"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension4.origam#Dimension4/5078f831-7962-477e-bf69-b3ff10c80f44"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="403626e1-b8e6-4476-a478-0caa776d051f"
-      adec:isPrimaryKey="false"
-      adec:label="Dimenze 4"
-      fmi:mappedColumnName="refDimension4Id"
-      asi:name="refDimension4Id"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension3_Universal.origam#Dimension3_Universal/fc8ac9a5-fa61-4332-a286-48af82cff41d"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension3.origam#Dimension3/8928dc62-e5e2-412b-b69c-a4dc6f3c1f51"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="dba10202-3b65-4bb5-b9e4-14aac3953eae"
-      adec:isPrimaryKey="false"
-      adec:label="Dimenze 3"
-      fmi:mappedColumnName="refDimension3Id"
-      asi:name="refDimension3Id"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension1_Universal.origam#Dimension1_Universal/be0adfff-6155-4e92-a7fe-bf1b0e320a15"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension1.origam#Dimension1/edccc045-3b55-45a2-861e-fa483f5793a0"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="0666a52d-0b52-490a-92f1-9d5dbcf48205"
-      adec:isPrimaryKey="false"
-      adec:label="Dimenze 1"
-      fmi:mappedColumnName="refDimension1Id"
-      asi:name="refDimension1Id"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension2_Universal.origam#Dimension2_Universal/74bda75a-6d49-42d0-851f-809eef2ca531"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension2.origam#Dimension2/c4b132a4-306a-44a5-b051-a44c31b61322"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="27116e80-eb77-4872-90d3-cefbfd130dad"
-      adec:isPrimaryKey="false"
-      adec:label="Dimenze 2"
-      fmi:mappedColumnName="refDimension2Id"
-      asi:name="refDimension2Id"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
     <ef:EntityFilter
       asi:abstract="true"
-      x:id="f61028ef-46ea-4395-a9de-142cdb70ddd6"
-      asi:name="Dimension4Id_Null">
+      x:id="0b624eaa-26bd-432a-b39a-d9b581d4610d"
+      asi:name="Dimension2Id_Null">
       <fc:DataEntityColumn
         asi:abstract="true"
         adec:allowNulls="true"
@@ -86,578 +30,27 @@
         adec:excludeFromAllFields="false"
         fc:forceDatabaseCalculation="false"
         fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="7f840c2e-5baa-4b2e-8c4f-82dc58749566"
+        x:id="d5e7ea8a-b2ab-4a65-ab35-905639af7ad2"
         adec:isPrimaryKey="false"
         asi:name="="
         adec:onCopyAction="Copy"
         adec:xmlMappingType="Element">
         <fcp:FunctionCallParameter
           asi:abstract="true"
-          x:id="00703c1d-865f-4ac2-ad23-8580eb2b0b8b"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="ee4e7e2c-d5ef-47c2-a18d-e660d110d427"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension4Id/403626e1-b8e6-4476-a478-0caa776d051f"
-            x:id="7cfb5a6f-1ece-42ee-9cff-36d0cbe5fd96"
-            asi:name="refDimension4Id" />
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="69be4516-8359-4fbc-8ff6-148597154a48"
-      asi:name="Dimension3Id_NotNull">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
-        x:id="9d05f985-0bb3-476c-b56f-906bd86d33d5"
-        adec:isPrimaryKey="false"
-        asi:name="NotEqual"
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="92cea168-998d-4c80-a488-6f2e48cf91e9"
-          asi:name="Left"
-          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe">
-          <ecr:EntityColumnReference
-            asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
-            x:id="baf27460-342c-4b99-b66c-159b4c54cd46"
-            asi:name="refDimension3Id" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="3011affa-4e0b-474e-a563-8243a06c431d"
-          asi:name="Right"
-          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e" />
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="80a6128f-5a4d-4925-9c07-33f8f42832b2"
-      asi:name="GetByDimension2Id">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="68406fa3-4138-4381-a9ab-76746c8d472e"
-        adec:isPrimaryKey="false"
-        asi:name="="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="c013f60b-0a1f-4d83-9393-5ab7bcb88262"
+          x:id="1b07be39-a8d1-472b-98d5-904f592745d8"
           asi:name="Left"
           fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
           <ecr:EntityColumnReference
             asi:abstract="true"
             ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
-            x:id="6a798fe6-fa8e-44a9-ab73-61d2915cef63"
+            x:id="3e583d62-be5e-4473-bbb3-53dc2d420848"
             asi:name="refDimension2Id" />
         </fcp:FunctionCallParameter>
         <fcp:FunctionCallParameter
           asi:abstract="true"
-          x:id="125a4c5e-6bea-4d4b-8ec6-908299f832be"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <pr:ParameterReference
-            asi:abstract="true"
-            x:id="49d94614-0754-4926-877d-10ec772bb3d1"
-            asi:name="parDimension2Id"
-            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension2Id/82219266-adff-4e2a-8aba-8d9a61547c61" />
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="f581ea45-3ca4-4863-8443-7926102650b7"
-      asi:name="Dimension1Id_NotNull">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
-        x:id="b82aefb0-dbac-4a63-b763-01de6df65da7"
-        adec:isPrimaryKey="false"
-        asi:name="NotEqual"
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="78d61dc5-98aa-47f0-8f45-6f8fbcca0f01"
-          asi:name="Left"
-          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe">
-          <ecr:EntityColumnReference
-            asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
-            x:id="2bb86013-9144-4dbb-aad5-219cc5352241"
-            asi:name="refDimension1Id" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="469d790b-a95e-4ff4-b01f-765dc83428de"
-          asi:name="Right"
-          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e" />
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="8cc65d06-4ad3-49be-b65a-83018a52eb3b"
-      asi:name="GetByDimension4Id">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="63e9ee0a-d5e2-42de-9258-2f1480eb867c"
-        adec:isPrimaryKey="false"
-        asi:name="="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="39792574-f11d-4ce8-8054-6a02c5a1c098"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension4Id/403626e1-b8e6-4476-a478-0caa776d051f"
-            x:id="45f0a243-db2a-4e3f-9461-5991ce15b157"
-            asi:name="refDimension4Id" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="b95a40e6-4e35-46a9-8af9-bf43defbbab3"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <pr:ParameterReference
-            asi:abstract="true"
-            x:id="3c2a8c28-d5e5-4d89-8cbf-6210e5d4bfc7"
-            asi:name="parDimension4Id"
-            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension4Id/105b5cc6-7378-4d39-a60f-1f9698d4609f" />
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="39c5bfb7-e22a-431e-968e-8ef1874e4449"
-      asi:name="GetByDimension3Id_ComplexNull">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
-        x:id="8bff4deb-73be-4ec2-81b1-780fc5af9ed7"
-        adec:isPrimaryKey="false"
-        asi:name="LogicalOr"
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="e01aef85-86fa-4a8a-adbc-77f00bc918f8"
-          asi:name="Arguments"
-          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
-          <fc:DataEntityColumn
-            asi:abstract="true"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-            x:id="92708605-587d-4eb8-8375-04c65a2589f0"
-            adec:isPrimaryKey="false"
-            asi:name="="
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Element">
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="1a18e5a9-877b-4000-85ba-9ed48ab939d3"
-              asi:name="Left"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-              <ecr:EntityColumnReference
-                asi:abstract="true"
-                ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
-                x:id="ee1532aa-262f-4c47-9e8f-ea0e816a1f52"
-                asi:name="refDimension3Id" />
-            </fcp:FunctionCallParameter>
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="f0a043d4-1ddc-43e7-92a9-ceec33726480"
-              asi:name="Right"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-              <pr:ParameterReference
-                asi:abstract="true"
-                x:id="74631980-4d0d-4848-9a24-0699b76e6685"
-                asi:name="parDimension3Id"
-                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension3Id/37996e5d-7630-45ea-8e43-621f192a0fd1" />
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-          <fc:DataEntityColumn
-            asi:abstract="true"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/LogicalAnd.origam#LogicalAnd/030bf9c0-69a3-459c-88a1-3a3b8025392a"
-            x:id="008613dc-13f1-4306-9ea1-1d677e16f205"
-            adec:isPrimaryKey="false"
-            asi:name="LogicalAnd"
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Element">
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="5a0db0bd-593b-48c3-99e3-b224cd66d90d"
-              asi:name="Arguments"
-              fcp:parameter="Root/Function/LogicalAnd.origam#LogicalAnd/Arguments/d86e8210-ad76-4b11-9cba-67a33c8f33f7">
-              <fc:DataEntityColumn
-                asi:abstract="true"
-                adec:allowNulls="true"
-                adec:autoIncrement="false"
-                adec:dataType="Boolean"
-                adec:excludeFromAllFields="false"
-                fc:forceDatabaseCalculation="false"
-                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-                x:id="da5f22dd-d4f8-4356-88ad-741f7ebe9e9d"
-                adec:isPrimaryKey="false"
-                asi:name="dimensionIsNull"
-                adec:onCopyAction="Copy"
-                adec:xmlMappingType="Element">
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="9f2304f9-695b-4f94-ba6d-cff1ba3cce84"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="a062f90f-bdbe-4b01-b3be-d3ccbdfcb64e"
-                  asi:name="Left"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-                  <ecr:EntityColumnReference
-                    asi:abstract="true"
-                    ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
-                    x:id="7ef0b726-3012-4597-a1d0-fe6c2aa0af42"
-                    asi:name="refDimension3Id" />
-                </fcp:FunctionCallParameter>
-              </fc:DataEntityColumn>
-              <fc:DataEntityColumn
-                asi:abstract="true"
-                adec:allowNulls="true"
-                adec:autoIncrement="false"
-                adec:dataType="Boolean"
-                adec:excludeFromAllFields="false"
-                fc:forceDatabaseCalculation="false"
-                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-                x:id="0e2d872b-7327-4669-a00d-f63bc23add95"
-                adec:isPrimaryKey="false"
-                asi:name="paramIsNull"
-                adec:onCopyAction="Copy"
-                adec:xmlMappingType="Element">
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="c416c31f-db0f-488e-b7cc-8a041f2783f0"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="c9c8d4f0-ab49-4e5a-b7eb-bef727646d69"
-                  asi:name="Left"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-                  <pr:ParameterReference
-                    asi:abstract="true"
-                    x:id="40fcb4c2-12a4-4ab5-b703-885f493fad23"
-                    asi:name="parDimension3Id"
-                    pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension3Id/37996e5d-7630-45ea-8e43-621f192a0fd1" />
-                </fcp:FunctionCallParameter>
-              </fc:DataEntityColumn>
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="495fbd09-4046-417f-80c9-97249db98da8"
-      asi:name="GetByDimension3Id">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="36252369-641e-4d7c-b617-f5ec70a5d553"
-        adec:isPrimaryKey="false"
-        asi:name="="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="67d20115-bce9-4f2d-9123-ab42b71d619d"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <pr:ParameterReference
-            asi:abstract="true"
-            x:id="414532dc-3bd9-40cf-85ec-7fe9d3e3daa6"
-            asi:name="parDimension3Id"
-            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension3Id/37996e5d-7630-45ea-8e43-621f192a0fd1" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="1a4d98c0-5de9-4d85-8968-cd11cda8b120"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
-            x:id="97407108-45ff-4cb9-a003-8a0637162969"
-            asi:name="refDimension3Id" />
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="f12bea60-b749-4e78-981e-a796014836a4"
-      asi:name="Dimension1Id_Null">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="5a35e6a7-f7f2-43be-bd8d-3047256cf4f1"
-        adec:isPrimaryKey="false"
-        asi:name="="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="03b63fb2-3874-428e-bec7-6b3cd1144f66"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
-            x:id="29a1172d-dcbf-4758-8144-3ef03cb5d19c"
-            asi:name="refDimension1Id" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="cb2b4862-7e9b-4d00-aaff-9966b884da79"
+          x:id="8b5de42b-eff6-4fd3-9b6e-dae7d6c2e654"
           asi:name="Right"
           fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="876856fc-05c1-4134-be58-ae9dc9ecb064"
-      asi:name="GetByDimension2Id_ComplexNull">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
-        x:id="7b1e7d3e-493f-4cd6-8593-c0d1cb8e5ca1"
-        adec:isPrimaryKey="false"
-        asi:name="LogicalOr"
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="3ae713fd-0efd-4c68-8dfd-3a6fba388776"
-          asi:name="Arguments"
-          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
-          <fc:DataEntityColumn
-            asi:abstract="true"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/LogicalAnd.origam#LogicalAnd/030bf9c0-69a3-459c-88a1-3a3b8025392a"
-            x:id="d77e3f14-bb53-40e3-bbd9-c751ffc6a535"
-            adec:isPrimaryKey="false"
-            asi:name="LogicalAnd"
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Element">
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="2a4031fc-12f0-49a3-b28c-61c1dc961075"
-              asi:name="Arguments"
-              fcp:parameter="Root/Function/LogicalAnd.origam#LogicalAnd/Arguments/d86e8210-ad76-4b11-9cba-67a33c8f33f7">
-              <fc:DataEntityColumn
-                asi:abstract="true"
-                adec:allowNulls="true"
-                adec:autoIncrement="false"
-                adec:dataType="Boolean"
-                adec:excludeFromAllFields="false"
-                fc:forceDatabaseCalculation="false"
-                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-                x:id="f0a11a37-33bb-4b6f-a308-4843b9e841c5"
-                adec:isPrimaryKey="false"
-                asi:name="paramIsNull"
-                adec:onCopyAction="Copy"
-                adec:xmlMappingType="Element">
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="400cb9b0-ca67-4a9d-9e78-418a3d7a526f"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="c6977bcb-079e-4856-8805-5924e947baf0"
-                  asi:name="Left"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-                  <pr:ParameterReference
-                    asi:abstract="true"
-                    x:id="d3ad4efa-98fa-48c6-80d0-0396e12b4322"
-                    asi:name="parDimension2Id"
-                    pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension2Id/82219266-adff-4e2a-8aba-8d9a61547c61" />
-                </fcp:FunctionCallParameter>
-              </fc:DataEntityColumn>
-              <fc:DataEntityColumn
-                asi:abstract="true"
-                adec:allowNulls="true"
-                adec:autoIncrement="false"
-                adec:dataType="Boolean"
-                adec:excludeFromAllFields="false"
-                fc:forceDatabaseCalculation="false"
-                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-                x:id="d6a01f08-2126-42a7-84aa-b8061084ca38"
-                adec:isPrimaryKey="false"
-                asi:name="dimensionIsNull"
-                adec:onCopyAction="Copy"
-                adec:xmlMappingType="Element">
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="c9b96f26-8352-48fb-ac6c-763ec74a5083"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="38e70597-61f6-4968-ba0b-ec764f61617d"
-                  asi:name="Left"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-                  <ecr:EntityColumnReference
-                    asi:abstract="true"
-                    ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
-                    x:id="596282a8-a6fb-49d8-9f77-039ba4568cd0"
-                    asi:name="refDimension2Id" />
-                </fcp:FunctionCallParameter>
-              </fc:DataEntityColumn>
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-          <fc:DataEntityColumn
-            asi:abstract="true"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-            x:id="04568ab0-e7ed-4bcc-ac5b-d98dccf43bef"
-            adec:isPrimaryKey="false"
-            asi:name="="
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Element">
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="9dd445ea-2167-4c9e-b330-6a6815e06d3e"
-              asi:name="Right"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-              <pr:ParameterReference
-                asi:abstract="true"
-                x:id="311b26c2-e159-4064-9c87-6e572fb7e688"
-                asi:name="parDimension2Id"
-                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension2Id/82219266-adff-4e2a-8aba-8d9a61547c61" />
-            </fcp:FunctionCallParameter>
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="dda2ddf2-1924-4367-86e9-a0c0ac6fb2d5"
-              asi:name="Left"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-              <ecr:EntityColumnReference
-                asi:abstract="true"
-                ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
-                x:id="608a8f02-3f31-48be-b360-a9d7ecb28d1c"
-                asi:name="refDimension2Id" />
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="d6050dbf-fc04-405f-bbc7-b440e314d4c4"
-      asi:name="GetByDimension1Id">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="28b13f2b-cdba-426a-97a1-aebec351c866"
-        adec:isPrimaryKey="false"
-        asi:name="="
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="5d825b25-5c3d-4e40-9538-ce45fcc6ff33"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <pr:ParameterReference
-            asi:abstract="true"
-            x:id="275c6792-906a-48ef-9a89-1dd1d0dac9ce"
-            asi:name="parDimension1Id"
-            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension1Id/3ef9d448-bee3-4220-a848-f4db8c04e36e" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="4ddf9253-79f0-442a-95ef-e8d17d2a0c41"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
-            x:id="2535b50b-1db8-448b-adfd-d9052ca1e793"
-            asi:name="refDimension1Id" />
-        </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
     <ef:EntityFilter
@@ -679,6 +72,11 @@
         adec:xmlMappingType="Element">
         <fcp:FunctionCallParameter
           asi:abstract="true"
+          x:id="3a8f365e-db3f-4b34-b910-3f031da7419a"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
           x:id="77ca4a1b-25b6-4949-80fd-0f7e944f4418"
           asi:name="Left"
           fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
@@ -687,152 +85,6 @@
             ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
             x:id="b69ea31f-53b5-415a-8f64-ec4e7e275b72"
             asi:name="refDimension3Id" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="3a8f365e-db3f-4b34-b910-3f031da7419a"
-          asi:name="Right"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="true"
-      x:id="b4531d46-96b4-4032-a37a-be82797cfa49"
-      asi:name="GetByDimension1Id_ComplexNull">
-      <fc:DataEntityColumn
-        asi:abstract="true"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
-        x:id="7b8af4ce-9bd0-48ef-963d-c8edd87ea888"
-        adec:isPrimaryKey="false"
-        asi:name="LogicalOr"
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Element">
-        <fcp:FunctionCallParameter
-          asi:abstract="true"
-          x:id="8e3f7785-3cbf-47a3-8b5b-cbff633739b2"
-          asi:name="Arguments"
-          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
-          <fc:DataEntityColumn
-            asi:abstract="true"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/LogicalAnd.origam#LogicalAnd/030bf9c0-69a3-459c-88a1-3a3b8025392a"
-            x:id="205f8f69-eb82-4621-b7bb-9a7521acc58c"
-            adec:isPrimaryKey="false"
-            asi:name="LogicalAnd"
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Element">
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="8b3444f8-7ada-4364-bad1-4708cd7c378d"
-              asi:name="Arguments"
-              fcp:parameter="Root/Function/LogicalAnd.origam#LogicalAnd/Arguments/d86e8210-ad76-4b11-9cba-67a33c8f33f7">
-              <fc:DataEntityColumn
-                asi:abstract="true"
-                adec:allowNulls="true"
-                adec:autoIncrement="false"
-                adec:dataType="Boolean"
-                adec:excludeFromAllFields="false"
-                fc:forceDatabaseCalculation="false"
-                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-                x:id="3036efea-c0de-464b-8d90-16b94274cf0d"
-                adec:isPrimaryKey="false"
-                asi:name="dimensionIsNull"
-                adec:onCopyAction="Copy"
-                adec:xmlMappingType="Element">
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="a47de596-e1c2-4238-832a-263807dc21d2"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="9890902a-11cf-497e-bf02-39a38aa873b7"
-                  asi:name="Left"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-                  <ecr:EntityColumnReference
-                    asi:abstract="true"
-                    ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
-                    x:id="44799828-b956-4ae3-a360-86cc6f3e2353"
-                    asi:name="refDimension1Id" />
-                </fcp:FunctionCallParameter>
-              </fc:DataEntityColumn>
-              <fc:DataEntityColumn
-                asi:abstract="true"
-                adec:allowNulls="true"
-                adec:autoIncrement="false"
-                adec:dataType="Boolean"
-                adec:excludeFromAllFields="false"
-                fc:forceDatabaseCalculation="false"
-                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-                x:id="84b51ccc-afc6-4a05-b16b-d30cfa6d8f66"
-                adec:isPrimaryKey="false"
-                asi:name="paramIsNull"
-                adec:onCopyAction="Copy"
-                adec:xmlMappingType="Element">
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="e630ed9d-9a15-482a-b919-07796d3fbee8"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="31530341-fa8a-4e0b-bd9a-f6f21cd3d3b5"
-                  asi:name="Left"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-                  <pr:ParameterReference
-                    asi:abstract="true"
-                    x:id="961a958f-40ea-4e09-bd27-9ca9f13aec6f"
-                    asi:name="parDimension1Id"
-                    pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension1Id/3ef9d448-bee3-4220-a848-f4db8c04e36e" />
-                </fcp:FunctionCallParameter>
-              </fc:DataEntityColumn>
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-          <fc:DataEntityColumn
-            asi:abstract="true"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-            x:id="efc5d6f2-cd4d-4a58-8f65-de178765f571"
-            adec:isPrimaryKey="false"
-            asi:name="="
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Element">
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="c0ee94e5-1e9d-43b9-98e4-39263a4a70b6"
-              asi:name="Right"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-              <pr:ParameterReference
-                asi:abstract="true"
-                x:id="5806b6ad-9c8a-4171-86df-dc7b15f5cdac"
-                asi:name="parDimension1Id"
-                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension1Id/3ef9d448-bee3-4220-a848-f4db8c04e36e" />
-            </fcp:FunctionCallParameter>
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
-              x:id="20975cff-d16c-4a61-848c-dcf13e4100a9"
-              asi:name="Left"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-              <ecr:EntityColumnReference
-                asi:abstract="true"
-                ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
-                x:id="9394018f-f5f6-4e0b-941c-2215c7afbc4a"
-                asi:name="refDimension1Id" />
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
@@ -873,8 +125,190 @@
     </ef:EntityFilter>
     <ef:EntityFilter
       asi:abstract="true"
-      x:id="f6711d3a-f160-4672-9070-ca448c957d8f"
-      asi:name="Dimension2Id_NotNull">
+      x:id="39c5bfb7-e22a-431e-968e-8ef1874e4449"
+      asi:name="GetByDimension3Id_ComplexNull">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
+        x:id="8bff4deb-73be-4ec2-81b1-780fc5af9ed7"
+        adec:isPrimaryKey="false"
+        asi:name="LogicalOr"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="e01aef85-86fa-4a8a-adbc-77f00bc918f8"
+          asi:name="Arguments"
+          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
+          <fc:DataEntityColumn
+            asi:abstract="true"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/LogicalAnd.origam#LogicalAnd/030bf9c0-69a3-459c-88a1-3a3b8025392a"
+            x:id="008613dc-13f1-4306-9ea1-1d677e16f205"
+            adec:isPrimaryKey="false"
+            asi:name="LogicalAnd"
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Element">
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="5a0db0bd-593b-48c3-99e3-b224cd66d90d"
+              asi:name="Arguments"
+              fcp:parameter="Root/Function/LogicalAnd.origam#LogicalAnd/Arguments/d86e8210-ad76-4b11-9cba-67a33c8f33f7">
+              <fc:DataEntityColumn
+                asi:abstract="true"
+                adec:allowNulls="true"
+                adec:autoIncrement="false"
+                adec:dataType="Boolean"
+                adec:excludeFromAllFields="false"
+                fc:forceDatabaseCalculation="false"
+                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+                x:id="0e2d872b-7327-4669-a00d-f63bc23add95"
+                adec:isPrimaryKey="false"
+                asi:name="paramIsNull"
+                adec:onCopyAction="Copy"
+                adec:xmlMappingType="Element">
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="c416c31f-db0f-488e-b7cc-8a041f2783f0"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="c9c8d4f0-ab49-4e5a-b7eb-bef727646d69"
+                  asi:name="Left"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+                  <pr:ParameterReference
+                    asi:abstract="true"
+                    x:id="40fcb4c2-12a4-4ab5-b703-885f493fad23"
+                    asi:name="parDimension3Id"
+                    pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension3Id/37996e5d-7630-45ea-8e43-621f192a0fd1" />
+                </fcp:FunctionCallParameter>
+              </fc:DataEntityColumn>
+              <fc:DataEntityColumn
+                asi:abstract="true"
+                adec:allowNulls="true"
+                adec:autoIncrement="false"
+                adec:dataType="Boolean"
+                adec:excludeFromAllFields="false"
+                fc:forceDatabaseCalculation="false"
+                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+                x:id="da5f22dd-d4f8-4356-88ad-741f7ebe9e9d"
+                adec:isPrimaryKey="false"
+                asi:name="dimensionIsNull"
+                adec:onCopyAction="Copy"
+                adec:xmlMappingType="Element">
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="9f2304f9-695b-4f94-ba6d-cff1ba3cce84"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="a062f90f-bdbe-4b01-b3be-d3ccbdfcb64e"
+                  asi:name="Left"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+                  <ecr:EntityColumnReference
+                    asi:abstract="true"
+                    ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
+                    x:id="7ef0b726-3012-4597-a1d0-fe6c2aa0af42"
+                    asi:name="refDimension3Id" />
+                </fcp:FunctionCallParameter>
+              </fc:DataEntityColumn>
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+          <fc:DataEntityColumn
+            asi:abstract="true"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="92708605-587d-4eb8-8375-04c65a2589f0"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Element">
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="1a18e5a9-877b-4000-85ba-9ed48ab939d3"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <ecr:EntityColumnReference
+                asi:abstract="true"
+                ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
+                x:id="ee1532aa-262f-4c47-9e8f-ea0e816a1f52"
+                asi:name="refDimension3Id" />
+            </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="f0a043d4-1ddc-43e7-92a9-ceec33726480"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+              <pr:ParameterReference
+                asi:abstract="true"
+                x:id="74631980-4d0d-4848-9a24-0699b76e6685"
+                asi:name="parDimension3Id"
+                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension3Id/37996e5d-7630-45ea-8e43-621f192a0fd1" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="495fbd09-4046-417f-80c9-97249db98da8"
+      asi:name="GetByDimension3Id">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="36252369-641e-4d7c-b617-f5ec70a5d553"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="1a4d98c0-5de9-4d85-8968-cd11cda8b120"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
+            x:id="97407108-45ff-4cb9-a003-8a0637162969"
+            asi:name="refDimension3Id" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="67d20115-bce9-4f2d-9123-ab42b71d619d"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr:ParameterReference
+            asi:abstract="true"
+            x:id="414532dc-3bd9-40cf-85ec-7fe9d3e3daa6"
+            asi:name="parDimension3Id"
+            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension3Id/37996e5d-7630-45ea-8e43-621f192a0fd1" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="69be4516-8359-4fbc-8ff6-148597154a48"
+      asi:name="Dimension3Id_NotNull">
       <fc:DataEntityColumn
         asi:abstract="true"
         adec:allowNulls="true"
@@ -883,26 +317,249 @@
         adec:excludeFromAllFields="false"
         fc:forceDatabaseCalculation="false"
         fc:function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
-        x:id="bbc3e079-e805-4029-8ab2-fe1b51899a3f"
+        x:id="9d05f985-0bb3-476c-b56f-906bd86d33d5"
         adec:isPrimaryKey="false"
         asi:name="NotEqual"
         adec:onCopyAction="Copy"
         adec:xmlMappingType="Element">
         <fcp:FunctionCallParameter
           asi:abstract="true"
-          x:id="c8e75928-eedf-4c6e-9769-be6e953ac67a"
+          x:id="3011affa-4e0b-474e-a563-8243a06c431d"
           asi:name="Right"
           fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e" />
         <fcp:FunctionCallParameter
           asi:abstract="true"
-          x:id="cf6b1e23-1a42-4113-b63d-c2a6c6ead943"
+          x:id="92cea168-998d-4c80-a488-6f2e48cf91e9"
           asi:name="Left"
           fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe">
           <ecr:EntityColumnReference
             asi:abstract="true"
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension3Id/dba10202-3b65-4bb5-b9e4-14aac3953eae"
+            x:id="baf27460-342c-4b99-b66c-159b4c54cd46"
+            asi:name="refDimension3Id" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="80a6128f-5a4d-4925-9c07-33f8f42832b2"
+      asi:name="GetByDimension2Id">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="68406fa3-4138-4381-a9ab-76746c8d472e"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="125a4c5e-6bea-4d4b-8ec6-908299f832be"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr:ParameterReference
+            asi:abstract="true"
+            x:id="49d94614-0754-4926-877d-10ec772bb3d1"
+            asi:name="parDimension2Id"
+            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension2Id/82219266-adff-4e2a-8aba-8d9a61547c61" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="c013f60b-0a1f-4d83-9393-5ab7bcb88262"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
             ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
-            x:id="8f6c469a-78fe-4271-9db3-ae238d93e280"
+            x:id="6a798fe6-fa8e-44a9-ab73-61d2915cef63"
             asi:name="refDimension2Id" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="876856fc-05c1-4134-be58-ae9dc9ecb064"
+      asi:name="GetByDimension2Id_ComplexNull">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
+        x:id="7b1e7d3e-493f-4cd6-8593-c0d1cb8e5ca1"
+        adec:isPrimaryKey="false"
+        asi:name="LogicalOr"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="3ae713fd-0efd-4c68-8dfd-3a6fba388776"
+          asi:name="Arguments"
+          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
+          <fc:DataEntityColumn
+            asi:abstract="true"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="04568ab0-e7ed-4bcc-ac5b-d98dccf43bef"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Element">
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="9dd445ea-2167-4c9e-b330-6a6815e06d3e"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+              <pr:ParameterReference
+                asi:abstract="true"
+                x:id="311b26c2-e159-4064-9c87-6e572fb7e688"
+                asi:name="parDimension2Id"
+                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension2Id/82219266-adff-4e2a-8aba-8d9a61547c61" />
+            </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="dda2ddf2-1924-4367-86e9-a0c0ac6fb2d5"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <ecr:EntityColumnReference
+                asi:abstract="true"
+                ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
+                x:id="608a8f02-3f31-48be-b360-a9d7ecb28d1c"
+                asi:name="refDimension2Id" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+          <fc:DataEntityColumn
+            asi:abstract="true"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/LogicalAnd.origam#LogicalAnd/030bf9c0-69a3-459c-88a1-3a3b8025392a"
+            x:id="d77e3f14-bb53-40e3-bbd9-c751ffc6a535"
+            adec:isPrimaryKey="false"
+            asi:name="LogicalAnd"
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Element">
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="2a4031fc-12f0-49a3-b28c-61c1dc961075"
+              asi:name="Arguments"
+              fcp:parameter="Root/Function/LogicalAnd.origam#LogicalAnd/Arguments/d86e8210-ad76-4b11-9cba-67a33c8f33f7">
+              <fc:DataEntityColumn
+                asi:abstract="true"
+                adec:allowNulls="true"
+                adec:autoIncrement="false"
+                adec:dataType="Boolean"
+                adec:excludeFromAllFields="false"
+                fc:forceDatabaseCalculation="false"
+                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+                x:id="d6a01f08-2126-42a7-84aa-b8061084ca38"
+                adec:isPrimaryKey="false"
+                asi:name="dimensionIsNull"
+                adec:onCopyAction="Copy"
+                adec:xmlMappingType="Element">
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="38e70597-61f6-4968-ba0b-ec764f61617d"
+                  asi:name="Left"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+                  <ecr:EntityColumnReference
+                    asi:abstract="true"
+                    ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
+                    x:id="596282a8-a6fb-49d8-9f77-039ba4568cd0"
+                    asi:name="refDimension2Id" />
+                </fcp:FunctionCallParameter>
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="c9b96f26-8352-48fb-ac6c-763ec74a5083"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+              </fc:DataEntityColumn>
+              <fc:DataEntityColumn
+                asi:abstract="true"
+                adec:allowNulls="true"
+                adec:autoIncrement="false"
+                adec:dataType="Boolean"
+                adec:excludeFromAllFields="false"
+                fc:forceDatabaseCalculation="false"
+                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+                x:id="f0a11a37-33bb-4b6f-a308-4843b9e841c5"
+                adec:isPrimaryKey="false"
+                asi:name="paramIsNull"
+                adec:onCopyAction="Copy"
+                adec:xmlMappingType="Element">
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="400cb9b0-ca67-4a9d-9e78-418a3d7a526f"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="c6977bcb-079e-4856-8805-5924e947baf0"
+                  asi:name="Left"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+                  <pr:ParameterReference
+                    asi:abstract="true"
+                    x:id="d3ad4efa-98fa-48c6-80d0-0396e12b4322"
+                    asi:name="parDimension2Id"
+                    pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension2Id/82219266-adff-4e2a-8aba-8d9a61547c61" />
+                </fcp:FunctionCallParameter>
+              </fc:DataEntityColumn>
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="8cc65d06-4ad3-49be-b65a-83018a52eb3b"
+      asi:name="GetByDimension4Id">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="63e9ee0a-d5e2-42de-9258-2f1480eb867c"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="39792574-f11d-4ce8-8054-6a02c5a1c098"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension4Id/403626e1-b8e6-4476-a478-0caa776d051f"
+            x:id="45f0a243-db2a-4e3f-9461-5991ce15b157"
+            asi:name="refDimension4Id" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="b95a40e6-4e35-46a9-8af9-bf43defbbab3"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr:ParameterReference
+            asi:abstract="true"
+            x:id="3c2a8c28-d5e5-4d89-8cbf-6210e5d4bfc7"
+            asi:name="parDimension4Id"
+            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension4Id/105b5cc6-7378-4d39-a60f-1f9698d4609f" />
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
@@ -961,6 +618,11 @@
                 adec:xmlMappingType="Element">
                 <fcp:FunctionCallParameter
                   asi:abstract="true"
+                  x:id="6be2e15d-f232-4ae3-9021-633f11759cba"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
                   x:id="999fa231-5f1f-45c2-baf5-27f9a758ac71"
                   asi:name="Left"
                   fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
@@ -970,11 +632,6 @@
                     x:id="7fc81ecf-283a-4f02-9e80-5a6cfb1e1d13"
                     asi:name="refDimension4Id" />
                 </fcp:FunctionCallParameter>
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
-                  x:id="6be2e15d-f232-4ae3-9021-633f11759cba"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
               </fc:DataEntityColumn>
               <fc:DataEntityColumn
                 asi:abstract="true"
@@ -991,11 +648,6 @@
                 adec:xmlMappingType="Element">
                 <fcp:FunctionCallParameter
                   asi:abstract="true"
-                  x:id="fc46e772-98a0-430b-b842-3e6a9dd278bd"
-                  asi:name="Right"
-                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-                <fcp:FunctionCallParameter
-                  asi:abstract="true"
                   x:id="55dd53d3-1699-431e-998c-6eb5bc45e574"
                   asi:name="Left"
                   fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
@@ -1005,6 +657,11 @@
                     asi:name="parDimension4Id"
                     pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension4Id/105b5cc6-7378-4d39-a60f-1f9698d4609f" />
                 </fcp:FunctionCallParameter>
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="fc46e772-98a0-430b-b842-3e6a9dd278bd"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
               </fc:DataEntityColumn>
             </fcp:FunctionCallParameter>
           </fc:DataEntityColumn>
@@ -1023,17 +680,6 @@
             adec:xmlMappingType="Element">
             <fcp:FunctionCallParameter
               asi:abstract="true"
-              x:id="ddceb18f-dc57-46e5-8678-39de5d484acf"
-              asi:name="Right"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-              <pr:ParameterReference
-                asi:abstract="true"
-                x:id="e4f62726-f6b9-42d7-b9b8-f1ac5f65eafe"
-                asi:name="parDimension4Id"
-                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension4Id/105b5cc6-7378-4d39-a60f-1f9698d4609f" />
-            </fcp:FunctionCallParameter>
-            <fcp:FunctionCallParameter
-              asi:abstract="true"
               x:id="719845bf-8056-45af-a1cc-d205be18a5b2"
               asi:name="Left"
               fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
@@ -1043,14 +689,166 @@
                 x:id="1e1feda3-f103-4b00-86a2-ecd31035f80a"
                 asi:name="refDimension4Id" />
             </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="ddceb18f-dc57-46e5-8678-39de5d484acf"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+              <pr:ParameterReference
+                asi:abstract="true"
+                x:id="e4f62726-f6b9-42d7-b9b8-f1ac5f65eafe"
+                asi:name="parDimension4Id"
+                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension4Id/105b5cc6-7378-4d39-a60f-1f9698d4609f" />
+            </fcp:FunctionCallParameter>
           </fc:DataEntityColumn>
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
     <ef:EntityFilter
       asi:abstract="true"
-      x:id="0b624eaa-26bd-432a-b39a-d9b581d4610d"
-      asi:name="Dimension2Id_Null">
+      x:id="b4531d46-96b4-4032-a37a-be82797cfa49"
+      asi:name="GetByDimension1Id_ComplexNull">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
+        x:id="7b8af4ce-9bd0-48ef-963d-c8edd87ea888"
+        adec:isPrimaryKey="false"
+        asi:name="LogicalOr"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="8e3f7785-3cbf-47a3-8b5b-cbff633739b2"
+          asi:name="Arguments"
+          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
+          <fc:DataEntityColumn
+            asi:abstract="true"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/LogicalAnd.origam#LogicalAnd/030bf9c0-69a3-459c-88a1-3a3b8025392a"
+            x:id="205f8f69-eb82-4621-b7bb-9a7521acc58c"
+            adec:isPrimaryKey="false"
+            asi:name="LogicalAnd"
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Element">
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="8b3444f8-7ada-4364-bad1-4708cd7c378d"
+              asi:name="Arguments"
+              fcp:parameter="Root/Function/LogicalAnd.origam#LogicalAnd/Arguments/d86e8210-ad76-4b11-9cba-67a33c8f33f7">
+              <fc:DataEntityColumn
+                asi:abstract="true"
+                adec:allowNulls="true"
+                adec:autoIncrement="false"
+                adec:dataType="Boolean"
+                adec:excludeFromAllFields="false"
+                fc:forceDatabaseCalculation="false"
+                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+                x:id="3036efea-c0de-464b-8d90-16b94274cf0d"
+                adec:isPrimaryKey="false"
+                asi:name="dimensionIsNull"
+                adec:onCopyAction="Copy"
+                adec:xmlMappingType="Element">
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="9890902a-11cf-497e-bf02-39a38aa873b7"
+                  asi:name="Left"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+                  <ecr:EntityColumnReference
+                    asi:abstract="true"
+                    ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
+                    x:id="44799828-b956-4ae3-a360-86cc6f3e2353"
+                    asi:name="refDimension1Id" />
+                </fcp:FunctionCallParameter>
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="a47de596-e1c2-4238-832a-263807dc21d2"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+              </fc:DataEntityColumn>
+              <fc:DataEntityColumn
+                asi:abstract="true"
+                adec:allowNulls="true"
+                adec:autoIncrement="false"
+                adec:dataType="Boolean"
+                adec:excludeFromAllFields="false"
+                fc:forceDatabaseCalculation="false"
+                fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+                x:id="84b51ccc-afc6-4a05-b16b-d30cfa6d8f66"
+                adec:isPrimaryKey="false"
+                asi:name="paramIsNull"
+                adec:onCopyAction="Copy"
+                adec:xmlMappingType="Element">
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="31530341-fa8a-4e0b-bd9a-f6f21cd3d3b5"
+                  asi:name="Left"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+                  <pr:ParameterReference
+                    asi:abstract="true"
+                    x:id="961a958f-40ea-4e09-bd27-9ca9f13aec6f"
+                    asi:name="parDimension1Id"
+                    pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension1Id/3ef9d448-bee3-4220-a848-f4db8c04e36e" />
+                </fcp:FunctionCallParameter>
+                <fcp:FunctionCallParameter
+                  asi:abstract="true"
+                  x:id="e630ed9d-9a15-482a-b919-07796d3fbee8"
+                  asi:name="Right"
+                  fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+              </fc:DataEntityColumn>
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+          <fc:DataEntityColumn
+            asi:abstract="true"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="efc5d6f2-cd4d-4a58-8f65-de178765f571"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Element">
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="20975cff-d16c-4a61-848c-dcf13e4100a9"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <ecr:EntityColumnReference
+                asi:abstract="true"
+                ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
+                x:id="9394018f-f5f6-4e0b-941c-2215c7afbc4a"
+                asi:name="refDimension1Id" />
+            </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="true"
+              x:id="c0ee94e5-1e9d-43b9-98e4-39263a4a70b6"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+              <pr:ParameterReference
+                asi:abstract="true"
+                x:id="5806b6ad-9c8a-4171-86df-dc7b15f5cdac"
+                asi:name="parDimension1Id"
+                pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension1Id/3ef9d448-bee3-4220-a848-f4db8c04e36e" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="d6050dbf-fc04-405f-bbc7-b440e314d4c4"
+      asi:name="GetByDimension1Id">
       <fc:DataEntityColumn
         asi:abstract="true"
         adec:allowNulls="true"
@@ -1059,29 +857,243 @@
         adec:excludeFromAllFields="false"
         fc:forceDatabaseCalculation="false"
         fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-        x:id="d5e7ea8a-b2ab-4a65-ab35-905639af7ad2"
+        x:id="28b13f2b-cdba-426a-97a1-aebec351c866"
         adec:isPrimaryKey="false"
         asi:name="="
         adec:onCopyAction="Copy"
         adec:xmlMappingType="Element">
         <fcp:FunctionCallParameter
           asi:abstract="true"
-          x:id="1b07be39-a8d1-472b-98d5-904f592745d8"
+          x:id="4ddf9253-79f0-442a-95ef-e8d17d2a0c41"
           asi:name="Left"
           fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
           <ecr:EntityColumnReference
             asi:abstract="true"
-            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
-            x:id="3e583d62-be5e-4473-bbb3-53dc2d420848"
-            asi:name="refDimension2Id" />
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
+            x:id="2535b50b-1db8-448b-adfd-d9052ca1e793"
+            asi:name="refDimension1Id" />
         </fcp:FunctionCallParameter>
         <fcp:FunctionCallParameter
           asi:abstract="true"
-          x:id="8b5de42b-eff6-4fd3-9b6e-dae7d6c2e654"
+          x:id="5d825b25-5c3d-4e40-9538-ce45fcc6ff33"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr:ParameterReference
+            asi:abstract="true"
+            x:id="275c6792-906a-48ef-9a89-1dd1d0dac9ce"
+            asi:name="parDimension1Id"
+            pr:parameter="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/parDimension1Id/3ef9d448-bee3-4220-a848-f4db8c04e36e" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="f12bea60-b749-4e78-981e-a796014836a4"
+      asi:name="Dimension1Id_Null">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="5a35e6a7-f7f2-43be-bd8d-3047256cf4f1"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="03b63fb2-3874-428e-bec7-6b3cd1144f66"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
+            x:id="29a1172d-dcbf-4758-8144-3ef03cb5d19c"
+            asi:name="refDimension1Id" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="cb2b4862-7e9b-4d00-aaff-9966b884da79"
           asi:name="Right"
           fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
       </fc:DataEntityColumn>
     </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="f581ea45-3ca4-4863-8443-7926102650b7"
+      asi:name="Dimension1Id_NotNull">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
+        x:id="b82aefb0-dbac-4a63-b763-01de6df65da7"
+        adec:isPrimaryKey="false"
+        asi:name="NotEqual"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="469d790b-a95e-4ff4-b01f-765dc83428de"
+          asi:name="Right"
+          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e" />
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="78d61dc5-98aa-47f0-8f45-6f8fbcca0f01"
+          asi:name="Left"
+          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension1Id/0666a52d-0b52-490a-92f1-9d5dbcf48205"
+            x:id="2bb86013-9144-4dbb-aad5-219cc5352241"
+            asi:name="refDimension1Id" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="f61028ef-46ea-4395-a9de-142cdb70ddd6"
+      asi:name="Dimension4Id_Null">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="7f840c2e-5baa-4b2e-8c4f-82dc58749566"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="00703c1d-865f-4ac2-ad23-8580eb2b0b8b"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="ee4e7e2c-d5ef-47c2-a18d-e660d110d427"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension4Id/403626e1-b8e6-4476-a478-0caa776d051f"
+            x:id="7cfb5a6f-1ece-42ee-9cff-36d0cbe5fd96"
+            asi:name="refDimension4Id" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="f6711d3a-f160-4672-9070-ca448c957d8f"
+      asi:name="Dimension2Id_NotNull">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
+        x:id="bbc3e079-e805-4029-8ab2-fe1b51899a3f"
+        adec:isPrimaryKey="false"
+        asi:name="NotEqual"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Element">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="c8e75928-eedf-4c6e-9769-be6e953ac67a"
+          asi:name="Right"
+          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e" />
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="cf6b1e23-1a42-4113-b63d-c2a6c6ead943"
+          asi:name="Left"
+          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
+            ecr:field="Root/DataEntity/Dimensions/IDimensionsReference.origam#IDimensionsReference/refDimension2Id/27116e80-eb77-4872-90d3-cefbfd130dad"
+            x:id="8f6c469a-78fe-4271-9db3-ae238d93e280"
+            asi:name="refDimension2Id" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension1_Universal.origam#Dimension1_Universal/be0adfff-6155-4e92-a7fe-bf1b0e320a15"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension1.origam#Dimension1/edccc045-3b55-45a2-861e-fa483f5793a0"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="0666a52d-0b52-490a-92f1-9d5dbcf48205"
+      adec:isPrimaryKey="false"
+      adec:label="Dimenze 1"
+      fmi:mappedColumnName="refDimension1Id"
+      asi:name="refDimension1Id"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension2_Universal.origam#Dimension2_Universal/74bda75a-6d49-42d0-851f-809eef2ca531"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension2.origam#Dimension2/c4b132a4-306a-44a5-b051-a44c31b61322"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="27116e80-eb77-4872-90d3-cefbfd130dad"
+      adec:isPrimaryKey="false"
+      adec:label="Dimenze 2"
+      fmi:mappedColumnName="refDimension2Id"
+      asi:name="refDimension2Id"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension4_Universal.origam#Dimension4_Universal/67cf76b3-7160-4e8a-928a-287ae2ea62f7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension4.origam#Dimension4/5078f831-7962-477e-bf69-b3ff10c80f44"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="403626e1-b8e6-4476-a478-0caa776d051f"
+      adec:isPrimaryKey="false"
+      adec:label="Dimenze 4"
+      fmi:mappedColumnName="refDimension4Id"
+      asi:name="refDimension4Id"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Dimensions/Dimension3_Universal.origam#Dimension3_Universal/fc8ac9a5-fa61-4332-a286-48af82cff41d"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Dimensions/Dimension3.origam#Dimension3/8928dc62-e5e2-412b-b69c-a4dc6f3c1f51"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="dba10202-3b65-4bb5-b9e4-14aac3953eae"
+      adec:isPrimaryKey="false"
+      adec:label="Dimenze 3"
+      fmi:mappedColumnName="refDimension3Id"
+      asi:name="refDimension3Id"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
     <sip:Parameter
       asi:abstract="true"
       sip:allowNulls="true"
@@ -1098,13 +1110,13 @@
       asi:abstract="true"
       sip:allowNulls="true"
       sip:dataType="UniqueIdentifier"
-      x:id="82219266-adff-4e2a-8aba-8d9a61547c61"
-      asi:name="parDimension2Id" />
+      x:id="3ef9d448-bee3-4220-a848-f4db8c04e36e"
+      asi:name="parDimension1Id" />
     <sip:Parameter
       asi:abstract="true"
       sip:allowNulls="true"
       sip:dataType="UniqueIdentifier"
-      x:id="3ef9d448-bee3-4220-a848-f4db8c04e36e"
-      asi:name="parDimension1Id" />
+      x:id="82219266-adff-4e2a-8aba-8d9a61547c61"
+      asi:name="parDimension2Id" />
   </de:DataEntity>
 </x:file>

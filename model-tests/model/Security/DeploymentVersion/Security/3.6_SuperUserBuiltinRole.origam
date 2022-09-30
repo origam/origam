@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
   <dv:DeploymentVersion
     asi:abstract="false"
     x:id="bdcff03e-b4f6-4b61-808e-6dd542ab8a27"
@@ -7,10 +12,10 @@
     dv:version="3.6">
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="20"
-      scusa:commandText="-***-ExternalFile:3.6_SuperUserBuiltinRole.origam___commandText___6345fe88-2e45-498c-b03d-576c99bb5229.txt"
-      x:id="6345fe88-2e45-498c-b03d-576c99bb5229"
-      asi:name="00020_Remove_Role_SYS_OrigamClient_GlobalTransaction"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:3.6_SuperUserBuiltinRole.origam___commandText___296eda73-560b-4a7d-8c71-b3baab85d878.txt"
+      x:id="296eda73-560b-4a7d-8c71-b3baab85d878"
+      asi:name="00030_Remove_Role_WEB_Admin_AddUser"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -23,10 +28,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="30"
-      scusa:commandText="-***-ExternalFile:3.6_SuperUserBuiltinRole.origam___commandText___296eda73-560b-4a7d-8c71-b3baab85d878.txt"
-      x:id="296eda73-560b-4a7d-8c71-b3baab85d878"
-      asi:name="00030_Remove_Role_WEB_Admin_AddUser"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:3.6_SuperUserBuiltinRole.origam___commandText___6345fe88-2e45-498c-b03d-576c99bb5229.txt"
+      x:id="6345fe88-2e45-498c-b03d-576c99bb5229"
+      asi:name="00020_Remove_Role_SYS_OrigamClient_GlobalTransaction"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>

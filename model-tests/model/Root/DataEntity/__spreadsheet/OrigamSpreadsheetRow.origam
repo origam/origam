@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0">
   <de:DataEntity
     asi:abstract="false"
     ade:audit="None"
     x:id="42013bb5-6ad9-456e-bf21-269a8d30867a"
     asi:name="OrigamSpreadsheetRow"
     ade:readOnly="false">
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:excludeFromAllFields="false"
-      x:id="f0ecf1a6-9af9-4a5e-8f21-41f743b1eb1d"
-      adec:isPrimaryKey="false"
-      asi:name="PageBreak"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
     <df:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -37,6 +34,17 @@
       x:id="232feef8-d188-478b-803a-959aa260f69b"
       adec:isPrimaryKey="true"
       asi:name="Index"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      x:id="f0ecf1a6-9af9-4a5e-8f21-41f743b1eb1d"
+      adec:isPrimaryKey="false"
+      asi:name="PageBreak"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <eri:EntityRelation

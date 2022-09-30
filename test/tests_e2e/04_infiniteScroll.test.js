@@ -4,7 +4,7 @@ const { sleep, openMenuItem, login, waitForRowCountData, catchRequests, clickAnd
   getTableData
 } = require('./testTools');
 const {widgetsMenuItemId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
-const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./consoleTools");
+const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
 
 let browser;
 let page;

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="f4c92dce-d634-4179-adb4-98876b870cc7"
@@ -19,19 +25,6 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="4e46424b-349f-4314-bc75-424206cd35b0"
-      asi:name="GetById">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Security/DataStructure/Security/UserProfile.origam#UserProfile/BusinessPartner/cc61170c-8e81-44bc-bebc-25c7c672ebdb"
-        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
-        x:id="1683ad85-b6b8-478a-86d9-634e8233f8d4"
-        asi:name="BusinessPartner_GetId"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
       x:id="46fd2484-4506-45a2-8a96-7855ea116210"
       asi:name="GetByUserEmail">
       <dsfsf:DataStructureFilterSetFilter
@@ -40,6 +33,19 @@
         dsfsf:filter="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetByUserEmail/27969716-fa79-4aa9-ba8c-3fcd50ed383e"
         x:id="83d81920-c811-4acd-9232-e659d67b0306"
         asi:name="BusinessPartner_GetByUserEmail"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="4e46424b-349f-4314-bc75-424206cd35b0"
+      asi:name="GetById">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Security/DataStructure/Security/UserProfile.origam#UserProfile/BusinessPartner/cc61170c-8e81-44bc-bebc-25c7c672ebdb"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="1683ad85-b6b8-478a-86d9-634e8233f8d4"
+        asi:name="BusinessPartner_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
     <dsfs:DataStructureFilterSet

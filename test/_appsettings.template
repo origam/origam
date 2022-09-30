@@ -82,11 +82,6 @@
 				  "TimeSeparator": ":",
 				  "DateTimeSeparator": " ",
 				  "DateSequence": "MonthDayYear"
-				},
-				"DefaultDateFormats":{
-				  "Short": "MM/dd/yyyy",
-				  "Long": "MM/dd/yyyy HH:mm:ss",
-				  "Time": "HH:mm:ss"
 				}
             },
             {
@@ -99,11 +94,6 @@
 				  "TimeSeparator": ":",
 				  "DateTimeSeparator": " ",
 				  "DateSequence": "DayMonthYear"
-				},
-				"DefaultDateFormats":{
-				  "Short": "dd.MM.yyyy",
-				  "Long": "dd.MM.yyyy HH:mm:ss",
-				  "Time": "HH:mm:ss"
 				}
             },      
 			{
@@ -116,11 +106,6 @@
 				  "TimeSeparator": ":",
 				  "DateTimeSeparator": " ",
 				  "DateSequence": "DayMonthYear"
-				},
-				"DefaultDateFormats":{
-				  "Short": "dd.MM.yyyy",
-				  "Long": "dd.MM.yyyy HH:mm:ss",
-				  "Time": "HH:mm:ss"
 				}
             }
         ]

@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 const { backEndUrl} = require('./additionalConfig');
 const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount} = require('./testTools');
 const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader} = require("./modelIds");
-const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./consoleTools");
+const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
 
 let browser;
 let page;

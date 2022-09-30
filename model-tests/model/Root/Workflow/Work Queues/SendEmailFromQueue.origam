@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wr="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowReference/6.0.0" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wr="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowReference/6.0.0"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="b882bf76-fea8-4b38-82bd-f41e851527fe"
@@ -24,27 +34,9 @@
       smct:serviceMethod="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/92bafb78-2b5c-479a-902b-8c65162a659d">
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="c17a276a-d9f8-49eb-b04b-5adba99432ef"
-        asi:name="Workflow"
-        smcp:serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Workflow/186c6a9c-8613-4251-8be8-48eded88f3c2">
-        <wr:WorkflowReference
-          asi:abstract="false"
-          x:id="67b40b7b-7827-41f6-bd34-242b9dc7a757"
-          asi:name="SendEmail"
-          wr:workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
         x:id="2fd02834-d69c-49a9-8a79-b526370e1840"
         asi:name="Parameters"
         smcp:serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Parameters/3aca11ea-3cb9-4e2f-96fa-ec7182605371">
-        <cr:WorkflowContextReference
-          asi:abstract="false"
-          cr:castToDataType="String"
-          cr:contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
-          x:id="97a7cc91-cc0f-4169-976d-04cdac3898b5"
-          asi:name="subject"
-          cr:xPath="/ROOT/WorkQueueEntry/@Subject" />
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
@@ -56,6 +48,13 @@
           asi:abstract="false"
           cr:castToDataType="String"
           cr:contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
+          x:id="3c4b6b0b-653b-4e52-b068-e8d01c91bd0f"
+          asi:name="body"
+          cr:xPath="/ROOT/WorkQueueEntry/MessageBody" />
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
           x:id="92bf2182-d43c-427b-8ba4-d5afea75d73a"
           asi:name="attachmentRecordId"
           cr:xPath="/ROOT/WorkQueueEntry/@Id" />
@@ -63,16 +62,16 @@
           asi:abstract="false"
           cr:castToDataType="String"
           cr:contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
-          x:id="aa440d47-3217-49f7-9d89-e5dfbfd18cd4"
-          asi:name="recipientEmail"
-          cr:xPath="/ROOT/WorkQueueEntry/Recipient" />
+          x:id="97a7cc91-cc0f-4169-976d-04cdac3898b5"
+          asi:name="subject"
+          cr:xPath="/ROOT/WorkQueueEntry/@Subject" />
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
           cr:contextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
-          x:id="3c4b6b0b-653b-4e52-b068-e8d01c91bd0f"
-          asi:name="body"
-          cr:xPath="/ROOT/WorkQueueEntry/MessageBody" />
+          x:id="aa440d47-3217-49f7-9d89-e5dfbfd18cd4"
+          asi:name="recipientEmail"
+          cr:xPath="/ROOT/WorkQueueEntry/Recipient" />
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
@@ -87,6 +86,17 @@
           x:id="c8ce6437-c9a6-4751-b923-06c8305e4a79"
           asi:name="recipientBCCEmail"
           cr:xPath="/ROOT/WorkQueueEntry/BCC" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="c17a276a-d9f8-49eb-b04b-5adba99432ef"
+        asi:name="Workflow"
+        smcp:serviceMethodParameter="Root/Service/WorkflowService.origam#WorkflowService/ExecuteWorkflow/Workflow/186c6a9c-8613-4251-8be8-48eded88f3c2">
+        <wr:WorkflowReference
+          asi:abstract="false"
+          x:id="67b40b7b-7827-41f6-bd34-242b9dc7a757"
+          asi:name="SendEmail"
+          wr:workflow="Root/Workflow/SendEmail.origam#SendEmail/6e6d4e02-812a-4c95-afd1-eb2428802e2b" />
       </smcp:ServiceMethodCallParameter>
     </smct:WorkflowTask>
   </w:Workflow>

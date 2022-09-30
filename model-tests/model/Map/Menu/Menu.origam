@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2" xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0">
+  <frmi:MenuItem
+    asi:abstract="false"
+    frmi:autoSaveOnListRecordChange="false"
+    ami:displayName="Map Element - Edit Mode"
+    x:id="29f3248b-cb50-497a-8d73-4ddc611c333a"
+    asi:name="MapElement_EditMode"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    frmi:readOnlyAccess="false"
+    frmi:refreshAfterSaveType="RefreshChangedRecords"
+    frmi:refreshOnFocus="false"
+    frmi:refreshPortalAfterSave="false"
+    frmi:requestSaveAfterUpdate="false"
+    ami:roles="*"
+    frmi:screen="Map/FormControlSet/Map/MapElement.origam#MapElement/cd697d73-6d26-4d2a-82f4-a483dc452dd0" />
   <frmi:MenuItem
     asi:abstract="false"
     frmi:autoRefreshInterval="Map/DataConstant/Map/MapRefreshInterval.origam#MapRefreshInterval/32a71da6-cbb6-4eeb-b8e0-a13909cdee35"
@@ -17,20 +37,4 @@
     frmi:requestSaveAfterUpdate="false"
     ami:roles="*"
     frmi:screen="Map/FormControlSet/Map/MapElement_DisplayAll.origam#MapElement_DisplayAll/a7acf9d2-11dc-436b-9f7f-fe2a56758aea" />
-  <frmi:MenuItem
-    asi:abstract="false"
-    frmi:autoSaveOnListRecordChange="false"
-    ami:displayName="Map Element - Edit Mode"
-    x:id="29f3248b-cb50-497a-8d73-4ddc611c333a"
-    asi:name="MapElement_EditMode"
-    ami:openExclusively="false"
-    ami:order="100"
-    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
-    frmi:readOnlyAccess="false"
-    frmi:refreshAfterSaveType="RefreshChangedRecords"
-    frmi:refreshOnFocus="false"
-    frmi:refreshPortalAfterSave="false"
-    frmi:requestSaveAfterUpdate="false"
-    ami:roles="*"
-    frmi:screen="Map/FormControlSet/Map/MapElement.origam#MapElement/cd697d73-6d26-4d2a-82f4-a483dc452dd0" />
 </x:file>

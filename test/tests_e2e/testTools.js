@@ -1,4 +1,5 @@
 const {userName, password} = require("./additionalConfig");
+const fs = require('fs');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -47,7 +48,7 @@ function xPathContainsClass(className){
 
 async function waitForRowCount(page, dataViewId, expectedRowCount){
   const modelInstanceId = dataViewId.substring(9);
-  const timeoutMs = 10000;
+  const timeoutMs = 10_000;
   const evalDelayMs = 50;
   let tableData
   for (let i = 0; i < timeoutMs / evalDelayMs; i++) {
@@ -65,20 +66,39 @@ async function waitForRowCount(page, dataViewId, expectedRowCount){
   expect(rowCount).toBe(expectedRowCount);
 }
 
+async function takeScreenShot(page, name){
+  const screenDir = process.platform === "win32"
+    ? "screenshots"
+    : "/home/origam/HTML5/screenshots";
+  if(!fs.existsSync(screenDir)){
+    fs.mkdirSync(screenDir)
+  }
+  const dateTime =new Date().toISOString()
+    .replace(/T/, ' ')
+    .replace(/Z/, '')
+    .replace(/\./, '_')
+    .replace(/:/, '_')
+    .replace(/:/, '_')
+  console.log("dateTime: "+ dateTime)
+  await page.screenshot({path: `${screenDir}/${name}_${dateTime}.png`});
+}
+
 async function waitForRowCountData(page, dataViewId, expectedRowCount) {
+  let countData;
   for (let i = 0; i < 200; i++) {
-    const countData = await getRowCountData(page, dataViewId)
+    countData = await getRowCountData(page, dataViewId)
     if(countData.rowCount === expectedRowCount.toString()){
       return countData;
     }
     await sleep(50);
   }
-  throw new Error("Row count did not change before timeout");
+  await takeScreenShot(page, `Error expectedRowCount ${expectedRowCount} `);
+  throw new Error(`Row count did not change before timeout, expectedRowCount: ${expectedRowCount},  countData.rowCount: ${countData.rowCount}`);
 }
 
 async function getTableData(page, dataViewId){
   const modelInstanceId = dataViewId.substring(9);
-  const timeoutMs = 10000;
+  const timeoutMs = 10_000;
   const evalDelayMs = 50;
   let tableData
   for (let i = 0; i < timeoutMs / evalDelayMs; i++) {
@@ -106,7 +126,7 @@ async function getRowCountData(page, dataViewId) {
 }
 
 async function waitForRowSelected(page, dataViewId, rowNumber){
-  const timeoutMs = 10000;
+  const timeoutMs = 10_000;
   const testDelayMs = 50;
   let rowCountData;
   for (let i = 0; i < timeoutMs / testDelayMs ; i++) {
@@ -163,16 +183,28 @@ async function typeAndWaitForSelector(args){
 }
 
 async function clickAndWaitForSelector(args){
-  await args.clickable.click();
+  try{
+    await args.clickable.click();
+  }catch(error){
+    console.log(error);
+    await sleep(200);
+  }
   for (let i = 0; i < 3; i++) {
     try{
       return await args.page.waitForSelector(
         args.selector,
-        {visible: true, timeout: 3000}
+        {visible: true, timeout: 5000}
       )
     }catch(error){
-      console.log(error);
-      await args.clickable.click();
+      if(error.name !== "TimeoutError"){
+        console.log(error);
+      }
+      try {
+        await args.clickable.click();
+      }catch(error){
+        console.log(error)
+        await args.page.evaluate(x => x.click(), args.clickable);
+      }
     }
   }
   throw Error(`${args.selector} did not appear before timeout`);
@@ -187,13 +219,82 @@ async function clickAndWaitForXPath(args){
         { visible: true, timeout: 3000 }
       );
     }catch(error){
-      console.log(error);
+      if(error.name !== "TimeoutError"){
+        console.log(error);
+      }
       await args.clickable.click();
     }
   }
   throw Error(`${args.xPath} did not appear before timeout`);
 }
 
+async function switchToFormPerspective(args){
+  const switchButton = await args.page.waitForSelector(
+    `.formPerspectiveButton`,
+    {visible: true});
+  await sleep(300);
+
+  await clickAndWaitForSelector({
+    page: args.page,
+    clickable: switchButton,
+    selector:`#editor_${args.aPropertyId}`
+  });
+}
+
+async function switchToTablePerspective(args){
+  const switchButton = await args.page.waitForSelector(
+    `.tablePerspectiveButton`,
+    {visible: true});
+  await sleep(300);
+
+  await clickAndWaitForSelector({
+    page: args.page,
+    clickable: switchButton,
+    selector:`.tablePerspectiveDirector`
+  });
+}
+
+async function inputByPressingKeys(args){
+  for (const key of args.value) {
+    await args.page.keyboard.press(key);
+    await sleep(100);
+  }
+}
+
+async function switchLanguageTo(args){
+
+  const languageLinkContainer = await args.page.waitForSelector(
+    "#languageLinkContainer",
+    {visible: true});
+  await sleep(300);
+
+  await args.page.evaluate((container, locale) =>
+      Array.from(container.children)
+        .filter(element=> element.tagName === "A" &&  element.attributes["value"].value === locale)
+        .forEach(element => element.click())
+    ,languageLinkContainer, args.locale);
+}
+
+async function waitForFocus(args){
+
+  const element = await args.page.waitForSelector(
+    "#" + args.elementId,
+    {visible: true});
+
+  await sleep(300);
+
+  for (let i = 0; i < 10 ; i++) {
+    await args.page.evaluate(x => x.focus(), element);
+    await sleep(100);
+    const focusedElementId = await args.page.evaluate(x => document.activeElement.attributes["id"].nodeValue);
+    if(focusedElementId === args.elementId){
+      return;
+    }
+  }
+  throw new Error("Could not set focus to:" + args.elementId);
+}
+
 module.exports = {sleep, xPathContainsClass, getImage, openMenuItem, login, getRowCountData, waitForRowCountData,
   getTableData, waitForRowCount, catchRequests, waitForRowSelected, clickAndWaitForXPath, clickAndWaitForSelector,
-  typeAndWaitForSelector};
+  typeAndWaitForSelector, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus,
+  switchToTablePerspective};
