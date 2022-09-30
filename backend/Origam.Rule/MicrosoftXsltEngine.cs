@@ -59,9 +59,30 @@ namespace Origam.Rule
             XsltArgumentList xslArg = new XsltArgumentList();
             xslArg.AddExtensionObject(XmlTools.AsNameSpace, ruleEngine);
             xslArg.AddExtensionObject("http://xsl.origam.com/crypto", new XslCryptoFunctions());
-            xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
-            xslArg.AddExtensionObject(ExsltNamespaces.Strings, new ExsltStrings());
-            xslArg.AddExtensionObject(ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.Strings, new ExsltStrings());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.Math, new ExsltMath());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.Random, new ExsltRandom());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.Sets, new ExsltSets());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnDatesAndTimes, new GdnDatesAndTimes());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnMath, new GdnMath());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnRegularExpressions, new GdnRegularExpressions());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnSets, new GdnSets());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnStrings, new GdnStrings());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnDynamic, new GdnDynamic());
             // add xsl function from services
             IBusinessServicesService bsService =
                 ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
@@ -273,13 +294,30 @@ namespace Origam.Rule
             XsltArgumentList xslArg = new XsltArgumentList();
             xslArg.AddExtensionObject(
                 XmlTools.AsNameSpace, ruleEngine);
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
+            xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes,
+                new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(
                 ExsltNamespaces.Strings, new ExsltStrings());
             xslArg.AddExtensionObject(
-                ExsltNamespaces.RegularExpressions, 
-                new ExsltRegularExpressions());
+                ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.Math, new ExsltMath());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.Random, new ExsltRandom());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.Sets, new ExsltSets());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnDatesAndTimes, new GdnDatesAndTimes());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnMath, new GdnMath());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnRegularExpressions, new GdnRegularExpressions());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnSets, new GdnSets());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnStrings, new GdnStrings());
+            xslArg.AddExtensionObject(
+                ExsltNamespaces.GdnDynamic, new GdnDynamic());
             // add xsl function from services
             IBusinessServicesService bsService =
                 ServiceManager.Services.GetService(
