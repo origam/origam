@@ -34,7 +34,6 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for AncestorItem.
 	/// </summary>
-	[EntityName("SchemaItemAncestor")]
 	[XmlModelRoot("ancestor")]
     [ClassMetaVersion("6.0.0")]
 	public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2, 

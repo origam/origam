@@ -26,7 +26,6 @@ using System.Linq;
 using MoreLinq;
 using Origam.OrigamEngine;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;

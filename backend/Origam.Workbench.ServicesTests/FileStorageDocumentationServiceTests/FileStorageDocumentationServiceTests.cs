@@ -22,15 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service;
-using Origam.DA.Service_net2Tests;
 using Origam.Workbench.Services;
 
 
