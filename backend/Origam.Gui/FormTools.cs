@@ -57,15 +57,15 @@ namespace Origam.Gui
             return result;
         }        
         
-        public static bool IsFormMenuInitialScreen(AbstractMenuItem formRef)
+        public static bool IsFormMenuInitialScreen(AbstractMenuItem menuItem)
         {
-            if (formRef.AuthorizationContext == "*")
+            if (menuItem.AuthorizationContext == "*")
             {
                 return false;
             }
 
             string authContext = SecurityManager
-                .GetInitialScreenRoles(formRef.AuthorizationContext);
+                .GetInitialScreenRoles(menuItem.AuthorizationContext);
             return SecurityManager
                 .GetAuthorizationProvider()
                 .Authorize(SecurityManager.CurrentPrincipal, authContext);
