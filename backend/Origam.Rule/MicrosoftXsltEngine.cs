@@ -54,45 +54,7 @@ namespace Origam.Rule
             RuleEngine ruleEngine, IDataStructure outputStructure, bool validateOnly)
         {
             if (ruleEngine == null) throw new InvalidOperationException("RuleEngine is not set");
-
-            // ORIGAM Business Rules Extension object
-            XsltArgumentList xslArg = new XsltArgumentList();
-            xslArg.AddExtensionObject(XmlTools.AsNameSpace, ruleEngine);
-            xslArg.AddExtensionObject("http://xsl.origam.com/crypto", new XslCryptoFunctions());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.Strings, new ExsltStrings());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.RegularExpressions, new ExsltRegularExpressions());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.Math, new ExsltMath());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.Random, new ExsltRandom());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.Sets, new ExsltSets());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.GdnDatesAndTimes, new GdnDatesAndTimes());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.GdnMath, new GdnMath());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.GdnRegularExpressions, new GdnRegularExpressions());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.GdnSets, new GdnSets());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.GdnStrings, new GdnStrings());
-            xslArg.AddExtensionObject(
-                ExsltNamespaces.GdnDynamic, new GdnDynamic());
-            // add xsl function from services
-            IBusinessServicesService bsService =
-                ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-            foreach (IXslFunctionProvider xslFunctionProvider
-                in bsService.XslFunctionProviderServiceAgents)
-            {
-                xslArg.AddExtensionObject(xslFunctionProvider.NameSpaceUri,
-                    xslFunctionProvider.XslFunctions);                
-            }
-
+            var xslArg = BuildArgumentListWithFunctions(ruleEngine);
             // If source xml is completely empty (not even a root element), we add one
             // with a name of dataset.datasetname (that's how root element looks like when
             // data come from a dataset.
@@ -282,20 +244,17 @@ namespace Origam.Rule
             }
             return resultDoc;
         }
-        internal override void Transform(
-            IXPathNavigable input, object xsltEngine, Hashtable parameters, 
-            RuleEngine ruleEngine, Stream output)
+
+        private static XsltArgumentList BuildArgumentListWithFunctions(
+            RuleEngine ruleEngine)
         {
-            if(ruleEngine == null)
-            {
-                throw new InvalidOperationException("RuleEngine is not set");
-            }
             // ORIGAM Business Rules Extension object
             XsltArgumentList xslArg = new XsltArgumentList();
+            xslArg.AddExtensionObject(XmlTools.AsNameSpace, ruleEngine);
+            xslArg.AddExtensionObject("http://xsl.origam.com/crypto",
+                new XslCryptoFunctions());
             xslArg.AddExtensionObject(
-                XmlTools.AsNameSpace, ruleEngine);
-            xslArg.AddExtensionObject(ExsltNamespaces.DatesAndTimes,
-                new ExsltDatesAndTimes());
+                ExsltNamespaces.DatesAndTimes, new ExsltDatesAndTimes());
             xslArg.AddExtensionObject(
                 ExsltNamespaces.Strings, new ExsltStrings());
             xslArg.AddExtensionObject(
@@ -320,14 +279,27 @@ namespace Origam.Rule
                 ExsltNamespaces.GdnDynamic, new GdnDynamic());
             // add xsl function from services
             IBusinessServicesService bsService =
-                ServiceManager.Services.GetService(
-                    typeof(IBusinessServicesService)) as IBusinessServicesService;
-            foreach(IXslFunctionProvider xslFunctionProvider
-                in bsService.XslFunctionProviderServiceAgents)
+                ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as
+                    IBusinessServicesService;
+            foreach (IXslFunctionProvider xslFunctionProvider
+                     in bsService.XslFunctionProviderServiceAgents)
             {
                 xslArg.AddExtensionObject(xslFunctionProvider.NameSpaceUri,
                     xslFunctionProvider.XslFunctions);
             }
+
+            return xslArg;
+        }
+
+        internal override void Transform(
+            IXPathNavigable input, object xsltEngine, Hashtable parameters, 
+            RuleEngine ruleEngine, Stream output)
+        {
+            if(ruleEngine == null)
+            {
+                throw new InvalidOperationException("RuleEngine is not set");
+            }
+            var xslArg = BuildArgumentListWithFunctions(ruleEngine);
             MemoryStream msTransform = new MemoryStream();
             try
             {
