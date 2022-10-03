@@ -46,6 +46,10 @@ import { findStrings } from "xmlInterpreters/xmlUtils";
 import { ExtraButtonsContext } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { IProperty } from "model/entities/types/IProperty";
+import { MobileState } from "model/entities/MobileState/MobileState";
+import { getActions } from "model/selectors/DataView/getMobileActions";
+import { IActionType } from "model/entities/types/IAction";
+import { MobileAction, MobileActionLink } from "gui/connections/MobileComponents/Form/MobileAction";
 
 
 @inject(({dataView}) => {
@@ -53,6 +57,7 @@ import { IProperty } from "model/entities/types/IProperty";
 })
 @observer
 export class MobileFormBuilder extends React.Component<{
+  mobileState: MobileState
   xmlFormRootObject?: any;
   dataView?: IDataView;
 }> {
@@ -138,6 +143,9 @@ export class MobileFormBuilder extends React.Component<{
 
     function recursiveBuild(formItem: FormItem): JSX.Element | undefined {
       if (formItem.xfo.name === "FormRoot") {
+        const actions = getActions(self.props.dataView, self.props.mobileState);
+        const noGroupActions = actions.filter(action => !action.groupId)
+
         return (
           <FormRoot
             key={formItem.xfo.$iid}
@@ -163,6 +171,18 @@ export class MobileFormBuilder extends React.Component<{
                 )
               }
             </ExtraButtonsContext.Consumer>
+            {/*<div>*/}
+              {noGroupActions.map(action =>
+                action.type === IActionType.Dropdown
+                ? <MobileActionLink
+                    linkAction={action}
+                    actions={actions.filter(subAction => subAction.groupId === action.id)}
+                    mobileState={self.props.mobileState}/>
+                : <MobileAction
+                  action={action}
+                  mobileState={self.props.mobileState}/>
+              )}
+            {/*</div>*/}
           </FormRoot>
         );
       } else if (formItem.xfo.name === "FormElement" && formItem.xfo.attributes.Type === "FormSection") {
@@ -313,7 +333,7 @@ function isFirstFormSection(formItem: FormItem) {
     if (parent.children.indexOf(formItem) !== 0) {
       return false;
     }
-    parent = formItem.parent;
+    parent = parent.parent;
   }
   return true;
 }
