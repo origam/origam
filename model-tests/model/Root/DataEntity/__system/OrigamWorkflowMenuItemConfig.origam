@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,48 +25,6 @@
     tmi:mappedObjectName="OrigamWorkflowMenuItemConfig"
     asi:name="OrigamWorkflowMenuItemConfig"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
-      x:id="97d8e86d-3b15-4e21-a9d1-5c5ad0565f78" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="3cbfda58-75b3-4d1f-a108-8e1b20184ca8"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="IsRepeatable"
-      asi:name="IsRepeatable"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="accbf8be-6068-4fc4-b231-c89ea03c0d37"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="ProfileId"
-      asi:name="ProfileId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="088a0676-d35a-4f5b-9126-f2a0dce6e54f"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="WorkflowMenuItemId"
-      asi:name="WorkflowMenuItemId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
     <dei:DataEntityIndex
       asi:abstract="false"
       dei:generateDeploymentScript="false"
@@ -60,16 +33,16 @@
       dei:unique="false">
       <deif:DataEntityIndexField
         asi:abstract="false"
-        deif:field="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/ProfileId/accbf8be-6068-4fc4-b231-c89ea03c0d37"
-        x:id="ea7fc4be-d64e-4c11-8a76-c7f70fd97797"
-        asi:name="0_ProfileId"
-        deif:sortOrder="Ascending" />
-      <deif:DataEntityIndexField
-        asi:abstract="false"
         deif:field="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/WorkflowMenuItemId/088a0676-d35a-4f5b-9126-f2a0dce6e54f"
         x:id="ab4f4072-65db-4ee8-9f9f-e972f01d7a05"
         asi:name="1_WorkflowMenuItemId"
         deif:ordinalPosition="1"
+        deif:sortOrder="Ascending" />
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/ProfileId/accbf8be-6068-4fc4-b231-c89ea03c0d37"
+        x:id="ea7fc4be-d64e-4c11-8a76-c7f70fd97797"
+        asi:name="0_ProfileId"
         deif:sortOrder="Ascending" />
     </dei:DataEntityIndex>
     <ef:EntityFilter
@@ -127,17 +100,6 @@
         adec:xmlMappingType="Element">
         <fcp:FunctionCallParameter
           asi:abstract="false"
-          x:id="eed1a974-1616-4426-ac60-0439b4afa15d"
-          asi:name="Left"
-          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-          <ecr:EntityColumnReference
-            asi:abstract="false"
-            ecr:field="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/ProfileId/accbf8be-6068-4fc4-b231-c89ea03c0d37"
-            x:id="5593689b-26e1-4cdc-b68a-395cfc267409"
-            asi:name="ProfileId" />
-        </fcp:FunctionCallParameter>
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
           x:id="15e7c626-0d77-4eea-95c5-821f53ba621a"
           asi:name="Right"
           fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
@@ -147,19 +109,72 @@
             asi:name="parProfileId"
             pr:parameter="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/parProfileId/7ec43eda-7c9a-44df-8261-230a6187c281" />
         </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="eed1a974-1616-4426-ac60-0439b4afa15d"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/ProfileId/accbf8be-6068-4fc4-b231-c89ea03c0d37"
+            x:id="5593689b-26e1-4cdc-b68a-395cfc267409"
+            asi:name="ProfileId" />
+        </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
-    <sip:Parameter
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      sip:allowNulls="false"
-      sip:dataType="UniqueIdentifier"
-      x:id="7ec43eda-7c9a-44df-8261-230a6187c281"
-      asi:name="parProfileId" />
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="088a0676-d35a-4f5b-9126-f2a0dce6e54f"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="WorkflowMenuItemId"
+      asi:name="WorkflowMenuItemId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="3cbfda58-75b3-4d1f-a108-8e1b20184ca8"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="IsRepeatable"
+      asi:name="IsRepeatable"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="accbf8be-6068-4fc4-b231-c89ea03c0d37"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="ProfileId"
+      asi:name="ProfileId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="97d8e86d-3b15-4e21-a9d1-5c5ad0565f78" />
     <sip:Parameter
       asi:abstract="false"
       sip:allowNulls="false"
       sip:dataType="UniqueIdentifier"
       x:id="32bfcae5-0f50-469f-a5d4-71233696d22d"
       asi:name="parWorkflowMenuItemId" />
+    <sip:Parameter
+      asi:abstract="false"
+      sip:allowNulls="false"
+      sip:dataType="UniqueIdentifier"
+      x:id="7ec43eda-7c9a-44df-8261-230a6187c281"
+      asi:name="parProfileId" />
   </tmi:DataEntity>
 </x:file>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1">
   <w:Workflow
     asi:abstract="true"
     x:id="85c55e5a-8e3c-4ae4-b44d-d652978a4381"
@@ -17,16 +21,16 @@
       asi:abstract="true"
       cs:dataType="UniqueIdentifier"
       cs:disableConstraints="false"
-      x:id="d06b2742-4c09-4338-975b-599544b7693f"
+      x:id="8887e49e-3f4d-4d8e-89a5-8b63ef0e36a4"
       cs:isReturnValue="false"
-      asi:name="ConnectionId" />
+      asi:name="ConfigId" />
     <cs:ContextStore
       asi:abstract="true"
       cs:dataType="UniqueIdentifier"
       cs:disableConstraints="false"
-      x:id="8887e49e-3f4d-4d8e-89a5-8b63ef0e36a4"
+      x:id="d06b2742-4c09-4338-975b-599544b7693f"
       cs:isReturnValue="false"
-      asi:name="ConfigId" />
+      asi:name="ConnectionId" />
     <cs:ContextStore
       asi:abstract="true"
       cs:dataType="UniqueIdentifier"

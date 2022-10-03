@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0"
+  xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0">
   <ci:Control
     asi:abstract="false"
     x:id="d657c222-f526-4a88-9e06-e18150a7daf8"
@@ -12,10 +16,24 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="e4c1326b-49a9-4337-a0d6-3eac611662ba"
+      x:id="01a26128-30cf-49a4-b045-e553331a5bcf"
       cpi:localizable="false"
-      asi:name="ButtonsOnly"
-      cpi:propertyType="Boolean" />
+      asi:name="DataMember"
+      cpi:propertyType="String" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="5f3bb279-07c0-473a-b60c-9551c82b88a9"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
+      x:id="7737ce00-fea0-4577-bbd9-d9444e39b7cd"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
@@ -33,20 +51,6 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="e66228a5-6e83-4ea7-8932-7b27a40921bf"
-      cpi:localizable="false"
-      asi:name="ReportId"
-      cpi:propertyType="UniqueIdentifier" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
-      x:id="5f3bb279-07c0-473a-b60c-9551c82b88a9"
-      cpi:localizable="false"
-      asi:name="Top"
-      cpi:propertyType="Integer" />
-    <cpi:ControlPropertyItem
-      asi:abstract="false"
-      cpi:bindOnly="false"
       x:id="d3d9a360-6788-4bfc-9ccf-ca478cfd1dc9"
       cpi:localizable="false"
       asi:name="TabIndex"
@@ -54,16 +58,16 @@
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="7737ce00-fea0-4577-bbd9-d9444e39b7cd"
+      x:id="e4c1326b-49a9-4337-a0d6-3eac611662ba"
       cpi:localizable="false"
-      asi:name="Width"
-      cpi:propertyType="Integer" />
+      asi:name="ButtonsOnly"
+      cpi:propertyType="Boolean" />
     <cpi:ControlPropertyItem
       asi:abstract="false"
       cpi:bindOnly="false"
-      x:id="01a26128-30cf-49a4-b045-e553331a5bcf"
+      x:id="e66228a5-6e83-4ea7-8932-7b27a40921bf"
       cpi:localizable="false"
-      asi:name="DataMember"
-      cpi:propertyType="String" />
+      asi:name="ReportId"
+      cpi:propertyType="UniqueIdentifier" />
   </ci:Control>
 </x:file>

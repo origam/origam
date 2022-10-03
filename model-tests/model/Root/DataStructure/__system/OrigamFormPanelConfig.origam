@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="218890ad-cd12-43a9-9166-4a02028d6125"
@@ -19,28 +25,15 @@
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
-      x:id="59d68a5a-0f9c-405b-957b-1d698535310e"
-      asi:name="GetByForm">
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
-        dsfsf:filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetPanel/3d3fb84c-7307-40e4-a863-8f9447dc6ad7"
-        x:id="e49fdb53-4aca-49f4-87ca-18fd967db122"
-        asi:name="OrigamFormPanelConfig_GetPanel"
-        dsfsf:passWhenParameterMatch="false" />
-      <dsfsf:DataStructureFilterSetFilter
-        asi:abstract="false"
-        dsfsf:entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
-        dsfsf:filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetProfile/c68538bf-4be4-4456-9a1e-784d6057b45c"
-        x:id="57f54394-c0ff-4eef-aebd-7203ab2ab1b3"
-        asi:name="OrigamFormPanelConfig_GetProfile"
-        dsfsf:passWhenParameterMatch="false" />
-    </dsfs:DataStructureFilterSet>
-    <dsfs:DataStructureFilterSet
-      asi:abstract="false"
-      dsfs:dynamic="false"
       x:id="3d5bb832-50d7-44d8-a7c5-abdf88d5df74"
       asi:name="GetByWorkflow">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+        dsfsf:filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetWorkflow/6f160c78-95d9-41e4-9e18-97ab396cfcb0"
+        x:id="06046419-0e06-4c15-aeb4-87338625abdd"
+        asi:name="OrigamFormPanelConfig_GetWorkflow"
+        dsfsf:passWhenParameterMatch="false" />
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
@@ -55,12 +48,25 @@
         x:id="b7010d56-afcb-416d-838e-417dc9e49368"
         asi:name="OrigamFormPanelConfig_GetPanel"
         dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="59d68a5a-0f9c-405b-957b-1d698535310e"
+      asi:name="GetByForm">
       <dsfsf:DataStructureFilterSetFilter
         asi:abstract="false"
         dsfsf:entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
-        dsfsf:filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetWorkflow/6f160c78-95d9-41e4-9e18-97ab396cfcb0"
-        x:id="06046419-0e06-4c15-aeb4-87338625abdd"
-        asi:name="OrigamFormPanelConfig_GetWorkflow"
+        dsfsf:filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetProfile/c68538bf-4be4-4456-9a1e-784d6057b45c"
+        x:id="57f54394-c0ff-4eef-aebd-7203ab2ab1b3"
+        asi:name="OrigamFormPanelConfig_GetProfile"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/OrigamFormPanelConfig/ce4e5ce2-cf20-45cf-8b22-484c8e9bec4b"
+        dsfsf:filter="Root/DataEntity/__system/OrigamFormPanelConfig.origam#OrigamFormPanelConfig/GetPanel/3d3fb84c-7307-40e4-a863-8f9447dc6ad7"
+        x:id="e49fdb53-4aca-49f4-87ca-18fd967db122"
+        asi:name="OrigamFormPanelConfig_GetPanel"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
   </ds:DataStructure>

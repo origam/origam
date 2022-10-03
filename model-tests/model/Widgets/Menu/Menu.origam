@@ -1,51 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2" xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0">
-  <s:MenuItem
-    asi:abstract="false"
-    ami:alwaysOpenNew="false"
-    ami:displayName="_hidden"
-    x:id="3b4b2244-6fba-4d7e-a36a-fdd40ee711f9"
-    s:isHidden="true"
-    asi:name="_hidden"
-    ami:order="100"
-    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6">
-    <frmi:MenuItem
-      asi:abstract="false"
-      ami:alwaysOpenNew="false"
-      frmi:autoSaveOnListRecordChange="false"
-      ami:displayName="All Data Types Edit 1"
-      x:id="213e6abf-4123-42ce-bba0-ae63e5b4896c"
-      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
-      asi:name="AllDataTypes_Edit1"
-      ami:openExclusively="false"
-      ami:order="100"
-      frmi:readOnlyAccess="false"
-      frmi:recordEditMethod="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
-      frmi:refreshAfterSaveType="RefreshChangedRecords"
-      frmi:refreshOnFocus="false"
-      frmi:refreshPortalAfterSave="false"
-      frmi:requestSaveAfterUpdate="false"
-      ami:roles="AllDataTypes"
-      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
-    <frmi:MenuItem
-      asi:abstract="false"
-      ami:alwaysOpenNew="false"
-      frmi:autoSaveOnListRecordChange="false"
-      ami:displayName="All Data Types Edit 2"
-      x:id="c8c2158d-ff28-4c6c-8a02-dd6f98ae1a64"
-      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
-      asi:name="AllDataTypes_Edit2"
-      ami:openExclusively="false"
-      ami:order="100"
-      frmi:readOnlyAccess="false"
-      frmi:recordEditMethod="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
-      frmi:refreshAfterSaveType="RefreshChangedRecords"
-      frmi:refreshOnFocus="false"
-      frmi:refreshPortalAfterSave="false"
-      frmi:requestSaveAfterUpdate="false"
-      ami:roles="AllDataTypes"
-      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
-  </s:MenuItem>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0">
   <s:MenuItem
     asi:abstract="false"
     ami:displayName="Widgets"
@@ -58,10 +17,9 @@
       asi:abstract="false"
       ami:alwaysOpenNew="false"
       frmi:autoSaveOnListRecordChange="false"
-      ami:displayName="All Data Types"
-      x:id="423a08e5-b1cf-4341-a342-d9b57667d1b9"
-      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
-      asi:name="AllDataTypes"
+      ami:displayName="InitialScreen"
+      x:id="1369073c-c88a-49a5-be3f-17c1b60030e8"
+      asi:name="InitialScreen"
       ami:openExclusively="false"
       ami:order="100"
       frmi:readOnlyAccess="false"
@@ -69,8 +27,8 @@
       frmi:refreshOnFocus="false"
       frmi:refreshPortalAfterSave="false"
       frmi:requestSaveAfterUpdate="false"
-      ami:roles="AllDataTypes"
-      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+      ami:roles="InitialScreen"
+      frmi:screen="Widgets/FormControlSet/Widgets/InitialScreen.origam#InitialScreen/42e20a31-40d9-4dd2-8501-4a8e0a6d4e03" />
     <frmi:MenuItem
       asi:abstract="false"
       ami:alwaysOpenNew="false"
@@ -92,6 +50,23 @@
       ami:roles="AllDataTypes"
       frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d"
       frmi:sortSet="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/Default/a6af8408-6d99-45f8-9084-0599c1cd0518" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types"
+      x:id="423a08e5-b1cf-4341-a342-d9b57667d1b9"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetTop30/89c90dee-440b-4b5c-b977-4fb472c43329"
+      asi:name="AllDataTypes"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="AllDataTypes"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
     <s:MenuItem
       asi:abstract="false"
       ami:displayName="Dropdown"
@@ -139,36 +114,6 @@
       <frmi:MenuItem
         asi:abstract="false"
         frmi:autoSaveOnListRecordChange="false"
-        ami:displayName="Dropdown Multi Column"
-        x:id="b1dbce06-5b56-4d47-b5e0-93d495101175"
-        asi:name="WidgetDropdownTest_MultiColumn"
-        ami:openExclusively="false"
-        ami:order="100"
-        frmi:readOnlyAccess="false"
-        frmi:refreshAfterSaveType="RefreshChangedRecords"
-        frmi:refreshOnFocus="false"
-        frmi:refreshPortalAfterSave="false"
-        frmi:requestSaveAfterUpdate="false"
-        ami:roles="WidgetDropdownTest_MultiColumn"
-        frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_MultiColumn.origam#WidgetDropdownTest_MultiColumn/ccd17666-bc6d-49b9-9ec7-570f16b4cb66" />
-      <frmi:MenuItem
-        asi:abstract="false"
-        frmi:autoSaveOnListRecordChange="false"
-        ami:displayName="Dropdown Search By First ColumnO nly"
-        x:id="d28dfa42-c298-4705-9ba6-c3e88c15abd0"
-        asi:name="WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly"
-        ami:openExclusively="false"
-        ami:order="100"
-        frmi:readOnlyAccess="false"
-        frmi:refreshAfterSaveType="RefreshChangedRecords"
-        frmi:refreshOnFocus="false"
-        frmi:refreshPortalAfterSave="false"
-        frmi:requestSaveAfterUpdate="false"
-        ami:roles="WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly"
-        frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly.origam#WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly/e424e0a5-48bc-44fe-b6e7-d13df9374dde" />
-      <frmi:MenuItem
-        asi:abstract="false"
-        frmi:autoSaveOnListRecordChange="false"
         ami:displayName="Dropdown Suppress Empty Columns"
         x:id="552bdfc1-9afb-485d-ab8f-606bb45f075e"
         asi:name="WidgetDropdownTest_MultiColumn_SuppressEmptyColumns"
@@ -181,6 +126,21 @@
         frmi:requestSaveAfterUpdate="false"
         ami:roles="WidgetDropdownTest_MultiColumn_SuppressEmptyColumns"
         frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_MultiColumn_SuppressEmptyColumns.origam#WidgetDropdownTest_MultiColumn_SuppressEmptyColumns/250345d4-8c0f-4bbc-9320-72786aa0144e" />
+      <frmi:MenuItem
+        asi:abstract="false"
+        frmi:autoSaveOnListRecordChange="false"
+        ami:displayName="Dropdown Multi Column"
+        x:id="b1dbce06-5b56-4d47-b5e0-93d495101175"
+        asi:name="WidgetDropdownTest_MultiColumn"
+        ami:openExclusively="false"
+        ami:order="100"
+        frmi:readOnlyAccess="false"
+        frmi:refreshAfterSaveType="RefreshChangedRecords"
+        frmi:refreshOnFocus="false"
+        frmi:refreshPortalAfterSave="false"
+        frmi:requestSaveAfterUpdate="false"
+        ami:roles="WidgetDropdownTest_MultiColumn"
+        frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_MultiColumn.origam#WidgetDropdownTest_MultiColumn/ccd17666-bc6d-49b9-9ec7-570f16b4cb66" />
       <frmi:MenuItem
         asi:abstract="false"
         ami:alwaysOpenNew="false"
@@ -212,6 +172,21 @@
         frmi:requestSaveAfterUpdate="false"
         ami:roles="WidgetDropdownTest_SingleColumn"
         frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_SingleColumn.origam#WidgetDropdownTest_SingleColumn/8b952652-26b1-4d4b-95e9-bf7d6585984c" />
+      <frmi:MenuItem
+        asi:abstract="false"
+        frmi:autoSaveOnListRecordChange="false"
+        ami:displayName="Dropdown Search By First ColumnO nly"
+        x:id="d28dfa42-c298-4705-9ba6-c3e88c15abd0"
+        asi:name="WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly"
+        ami:openExclusively="false"
+        ami:order="100"
+        frmi:readOnlyAccess="false"
+        frmi:refreshAfterSaveType="RefreshChangedRecords"
+        frmi:refreshOnFocus="false"
+        frmi:refreshPortalAfterSave="false"
+        frmi:requestSaveAfterUpdate="false"
+        ami:roles="WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly"
+        frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly.origam#WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly/e424e0a5-48bc-44fe-b6e7-d13df9374dde" />
     </s:MenuItem>
     <s:MenuItem
       asi:abstract="false"
@@ -284,21 +259,6 @@
       <frmi:MenuItem
         asi:abstract="false"
         frmi:autoSaveOnListRecordChange="false"
-        ami:displayName="Widget PlainText Test/Read Only"
-        x:id="e1e26e74-3f91-4051-99b2-4328a9dd71c4"
-        asi:name="WidgetPlainTextTest_ReadOnly"
-        ami:openExclusively="false"
-        ami:order="100"
-        frmi:readOnlyAccess="true"
-        frmi:refreshAfterSaveType="RefreshChangedRecords"
-        frmi:refreshOnFocus="false"
-        frmi:refreshPortalAfterSave="false"
-        frmi:requestSaveAfterUpdate="false"
-        ami:roles="WidgetPlainTextTest"
-        frmi:screen="Widgets/FormControlSet/Widgets/WidgetPlainTextTest.origam#WidgetPlainTextTest/d5b55166-38a5-4f88-b568-ca220f52f8aa" />
-      <frmi:MenuItem
-        asi:abstract="false"
-        frmi:autoSaveOnListRecordChange="false"
         ami:displayName="Widget Rich Text Test"
         x:id="a81c6fdf-5827-4b3a-b44a-1f296f4161b8"
         asi:name="WidgetRichTextTest"
@@ -326,6 +286,67 @@
         frmi:requestSaveAfterUpdate="false"
         ami:roles="WidgetRichTextTest"
         frmi:screen="Widgets/FormControlSet/Widgets/WidgetRichTextTest.origam#WidgetRichTextTest/59b4b5cb-5e69-484a-a3cf-8e2cb933fdb9" />
+      <frmi:MenuItem
+        asi:abstract="false"
+        frmi:autoSaveOnListRecordChange="false"
+        ami:displayName="Widget PlainText Test/Read Only"
+        x:id="e1e26e74-3f91-4051-99b2-4328a9dd71c4"
+        asi:name="WidgetPlainTextTest_ReadOnly"
+        ami:openExclusively="false"
+        ami:order="100"
+        frmi:readOnlyAccess="true"
+        frmi:refreshAfterSaveType="RefreshChangedRecords"
+        frmi:refreshOnFocus="false"
+        frmi:refreshPortalAfterSave="false"
+        frmi:requestSaveAfterUpdate="false"
+        ami:roles="WidgetPlainTextTest"
+        frmi:screen="Widgets/FormControlSet/Widgets/WidgetPlainTextTest.origam#WidgetPlainTextTest/d5b55166-38a5-4f88-b568-ca220f52f8aa" />
     </s:MenuItem>
+  </s:MenuItem>
+  <s:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="_hidden"
+    x:id="3b4b2244-6fba-4d7e-a36a-fdd40ee711f9"
+    s:isHidden="true"
+    asi:name="_hidden"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6">
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Edit 1"
+      x:id="213e6abf-4123-42ce-bba0-ae63e5b4896c"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      asi:name="AllDataTypes_Edit1"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:recordEditMethod="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="AllDataTypes"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Edit 2"
+      x:id="c8c2158d-ff28-4c6c-8a02-dd6f98ae1a64"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      asi:name="AllDataTypes_Edit2"
+      ami:openExclusively="false"
+      ami:order="100"
+      frmi:readOnlyAccess="false"
+      frmi:recordEditMethod="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="AllDataTypes"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
   </s:MenuItem>
 </x:file>

@@ -1,37 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0">
   <de:DataEntity
     asi:abstract="true"
     ade:audit="None"
     x:id="d3171349-284d-458e-a22d-be875074b398"
     asi:name="IOrigamGeneralEntityAttachment"
     ade:readOnly="false">
-    <fmi:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="37560615-b9bc-4b55-8004-6cb68877ef70"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="refParentRecordEntityId"
-      asi:name="refParentRecordEntityId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="true"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="4badf745-4bf1-4257-a3fe-ec0c86c2588d"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="refParentRecordId"
-      asi:name="refParentRecordId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
     <dei:DataEntityIndex
       asi:abstract="true"
       dei:generateDeploymentScript="false"
@@ -86,6 +74,32 @@
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="37560615-b9bc-4b55-8004-6cb68877ef70"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refParentRecordEntityId"
+      asi:name="refParentRecordEntityId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="4badf745-4bf1-4257-a3fe-ec0c86c2588d"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refParentRecordId"
+      asi:name="refParentRecordId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
     <sip:Parameter
       asi:abstract="true"
       sip:allowNulls="false"

@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0"
+  xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="All"
@@ -10,446 +29,6 @@
     tmi:mappedObjectName="WorkQueue"
     asi:name="WorkQueue"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="592a483f-65d4-4957-9909-047edede1ee0" />
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/ec35502c-17c8-45b6-bac7-cc0730471f6b"
-      x:id="1972a059-302a-47b0-b7ba-35a51619f5e4" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="50"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="789a925f-fb14-4665-b3a4-018d1b8198db"
-      adec:isPrimaryKey="false"
-      adec:label="Queue Processor"
-      fmi:mappedColumnName="QueueProcessor"
-      asi:name="QueueProcessor"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/0bcc1f88-dce5-4e37-94bc-9c9092e0c974"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="0fd32fd1-741a-471a-b033-059f062d238e"
-      adec:isPrimaryKey="false"
-      adec:label="Removal Event"
-      fmi:mappedColumnName="refRemovalOrigamStateMachineEventTypeId"
-      asi:name="refRemovalOrigamStateMachineEventTypeId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="98a1d200-0fa2-4079-bdba-1908d0004705"
-      adec:isPrimaryKey="false"
-      adec:label="Removal New Value"
-      fmi:mappedColumnName="RemovalNewValue"
-      asi:name="RemovalNewValue"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="50"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="50803c7d-cf26-4c2f-bc46-1ecf8d50b877"
-      adec:isPrimaryKey="false"
-      adec:label="User Name"
-      fmi:mappedColumnName="ExternalSourceUserName"
-      asi:name="ExternalSourceUserName"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      x:id="06c5703c-7615-4e37-b332-30af45bc6ca7"
-      adec:isPrimaryKey="false"
-      asi:name="CntTotal"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="4a033396-b150-4d1c-8cc9-394b069ccae8"
-      adec:isPrimaryKey="false"
-      adec:label="Condition (XPath)"
-      fmi:mappedColumnName="RemovalCondition"
-      asi:name="RemovalCondition"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Date"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="true"
-      x:id="18aaefda-e04f-4155-8c03-4062e60b5b3e"
-      adec:isPrimaryKey="false"
-      adec:label="Last Action"
-      fmi:mappedColumnName="ExternalSourceLastTime"
-      asi:name="ExternalSourceLastTime"
-      adec:onCopyAction="Initialize"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      x:id="c39717ad-7b15-46cd-a43b-443a4fbc9eea"
-      adec:isPrimaryKey="false"
-      asi:name="CntToMe"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="true"
-      x:id="535f2898-d757-4612-96dd-4bfc52d2a386"
-      adec:isPrimaryKey="false"
-      adec:label="Last Message"
-      fmi:mappedColumnName="ExternalSourceLastMessage"
-      asi:name="ExternalSourceLastMessage"
-      adec:onCopyAction="Initialize"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="e4c73d00-246e-42b7-8db2-55124971cb00"
-      adec:isPrimaryKey="false"
-      adec:label="Removal Old Value"
-      fmi:mappedColumnName="RemovalOldValue"
-      asi:name="RemovalOldValue"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="50"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="true"
-      x:id="ffe314a2-0b7d-40a7-94ab-55a486fdf48c"
-      adec:isPrimaryKey="false"
-      adec:label="Password"
-      fmi:mappedColumnName="ExternalSourcePassword"
-      asi:name="ExternalSourcePassword"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="47a7d7e0-a4fb-4be0-838f-5d2ca7b6e29c"
-      adec:isPrimaryKey="false"
-      adec:label="Connection String"
-      fmi:mappedColumnName="ExternalSourceConnection"
-      asi:name="ExternalSourceConnection"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="40"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="22c153e5-243a-430c-b8ad-5f9ea1d6ed91"
-      adec:isPrimaryKey="false"
-      adec:label="Code"
-      fmi:mappedColumnName="ReferenceCode"
-      asi:name="ReferenceCode"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="e988ba46-8873-426a-a91d-610cb0d94ca9"
-      adec:isPrimaryKey="false"
-      adec:label="Lookup Field Values"
-      fmi:mappedColumnName="ReverseLookupFieldValues"
-      asi:name="ReverseLookupFieldValues"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="38ba3553-cf16-461b-9729-63d0cbb1c9d1"
-      adec:isPrimaryKey="false"
-      adec:label="Creation New Value"
-      fmi:mappedColumnName="CreationNewValue"
-      asi:name="CreationNewValue"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:defaultValue="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="96113e75-13a8-47c9-a170-663809367169"
-      adec:isPrimaryKey="false"
-      adec:label="Display Number of Messages"
-      fmi:mappedColumnName="IsMessageCountDisplayed"
-      asi:name="IsMessageCountDisplayed"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      x:id="59e07ada-edba-4d68-84cc-66586a0c46ef"
-      adec:isPrimaryKey="false"
-      asi:name="CntFromMe"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="836f4f72-c290-45db-8bde-6ddc005dd190"
-      adec:isPrimaryKey="false"
-      adec:label="Creation Field Name"
-      fmi:mappedColumnName="CreationFieldName"
-      asi:name="CreationFieldName"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="a339d36f-29d4-4a77-96c6-77a332afffaa"
-      adec:isPrimaryKey="false"
-      adec:label="Creation Old Value"
-      fmi:mappedColumnName="CreationOldValue"
-      asi:name="CreationOldValue"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="ccc6fb93-2e10-416e-a910-954f47d6d989"
-      adec:isPrimaryKey="false"
-      adec:label="Class"
-      fmi:mappedColumnName="WorkQueueClass"
-      asi:name="WorkQueueClass"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/dde81b22-f0b6-4000-9f99-43416f97ae37"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/aabafcf4-3e62-4fab-98d8-676873aaa873"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="7306f2fe-c2fb-4c7d-817f-9984e7c470ce"
-      adec:isPrimaryKey="false"
-      adec:label="External Source"
-      fmi:mappedColumnName="refWorkQueueExternalSourceTypeId"
-      asi:name="refWorkQueueExternalSourceTypeId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="500"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="a93c1dee-3e35-4456-9877-a20526e1efd6"
-      adec:isPrimaryKey="false"
-      adec:label="Role"
-      fmi:mappedColumnName="Roles"
-      asi:name="Roles"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="true"
-      x:id="cf35e430-d4ef-47ee-b6b5-ac165e64e71f"
-      adec:isPrimaryKey="false"
-      adec:label="State Data"
-      fmi:mappedColumnName="ExternalSourceState"
-      asi:name="ExternalSourceState"
-      adec:onCopyAction="Initialize"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:defaultLookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/0bcc1f88-dce5-4e37-94bc-9c9092e0c974"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-      x:id="7dd12d9d-696c-42e4-9644-af9d5b427ec0"
-      adec:isPrimaryKey="false"
-      adec:label="Create Event"
-      fmi:mappedColumnName="refCreationOrigamStateMachineEventTypeId"
-      asi:name="refCreationOrigamStateMachineEventTypeId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <df:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:excludeFromAllFields="false"
-      x:id="f04d9577-b0cd-46fb-a92e-c3e548c46338"
-      adec:isPrimaryKey="false"
-      asi:name="CntExpired"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataType="Memo"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="f31175c9-6f12-441c-ae7e-cae2c070e7f7"
-      adec:isPrimaryKey="false"
-      adec:label="Condition (XPath)"
-      fmi:mappedColumnName="CreationCondition"
-      asi:name="CreationCondition"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="e938d28a-9e48-4d8b-b0f8-db105fdaafe6"
-      adec:isPrimaryKey="false"
-      adec:label="Error Queue"
-      fmi:mappedColumnName="IsErrorQueue"
-      asi:name="IsErrorQueue"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="500"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="6878eca9-5ff7-4f01-b756-eb16da693763"
-      adec:isPrimaryKey="false"
-      adec:label="API Access Roles"
-      fmi:mappedColumnName="ApiAccessRoles"
-      asi:name="ApiAccessRoles"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="true"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="0fb70f69-de86-429f-a0ba-efac1cdd8439"
-      adec:isPrimaryKey="false"
-      adec:label="Removal Field Name"
-      fmi:mappedColumnName="RemovalFieldName"
-      asi:name="RemovalFieldName"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="200"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="ec110293-d14e-48c0-9764-f9aa09495b3f"
-      adec:isPrimaryKey="false"
-      adec:label="Name"
-      fmi:mappedColumnName="Name"
-      asi:name="Name"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
     <dei:DataEntityIndex
       asi:abstract="false"
       dei:generateDeploymentScript="false"
@@ -463,6 +42,177 @@
         asi:name="0_ReferenceCode"
         deif:sortOrder="Ascending" />
     </dei:DataEntityIndex>
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="06c5703c-7615-4e37-b332-30af45bc6ca7"
+      adec:isPrimaryKey="false"
+      asi:name="CntTotal"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="59e07ada-edba-4d68-84cc-66586a0c46ef"
+      adec:isPrimaryKey="false"
+      asi:name="CntFromMe"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="c39717ad-7b15-46cd-a43b-443a4fbc9eea"
+      adec:isPrimaryKey="false"
+      asi:name="CntToMe"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="f04d9577-b0cd-46fb-a92e-c3e548c46338"
+      adec:isPrimaryKey="false"
+      asi:name="CntExpired"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="String"
+      x:id="4745550b-fe53-49f1-a8d3-b50d3d0e6432"
+      asi:name="parQueueProcessor" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="468b753a-1c8d-4eab-a6c0-ecf411771a59"
+      asi:name="GetByProcessor">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
+        x:id="e15b1c74-f771-4ce7-9984-d38247b5872e"
+        adec:isPrimaryKey="false"
+        asi:name="or"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="3ec1cc38-3043-4467-9b95-f2a544b2347c"
+          asi:name="Arguments"
+          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
+          <fc:DataEntityColumn
+            asi:abstract="false"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="61183158-9a6d-4cb0-9196-4317b8e28e25"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="688d1178-360f-499c-9c3f-e7674603cdbe"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <ecr:EntityColumnReference
+                asi:abstract="false"
+                ecr:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/QueueProcessor/789a925f-fb14-4665-b3a4-018d1b8198db"
+                x:id="fadf3ac0-bc60-48f3-8b9f-4ff643236180"
+                asi:name="QueueProcessor" />
+            </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="e05360ad-ae7b-4860-b792-c938a2c7f461"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+              <pr:ParameterReference
+                asi:abstract="false"
+                x:id="18e6f001-1f8c-4a59-9794-9a2cb1fde60a"
+                asi:name="parQueueProcessor"
+                pr:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+          <fc:DataEntityColumn
+            asi:abstract="false"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="83e2bbef-1d54-4255-977e-e6d6ae7cc15b"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="6d8efc30-72c3-438e-8153-a448d73b9aed"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <pr:ParameterReference
+                asi:abstract="false"
+                x:id="3efdc71d-6212-40a7-ae85-ecba79e1fb71"
+                asi:name="parQueueProcessor"
+                pr:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
+            </fcp:FunctionCallParameter>
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="d9dcc050-ac02-4b35-9201-19476832f05e"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+          </fc:DataEntityColumn>
+          <fc:DataEntityColumn
+            asi:abstract="false"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            x:id="f60bb0fb-989c-49d2-a6df-1aa97b895590"
+            adec:isPrimaryKey="false"
+            asi:name="="
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="0cc9eb54-c8ee-4941-9056-1d6b3d0dd62f"
+              asi:name="Right"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="414106ce-c8ca-4a5a-b923-930076255039"
+              asi:name="Left"
+              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+              <ecr:EntityColumnReference
+                asi:abstract="false"
+                ecr:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/QueueProcessor/789a925f-fb14-4665-b3a4-018d1b8198db"
+                x:id="fccab389-28a3-4f9a-9d43-b1a763a2b3c0"
+                asi:name="QueueProcessor" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
     <ef:EntityFilter
       asi:abstract="false"
       x:id="afed0343-4284-4afc-b147-6da5dc539de7"
@@ -504,141 +254,20 @@
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>
-    <ef:EntityFilter
-      asi:abstract="false"
-      x:id="468b753a-1c8d-4eab-a6c0-ecf411771a59"
-      asi:name="GetByProcessor">
-      <fc:DataEntityColumn
-        asi:abstract="false"
-        adec:allowNulls="true"
-        adec:autoIncrement="false"
-        adec:dataType="Boolean"
-        adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
-        x:id="e15b1c74-f771-4ce7-9984-d38247b5872e"
-        adec:isPrimaryKey="false"
-        asi:name="or"
-        adec:onCopyAction="Copy"
-        adec:xmlMappingType="Attribute">
-        <fcp:FunctionCallParameter
-          asi:abstract="false"
-          x:id="3ec1cc38-3043-4467-9b95-f2a544b2347c"
-          asi:name="Arguments"
-          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
-          <fc:DataEntityColumn
-            asi:abstract="false"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-            x:id="f60bb0fb-989c-49d2-a6df-1aa97b895590"
-            adec:isPrimaryKey="false"
-            asi:name="="
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Attribute">
-            <fcp:FunctionCallParameter
-              asi:abstract="false"
-              x:id="0cc9eb54-c8ee-4941-9056-1d6b3d0dd62f"
-              asi:name="Right"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-            <fcp:FunctionCallParameter
-              asi:abstract="false"
-              x:id="414106ce-c8ca-4a5a-b923-930076255039"
-              asi:name="Left"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-              <ecr:EntityColumnReference
-                asi:abstract="false"
-                ecr:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/QueueProcessor/789a925f-fb14-4665-b3a4-018d1b8198db"
-                x:id="fccab389-28a3-4f9a-9d43-b1a763a2b3c0"
-                asi:name="QueueProcessor" />
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-          <fc:DataEntityColumn
-            asi:abstract="false"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-            x:id="61183158-9a6d-4cb0-9196-4317b8e28e25"
-            adec:isPrimaryKey="false"
-            asi:name="="
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Attribute">
-            <fcp:FunctionCallParameter
-              asi:abstract="false"
-              x:id="e05360ad-ae7b-4860-b792-c938a2c7f461"
-              asi:name="Right"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-              <pr:ParameterReference
-                asi:abstract="false"
-                x:id="18e6f001-1f8c-4a59-9794-9a2cb1fde60a"
-                asi:name="parQueueProcessor"
-                pr:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
-            </fcp:FunctionCallParameter>
-            <fcp:FunctionCallParameter
-              asi:abstract="false"
-              x:id="688d1178-360f-499c-9c3f-e7674603cdbe"
-              asi:name="Left"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-              <ecr:EntityColumnReference
-                asi:abstract="false"
-                ecr:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/QueueProcessor/789a925f-fb14-4665-b3a4-018d1b8198db"
-                x:id="fadf3ac0-bc60-48f3-8b9f-4ff643236180"
-                asi:name="QueueProcessor" />
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-          <fc:DataEntityColumn
-            asi:abstract="false"
-            adec:allowNulls="true"
-            adec:autoIncrement="false"
-            adec:dataType="Boolean"
-            adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
-            x:id="83e2bbef-1d54-4255-977e-e6d6ae7cc15b"
-            adec:isPrimaryKey="false"
-            asi:name="="
-            adec:onCopyAction="Copy"
-            adec:xmlMappingType="Attribute">
-            <fcp:FunctionCallParameter
-              asi:abstract="false"
-              x:id="d9dcc050-ac02-4b35-9201-19476832f05e"
-              asi:name="Right"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-            <fcp:FunctionCallParameter
-              asi:abstract="false"
-              x:id="6d8efc30-72c3-438e-8153-a448d73b9aed"
-              asi:name="Left"
-              fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-              <pr:ParameterReference
-                asi:abstract="false"
-                x:id="3efdc71d-6212-40a7-ae85-ecba79e1fb71"
-                asi:name="parQueueProcessor"
-                pr:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
-            </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-        </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
-    </ef:EntityFilter>
     <eri:EntityRelation
       asi:abstract="false"
-      x:id="b67bd0c3-0b61-4892-9673-201f3d38cff2"
-      asi:name="WorkQueueCommand"
+      x:id="7b96408c-bbe7-485b-9765-c5fb58f94129"
+      asi:name="WorkQueueEntry"
       eri:or="false"
       eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/b40f9da9-c8fa-490f-9c49-6db804c534f0"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/76efc330-faab-45f4-9760-9aa5a6e42078"
       eri:selfJoin="false">
       <ercpi:EntityRelationColumnPair
         asi:abstract="false"
         ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="b1af8169-c947-405a-b6b6-36c248d541b2"
-        asi:name="WorkQueueCommandKey1"
-        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/refWorkQueueId/c74dd80c-e74e-4c3c-a4a0-555b097c5859" />
+        x:id="ce43c8e6-9185-4d3c-b286-cd9488ef7d75"
+        asi:name="WorkQueueEntryKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refWorkQueueId/f37a5473-98ef-4e6b-9c30-ccc12e99adcc" />
     </eri:EntityRelation>
     <eri:EntityRelation
       asi:abstract="false"
@@ -657,19 +286,415 @@
     </eri:EntityRelation>
     <eri:EntityRelation
       asi:abstract="false"
-      x:id="7b96408c-bbe7-485b-9765-c5fb58f94129"
-      asi:name="WorkQueueEntry"
+      x:id="b67bd0c3-0b61-4892-9673-201f3d38cff2"
+      asi:name="WorkQueueCommand"
       eri:or="false"
       eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/76efc330-faab-45f4-9760-9aa5a6e42078"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/b40f9da9-c8fa-490f-9c49-6db804c534f0"
       eri:selfJoin="false">
       <ercpi:EntityRelationColumnPair
         asi:abstract="false"
         ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
-        x:id="ce43c8e6-9185-4d3c-b286-cd9488ef7d75"
-        asi:name="WorkQueueEntryKey1"
-        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refWorkQueueId/f37a5473-98ef-4e6b-9c30-ccc12e99adcc" />
+        x:id="b1af8169-c947-405a-b6b6-36c248d541b2"
+        asi:name="WorkQueueCommandKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/refWorkQueueId/c74dd80c-e74e-4c3c-a4a0-555b097c5859" />
     </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="0fb70f69-de86-429f-a0ba-efac1cdd8439"
+      adec:isPrimaryKey="false"
+      adec:label="Removal Field Name"
+      fmi:mappedColumnName="RemovalFieldName"
+      asi:name="RemovalFieldName"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/0bcc1f88-dce5-4e37-94bc-9c9092e0c974"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="0fd32fd1-741a-471a-b033-059f062d238e"
+      adec:isPrimaryKey="false"
+      adec:label="Removal Event"
+      fmi:mappedColumnName="refRemovalOrigamStateMachineEventTypeId"
+      asi:name="refRemovalOrigamStateMachineEventTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="true"
+      x:id="18aaefda-e04f-4155-8c03-4062e60b5b3e"
+      adec:isPrimaryKey="false"
+      adec:label="Last Action"
+      fmi:mappedColumnName="ExternalSourceLastTime"
+      asi:name="ExternalSourceLastTime"
+      adec:onCopyAction="Initialize"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="40"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="22c153e5-243a-430c-b8ad-5f9ea1d6ed91"
+      adec:isPrimaryKey="false"
+      adec:label="Code"
+      fmi:mappedColumnName="ReferenceCode"
+      asi:name="ReferenceCode"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="38ba3553-cf16-461b-9729-63d0cbb1c9d1"
+      adec:isPrimaryKey="false"
+      adec:label="Creation New Value"
+      fmi:mappedColumnName="CreationNewValue"
+      asi:name="CreationNewValue"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="47a7d7e0-a4fb-4be0-838f-5d2ca7b6e29c"
+      adec:isPrimaryKey="false"
+      adec:label="Connection String"
+      fmi:mappedColumnName="ExternalSourceConnection"
+      asi:name="ExternalSourceConnection"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="4a033396-b150-4d1c-8cc9-394b069ccae8"
+      adec:isPrimaryKey="false"
+      adec:label="Condition (XPath)"
+      fmi:mappedColumnName="RemovalCondition"
+      asi:name="RemovalCondition"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="50803c7d-cf26-4c2f-bc46-1ecf8d50b877"
+      adec:isPrimaryKey="false"
+      adec:label="User Name"
+      fmi:mappedColumnName="ExternalSourceUserName"
+      asi:name="ExternalSourceUserName"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="true"
+      x:id="535f2898-d757-4612-96dd-4bfc52d2a386"
+      adec:isPrimaryKey="false"
+      adec:label="Last Message"
+      fmi:mappedColumnName="ExternalSourceLastMessage"
+      asi:name="ExternalSourceLastMessage"
+      adec:onCopyAction="Initialize"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="500"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="6878eca9-5ff7-4f01-b756-eb16da693763"
+      adec:isPrimaryKey="false"
+      adec:label="API Access Roles"
+      fmi:mappedColumnName="ApiAccessRoles"
+      asi:name="ApiAccessRoles"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/dde81b22-f0b6-4000-9f99-43416f97ae37"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueExternalSourceType.origam#WorkQueueExternalSourceType/aabafcf4-3e62-4fab-98d8-676873aaa873"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="7306f2fe-c2fb-4c7d-817f-9984e7c470ce"
+      adec:isPrimaryKey="false"
+      adec:label="External Source"
+      fmi:mappedColumnName="refWorkQueueExternalSourceTypeId"
+      asi:name="refWorkQueueExternalSourceTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="789a925f-fb14-4665-b3a4-018d1b8198db"
+      adec:isPrimaryKey="false"
+      adec:label="Queue Processor"
+      fmi:mappedColumnName="QueueProcessor"
+      asi:name="QueueProcessor"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/0bcc1f88-dce5-4e37-94bc-9c9092e0c974"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="7dd12d9d-696c-42e4-9644-af9d5b427ec0"
+      adec:isPrimaryKey="false"
+      adec:label="Create Event"
+      fmi:mappedColumnName="refCreationOrigamStateMachineEventTypeId"
+      asi:name="refCreationOrigamStateMachineEventTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="836f4f72-c290-45db-8bde-6ddc005dd190"
+      adec:isPrimaryKey="false"
+      adec:label="Creation Field Name"
+      fmi:mappedColumnName="CreationFieldName"
+      asi:name="CreationFieldName"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="96113e75-13a8-47c9-a170-663809367169"
+      adec:isPrimaryKey="false"
+      adec:label="Display Number of Messages"
+      fmi:mappedColumnName="IsMessageCountDisplayed"
+      asi:name="IsMessageCountDisplayed"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="98a1d200-0fa2-4079-bdba-1908d0004705"
+      adec:isPrimaryKey="false"
+      adec:label="Removal New Value"
+      fmi:mappedColumnName="RemovalNewValue"
+      asi:name="RemovalNewValue"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="a339d36f-29d4-4a77-96c6-77a332afffaa"
+      adec:isPrimaryKey="false"
+      adec:label="Creation Old Value"
+      fmi:mappedColumnName="CreationOldValue"
+      asi:name="CreationOldValue"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="500"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="a93c1dee-3e35-4456-9877-a20526e1efd6"
+      adec:isPrimaryKey="false"
+      adec:label="Role"
+      fmi:mappedColumnName="Roles"
+      asi:name="Roles"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="ccc6fb93-2e10-416e-a910-954f47d6d989"
+      adec:isPrimaryKey="false"
+      adec:label="Class"
+      fmi:mappedColumnName="WorkQueueClass"
+      asi:name="WorkQueueClass"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="true"
+      x:id="cf35e430-d4ef-47ee-b6b5-ac165e64e71f"
+      adec:isPrimaryKey="false"
+      adec:label="State Data"
+      fmi:mappedColumnName="ExternalSourceState"
+      asi:name="ExternalSourceState"
+      adec:onCopyAction="Initialize"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="e4c73d00-246e-42b7-8db2-55124971cb00"
+      adec:isPrimaryKey="false"
+      adec:label="Removal Old Value"
+      fmi:mappedColumnName="RemovalOldValue"
+      asi:name="RemovalOldValue"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="e938d28a-9e48-4d8b-b0f8-db105fdaafe6"
+      adec:isPrimaryKey="false"
+      adec:label="Error Queue"
+      fmi:mappedColumnName="IsErrorQueue"
+      asi:name="IsErrorQueue"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="e988ba46-8873-426a-a91d-610cb0d94ca9"
+      adec:isPrimaryKey="false"
+      adec:label="Lookup Field Values"
+      fmi:mappedColumnName="ReverseLookupFieldValues"
+      asi:name="ReverseLookupFieldValues"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="ec110293-d14e-48c0-9764-f9aa09495b3f"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="f31175c9-6f12-441c-ae7e-cae2c070e7f7"
+      adec:isPrimaryKey="false"
+      adec:label="Condition (XPath)"
+      fmi:mappedColumnName="CreationCondition"
+      asi:name="CreationCondition"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="true"
+      x:id="ffe314a2-0b7d-40a7-94ab-55a486fdf48c"
+      adec:isPrimaryKey="false"
+      adec:label="Password"
+      fmi:mappedColumnName="ExternalSourcePassword"
+      asi:name="ExternalSourcePassword"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IActive.origam#IActive/ec35502c-17c8-45b6-bac7-cc0730471f6b"
+      x:id="1972a059-302a-47b0-b7ba-35a51619f5e4" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="592a483f-65d4-4957-9909-047edede1ee0" />
     <sip:Parameter
       asi:abstract="false"
       sip:allowNulls="true"
@@ -677,11 +702,5 @@
       sip:dataType="String"
       x:id="dfb2875c-b203-4035-904a-9c60f62da99a"
       asi:name="parReferenceCode" />
-    <dp:Parameter
-      asi:abstract="false"
-      sip:allowNulls="true"
-      sip:dataType="String"
-      x:id="4745550b-fe53-49f1-a8d3-b50d3d0e6432"
-      asi:name="parQueueProcessor" />
   </tmi:DataEntity>
 </x:file>
