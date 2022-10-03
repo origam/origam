@@ -17,10 +17,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react";
+import React, { useState } from "react";
 import "gui/connections/MobileComponents/Form/MobileFormSection.module.scss";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
-import { FormSection } from "gui/Components/Form/FormSection";
+import { getStyle } from "gui/Components/Form/FormSection";
+import cx from "classnames";
+import { FormSectionHeader } from "gui/Components/Form/FormSectionHeader";
+
+const emptyDimensions = new FieldDimensions();
 
 export const MobileFormSection: React.FC<{
   title?: string;
@@ -28,16 +32,24 @@ export const MobileFormSection: React.FC<{
   foreGroundColor: string | undefined;
 }> = (props) => {
 
+  const [isOpen, setOpen] = useState(false);
+  const hasTitle = !!props.title;
+
   return (
     <div className={"mobileFormSection"}>
-      <FormSection
-        title={props.title}
-        backgroundColor={props.backgroundColor}
-        foreGroundColor={props.foreGroundColor}
-        dimensions={new FieldDimensions()}
+      <div
+        className={cx("formSection", {hasTitle})}
+        style={getStyle(emptyDimensions, props.backgroundColor)}
       >
-        {props.children}
-      </FormSection>
+        <div onClick={() => setOpen(!isOpen)}>
+          {hasTitle && (
+            <FormSectionHeader foreGroundColor={props.foreGroundColor} tooltip={props.title}>
+              {props.title}
+            </FormSectionHeader>
+          )}
+        </div>
+        {isOpen && props.children}
+      </div>
     </div>
   );
 };
