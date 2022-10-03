@@ -110,7 +110,7 @@ export class MobileFormBuilder extends React.Component<{
                 .flatMap((child: any, index: number) => recursive(child, index))
                 .flat()
                 .filter((item: any) => item)
-                .sort(compareTabIndexOwners)
+                .sort(compareByIsFormSectionThenByTabIndex)
                 .map((item: FormItem) => item.element)
             }
             <ExtraButtonsContext.Consumer>
@@ -141,11 +141,11 @@ export class MobileFormBuilder extends React.Component<{
                 .flatMap((child: any, index: number) => recursive(child, index))
                 .flat()
                 .filter((item: any) => item)
-                .sort(compareTabIndexOwners)
+                .sort(compareByIsFormSectionThenByTabIndex)
                 .map((item: FormItem) => item.element)
             }
-          </MobileFormSection>
-        )];
+          </MobileFormSection>,
+        true)];
       } else if (xfo.name === "FormElement" && xfo.attributes.Type === "Label") {
         return undefined;
       } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
@@ -248,7 +248,7 @@ export class MobileFormBuilder extends React.Component<{
 
     const form = recursive(this.props.xmlFormRootObject, 0)!
       .filter(item => item)
-      .sort(compareTabIndexOwners)
+      .sort(compareByIsFormSectionThenByTabIndex)
       .map(item => item.element);
 
     if (this.props.dataView?.isFirst && this.context.isVisible) {
@@ -265,8 +265,19 @@ export class MobileFormBuilder extends React.Component<{
 class FormItem implements ITabIndexOwner {
   constructor(
     public tabIndex: string | undefined,
-    public element: JSX.Element) {
+    public element: JSX.Element,
+    public isFormSection: boolean = false) {
   }
+}
+
+function compareByIsFormSectionThenByTabIndex(x: FormItem, y: FormItem){
+  if(x.isFormSection && !y.isFormSection){
+    return 1;
+  }
+  if(!x.isFormSection && y.isFormSection){
+    return -1;
+  }
+  return compareTabIndexOwners(x, y);
 }
 
 function findPropertiesInPropertyNode(xfo: any, dataView: IDataView | undefined) {
