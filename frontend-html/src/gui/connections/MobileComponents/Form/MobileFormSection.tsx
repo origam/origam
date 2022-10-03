@@ -28,11 +28,12 @@ const emptyDimensions = new FieldDimensions();
 
 export const MobileFormSection: React.FC<{
   title?: string;
+  startOpen: boolean;
   backgroundColor: string | undefined;
   foreGroundColor: string | undefined;
 }> = (props) => {
 
-  const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(props.startOpen);
   const hasTitle = !!props.title;
 
   return (
