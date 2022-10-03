@@ -36,6 +36,7 @@ import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNex
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { Button } from "@origam/components";
 import { T } from "utils/translation";
+import { getActions, sortToGroups } from "model/selectors/DataView/getMobileActions";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -54,63 +55,6 @@ export class BottomToolBar extends React.Component<{
     return getActiveScreen(this.props.ctx)?.content?.formScreen;
   }
 
-  getActions() {
-    const screenActions = getActiveScreenActions(this.props.ctx)
-      .flatMap(actionGroup => actionGroup.actions)
-      .filter(action => getIsEnabledAction(action));
-
-
-    const dataViews = this.activeScreen?.dataViews;
-    if (!dataViews || dataViews.length === 0) {
-      return screenActions;
-    }
-
-    let dataView;
-    if (dataViews.length === 1) {
-      dataView = dataViews[0];
-    }
-    if (!this.mobileState.activeDataViewId) {
-      return screenActions;
-    }
-    dataView = dataViews.find(dataView => dataView.id === this.mobileState.activeDataViewId);
-    if (!dataView) {
-      return screenActions;
-    }
-    const sectionActions = getPanelViewActions(dataView)
-      .filter((action) => !action.groupId)
-      .filter((action) => getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord);
-
-    return screenActions.concat(sectionActions);
-  }
-
-  getActionGroups(): IAction[][] {
-    const groupMap = this.getActions().groupBy(action => action.groupId);
-    if(groupMap.size === 0){
-      return [];
-    }
-    const noGroupActions = groupMap.get("");
-    if(!noGroupActions){
-      return []
-    }
-    let groups = [];
-    for (let action of noGroupActions) {
-      if(groupMap.has(action.id)){
-        groups.push(groupMap.get(action.id)!)
-      }
-      else
-      {
-        let lastGroup = groups[groups.length -1];
-        if(lastGroup && (lastGroup.length === 0 || lastGroup[0].groupId === "")) {
-          lastGroup.push(action);
-        }
-        else
-        {
-          groups.push([action])
-        }
-      }
-    }
-    return groups;
-  }
 
   showNextButton() {
     return this.activeScreen && this.activeScreen.showWorkflowNextButton;
@@ -119,7 +63,7 @@ export class BottomToolBar extends React.Component<{
   render() {
     const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
 
-    const actions = this.getActions();
+    const actions = getActions(this.props.ctx, this.mobileState);
 
     const buttons = [];
     if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
@@ -148,7 +92,7 @@ export class BottomToolBar extends React.Component<{
       buttons.push(
         <ActionDropUp
           key={"actions"}
-          actionGroups={this.getActionGroups()}
+          actionGroups={sortToGroups(actions)}
         />
       );
     }
@@ -185,6 +129,4 @@ export class BottomToolBar extends React.Component<{
       : null;
   }
 }
-
-
 
