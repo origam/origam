@@ -3,10 +3,10 @@ import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
-import { IAction, IActionMode } from "model/entities/types/IAction";
+import { IActionMode } from "model/entities/types/IAction";
 
 
-export function getActions(ctx: any, mobileState: MobileState) {
+export function getAllActions(ctx: any, mobileState: MobileState) {
   const screenActions = getActiveScreenActions(ctx)
     .flatMap(actionGroup => actionGroup.actions)
     .filter(action => getIsEnabledAction(action));
@@ -35,34 +35,4 @@ export function getActions(ctx: any, mobileState: MobileState) {
 
   return screenActions.concat(sectionActions);
 }
-
-export function sortToGroups(actions: IAction[]): IAction[][] {
-  const groupMap = actions.groupBy(action => action.groupId);
-  if(groupMap.size === 0){
-    return [];
-  }
-  const noGroupActions = groupMap.get("");
-  if(!noGroupActions){
-    return []
-  }
-  const groups = [];
-  for (let action of noGroupActions) {
-    if(groupMap.has(action.id)){
-      groups.push(groupMap.get(action.id)!)
-    }
-    else
-    {
-      let lastGroup = groups[groups.length -1];
-      if(lastGroup && (lastGroup.length === 0 || lastGroup[0].groupId === "")) {
-        lastGroup.push(action);
-      }
-      else
-      {
-        groups.push([action])
-      }
-    }
-  }
-  return groups;
-}
-
 

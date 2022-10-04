@@ -47,7 +47,7 @@ import { ExtraButtonsContext } from "gui/connections/MobileComponents/Navigation
 import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
 import { IProperty } from "model/entities/types/IProperty";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { getActions } from "model/selectors/DataView/getMobileActions";
+import { getAllActions } from "model/selectors/DataView/getMobileActions";
 import { IActionType } from "model/entities/types/IAction";
 import { MobileAction, MobileActionLink } from "gui/connections/MobileComponents/Form/MobileAction";
 
@@ -143,7 +143,7 @@ export class MobileFormBuilder extends React.Component<{
 
     function recursiveBuild(formItem: FormItem): JSX.Element | undefined {
       if (formItem.xfo.name === "FormRoot") {
-        const actions = getActions(self.props.dataView, self.props.mobileState);
+        const actions = getAllActions(self.props.dataView, self.props.mobileState);
         const noGroupActions = actions.filter(action => !action.groupId)
 
         return (
@@ -171,18 +171,16 @@ export class MobileFormBuilder extends React.Component<{
                 )
               }
             </ExtraButtonsContext.Consumer>
-            {/*<div>*/}
-              {noGroupActions.map(action =>
-                action.type === IActionType.Dropdown
-                ? <MobileActionLink
-                    linkAction={action}
-                    actions={actions.filter(subAction => subAction.groupId === action.id)}
-                    mobileState={self.props.mobileState}/>
-                : <MobileAction
-                  action={action}
+            {noGroupActions.map(action =>
+              action.type === IActionType.Dropdown
+              ? <MobileActionLink
+                  linkAction={action}
+                  actions={actions.filter(subAction => subAction.groupId === action.id)}
                   mobileState={self.props.mobileState}/>
-              )}
-            {/*</div>*/}
+              : <MobileAction
+                action={action}
+                mobileState={self.props.mobileState}/>
+            )}
           </FormRoot>
         );
       } else if (formItem.xfo.name === "FormElement" && formItem.xfo.attributes.Type === "FormSection") {

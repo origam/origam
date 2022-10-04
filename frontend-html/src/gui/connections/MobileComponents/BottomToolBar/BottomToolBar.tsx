@@ -22,7 +22,6 @@ import S from "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.modu
 import "gui/connections/MobileComponents/BottomToolBar/BottomToolBar.module.scss";
 import { BottomIcon } from "gui/connections/MobileComponents/BottomToolBar/BottomIcon";
 import { MobileState } from "model/entities/MobileState/MobileState";
-import { ActionDropUp } from "gui/connections/MobileComponents/BottomToolBar/ActionDropUp";
 import { MobXProviderContext, observer } from "mobx-react";
 import { geScreenActionButtonsState } from "model/actions-ui/ScreenToolbar/saveBottonVisible";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
@@ -32,7 +31,6 @@ import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNex
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { Button } from "@origam/components";
 import { T } from "utils/translation";
-import { getActions, sortToGroups } from "model/selectors/DataView/getMobileActions";
 
 @observer
 export class BottomToolBar extends React.Component<{
@@ -58,9 +56,6 @@ export class BottomToolBar extends React.Component<{
 
   render() {
     const actionButtonsState = geScreenActionButtonsState(this.props.ctx);
-
-    const actions = getActions(this.props.ctx, this.mobileState);
-
     const buttons = [];
     if (this.props.mobileState.layoutState.showCloseButton(!!this.activeScreen)) {
       buttons.push(
@@ -81,14 +76,6 @@ export class BottomToolBar extends React.Component<{
           onClick={async () => {
             await this.props.mobileState.close()
           }}
-        />
-      );
-    }
-    if (actions.length > 0 && !this.props.mobileState.layoutState.actionDropUpHidden) {
-      buttons.push(
-        <ActionDropUp
-          key={"actions"}
-          actionGroups={sortToGroups(actions)}
         />
       );
     }
