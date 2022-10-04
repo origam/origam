@@ -158,6 +158,7 @@ export class MobileFormBuilder extends React.Component<{
                 .flat()
                 .filter((item: any) => item)
             }
+            <div style={{height: "20px"}}/>
             <ExtraButtonsContext.Consumer>
               {
                 extraButtons => (

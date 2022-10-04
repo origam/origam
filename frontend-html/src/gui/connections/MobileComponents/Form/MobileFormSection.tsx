@@ -22,7 +22,8 @@ import "gui/connections/MobileComponents/Form/MobileFormSection.module.scss";
 import { FieldDimensions } from "gui/Components/Form/FieldDimensions";
 import { getStyle } from "gui/Components/Form/FormSection";
 import cx from "classnames";
-import { FormSectionHeader } from "gui/Components/Form/FormSectionHeader";
+import { Icon } from "@origam/components";
+import S from "gui/connections/MobileComponents/Form/MobileFormSection.module.scss";
 
 const emptyDimensions = new FieldDimensions();
 
@@ -37,17 +38,24 @@ export const MobileFormSection: React.FC<{
   const hasTitle = !!props.title;
 
   return (
-    <div className={"mobileFormSection"}>
+    <div>
       <div
-        className={cx("formSection", {hasTitle})}
+        className={cx(S.formSection, {hasTitle})}
         style={getStyle(emptyDimensions, props.backgroundColor)}
       >
-        <div onClick={() => setOpen(!isOpen)}>
+        <div
+          className={S.header}
+          onClick={() => setOpen(!isOpen)}
+        >
           {hasTitle && (
-            <FormSectionHeader foreGroundColor={props.foreGroundColor} tooltip={props.title}>
+            <h1 className={S.title} style={{color: props.foreGroundColor}} title={props.title}>
               {props.title}
-            </FormSectionHeader>
+            </h1>
           )}
+          <Icon
+            src={isOpen ? "./icons/noun-chevron-933246.svg" : "./icons/noun-chevron-933251.svg"}
+            className={S.navigationIcon}
+          />
         </div>
         {isOpen && props.children}
       </div>
