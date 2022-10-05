@@ -83,7 +83,7 @@
     "sass": "^1.54.4",
     "stream-browserify": "^3.0.0",
     "string-strip-html": "^8.3.0",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.4",
     "uuid": "^8.3.2",
     "vite-tsconfig-paths": "^3.5.0",
     "wkt": "^0.1.1",
