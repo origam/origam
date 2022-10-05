@@ -7,7 +7,7 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MimeKit" Version="3.4.0" />
+    <PackageReference Include="MimeKit" Version="3.4.1" />
     <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
   </ItemGroup>
 
