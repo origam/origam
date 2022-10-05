@@ -20,7 +20,7 @@
     "@origam/plugin-audit": "^2.0.0",
     "@origam/plugin-chart": "^2.0.1",
     "@origam/plugin-filter": "^2.0.1",
-    "@origam/plugins": "^1.0.2",
+    "@origam/plugins": "^1.1.0",
     "@origam/styles": "^2.0.2",
     "@origam/utils": "^1.1.1",
     "@testing-library/jest-dom": "^5.16.5",
