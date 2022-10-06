@@ -1,8 +1,6 @@
-const puppeteer = require("puppeteer");
-const { backEndUrl} = require('./additionalConfig');
 const { sleep, openMenuItem, login, waitForRowCountData, switchToFormPerspective,
   inputByPressingKeys, switchLanguageTo, waitForFocus,
-  switchToTablePerspective, catchRequests
+  switchToTablePerspective, catchRequests, beforeEachTest, afterEachTest
 } = require('./testTools');
 const {widgetsMenuItemId,topMenuHeader,
   allDataTypesLazyMenuItemsId} = require("./modelIds");
@@ -17,28 +15,11 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  browser = await puppeteer.launch({
-    ignoreHTTPSErrors: true,
-    //devtools: true,
-    headless: false,
-    defaultViewport: {
-      width: 1024,
-      height: 768,
-    },
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  page = await browser.newPage();
-  await page.goto(backEndUrl);
-  await page.evaluate(() => {
-    localStorage.setItem("debugCloseAllForms", "1");
-  });
+  [browser, page] = await beforeEachTest()
 });
 
 afterEach(async () => {
-  let pages = await browser.pages();
-  await Promise.all(pages.map(async page => await page.close()));
-  await sleep(200);
-  if(browser) await browser.close();
+  await afterEachTest(browser);
   browser = undefined;
 });
 

@@ -1,7 +1,5 @@
-const puppeteer = require("puppeteer");
-const { backEndUrl } = require('./additionalConfig');
 const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, clickAndWaitForSelector, clickAndWaitForXPath,
-  catchRequests, waitForRowSelected
+  catchRequests, waitForRowSelected, beforeEachTest, afterEachTest
 } = require('./testTools');
 const {installMouseHelper} = require('./instalMouseHelper_');
 const {widgetsMenuItemId, allDataTypesMenuId, allDataTypesLazyMenuItemsId, topMenuHeader} = require("./modelIds");
@@ -16,35 +14,11 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  browser = await puppeteer.launch({
-    ignoreHTTPSErrors: true,
-    //devtools: true,
-    headless: false,
-    defaultViewport: {
-      width: 1024,
-      height: 1000,
-    },
-    // slowMo: 50,
-    args: [
-        "--disable-gpu",
-        "--disable-dev-shm-usage",
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-    ]
-  });
-  page = await browser.newPage();
-  await installMouseHelper(page);
-  await page.goto(backEndUrl);
-  await page.evaluate(() => {
-    localStorage.setItem("debugCloseAllForms", "1");
-  });
+  [browser, page] = await beforeEachTest()
 });
 
 afterEach(async () => {
-  let pages = await browser.pages();
-  await Promise.all(pages.map(page =>page.close()));
-  await sleep(200);
-  if(browser) await browser.close();
+  await afterEachTest(browser);
   browser = undefined;
 });
 
