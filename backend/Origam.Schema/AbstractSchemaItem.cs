@@ -1675,13 +1675,15 @@ namespace Origam.Schema
 			return item;
 		}
 
-		public virtual SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
+		public virtual SchemaItemGroup NewGroup(
+			Guid schemaExtensionId, string groupName)
 		{
 			return null;
 		}
 
 		[Browsable(false)]
-		public virtual Type[] NewItemTypes => new Type[] { };
+		public virtual Type[] NewItemTypes 
+			=> (Type[])_childItemTypes.ToArray(typeof(Type));
 
 		[Browsable(false)]
 		public virtual IList<string> NewTypeNames
