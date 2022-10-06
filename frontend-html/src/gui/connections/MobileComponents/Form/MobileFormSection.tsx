@@ -53,7 +53,7 @@ export const MobileFormSection: React.FC<{
             </h1>
           )}
           <Icon
-            src={isOpen ? "./icons/noun-chevron-933246.svg" : "./icons/noun-chevron-933251.svg"}
+            src={isOpen ? "./icons/noun-chevron-933254.svg" : "./icons/noun-chevron-933246.svg"}
             className={S.navigationIcon}
           />
         </div>
