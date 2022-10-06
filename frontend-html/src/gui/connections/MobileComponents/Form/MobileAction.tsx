@@ -56,7 +56,7 @@ export const MobileActionLink: React.FC<{
       <ActionList
         actions={props.actions}
         mobileState={props.mobileState}/>,
-      T("Action Submenu", "action_submenu"),
+      props.linkAction.caption,
       new ScreenLayoutState(),
       false,
       true,
