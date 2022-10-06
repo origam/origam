@@ -58,6 +58,7 @@ async function beforeEachTest(){
   const page = await browser.newPage();
   // await installMouseHelper(page); // uncomment to see the mouse movement
   await page.goto(backEndUrl);
+  await sleep(500);
   await page.evaluate(() => {
     localStorage.setItem("debugCloseAllForms", "1");
   });
