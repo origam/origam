@@ -158,7 +158,7 @@ export class MobileFormBuilder extends React.Component<{
                 .flat()
                 .filter((item: any) => item)
             }
-            <div style={{height: "20px"}}/>
+            <div key={"divider1"} style={{minHeight: "20px", maxHeight: "20px"}}/>
             <ExtraButtonsContext.Consumer>
               {
                 extraButtons => (
@@ -172,15 +172,18 @@ export class MobileFormBuilder extends React.Component<{
                 )
               }
             </ExtraButtonsContext.Consumer>
+            {noGroupActions.length > 0 && <div key={"divider2"} style={{minHeight: "20px", maxHeight: "20px"}}/>}
             {noGroupActions.map(action =>
               action.type === IActionType.Dropdown
               ? <MobileActionLink
+                  key={action.id}
                   linkAction={action}
                   actions={actions.filter(subAction => subAction.groupId === action.id)}
                   mobileState={self.props.mobileState}/>
               : <MobileAction
-                action={action}
-                mobileState={self.props.mobileState}/>
+                  key={action.id}
+                  action={action}
+                  mobileState={self.props.mobileState}/>
             )}
           </FormRoot>
         );
