@@ -1,5 +1,6 @@
-const {userName, password} = require("./additionalConfig");
+const {userName, password, backEndUrl} = require("./additionalConfig");
 const fs = require('fs');
+const puppeteer = require("puppeteer");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -23,6 +24,47 @@ async function login(page) {
   await sleep(500); // give the translations some time to load
   await loginButton.click();
 }
+
+
+async function afterEachTest(browser){
+  const pages = await browser.pages();
+  try{
+    await Promise.all(pages.map(async page => await page.close()));
+  }catch(e){
+    console.warn(e);
+  }
+  await sleep(200);
+  if(browser) {
+    await browser.close();
+  }
+}
+
+async function beforeEachTest(){
+  const browser = await puppeteer.launch({
+    ignoreHTTPSErrors: true,
+    //devtools: true,
+    headless: false,
+    defaultViewport: {
+      width: 1024,
+      height: 2000, // to make all 30 lines visible and avoid the need for scrolling
+    },
+    args: [
+      "--disable-gpu",
+      "--disable-dev-shm-usage",
+      "--disable-setuid-sandbox",
+      "--no-sandbox",
+    ]
+  });
+  const page = await browser.newPage();
+  // await installMouseHelper(page); // uncomment to see the mouse movement
+  await page.goto(backEndUrl);
+  await sleep(500);
+  await page.evaluate(() => {
+    localStorage.setItem("debugCloseAllForms", "1");
+  });
+  return [browser, page]
+}
+
 
 async function openMenuItem(page, menuItemIdList) {
   for (const menuItemId of menuItemIdList) {
@@ -297,4 +339,4 @@ async function waitForFocus(args){
 module.exports = {sleep, xPathContainsClass, getImage, openMenuItem, login, getRowCountData, waitForRowCountData,
   getTableData, waitForRowCount, catchRequests, waitForRowSelected, clickAndWaitForXPath, clickAndWaitForSelector,
   typeAndWaitForSelector, switchToFormPerspective, inputByPressingKeys, switchLanguageTo, waitForFocus,
-  switchToTablePerspective};
+  switchToTablePerspective, afterEachTest, beforeEachTest};
