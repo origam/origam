@@ -38,8 +38,8 @@ export const MobileTagInputEditor = (
       customInputClass?: string;
       id?: string;
       property: IProperty;
-      onPlusButtonClick: ()=> void;
-      onChange?: (event: any, newValue: string[])=> void;
+      onPlusButtonClick: () => void;
+      onChange?: (event: any, newValue: string[]) => void;
       values?: any[];
     }) => {
       const dataTable = getDataTable(props.property);
@@ -69,8 +69,8 @@ export const MobileTagInputEditor = (
         }
       }
 
-      function onPlusButtonClick(){
-        if(props.isReadOnly){
+      function onPlusButtonClick() {
+        if (props.isReadOnly) {
           return;
         }
         props.onPlusButtonClick();
@@ -80,15 +80,16 @@ export const MobileTagInputEditor = (
         <div className={CS.editorContainer + " tagEditorContainer"}>
           <TagInput className={S.tagInput}>
             {values.map((valueItem, idx) => (
-                <TagInputItem key={valueItem}>
+              <TagInputItem key={valueItem}>
+                {!props.isReadOnly &&
                   <TagInputItemDelete
                     onClick={(event) => {
                       removeItem(event, valueItem);
                     }}
-                  />
-                  {textValues![idx] || ""}
-                </TagInputItem>
-              ))}
+                  />}
+                {textValues![idx] || ""}
+              </TagInputItem>
+            ))}
             {props.isReadOnly ? null : (
               <TagInputAdd onClick={onPlusButtonClick}/>
             )}
@@ -107,10 +108,10 @@ export const MobileTagInputEditor = (
   )
 );
 
-export function getTagInputValues(property: IProperty): any[]{
+export function getTagInputValues(property: IProperty): any[] {
   const dataTable = getDataTable(property);
   const row = getSelectedRow(property);
-  if(!row){
+  if (!row) {
     return [];
   }
 
