@@ -572,7 +572,7 @@ public class LegacyXsltFunctionContainer : AbstractOrigamDependentXsltFunctionCo
 
     public string OrigamRound(string num, string origamRounding)
     {
-        return OrigamRound(Convert.ToDecimal(num),
+        return OrigamRound(XmlConvert.ToDecimal(num),
             XmlTools.XPathArgToString(origamRounding));
     }
 
