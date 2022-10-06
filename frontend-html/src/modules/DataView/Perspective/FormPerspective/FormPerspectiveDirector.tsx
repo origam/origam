@@ -106,8 +106,8 @@ const FormPerspectiveDirectorComponent: React.FC<{
       <div className={cx(S.root, {isActive: props.formPerspectiveActive})}>
         <FormView>
           {isMobileLayoutActive(application)
-            ?<MobileFormBuilder/>
-            :<FormBuilder/>
+            ? <MobileFormBuilder mobileState={application.mobileState}/>
+            : <FormBuilder/>
           }
         </FormView>
       </div>

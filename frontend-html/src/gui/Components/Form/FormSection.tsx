@@ -29,17 +29,11 @@ export const FormSection: React.FC<{
   foreGroundColor: string | undefined;
   dimensions: FieldDimensions;
 }> = (props) => {
-
-  function getStyle(){
-    const style = props.dimensions.asStyle();
-    style["backgroundColor"] = props.backgroundColor;
-    return style;
-  }
   const hasTitle = !!props.title;
   return (
     <div
       className={cx("formSection", {hasTitle})}
-      style={getStyle()}
+      style={getStyle(props.dimensions, props.backgroundColor)}
     >
       {hasTitle && (
         <FormSectionHeader foreGroundColor={props.foreGroundColor} tooltip={props.title}>
@@ -50,3 +44,9 @@ export const FormSection: React.FC<{
     </div>
   );
 };
+
+export function getStyle(dimensions: FieldDimensions, backgroundColor: string | undefined) {
+  const style = dimensions.asStyle();
+  style["backgroundColor"] = backgroundColor;
+  return style;
+}

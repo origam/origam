@@ -17,28 +17,25 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root{
-  flex-grow: 1;
-}
+import React from "react";
+import { IAction } from "model/entities/types/IAction";
+import { MobileState } from "model/entities/MobileState/MobileState";
+import { MobileAction } from "gui/connections/MobileComponents/Form/MobileAction";
+import S from "gui/connections/MobileComponents/Form/ActionList.module.scss";
 
-.root div div div svg {
-  width: var(--mobileBottomToolbarIconSize);
-  height: var(--mobileBottomToolbarIconSize);
-}
-
-.clickArea {
-  width: 100%;
-  cursor: pointer;
-  justify-content: center;
-  display: flex;
-}
-
-.iconContainer {
-  height: 50px;
-  align-items: center;
-  display: flex;
-}
-
-.placeholder {
-  width: 30px;
+export const ActionList: React.FC<{
+  actions: IAction[],
+  mobileState: MobileState
+}> = (props) => {
+  return (
+    <div
+      className={S.root + " formRootMobile"}
+    >
+      {props.actions.map(action =>
+        <MobileAction
+          action={action}
+          mobileState={props.mobileState}/>
+      )}
+    </div>
+  );
 }
