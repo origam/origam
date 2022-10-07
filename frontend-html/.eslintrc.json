@@ -9,6 +9,7 @@
     "@typescript-eslint/no-use-before-define": 0,
     "jsx-a11y/iframe-has-title": 0,
     "jsx-a11y/anchor-is-valid": 0,
-    "no-console": 1
+    "no-console": 1,
+    "@typescript-eslint/no-unused-vars" : 0
   }
 }
