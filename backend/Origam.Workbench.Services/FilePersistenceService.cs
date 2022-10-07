@@ -199,11 +199,6 @@ namespace Origam.Workbench.Services
             return LoadSchema(schemaExtensionId);
         }
 
-        public void ExportPackage(Guid extensionId, string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
         public void MergePackage(Guid extensionId, System.Data.DataSet data, string transcationId)
         {
             throw new NotImplementedException();

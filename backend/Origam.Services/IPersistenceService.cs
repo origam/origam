@@ -39,7 +39,6 @@ namespace Origam.Workbench.Services
 			bool loadDeploymentScripts, string transactionId);
 		Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
 			bool loadDocumentation, bool loadDeploymentScripts, string transactionId);
-		void ExportPackage (Guid extensionId, string fileName);
 		void MergePackage (Guid extensionId, DataSet data, string transcationId);
         void MergeSchema(DataSet schema, Key activePackage);
         void InitializeRepository();

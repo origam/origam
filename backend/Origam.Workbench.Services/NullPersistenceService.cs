@@ -56,11 +56,7 @@ namespace Origam.Workbench.Services
         {
             throw new NotImplementedException();
         }
-
-        public void ExportPackage(Guid extensionId, string fileName)
-        {
-        }
-
+        
         public void MergePackage(Guid extensionId, DataSet data, string transcationId)
         {
         }
