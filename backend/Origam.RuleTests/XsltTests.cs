@@ -579,7 +579,7 @@ public class XsltTests
     [Test]
     public void ShouldDoOrigamRound()
     {
-        string xsltCall = $"AS:OrigamRound('1,569456', 'rounding1')";
+        string xsltCall = $"AS:OrigamRound('1.569456', 'rounding1')";
         object expectedResult = "2";
 
         lookupServiceMock
