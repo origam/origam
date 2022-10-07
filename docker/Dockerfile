@@ -12,7 +12,7 @@ WORKDIR /tmp
 RUN apt-get update \
 && apt-get -y install curl gnupg \
 && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-&& curl -sL https://deb.nodesource.com/setup_14.x | sudo bash - \
+&& curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
 && apt-get update \
 && apt-get -y install libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh yarn nodejs \
