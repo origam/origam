@@ -1,0 +1,4 @@
+﻿ALTER TABLE "OrigamParameters" ALTER COLUMN "RecordCreated" TYPE timestamp(6) without time zone ;
+ALTER TABLE "OrigamParameters" ALTER COLUMN "RecordUpdated" TYPE timestamp(6) without time zone ;
+ALTER TABLE "OrigamParameters" ALTER COLUMN "RecordUpdatedServer" TYPE timestamp(6) without time zone;
+ALTER TABLE "OrigamParameters" ALTER COLUMN "RecordCreatedServer" TYPE timestamp(6) without time zone;

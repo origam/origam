@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="df65d708-2ea9-4d4e-a2c5-8f32e3b2e85e"

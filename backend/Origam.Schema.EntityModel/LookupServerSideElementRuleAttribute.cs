@@ -41,7 +41,7 @@ namespace Origam.Schema.EntityModel
             {
                 return null;
             }
-            return new DataException("Lookup have to have property isFilteredServerSide on true.");
+            return new DataException("Lookup has to have property isFilteredServerSide on true.");
         }
     }
 }

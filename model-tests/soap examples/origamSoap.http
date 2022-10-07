@@ -1,0 +1,382 @@
+# Input file for Visual Studio Code REST client:
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+#
+# - instal the client
+# - set @port and @authCookie variables
+# - click "Send Request" over the request you want to send 
+
+@port = 44356
+# authCookie only matters if the "RequiresAuthentication" in "SoapAPI" config section is set to "true"
+@authCookie = CfDJ8LVdnbG3moNEiDWHMuco-LdmRLB4pQZHw4sevTuOIvI_NUr5io7HcD1Se8EIGRqjTUWNlzJOa2wcpDX2ylPW2F4F9vgGXnrqrFqjOVoSGAi0ratxaGMl_9VejptlqG-FPRsL8daRAszz6lzMR5htW8lmJwxf7xBmADWrB1lgyq35L8b9D0zFE35-jXcdKptbaIggg0whvXmzt9LYMGV0T38VgjDhB4aXc8D1lnm5tYKJGVEWfjRTQOmRE58peIVEHpk5AFKRAjGTTHWZGLU_M5b0yuLVRkjFekEeWKKUoCFMfYhC7Jlc8J3Y2ySSBmTLq7aaCTd1wKRzgoHMYxSwglg3Fax6bZ4JcsF_RkcuRRCvQQ7_1KE6e47NUpXPpIqC8QKwfd4Cptf2CIoZoLqcIj5E7oH2dfLxpClAzU7ajq-fLKxV4dj7IsaFyAvXyeI478AKYE8fZgDeDpf_XZPyVu2sBzySp9jG79S3ptI5aAMyw0e_7RUbqnloy4nqJYqAjUDTT1FE2Sek29Be9zXv-67QPLQOlFiBZ3TJOAWpgfWpli6qw0lC7F_j0h4Hsln5opk-CtpioZ3c--6Cf15vgqHprP7gD4Rd01ExTLTWJO8OpZ6ymWt5py3vD-leQ6Ncl9a_0hnB-txOydFE1H9fap8
+
+###
+GET  https://localhost:{{port}}/soap/DataService
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+###
+POST https://localhost:{{port}}/soap/DataService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://asapenginewebapi.advantages.cz/" >
+    <s:Body>
+        <a:LoadData>
+            <a:dataStructureId>31791c3b-7265-439e-ac96-ddd57aa82579</a:dataStructureId> 
+        </a:LoadData>
+    </s:Body>
+</s:Envelope>
+
+###
+POST https://localhost:{{port}}/soap/DataService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<soap:Envelope
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
+        <StoreData
+            xmlns="http://asapenginewebapi.advantages.cz/">
+            <dataStructureId>
+                31791c3b-7265-439e-ac96-ddd57aa82579
+            </dataStructureId>
+            <data>
+                <xs:schema id="ROOT" 
+                    xmlns="" 
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" 
+                    xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+                    <xs:element name="ROOT" msdata:IsDataSet="true" msdata:Locale="en-US" msprop:Id="31791c3b-7265-439e-ac96-ddd57aa82579">
+                        <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="AllDataTypes" msdata:IsLoading="False" msdata:DisplayExpression="'AllDataTypes'" msprop:EntityId="7a2338f2-7290-4cec-b0ad-2c0ee6386885" msprop:AuditingSecondReferenceKeyColumn="" msprop:IsAuditingEnabled="None" msprop:Id="de98641d-0097-4bf7-b439-d37b07eb4a41" msprop:HasAggregation="True">
+                            <xs:complexType>
+                                <xs:sequence>
+                                <xs:element name="TagInputBinding" msdata:IsLoading="False" msdata:DisplayExpression="'TagInputBinding'" msprop:EntityId="933d7409-8df9-455a-bb2a-bd2411e6e025" msprop:AuditingSecondReferenceKeyColumn="" msprop:Id="ef0d62a1-e6de-465a-88e2-44b03610ac6c" msprop:IsAuditingEnabled="None" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:annotation>
+                                    <xs:appinfo>
+                                        <msdata:Relationship name="TagInputBinding" msdata:parent="AllDataTypes" msdata:child="TagInputBinding" msdata:parentkey="Id" msdata:childkey="refAllDataTypesId" />
+                                    </xs:appinfo>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                    <xs:attribute name="refTagInputSourceId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msprop:FieldId="7d2b6322-5587-4487-b95f-0fe1e95cc04e" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="7ce7edc1-f490-4a3f-bf8c-f4430dae2af8" type="xs:string" />
+                                    <xs:attribute name="refAllDataTypesId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msprop:FieldId="b79e5f37-ebf6-4e9a-b8a4-78e2af620630" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="cbe68de1-d044-439b-8c29-790bbca44937" type="xs:string" />
+                                    <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msdata:Caption="Created By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="2c6f7849-27d1-4f36-9c5e-98e34ec8fe4d" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" type="xs:string" />
+                                    <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msdata:Caption="Updated By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="b83e0989-1f9a-4b25-a14f-7b7fe2fc6058" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" type="xs:string" />
+                                    <xs:attribute name="Id" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msprop:FieldId="ea0cfd88-f2b7-45b7-85f8-1042770aabd1" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" type="xs:string" use="required" />
+                                    <xs:attribute name="RecordCreated" msdata:Caption="Time Created" msprop:FieldId="664873b9-6057-41f3-bf62-645a509e602f" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+                                    <xs:attribute name="RecordUpdated" msdata:Caption="Time Updated" msprop:FieldId="8da1ebd5-48d5-4292-83c9-2d7559debfce" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+                                    <xs:attribute name="Selected" msprop:OnCopyAction="Copy" msprop:FieldId="5b04c466-2f46-41f6-99ce-0a03f0da8784" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Boolean" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="refTagInputSourceId" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msdata:Caption="Guid1" msprop:DefaultLookupId="991a8bec-5169-4506-9457-7f91c27bb5fd" msprop:FieldId="212b0c16-7e3d-4c1d-9578-60ffc6c664ef" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="7142586a-1798-4f99-af0a-9166319d11e0" type="xs:string" />
+                                <xs:attribute name="Text2" msdata:Caption="Text 2" msprop:FieldId="0c27acee-f5a4-40f5-8cee-11d5ec74afa9" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="40adf540-f1fb-4ade-9e29-f349c3a7433e">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                    <xs:maxLength value="50" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="TagInput" msdata:ReadOnly="true" msdata:Expression="COUNT(Child(TagInputBinding).RecordCreated)" msprop:DefaultLookupId="991a8bec-5169-4506-9457-7f91c27bb5fd" msprop:OnCopyAction="Copy" msprop:FieldId="a281da1a-b501-4d03-b949-a9ac049fc352" msprop:IsAuditingEnabled="None" msprop:ArrayRelationField="refTagInputSourceId" msprop:ArrayRelation="TagInputBinding" msprop:OrigamDataType="Array" msprop:Id="56f2a591-7951-4148-8bcd-ded817cb22ac" type="xs:long" />
+                                <xs:attribute name="Date1" msdata:Caption="Date 1" msprop:FieldId="2b15c5b4-a68c-405e-8095-0477ea56dfb3" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="591b8777-70c9-4526-99f9-c3de3ebc3a91" type="xs:dateTime" />
+                                <xs:attribute name="Text1" msdata:Caption="Text 1" msprop:FieldId="bcec6963-1293-41aa-a91f-5c2d28712db9" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="8954ae10-e0db-49b8-b04c-351e03249c36" use="required">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                    <xs:maxLength value="50" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="Currency1" msdata:Caption="Currency 1" msprop:FieldId="f944300a-fb04-4d74-a8f6-c48f971cbeb4" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="91e811e1-be8d-4eab-b66f-29c544939470" type="xs:decimal" />
+                                <xs:attribute name="Long1" msdata:Caption="Long 1" msprop:FieldId="d47a1966-b050-4068-b71f-0177cf612ba5" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Long" msprop:Id="c32d22e2-3125-4a6a-a546-facae3acea0c" type="xs:long" />
+                                <xs:attribute name="Integer1" msdata:Caption="Integer 1" msprop:FieldId="24bab68c-6f27-4696-92f7-71a8651a52e2" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Integer" msprop:Id="c5f2891f-b0b7-48e4-b7d6-5237b778d867" type="xs:int" />
+                                <xs:attribute name="Boolean1" msdata:Caption="Boolean 1" msprop:FieldId="607498c1-4f31-4fea-8b9e-7e245bc1c395" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean" msprop:Id="f5997d8d-384f-4a20-9dc3-490bdc05f791" type="xs:boolean" default="false" />
+                                <xs:attribute name="TagInputSourceLabel" msprop:OriginalFieldId="7142586a-1798-4f99-af0a-9166319d11e0" msprop:OnCopyAction="Copy" msprop:FieldId="c4fdc66e-83cb-4880-aba2-ebba9ad53f0f" msprop:IsAuditingEnabled="None" msprop:OriginalLookupId="991a8bec-5169-4506-9457-7f91c27bb5fd" msprop:OrigamDataType="String" msprop:Id="c5bc351d-cc9b-433b-93b5-2fb2870b14cb">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                    <xs:maxLength value="100" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msdata:Caption="Created By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="9fc76fa2-d270-4e96-aec6-879c5d4ae5d3" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" type="xs:string" />
+                                <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msdata:Caption="Updated By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="2faa85a3-d5c8-4d8d-ac7b-3f8b3fe4e34a" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" type="xs:string" />
+                                <xs:attribute name="Id" msdata:DataType="System.Guid, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" msprop:FieldId="5be495a0-94a6-4f15-94fa-1ad4da271835" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" type="xs:string" use="required" />
+                                <xs:attribute name="RecordCreated" msdata:Caption="Time Created" msprop:FieldId="a2e13dbb-a732-479d-a7e5-207bd037079e" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+                                <xs:attribute name="RecordUpdated" msdata:Caption="Time Updated" msprop:FieldId="69f5d051-195e-4510-b3db-58c78f1d00d2" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+                                <xs:attribute name="Selected" msprop:OnCopyAction="Copy" msprop:FieldId="5095071d-3ed7-4174-a55f-914c00257542" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Boolean" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+                            </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                        </xs:complexType>
+                        <xs:unique name="TagInputBinding_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+                        <xs:selector xpath=".//TagInputBinding" />
+                        <xs:field xpath="@Id" />
+                        </xs:unique>
+                        <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+                        <xs:selector xpath=".//AllDataTypes" />
+                        <xs:field xpath="@Id" />
+                        </xs:unique>
+                        <xs:keyref name="FK_AllDataTypes" refer="Constraint1" msdata:ConstraintOnly="true">
+                        <xs:selector xpath=".//TagInputBinding" />
+                        <xs:field xpath="@refAllDataTypesId" />
+                        </xs:keyref>
+                    </xs:element>
+                </xs:schema>
+                <diffgr:diffgram
+                    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                    xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+                    <ROOT xmlns="">
+                        <AllDataTypes 
+                            diffgr:id="AllDataTypes1" 
+                            diffgr:hasChanges="inserted"
+                            msdata:rowOrder="0" 
+                            Text2="soap1"
+                            TagInput="0" 
+                            Date1="2025-09-12T00:00:00+02:00"
+                            Text1="soap1"
+                            Currency1="1543.0000"
+                            Long1="1543"
+                            Integer1="1543"
+                            Boolean1="true"
+                            RecordCreatedBy="abce2f49-6693-4525-87a4-65d8687413fb" 
+                            Id="c8fc9865-b7c0-4f61-a9aa-21ce9be57c15" 
+                            RecordCreated="2025-09-12T00:00:00+02:00" 
+                            Selected="false" />
+                    </ROOT>
+                </diffgr:diffgram>
+            </data>
+        <loadActualValuesAfterUpdate>
+            false
+            </loadActualValuesAfterUpdate>
+        </StoreData>
+    </soap:Body>
+</soap:Envelope>
+
+
+
+###
+# insert with old .NET assembly references
+POST https://localhost:{{port}}/soap/DataService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<soap:Envelope
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
+        <StoreData
+            xmlns="http://asapenginewebapi.advantages.cz/">
+            <dataStructureId>
+                31791c3b-7265-439e-ac96-ddd57aa82579
+            </dataStructureId>
+            <data>
+                <xs:schema id="ROOT" 
+                    xmlns="" 
+                    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+                    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" 
+                    xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+                    <xs:element name="ROOT" msdata:IsDataSet="true" msdata:Locale="en-US" msprop:Id="31791c3b-7265-439e-ac96-ddd57aa82579">
+                        <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="AllDataTypes" msdata:IsLoading="False" msdata:DisplayExpression="'AllDataTypes'" msprop:EntityId="7a2338f2-7290-4cec-b0ad-2c0ee6386885" msprop:AuditingSecondReferenceKeyColumn="" msprop:IsAuditingEnabled="None" msprop:Id="de98641d-0097-4bf7-b439-d37b07eb4a41" msprop:HasAggregation="True">
+                            <xs:complexType>
+                                <xs:sequence>
+                                <xs:element name="TagInputBinding" msdata:IsLoading="False" msdata:DisplayExpression="'TagInputBinding'" msprop:EntityId="933d7409-8df9-455a-bb2a-bd2411e6e025" msprop:AuditingSecondReferenceKeyColumn="" msprop:Id="ef0d62a1-e6de-465a-88e2-44b03610ac6c" msprop:IsAuditingEnabled="None" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:annotation>
+                                    <xs:appinfo>
+                                        <msdata:Relationship name="TagInputBinding" msdata:parent="AllDataTypes" msdata:child="TagInputBinding" msdata:parentkey="Id" msdata:childkey="refAllDataTypesId" />
+                                    </xs:appinfo>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                    <xs:attribute name="refTagInputSourceId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:FieldId="7d2b6322-5587-4487-b95f-0fe1e95cc04e" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="7ce7edc1-f490-4a3f-bf8c-f4430dae2af8" type="xs:string" />
+                                    <xs:attribute name="refAllDataTypesId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:FieldId="b79e5f37-ebf6-4e9a-b8a4-78e2af620630" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="cbe68de1-d044-439b-8c29-790bbca44937" type="xs:string" />
+                                    <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Created By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="2c6f7849-27d1-4f36-9c5e-98e34ec8fe4d" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" type="xs:string" />
+                                    <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Updated By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="b83e0989-1f9a-4b25-a14f-7b7fe2fc6058" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" type="xs:string" />
+                                    <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:FieldId="ea0cfd88-f2b7-45b7-85f8-1042770aabd1" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" type="xs:string" use="required" />
+                                    <xs:attribute name="RecordCreated" msdata:Caption="Time Created" msprop:FieldId="664873b9-6057-41f3-bf62-645a509e602f" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+                                    <xs:attribute name="RecordUpdated" msdata:Caption="Time Updated" msprop:FieldId="8da1ebd5-48d5-4292-83c9-2d7559debfce" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+                                    <xs:attribute name="Selected" msprop:OnCopyAction="Copy" msprop:FieldId="5b04c466-2f46-41f6-99ce-0a03f0da8784" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Boolean" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="refTagInputSourceId" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Guid1" msprop:DefaultLookupId="991a8bec-5169-4506-9457-7f91c27bb5fd" msprop:FieldId="212b0c16-7e3d-4c1d-9578-60ffc6c664ef" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="7142586a-1798-4f99-af0a-9166319d11e0" type="xs:string" />
+                                <xs:attribute name="Text2" msdata:Caption="Text 2" msprop:FieldId="0c27acee-f5a4-40f5-8cee-11d5ec74afa9" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="40adf540-f1fb-4ade-9e29-f349c3a7433e">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                    <xs:maxLength value="50" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="TagInput" msdata:ReadOnly="true" msdata:Expression="COUNT(Child(TagInputBinding).RecordCreated)" msprop:DefaultLookupId="991a8bec-5169-4506-9457-7f91c27bb5fd" msprop:OnCopyAction="Copy" msprop:FieldId="a281da1a-b501-4d03-b949-a9ac049fc352" msprop:IsAuditingEnabled="None" msprop:ArrayRelationField="refTagInputSourceId" msprop:ArrayRelation="TagInputBinding" msprop:OrigamDataType="Array" msprop:Id="56f2a591-7951-4148-8bcd-ded817cb22ac" type="xs:long" />
+                                <xs:attribute name="Date1" msdata:Caption="Date 1" msprop:FieldId="2b15c5b4-a68c-405e-8095-0477ea56dfb3" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="591b8777-70c9-4526-99f9-c3de3ebc3a91" type="xs:dateTime" />
+                                <xs:attribute name="Text1" msdata:Caption="Text 1" msprop:FieldId="bcec6963-1293-41aa-a91f-5c2d28712db9" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="String" msprop:Id="8954ae10-e0db-49b8-b04c-351e03249c36" use="required">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                    <xs:maxLength value="50" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="Currency1" msdata:Caption="Currency 1" msprop:FieldId="f944300a-fb04-4d74-a8f6-c48f971cbeb4" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Currency" msprop:Id="91e811e1-be8d-4eab-b66f-29c544939470" type="xs:decimal" />
+                                <xs:attribute name="Long1" msdata:Caption="Long 1" msprop:FieldId="d47a1966-b050-4068-b71f-0177cf612ba5" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Long" msprop:Id="c32d22e2-3125-4a6a-a546-facae3acea0c" type="xs:long" />
+                                <xs:attribute name="Integer1" msdata:Caption="Integer 1" msprop:FieldId="24bab68c-6f27-4696-92f7-71a8651a52e2" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Integer" msprop:Id="c5f2891f-b0b7-48e4-b7d6-5237b778d867" type="xs:int" />
+                                <xs:attribute name="Boolean1" msdata:Caption="Boolean 1" msprop:FieldId="607498c1-4f31-4fea-8b9e-7e245bc1c395" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Boolean" msprop:Id="f5997d8d-384f-4a20-9dc3-490bdc05f791" type="xs:boolean" default="false" />
+                                <xs:attribute name="TagInputSourceLabel" msprop:OriginalFieldId="7142586a-1798-4f99-af0a-9166319d11e0" msprop:OnCopyAction="Copy" msprop:FieldId="c4fdc66e-83cb-4880-aba2-ebba9ad53f0f" msprop:IsAuditingEnabled="None" msprop:OriginalLookupId="991a8bec-5169-4506-9457-7f91c27bb5fd" msprop:OrigamDataType="String" msprop:Id="c5bc351d-cc9b-433b-93b5-2fb2870b14cb">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                    <xs:maxLength value="100" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="RecordCreatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Created By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="9fc76fa2-d270-4e96-aec6-879c5d4ae5d3" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="cbcf7bb8-10d0-4576-98f5-1210b10bae5f" type="xs:string" />
+                                <xs:attribute name="RecordUpdatedBy" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msdata:Caption="Updated By" msprop:DefaultLookupId="08d82ef5-df38-48d6-a276-ee5b7f027bd6" msprop:FieldId="2faa85a3-d5c8-4d8d-ac7b-3f8b3fe4e34a" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="ad2d2efe-9cb0-4141-ac28-25b8ed68580b" type="xs:string" />
+                                <xs:attribute name="Id" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:FieldId="5be495a0-94a6-4f15-94fa-1ad4da271835" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="UniqueIdentifier" msprop:Id="c54413b6-eb88-49c8-a7ff-3bb942c1984e" type="xs:string" use="required" />
+                                <xs:attribute name="RecordCreated" msdata:Caption="Time Created" msprop:FieldId="a2e13dbb-a732-479d-a7e5-207bd037079e" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="6a92781b-ac57-4b24-a2a3-7ff772747431" type="xs:dateTime" />
+                                <xs:attribute name="RecordUpdated" msdata:Caption="Time Updated" msprop:FieldId="69f5d051-195e-4510-b3db-58c78f1d00d2" msprop:IsAuditingEnabled="None" msprop:IsDatabaseField="True" msprop:OnCopyAction="Copy" msprop:OrigamDataType="Date" msprop:Id="d245e9df-9a2f-4196-89de-b86faaaeb624" type="xs:dateTime" />
+                                <xs:attribute name="Selected" msprop:OnCopyAction="Copy" msprop:FieldId="5095071d-3ed7-4174-a55f-914c00257542" msprop:AllowNulls="False" msprop:IsAuditingEnabled="None" msprop:OrigamDataType="Boolean" msprop:Id="de0d5266-6200-4775-87aa-e151815fb23c" type="xs:boolean" msdata:DefaultValue="false" use="required" />
+                            </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                        </xs:complexType>
+                        <xs:unique name="TagInputBinding_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+                        <xs:selector xpath=".//TagInputBinding" />
+                        <xs:field xpath="@Id" />
+                        </xs:unique>
+                        <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+                        <xs:selector xpath=".//AllDataTypes" />
+                        <xs:field xpath="@Id" />
+                        </xs:unique>
+                        <xs:keyref name="FK_AllDataTypes" refer="Constraint1" msdata:ConstraintOnly="true">
+                        <xs:selector xpath=".//TagInputBinding" />
+                        <xs:field xpath="@refAllDataTypesId" />
+                        </xs:keyref>
+                    </xs:element>
+                </xs:schema>
+                <diffgr:diffgram
+                    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                    xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+                    <ROOT xmlns="">
+                        <AllDataTypes 
+                            diffgr:id="AllDataTypes1" 
+                            diffgr:hasChanges="inserted"
+                            msdata:rowOrder="0" 
+                            Text2="soap1"
+                            TagInput="0" 
+                            Date1="2025-09-12T00:00:00+02:00"
+                            Text1="soap1"
+                            Currency1="1543.0000"
+                            Long1="1543"
+                            Integer1="1543"
+                            Boolean1="true"
+                            RecordCreatedBy="abce2f49-6693-4525-87a4-65d8687413fb" 
+                            Id="c8fc9865-b7c0-4f61-a9aa-21ce9be57c15" 
+                            RecordCreated="2025-09-12T00:00:00+02:00" 
+                            Selected="false" />
+                    </ROOT>
+                </diffgr:diffgram>
+            </data>
+        <loadActualValuesAfterUpdate>
+            false
+            </loadActualValuesAfterUpdate>
+        </StoreData>
+    </soap:Body>
+</soap:Envelope>
+
+
+###
+POST https://localhost:{{port}}/soap/DataService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://asapenginewebapi.advantages.cz/" >
+    <s:Body>
+        <a:LoadData0>
+            <a:dataStructureId>31791c3b-7265-439e-ac96-ddd57aa82579</a:dataStructureId> 
+        </a:LoadData0>
+    </s:Body>
+</s:Envelope>
+
+
+###
+POST https://localhost:{{port}}/soap/DataService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://asapenginewebapi.advantages.cz/" >
+    <s:Body>
+        <a:LoadData1>
+            <a:dataStructureId>31791c3b-7265-439e-ac96-ddd57aa82579</a:dataStructureId> 
+        </a:LoadData1>
+    </s:Body>
+</s:Envelope>
+
+
+###
+POST https://localhost:{{port}}/soap/DataService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://asapenginewebapi.advantages.cz/" >
+    <s:Body>
+        <a:LoadData2>
+            <a:dataStructureId>31791c3b-7265-439e-ac96-ddd57aa82579</a:dataStructureId> 
+        </a:LoadData2>
+    </s:Body>
+</s:Envelope>
+
+
+###
+GET  https://localhost:{{port}}/soap/WorkflowService
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+###
+POST https://localhost:{{port}}/soap/WorkflowService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://asapenginewebapi.advantages.cz/" >
+    <s:Body>
+        <a:ExecuteWorkflow0>
+            <a:workflowId>33cbb851-b4d5-4ddd-8999-135fde65ef30</a:workflowId> 
+        </a:ExecuteWorkflow0>
+    </s:Body>
+</s:Envelope>
+
+###
+POST https://localhost:{{port}}/soap/WorkflowService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://asapenginewebapi.advantages.cz/" >
+    <s:Body>
+        <a:ExecuteWorkflow>
+            <a:workflowId>33cbb851-b4d5-4ddd-8999-135fde65ef30</a:workflowId> 
+        </a:ExecuteWorkflow>
+    </s:Body>
+</s:Envelope>
+
+
+###
+POST https://localhost:{{port}}/soap/WorkflowService
+Content-Type: application/xml
+Cookie: .AspNetCore.Identity.Application={{authCookie}}
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:a="http://asapenginewebapi.advantages.cz/" >
+    <s:Body>
+        <a:ExecuteWorkflow1>
+            <a:workflowId>33cbb851-b4d5-4ddd-8999-135fde65ef30</a:workflowId> 
+        </a:ExecuteWorkflow1>
+    </s:Body>
+</s:Envelope>
+
+
+
+

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="7515cb11-9697-4ca6-985e-ff54f0425deb"
@@ -9,50 +15,6 @@
       x:id="a942afd7-0485-453c-9f15-f01e27534eed"
       asi:name="PrintPDF"
       sm:returnValueDataType="Xml">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataLength="1000"
-        sip:dataType="String"
-        x:id="9e4d78c2-2f71-43d7-91df-577947b59445"
-        asi:name="Filename" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="Integer"
-        x:id="921cda95-180a-41c2-bb8c-81aebcd06707"
-        asi:name="Copies" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataLength="200"
-        sip:dataType="String"
-        x:id="fea0210f-7b23-4ab2-a205-8258c7ddd356"
-        asi:name="PaperSource" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -82,6 +44,50 @@
         sip:dataType="Boolean"
         x:id="8856c8fd-81bf-4de7-91b9-dc050fc84a3d"
         asi:name="Timeout" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Integer"
+        x:id="921cda95-180a-41c2-bb8c-81aebcd06707"
+        asi:name="Copies" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="1000"
+        sip:dataType="String"
+        x:id="9e4d78c2-2f71-43d7-91df-577947b59445"
+        asi:name="Filename" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="200"
+        sip:dataType="String"
+        x:id="fea0210f-7b23-4ab2-a205-8258c7ddd356"
+        asi:name="PaperSource" />
     </sm:ServiceMethod>
   </s:Service>
 </x:file>

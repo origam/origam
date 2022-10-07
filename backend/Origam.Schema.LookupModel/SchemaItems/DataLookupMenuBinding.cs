@@ -101,6 +101,7 @@ namespace Origam.Schema.LookupModel
 		[Category("Menu Reference")]
 		[TypeConverter(typeof(MenuItemConverter))]
 		[NotNullModelElementRule()]
+		[NotNullMenuRecordEditMethod()]
         [XmlReference("menuItem", "MenuItemId")]
         public AbstractMenuItem MenuItem
 		{
