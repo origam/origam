@@ -32,7 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp']
-        node-version: [12.x]
+        node-version: [14.x]
         
     steps:
     - name: Checkout repository
@@ -41,7 +41,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v2
       with:
-       node-version: '12'
+       node-version: '14'
      
     - name: Install Yarn
       run: npm install -g yarn
