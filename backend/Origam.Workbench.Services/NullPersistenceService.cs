@@ -56,20 +56,6 @@ namespace Origam.Workbench.Services
         {
             throw new NotImplementedException();
         }
-        
-        public void UpdateRepository()
-        {
-        }
-
-        public bool IsRepositoryVersionCompatible()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CanUpdateRepository()
-        {
-            throw new NotImplementedException();
-        }
 
         public void ExportPackage(Guid extensionId, string fileName)
         {

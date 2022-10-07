@@ -199,20 +199,6 @@ namespace Origam.Workbench.Services
             return LoadSchema(schemaExtensionId);
         }
 
-        public void UpdateRepository()
-        {
-        }
-
-        public bool IsRepositoryVersionCompatible()
-        {
-            return true;
-        }
-
-        public bool CanUpdateRepository()
-        {
-            throw new NotImplementedException();
-        }
-
         public void ExportPackage(Guid extensionId, string fileName)
         {
             throw new NotImplementedException();
