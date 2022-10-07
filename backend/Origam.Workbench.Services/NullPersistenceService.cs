@@ -56,10 +56,6 @@ namespace Origam.Workbench.Services
         {
             throw new NotImplementedException();
         }
-        
-        public void MergePackage(Guid extensionId, DataSet data, string transcationId)
-        {
-        }
 
         public void MergeSchema(DataSet schema, Key activePackage)
         {
