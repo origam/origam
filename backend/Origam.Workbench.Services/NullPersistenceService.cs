@@ -56,11 +56,7 @@ namespace Origam.Workbench.Services
         {
             throw new NotImplementedException();
         }
-
-        public void LoadSchemaList()
-        {
-        }
-
+        
         public void UpdateRepository()
         {
         }

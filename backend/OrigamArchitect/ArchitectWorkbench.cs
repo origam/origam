@@ -1457,25 +1457,6 @@ namespace OrigamArchitect
 			try
 			{
 				_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
-
-				// Login to the repository
-				try
-				{
-					if(! LoadSchemaList())
-					{
-						return;
-					}
-				}
-				catch(Exception ex)
-				{
-					AsMessageBox.ShowError(
-                        this,
-                        string.Format(strings.RepositoryLoginFailedMessage, Environment.NewLine + ex.Message),
-                        strings.RepositoryLoginFailedTitle,
-                        ex);
-
-					return;
-				}
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
 				// Init services
@@ -1822,89 +1803,7 @@ namespace OrigamArchitect
 		    FilePersistenceBuilder.Clear();
             OrigamEngine.UnloadConnectedServices();
         }
-
-		/// <summary>
-		/// After configuration is selected, connect to the repository and load the model list from the repository.
-		/// </summary>
-		private bool LoadSchemaList()
-		{
-			IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
-			ServiceManager.Services.AddService(persistence);
-
-			try
-			{
-				bool isRepositoryVersionCompatible = false;
-				bool isRepositoryEmpty = false;
-				try
-				{
-					isRepositoryVersionCompatible 
-						= persistence.IsRepositoryVersionCompatible();
-				}
-                catch (DatabaseProcedureNotFoundException ex)
-				{
-					if(ex.ProcedureName == "OrigamDatabaseSchemaVersion")
-					{
-						// let's assume repository is empty
-						isRepositoryEmpty = true;
-					}
-					else
-					{
-						throw;
-					}
-				}
-				if(! isRepositoryVersionCompatible && ! isRepositoryEmpty)
-				{
-					bool shouldUpdate = false;
-
-#if ORIGAM_CLIENT
-				shouldUpdate = AdministratorMode;
-#else
-					shouldUpdate = true;
-#endif
-
-					if(shouldUpdate & persistence.CanUpdateRepository())
-					{
-						if(MessageBox.Show(this, strings.UpgradeModelQuestion, strings.UpgradeModelTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-						{
-							persistence.UpdateRepository();
-						}
-						else
-						{
-							MessageBox.Show(this, strings.CannotLogin_Message, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-							ServiceManager.Services.UnloadService(persistence);
-							return false;
-						}
-					}
-					else
-					{
-						MessageBox.Show(this, strings.CannotLogin_Message2, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-						ServiceManager.Services.UnloadService(persistence);
-						return false;
-					}
-				}
-				else if(isRepositoryEmpty)
-				{
-					if(MessageBox.Show(this, strings.RepositoryInitializeQuestion, strings.Initialize_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-					{
-                        persistence.InitializeRepository();
-					}
-					else
-					{
-						MessageBox.Show(this, strings.CannotLogin_Message, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-						ServiceManager.Services.UnloadService(persistence);
-						return false;
-					}
-				}
-				persistence.LoadSchemaList();
-				return true;
-			}
-			catch
-			{
-				ServiceManager.Services.UnloadService(persistence);
-				throw;
-			}
-		}
-
+		
 		private void frmMain_Load(object sender, EventArgs e)
 		{
 			AppDomain.CurrentDomain.SetPrincipalPolicy(System.Security.Principal.PrincipalPolicy.WindowsPrincipal);

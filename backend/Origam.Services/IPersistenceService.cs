@@ -39,7 +39,6 @@ namespace Origam.Workbench.Services
 			bool loadDeploymentScripts, string transactionId);
 		Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
 			bool loadDocumentation, bool loadDeploymentScripts, string transactionId);
-		void LoadSchemaList();
 		void UpdateRepository();
 		bool IsRepositoryVersionCompatible();
 		bool CanUpdateRepository();

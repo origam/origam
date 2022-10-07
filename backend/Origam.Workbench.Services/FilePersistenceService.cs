@@ -199,10 +199,6 @@ namespace Origam.Workbench.Services
             return LoadSchema(schemaExtensionId);
         }
 
-        public void LoadSchemaList()
-        {
-        }
-
         public void UpdateRepository()
         {
         }
