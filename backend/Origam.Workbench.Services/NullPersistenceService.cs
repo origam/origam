@@ -44,12 +44,7 @@ namespace Origam.Workbench.Services
 
         public IPersistenceProvider SchemaProvider => new NullPersistenceProvider();
         public IPersistenceProvider SchemaListProvider => new NullPersistenceProvider();
-
-        public void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, bool loadDeploymentScripts,
-            string transactionId)
-        {
-        }
-
+        
         public Package LoadSchema(Guid schemaExtension, bool loadDocumentation, bool loadDeploymentScripts,
             string transactionId)
         {

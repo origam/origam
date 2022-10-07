@@ -172,12 +172,7 @@ namespace Origam.Workbench.Services
 
         public Maybe<XmlLoadError> Reload() => 
             schemaProvider.ReloadFiles();
-
-        public void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public Package LoadSchema(Guid schemaExtensionId, 
             bool loadDocumentation, bool loadDeploymentScripts,
             string transactionId) => LoadSchema(schemaExtensionId);

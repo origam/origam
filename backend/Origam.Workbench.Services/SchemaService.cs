@@ -221,8 +221,7 @@ namespace Origam.Workbench.Services
                 throw new NotImplementedException();
             }
         }
-
-
+        
         public virtual bool UnloadSchema()
 		{
 			CancelEventArgs e = new CancelEventArgs(false);
@@ -257,53 +256,7 @@ namespace Origam.Workbench.Services
 
 			return true;
 		}
-
-		public bool LoadSchema(ArrayList extensions, Guid mainExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
-		{
-			if( ! UnloadSchema()) return false;
-		
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
-
-			ArrayList ids = new ArrayList();
-
-			for(int i = 0; i < extensions.Count; i++)
-			{
-				ids.Add(extensions[i]);
-
-				bool append = i > 24; // (i < extensionsSorted.Count-1);
-
-				if(i % 24 == 0 & i > 0)
-				{
-					persistence.LoadSchema(ids, append, loadDocumentation, loadDeploymentScripts, null);
-					ids.Clear();
-				}
-
-				//				if(statusBar != null) statusBar.SetStatusText("Loading " + loadingExtension.Name + "...");
-				//				bool append = i > 0; // (i < extensionsSorted.Count-1);
-			}
-
-			if(ids.Count > 0)
-			{
-				persistence.LoadSchema(ids, extensions.Count > 25, loadDocumentation, loadDeploymentScripts, null);
-			}
-
-			_activeSchemaExtensionId = mainExtensionId;
-
-			try
-			{
-				_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), new ModelElementKey(mainExtensionId)) as Package;
-			}
-			catch
-			{
-				throw new ArgumentOutOfRangeException("mainExtensionId", mainExtensionId, ResourceUtils.GetString("ErrorOpenModelPackage"));
-			}
-
-			OnSchemaLoaded(EventArgs.Empty);
-
-			return true;
-		}
-
+        
 		public bool LoadSchema(Guid schemaExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
 		{
 			return LoadSchema(schemaExtensionId, Guid.Empty, loadDocumentation, loadDeploymentScripts);

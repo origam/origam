@@ -35,9 +35,6 @@ namespace Origam.Workbench.Services
     {
 		IPersistenceProvider SchemaProvider{get;}
 		IPersistenceProvider SchemaListProvider{get;}
-
-		void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, 
-			bool loadDeploymentScripts, string transactionId);
 		Package LoadSchema(Guid schemaExtension, bool loadDocumentation, 
 			bool loadDeploymentScripts, string transactionId);
 		Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
