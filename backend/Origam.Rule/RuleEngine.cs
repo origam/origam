@@ -4805,7 +4805,7 @@ namespace Origam.Rule
 		public object Invoke(XsltContext xsltContext, 
 			object[] args, XPathNavigator docContext) 
 		{
-			return Engine.OrigamRound(Convert.ToDecimal(args[0]), XmlTools.XPathArgToString(args[1]));
+			return Engine.OrigamRound(XmlConvert.ToDecimal((string)args[0]), XmlTools.XPathArgToString(args[1]));
 		}
 	}
 
