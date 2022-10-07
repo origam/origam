@@ -662,7 +662,6 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.Connect_MenuItem, new ConnectRepository(), Images.Home, Keys.None, _fileMenu);
 			CreateMenuItem(strings.Disconnect_MenuItem, new DisconnectRepository(), null, Keys.None, _fileMenu);
 			CreateMenuItem(strings.ConnectionConfig_MenuItem, new EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
-			AsMenuCommand mnuServerRestart = CreateMenuItem(strings.SetServerRestart_MenuItem, new Commands.SetServerRestart(), Images.RestartServer, Keys.None, _toolsMenu);
 			using (SqlViewer vwr = new SqlViewer(null))
             {
 				CreateMenuWithSubmenu(strings.SqlConsole_MenuItem, vwr.Icon.ToBitmap(), new ShowSqlConsoleMenuBuilder(), _toolsMenu);
@@ -679,8 +678,6 @@ namespace OrigamArchitect
 			ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuSave,ImageRes.Save));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuRefresh,ImageRes.Refresh));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
-
-			toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
 #endif
         }
 		private void CreateHelpMenu()
@@ -1457,6 +1454,7 @@ namespace OrigamArchitect
 			try
 			{
 				_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
+				InitPersistenceService();
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
 				// Init services
@@ -1647,21 +1645,7 @@ namespace OrigamArchitect
 				// could not close all the documents
 				return false;
 			}
-
-			if(_schema.IsSchemaChanged && _schema.SupportsSave)
-			{
-				DialogResult result = MessageBox.Show(this, strings.ModelChangedSaveToRepQuestion, strings.ModelChanged_Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-				switch(result)
-				{
-					case DialogResult.Yes:
-						_schema.SaveSchema();
-						break;
-					case DialogResult.Cancel:
-						return false;
-				}
-			}
-			_workflowPad.OrigamMenu = null;
+            _workflowPad.OrigamMenu = null;
 			
 #if ! ORIGAM_CLIENT
 			_findSchemaItemResultsPad?.ResetResults();
@@ -1803,7 +1787,16 @@ namespace OrigamArchitect
 		    FilePersistenceBuilder.Clear();
             OrigamEngine.UnloadConnectedServices();
         }
-		
+
+		/// <summary>
+		/// After configuration is selected, connect to the repository and load the model list from the repository.
+		/// </summary>
+		private void InitPersistenceService()
+		{
+			IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
+			ServiceManager.Services.AddService(persistence);
+		}
+
 		private void frmMain_Load(object sender, EventArgs e)
 		{
 			AppDomain.CurrentDomain.SetPrincipalPolicy(System.Security.Principal.PrincipalPolicy.WindowsPrincipal);

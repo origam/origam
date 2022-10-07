@@ -164,57 +164,8 @@ namespace Origam.Workbench.Services
             }
 			base.SchemaProvider_InstancePersisted(sender, persistedObject);
 		}
-
-        public override bool SupportsSave
-        {
-            get
-            {
-                IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-                IDatabasePersistenceProvider dbProvider = persistence.SchemaProvider as IDatabasePersistenceProvider;
-                return dbProvider != null;
-            }
-        }
-
-        override public void SaveSchema()
-		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            IDatabasePersistenceProvider dbProvider = persistence.SchemaProvider as IDatabasePersistenceProvider;
-            if (dbProvider == null)
-            {
-                throw new Exception("Configured model persistence provider does not support SaveSchema command.");
-            }
-            else
-            {
-                dbProvider.Update(null);
-                if(SchemaListBrowser != null)
-                {
-                    SchemaListBrowser.LoadPackages();
-                }
-                _isSchemaChanged = false;
-                OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-                if (settings.ModelSourceControlLocation != "" && settings.ModelSourceControlLocation != null)
-                {
-	                string oldFilePath = MakeXmlFileName(ActiveExtension.OldName, settings);
-                    string newFilePath = MakeXmlFileName(ActiveExtension.Name, settings);
-
-	                if (File.Exists(oldFilePath))
-	                {
-		                File.Delete(oldFilePath);
-	                }
-	                persistence.ExportPackage(ActiveExtension.Id, newFilePath);
-                }
-            }
-		}
-
-		private string MakeXmlFileName(string fileName, OrigamSettings settings)
-		{
-			string fullPath = Path.Combine(
-				settings.ModelSourceControlLocation,
-				fileName.ReplaceInvalidFileCharacters("_") + ".xml");
-			return fullPath;
-		}
-
-		override public void MergeSchema(DataSet schema)
+        
+        override public void MergeSchema(DataSet schema)
 		{
             IStatusBarService statusBar = ServiceManager.Services.GetService(typeof(IStatusBarService)) as IStatusBarService;
             if (statusBar != null) statusBar.SetStatusText(ResourceUtils.GetString("ImportingModel"));

@@ -53,15 +53,6 @@ namespace Origam.Workbench.Services
             origamRootReference.ReferencedPackageId = referencePackageId;
             newExtension.Persist();
             origamRootReference.Persist();
-
-            IDatabasePersistenceProvider dbListProvider =
-                persistenceService.SchemaListProvider
-                    as IDatabasePersistenceProvider;
-            if (dbListProvider != null)
-            {
-                dbListProvider.Update(null);
-            }
-
             SchemaService schema =
                 ServiceManager.Services.GetService(typeof(SchemaService)) as
                     SchemaService;
@@ -84,12 +75,6 @@ namespace Origam.Workbench.Services
                     }
                 }
             }
-
-            if (schema.SupportsSave)
-            {
-                schema.SaveSchema();
-            }
-
             IDeploymentService deployment =
                 ServiceManager.Services.GetService(typeof(IDeploymentService)) as
                     IDeploymentService;

@@ -964,35 +964,6 @@ namespace OrigamArchitect.Commands
 		}		
 	}
 
-	public class SetServerRestart : AbstractMenuCommand
-	{
-		private SchemaService _schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-		public override bool IsEnabled
-		{
-			get
-			{
-				return _schemaService.IsSchemaLoaded;
-			}
-			set
-			{
-				base.IsEnabled = value;
-			}
-		}
-
-		public override void Run()
-		{
-            if (_schemaService.IsSchemaChanged && _schemaService.SupportsSave)
-            {
-                if (MessageBox.Show(strings.SaveModelChanges_Question,
-                    strings.SavemodelChanges_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    _schemaService.SaveSchema();
-                }
-            }
-			OrigamEngine.SetRestart();
-		}		
-	}
-
     public class ShowHelp : AbstractMenuCommand
     {
         public override void Run()
@@ -1152,7 +1123,7 @@ namespace OrigamArchitect.Commands
 		}
 	}
 	
-	public class SchemaExtensionSorter : IDatasetFormater
+	public class SchemaExtensionSorter : IDatasetFormatter
 	{
 		public DataSet Format(DataSet unsortedData)
 		{

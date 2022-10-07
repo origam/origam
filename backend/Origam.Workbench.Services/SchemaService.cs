@@ -209,20 +209,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		public virtual void SaveSchema()
-		{
-            throw new NotImplementedException();
-		}
-
-        public virtual bool SupportsSave
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-        
-        public virtual bool UnloadSchema()
+		public virtual bool UnloadSchema()
 		{
 			CancelEventArgs e = new CancelEventArgs(false);
             _isSchemaLoaded = false;
@@ -279,18 +266,6 @@ namespace Origam.Workbench.Services
 			return true;
 		}
 		
-
-		public DataSet EmptySchema()
-		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            IDatabasePersistenceProvider dbProvider = persistence.SchemaProvider as IDatabasePersistenceProvider;
-            if (dbProvider == null)
-            {
-                throw new Exception("The configured model persistence provider does not support this command.");
-            }
-            return dbProvider.EmptyData();
-		}
-
 		public virtual void MergeSchema(DataSet schema)
 		{
             throw new NotImplementedException();

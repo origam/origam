@@ -48,18 +48,6 @@ namespace Origam.Gui.Win.Commands
 			ext.VersionString = version.VersionString;
 			ext.Persist();
 			_schemaService.ActiveExtension.Refresh();
-
-			IDatabasePersistenceProvider dbProvider = _persistence.SchemaProvider as IDatabasePersistenceProvider;
-			IDatabasePersistenceProvider dbListProvider = _persistence.SchemaListProvider as IDatabasePersistenceProvider;
-			if(dbProvider != null)
-			{
-				dbProvider.Update(null);
-			}
-			if(dbListProvider != null)
-			{
-				dbListProvider.Refresh(false, null);
-			}
-
 			_schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
 			_schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
 			Origam.Workbench.Commands.DeployVersion cmd3 = new Origam.Workbench.Commands.DeployVersion();
