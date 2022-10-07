@@ -164,23 +164,6 @@ namespace Origam.Workbench.Services
             }
 			base.SchemaProvider_InstancePersisted(sender, persistedObject);
 		}
-        
-        override public void MergeSchema(DataSet schema)
-		{
-            IStatusBarService statusBar = ServiceManager.Services.GetService(typeof(IStatusBarService)) as IStatusBarService;
-            if (statusBar != null) statusBar.SetStatusText(ResourceUtils.GetString("ImportingModel"));
-            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			RemoveAllProviders();
-            persistence.MergeSchema(schema, this.ActiveExtension.PrimaryKey);
-            if (_schemaBrowser != null)
-            {
-                _schemaBrowser.EbrSchemaBrowser.RemoveBrowserNode(this.ActiveExtension);
-            }            
-            _activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), this.ActiveExtension.PrimaryKey) as Package;
-            this.OnSchemaLoaded(EventArgs.Empty);
-            this.OnSchemaChanged(this, EventArgs.Empty);
-            if (statusBar != null) statusBar.SetStatusText("");
-        }
 
 		public void SelectItem(AbstractSchemaItem schemaItem)
 		{

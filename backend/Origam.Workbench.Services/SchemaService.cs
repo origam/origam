@@ -266,11 +266,6 @@ namespace Origam.Workbench.Services
 			return true;
 		}
 		
-		public virtual void MergeSchema(DataSet schema)
-		{
-            throw new NotImplementedException();
-		}
-
 		public void AddProvider(AbstractSchemaItemProvider provider)
 		{
 			_providers.Add(provider.GetType(), provider);

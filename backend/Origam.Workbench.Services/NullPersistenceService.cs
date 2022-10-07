@@ -57,10 +57,6 @@ namespace Origam.Workbench.Services
             throw new NotImplementedException();
         }
 
-        public void MergeSchema(DataSet schema, Key activePackage)
-        {
-        }
-
         public void InitializeRepository()
         {
         }

@@ -216,12 +216,6 @@ namespace Origam.Workbench.Services
                 pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
 
-        public void MergeSchema(System.Data.DataSet schema, Key activePackage)
-        {
-            throw new NotImplementedException();
-        }
-
-
         public void InitializeRepository()
         {
         }
