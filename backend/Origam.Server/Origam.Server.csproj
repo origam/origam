@@ -81,6 +81,7 @@
   <ItemGroup>
     <ProjectReference Include="..\origam-utils\origam-utils.csproj" />
     <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj" />
+    <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj" />
     <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj" />
     <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj" />
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
