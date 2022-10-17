@@ -52,7 +52,7 @@
 
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.35.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
