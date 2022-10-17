@@ -186,13 +186,13 @@ namespace Origam.Schema.WorkflowModel
 			wqStructure.ClearCacheOnPersist = false;
 			wqStructure.ThrowEventOnPersist = false;
 			wqStructure.Persist();
+			wqStructure.UpdateReferences();
+			wqStructure.ClearCacheOnPersist = true;
 			DataStructureSortSet sortSet = EntityHelper.CreateSortSet(
 				wqStructure, "Default", true);
 			EntityHelper.CreateSortSetItem(sortSet,
 				wqStructure.Entities[0] as DataStructureEntity, "RecordCreated",
 				DataStructureColumnSortDirection.Ascending, true);
-			wqStructure.UpdateReferences();
-			wqStructure.ClearCacheOnPersist = true;
 			wqStructure.ThrowEventOnPersist = true;
 			wqStructure.Persist();
 
