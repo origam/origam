@@ -963,7 +963,26 @@ namespace OrigamArchitect.Commands
 			if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
 		}		
 	}
+	public class SetServerRestart : AbstractMenuCommand
+	{
+		private SchemaService _schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+		public override bool IsEnabled
+		{
+			get
+			{
+				return _schemaService.IsSchemaLoaded;
+			}
+			set
+			{
+				base.IsEnabled = value;
+			}
+		}
 
+		public override void Run()
+		{
+			OrigamEngine.SetRestart();
+		}		
+	}
     public class ShowHelp : AbstractMenuCommand
     {
         public override void Run()

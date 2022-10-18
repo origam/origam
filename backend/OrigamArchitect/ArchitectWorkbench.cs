@@ -662,6 +662,7 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.Connect_MenuItem, new ConnectRepository(), Images.Home, Keys.None, _fileMenu);
 			CreateMenuItem(strings.Disconnect_MenuItem, new DisconnectRepository(), null, Keys.None, _fileMenu);
 			CreateMenuItem(strings.ConnectionConfig_MenuItem, new EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
+			AsMenuCommand mnuServerRestart = CreateMenuItem(strings.SetServerRestart_MenuItem, new Commands.SetServerRestart(), Images.RestartServer, Keys.None, _toolsMenu);
 			using (SqlViewer vwr = new SqlViewer(null))
             {
 				CreateMenuWithSubmenu(strings.SqlConsole_MenuItem, vwr.Icon.ToBitmap(), new ShowSqlConsoleMenuBuilder(), _toolsMenu);
@@ -678,6 +679,7 @@ namespace OrigamArchitect
 			ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuSave,ImageRes.Save));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuRefresh,ImageRes.Refresh));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
+            toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
 #endif
         }
 		private void CreateHelpMenu()
