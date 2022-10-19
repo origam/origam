@@ -47,7 +47,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -82,8 +81,7 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		WorkflowEntityParameterMappingType _type = WorkflowEntityParameterMappingType.Current;
-		[EntityColumn("I01")] 
-        [XmlAttribute("type")]
+		[XmlAttribute("type")]
 		public WorkflowEntityParameterMappingType Type
 		{
 			get
@@ -96,7 +94,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid FieldId;
 
 		[TypeConverter(typeof(StateMachineAllFieldConverter))]

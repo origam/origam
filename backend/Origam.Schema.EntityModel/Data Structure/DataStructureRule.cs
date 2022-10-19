@@ -49,8 +49,7 @@ namespace Origam.Schema.EntityModel
 			DataStructureRuleDependency.CategoryConst);
 
 		private int _priority = 100;
-
-		[EntityColumn("I01")]
+		
 		[DefaultValue(100)]
         [XmlAttribute("priority")]
 		public int Priority
@@ -58,8 +57,7 @@ namespace Origam.Schema.EntityModel
 			get => _priority;
 			set => _priority = value;
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
@@ -77,8 +75,7 @@ namespace Origam.Schema.EntityModel
 				TargetField = null;
 			}
 		}
-
-		[EntityColumn("G04")]  
+        
 		public Guid TargetFieldId;
 
 		[TypeConverter(typeof(DataStructureEntityFieldConverter))]
@@ -91,8 +88,7 @@ namespace Origam.Schema.EntityModel
 			set => TargetFieldId = (value == null) 
 				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid ValueRuleId;
 
 		[TypeConverter(typeof(DataRuleConverter))]
@@ -105,8 +101,7 @@ namespace Origam.Schema.EntityModel
 			set => ValueRuleId = (value == null) 
 				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G03")]  
+		
 		public Guid CheckRuleId;
 
 		[TypeConverter(typeof(StartRuleConverter))]
@@ -122,7 +117,7 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(ArrayList dependencies)

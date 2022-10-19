@@ -121,7 +121,6 @@ namespace Origam.Schema.MenuModel
 		}
 
 		[DefaultValue(false)]
-		[EntityColumn("B01")]
 		[XmlAttribute("isHidden")]
 		public bool IsHidden { get; set; } 
 

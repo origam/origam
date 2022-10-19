@@ -72,7 +72,7 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		private int _callElements;
-		[EntityColumn("I05"), Browsable(false)]
+		[Browsable(false)]
         [XmlAttribute("callElements")]
         public int CallElements
 		{

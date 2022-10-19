@@ -25,9 +25,6 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.TestModel
 {
-	/// <summary>
-	/// Summary description for TestCaseAlternative.
-	/// </summary>
 	[SchemaItemDescription("Alternative", "Alternatives", 27)]
     [ClassMetaVersion("6.0.0")]
 	public class TestCaseAlternative : AbstractSchemaItem
@@ -42,7 +39,6 @@ namespace Origam.Schema.TestModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override string Icon => "27";

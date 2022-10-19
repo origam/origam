@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="c63a999f-b117-4618-8aaa-a38789039452"
     asi:name="Identity_CreateUser_GUI_Save"
     w:transactionBehavior="InheritExisting">
+    <crs:WorkflowTask
+      asi:abstract="false"
+      x:id="2c8c0249-abf8-4f58-95b0-1429e43dc5e9"
+      asi:name="01_Validate"
+      aws:roles="*"
+      aws:validationRule="Security/Rule/Security/ValidateNewUser.origam#ValidateNewUser/6fc55ed1-8605-422e-93b9-7eee08be9bfd"
+      aws:validationRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -21,13 +41,6 @@
       x:id="5edc96b2-2247-4925-b2a9-f629deb2e74e"
       cs:isReturnValue="false"
       asi:name="OutputFromMembership" />
-    <crs:WorkflowTask
-      asi:abstract="false"
-      x:id="2c8c0249-abf8-4f58-95b0-1429e43dc5e9"
-      asi:name="01_Validate"
-      aws:roles="*"
-      aws:validationRule="Security/Rule/Security/ValidateNewUser.origam#ValidateNewUser/6fc55ed1-8605-422e-93b9-7eee08be9bfd"
-      aws:validationRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e" />
     <twb:WorkflowTask
       asi:abstract="false"
       x:id="948e9557-dd95-4fda-b273-e12889340bd3"
@@ -45,9 +58,43 @@
         smct:serviceMethod="Security/Service/IdentityService.origam#IdentityService/CreateUser/3721b774-d828-49e2-b80d-93dc7d189a75">
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
-          x:id="da2cd46f-e157-4273-813d-1da325f00e3f"
-          asi:name="PasswordAnswer"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordAnswer/f5f8da01-a93f-468a-a7df-1a6bb44c2a37" />
+          x:id="0ea684b8-7e28-42c0-98bb-76c6f3a036c6"
+          asi:name="Username"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Username/5ec01d8a-c34a-4d2a-84e6-a30f85856ca1">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e"
+            x:id="f7c81673-757d-4aec-a5de-ad01fdee9844"
+            asi:name="UserName"
+            cr:xPath="/ROOT/BusinessPartner/UserName" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="5453fa16-1d40-4097-8ed9-2362653bf8c0"
+          asi:name="ProviderUserKey"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/ProviderUserKey/dd68f8c9-172d-4423-931a-d3fcda304c87">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e"
+            x:id="6e864ab5-8651-4381-90e5-6812a56962f8"
+            asi:name="ProviderUserKey"
+            cr:xPath="/ROOT/BusinessPartner/Id" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
+          x:id="83aa621b-cacc-414f-ad38-d46446ceb107"
+          asi:name="Email"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Email/71afe313-2206-49a4-b0dc-42d0720567ad">
+          <cr:WorkflowContextReference
+            asi:abstract="false"
+            cr:castToDataType="String"
+            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e"
+            x:id="d6ebb26d-381a-4cc4-8e20-57ecd5edddee"
+            asi:name="Email"
+            cr:xPath="/ROOT/BusinessPartner/@UserEmail" />
+        </smcp:ServiceMethodCallParameter>
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
           x:id="9947848e-e84d-4bca-bfb5-4a667dadba0f"
@@ -68,19 +115,6 @@
           smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordQuestion/4f3f8c55-209d-43b9-bb3e-67f166c421e5" />
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
-          x:id="5453fa16-1d40-4097-8ed9-2362653bf8c0"
-          asi:name="ProviderUserKey"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/ProviderUserKey/dd68f8c9-172d-4423-931a-d3fcda304c87">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e"
-            x:id="6e864ab5-8651-4381-90e5-6812a56962f8"
-            asi:name="ProviderUserKey"
-            cr:xPath="/ROOT/BusinessPartner/Id" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
           x:id="d1d402eb-c473-43e4-8a14-3b93ce30c77a"
           asi:name="Password"
           smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Password/3b97d106-dd77-47f4-861b-a0e6ed248e97">
@@ -94,30 +128,9 @@
         </smcp:ServiceMethodCallParameter>
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
-          x:id="0ea684b8-7e28-42c0-98bb-76c6f3a036c6"
-          asi:name="Username"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Username/5ec01d8a-c34a-4d2a-84e6-a30f85856ca1">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e"
-            x:id="f7c81673-757d-4aec-a5de-ad01fdee9844"
-            asi:name="UserName"
-            cr:xPath="/ROOT/BusinessPartner/UserName" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="83aa621b-cacc-414f-ad38-d46446ceb107"
-          asi:name="Email"
-          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/Email/71afe313-2206-49a4-b0dc-42d0720567ad">
-          <cr:WorkflowContextReference
-            asi:abstract="false"
-            cr:castToDataType="String"
-            cr:contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI_Save.origam#Identity_CreateUser_GUI_Save/UserProfile_New/50d48e72-d4dd-4dbf-a400-2a302fbce03e"
-            x:id="d6ebb26d-381a-4cc4-8e20-57ecd5edddee"
-            asi:name="Email"
-            cr:xPath="/ROOT/BusinessPartner/@UserEmail" />
-        </smcp:ServiceMethodCallParameter>
+          x:id="da2cd46f-e157-4273-813d-1da325f00e3f"
+          asi:name="PasswordAnswer"
+          smcp:serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordAnswer/f5f8da01-a93f-468a-a7df-1a6bb44c2a37" />
         <wtd:WorkflowTaskDependency
           asi:abstract="false"
           x:id="cd23f391-ae33-44f7-886b-2dfee40dfbfa"
@@ -136,6 +149,17 @@
         smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
         <smcp:ServiceMethodCallParameter
           asi:abstract="false"
+          x:id="b4b5d564-b78f-403b-a65e-700ae401df0c"
+          asi:name="DataStructure"
+          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+          <dsr:DataStructureReference
+            asi:abstract="false"
+            dsr:dataStructure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34"
+            x:id="fcfbccab-182b-4337-bb38-5e654b37766e"
+            asi:name="UserProfile_New" />
+        </smcp:ServiceMethodCallParameter>
+        <smcp:ServiceMethodCallParameter
+          asi:abstract="false"
           x:id="ef3bec35-8a85-4a3e-a314-070d240432f3"
           asi:name="Data"
           smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
@@ -146,17 +170,6 @@
             x:id="b3e2466b-b4ff-4116-b637-a23831e1c409"
             asi:name="UserProfile_New"
             cr:xPath="/" />
-        </smcp:ServiceMethodCallParameter>
-        <smcp:ServiceMethodCallParameter
-          asi:abstract="false"
-          x:id="b4b5d564-b78f-403b-a65e-700ae401df0c"
-          asi:name="DataStructure"
-          smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
-          <dsr:DataStructureReference
-            asi:abstract="false"
-            dsr:dataStructure="Security/DataStructure/Security/UserProfile_New.origam#UserProfile_New/ee5cb6a9-8724-41ae-b599-f89913868f34"
-            x:id="fcfbccab-182b-4337-bb38-5e654b37766e"
-            asi:name="UserProfile_New" />
         </smcp:ServiceMethodCallParameter>
       </smct:WorkflowTask>
       <wtd:WorkflowTaskDependency

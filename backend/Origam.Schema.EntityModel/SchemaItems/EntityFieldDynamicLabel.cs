@@ -51,7 +51,6 @@ namespace Origam.Schema.EntityModel
 		#region Properties
 		private string _roles = "";
 		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("LS01")]
 		[StringNotEmptyModelElementRule()]
         [XmlAttribute("roles")]
         public string Roles
@@ -70,8 +69,7 @@ namespace Origam.Schema.EntityModel
 
 		private int _level = 100;
 		[Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")]
-        [XmlAttribute("level")]
+		[XmlAttribute("level")]
         public int Level
 		{
 			get
@@ -85,8 +83,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("G01")]  
+        
 		public Guid RuleId;
 
 		[TypeConverter(typeof(EntityRuleConverter))]
@@ -106,8 +103,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("G02")]  
+        
 		public Guid LabelConstantId;
 
 		[TypeConverter(typeof(DataConstantConverter))]
@@ -178,8 +174,7 @@ namespace Origam.Schema.EntityModel
 				return "5";
 			}
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get

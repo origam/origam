@@ -52,7 +52,6 @@ namespace Origam.Schema.MenuModel
         }
 
         #region Properties
-        [EntityColumn("G01")]
         public Guid DataStructureId;
 
         [TypeConverter(typeof(DataStructureConverter))]
@@ -74,7 +73,6 @@ namespace Origam.Schema.MenuModel
             }
         }
 
-        [EntityColumn("G02")]
         public Guid DataStructureMethodId;
 
         [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
@@ -102,7 +100,6 @@ namespace Origam.Schema.MenuModel
         [Category("Results")]
         [DisplayName("Group Label")]
         [Description("A text under which the search results will be grouped.")]
-        [EntityColumn("SS01")]
         [NotNullModelElementRule()]
         [Localizable(true)]
         [XmlAttribute("groupLabel")]
@@ -122,7 +119,6 @@ namespace Origam.Schema.MenuModel
         [Category("Data Source")]
         [DisplayName("Filter Parameter")]
         [Description("String parameter that will accept the searched text.")]
-        [EntityColumn("SS02")]
         [NotNullModelElementRule()]
         [XmlAttribute("filterParameter")]
         public string FilterParameter
@@ -137,7 +133,6 @@ namespace Origam.Schema.MenuModel
             }
         }
 
-        [EntityColumn("G03")]
         public Guid LookupId;
 
         [Category("Reference")]
@@ -160,7 +155,7 @@ namespace Origam.Schema.MenuModel
 
         private string _roles = "*";
         [Category("Security")]
-        [EntityColumn("LS01"), NotNullModelElementRule()]
+        [NotNullModelElementRule()]
         [XmlAttribute("roles")]
         public string Roles
         {
@@ -191,7 +186,6 @@ namespace Origam.Schema.MenuModel
             }
         }
 
-        [EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

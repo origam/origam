@@ -47,7 +47,6 @@ namespace Origam.Schema.GuiModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -79,7 +78,6 @@ namespace Origam.Schema.GuiModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid ReportId;
 
 		[Category("Reference")]

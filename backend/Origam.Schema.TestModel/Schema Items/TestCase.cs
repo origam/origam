@@ -21,13 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.TestModel
 {
-	/// <summary>
-	/// Summary description for TestCase.
-	/// </summary>
 	[SchemaItemDescription("Test Case", 26)]
     [ClassMetaVersion("6.0.0")]
 	public class TestCase : AbstractSchemaItem
@@ -42,7 +38,6 @@ namespace Origam.Schema.TestModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override string Icon => "26";
@@ -81,8 +76,7 @@ namespace Origam.Schema.TestModel
 
 		#region Properties
 		private string _role;
-
-		[EntityColumn("LS01")]
+		
 		public string Role
 		{
 			get => _role;

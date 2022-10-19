@@ -44,7 +44,6 @@ namespace Origam.Schema.LookupModel
 	
 		#region Properties
 		private NotificationBoxType _type = NotificationBoxType.Logo;
-		[EntityColumn("I01")]
 		[Description("One of the predefined notification box types.")]
         [XmlAttribute("type")]
 		public NotificationBoxType Type
@@ -54,7 +53,6 @@ namespace Origam.Schema.LookupModel
 		}
 
 		private int _refreshInterval = 0;
-		[EntityColumn("I02")]
 		[Description("Refresh interval in seconds.")]
         [XmlAttribute("refreshInterval")]
         public int RefreshInterval
@@ -65,8 +63,6 @@ namespace Origam.Schema.LookupModel
 		#endregion
 
 		#region Overriden AbstractDataEntityColumn Members
-		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override bool UseFolders => false;

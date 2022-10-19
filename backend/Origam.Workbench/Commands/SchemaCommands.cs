@@ -563,7 +563,7 @@ namespace Origam.Workbench.Commands
 			}
             else if (item is EntityUIAction)
             {
-               editor = new UiActionEditor();
+               editor = new UiActionEditor(ShowDialog);
             }
             else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && ! ShowDialog)
             {
@@ -576,14 +576,14 @@ namespace Origam.Workbench.Commands
                 }
                 else
                 {
-                    editor = new PropertyGridEditor();
                     this.ShowDialog = true;
+                    editor = new PropertyGridEditor(ShowDialog);
                     this.ShowDiagramEditorAfterSave = true;
                 }
             }
             else
 			{
-                editor = new PropertyGridEditor();
+                editor = new PropertyGridEditor(ShowDialog);
             }
 
             // Set editor to dirty, if object has not been persisted, yet (new item)

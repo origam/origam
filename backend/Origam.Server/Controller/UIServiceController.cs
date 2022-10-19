@@ -126,11 +126,11 @@ namespace Origam.Server.Controller
                     basicUIService: sessionObjects.UIService)));
         }
         [HttpPost("[action]")]
-        public IActionResult DestroyUI(Guid sessionFormIdentifier)
+        public IActionResult DestroyUI([FromBody]DestroyInput input)
         {
             return RunWithErrorHandler(() =>
             {
-                sessionObjects.UIService.DestroyUI(sessionFormIdentifier);
+                sessionObjects.UIService.DestroyUI(input.FormSessionId);
                 return Ok();
             });
         }

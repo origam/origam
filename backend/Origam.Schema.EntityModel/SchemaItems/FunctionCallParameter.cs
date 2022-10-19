@@ -26,9 +26,6 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for FunctionCallParameter.
-	/// </summary>
 	[SchemaItemDescription("Parameter", 15)]
     [HelpTopic("Function+Call+Field")]
 	[XmlModelRoot(CategoryConst)]
@@ -45,7 +42,6 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override string Icon => "15";
@@ -63,7 +59,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid FunctionParameterId;
 
 		[NotNullModelElementRule()]

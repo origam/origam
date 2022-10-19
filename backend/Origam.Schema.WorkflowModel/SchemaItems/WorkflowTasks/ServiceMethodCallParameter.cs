@@ -49,7 +49,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		[Browsable(false)]
@@ -64,7 +63,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid ServiceMethodParameterId;
 
 		[XmlReference("serviceMethodParameter", "ServiceMethodParameterId")]

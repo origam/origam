@@ -42,15 +42,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  //width: -webkit-min-content;
-  //width: -moz-min-content;
-  //width: min-content;
   cursor: pointer;
   font-size: 0.9em;
   @include hoverItemAnimation;
 
   &:global(.hidden) {
-    //display: none;
     position: absolute;
     top: 110%;;
     left: 0;
@@ -62,23 +58,4 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   &:not(:global(.hidden)):first-of-type {
     margin-left: 0;
   }
-/*
-  &:not(:global(.hidden)):first-of-type {
-    border-radius: 3em 0em 0em 3em;
-    border-right: none;
-    margin-right: 0;
-  }
-
-  &:not(:global(.hidden)):last-of-type {
-    border-radius: 0em 3em 3em 0em;
-    border-left: none;
-    margin-left: 0;
-  }
-
-  &:first-of-type:last-of-type {
-    border-radius: 3em;
-    border-color: var(--background5);
-    border-style: solid;
-    border-width: 1px;
-  }*/
 }

@@ -42,7 +42,6 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowSchedule(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid WorkflowId;
 
 		[TypeConverter(typeof(WorkflowConverter))]
@@ -70,8 +69,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid ScheduleTimeId;
 
 		[TypeConverter(typeof(ScheduleTimeConverter))]
@@ -103,7 +101,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(

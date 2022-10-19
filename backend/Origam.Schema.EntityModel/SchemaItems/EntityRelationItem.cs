@@ -43,7 +43,6 @@ namespace Origam.Schema.EntityModel
 		public const string CategoryConst = "EntityRelation";
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid RelatedEntityId;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -79,8 +78,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private bool _isParentChild = false;
-
-		[EntityColumn("B01")]
+		
         [XmlAttribute("parentChild")]
         public bool IsParentChild
 		{
@@ -90,13 +88,11 @@ namespace Origam.Schema.EntityModel
 
 
         [SelfJoinSameBaseRule]
-		[EntityColumn("B02")]
         [XmlAttribute("selfJoin")]
         public bool IsSelfJoin { get; set; }
 
         private bool _isOR = false;
 
-		[EntityColumn("B03")]
         [XmlAttribute("or")]
         public bool IsOR
 		{
@@ -106,9 +102,9 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
+		
 		public override bool UseFolders => false;
 
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(

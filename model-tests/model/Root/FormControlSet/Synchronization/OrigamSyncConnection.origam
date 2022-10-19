@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:apvi="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPropertyValueItem/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:csi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlSetItem/6.0.0" xmlns:fcs="http://schemas.origam.com/Origam.Schema.GuiModel.FormControlSet/6.0.0" xmlns:pvi="http://schemas.origam.com/Origam.Schema.GuiModel.PropertyValueItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:apvi="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPropertyValueItem/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:csi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlSetItem/6.0.0"
+  xmlns:fcs="http://schemas.origam.com/Origam.Schema.GuiModel.FormControlSet/6.0.0"
+  xmlns:pvi="http://schemas.origam.com/Origam.Schema.GuiModel.PropertyValueItem/6.0.0">
   <fcs:FormControlSet
     asi:abstract="false"
     fcs:dataStructure="Root/DataStructure/Synchronization/OrigamSyncConnection_Complete.origam#OrigamSyncConnection_Complete/c2b8c1eb-05cc-4866-9737-116fce0ff292"
@@ -21,23 +27,91 @@
         csi:widget="Root/Control/_Basic Controls/SplitPanel.origam#SplitPanel/9a805f08-aa81-468e-a2a0-5bdb57b734e5">
         <csi:ControlSetItem
           asi:abstract="false"
-          x:id="eb8f2d7c-462b-415e-bdca-c72beaf1f88c"
+          x:id="62e86729-a83e-4aa0-9bbc-fc0f142b5b45"
           csi:isAlternative="false"
-          asi:name="AsPanel1"
+          asi:name="AsPanel2"
           csi:requestSaveAfterChange="false"
-          csi:widget="Root/Control/OrigamSyncConnection.origam#OrigamSyncConnection/f002bbe7-7ebf-4906-96f7-ed9ef1b6dd35">
+          csi:widget="Root/Control/OrigamSyncConnectionParameter.origam#OrigamSyncConnectionParameter/6caf004b-0601-49bb-acda-50ce97ba5d78">
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="b9b58d3f-cea6-48f5-8f48-2bbba5cae3c8"
+            x:id="0515ed51-0d6f-4904-b5f0-fe0c62a106e4"
+            asi:name="Height"
+            apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
+            pvi:value="300" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="194b04c5-d8a8-4d75-b3d6-1e6a5dc4d452"
+            asi:name="Width"
+            apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
+            pvi:value="788" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="2771fabf-6016-4d08-8ccb-608ba8388fbd"
             asi:name="ShowDeleteButton"
             apvi:propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
             pvi:value="true" />
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="6183ac30-4a72-41bd-b329-4ab5b785e7e6"
+            x:id="3058d90f-1928-4e53-aea1-4147717c38aa"
+            asi:name="IconId"
+            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+            pvi:value="00000000-0000-0000-0000-000000000000" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="72176e8d-eaad-4900-b5fd-e50be58c2045"
+            asi:name="HideNavigationPanel"
+            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+            pvi:value="false" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="75a386ef-6dc2-48c8-970c-2a03e90fe6a6"
+            asi:name="PanelTitle"
+            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
+            pvi:value="Parametry" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="7f8d03e7-58ff-486a-ac20-90787d187621"
+            asi:name="Top"
+            apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
+            pvi:value="210" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="ec111f8a-71d6-4216-be85-f6d823c25394"
+            asi:name="ShowNewButton"
+            apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
+            pvi:value="true" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="f60989a2-bc3b-4e53-814c-27f1d016ebd1"
             asi:name="GridVisible"
             apvi:propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
             pvi:value="true" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="f9af69d6-15aa-43b8-b86b-3270d715681b"
+            asi:name="DataMember"
+            apvi:propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
+            pvi:value="OrigamSyncConnection.OrigamSyncConnectionParameter" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="fc0ceb37-e333-4089-b00d-d949c6277ae6"
+            asi:name="Left"
+            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
+            pvi:value="18" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
+            x:id="fcbac0af-22ea-4b5a-938f-9d8efcf9b5a5"
+            asi:name="TabIndex"
+            apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
+            pvi:value="1" />
+        </csi:ControlSetItem>
+        <csi:ControlSetItem
+          asi:abstract="false"
+          x:id="eb8f2d7c-462b-415e-bdca-c72beaf1f88c"
+          csi:isAlternative="false"
+          asi:name="AsPanel1"
+          csi:requestSaveAfterChange="false"
+          csi:widget="Root/Control/OrigamSyncConnection.origam#OrigamSyncConnection/f002bbe7-7ebf-4906-96f7-ed9ef1b6dd35">
           <pvi:PropertyValueItem
             asi:abstract="false"
             x:id="083263c9-535b-4c09-9c5e-563b85c3e2f4"
@@ -46,22 +120,10 @@
             pvi:value="0" />
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="f463684d-1db5-4fc5-b81f-5733c6ce3b41"
-            asi:name="IconId"
-            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
-            pvi:value="00000000-0000-0000-0000-000000000000" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="98940bc7-3024-4a5a-92e1-6d06f63d40d9"
-            asi:name="HideNavigationPanel"
-            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
-            pvi:value="false" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="d08d8ca5-4439-4569-988d-71e97715d970"
-            asi:name="ShowNewButton"
-            apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
-            pvi:value="true" />
+            x:id="0ca3e58c-897a-4216-bf6b-995f3670de81"
+            asi:name="Left"
+            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
+            pvi:value="10" />
           <pvi:PropertyValueItem
             asi:abstract="false"
             x:id="23153af8-6f53-4add-b6de-7e133d0685c2"
@@ -76,10 +138,10 @@
             pvi:value="200" />
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="0ca3e58c-897a-4216-bf6b-995f3670de81"
-            asi:name="Left"
-            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
-            pvi:value="10" />
+            x:id="6183ac30-4a72-41bd-b329-4ab5b785e7e6"
+            asi:name="GridVisible"
+            apvi:propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
+            pvi:value="true" />
           <pvi:PropertyValueItem
             asi:abstract="false"
             x:id="94a2f659-0317-4c94-a19e-c3e3a42f4a9a"
@@ -88,97 +150,59 @@
             pvi:value="OrigamSyncConnection" />
           <pvi:PropertyValueItem
             asi:abstract="false"
+            x:id="98940bc7-3024-4a5a-92e1-6d06f63d40d9"
+            asi:name="HideNavigationPanel"
+            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
+            pvi:value="false" />
+          <pvi:PropertyValueItem
+            asi:abstract="false"
             x:id="b89c55e1-990c-4cc1-82c5-d9cd8eb10208"
             asi:name="Width"
             apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
             pvi:value="796" />
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="bc755565-06df-4789-a836-ffd0d2987ed6"
-            asi:name="PanelTitle"
-            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
-            pvi:value="Připojení k synchronizačnímu zdroji" />
-        </csi:ControlSetItem>
-        <csi:ControlSetItem
-          asi:abstract="false"
-          x:id="62e86729-a83e-4aa0-9bbc-fc0f142b5b45"
-          csi:isAlternative="false"
-          asi:name="AsPanel2"
-          csi:requestSaveAfterChange="false"
-          csi:widget="Root/Control/OrigamSyncConnectionParameter.origam#OrigamSyncConnectionParameter/6caf004b-0601-49bb-acda-50ce97ba5d78">
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="194b04c5-d8a8-4d75-b3d6-1e6a5dc4d452"
-            asi:name="Width"
-            apvi:propertyId="16c346fc-561e-404b-a76a-7198ab488710"
-            pvi:value="788" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="f60989a2-bc3b-4e53-814c-27f1d016ebd1"
-            asi:name="GridVisible"
-            apvi:propertyId="84ee631d-39c1-4ecd-91f9-24e434507bc7"
-            pvi:value="true" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="75a386ef-6dc2-48c8-970c-2a03e90fe6a6"
-            asi:name="PanelTitle"
-            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
-            pvi:value="Parametry" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="f9af69d6-15aa-43b8-b86b-3270d715681b"
-            asi:name="DataMember"
-            apvi:propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
-            pvi:value="OrigamSyncConnection.OrigamSyncConnectionParameter" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="3058d90f-1928-4e53-aea1-4147717c38aa"
-            asi:name="IconId"
-            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
-            pvi:value="00000000-0000-0000-0000-000000000000" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="2771fabf-6016-4d08-8ccb-608ba8388fbd"
+            x:id="b9b58d3f-cea6-48f5-8f48-2bbba5cae3c8"
             asi:name="ShowDeleteButton"
             apvi:propertyId="c9e691f4-520e-46a8-b1a1-941ae833bf88"
             pvi:value="true" />
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="7f8d03e7-58ff-486a-ac20-90787d187621"
-            asi:name="Top"
-            apvi:propertyId="0ab85221-d0b8-4df7-bfcc-ac196db06439"
-            pvi:value="210" />
+            x:id="bc755565-06df-4789-a836-ffd0d2987ed6"
+            asi:name="PanelTitle"
+            apvi:propertyId="8e2ee6f6-ef26-4954-ae70-b864e3ef21f2"
+            pvi:value="Připojení k synchronizačnímu zdroji" />
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="fcbac0af-22ea-4b5a-938f-9d8efcf9b5a5"
-            asi:name="TabIndex"
-            apvi:propertyId="3496cb84-734e-4100-b8fc-f54431d82770"
-            pvi:value="1" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="fc0ceb37-e333-4089-b00d-d949c6277ae6"
-            asi:name="Left"
-            apvi:propertyId="2ed67118-feb2-4529-bf0b-524d38ab408c"
-            pvi:value="18" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="72176e8d-eaad-4900-b5fd-e50be58c2045"
-            asi:name="HideNavigationPanel"
-            apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
-            pvi:value="false" />
-          <pvi:PropertyValueItem
-            asi:abstract="false"
-            x:id="ec111f8a-71d6-4216-be85-f6d823c25394"
+            x:id="d08d8ca5-4439-4569-988d-71e97715d970"
             asi:name="ShowNewButton"
             apvi:propertyId="af590ff2-4668-40e3-8195-e1a1f735d433"
             pvi:value="true" />
           <pvi:PropertyValueItem
             asi:abstract="false"
-            x:id="0515ed51-0d6f-4904-b5f0-fe0c62a106e4"
-            asi:name="Height"
-            apvi:propertyId="2e965f41-7fea-480b-a44a-095637d0af7d"
-            pvi:value="300" />
+            x:id="f463684d-1db5-4fc5-b81f-5733c6ce3b41"
+            asi:name="IconId"
+            apvi:propertyId="c9a65ec4-4a73-4351-b86a-deb76329b98f"
+            pvi:value="00000000-0000-0000-0000-000000000000" />
         </csi:ControlSetItem>
+        <pvi:PropertyValueItem
+          asi:abstract="false"
+          x:id="1a064cc6-9fb2-4cd5-b2b4-d85626c249a6"
+          asi:name="Left"
+          apvi:propertyId="9168475b-8aad-4278-9e41-19f0cf0f60cd"
+          pvi:value="8" />
+        <pvi:PropertyValueItem
+          asi:abstract="false"
+          x:id="4eeac0e6-8c80-4f20-803d-6cd7f1956e9a"
+          asi:name="Orientation"
+          apvi:propertyId="97ac8865-099a-488a-874c-f6a5a14a052d"
+          pvi:value="0" />
+        <pvi:PropertyValueItem
+          asi:abstract="false"
+          x:id="54752df9-aed0-4ec8-adf8-6a2ac45da5e2"
+          asi:name="Height"
+          apvi:propertyId="0c143f08-d922-40df-bfb0-f54727fe9fcb"
+          pvi:value="520" />
         <pvi:PropertyValueItem
           asi:abstract="false"
           x:id="97f27463-8bf2-45ea-bedc-1cba8298b604"
@@ -199,35 +223,11 @@
           pvi:value="false" />
         <pvi:PropertyValueItem
           asi:abstract="false"
-          x:id="54752df9-aed0-4ec8-adf8-6a2ac45da5e2"
-          asi:name="Height"
-          apvi:propertyId="0c143f08-d922-40df-bfb0-f54727fe9fcb"
-          pvi:value="520" />
-        <pvi:PropertyValueItem
-          asi:abstract="false"
-          x:id="4eeac0e6-8c80-4f20-803d-6cd7f1956e9a"
-          asi:name="Orientation"
-          apvi:propertyId="97ac8865-099a-488a-874c-f6a5a14a052d"
-          pvi:value="0" />
-        <pvi:PropertyValueItem
-          asi:abstract="false"
           x:id="fc1e0451-91e5-4c65-bfe3-87562adde758"
           asi:name="Top"
           apvi:propertyId="52d8fcdd-1ec5-4ed4-89c6-6f9c9bc71705"
           pvi:value="8" />
-        <pvi:PropertyValueItem
-          asi:abstract="false"
-          x:id="1a064cc6-9fb2-4cd5-b2b4-d85626c249a6"
-          asi:name="Left"
-          apvi:propertyId="9168475b-8aad-4278-9e41-19f0cf0f60cd"
-          pvi:value="8" />
       </csi:ControlSetItem>
-      <pvi:PropertyValueItem
-        asi:abstract="false"
-        x:id="c3a7d1a2-06ee-4296-b4ba-21a2ab6c0d14"
-        asi:name="Width"
-        apvi:propertyId="99f5687f-be11-49ec-a2eb-fba58d945b3e"
-        pvi:value="864" />
       <pvi:PropertyValueItem
         asi:abstract="false"
         x:id="0b7e5326-3c4c-4955-84d5-27d1b99e9e6a"
@@ -240,6 +240,12 @@
         asi:name="Height"
         apvi:propertyId="3ec90be1-7cc2-481d-aed3-85505560eb70"
         pvi:value="592" />
+      <pvi:PropertyValueItem
+        asi:abstract="false"
+        x:id="c3a7d1a2-06ee-4296-b4ba-21a2ab6c0d14"
+        asi:name="Width"
+        apvi:propertyId="99f5687f-be11-49ec-a2eb-fba58d945b3e"
+        pvi:value="864" />
       <pvi:PropertyValueItem
         asi:abstract="false"
         x:id="fe53bb53-dc9b-477c-9d4e-d29b310bdf19"

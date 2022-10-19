@@ -44,7 +44,6 @@ namespace Origam.Schema.GuiModel
 		private bool _isUrlEscaped = false;
 		private WebPageOpenMethod _openMethod = WebPageOpenMethod.OrigamTab;
 		
-		[EntityColumn("LS01")]
         [XmlAttribute("url")]
 		public string Url
 		{
@@ -58,7 +57,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("SS03")]
         [XmlAttribute("externalUrlScheme")]
         public string ExternalUrlScheme
 		{
@@ -72,7 +70,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("B01")]
         [XmlAttribute("forceExternalUrl")]
         public bool ForceExternalUrl
 		{
@@ -86,7 +83,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("B02")] 
         [XmlAttribute("isUrlEscaped")]
 		public bool IsUrlEscaped
 		{
@@ -100,7 +96,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("I03")]
 		[DefaultValue(WebPageOpenMethod.OrigamTab)]
         [XmlAttribute("openMethod")]
         public WebPageOpenMethod OpenMethod

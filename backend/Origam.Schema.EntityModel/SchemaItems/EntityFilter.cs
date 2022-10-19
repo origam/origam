@@ -26,9 +26,6 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for EntityFilter.
-	/// </summary>
 	[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
     [HelpTopic("Filters")]
 	[XmlModelRoot(CategoryConst)]
@@ -49,7 +46,6 @@ namespace Origam.Schema.EntityModel
 			return newNode is IDataEntity;
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override bool UseFolders => false;

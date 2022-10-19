@@ -46,7 +46,6 @@ namespace Origam.Schema
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -58,7 +57,6 @@ namespace Origam.Schema
 
 		#region Properties
 		private string _string;
-		[EntityColumn("M01")]
 		[Localizable(true)]
         [XmlAttribute("string")]
         public string String

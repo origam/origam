@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xfc="http://schemas.origam.com/Origam.Schema.EntityModel.XsltFunctionCollection/6.0.0">
+  <xfc:XsltFunctionCollection
+    asi:abstract="false"
+    xfc:assemblyName="Origam.Rule"
+    xfc:fullClassName="Origam.Rule.XsltFunctions.FileSystemXsltFunctionContainer"
+    x:id="b704f73e-71ec-4d15-8111-bd5e28d7a44f"
+    asi:name="FileSystemXsltFunctions"
+    xfc:xslNameSpacePrefix="fs"
+    xfc:xslNameSpaceUri="http://xsl.origam.com/filesystem" />
+</x:file>

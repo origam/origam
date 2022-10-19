@@ -43,15 +43,13 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
-
+		
 		#endregion
 
 		#region Properties
 		private string _classPath;
-        [EntityColumn("LS01")]
-        [XmlAttribute("classPath")]
+		[XmlAttribute("classPath")]
 		public string ClassPath
 		{
 			get => _classPath;

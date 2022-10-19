@@ -49,7 +49,6 @@ namespace Origam.Schema.EntityModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		[Browsable(false)]
@@ -91,8 +90,7 @@ namespace Origam.Schema.EntityModel
 
 		#region Properties
 		private OrigamDataType _dataType;
-		[EntityColumn("I01")] 
-        [XmlAttribute("dataType")]
+		[XmlAttribute("dataType")]
 		public OrigamDataType DataType
 		{
 			get => _dataType;
@@ -100,8 +98,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private OrigamFunctionType _functionType;
-		[EntityColumn("I02")]
-        [XmlAttribute("type")]
+		[XmlAttribute("type")]
         public OrigamFunctionType FunctionType
 		{
 			get => _functionType;

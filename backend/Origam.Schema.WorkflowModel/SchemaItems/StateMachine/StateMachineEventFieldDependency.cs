@@ -48,7 +48,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -74,7 +73,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid FieldId;
 
 		[TypeConverter(typeof(StateMachineAllFieldConverter))]

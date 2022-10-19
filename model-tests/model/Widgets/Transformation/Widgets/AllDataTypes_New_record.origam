@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:at="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractTransformation/6.0.0"
+  xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  <xt:Transformation
+    asi:abstract="false"
+    xt:engineType="XslCompiledTransform"
+    x:id="ee4763fd-7a25-4b4d-9c9d-8995aa93dbec"
+    asi:name="AllDataTypes_New_record"
+    xt:text="-***-ExternalFile:AllDataTypes_New_record.origam___text___ee4763fd-7a25-4b4d-9c9d-8995aa93dbec.xslt" />
+</x:file>

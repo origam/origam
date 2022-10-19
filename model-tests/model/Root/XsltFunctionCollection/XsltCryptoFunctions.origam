@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:xfc="http://schemas.origam.com/Origam.Schema.EntityModel.XsltFunctionCollection/6.0.0">
+  <xfc:XsltFunctionCollection
+    asi:abstract="false"
+    xfc:assemblyName="Origam.Rule"
+    xfc:fullClassName="Origam.Rule.XsltFunctions.XsltCryptoFunctionContainer"
+    x:id="d83810a3-2948-487e-a986-9a2c374e23c1"
+    asi:name="XsltCryptoFunctions"
+    xfc:xslNameSpacePrefix="CR"
+    xfc:xslNameSpaceUri="http://xsl.origam.com/crypto" />
+</x:file>

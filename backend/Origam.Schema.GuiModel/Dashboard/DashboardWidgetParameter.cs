@@ -47,7 +47,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _caption = "";
 		[Category("User Interface")]
-		[EntityColumn("SS01"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
 		[Localizable(true)]
         [XmlAttribute("label")]
 		public string Caption
@@ -63,7 +63,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		private OrigamDataType _dataType = OrigamDataType.String;
-		[EntityColumn("I01")]
 		[Category("Mapping")]
         [XmlAttribute("dataType")]
 		public OrigamDataType DataType
@@ -78,7 +77,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid DataConstantId;
 
 		[Category("Mapping")]
@@ -96,8 +94,7 @@ namespace Origam.Schema.GuiModel
 				this.DataConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G02")]  
+ 
 		public Guid LookupId;
 
 		[Category("Mapping")]
@@ -124,7 +121,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

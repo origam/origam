@@ -27,7 +27,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 
 namespace Origam.DA.Service

@@ -45,8 +45,7 @@ namespace Origam.Schema.WorkflowModel
 		private string _xpath;
 		[Category("Result")]
 		[Description("An XPath expression from the context of the data returned by the workflow. The result will be used as the URL.")]
-		[EntityColumn("M01")]
-        [XmlAttribute("xPath")]
+		[XmlAttribute("xPath")]
 		public string XPath
 		{
 			get
@@ -62,8 +61,7 @@ namespace Origam.Schema.WorkflowModel
 		private bool _isUrlEscaped;
 		[Category("Result")]
 		[Description("Indicates if the result is already a complete URL that needs no escaping.")]
-		[EntityColumn("B03")]
-        [XmlAttribute("escapeUrl")]
+		[XmlAttribute("escapeUrl")]
 		public bool IsUrlEscaped
 		{
 			get

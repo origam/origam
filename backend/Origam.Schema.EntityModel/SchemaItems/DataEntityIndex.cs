@@ -50,8 +50,7 @@ namespace Origam.Schema.EntityModel
 
 		#region Properties
 		private bool _isUnique = false;
-		
-		[EntityColumn("B01")]
+
 		[DefaultValue(false)]
         [XmlAttribute("unique")]
         public bool IsUnique
@@ -61,7 +60,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private bool _generateDeploymentScript = true;
-		[EntityColumn("B02")]
 		[Category("Mapping"), DefaultValue(true)]
 		[Description("Indicates if deployment script will be generated for this index. If set to false, this index will be skipped from the deployment scripts generator.")]
         [XmlAttribute("generateDeploymentScript")]
@@ -86,7 +84,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

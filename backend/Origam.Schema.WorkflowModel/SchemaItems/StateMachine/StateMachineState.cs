@@ -55,7 +55,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override string Icon
@@ -130,7 +129,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		private StateMachineStateType _type;
-		[EntityColumn("I01")]
+
         [XmlAttribute("type")]
 		public StateMachineStateType Type
 		{
@@ -139,7 +138,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		private int _intValue;
-		[EntityColumn("I02")]  
+
 		[Browsable(false)]
 		public int IntValue
 		{
@@ -148,7 +147,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		private Guid _guidValue;
-		[EntityColumn("G01")]  
+
 		[Browsable(false)]
 		public Guid GuidValue
 		{
@@ -157,7 +156,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		private string _stringValue;
-		[EntityColumn("SS01")]  
+
 		[Browsable(false)]
 		public string StringValue
 		{
@@ -166,7 +165,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		bool _booleanValue = false;
-		[EntityColumn("B01")] 
+
 		[Browsable(false)]
 		public bool BooleanValue
 		{
@@ -175,7 +174,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		decimal _currencyValue = 0;
-		[EntityColumn("C01")] 
+
 		[Browsable(false)]
 		public decimal CurrencyValue
 		{
@@ -184,7 +183,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		decimal _floatValue = 0;
-		[EntityColumn("F01")] 
+
 		[Browsable(false)]
 		public decimal FloatValue
 		{
@@ -193,7 +192,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		object _dateValue = null;
-		[EntityColumn("D01")] 
+
 		[Browsable(false)]
 		public object DateValue
 		{
@@ -331,8 +330,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid DefaultSubstateId;
 
 		[TypeConverter(typeof(StateMachineSubstateConverter))]

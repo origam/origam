@@ -25,9 +25,6 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for DataQuery.
-	/// </summary>
 	[SchemaItemDescription("OR Expression", 2)]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
@@ -42,7 +39,6 @@ namespace Origam.Schema.EntityModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override string Icon => "2";

@@ -1,4 +1,4 @@
-name: "Build Backend and Architect Master"
+name: "Architect & tests"
 
 on:
   push:

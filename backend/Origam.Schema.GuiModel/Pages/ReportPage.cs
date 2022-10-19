@@ -68,7 +68,6 @@ namespace Origam.Schema.GuiModel
 		}		
 
 		#region Properties
-		[EntityColumn("G05")]
 		public Guid ReportId;
 
 		[Category("Report")]
@@ -88,7 +87,6 @@ namespace Origam.Schema.GuiModel
 
 		private DataReportExportFormatType _exportFormatType;
 		[Category("Data Report")]
-		[EntityColumn("I01")]
 		[Description("Export Format Type")]
         [XmlAttribute("exportFormatType")]
 		public DataReportExportFormatType ExportFormatType

@@ -74,7 +74,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(ArrayList dependencies)
@@ -197,8 +196,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			return view;
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid EntityId;
         [NotNullModelElementRule]
 		[TypeConverter(typeof(EntityConverter))]
@@ -215,8 +213,7 @@ namespace Origam.Schema.WorkflowModel
 				SetName();
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid FieldId;
 
 		[TypeConverter(typeof(StateMachineEntityFieldConverter))]
@@ -233,8 +230,7 @@ namespace Origam.Schema.WorkflowModel
 				SetName();
 			}
 		}
-
-		[EntityColumn("G03")]
+		
 		public Guid DynamicStatesLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -248,8 +244,7 @@ namespace Origam.Schema.WorkflowModel
 			set => DynamicStatesLookupId = (value == null) 
 				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G04")]
+		
 		public Guid DynamicOperationsLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -263,8 +258,7 @@ namespace Origam.Schema.WorkflowModel
 			set => DynamicOperationsLookupId = (value == null) 
 				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G05")]
+		
 		public Guid ReverseLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]

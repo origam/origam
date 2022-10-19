@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSet/6.0.0" xmlns:dsdsd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSetDefault/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSet/6.0.0"
+  xmlns:dsdsd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSetDefault/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="132fc504-ec51-4a2f-95d3-8c7c775b224c"
@@ -39,17 +49,6 @@
         asi:abstract="false"
         dse:allFields="true"
         dse:concurrencyHandling="Standard"
-        dse:entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueCommand/b67bd0c3-0b61-4892-9673-201f3d38cff2"
-        x:id="e21e1e36-34f4-4834-9c35-c739ad48839d"
-        dse:ignoreCondition="None"
-        dse:ignoreImplicitFilters="false"
-        asi:name="WorkQueueCommand"
-        dse:relationType="Normal"
-        dse:useUpsert="false" />
-      <dse:DataStructureEntity
-        asi:abstract="false"
-        dse:allFields="true"
-        dse:concurrencyHandling="Standard"
         dse:entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueNotification/b04b2dd9-0d2c-4ab8-940a-85e1d07afdcb"
         x:id="4ae32981-ba9d-40fa-9b2a-d82332a36b63"
         dse:ignoreCondition="None"
@@ -80,6 +79,17 @@
           dse:relationType="Normal"
           dse:useUpsert="false" />
       </dse:DataStructureEntity>
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueCommand/b67bd0c3-0b61-4892-9673-201f3d38cff2"
+        x:id="e21e1e36-34f4-4834-9c35-c739ad48839d"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="WorkQueueCommand"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
     </dse:DataStructureEntity>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"

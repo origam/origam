@@ -39,9 +39,6 @@ namespace Origam.Schema.EntityModel
 		InnerJoin
 	}
 
-	/// <summary>
-	/// Summary description for EntityRelationItem.
-	/// </summary>
 	[SchemaItemDescription("Entity", "Entities", "icon_entity.png")]
     [HelpTopic("Entities")]
 	[XmlModelRoot(CategoryConst)]
@@ -58,7 +55,6 @@ namespace Origam.Schema.EntityModel
 		public DataStructureEntity(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid EntityId = Guid.Empty;
 
 		/// <summary>
@@ -135,7 +131,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private string _caption = "";
-		[EntityColumn("SS01")]
+
         [XmlAttribute("label")]
         public string Caption
 		{
@@ -144,8 +140,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private bool _allFields = true;
-		[EntityColumn("B01")]
-        [XmlAttribute("allFields")]
+		[XmlAttribute("allFields")]
         public bool AllFields
 		{
 			get => _allFields;
@@ -174,7 +169,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private bool _ignoreImplicitFilters = false;
-		[EntityColumn("B02"), DefaultValue(false)]
+		[DefaultValue(false)]
 		[Description("Disables row level security filters for an entity. Row-level filters are defined under entitities.")]
         [XmlAttribute("ignoreImplicitFilters")]
         public bool IgnoreImplicitFilters
@@ -185,7 +180,6 @@ namespace Origam.Schema.EntityModel
 
 		private DataStructureIgnoreCondition _ignoreCondition 
 			= DataStructureIgnoreCondition.None;
-		[EntityColumn("I02")]
 		[DefaultValue(DataStructureIgnoreCondition.None)]
 		[Description("Specify the condition resulting in not adding the whole entity to data query. Value 'IgnoreWhenNoFilters' means that the entity is skipped when neither one filter would be constructed for that entity. Value 'IgnoreWhenNoExplicitFilters' means the same as 'IgnoreWhenNoFilters' but it doesn't count implicit filters (aka row level security filters), so only datastructure filters are examined. Note, that filters can be avoided from construction according to their ignore condition settings and provided the whole corresponding filterset is 'dynamic'")]
         [XmlAttribute("ignoreCondition")]
@@ -197,7 +191,6 @@ namespace Origam.Schema.EntityModel
 
         private DataStructureConcurrencyHandling _concurrencyHandling 
             = DataStructureConcurrencyHandling.Standard;
-        [EntityColumn("I03")]
         [DefaultValue(DataStructureConcurrencyHandling.Standard)]
         [Description("Specify behaviour during cuncurrency handling. Standard - concurrency checks are performed; LastWins - no concurrency checks are performed.")]
         [XmlAttribute("concurrencyHandling")]
@@ -208,8 +201,7 @@ namespace Origam.Schema.EntityModel
         }
 
 		private RelationType _relationType = RelationType.Normal;
-		[EntityColumn("I01")]
-        [RelationTypeModelElementRule()]
+		[RelationTypeModelElementRule()]
         [XmlAttribute("relationType")]
         public RelationType RelationType
 		{
@@ -217,7 +209,6 @@ namespace Origam.Schema.EntityModel
 			set => _relationType = value;
 		}
 
-		[EntityColumn("G02")]  
 		public Guid ConditionEntityConstantId;
 
 		[TypeConverter(typeof(DataConstantConverter))]
@@ -232,7 +223,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private string _conditionEntityParameterName;
-		[EntityColumn("SS02")]
 		[Description("When defined (e.g. Resource_parName) together with a value of 'ConditionEntityConstant' then a value of the parameter is tested whether equals to a value of 'ConditionalEntityConstant'. If equals then an entity is APPLIED to resulting data query, otherwise the entity is skipped. When not defined, entity is allways applied.")]
         [XmlAttribute("conditionEntityParameterName")]
         public string ConditionEntityParameterName
@@ -242,7 +232,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private bool _useUpsert = false;
-		[Category("Update"), EntityColumn("B03"), DefaultValue(false)]
+		[Category("Update"), DefaultValue(false)]
         [XmlAttribute("useUpsert")]
         public bool UseUPSERT
 		{
@@ -380,8 +370,7 @@ namespace Origam.Schema.EntityModel
 				}
 			}
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType => CategoryConst;
 
 		public override bool CanMove(UI.IBrowserNode2 newNode) =>

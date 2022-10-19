@@ -46,7 +46,6 @@ namespace Origam.Schema.MenuModel
 
 		public EntityWorkflowActionScriptCall(Key primaryKey) : base(primaryKey)	{}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -57,7 +56,6 @@ namespace Origam.Schema.MenuModel
 
 		private string _roles = "";
 		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("LS01")]
 		[StringNotEmptyModelElementRule()]
         [XmlAttribute("roles")]
 		public string Roles
@@ -74,8 +72,7 @@ namespace Origam.Schema.MenuModel
 
 		private string _features;
 		[Category("Condition")]
-		[EntityColumn("SS01")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
         public string Features
 		{
 			get
@@ -88,7 +85,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}		
 
-		[EntityColumn("G01")]  
 		public Guid RuleId;
 
 		[Category("Condition")]
@@ -111,8 +107,7 @@ namespace Origam.Schema.MenuModel
 
 		private int _order = 0;
 		[Category("Script")]
-		[EntityColumn("I01")]
-        [XmlAttribute("order")]
+		[XmlAttribute("order")]
 		public int Order
 		{
 			get
@@ -128,8 +123,7 @@ namespace Origam.Schema.MenuModel
 		private string _script;
 
 		[Category("Script")]
-		[EntityColumn("M01")]
-        [XmlAttribute("script")]
+		[XmlAttribute("script")]
 		public string Script
 		{
 			get { return _script; }

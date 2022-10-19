@@ -58,8 +58,7 @@ namespace Origam.Schema.GuiModel
 				return "79";
 			}
 		}
-
-		[EntityColumn("G05")]  
+		
 		public Guid DataStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -79,7 +78,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G06")]  
 		public Guid DataStructureMethodId;
 
 		[Category("Data"), TypeConverter(typeof(DataStructureReferenceMethodConverter))]
@@ -96,7 +94,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G07")]  
 		public Guid DataStructureSortSetId;
 
 		[Category("Data"), TypeConverter(typeof(DataStructureReferenceSortSetConverter))]

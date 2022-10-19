@@ -1,0 +1,62 @@
+# Input file for Visual Studio Code REST client:
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+#
+# - instal the client
+# - set @port and @authCookie variables
+# - click "Send Request" over the request you want to send 
+
+@port = 44356
+# authCookie only matters if the "RequiresAuthentication" in "SoapAPI" config section is set to "true"
+@authCookie = CfDJ8LVdnbG3moNEiDWHMuco-LdmRLB4pQZHw4sevTuOIvI_NUr5io7HcD1Se8EIGRqjTUWNlzJOa2wcpDX2ylPW2F4F9vgGXnrqrFqjOVoSGAi0ratxaGMl_9VejptlqG-FPRsL8daRAszz6lzMR5htW8lmJwxf7xBmADWrB1lgyq35L8b9D0zFE35-jXcdKptbaIggg0whvXmzt9LYMGV0T38VgjDhB4aXc8D1lnm5tYKJGVEWfjRTQOmRE58peIVEHpk5AFKRAjGTTHWZGLU_M5b0yuLVRkjFekEeWKKUoCFMfYhC7Jlc8J3Y2ySSBmTLq7aaCTd1wKRzgoHMYxSwglg3Fax6bZ4JcsF_RkcuRRCvQQ7_1KE6e47NUpXPpIqC8QKwfd4Cptf2CIoZoLqcIj5E7oH2dfLxpClAzU7ajq-fLKxV4dj7IsaFyAvXyeI478AKYE8fZgDeDpf_XZPyVu2sBzySp9jG79S3ptI5aAMyw0e_7RUbqnloy4nqJYqAjUDTT1FE2Sek29Be9zXv-67QPLQOlFiBZ3TJOAWpgfWpli6qw0lC7F_j0h4Hsln5opk-CtpioZ3c--6Cf15vgqHprP7gD4Rd01ExTLTWJO8OpZ6ymWt5py3vD-leQ6Ncl9a_0hnB-txOydFE1H9fap8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTEFQVE9QLTMyQkxMMjhGXFxqaW5kciIsIm5iZiI6IjE1NDIzNTc5NTEiLCJleHAiOiIxNTQyNDQ0MzUxIn0.pCB3j4oD85-D3azN0LOi132SXtB4jr8AflLDH_qB9tI
+
+/// --- TokenController --- ///
+// send user and password to get new token, put the received 
+// value to the token variable defined above
+POST https://localhost:{{port}}/connect/Token/Create
+content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+password=blabla
+&username=washi
+
+###
+
+POST https://localhost:{{port}}/internalApi/UIService/GetRows
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Authorization: Bearer F04B2E1AA281298185E98379F0AD2E41296E8832D2309FBC06BCE4CE0A971BFF
+Connection: keep-alive
+Content-Length: 520
+Content-Type: application/json
+
+{
+  "ColumnNames": ["Boolean1", "RecordCreated", "Id", "RecordUpdatedBy", "RecordCreatedBy", "VirtualTest", "Text2"],
+  "DataStructureEntityId": "de98641d-0097-4bf7-b439-d37b07eb4a41",
+  "Filter": "[\"Date1\", \"nbetween\", [\"2021-07-03T00:00:00\", \"2020-07-15T00:00:00\"]]",
+  "MenuId": "30322a63-f242-45d5-a3ff-adaa3e4cb28a",
+  "Ordering": [{"columnId": "Date1", "direction": "ASC"}],
+  "Parameters": {},
+  "RowLimit": 1000,
+  "RowOffset": 0,
+  "SessionFormIdentifier": "b7a53dc7-8805-47e8-b8e8-06c7261a217c"
+}
+
+###
+
+POST https://localhost:{{port}}/internalApi/UIService/GetAggregations
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+Authorization: Bearer F04B2E1AA281298185E98379F0AD2E41296E8832D2309FBC06BCE4CE0A971BFF
+Connection: keep-alive
+Content-Length: 520
+Content-Type: application/json
+
+{
+  "AggregatedColumns": [{"ColumnName": "Id","AggregationType": "COUNT"}],
+  "DataStructureEntityId": "de98641d-0097-4bf7-b439-d37b07eb4a41",
+  "Filter": "",
+  "MenuId": "30322a63-f242-45d5-a3ff-adaa3e4cb28a",
+  "SessionFormIdentifier": "5d5f9520-1d6e-4703-9cf0-a67102440cd3",
+}

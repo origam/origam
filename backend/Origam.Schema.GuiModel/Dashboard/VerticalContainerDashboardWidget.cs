@@ -48,7 +48,6 @@ namespace Origam.Schema.GuiModel
 
 
 		#region Properties
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

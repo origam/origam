@@ -23,7 +23,6 @@ using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
-using Origam.DA.ObjectPersistence;
 
 using Schedule;
 
@@ -72,8 +71,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Properties
 		private ScheduleIntervalType _intervalType = ScheduleIntervalType.Daily;
 		[Category("Schedule Interval"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")]
-        [XmlAttribute("intervalType")]
+		[XmlAttribute("intervalType")]
 		public ScheduleIntervalType IntervalType
 		{
 			get => _intervalType;
@@ -113,7 +111,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		private int _milliseconds = 0;
-		[EntityColumn("I02")] 
+		
 		[Browsable(false)]
         [XmlAttribute("milliseconds")]
 		public int Milliseconds
@@ -132,8 +130,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 		private int _seconds = 0;
 		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I03")]
-        [XmlAttribute("seconds")]
+		[XmlAttribute("seconds")]
         public int Seconds
 		{
 			get => _seconds;
@@ -150,8 +147,7 @@ namespace Origam.Schema.WorkflowModel
 
 		private int _minutes = 0;
 		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I04")]
-        [XmlAttribute("minutes")]
+		[XmlAttribute("minutes")]
         public int Minutes
 		{
 			get => _minutes;
@@ -168,8 +164,7 @@ namespace Origam.Schema.WorkflowModel
 
 		private int _hours = 0;
 		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I05")]
-        [XmlAttribute("hours")]
+		[XmlAttribute("hours")]
         public int Hours
 		{
 			get => _hours;
@@ -186,8 +181,7 @@ namespace Origam.Schema.WorkflowModel
 
 		private int _days = 0;
 		[Category("Schedule"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I06")]
-        [XmlAttribute("days")]
+		[XmlAttribute("days")]
         public int Days
 		{
 			get => _days;

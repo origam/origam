@@ -40,7 +40,6 @@ namespace Origam.Schema.GuiModel
 
         private string _reportPath;
 
-		[EntityColumn("LS01")] 
         [Description("Path to the report. The Path starts with forward slash. The Path supports a curly-bracket parameter expansion, e.g '/my-report-{language}', where 'language' is a name of a report parameter.")]
         [XmlAttribute("reportPath")]
 		public string ReportPath
