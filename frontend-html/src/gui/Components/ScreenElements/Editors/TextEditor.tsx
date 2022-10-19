@@ -31,8 +31,6 @@ import htmlToDraft from "html-to-draftjs";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const autoUpdateUntervalMs = 60_000;
-
 @observer
 export class TextEditor extends React.Component<{
   id?: string;
@@ -54,7 +52,6 @@ export class TextEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  onAutoUpdate?(value: string): void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
 }> {
   disposers: any[] = [];
@@ -63,9 +60,6 @@ export class TextEditor extends React.Component<{
   updateInterval: NodeJS.Timeout | undefined;
 
   componentDidMount() {
-    if (this.props.isMultiline) {
-      this.disposers.push(this.startAutoUpdate());
-    }
     this.updateTextOverflowState();
   }
 
@@ -79,16 +73,6 @@ export class TextEditor extends React.Component<{
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
     this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
-  }
-
-  private startAutoUpdate() {
-    this.updateInterval = setInterval(() => {
-      if (this.lastAutoUpdatedValue !== this.currentValue) {
-        this.props.onAutoUpdate?.(this.currentValue ?? "");
-        this.lastAutoUpdatedValue = this.currentValue;
-      }
-    }, autoUpdateUntervalMs);
-    return () => this.updateInterval && clearTimeout(this.updateInterval);
   }
 
   componentWillUnmount() {

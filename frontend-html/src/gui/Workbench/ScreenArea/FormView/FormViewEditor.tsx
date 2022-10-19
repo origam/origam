@@ -46,7 +46,6 @@ import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreen
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
-import { onTextFieldAutoUpdate } from "model/actions-ui/DataView/OnTextFieldAutoUpdate";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
 
 
@@ -153,7 +152,6 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={this.makeOnKeyDownCallBack()}
             wrapText={true}
             onEditorBlur={this.props.onEditorBlur}
-            onAutoUpdate={value => onTextFieldAutoUpdate(this.props.property!, value)}
             isRichText={this.props.isRichText}
             onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
