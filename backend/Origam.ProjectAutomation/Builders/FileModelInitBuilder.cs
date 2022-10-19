@@ -31,12 +31,6 @@ namespace Origam.ProjectAutomation
         public override void Execute(Project project)
         {
             OrigamEngine.OrigamEngine.InitializeRuntimeServices();
-
-            ServiceManager
-                .Services
-                .GetService<IPersistenceService>()
-                .LoadSchemaList();
-            
             LoadBaseSchema(project);
         }
         private void LoadBaseSchema(Project project)
@@ -45,9 +39,6 @@ namespace Origam.ProjectAutomation
                 ServiceManager.Services.GetService<SchemaService>();
             try
             {
-                ServiceManager.Services
-                    .GetService<IPersistenceService>()
-                    .LoadSchemaList();
                 schema.LoadSchema(new Guid(project.BasePackageId), false, false);
             } catch
             {

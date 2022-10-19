@@ -102,7 +102,6 @@ namespace Origam.Schema.EntityModel
 
 		
 		[NoDuplicateNamesInParentRule]
-		[EntityColumn("Name")] 
 		[Category("(Schema Item)")]
 		[StringNotEmptyModelElementRule]
 		[RefreshProperties(RefreshProperties.Repaint)]
@@ -114,7 +113,6 @@ namespace Origam.Schema.EntityModel
 		}
 		
 		[Category("Aggregation")]
-		[EntityColumn("I07")]  
 		[NotNullModelElementRule()]
 		[NoNestedCountAggregationsRule]
         [XmlAttribute("aggregationType")]
@@ -130,7 +128,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G07")]  
 		public Guid RelationId;
 
 		[Category("Aggregation")]
@@ -150,8 +147,7 @@ namespace Origam.Schema.EntityModel
                 this.Field = null;
 			}
 		}
-
-		[EntityColumn("G08")]  
+		
 		public Guid ColumnId;
 
 		[Category("Aggregation")]

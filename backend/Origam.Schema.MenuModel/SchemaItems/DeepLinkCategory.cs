@@ -115,7 +115,6 @@ namespace Origam.Schema.MenuModel
                 return false;
             }
         }
-        [EntityColumn("ItemType")]
         public override string ItemType
         {
             get

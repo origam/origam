@@ -38,7 +38,6 @@ namespace Origam.Schema.RuleModel
 		public EntityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
         public EntityRule(Key primaryKey) : base(primaryKey) { }
 
-		[EntityColumn("B01"), DefaultValue(false)] 
         [XmlAttribute("isPathRelative")]
         [Browsable(false)]
 		public override bool IsPathRelative { get; set; } = false;

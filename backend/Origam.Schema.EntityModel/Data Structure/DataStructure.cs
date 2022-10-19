@@ -136,7 +136,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private bool _isLocalized = false;
-		[EntityColumn("B03")]
 		[Description("Translate data for all entities, that has realtion marked with IsMultilingual='true'. If set to true, any read-write operation will fail.")]
         [XmlAttribute("localized")]
 		public bool IsLocalized
@@ -152,7 +151,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private string _dataSetClass;
-		[EntityColumn("SS01")]
 		[Description("A fully qualified name of a class followed by an assembly name which has a class in it. A class should correspond (should have same xsd) as a xsd of a current datastructure. A class will be used everytime a dataset is to be created from a datastructure. A class is worth defining when we need to seamlessly pass a dataset between origam and a service agent (library) code.")]
         [XmlAttribute("dataSetClass")]
         public string DataSetClass

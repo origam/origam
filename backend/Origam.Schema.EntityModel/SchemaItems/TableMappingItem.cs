@@ -51,7 +51,6 @@ namespace Origam.Schema.EntityModel
 
 		#region Properties
 		private string _sourceTableName;
-		[EntityColumn("SS03")]
 		[Category("Mapping")]
 		[StringNotEmptyModelElementRule()]
 		[Description("Name of the database table name. When loading data from a database for this entity, this name will be used as the table name.")]
@@ -69,7 +68,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private DatabaseMappingObjectType _databaseObjectType = DatabaseMappingObjectType.Table;
-		[EntityColumn("I05")]
 		[Category("Mapping"), DefaultValue(DatabaseMappingObjectType.Table)]
 		[Description("Type of the database object - View or Table. For views the deployment scripts will not be generated.")]
         [XmlAttribute("databaseObjectType")]
@@ -86,7 +84,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private bool _generateDeploymentScript = true;
-		[EntityColumn("B05")]
 		[Category("Mapping"), DefaultValue(true)]
 		[Description("Indicates if deployment scripts will be generated for this entity. If set to false, this entity will be skipped from the deployment scripts generator. This is useful e.g. if creating a duplicate entity (from the same table as another one).")]
         [XmlAttribute("generateDeploymentScript")]
@@ -101,8 +98,7 @@ namespace Origam.Schema.EntityModel
 				_generateDeploymentScript = value;
 			}
 		}
-
-		[EntityColumn("G02")]
+        
 		public Guid LocalizationRelationId = Guid.Empty;
 
 		[TypeConverter(typeof(EntityRelationConverter))]

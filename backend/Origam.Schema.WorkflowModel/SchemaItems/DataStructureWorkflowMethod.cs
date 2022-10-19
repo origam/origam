@@ -72,8 +72,7 @@ namespace Origam.Schema.WorkflowModel
 
 		
 		#region Properties
-
-		[EntityColumn("G01")]  
+		
 		public Guid LoadWorkflowId;
 
 		[Category("Reference")]

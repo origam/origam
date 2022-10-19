@@ -62,7 +62,6 @@ namespace Origam.Schema.GuiModel
         }
 
         #region Properties
-        [EntityColumn("G01")]
         public Guid ControlId;
 
         [TypeConverter(typeof(ControlConverter))]
@@ -99,7 +98,6 @@ namespace Origam.Schema.GuiModel
             }
         }
 
-        [EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

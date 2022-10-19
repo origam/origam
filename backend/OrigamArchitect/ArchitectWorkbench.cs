@@ -679,8 +679,7 @@ namespace OrigamArchitect
 			ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuSave,ImageRes.Save));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuRefresh,ImageRes.Refresh));
             ducumentToolStrip.Items.Add(CreateButtonFromMenu(mnuFinishWorkflowTask,ImageRes.FinishTask));
-
-			toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
+            toolsToolStrip.Items.Add(CreateButtonFromMenu(mnuServerRestart,ImageRes.RestartServer));
 #endif
         }
 		private void CreateHelpMenu()
@@ -1457,25 +1456,7 @@ namespace OrigamArchitect
 			try
 			{
 				_statusBarService.SetStatusText(strings.ConnectingToModelRepository_StatusText);
-
-				// Login to the repository
-				try
-				{
-					if(! LoadSchemaList())
-					{
-						return;
-					}
-				}
-				catch(Exception ex)
-				{
-					AsMessageBox.ShowError(
-                        this,
-                        string.Format(strings.RepositoryLoginFailedMessage, Environment.NewLine + ex.Message),
-                        strings.RepositoryLoginFailedTitle,
-                        ex);
-
-					return;
-				}
+				InitPersistenceService();
 				_schema.SchemaBrowser = _schemaBrowserPad;
 
 				// Init services
@@ -1666,21 +1647,7 @@ namespace OrigamArchitect
 				// could not close all the documents
 				return false;
 			}
-
-			if(_schema.IsSchemaChanged && _schema.SupportsSave)
-			{
-				DialogResult result = MessageBox.Show(this, strings.ModelChangedSaveToRepQuestion, strings.ModelChanged_Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-				switch(result)
-				{
-					case DialogResult.Yes:
-						_schema.SaveSchema();
-						break;
-					case DialogResult.Cancel:
-						return false;
-				}
-			}
-			_workflowPad.OrigamMenu = null;
+            _workflowPad.OrigamMenu = null;
 			
 #if ! ORIGAM_CLIENT
 			_findSchemaItemResultsPad?.ResetResults();
@@ -1826,83 +1793,10 @@ namespace OrigamArchitect
 		/// <summary>
 		/// After configuration is selected, connect to the repository and load the model list from the repository.
 		/// </summary>
-		private bool LoadSchemaList()
+		private void InitPersistenceService()
 		{
 			IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
 			ServiceManager.Services.AddService(persistence);
-
-			try
-			{
-				bool isRepositoryVersionCompatible = false;
-				bool isRepositoryEmpty = false;
-				try
-				{
-					isRepositoryVersionCompatible 
-						= persistence.IsRepositoryVersionCompatible();
-				}
-                catch (DatabaseProcedureNotFoundException ex)
-				{
-					if(ex.ProcedureName == "OrigamDatabaseSchemaVersion")
-					{
-						// let's assume repository is empty
-						isRepositoryEmpty = true;
-					}
-					else
-					{
-						throw;
-					}
-				}
-				if(! isRepositoryVersionCompatible && ! isRepositoryEmpty)
-				{
-					bool shouldUpdate = false;
-
-#if ORIGAM_CLIENT
-				shouldUpdate = AdministratorMode;
-#else
-					shouldUpdate = true;
-#endif
-
-					if(shouldUpdate & persistence.CanUpdateRepository())
-					{
-						if(MessageBox.Show(this, strings.UpgradeModelQuestion, strings.UpgradeModelTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-						{
-							persistence.UpdateRepository();
-						}
-						else
-						{
-							MessageBox.Show(this, strings.CannotLogin_Message, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-							ServiceManager.Services.UnloadService(persistence);
-							return false;
-						}
-					}
-					else
-					{
-						MessageBox.Show(this, strings.CannotLogin_Message2, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-						ServiceManager.Services.UnloadService(persistence);
-						return false;
-					}
-				}
-				else if(isRepositoryEmpty)
-				{
-					if(MessageBox.Show(this, strings.RepositoryInitializeQuestion, strings.Initialize_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-					{
-                        persistence.InitializeRepository();
-					}
-					else
-					{
-						MessageBox.Show(this, strings.CannotLogin_Message, strings.CannotLogin_Title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-						ServiceManager.Services.UnloadService(persistence);
-						return false;
-					}
-				}
-				persistence.LoadSchemaList();
-				return true;
-			}
-			catch
-			{
-				ServiceManager.Services.UnloadService(persistence);
-				throw;
-			}
 		}
 
 		private void frmMain_Load(object sender, EventArgs e)

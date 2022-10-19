@@ -50,7 +50,6 @@ namespace Origam.Schema.EntityModel
 			return newNode is IDataEntity;
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

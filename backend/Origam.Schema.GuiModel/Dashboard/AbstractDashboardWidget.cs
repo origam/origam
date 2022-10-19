@@ -61,7 +61,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _caption = "";
 		[Category("User Interface")]
-		[EntityColumn("SS01"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
 		[Localizable(true)]
         [XmlAttribute("label")]
 		public string Caption
@@ -78,8 +78,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _roles;
 		[Category("Security")]
-		[EntityColumn("LS01")]
-        [XmlAttribute("roles")]
+		[XmlAttribute("roles")]
         public string Roles
 		{
 			get
@@ -93,8 +92,7 @@ namespace Origam.Schema.GuiModel
 		}
 
 		private string _features;
-		[EntityColumn("SS02")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
         public string Features
 		{
 			get
@@ -116,8 +114,7 @@ namespace Origam.Schema.GuiModel
 				return "29";
 			}
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get

@@ -52,8 +52,7 @@ namespace Origam.Schema.GuiModel
 
         //refDataSource means for PanelCOntolSet reference on DataEntity object
         // (for FormControlSet refDataSource means reference on DataStructure object
-		[EntityColumn("G01")]  
-		public Guid DataSourceId;
+        public Guid DataSourceId;
 
         [XmlReference("entity", "DataSourceId")]
         public IDataEntity DataEntity
@@ -117,7 +116,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

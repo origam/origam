@@ -85,7 +85,6 @@ namespace Origam.Schema.MenuModel
 		}
 
 		#region Properties
-		[EntityColumn("G02")]  
 		public Guid ScreenId;
 
 		[Category("Screen Reference")]
@@ -117,7 +116,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G09")]  
 		public Guid TemplateSetId;
 
 		[Category("Templates"), RefreshProperties(RefreshProperties.Repaint)]
@@ -136,8 +134,7 @@ namespace Origam.Schema.MenuModel
 				this.DefaultTemplate = null;
 			}
 		}
-
-		[EntityColumn("G10")]  
+ 
 		public Guid DefaultTemplateId;
 
 		[Category("Templates")]
@@ -154,8 +151,7 @@ namespace Origam.Schema.MenuModel
 				this.DefaultTemplateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G03")]  
+		
 		public Guid DefaultSetId;
 
 		[Category("Screen Reference")]
@@ -172,8 +168,7 @@ namespace Origam.Schema.MenuModel
 				this.DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G04")]  
+		
 		public Guid MethodId;
 
 		[Category("Data Loading")]
@@ -191,8 +186,7 @@ namespace Origam.Schema.MenuModel
 				this.MethodId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G11")]  
+		
 		public Guid ListDataStructureId;
 
 		[Category("Data Loading"), RefreshProperties(RefreshProperties.Repaint)]
@@ -212,8 +206,7 @@ namespace Origam.Schema.MenuModel
 				this.ListEntity = null;
 			}
 		}
-
-		[EntityColumn("G12")]  
+		
 		public Guid ListMethodId;
 
 		[Category("Data Loading")]
@@ -230,8 +223,7 @@ namespace Origam.Schema.MenuModel
 				this.ListMethodId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-		
-		[EntityColumn("G17")]
+
 		public Guid ListSortSetId;
 
 		[Category("Data Loading")]
@@ -250,7 +242,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G18")]  
 		public Guid AutoRefreshIntervalConstantId;
 
 		[TypeConverter(typeof(DataConstantConverter))]
@@ -272,7 +263,6 @@ namespace Origam.Schema.MenuModel
 		private SaveRefreshType _refreshAfterSaveType = SaveRefreshType.RefreshChangedRecords;
 
 		[Category("Data Loading"), DefaultValue(SaveRefreshType.RefreshChangedRecords)]
-		[EntityColumn("I03")]
 		[XmlAttribute("refreshAfterSaveType")]
 		public SaveRefreshType RefreshAfterSaveType
 		{
@@ -285,8 +275,7 @@ namespace Origam.Schema.MenuModel
 				_refreshAfterSaveType = value;
 			}
 		}
-
-		[EntityColumn("G14")]  
+  
 		public Guid RecordEditMethodId;
 
 		[Category("Data Loading")]
@@ -304,7 +293,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G13")]  
 		public Guid ListEntityId;
 
 		[Category("Data Loading")]
@@ -322,7 +310,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G05")]  
 		public Guid SelectionPanelId;
 
 		[Category("Selection Dialog")]
@@ -339,8 +326,7 @@ namespace Origam.Schema.MenuModel
 				this.SelectionPanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G06")]  
+  
 		public Guid SelectionPanelBeforeTransformationId;
 
 		[Category("Selection Dialog")]
@@ -358,7 +344,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G07")]  
 		public Guid SelectionPanelAfterTransformationId;
 
 		[Category("Selection Dialog")]
@@ -375,8 +360,7 @@ namespace Origam.Schema.MenuModel
 				this.SelectionPanelAfterTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G08")]  
+		
 		public Guid SelectionEndRuleId;
 
 		[Category("Selection Dialog")]
@@ -395,7 +379,6 @@ namespace Origam.Schema.MenuModel
 		}
 
 		[Category("Screen Reference"), DefaultValue(false)]
-		[EntityColumn("B01")]
 		[XmlAttribute("readOnlyAccess")]
 		public bool ReadOnlyAccess { get; set; } = false;
 
@@ -407,8 +390,7 @@ namespace Origam.Schema.MenuModel
 				return this.ListEntity != null ? this.ListEntity.Name : null;
 			}
 		}
-
-		[EntityColumn("G15")]  
+		
 		public Guid RuleSetId;
 
 		[Category("Screen Reference")]
@@ -426,7 +408,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G16")]  
 		public Guid SortSetId;
 
 		[Category("Data Loading")]
@@ -444,8 +425,7 @@ namespace Origam.Schema.MenuModel
 				this.SortSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G19")]  
+ 
 		public Guid ConfirmationRuleId;
 
 		[Category("References")]
@@ -464,31 +444,25 @@ namespace Origam.Schema.MenuModel
 		}
 
 		[Category("Data Loading"), DefaultValue(false)]
-		[EntityColumn("B02")]
 		[Description("If true screen will be refresh each time user selects it. If AutomaticRefreshInterval is set, this value is considered as true regardless the actual value.")]
 		[XmlAttribute("refreshOnFocus")]
 		public bool RefreshOnFocus { get; set; } = false;
 
 		[DefaultValue(false)]
-        [EntityColumn("B03")]
-        [Description("If true and List* properties are set (delayed data loading) user will not be asked if she wants to save records before moving to another. Data will be saved automatically.")]
+		[Description("If true and List* properties are set (delayed data loading) user will not be asked if she wants to save records before moving to another. Data will be saved automatically.")]
 		[XmlAttribute("autoSaveOnListRecordChange")]
 		public bool AutoSaveOnListRecordChange { get; set; } = false;
 
 		[DefaultValue(false)]
-        [EntityColumn("B04")]
-        [Description("If true, the client will attempt to request save after each update if there are no errors in data.")]
+		[Description("If true, the client will attempt to request save after each update if there are no errors in data.")]
 		[XmlAttribute("requestSaveAfterUpdate")]
 		public bool RequestSaveAfterUpdate { get; set; } = false;
 
 		[DefaultValue(false)]
-        [EntityColumn("B05")]
-        [Description("If true, the client will refresh its menu after saving data.")]
+		[Description("If true, the client will refresh its menu after saving data.")]
 		[XmlAttribute("refreshPortalAfterSave")]
 		public bool RefreshPortalAfterSave { get; set; } = false;
-
-
-		[EntityColumn("G20")]
+		
         public Guid DynamicFormLabelEntityId;
 
         [Category("Dynamic Form Label")]
@@ -512,8 +486,7 @@ namespace Origam.Schema.MenuModel
         }
 
 		[Category("Dynamic Form Label")]
-        [EntityColumn("SS03")]
-        [Localizable(false)]
+		[Localizable(false)]
 		[XmlAttribute("dynamicFormLabelField")]
         public string DynamicFormLabelField { get; set; }
 

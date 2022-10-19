@@ -48,7 +48,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid DefaultValueId;
 
 		[Category("Reference")]

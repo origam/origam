@@ -69,7 +69,6 @@ namespace Origam.Schema.MenuModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid MenuId;
 
 		[Category("References")]

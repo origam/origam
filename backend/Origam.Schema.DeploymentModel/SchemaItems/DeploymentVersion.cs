@@ -96,8 +96,7 @@ namespace Origam.Schema.DeploymentModel
 				return this.Name;
 			}
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get
@@ -145,8 +144,7 @@ namespace Origam.Schema.DeploymentModel
 
 		private string versionString;
 		[Category("Version Information")]
-		[EntityColumn("SS01"), NotNullModelElementRule()]
-        [XmlAttribute("version")]
+		[XmlAttribute("version")]
 		public string VersionString
 		{
 			get => versionString;
@@ -171,8 +169,7 @@ namespace Origam.Schema.DeploymentModel
 
         [Browsable(false)]
         public PackageVersion Version { get; private set; }
-		
-		[EntityColumn("M01")] 
+        
 		[XmlAttribute("deploymentDependenciesCsv")]
 		public string DeploymentDependenciesCsv;
 

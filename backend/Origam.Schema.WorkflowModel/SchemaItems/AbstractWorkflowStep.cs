@@ -52,7 +52,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -120,7 +119,6 @@ namespace Origam.Schema.WorkflowModel
 
 		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")]  
 		[RuntimeConfigurable("traceLevel")]
 		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;
 
@@ -144,9 +142,7 @@ namespace Origam.Schema.WorkflowModel
 	        } 
 	        return Trace.InheritFromParent;
         }
-
-
-        [EntityColumn("G02")]  
+        
 		public Guid StartRuleId;
 
 		[Category("Rules")]
@@ -174,8 +170,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid StartRuleContextStoreId;
 
 		[Category("Rules")]
@@ -203,8 +198,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G04")]  
+		
 		public Guid ValidationRuleId;
 
 		[Category("Rules")]
@@ -232,8 +226,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G03")]  
+		
 		public Guid ValidationRuleContextStoreId;
 
 		[Category("Rules")]
@@ -261,13 +254,11 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("SS02")]
+        
 		[Category("Rules")]
 		[XmlAttribute ("roles")]
 		public string Roles { get; set; } = "*";
 
-		[EntityColumn("SS01")]
 		[Category("Rules")]
 		[XmlAttribute ("features")]
 		public string Features { get; set; }

@@ -44,12 +44,10 @@ namespace Origam.Schema.WorkflowModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 		#endregion
 
 		#region Properties
-		[EntityColumn("I01")]
 		[XmlAttribute ("value")]
 		public WorkQueueCommandParameterMappingType Value { get; set; } = WorkQueueCommandParameterMappingType.QueueEntries;
 		#endregion

@@ -48,7 +48,6 @@ namespace Origam.Schema.EntityModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -99,8 +98,7 @@ namespace Origam.Schema.EntityModel
 		#region Properties
 		private string _roles;
 		[Category("Security")]
-		[EntityColumn("LS01")]
-        [XmlAttribute("roles")]
+		[XmlAttribute("roles")]
 		public string Roles
 		{
 			get
@@ -112,8 +110,7 @@ namespace Origam.Schema.EntityModel
 				_roles = value;
 			}
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid FilterId;
 
 		[TypeConverter(typeof(EntityFilterConverter))]

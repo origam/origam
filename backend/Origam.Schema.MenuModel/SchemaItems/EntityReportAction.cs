@@ -47,7 +47,6 @@ namespace Origam.Schema.MenuModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -95,7 +94,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G05")]  
 		public Guid ReportId;
 
 		[Category("References")]
@@ -115,7 +113,6 @@ namespace Origam.Schema.MenuModel
 
 		private DataReportExportFormatType _exportFormatType;
 		[Category("Data Report")]
-		[EntityColumn("I07")]
 		[Description("Export Format Type")]
         [XmlAttribute("exportFormatType")]
 		public DataReportExportFormatType ExportFormatType

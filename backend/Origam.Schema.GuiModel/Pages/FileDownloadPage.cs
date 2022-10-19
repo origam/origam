@@ -70,7 +70,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid DataStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -90,7 +89,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G06")]  
 		public Guid DataStructureMethodId;
 
 		[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
@@ -106,8 +104,7 @@ namespace Origam.Schema.GuiModel
 				this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G07")]  
+  
 		public Guid DataStructureSortSetId;
 
 		[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
@@ -126,7 +123,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _contentField = "";
 		[Category("File Data")]
-		[EntityColumn("SS04"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("contentField")]
 		public string ContentField
 		{
@@ -142,7 +139,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _fileNameField = "";
 		[Category("File Data")]
-		[EntityColumn("SS05"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("fileNameField")]
         public string FileNameField
 		{

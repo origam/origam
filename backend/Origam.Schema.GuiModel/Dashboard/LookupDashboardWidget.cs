@@ -56,7 +56,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid LookupId;
 
 		[Category("Reference")]

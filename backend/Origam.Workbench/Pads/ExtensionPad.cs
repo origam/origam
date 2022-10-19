@@ -195,12 +195,6 @@ namespace Origam.Workbench.Pads
 				lvwPackages.Items.Clear();
 
         		IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService )) as IPersistenceService;
-                IDatabasePersistenceProvider dbProvider = persistenceService.SchemaListProvider as IDatabasePersistenceProvider;
-                if(dbProvider != null)
-                {
-                    dbProvider.Refresh(false, null);
-                }
-
 				List<Package> packageList = persistenceService.SchemaListProvider.RetrieveList<Package>(null);
 				foreach(Package extension in packageList)
 				{

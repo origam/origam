@@ -12,8 +12,7 @@ namespace Origam.Schema.GuiModel
     public class ScreenSectionCondition: AbstractSchemaItem
     {
         public const string CategoryConst = "ScreenSectionCondition";
-        
-        [EntityColumn("ItemType")]
+   
         public override string ItemType => CategoryConst;
 
         public Guid ScreenSectionId;

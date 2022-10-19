@@ -47,7 +47,6 @@ namespace Origam.Schema.RuleModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -66,11 +65,9 @@ namespace Origam.Schema.RuleModel
 
 		#region Properties
 		[Category("Rule")]
-		[EntityColumn("I01")]
 		[XmlAttribute ("dataType")]
 		public OrigamDataType DataType { get; set; }
 
-		[EntityColumn("G01")] 
 		public Guid DataStructureId;
 
 		[Category("Rule")]
@@ -102,7 +99,6 @@ namespace Origam.Schema.RuleModel
 		
 		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")] 
 		[RuntimeConfigurable ("traceLevel")]
 		[DisplayName("Trace Level")]
 		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;

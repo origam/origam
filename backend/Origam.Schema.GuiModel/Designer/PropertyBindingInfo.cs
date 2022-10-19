@@ -47,7 +47,6 @@ namespace Origam.Schema.GuiModel
 
         private string _value;
 
-        [EntityColumn("LS01")]
         [Localizable(true)]
         [XmlAttribute("value")]
         public string Value
@@ -67,7 +66,6 @@ namespace Origam.Schema.GuiModel
 
         private string _designDataSetPath;
 
-		[EntityColumn("SS01")] 
         [XmlAttribute("designDataSetPath")]
 		public string DesignDataSetPath
 		{
@@ -82,7 +80,6 @@ namespace Origam.Schema.GuiModel
 
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

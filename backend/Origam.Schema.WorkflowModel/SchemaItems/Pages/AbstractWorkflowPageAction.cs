@@ -49,7 +49,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid ConditionRuleId;
 
 		[Category("Conditions")]
@@ -68,7 +67,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		private int _sortOrder = 100;
-		[EntityColumn("I01")]
 		[DefaultValue(100)]
         [XmlAttribute("sortOrder")]
 		public int SortOrder
@@ -85,8 +83,7 @@ namespace Origam.Schema.WorkflowModel
 
 		private string _roles = "*";
 		[Category("Conditions")]
-		[EntityColumn("SS01")]
-        [NotNullModelElementRule()]
+		[NotNullModelElementRule()]
         [DefaultValue("*")]
         [XmlAttribute("roles")]
         public string Roles
@@ -103,8 +100,7 @@ namespace Origam.Schema.WorkflowModel
 
 		private string _features;
 		[Category("Conditions")]
-		[EntityColumn("SS02")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
 		public string Features
 		{
 			get
@@ -119,8 +115,7 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		
-		[EntityColumn("ItemType")]
+
 		public override string ItemType
 		{
 			get

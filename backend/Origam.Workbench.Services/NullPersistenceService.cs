@@ -44,12 +44,7 @@ namespace Origam.Workbench.Services
 
         public IPersistenceProvider SchemaProvider => new NullPersistenceProvider();
         public IPersistenceProvider SchemaListProvider => new NullPersistenceProvider();
-
-        public void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, bool loadDeploymentScripts,
-            string transactionId)
-        {
-        }
-
+        
         public Package LoadSchema(Guid schemaExtension, bool loadDocumentation, bool loadDeploymentScripts,
             string transactionId)
         {
@@ -60,36 +55,6 @@ namespace Origam.Workbench.Services
             bool loadDeploymentScripts, string transactionId)
         {
             throw new NotImplementedException();
-        }
-
-        public void LoadSchemaList()
-        {
-        }
-
-        public void UpdateRepository()
-        {
-        }
-
-        public bool IsRepositoryVersionCompatible()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CanUpdateRepository()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ExportPackage(Guid extensionId, string fileName)
-        {
-        }
-
-        public void MergePackage(Guid extensionId, DataSet data, string transcationId)
-        {
-        }
-
-        public void MergeSchema(DataSet schema, Key activePackage)
-        {
         }
 
         public void InitializeRepository()

@@ -24,10 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Xml;
-using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
-using Origam.DA.Service;
 using Origam.Extensions;
 
 namespace Origam.DA.Service

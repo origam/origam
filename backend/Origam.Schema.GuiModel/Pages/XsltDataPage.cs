@@ -78,7 +78,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid DataStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -96,7 +95,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G06")]  
 		public Guid DataStructureMethodId;
 
 		[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
@@ -109,8 +107,7 @@ namespace Origam.Schema.GuiModel
 				this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G07")]  
+ 
 		public Guid DataStructureSortSetId;
 
 		[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
@@ -124,7 +121,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G12")]
 		public Guid DefaultSetId;
 
 		[TypeConverter(typeof(DataStructureReferenceDefaultSetConverter))]
@@ -138,9 +134,7 @@ namespace Origam.Schema.GuiModel
 				this.DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-
-		[EntityColumn("G08")]  
+		
 		public Guid TransformationId;
 
 		[Category("Xslt")]
@@ -158,7 +152,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G13")]
 		public Guid TransformationOutputStructureId;
 
 		[Category("Xslt")]
@@ -188,8 +181,7 @@ namespace Origam.Schema.GuiModel
 					(value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G09")]  
+ 
 		public Guid SaveValidationBeforeMergeRuleId;
 
 		[Category("Updating")]
@@ -203,8 +195,7 @@ namespace Origam.Schema.GuiModel
 				this.SaveValidationBeforeMergeRuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G10")]  
+ 
 		public Guid SaveValidationAfterMergeRuleId;
 
 		[Category("Updating")]
@@ -219,7 +210,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G11")]  
 		public Guid LogTransformationId;
 
 		[Category("Logging")]
@@ -236,28 +226,25 @@ namespace Origam.Schema.GuiModel
 
 
 		[Category("Xslt")]
-		[EntityColumn("SS04")]
 		[Description("An xpath to be run on a result. A string "
-			+ "value of the resulting Xpath navigator is used. "
-			+ "It's mainly used for "
-			+ "extracting pure text out of the result xml. "
-			+ "If it's set and application/json mime-type is set too, "
-			+ "then resulting JSON conversion is always done as "
-			+ "a non-typed XML->JSON conversion")]
+		             + "value of the resulting Xpath navigator is used. "
+		             + "It's mainly used for "
+		             + "extracting pure text out of the result xml. "
+		             + "If it's set and application/json mime-type is set too, "
+		             + "then resulting JSON conversion is always done as "
+		             + "a non-typed XML->JSON conversion")]
 		[XmlAttribute ("resultXPath")]
 		public string ResultXPath { get; set; }
 
 		[Category("JSON")]
-		[EntityColumn("B05"), DefaultValue(false)]
 		[Description("Tells whether to remove root 'ROOT' element. "
-			+ "It's applied only if a MimeType is application/json and "
-			+ " a non-typed XML->JSON conversion is used (Transformation is"
-			+ " filled while TransformationOutputDatastructure is not)")]
+		             + "It's applied only if a MimeType is application/json and "
+		             + " a non-typed XML->JSON conversion is used (Transformation is"
+		             + " filled while TransformationOutputDatastructure is not)")]
 		[XmlAttribute ("omitJsonRootElement")]
 		public bool OmitJsonRootElement { get; set; } = false;
 
 		[Category("InputValidation")]
-		[EntityColumn("B06")]
 		[XmlAttribute ("disableConstraintForInputValidation")]
 		public bool DisableConstraintForInputValidation { get; set; }
 		[Category("Security")]

@@ -64,7 +64,6 @@ namespace Origam.Schema.EntityModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -151,7 +150,6 @@ namespace Origam.Schema.EntityModel
 
 		private string _roles = "";
 		[Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("LS01")]
 		[StringNotEmptyModelElementRule()]
         [XmlAttribute("roles")]
 		public string Roles
@@ -171,8 +169,7 @@ namespace Origam.Schema.EntityModel
 		private PermissionType _permissionType;
 		[Category("Security"), RefreshProperties(RefreshProperties.Repaint)]
 		[NotNullModelElementRule()]
-		[EntityColumn("I01")]
-        [XmlAttribute("type")]
+		[XmlAttribute("type")]
         public PermissionType Type
 		{
 			get
@@ -190,8 +187,7 @@ namespace Origam.Schema.EntityModel
 		private int _level = 100;
 		[Category("Security"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
 		[NotNullModelElementRule()]
-		[EntityColumn("I02")]
-        [XmlAttribute("level")]
+		[XmlAttribute("level")]
         public int Level
 		{
 			get
@@ -208,7 +204,6 @@ namespace Origam.Schema.EntityModel
 
 		private CredentialValueType _valueType = CredentialValueType.SavedValue;
 		[Category("Security"), DefaultValue(CredentialValueType.SavedValue), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I03")]
 		[NotNullModelElementRule()]
         [XmlAttribute("valueType")]
         public CredentialValueType ValueType
@@ -224,8 +219,7 @@ namespace Origam.Schema.EntityModel
 				UpdateName();
 			}
 		}
-
-		[EntityColumn("G01")]  
+        
 		public Guid RuleId;
 
 		[TypeConverter(typeof(EntityRuleConverter))]

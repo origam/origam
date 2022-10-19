@@ -50,7 +50,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -70,7 +69,6 @@ namespace Origam.Schema.GuiModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("SS01")]  
 		public string _rootNodeLabel;
 
 		[NotNullModelElementRule()]

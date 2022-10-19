@@ -93,7 +93,6 @@ namespace Origam.Schema.EntityModel
 
 		private OrigamDataType _dataType;
 		[Category("Entity Column")]
-		[EntityColumn("I01")]
 		[Description("Data type of this field")]
         [XmlAttribute("dataType")]
 		public OrigamDataType DataType
@@ -111,7 +110,6 @@ namespace Origam.Schema.EntityModel
 
 		private int _dataLength = 0;
 		[Category("Entity Column"), DefaultValue(0)]
-		[EntityColumn("I02")]
 		[Description("Length of this field. Used only for String data type. It is used for specifying a length of a database field (in case when the field is database mapped) and a maximum length in the user interface (in case of TextBox).")]
         [PositiveValueModelElementRuleAttribute()]
 		[NoLengthLimitOnMemoFieldRule]
@@ -130,7 +128,6 @@ namespace Origam.Schema.EntityModel
 
 		private bool _allowNulls = true;
 		[Category("Entity Column"), DefaultValue(true)]
-		[EntityColumn("B01")]
 		[Description("Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record.")]
         [XmlAttribute("allowNulls")]
         public bool AllowNulls
@@ -147,7 +144,6 @@ namespace Origam.Schema.EntityModel
 
 		private bool _isPrimaryKey = false;
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B02")]
 		[Description("Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys.")]
         [XmlAttribute("isPrimaryKey")]
         public bool IsPrimaryKey
@@ -164,7 +160,6 @@ namespace Origam.Schema.EntityModel
 
 		private string _caption = "";
 		[Category("Entity Column")]
-		[EntityColumn("SS01")]
 		[Localizable(true)]
 		[Description("Default label for the field in a GUI. Audit log viewer also gets the field names from here.")]
         [XmlAttribute("label")]
@@ -182,7 +177,6 @@ namespace Origam.Schema.EntityModel
 
 		private bool _excludeFromAllFields = false;
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B04")]
 		[Description("If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms.")]
         [XmlAttribute("excludeFromAllFields")]
         public bool ExcludeFromAllFields
@@ -212,7 +206,6 @@ namespace Origam.Schema.EntityModel
 
 		private bool _autoIncrement = false;
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B03")]
 		[Description("If set to True, the new record gets the next highest value in a data context. DataType has to be numeric.")]
         [XmlAttribute("autoIncrement")]
         public bool AutoIncrement
@@ -229,7 +222,6 @@ namespace Origam.Schema.EntityModel
 
 		private long _autoIncrementSeed = 0;
 		[Category("Entity Column"), DefaultValue((long)0)]
-		// [EntityColumn("L01")]	// model has to be updated so L02 has always value 1
 		[Browsable(false)]
 		public long AutoIncrementSeed
 		{
@@ -245,7 +237,6 @@ namespace Origam.Schema.EntityModel
 
 		private long _autoIncrementStep = 1;
 		[Category("Entity Column"), DefaultValue((long)1)]
-		//[EntityColumn("L02")]		// model has to be updated so L02 has always value 1
 		[Browsable(false)]
 		public long AutoIncrementStep
 		{
@@ -264,7 +255,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid DefaultLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -284,7 +274,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G03")]  
 		public Guid ForeignEntityId;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -321,8 +310,7 @@ namespace Origam.Schema.EntityModel
 				}
 			}
 		}
-
-		[EntityColumn("G04")]  
+  
 		public Guid ForeignEntityColumnId;
 
 		[TypeConverter(typeof(EntityForeignColumnConverter))]
@@ -357,8 +345,7 @@ namespace Origam.Schema.EntityModel
 				}
 			}
 		}
-
-		[EntityColumn("G02")]  
+ 
 		public Guid DefaultValueId;
 
 		[TypeConverter(typeof(DataConstantConverter))]
@@ -386,7 +373,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G06")]
 		public Guid defaultValueParameterId;
 		
 		[Category("Entity Column")]
@@ -409,8 +395,7 @@ namespace Origam.Schema.EntityModel
 
 		private EntityColumnXmlMapping _xmlMappingType = EntityColumnXmlMapping.Attribute;
 		[Category("Entity Column"), DefaultValue(EntityColumnXmlMapping.Attribute)]
-		[EntityColumn("I03")]
-        [XmlAttribute("xmlMappingType")]
+		[XmlAttribute("xmlMappingType")]
         public EntityColumnXmlMapping XmlMappingType 
 		{
 			get
@@ -425,8 +410,7 @@ namespace Origam.Schema.EntityModel
 
 		private OnCopyActionType _onCopyAction = OnCopyActionType.Copy;
 		[Category("Entity Column"), DefaultValue(OnCopyActionType.Copy)]
-		[EntityColumn("I04")]
-        [XmlAttribute("onCopyAction")]
+		[XmlAttribute("onCopyAction")]
         public OnCopyActionType OnCopyAction
 		{
 			get
@@ -493,8 +477,7 @@ namespace Origam.Schema.EntityModel
 		{
 			return newNode is IDataEntity;
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get
