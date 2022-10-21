@@ -62,7 +62,7 @@ namespace Origam.DA.Service
 
 		public void Fill()
 		{
-			var connection = (Transaction == null) 
+			IDbConnection connection = (Transaction == null) 
 				? DataService.GetConnection(ConnectionString) 
 				: Transaction.Connection;
 			try
@@ -112,7 +112,7 @@ namespace Origam.DA.Service
 					CurrentProfile);
 				try
 				{
-					if (Transaction == null)
+					if(Transaction == null)
 					{
 						connection.Open();
 					}
@@ -122,7 +122,7 @@ namespace Origam.DA.Service
 					adapter.Fill(Dataset);
 					Dataset.Tables[Entity.Name].EndLoadData();
 				}
-				catch (Exception ex)
+				catch(Exception ex)
 				{
 					HandleException(
 						exception: ex,
@@ -148,7 +148,6 @@ namespace Origam.DA.Service
 				}
 				catch
 				{
-					// ignored
 				}
 				if(Transaction == null)
 				{
@@ -160,7 +159,7 @@ namespace Origam.DA.Service
 		private void HandleException(
 			Exception exception, string commandText, bool logAsDebug)
 		{
-			if (log.IsErrorEnabled && !logAsDebug)
+			if(log.IsErrorEnabled && !logAsDebug)
 			{
 				log.LogOrigamError(
 					$"{exception.Message}, SQL: {commandText}",
@@ -284,8 +283,8 @@ namespace Origam.DA.Service
 		public override DataSet LoadDataSet(DataStructureQuery query,
             IPrincipal principal, DataSet dataset, string transactionId)
 		{
-			var settings = ConfigurationManager.GetActiveConfiguration() ;
-			var timeout = settings.DataServiceSelectTimeout;
+			var settings = ConfigurationManager.GetActiveConfiguration();
+			int timeout = settings.DataServiceSelectTimeout;
 			UserProfile currentProfile = null;
 			if(query.LoadByIdentity)
 			{
@@ -355,13 +354,14 @@ namespace Origam.DA.Service
 					ResourceUtils.GetString("UnknownDataSource"));
 				}
 			}
-			var expressions = DatasetTools.RemoveExpressions(dataset, true);
+			IDictionary<DataColumn, string> expressions 
+				= DatasetTools.RemoveExpressions(dataset, true);
 			if((dataset.Tables.Count > 1) && query.Paging)
 			{
 				throw new Exception(
 					"Paging is allowed only on data structures with a single entity.");
 			}
-			var enforceConstraints = dataset.EnforceConstraints;
+			bool enforceConstraints = dataset.EnforceConstraints;
 			dataset.EnforceConstraints = false;
 			foreach(DataStructureEntity entity in entities)
 			{
@@ -372,8 +372,8 @@ namespace Origam.DA.Service
 				}
 				// Skip self joins, they are just relations, not really entities
 				if((entity.Columns.Count > 0) 
-				&& !(entity.Entity is IAssociation association 
-				     && association.IsSelfJoin))
+				   && !(entity.Entity is IAssociation association 
+				        && association.IsSelfJoin))
 				{
 					profiler.ExecuteAndRememberLoadDuration(
 						entity: entity,
@@ -428,7 +428,6 @@ namespace Origam.DA.Service
 					}
 					catch
 					{
-						// ignored
 					}
 					throw;
 				}
@@ -440,7 +439,7 @@ namespace Origam.DA.Service
 		private bool LoadWillReturnZeroResults(DataSet dataset,
 			DataStructureEntity entity, QueryDataSourceType dataSourceType)
 		{
-			var rootEntity = entity.RootEntity;
+			DataStructureEntity rootEntity = entity.RootEntity;
 			if(dataSourceType == QueryDataSourceType.DataStructureEntity)
 			{
 				return false;
@@ -456,9 +455,9 @@ namespace Origam.DA.Service
 			if(!(rootEntity.Entity is TableMappingItem mappingItem))
 			{
 				return false;
-			}
-            var rootEntityTableName = mappingItem.MappedObjectName;
-			var rootTable = dataset.Tables
+			} 
+			string rootEntityTableName = mappingItem.MappedObjectName;
+			DataTable rootTable = dataset.Tables
 				.Cast<DataTable>()
 				.FirstOrDefault(
 					table => table.TableName == rootEntityTableName);
@@ -477,7 +476,7 @@ namespace Origam.DA.Service
             DataStructureQuery query, IPrincipal userProfile, DataSet dataset, 
             string transactionId, bool forceBulkInsert)
 		{
-			if (log.IsDebugEnabled)
+			if(log.IsDebugEnabled)
 			{
 				log.RunHandled(() =>
 				{
@@ -507,18 +506,19 @@ namespace Origam.DA.Service
 					userProfile.Identity) as UserProfile;
 			}
             var stateMachine = StateMachine;
-			var changedDataset = dataset;
-			var dataStructure = GetDataStructure(query);
+			DataSet changedDataset = dataset;
+			DataStructure dataStructure = GetDataStructure(query);
 			if(dataStructure.IsLocalized)
 			{
 				throw new OrigamException(
 					$"Couldn't update localized data structure `{dataStructure.Name}' ({dataStructure.Id})");
 			}
-			var transaction = GetTransaction(transactionId, query.IsolationLevel);
-			var connection = transaction.Connection;
+			IDbTransaction transaction = GetTransaction(
+				transactionId, query.IsolationLevel);
+			IDbConnection connection = transaction.Connection;
 			var currentEntityName = "";
 			var lastTableName = "";
-			var entities = dataStructure.Entities;
+			ArrayList entities = dataStructure.Entities;
 			var changedTables = new ArrayList();
             var deletedRowIds = new ArrayList();
 			var rowStates = new[]
@@ -547,9 +547,9 @@ namespace Origam.DA.Service
 						// E.g. for self-joins the entity name is not contained
 						// in the dataset but that does not matter
 						// because we save such an entity once anyway.
-						if(!(entity.EntityDefinition is TableMappingItem
-							   tableMapping)
-						|| !changedDataset.Tables.Contains(currentEntityName))
+						if(!(entity.EntityDefinition 
+							   is TableMappingItem tableMapping) 
+						   || !changedDataset.Tables.Contains(currentEntityName))
 						{
 							continue;
 						}
@@ -583,7 +583,7 @@ namespace Origam.DA.Service
 							if(changedTable != null)
 							{
 								if((stateMachine != null) 
-								&& query.FireStateMachineEvents)
+								   && query.FireStateMachineEvents)
 								{
 									stateMachine.OnDataChanging(
 										changedTable, transactionId);
@@ -625,7 +625,7 @@ namespace Origam.DA.Service
 				profiler.LogRememberedExecutionTimes();
                 // delete attachments if any
                 if((deletedRowIds.Count > 0) 
-                && query.SynchronizeAttachmentsOnDelete)
+                   && query.SynchronizeAttachmentsOnDelete)
                 {
                     var attachmentService = ServiceManager.Services
 	                    .GetService<IAttachmentService>();
@@ -699,7 +699,7 @@ namespace Origam.DA.Service
 		private void ComposeGeneralErrorMessage(
 			string lastTableName, DataTable changedTable, Exception exception)
         {
-            var errorRow = DatasetTools.GetErrorRow(changedTable);
+            DataRow errorRow = DatasetTools.GetErrorRow(changedTable);
             if(errorRow == null)
             {
 	            return;
@@ -746,23 +746,24 @@ namespace Origam.DA.Service
             var errorString = "";
             try
             {
-                var table = dataset.Tables[currentEntityName];
+                DataTable table = dataset.Tables[currentEntityName];
 				// if the row in the queue is being deleted we will not find it
 				// in the original data
 				// in that case we will use the row provided by the event
 				// which contains the data
-                var row = table.Rows
-	                .Find(DatasetTools.PrimaryKey(exception.Row)) 
-                          ?? exception.Row;
+                DataRow row = table.Rows.Find(
+	                              DatasetTools.PrimaryKey(exception.Row)) 
+                              ?? exception.Row;
                 // load the existing row from the database to see what changes
                 // have been made by the other user
-                var storedData = CloneDatasetForActualRow(table);
+                DataSet storedData = CloneDatasetForActualRow(table);
                 var entityId = (Guid)table.ExtendedProperties["Id"];
                 var entity = GetEntity(entityId);
                 var rowName = DatasetTools.PrimaryKey(row)[0].ToString();
-                var describingField = entity.EntityDefinition.DescribingField;
+                IDataEntityColumn describingField 
+                = entity.EntityDefinition.DescribingField;
                 if((describingField != null) 
-                && table.Columns.Contains(describingField.Name))
+                   && table.Columns.Contains(describingField.Name))
                 {
                     if(!row.IsNull(describingField.Name))
                     {
@@ -771,7 +772,7 @@ namespace Origam.DA.Service
                 }
                 LoadActualRow(storedData, entityId, Guid.Empty, row, 
 	                userProfile, transactionId);
-                var storedTable = storedData.Tables[currentEntityName];
+                DataTable storedTable = storedData.Tables[currentEntityName];
                 if(storedTable.Rows.Count == 0)
                 {
                     errorString = ResourceUtils.GetString(
@@ -780,9 +781,9 @@ namespace Origam.DA.Service
                 }
                 else
                 {
-                    var storedRow = storedTable.Rows[0];
+                    DataRow storedRow = storedTable.Rows[0];
                     if(storedTable.Columns.Contains("RecordUpdatedBy") 
-                    && !storedRow.IsNull("RecordUpdatedBy"))
+                       && !storedRow.IsNull("RecordUpdatedBy"))
                     {
                         var concurrentProfile = SecurityManager
 	                        .GetProfileProvider().GetProfile(
@@ -795,10 +796,10 @@ namespace Origam.DA.Service
 	                    lastTableName, concurrentUserName);
                     foreach(DataColumn column in row.Table.Columns)
                     {
-                        var field = GetField(
+                        IDataEntityColumn field = GetField(
 	                        (Guid)column.ExtendedProperties["Id"]);
-                        if((column.ColumnName == "RecordUpdatedBy")
-                        || !(field is FieldMappingItem))
+                        if((column.ColumnName == "RecordUpdatedBy") 
+                           || !(field is FieldMappingItem))
                         {
 	                        continue;
                         }
@@ -859,7 +860,6 @@ namespace Origam.DA.Service
             }
             catch
             {
-	            // ignored
             }
             return errorString;
         }
@@ -881,13 +881,13 @@ namespace Origam.DA.Service
             // LOGGING
             LogData(changedTable, profile, transactionId, connection, 
 	            transaction);
-            if ((forceBulkInsert || ((BulkInsertThreshold != 0)
-            && (rowCount > BulkInsertThreshold)))
-            && (rowState == DataRowState.Added))
+            if((forceBulkInsert || ((BulkInsertThreshold != 0) 
+                                     && (rowCount > BulkInsertThreshold))) 
+                && (rowState == DataRowState.Added))
             {
                 BulkInsert(entity, connection,
                     transaction, changedTable);
-                if (log.IsInfoEnabled)
+                if(log.IsInfoEnabled)
                 {
                     log.Info("BulkCopy; Entity: "
                         + changedTable?.TableName
@@ -899,8 +899,8 @@ namespace Origam.DA.Service
             }
             else
             {
-                var filter = GetFilterSet(query.MethodId);
-                var sortSet = GetSortSet(query.SortSetId);
+                DataStructureFilterSet filter = GetFilterSet(query.MethodId);
+                DataStructureSortSet sortSet = GetSortSet(query.SortSetId);
                 // CONFIGURE DATA ADAPTER
                 var adapterParameters = new SelectParameters
                 {
@@ -911,7 +911,7 @@ namespace Origam.DA.Service
                     Parameters = query.Parameters.ToHashtable(),
                     Paging = false
                 };
-                var adapter = GetAdapter(adapterParameters, profile);
+                DbDataAdapter adapter = GetAdapter(adapterParameters, profile);
                 SetConnection(adapter, connection);
                 SetTransaction(adapter, transaction);
                 if(UpdateBatchSize != 0)
@@ -940,7 +940,8 @@ namespace Origam.DA.Service
 		                // remember row in order to delete an attachment later
 		                // at the end of updateData
 		                if((changedTable.PrimaryKey.Length == 1) 
-		                && (changedTable.PrimaryKey[0].DataType == typeof(Guid)))
+		                   && (changedTable.PrimaryKey[0].DataType 
+		                       == typeof(Guid)))
 		                {
 			                // entity has a primary key Id taken from IOrigamEntity2
 			                foreach (DataRow row in changedTable.Rows)
@@ -959,7 +960,7 @@ namespace Origam.DA.Service
 		                break;
 	                }
                 }
-                var result = adapter.Update(changedTable);
+                int result = adapter.Update(changedTable);
                 if(log.IsInfoEnabled)
                 {
                     log.Info(
@@ -997,7 +998,7 @@ namespace Origam.DA.Service
 
 		private Hashtable GetScalarCommandCache()
 		{
-			var context = OrigamUserContext.Context;
+			Hashtable context = OrigamUserContext.Context;
             lock (context)
             {
                 if(!context.Contains("ScalarCommandCache"))
@@ -1020,13 +1021,13 @@ namespace Origam.DA.Service
 				currentProfile = SecurityManager.GetProfileProvider()
 					.GetProfile(principal.Identity) as UserProfile;
 			}
-			var dataStructure = this.GetDataStructure(query);
+			DataStructure dataStructure = GetDataStructure(query);
 			var cacheId 
 				= query.DataSourceId.ToString() 
 				  + query.MethodId.ToString() 
 				  + query.SortSetId.ToString() 
 				  + columnsInfo;
-			var cache = GetScalarCommandCache();
+			Hashtable cache = GetScalarCommandCache();
 			if(cache.Contains(cacheId))
 			{
 				command = (IDbCommand)cache[cacheId];
@@ -1068,13 +1069,13 @@ namespace Origam.DA.Service
 				TraceCommand(command, transactionId);
 				result = command.ExecuteScalar();
 				var dataType = OrigamDataType.Xml;
-				foreach(var column 
+				foreach(DataStructureColumn column 
 				        in (dataStructure.Entities[0] as DataStructureEntity)
 				        .Columns)
 				{
 					if(column.Name == columnsInfo?.ToString())
 					{
-						var finalColumn = column.FinalColumn;
+						DataStructureColumn finalColumn = column.FinalColumn;
 						dataType = (column.Aggregation == AggregationType.Count) 
 							? OrigamDataType.Long 
 							: finalColumn.DataType;
@@ -1151,7 +1152,7 @@ namespace Origam.DA.Service
 	        string transactionId)
 		{
 			var settings = ConfigurationManager.GetActiveConfiguration();
-			var dataStructure = GetDataStructure(query);
+			DataStructure dataStructure = GetDataStructure(query);
 			DataSet result = null;
 			if(dataStructure != null)
 			{
@@ -1189,13 +1190,14 @@ namespace Origam.DA.Service
 						command.Transaction = transaction;
 						command.CommandTimeout 
 							= settings.DataServiceExecuteProcedureTimeout;
-						foreach(var parameter in query.Parameters)
+						foreach(QueryParameter parameter in query.Parameters)
 						{
 							if(parameter.Value != null)
 							{
-								var dataParameter = DbDataAdapterFactory
-									.GetParameter(parameter.Name, 
-										parameter.Value.GetType());
+								IDbDataParameter dataParameter 
+									= DbDataAdapterFactory
+										.GetParameter(parameter.Name, 
+											parameter.Value.GetType());
 								dataParameter.Value = parameter.Value;
 								command.Parameters.Add(dataParameter);
 							}
@@ -1218,7 +1220,7 @@ namespace Origam.DA.Service
 						else
 						{
 							entitiesOrdered = new ArrayList();
-							foreach(var entityName in entityOrder.Split(';'))
+							foreach(string entityName in entityOrder.Split(';'))
 							{
 								var found = false;
 								foreach(DataStructureEntity dataStructureEntity 
@@ -1299,26 +1301,26 @@ namespace Origam.DA.Service
 			var result = 0;
 			var profile = SecurityManager.GetProfileProvider().GetProfile(
 				userProfile.Identity) as UserProfile;
-			var transaction = GetTransaction(transactionId, 
+			IDbTransaction transaction = GetTransaction(transactionId, 
 				IsolationLevel.ReadCommitted);
-			var connection = transaction.Connection;
+			IDbConnection connection = transaction.Connection;
 			try
 			{
-				var table = GetTable(entityId);
+				TableMappingItem table = GetTable(entityId);
 				if(table.DatabaseObjectType != DatabaseMappingObjectType.Table)
 				{
 					throw new ArgumentOutOfRangeException(
 						"DatabaseObjectType", table.DatabaseObjectType, 
 						ResourceUtils.GetString("UpdateFieldUpdate"));
 				}
-				var field = GetTableColumn(fieldId);
+				FieldMappingItem field = GetTableColumn(fieldId);
 				// get data for audit log
 				var datasetGenerator = new DatasetGenerator(true);
-				var dataSet = datasetGenerator.CreateUpdateFieldDataSet(
+				DataSet dataSet = datasetGenerator.CreateUpdateFieldDataSet(
 					table, field);
-				var dataTable = dataSet.Tables[table.Name];
-				var adapter = DbDataAdapterFactory.CreateUpdateFieldDataAdapter(
-					table, field);
+				DataTable dataTable = dataSet.Tables[table.Name];
+				DbDataAdapter adapter = DbDataAdapterFactory
+					.CreateUpdateFieldDataAdapter(table, field);
 				((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
 				((IDbDataAdapter)adapter).SelectCommand.Transaction 
 					= transaction;
@@ -1346,8 +1348,8 @@ namespace Origam.DA.Service
 				}
 				LogData(dataTable, profile, transactionId, connection, 
 					transaction, 32);
-				using(var command = DbDataAdapterFactory.UpdateFieldCommand(
-					      table, field))
+				using(IDbCommand command = DbDataAdapterFactory
+					      .UpdateFieldCommand(table, field))
 				{
 					command.Connection = connection;
 					command.Transaction = transaction;
@@ -1388,21 +1390,21 @@ namespace Origam.DA.Service
 		{
 			var profile = SecurityManager.GetProfileProvider().GetProfile(
 				userProfile.Identity) as UserProfile;
-			var transaction = GetTransaction(transactionId, 
+			IDbTransaction transaction = GetTransaction(transactionId, 
 				IsolationLevel.ReadCommitted);
-			var connection = transaction.Connection;
+			IDbConnection connection = transaction.Connection;
 			try
 			{
-				var table = GetTable(entityId);
+				TableMappingItem table = GetTable(entityId);
 				if(table.DatabaseObjectType != DatabaseMappingObjectType.Table)
 				{
 					throw new ArgumentOutOfRangeException(
 						"DatabaseObjectType", table.DatabaseObjectType, 
 						ResourceUtils.GetString("UpdateFieldUpdate"));
 				}
-				var field = GetTableColumn(fieldId);
-				var command = DbDataAdapterFactory.SelectReferenceCountCommand(
-					table, field);
+				FieldMappingItem field = GetTableColumn(fieldId);
+				IDbCommand command = DbDataAdapterFactory
+					.SelectReferenceCountCommand(table, field);
 				command.Connection = connection;
 				command.Transaction = transaction;
 				command.CommandTimeout = 0;
@@ -1454,10 +1456,10 @@ namespace Origam.DA.Service
             {
                 var dataset = new DataSet();
                 var records = 0;
-                using (var databaseCommand = DbDataAdapterFactory.GetCommand(
-	                       command, connection, transaction))
+                using (IDbCommand databaseCommand = DbDataAdapterFactory
+	                       .GetCommand(command, connection, transaction))
                 {
-                    var adapter = DbDataAdapterFactory.GetAdapter(
+                    DbDataAdapter adapter = DbDataAdapterFactory.GetAdapter(
 	                    databaseCommand);
                     databaseCommand.CommandTimeout = 0;
                     records = adapter.Fill(dataset);
@@ -1527,7 +1529,7 @@ namespace Origam.DA.Service
 
         private static int GetLength(DataColumn column)
         {
-            var nameLength = column.ColumnName.Length + 1;
+            int nameLength = column.ColumnName.Length + 1;
             int dataLength;
             if(column.DataType == typeof(string))
             {
@@ -1564,13 +1566,13 @@ namespace Origam.DA.Service
 			string transactionId, IDbConnection connection, 
 			IDbTransaction transaction, int overrideActionType)
 		{
-			var dataAuditLog = GetLog(changedTable, profile, transactionId, 
-				overrideActionType);
-			if(dataAuditLog == null || dataAuditLog.AuditRecord.Count <= 0)
+			DataAuditLog dataAuditLog = GetLog(
+				changedTable, profile, transactionId, overrideActionType);
+			if((dataAuditLog == null) || (dataAuditLog.AuditRecord.Count <= 0))
 			{
 				return;
 			}
-			var logDataStructure = GetDataStructure(
+			DataStructure logDataStructure = GetDataStructure(
 				new Guid("530eba45-40db-470d-8e53-8b98ace758ad"));
 			var adapterParameters = new SelectParameters
 			{
@@ -1579,7 +1581,7 @@ namespace Origam.DA.Service
 				Parameters = new Hashtable(),
 				Paging = false,
 			};
-			var logAdapter = GetAdapter(adapterParameters, profile);
+			DbDataAdapter logAdapter = GetAdapter(adapterParameters, profile);
 			SetConnection(logAdapter, connection);
 			SetTransaction(logAdapter, transaction);
 			logAdapter.Update(dataAuditLog);
@@ -1593,7 +1595,8 @@ namespace Origam.DA.Service
 			{
 			    var settings = ConfigurationManager.GetActiveConfiguration();
 			    string result;
-			    using(var connection = GetConnection(connectionString))
+			    using(IDbConnection connection 
+			          = GetConnection(connectionString))
 			    {
 				    connection.Open();
 				    result = RunSchemaVersionQuery(connection, settings);
@@ -1630,7 +1633,7 @@ namespace Origam.DA.Service
 		private string TryGetSchemaVersion(IDbConnection connection,
 			OrigamSettings settings, string versionCommandName)
 		{
-			using(var command = DbDataAdapterFactory.GetCommand(
+			using(IDbCommand command = DbDataAdapterFactory.GetCommand(
 				      versionCommandName, connection))
 			{
 				command.CommandTimeout 
@@ -1671,7 +1674,7 @@ namespace Origam.DA.Service
         {
             DataSet dataSet = null;
             var settings = ConfigurationManager.GetActiveConfiguration();
-            var timeout = settings.DataServiceSelectTimeout;
+            int timeout = settings.DataServiceSelectTimeout;
             UserProfile currentProfile = null;
             if(query.LoadByIdentity)
             {
@@ -1683,10 +1686,10 @@ namespace Origam.DA.Service
                 throw new NullReferenceException(
                     ResourceUtils.GetString("NoProviderForMS"));
             }
-            var dataStructure = GetDataStructure(query);
-            var filterSet = GetFilterSet(query.MethodId);
-            var sortSet = GetSortSet(query.SortSetId);
-            var entity = GetEntity(query, dataStructure);
+            DataStructure dataStructure = GetDataStructure(query);
+            DataStructureFilterSet filterSet = GetFilterSet(query.MethodId);
+            DataStructureSortSet sortSet = GetSortSet(query.SortSetId);
+            DataStructureEntity entity = GetEntity(query, dataStructure);
             dataSet = GetDataset(dataStructure, query.DefaultSetId);
             DatasetTools.RemoveExpressions(dataSet, true);
 			IDbConnection connection = null;
@@ -1723,7 +1726,8 @@ namespace Origam.DA.Service
                 ForceDatabaseCalculation = query.ForceDatabaseCalculation,
                 AggregatedColumns = query.AggregatedColumns
             };
-            var adapter = GetAdapter(adapterParameters, currentProfile);
+            DbDataAdapter adapter = GetAdapter(
+	            adapterParameters, currentProfile);
             ((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
             ((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
             ((IDbDataAdapter)adapter).SelectCommand.CommandTimeout = timeout;
@@ -1761,9 +1765,9 @@ namespace Origam.DA.Service
         {
 	        var processedItems = new List<KeyValuePair<string, object>>();
 	        var aggregationData = new List<object>();
-	        foreach (var pair in line)
+	        foreach (KeyValuePair<string, object> pair in line)
 	        {
-		        var aggregatedColumn = query.AggregatedColumns
+		        Aggregation aggregatedColumn = query.AggregatedColumns
 			        ?.FirstOrDefault(column 
 				        => column.SqlQueryColumnName == pair.Key);
 		        if(aggregatedColumn != null)
@@ -1797,9 +1801,9 @@ namespace Origam.DA.Service
 	        return query.GetAllQueryColumns()
 		        .SelectMany(column =>
 		        {
-			        if(!string.IsNullOrWhiteSpace(
-				           query.CustomGrouping?.GroupingUnit) 
-					&& (query.CustomGrouping?.GroupBy == column.Name))
+			        if(!string.IsNullOrWhiteSpace(query.CustomGrouping?
+				           .GroupingUnit) 
+			           && (query.CustomGrouping?.GroupBy == column.Name))
 			        {
 				        return TimeGroupingRenderer
 					        .GetColumnNames(column.Name, 
@@ -1818,22 +1822,22 @@ namespace Origam.DA.Service
         private IEnumerable<IEnumerable<KeyValuePair<string, object>>> 
 	        ExecuteDataReaderInternal(DataStructureQuery query)
         {
-	        using(var reader = ExecuteDataReader(
+	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
-		        var queryColumns = GetAllQueryColumns(query);
+		        List<ColumnData> queryColumns = GetAllQueryColumns(query);
 		        while(reader.Read())
 		        {
 			        var values = new KeyValuePair<string, object>[
 				        queryColumns.Count];
 			        for(var i = 0; i < queryColumns.Count; i++)
 			        {
-				        var queryColumn = queryColumns[i];
+				        ColumnData queryColumn = queryColumns[i];
 				        if(queryColumn.IsVirtual && !queryColumn.HasRelation)
 				        {
 					        continue;
 				        }
-				        var value = reader.GetValue(reader.GetOrdinal(
+				        object value = reader.GetValue(reader.GetOrdinal(
 					        queryColumn.Name));
 				        values[i] = new KeyValuePair<string, object>(
 					        queryColumn.Name , value);
@@ -1941,13 +1945,13 @@ namespace Origam.DA.Service
 		public override ArrayList CompareSchema(IPersistenceProvider provider)
 		{
 			var results = new ArrayList();
-            var schemaTables = GetSchemaTables(provider);
+            ArrayList schemaTables = GetSchemaTables(provider);
             // tables
-            var schemaTableList = GetSchemaTableList(schemaTables);
+            Hashtable schemaTableList = GetSchemaTableList(schemaTables);
 			var schemaColumnList = new Hashtable();
 			var schemaIndexListAll = new Hashtable();
-            var dbTableList = GetDbTableList();
-			var columns = GetData(GetAllColumnsSQL());
+            Hashtable dbTableList = GetDbTableList();
+			DataSet columns = GetData(GetAllColumnsSQL());
 			columns.CaseSensitive = true;
 			DoCompare(results, dbTableList, schemaTableList, columns, 
 				DbCompareResultType.MissingInDatabase, 
@@ -1963,12 +1967,12 @@ namespace Origam.DA.Service
 	            schemaColumnList,columns);
             //End fields
             //indexes
-			var indexes = GetData(GetSqlIndexes());
-			var indexFields = GetData(GetSqlIndexFields());
+			DataSet indexes = GetData(GetSqlIndexes());
+			DataSet indexFields = GetData(GetSqlIndexFields());
 			indexFields.CaseSensitive = true;
-            var schemaIndexListGenerate = GetSchemaIndexListGenerate(
+            Hashtable schemaIndexListGenerate = GetSchemaIndexListGenerate(
 	            schemaTables, dbTableList, schemaIndexListAll);
-            var dbIndexList = GetDbIndexList(indexes, schemaTableList);
+            Hashtable dbIndexList = GetDbIndexList(indexes, schemaTableList);
 			DoCompare(results, dbIndexList, schemaIndexListGenerate, 
 				columns, DbCompareResultType.MissingInDatabase, 
 				typeof(DataEntityIndex), provider);
@@ -1981,7 +1985,7 @@ namespace Origam.DA.Service
             // the whole index anyway.
             DoCompareIndex(results, schemaTables, indexFields);
 			// foreign keys
-			var foreignKeys = GetData(GetSqlFk());
+			DataSet foreignKeys = GetData(GetSqlFk());
             // for each existing table - we skip foreign keys
             // where table does not exist in the database or schema,
             // they will be re-created completely anyway
@@ -1998,21 +2002,21 @@ namespace Origam.DA.Service
             {
 	            // not for views and not for tables where generating script
                 // is turned off
-                if(!table.GenerateDeploymentScript
-                || (table.DatabaseObjectType 
-                    != DatabaseMappingObjectType.Table))
+                if(!table.GenerateDeploymentScript 
+                   || (table.DatabaseObjectType 
+                       != DatabaseMappingObjectType.Table))
                 {
 	                continue;
                 }
-                var dbRows = foreignKeys.Tables[0].Select(
+                DataRow[] dbRows = foreignKeys.Tables[0].Select(
 	                "FK_Table = '" + table.MappedObjectName + "'");
                 // there are some constraints for this table in the database
                 if(dbRows.Length > 0)
                 {
 	                // we try to see which of these we don't find in the model
-	                foreach(var row in dbRows)
+	                foreach(DataRow row in dbRows)
 	                {
-		                var found = table.Constraints
+		                bool found = table.Constraints
 			                .Cast<DataEntityConstraint>()
 			                .Where(constraint => 
 				                (constraint.Type == ConstraintType.ForeignKey) 
@@ -2043,130 +2047,119 @@ namespace Origam.DA.Service
                 foreach (DataEntityConstraint constraint 
                          in table.Constraints)
                 {
-	                if((constraint.Type != ConstraintType.ForeignKey)
-	                || !(constraint.ForeignEntity is TableMappingItem)
-	                || !(constraint.Fields[0] is FieldMappingItem))
-	                {
-		                continue;
-	                }
-	                var rows = foreignKeys.Tables[0].Select(
-		                "PK_Table = '" 
-		                + (constraint.ForeignEntity as TableMappingItem)
-		                .MappedObjectName 
-		                + "' AND FK_Table = '" 
-		                + table.MappedObjectName 
-		                + "' AND cKeyCol1 = '" 
-		                + (constraint.Fields[0] as FieldMappingItem)
-		                .MappedColumnName 
-		                + "'");
-	                if(columns.Tables[0].Select(
-		                   "TABLE_NAME = '"
-		                   + table.MappedObjectName
-		                   + "' AND COLUMN_NAME = '"
-		                   + (constraint.Fields[0] as FieldMappingItem)
-		                   .MappedColumnName
-		                   + "'").Length <= 0)
-	                {
-		                continue;
-	                }
-	                if(rows.Length == 0)
-	                {
-		                // constraint was not found in the database at all
-		                var result = new SchemaDbCompareResult
-		                {
-			                ResultType = DbCompareResultType
-				                .MissingInDatabase,
-			                ItemName = ConstraintName(
-				                table, constraint),
-			                SchemaItem = table,
-			                SchemaItemType = typeof(DataEntityConstraint),
-			                Script = (DbDataAdapterFactory 
-					                as AbstractSqlCommandGenerator)
-				                .AddForeignKeyConstraintDdl(
-					                table, constraint)
-		                };
-		                results.Add(result);
-	                }
-	                else
-	                {
-		                var constraintEqual = true;
-		                // constraint found in database,
-		                // we check if it has the same fields
-		                foreach(IDataEntityColumn column 
-		                        in constraint.Fields)
-		                {
-			                if(column is FieldMappingItem fieldMappingItem)
-			                {
-				                if(column.ForeignKeyField 
-				                   is FieldMappingItem foreignKeyField)
-				                {
-					                var primaryKey = foreignKeyField
-						                .MappedColumnName;
-					                var foreignKey = fieldMappingItem
-						                .MappedColumnName;
-					                var foundPair = false;
-					                for(var i = 1; i < 17; i++)
-					                {
-						                if((rows[0]["cKeyCol" + i] 
-						                    != DBNull.Value) 
-						                   && ((string)rows[0]["cKeyCol" + i] 
-						                       == foreignKey) 
-						                   && ((string)rows[0]["cRefCol" + i] 
-						                       == primaryKey))
-						                {
-							                foundPair = true;
-							                break;
-						                }
-					                }
-					                // if pair was found,
-					                // we set constraint to equal
-					                if(!foundPair)
-					                {
-						                constraintEqual = false;
-						                break;
-					                }
-				                }
-				                else
-				                {
-					                // one of the columns is not a physical
-					                // column
-					                constraintEqual = false;
-					                break;
-				                }
-			                }
-			                else
-			                {
-				                // one of the columns is not a physical column
-				                constraintEqual = false;
-				                break;
-			                }
-		                }
-		                if(!constraintEqual)
-		                {
-			                // constraint found but different
-			                var result = new SchemaDbCompareResult
-			                {
-				                ResultType = DbCompareResultType
-					                .ExistingButDifferent,
-				                ItemName = "FK_" 
-				                           + table.MappedObjectName 
-				                           + "_" 
-				                           + (constraint.Fields[0] 
-					                           as FieldMappingItem)
-				                           .MappedColumnName 
-				                           + "_" 
-				                           + (constraint.ForeignEntity 
-					                           as TableMappingItem)
-				                           .MappedObjectName,
-				                SchemaItem = table,
-				                SchemaItemType = typeof(
-					                DataEntityConstraint)
-			                };
-			                results.Add(result);
-		                }
-	                }
+	                CompareConstraintMissingInDatabase(constraint, table,
+		                foreignKeys, columns, results);
                 }
             }
+        }
+
+        private void CompareConstraintMissingInDatabase(
+	        DataEntityConstraint constraint, TableMappingItem table,
+	        DataSet foreignKeys, DataSet columns, ArrayList results)
+        {
+			if((constraint.Type != ConstraintType.ForeignKey) 
+			   || !(constraint.ForeignEntity is TableMappingItem) 
+			   || !(constraint.Fields[0] is FieldMappingItem))
+			{
+				return;
+			}
+			DataRow[] rows = foreignKeys.Tables[0].Select(
+				"PK_Table = '" 
+				+ (constraint.ForeignEntity as TableMappingItem)
+				.MappedObjectName 
+				+ "' AND FK_Table = '" 
+				+ table.MappedObjectName 
+				+ "' AND cKeyCol1 = '" 
+				+ (constraint.Fields[0] as FieldMappingItem)
+				.MappedColumnName 
+				+ "'");
+			if(columns.Tables[0].Select(
+				   "TABLE_NAME = '"
+				   + table.MappedObjectName
+				   + "' AND COLUMN_NAME = '"
+				   + (constraint.Fields[0] as FieldMappingItem)
+				   .MappedColumnName
+				   + "'").Length <= 0)
+			{
+				return;
+			}
+			if(rows.Length == 0)
+			{
+				// constraint was not found in the database at all
+				var result = new SchemaDbCompareResult
+				{
+					ResultType = DbCompareResultType
+						.MissingInDatabase,
+					ItemName = ConstraintName(
+						table, constraint),
+					SchemaItem = table,
+					SchemaItemType = typeof(DataEntityConstraint),
+					Script = ((AbstractSqlCommandGenerator)DbDataAdapterFactory)
+						.AddForeignKeyConstraintDdl(table, constraint)
+				};
+				results.Add(result);
+			}
+			else
+			{
+				var constraintEqual = true;
+				// constraint found in database,
+				// we check if it has the same fields
+				foreach(IDataEntityColumn column in constraint.Fields)
+				{
+					if(!(column is FieldMappingItem fieldMappingItem))
+					{
+						// one of the columns is not a physical column
+						constraintEqual = false;
+						break;
+					}
+					if(!(column.ForeignKeyField 
+						   is FieldMappingItem foreignKeyField))
+					{
+						continue;
+					}
+					string primaryKey = foreignKeyField.MappedColumnName;
+					string foreignKey = fieldMappingItem.MappedColumnName;
+					var foundPair = false;
+					for(var i = 1; i < 17; i++)
+					{
+						if((rows[0]["cKeyCol" + i] != DBNull.Value) 
+						   && ((string)rows[0]["cKeyCol" + i] == foreignKey) 
+						   && ((string)rows[0]["cRefCol" + i] == primaryKey))
+						{
+							foundPair = true;
+							break;
+						}
+					}
+					// if pair was found,
+					// we set constraint to equal
+					if(!foundPair)
+					{
+						constraintEqual = false;
+						break;
+					}
+				}
+				if(!constraintEqual)
+				{
+					// constraint found but different
+					var result = new SchemaDbCompareResult
+					{
+						ResultType = DbCompareResultType
+							.ExistingButDifferent,
+						ItemName = "FK_" 
+								   + table.MappedObjectName 
+								   + "_" 
+								   + (constraint.Fields[0] as FieldMappingItem)
+									   .MappedColumnName 
+								   + "_" 
+								   + (constraint.ForeignEntity 
+									   as TableMappingItem).MappedObjectName,
+						SchemaItem = table,
+						SchemaItemType = typeof(
+							DataEntityConstraint)
+					};
+					results.Add(result);
+				}
+			}
         }
 
         internal abstract string GetSqlFk();
@@ -2176,8 +2169,9 @@ namespace Origam.DA.Service
         {
             foreach(TableMappingItem table in schemaTables)
             {
-	            if(!table.GenerateDeploymentScript
-	            || (table.DatabaseObjectType != DatabaseMappingObjectType.Table))
+	            if(!table.GenerateDeploymentScript 
+	               || (table.DatabaseObjectType 
+	                   != DatabaseMappingObjectType.Table))
 	            {
 		            continue;
 	            }
@@ -2188,7 +2182,7 @@ namespace Origam.DA.Service
 			            continue;
 		            }
 		            var different = false;
-		            var rows = indexFields.Tables[0].Select(
+		            DataRow[] rows = indexFields.Tables[0].Select(
 			            "TableName = '" 
 			            + table.MappedObjectName 
 			            + "' AND IndexName = '" 
@@ -2287,19 +2281,19 @@ namespace Origam.DA.Service
 	                var fieldMappingItem = schemaColumnList[key] 
 		                as FieldMappingItem;
 	                var differenceDescription = "";
-	                if(((string)row["IS_NULLABLE"] == "YES")
-	                && !fieldMappingItem.AllowNulls)
+	                if(((string)row["IS_NULLABLE"] == "YES") 
+	                   && !fieldMappingItem.AllowNulls)
 	                {
-		                differenceDescription =
-			                (differenceDescription == "" ? "" : "; ")
-			                + "AllowNulls: Schema-NO, Database-YES";
+		                differenceDescription 
+			                = (differenceDescription == "" ? "" : "; ") 
+			                  + "AllowNulls: Schema-NO, Database-YES";
 	                }
 	                if(((string)row["IS_NULLABLE"] == "NO") 
-	                && fieldMappingItem.AllowNulls)
+	                   && fieldMappingItem.AllowNulls)
 	                {
-		                differenceDescription =
-			                (differenceDescription == "" ? "" : "; ")
-			                + "AllowNulls: Schema-YES, Database-NO";
+		                differenceDescription 
+			                = (differenceDescription == "" ? "" : "; ") 
+			                  + "AllowNulls: Schema-YES, Database-NO";
 	                }
 	                if(CompareType(row, abstractSqlCommandGenerator
 		                   .DdlDataType(fieldMappingItem.DataType, 
@@ -2318,12 +2312,12 @@ namespace Origam.DA.Service
 	                   && ((int)row["CHARACTER_MAXIMUM_LENGTH"] 
 	                       != fieldMappingItem.DataLength))
 	                {
-		                differenceDescription =
-			                (differenceDescription == "" ? "" : "; ")
-			                + "DataLength: Schema-" 
-			                + fieldMappingItem.DataLength
-			                + ", Database-" 
-			                + row["CHARACTER_MAXIMUM_LENGTH"];
+		                differenceDescription 
+			                = (differenceDescription == "" ? "" : "; ") 
+			                  + "DataLength: Schema-" 
+			                  + fieldMappingItem.DataLength 
+			                  + ", Database-" 
+			                  + row["CHARACTER_MAXIMUM_LENGTH"];
 	                }
 	                if(differenceDescription != "")
 	                {
@@ -2361,14 +2355,14 @@ namespace Origam.DA.Service
 
         private bool CompareType(DataRow row, string modelType)
         {
-			var columnType = GetColumnType(row);
+			string columnType = GetColumnType(row);
 			if(columnType.Contains("TIMESTAMP") 
-			&& modelType.Contains("TIMESTAMP"))
+			   && modelType.Contains("TIMESTAMP"))
 			{
 				return false;
 			}
 			if(columnType.Contains("CHARACTER VARYING") 
-			&& modelType.Contains("VARCHAR"))
+			   && modelType.Contains("VARCHAR"))
             {
 				return false;
             }
@@ -2379,7 +2373,7 @@ namespace Origam.DA.Service
         {
 			var stringBuilder = new StringBuilder();
 			stringBuilder.Append((string)row["DATA_TYPE"]);
-            var length = Convert.IsDBNull(row["CHARACTER_MAXIMUM_LENGTH"]) 
+            int length = Convert.IsDBNull(row["CHARACTER_MAXIMUM_LENGTH"]) 
 	            ? 0 : (int)row["CHARACTER_MAXIMUM_LENGTH"];
 			if(length ==-1)
 			{
@@ -2432,7 +2426,7 @@ namespace Origam.DA.Service
 		                SchemaItemType = typeof(FieldMappingItem)
 	                };
 	                if(table.DatabaseObjectType 
-	                == DatabaseMappingObjectType.Table)
+	                   == DatabaseMappingObjectType.Table)
 	                {
 		                result.Script = ((AbstractSqlCommandGenerator)
 			                DbDataAdapterFactory).AddColumnDdl(
@@ -2445,10 +2439,11 @@ namespace Origam.DA.Service
 	                }
 	                results.Add(result);
 	                // foreign key
-	                var foreignKeyConstraint = column.ForeignKeyConstraint;
+	                DataEntityConstraint foreignKeyConstraint 
+		                = column.ForeignKeyConstraint;
 	                if((table.DatabaseObjectType 
-	                    == DatabaseMappingObjectType.Table)
-	                && (foreignKeyConstraint != null))
+	                    == DatabaseMappingObjectType.Table) 
+	                   && (foreignKeyConstraint != null))
 	                {
 		                result = new SchemaDbCompareResult
 		                {
@@ -2472,7 +2467,7 @@ namespace Origam.DA.Service
 
         private Hashtable GetDbTableList()
         {
-            var tables = GetData(GetAllTablesSql());
+            DataSet tables = GetData(GetAllTablesSql());
             var dbTableList = new Hashtable();
             foreach(DataRow row in tables.Tables[0].Rows)
             {
@@ -2496,7 +2491,7 @@ namespace Origam.DA.Service
 
         private ArrayList GetSchemaTables(IPersistenceProvider provider)
         {
-            var entityList = provider
+            List<AbstractSchemaItem> entityList = provider
 	            .RetrieveListByCategory<AbstractSchemaItem>(
 		            AbstractDataEntity.CategoryConst);
             var schemaTables = new ArrayList();
@@ -2564,31 +2559,33 @@ namespace Origam.DA.Service
 	            // generate a model element
 	            if(schemaItemType == typeof(TableMappingItem))
 	            {
-		            var schema = ServiceManager.Services
+		            var schemaService = ServiceManager.Services
 			            .GetService<ISchemaService>();
 		            var entity = new TableMappingItem();
 		            entity.PersistenceProvider = provider;
-		            entity.SchemaExtensionId = schema.ActiveSchemaExtensionId;
-		            entity.RootProvider = schema
+		            entity.SchemaExtensionId 
+			            = schemaService.ActiveSchemaExtensionId;
+		            entity.RootProvider = schemaService
 			            .GetProvider<EntityModelSchemaItemProvider>();
 		            entity.Name = result.ItemName;
-		            foreach(var columnRow in columns.Tables[0].Select(
+		            foreach(DataRow columnRow in columns.Tables[0].Select(
 			                    "TABLE_NAME = '" + entity.Name + "'"))
 		            {
-			            var fieldMappingItem = entity.NewItem(
+			            FieldMappingItem fieldMappingItem = entity.NewItem(
 					            typeof(FieldMappingItem), 
-					            schema.ActiveSchemaExtensionId, null) 
+					            schemaService.ActiveSchemaExtensionId, null) 
 				            as FieldMappingItem;
 			            fieldMappingItem.Name 
 				            = (string)columnRow["COLUMN_NAME"];
 			            fieldMappingItem.AllowNulls 
 				            = (string)columnRow["IS_NULLABLE"] == "YES";
 			            // find a specific data type
-			            var dataTypeSchemaItemProvider = schema
+			            var dataTypeSchemaItemProvider = schemaService
 				            .GetProvider<DatabaseDataTypeSchemaItemProvider>();
 			            var dataTypeName = (string)columnRow["DATA_TYPE"];
-			            var databaseDataType = dataTypeSchemaItemProvider
-				            .FindDataType(dataTypeName);
+			            DatabaseDataType databaseDataType 
+				            = dataTypeSchemaItemProvider.FindDataType(
+					            dataTypeName);
 			            if(databaseDataType == null)
 			            {
 				            // if not found, get a generic data type
@@ -2618,16 +2615,16 @@ namespace Origam.DA.Service
             Hashtable dbList, Hashtable schemaList, Type schemaItemType)
         {
             var sqlGenerator 
-            = DbDataAdapterFactory as AbstractSqlCommandGenerator;
+	            = DbDataAdapterFactory as AbstractSqlCommandGenerator;
             foreach(DictionaryEntry entry in schemaList)
             {
 	            var process 
 		            = !((entry.Value is TableMappingItem tableMappingItem) 
 		                && !tableMappingItem.GenerateDeploymentScript);
-	            if((entry.Value is DataEntityIndex dataEntityIndex)
-	            && (!((TableMappingItem)dataEntityIndex.ParentItem)
-		                .GenerateDeploymentScript 
-	                || !dataEntityIndex.GenerateDeploymentScript))
+	            if((entry.Value is DataEntityIndex dataEntityIndex) 
+	               && (!((TableMappingItem)dataEntityIndex.ParentItem)
+		                   .GenerateDeploymentScript 
+	                   || !dataEntityIndex.GenerateDeploymentScript))
 	            {
 		            process = false;
 	            }
@@ -2645,8 +2642,8 @@ namespace Origam.DA.Service
 	            };
 	            if(schemaItemType == typeof(TableMappingItem))
 	            {
-		            if(((TableMappingItem)result.SchemaItem).DatabaseObjectType
-		            == DatabaseMappingObjectType.Table)
+		            if(((TableMappingItem)result.SchemaItem).DatabaseObjectType 
+		               == DatabaseMappingObjectType.Table)
 		            {
 			            result.Script = sqlGenerator.TableDefinitionDdl(
 				            result.SchemaItem as TableMappingItem);
@@ -2671,12 +2668,12 @@ namespace Origam.DA.Service
 
         internal DataSet GetData(string sql)
 		{
-			using(var connection = GetConnection(connectionString))
+			using(IDbConnection connection = GetConnection(connectionString))
 			{
 				connection.Open();
 				try
 				{
-					var adapter = DbDataAdapterFactory.GetAdapter(
+					DbDataAdapter adapter = DbDataAdapterFactory.GetAdapter(
 						DbDataAdapterFactory.GetCommand(sql, connection));
 					var schemaCompareDataset = new DataSet("SchemaCompare");
 					adapter.Fill(schemaCompareDataset);
@@ -2700,29 +2697,29 @@ namespace Origam.DA.Service
 			// Much faster than DataSet.AcceptChanges()
 			foreach(string tableName in changedTables)
 			{
-				var table = dataset.Tables[tableName];
-				var rowCount = table.Rows.Count;
+				DataTable table = dataset.Tables[tableName];
+				int rowCount = table.Rows.Count;
 				var rowArray = new DataRow[rowCount];
 				table.Rows.CopyTo(rowArray, 0);
 				// create dataset of this particular data table
 				// for loading new data
-				var newData = CloneDatasetForActualRow(table);
+				DataSet newData = CloneDatasetForActualRow(table);
 				for(var i = 0; i < rowCount; i++)
 				{
 					if(rowArray[i].RowState == DataRowState.Deleted)
 					{
 						rowArray[i].AcceptChanges();
 					}
-					else if(rowArray[i].RowState != DataRowState.Unchanged
-					&& rowArray[i].RowState != DataRowState.Detached
-					&& rowArray[i].RowState != DataRowState.Deleted)
+					else if(rowArray[i].RowState != DataRowState.Unchanged 
+					        && rowArray[i].RowState != DataRowState.Detached 
+					        && rowArray[i].RowState != DataRowState.Deleted)
 					{
 						if(query.LoadActualValuesAfterUpdate)
 						{
 							var entityId = (Guid)table.ExtendedProperties["Id"];
 							var entity = GetEntity(entityId);
 							if(entity.EntityDefinition.GetType() 
-							== typeof(TableMappingItem))
+							   == typeof(TableMappingItem))
 							{
 								newData.Clear();
 								LoadActualRow(newData, entityId, query.MethodId,
@@ -2746,15 +2743,15 @@ namespace Origam.DA.Service
 									foreach(DataColumn column in table.Columns)
 									{
 										if(detachedColumns.Contains(
-											   column.ColumnName)
-										|| column.ReadOnly)
+											   column.ColumnName) 
+										   || column.ReadOnly)
 										{
 											continue;
 										}
-										var newValue = newData.Tables[0]
+										object newValue = newData.Tables[0]
 											.Rows[0][column.ColumnName];
-										if(!rowArray[i][column]
-											   .Equals(newValue))
+										if(!rowArray[i][column].Equals(
+											   newValue))
 										{
 											rowArray[i][column] = newData
 												.Tables[0].Rows[0][column
@@ -2826,7 +2823,7 @@ namespace Origam.DA.Service
 			{
 				DataSourceType = QueryDataSourceType.DataStructureEntity
 			};
-			foreach(var column in row.Table.PrimaryKey)
+			foreach(DataColumn column in row.Table.PrimaryKey)
 			{
 				newDataQuery.Parameters.Add(
 					row.RowState == DataRowState.Deleted
@@ -2843,10 +2840,10 @@ namespace Origam.DA.Service
 			{
 				return;
 			}
-			var processIdCommand = command.Connection.CreateCommand();
+			IDbCommand processIdCommand = command.Connection.CreateCommand();
 			processIdCommand.CommandText = GetPid(); 
 			processIdCommand.Transaction = command.Transaction;
-			var spid = processIdCommand.ExecuteScalar();
+			object spid = processIdCommand.ExecuteScalar();
 			log.DebugFormat(
 				"SQL Command; Connection ID: {0}, Transaction ID: {1}, {2}", 
 				spid, transactionId, command.CommandText); 
@@ -2915,12 +2912,12 @@ namespace Origam.DA.Service
 			var taskPath = (string)ThreadContext.Properties["currentTaskPath"];
 			var taskId = (string)ThreadContext.Properties["currentTaskId"];
 			var serviceMethodName = (string)ThreadContext
-			.Properties["ServiceMethodName"];
+				.Properties["ServiceMethodName"];
 			if(taskId == null)
 			{
 				return;
 			}
-			foreach(var entity in entityOrder)
+			foreach(DataStructureEntity entity in entityOrder)
 			{
 				LogDuration(
 					logEntryType: serviceMethodName,
