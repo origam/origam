@@ -42,7 +42,7 @@ public static class ReferenceIndexManager
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
     public static bool IsReady { get; private set; } = false;
-    private static bool doNotDefferUpdates = false;
+    private static bool defferUpdates = true;
     private static readonly ConcurrentDictionary<Guid, HashSet<ReferenceInfo>>
         referenceDictionary = new ();
 
@@ -58,7 +58,7 @@ public static class ReferenceIndexManager
     public static void ClearReferenceIndex(bool fullClear)
     {
         IsReady = false;
-        doNotDefferUpdates = false;
+        defferUpdates = true;
         if (fullClear)
         {
             itemsToUpdateLater = new ConcurrentQueue<IPersistent>();
@@ -81,8 +81,11 @@ public static class ReferenceIndexManager
 
     internal static void UpdateReferenceIndex(IPersistent sender)
     {
-        RequestDeferredUpdate(sender);
-        if (doNotDefferUpdates)
+        if (defferUpdates)
+        {
+            RequestDeferredUpdate(sender);
+        }
+        else
         {
             Update(sender);
         }
@@ -99,10 +102,6 @@ public static class ReferenceIndexManager
 
     private static void RequestDeferredUpdate(IPersistent sender)
     {
-        if (doNotDefferUpdates)
-        {
-            return;
-        }
         lock (itemsToUpdateLater)
         {
             itemsToUpdateLater.Enqueue(sender);
@@ -115,7 +114,7 @@ public static class ReferenceIndexManager
         {
             Update(item);
         }
-        doNotDefferUpdates = true;
+        defferUpdates = false;
     }
 
     private static void AddReferences(AbstractSchemaItem retrievedObj)
