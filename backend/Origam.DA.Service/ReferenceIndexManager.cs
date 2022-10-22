@@ -86,7 +86,7 @@ public static class ReferenceIndexManager
             List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>
                 newReferenceIndex =
                     new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
-            Addreference((AbstractSchemaItem)sender, newReferenceIndex);
+            AddReferences((AbstractSchemaItem)sender, newReferenceIndex);
             referenceIndex.AddRange(newReferenceIndex);
         }
     }
@@ -136,21 +136,21 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void Addreference(AbstractSchemaItem retrievedObj,
+    private static void AddReferences(AbstractSchemaItem retrievedObj,
         List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
     {
-        CheckDependencies(retrievedObj, referenceIndex);
-        GetGuidFromText(retrievedObj, referenceIndex);
-        GetGuidFromReferences(retrievedObj, referenceIndex);
+        GetReferencesFromDependencies(retrievedObj, referenceIndex);
+        GetReferencesFromText(retrievedObj, referenceIndex);
+        GetTypeSpecifficReferences(retrievedObj, referenceIndex);
         foreach (AbstractSchemaItem item in retrievedObj.ChildItems)
         {
-            CheckDependencies(item, referenceIndex);
-            GetGuidFromText(item, referenceIndex);
-            GetGuidFromReferences(item, referenceIndex);
+            GetReferencesFromDependencies(item, referenceIndex);
+            GetReferencesFromText(item, referenceIndex);
+            GetTypeSpecifficReferences(item, referenceIndex);
         }
     }
 
-    private static void GetGuidFromReferences(AbstractSchemaItem retrievedObj,
+    private static void GetTypeSpecifficReferences(AbstractSchemaItem retrievedObj,
         List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
     {
         if (retrievedObj is EntityUIAction uiAction)
@@ -174,7 +174,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void GetGuidFromText(AbstractSchemaItem retrievedObj,
+    private static void GetReferencesFromText(AbstractSchemaItem retrievedObj,
         List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
     {
         MatchCollection mc = null;
@@ -209,7 +209,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void CheckDependencies(AbstractSchemaItem item,
+    private static void GetReferencesFromDependencies(AbstractSchemaItem item,
         List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
     {
         ArrayList dependencies = item.GetDependencies(false);
@@ -236,7 +236,7 @@ public static class ReferenceIndexManager
     public static void AddToBuildIndex(IFilePersistent item)
     {
         AbstractSchemaItem schemaItem = (AbstractSchemaItem)item;
-        Addreference(schemaItem, referenceIndex);
+        AddReferences(schemaItem, referenceIndex);
     }
 
     public static void ActivateReferenceIndex()
