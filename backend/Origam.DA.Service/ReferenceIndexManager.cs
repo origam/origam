@@ -41,7 +41,7 @@ public static class ReferenceIndexManager
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
-    public static bool IsReady { get; private set; } = false;
+    public static bool IsReady => !defferUpdates;
     private static bool defferUpdates = true;
     private static readonly ConcurrentDictionary<Guid, HashSet<ReferenceInfo>>
         referenceDictionary = new ();
@@ -57,7 +57,6 @@ public static class ReferenceIndexManager
 
     public static void ClearReferenceIndex(bool fullClear)
     {
-        IsReady = false;
         defferUpdates = true;
         if (fullClear)
         {
@@ -204,7 +203,6 @@ public static class ReferenceIndexManager
     public static void InitializeReferenceIndex()
     {
         ProcessDeferredUpdates();
-        IsReady = true;
     }
 }
 
