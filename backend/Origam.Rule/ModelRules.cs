@@ -67,7 +67,7 @@ namespace Origam.Rule
                     })
                     .Where(x => x != null)
                     .ToList();
-            ReferenceIndexManager.InitializeReferenceIndex();
+            ReferenceIndexManager.Initialize();
             statusBar.SetStatusText("");
             return errorFragments;
         }

@@ -26,7 +26,6 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -64,17 +63,12 @@ public static class ReferenceIndexManager
         }
         referenceDictionary.Clear();
     }
-
-    private static void Remove(AbstractSchemaItem item)
-    {
-        referenceDictionary.TryRemove(item.Id, out _);
-    }
     
     internal static void UpdateIndex(AbstractSchemaItem item)
     {
         if (defferUpdates)
-        {
-            RequestDeferredUpdate(item);
+        { 
+            itemsToUpdateLater.Enqueue(item);
         }
         else
         {
@@ -84,28 +78,11 @@ public static class ReferenceIndexManager
 
     private static void Update(AbstractSchemaItem item)
     {
-        Remove(item);
+        referenceDictionary.TryRemove(item.Id, out _);
         if (!item.IsDeleted)
         {
             Add(item);
         }
-    }
-
-    private static void RequestDeferredUpdate(AbstractSchemaItem item)
-    {
-        lock (itemsToUpdateLater)
-        {
-            itemsToUpdateLater.Enqueue(item);
-        }
-    }
-
-    private static void ProcessDeferredUpdates()
-    {
-        while (itemsToUpdateLater.TryDequeue(out var item))
-        {
-            Update(item);
-        }
-        defferUpdates = false;
     }
 
     public static void Add(AbstractSchemaItem retrievedObj)
@@ -200,9 +177,13 @@ public static class ReferenceIndexManager
             });
     }
 
-    public static void InitializeReferenceIndex()
+    public static void Initialize()
     {
-        ProcessDeferredUpdates();
+        while (itemsToUpdateLater.TryDequeue(out var item))
+        {
+            Update(item);
+        }
+        defferUpdates = false;
     }
 }
 
