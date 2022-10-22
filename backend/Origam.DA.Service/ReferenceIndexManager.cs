@@ -36,7 +36,7 @@ namespace Origam.DA.Service;
 
 public static class ReferenceIndexManager
 {
-    private static readonly List<IPersistent> itemsToUpdateLater = new ();
+    private static ConcurrentQueue<IPersistent> itemsToUpdateLater = new ();
 
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
@@ -61,7 +61,7 @@ public static class ReferenceIndexManager
         doNotDefferUpdates = false;
         if (fullClear)
         {
-            itemsToUpdateLater.Clear();
+            itemsToUpdateLater = new ConcurrentQueue<IPersistent>();
         }
         referenceDictionary.Clear();
     }
@@ -105,18 +105,16 @@ public static class ReferenceIndexManager
         }
         lock (itemsToUpdateLater)
         {
-            itemsToUpdateLater.Add(sender);
+            itemsToUpdateLater.Enqueue(sender);
         }
     }
 
     private static void ProcessDeferredUpdates()
     {
-        foreach (IPersistent persistent in itemsToUpdateLater)
+        while (itemsToUpdateLater.TryDequeue(out var item))
         {
-            Update(persistent);
+            Update(item);
         }
-
-        itemsToUpdateLater.Clear();
         doNotDefferUpdates = true;
     }
 
