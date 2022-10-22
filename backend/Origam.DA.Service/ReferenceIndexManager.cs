@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
 
 namespace Origam.DA.Service
@@ -125,11 +126,24 @@ namespace Origam.DA.Service
             }
         }
 
-        private static void GetGuidFromReferences(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+        private static void GetGuidFromReferences(AbstractSchemaItem retrievedObj,
+            List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
         {
-             if (retrievedObj is Schema.GuiModel.EntityUIAction)
+            if (retrievedObj is EntityUIAction uiAction)
             {
-                AddToIndex(((Schema.GuiModel.EntityUIAction)retrievedObj).ConfirmationRuleId, retrievedObj, referenceIndex);
+                AddToIndex(uiAction.ConfirmationRuleId, uiAction, referenceIndex);
+                ArrayList screenConditions = uiAction.ChildItemsByType(
+                    ScreenCondition.CategoryConst);
+                foreach (ScreenCondition screenCondition in screenConditions)
+                {
+                    AddToIndex(uiAction.Id, screenCondition.Screen, referenceIndex);
+                }
+                ArrayList sectionConditions = uiAction.ChildItemsByType(
+                    ScreenSectionCondition.CategoryConst);
+                foreach (ScreenSectionCondition sectionCondition in sectionConditions)
+                {
+                    AddToIndex(uiAction.Id, sectionCondition.ScreenSection, referenceIndex);
+                }
             }
         }
 
