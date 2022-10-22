@@ -36,14 +36,13 @@ namespace Origam.DA.Service;
 
 public static class ReferenceIndexManager
 {
-    private static readonly List<IPersistent> temporaryAction =
-        new List<IPersistent>();
+    private static readonly List<IPersistent> itemsToUpdate = new ();
 
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
-    public static bool UseIndex { get; private set; } = false;
-    private static bool blockAddTemporaryAction = false;
+    public static bool IsReady { get; private set; } = false;
+    private static bool doNotDefferUpdates = false;
     private static readonly ConcurrentDictionary<Guid, HashSet<ReferenceInfo>>
         referenceDictionary = new ();
 
@@ -58,11 +57,11 @@ public static class ReferenceIndexManager
 
     public static void ClearReferenceIndex(bool fullClear)
     {
-        UseIndex = false;
-        blockAddTemporaryAction = false;
+        IsReady = false;
+        doNotDefferUpdates = false;
         if (fullClear)
         {
-            temporaryAction.Clear();
+            itemsToUpdate.Clear();
         }
         referenceDictionary.Clear();
     }
@@ -82,14 +81,14 @@ public static class ReferenceIndexManager
 
     internal static void UpdateReferenceIndex(IPersistent sender)
     {
-        DoTemporaryAction(sender);
-        if (blockAddTemporaryAction)
+        RequestDeferredUpdate(sender);
+        if (doNotDefferUpdates)
         {
-            UpdateIndex(sender);
+            Update(sender);
         }
     }
 
-    private static void UpdateIndex(IPersistent sender)
+    private static void Update(IPersistent sender)
     {
         Remove(sender);
         if (!sender.IsDeleted)
@@ -98,27 +97,27 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void DoTemporaryAction(IPersistent sender)
+    private static void RequestDeferredUpdate(IPersistent sender)
     {
-        if (!blockAddTemporaryAction)
+        if (!doNotDefferUpdates)
         {
-            lock (temporaryAction)
+            lock (itemsToUpdate)
             {
-                if (!blockAddTemporaryAction)
+                if (!doNotDefferUpdates)
                 {
                     if (sender == null)
                     {
-                        foreach (IPersistent persistent in temporaryAction)
+                        foreach (IPersistent persistent in itemsToUpdate)
                         {
-                            UpdateIndex(persistent);
+                            Update(persistent);
                         }
 
-                        temporaryAction.Clear();
-                        blockAddTemporaryAction = true;
+                        itemsToUpdate.Clear();
+                        doNotDefferUpdates = true;
                     }
                     else
                     {
-                        temporaryAction.Add(sender);
+                        itemsToUpdate.Add(sender);
                     }
                 }
             }
@@ -223,10 +222,10 @@ public static class ReferenceIndexManager
         AddReferences(schemaItem);
     }
 
-    public static void ActivateReferenceIndex()
+    public static void InitializeReferenceIndex()
     {
-        DoTemporaryAction(null);
-        UseIndex = true;
+        RequestDeferredUpdate(null);
+        IsReady = true;
     }
 }
 
