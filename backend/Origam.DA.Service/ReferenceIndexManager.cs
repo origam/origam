@@ -36,7 +36,7 @@ namespace Origam.DA.Service;
 
 public static class ReferenceIndexManager
 {
-    private static readonly List<IPersistent> itemsToUpdate = new ();
+    private static readonly List<IPersistent> itemsToUpdateLater = new ();
 
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
@@ -61,7 +61,7 @@ public static class ReferenceIndexManager
         doNotDefferUpdates = false;
         if (fullClear)
         {
-            itemsToUpdate.Clear();
+            itemsToUpdateLater.Clear();
         }
         referenceDictionary.Clear();
     }
@@ -99,29 +99,25 @@ public static class ReferenceIndexManager
 
     private static void RequestDeferredUpdate(IPersistent sender)
     {
-        if (!doNotDefferUpdates)
+        if (doNotDefferUpdates)
         {
-            lock (itemsToUpdate)
-            {
-                if (!doNotDefferUpdates)
-                {
-                    if (sender == null)
-                    {
-                        foreach (IPersistent persistent in itemsToUpdate)
-                        {
-                            Update(persistent);
-                        }
-
-                        itemsToUpdate.Clear();
-                        doNotDefferUpdates = true;
-                    }
-                    else
-                    {
-                        itemsToUpdate.Add(sender);
-                    }
-                }
-            }
+            return;
         }
+        lock (itemsToUpdateLater)
+        {
+            itemsToUpdateLater.Add(sender);
+        }
+    }
+
+    private static void ProcessDeferredUpdates()
+    {
+        foreach (IPersistent persistent in itemsToUpdateLater)
+        {
+            Update(persistent);
+        }
+
+        itemsToUpdateLater.Clear();
+        doNotDefferUpdates = true;
     }
 
     private static void AddReferences(AbstractSchemaItem retrievedObj)
@@ -224,7 +220,7 @@ public static class ReferenceIndexManager
 
     public static void InitializeReferenceIndex()
     {
-        RequestDeferredUpdate(null);
+        ProcessDeferredUpdates();
         IsReady = true;
     }
 }
