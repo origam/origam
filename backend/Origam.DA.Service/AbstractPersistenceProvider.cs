@@ -25,6 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Schema;
 
 namespace Origam.DA.ObjectPersistence
@@ -96,27 +97,15 @@ namespace Origam.DA.ObjectPersistence
             try
             {
                 RestrictToLoadedPackage(false);
-                ArrayList listOfReferences = null;
-                if (ReferenceIndexManager.UseIndex)
+                if (!ReferenceIndexManager.UseIndex)
                 {
-                    listOfReferences = new ArrayList();
-                    Guid guid = Guid.Parse(key.ToString());
-                    List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> list =
-                        ReferenceIndexManager
-                        .GetReferenceIndex()
-                        .Where(x => x.Key == guid)
-                        .ToList();
-                    foreach (KeyValuePair<Guid, KeyValuePair<Guid, Type>> keyValue in list)
-                    {
-                        KeyValuePair<Guid, Type> kvalue = keyValue.Value;
-                        object refInstance = RetrieveInstance(kvalue.Value, new ModelElementKey(kvalue.Key));
-                        if (!listOfReferences.Contains(refInstance))
-                        {
-                            listOfReferences.Add(refInstance);
-                        }
-                    }
+                   return null;
                 }
-                return listOfReferences;
+                Guid id = Guid.Parse(key.ToString());
+                return ReferenceIndexManager
+                    .GetReferences(id)
+                    .Select(refInfo => RetrieveInstance(refInfo.type, new ModelElementKey(refInfo.Id)))
+                    .ToArrayList();
             }
             finally
             {

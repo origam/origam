@@ -23,8 +23,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
@@ -39,22 +39,21 @@ public static class ReferenceIndexManager
     private static readonly List<IPersistent> temporaryAction =
         new List<IPersistent>();
 
-    private static object obj = new object();
-
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
     public static bool UseIndex { get; private set; } = false;
     private static bool blockAddTemporaryAction = false;
+    private static readonly ConcurrentDictionary<Guid, HashSet<ReferenceInfo>>
+        referenceDictionary = new ();
 
-    private static readonly List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>
-        referenceIndex
-            = new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
-
-    internal static List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>
-        GetReferenceIndex()
+    internal static HashSet<ReferenceInfo> GetReferences(Guid itemId)
     {
-        return referenceIndex;
+        bool referencesExist = referenceDictionary.TryGetValue(
+            itemId, out var references);
+        return referencesExist
+            ? references 
+            : new HashSet<ReferenceInfo>();
     }
 
     public static void ClearReferenceIndex(bool fullClear)
@@ -65,29 +64,19 @@ public static class ReferenceIndexManager
         {
             temporaryAction.Clear();
         }
-
-        referenceIndex.Clear();
+        referenceDictionary.Clear();
     }
 
     private static void Remove(IPersistent sender)
     {
-        List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> ListForDelete
-            = referenceIndex.Where(x => x.Value.Key == sender.Id).ToList();
-        foreach (var items in ListForDelete)
-        {
-            referenceIndex.Remove(items);
-        }
+        referenceDictionary.TryRemove(sender.Id, out _);
     }
 
     private static void Add(IPersistent sender)
     {
-        if (sender is AbstractSchemaItem)
+        if (sender is AbstractSchemaItem abstractSchemaItem)
         {
-            List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>
-                newReferenceIndex =
-                    new List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>>();
-            AddReferences((AbstractSchemaItem)sender, newReferenceIndex);
-            referenceIndex.AddRange(newReferenceIndex);
+            AddReferences(abstractSchemaItem);
         }
     }
 
@@ -136,31 +125,29 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void AddReferences(AbstractSchemaItem retrievedObj,
-        List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+    private static void AddReferences(AbstractSchemaItem retrievedObj)
     {
-        GetReferencesFromDependencies(retrievedObj, referenceIndex);
-        GetReferencesFromText(retrievedObj, referenceIndex);
-        GetTypeSpecifficReferences(retrievedObj, referenceIndex);
+        GetReferencesFromDependencies(retrievedObj);
+        GetReferencesFromText(retrievedObj);
+        GetTypeSpecificReferences(retrievedObj);
         foreach (AbstractSchemaItem item in retrievedObj.ChildItems)
         {
-            GetReferencesFromDependencies(item, referenceIndex);
-            GetReferencesFromText(item, referenceIndex);
-            GetTypeSpecifficReferences(item, referenceIndex);
+            GetReferencesFromDependencies(item);
+            GetReferencesFromText(item);
+            GetTypeSpecificReferences(item);
         }
     }
 
-    private static void GetTypeSpecifficReferences(AbstractSchemaItem retrievedObj,
-        List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+    private static void GetTypeSpecificReferences(AbstractSchemaItem retrievedObj)
     {
         if (retrievedObj is EntityUIAction uiAction)
         {
-            AddToIndex(uiAction.ConfirmationRuleId, uiAction, referenceIndex);
+            AddToIndex(uiAction.ConfirmationRuleId, uiAction);
             ArrayList screenConditions = uiAction.ChildItemsByType(
                 ScreenCondition.CategoryConst);
             foreach (ScreenCondition screenCondition in screenConditions)
             {
-                AddToIndex(uiAction.Id, screenCondition.Screen, referenceIndex);
+                AddToIndex(uiAction.Id, screenCondition.Screen);
             }
 
             ArrayList sectionConditions = uiAction.ChildItemsByType(
@@ -168,14 +155,12 @@ public static class ReferenceIndexManager
             foreach (ScreenSectionCondition sectionCondition in
                      sectionConditions)
             {
-                AddToIndex(uiAction.Id, sectionCondition.ScreenSection,
-                    referenceIndex);
+                AddToIndex(uiAction.Id, sectionCondition.ScreenSection);
             }
         }
     }
 
-    private static void GetReferencesFromText(AbstractSchemaItem retrievedObj,
-        List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+    private static void GetReferencesFromText(AbstractSchemaItem retrievedObj)
     {
         MatchCollection mc = null;
         if (retrievedObj is XslTransformation transformation)
@@ -203,45 +188,59 @@ public static class ReferenceIndexManager
         {
             foreach (var id in mc)
             {
-                AddToIndex(new Guid(id.ToString()), retrievedObj,
-                    referenceIndex);
+                AddToIndex(new Guid(id.ToString()), retrievedObj);
             }
         }
     }
 
-    private static void GetReferencesFromDependencies(AbstractSchemaItem item,
-        List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+    private static void GetReferencesFromDependencies(AbstractSchemaItem item)
     {
         ArrayList dependencies = item.GetDependencies(false);
         foreach (AbstractSchemaItem item1 in dependencies)
         {
             if (item1 != null)
             {
-                AddToIndex(item1.Id, item, referenceIndex);
+                AddToIndex(item1.Id, item);
             }
         }
     }
 
-    private static void AddToIndex(Guid guid, AbstractSchemaItem item,
-        List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+    private static void AddToIndex(Guid guid, AbstractSchemaItem item)
     {
-        lock (obj)
-        {
-            referenceIndex.Add
-            (new KeyValuePair<Guid, KeyValuePair<Guid, Type>>(guid,
-                new KeyValuePair<Guid, Type>(item.Id, item.GetType())));
-        }
+        var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
+        referenceDictionary.AddOrUpdate(guid,
+            new HashSet<ReferenceInfo> { referenceInfo },
+            (id, oldSet) =>
+            {
+                oldSet.Add(referenceInfo);
+                return oldSet;
+            });
     }
 
     public static void AddToBuildIndex(IFilePersistent item)
     {
         AbstractSchemaItem schemaItem = (AbstractSchemaItem)item;
-        AddReferences(schemaItem, referenceIndex);
+        AddReferences(schemaItem);
     }
 
     public static void ActivateReferenceIndex()
     {
         DoTemporaryAction(null);
         UseIndex = true;
+    }
+}
+
+record ReferenceInfo(Guid Id, Type type)
+{
+    public virtual bool Equals(ReferenceInfo other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Id.Equals(other.Id);
+    }
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
     }
 }
