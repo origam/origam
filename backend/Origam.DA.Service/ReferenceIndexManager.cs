@@ -66,37 +66,37 @@ public static class ReferenceIndexManager
         referenceDictionary.Clear();
     }
 
-    private static void Remove(AbstractSchemaItem sender)
+    private static void Remove(AbstractSchemaItem item)
     {
-        referenceDictionary.TryRemove(sender.Id, out _);
+        referenceDictionary.TryRemove(item.Id, out _);
     }
     
-    internal static void UpdateReferenceIndex(AbstractSchemaItem sender)
+    internal static void UpdateReferenceIndex(AbstractSchemaItem item)
     {
         if (defferUpdates)
         {
-            RequestDeferredUpdate(sender);
+            RequestDeferredUpdate(item);
         }
         else
         {
-            Update(sender);
+            Update(item);
         }
     }
 
-    private static void Update(AbstractSchemaItem sender)
+    private static void Update(AbstractSchemaItem item)
     {
-        Remove(sender);
-        if (!sender.IsDeleted)
+        Remove(item);
+        if (!item.IsDeleted)
         {
-            Add(sender);
+            Add(item);
         }
     }
 
-    private static void RequestDeferredUpdate(AbstractSchemaItem sender)
+    private static void RequestDeferredUpdate(AbstractSchemaItem item)
     {
         lock (itemsToUpdateLater)
         {
-            itemsToUpdateLater.Enqueue(sender);
+            itemsToUpdateLater.Enqueue(item);
         }
     }
 
