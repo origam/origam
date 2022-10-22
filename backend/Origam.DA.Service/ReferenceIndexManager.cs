@@ -41,8 +41,8 @@ public static class ReferenceIndexManager
 
     private static object obj = new object();
 
-    private static string pattern =
-        @"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})";
+    private static readonly Regex GuidRegEx =
+       new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
 
     public static bool UseIndex { get; private set; } = false;
     private static bool blockAddTemporaryAction = false;
@@ -180,12 +180,12 @@ public static class ReferenceIndexManager
         MatchCollection mc = null;
         if (retrievedObj is XslTransformation transformation)
         {
-            mc = Regex.Matches(transformation.TextStore, pattern);
+            mc = GuidRegEx.Matches(transformation.TextStore);
         }
 
         if (retrievedObj is XslRule rule)
         {
-            mc = Regex.Matches(rule.Xsl, pattern);
+            mc = GuidRegEx.Matches(rule.Xsl);
         }
 
         if (retrievedObj is XPathRule xPathRule)
@@ -196,7 +196,7 @@ public static class ReferenceIndexManager
                     string.Format(Origam.Strings.XPathIsNull, xPathRule.Id));
             }
 
-            mc = Regex.Matches(xPathRule.XPath, pattern);
+            mc = GuidRegEx.Matches(xPathRule.XPath);
         }
 
         if (mc != null)
