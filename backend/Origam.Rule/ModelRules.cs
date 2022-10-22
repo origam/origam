@@ -48,7 +48,7 @@ namespace Origam.Rule
                     .Select(retrievedObj => {
                         retrievedObj.RootProvider = schemaProviders.FirstOrDefault(x => BelongsToProvider(x, retrievedObj));
                         cancellationToken.ThrowIfCancellationRequested();
-                        ReferenceIndexManager.AddToBuildIndex(retrievedObj);
+                        ReferenceIndexManager.Add(retrievedObj);
                         return retrievedObj;
                     })
                     .AsParallel()

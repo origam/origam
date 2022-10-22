@@ -70,12 +70,7 @@ public static class ReferenceIndexManager
     {
         referenceDictionary.TryRemove(sender.Id, out _);
     }
-
-    private static void Add(AbstractSchemaItem item)
-    {
-        AddReferences(item);
-    }
-
+    
     internal static void UpdateReferenceIndex(AbstractSchemaItem sender)
     {
         if (defferUpdates)
@@ -114,7 +109,7 @@ public static class ReferenceIndexManager
         defferUpdates = false;
     }
 
-    private static void AddReferences(AbstractSchemaItem retrievedObj)
+    public static void Add(AbstractSchemaItem retrievedObj)
     {
         GetReferencesFromDependencies(retrievedObj);
         GetReferencesFromText(retrievedObj);
@@ -204,11 +199,6 @@ public static class ReferenceIndexManager
                 oldSet.Add(referenceInfo);
                 return oldSet;
             });
-    }
-
-    public static void AddToBuildIndex(AbstractSchemaItem item)
-    {
-        AddReferences(item);
     }
 
     public static void InitializeReferenceIndex()
