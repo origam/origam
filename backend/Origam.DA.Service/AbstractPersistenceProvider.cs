@@ -104,7 +104,7 @@ namespace Origam.DA.ObjectPersistence
                 Guid id = Guid.Parse(key.ToString());
                 return ReferenceIndexManager
                     .GetReferences(id)
-                    .Select(refInfo => RetrieveInstance(refInfo.type, new ModelElementKey(refInfo.Id)))
+                    .Select(refInfo => RetrieveInstance(refInfo.Type, new ModelElementKey(refInfo.Id)))
                     .ToArrayList();
             }
             finally

@@ -1731,7 +1731,7 @@ namespace OrigamArchitect
                  ServiceManager.Services.GetService<IPersistenceService>();
             if (persistenceService != null)
             {
-                ReferenceIndexManager.ClearReferenceIndex(true);
+                ReferenceIndexManager.Clear(true);
             }
         }
 

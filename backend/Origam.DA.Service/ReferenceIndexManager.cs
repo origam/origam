@@ -55,7 +55,7 @@ public static class ReferenceIndexManager
             : new HashSet<ReferenceInfo>();
     }
 
-    public static void ClearReferenceIndex(bool fullClear)
+    public static void Clear(bool fullClear)
     {
         defferUpdates = true;
         if (fullClear)
@@ -70,7 +70,7 @@ public static class ReferenceIndexManager
         referenceDictionary.TryRemove(item.Id, out _);
     }
     
-    internal static void UpdateReferenceIndex(AbstractSchemaItem item)
+    internal static void UpdateIndex(AbstractSchemaItem item)
     {
         if (defferUpdates)
         {
@@ -145,15 +145,15 @@ public static class ReferenceIndexManager
 
     private static void GetReferencesFromText(AbstractSchemaItem retrievedObj)
     {
-        MatchCollection mc = null;
+        MatchCollection matchCollection = null;
         if (retrievedObj is XslTransformation transformation)
         {
-            mc = GuidRegEx.Matches(transformation.TextStore);
+            matchCollection = GuidRegEx.Matches(transformation.TextStore);
         }
 
         if (retrievedObj is XslRule rule)
         {
-            mc = GuidRegEx.Matches(rule.Xsl);
+            matchCollection = GuidRegEx.Matches(rule.Xsl);
         }
 
         if (retrievedObj is XPathRule xPathRule)
@@ -164,12 +164,12 @@ public static class ReferenceIndexManager
                     string.Format(Origam.Strings.XPathIsNull, xPathRule.Id));
             }
 
-            mc = GuidRegEx.Matches(xPathRule.XPath);
+            matchCollection = GuidRegEx.Matches(xPathRule.XPath);
         }
 
-        if (mc != null)
+        if (matchCollection != null)
         {
-            foreach (var id in mc)
+            foreach (var id in matchCollection)
             {
                 AddToIndex(new Guid(id.ToString()), retrievedObj);
             }
@@ -179,11 +179,11 @@ public static class ReferenceIndexManager
     private static void GetReferencesFromDependencies(AbstractSchemaItem item)
     {
         ArrayList dependencies = item.GetDependencies(false);
-        foreach (AbstractSchemaItem item1 in dependencies)
+        foreach (AbstractSchemaItem dependency in dependencies)
         {
-            if (item1 != null)
+            if (dependency != null)
             {
-                AddToIndex(item1.Id, item);
+                AddToIndex(dependency.Id, item);
             }
         }
     }
@@ -206,7 +206,7 @@ public static class ReferenceIndexManager
     }
 }
 
-record ReferenceInfo(Guid Id, Type type)
+record ReferenceInfo(Guid Id, Type Type)
 {
     public virtual bool Equals(ReferenceInfo other)
     {
