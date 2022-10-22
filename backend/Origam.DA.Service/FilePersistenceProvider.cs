@@ -85,7 +85,12 @@ namespace Origam.DA.Service
                 this,index,origamFileFactory,origamFileManager, trackerLoaderFactory);
             fileEventQueue.Start();
             InstancePersisted += (sender, persistent) =>
-                ReferenceIndexManager.UpdateReferenceIndex(persistent);
+            {
+                if (persistent is AbstractSchemaItem item)
+                {
+                    ReferenceIndexManager.UpdateReferenceIndex(item);
+                }
+            };
             runtimeModelConfig.ConfigurationReloaded += OnRuntimeModelConfigReloaded;
         }
 

@@ -36,7 +36,7 @@ namespace Origam.DA.Service;
 
 public static class ReferenceIndexManager
 {
-    private static ConcurrentQueue<IPersistent> itemsToUpdateLater = new ();
+    private static ConcurrentQueue<AbstractSchemaItem> itemsToUpdateLater = new ();
 
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
@@ -61,25 +61,22 @@ public static class ReferenceIndexManager
         defferUpdates = true;
         if (fullClear)
         {
-            itemsToUpdateLater = new ConcurrentQueue<IPersistent>();
+            itemsToUpdateLater = new ConcurrentQueue<AbstractSchemaItem>();
         }
         referenceDictionary.Clear();
     }
 
-    private static void Remove(IPersistent sender)
+    private static void Remove(AbstractSchemaItem sender)
     {
         referenceDictionary.TryRemove(sender.Id, out _);
     }
 
-    private static void Add(IPersistent sender)
+    private static void Add(AbstractSchemaItem item)
     {
-        if (sender is AbstractSchemaItem abstractSchemaItem)
-        {
-            AddReferences(abstractSchemaItem);
-        }
+        AddReferences(item);
     }
 
-    internal static void UpdateReferenceIndex(IPersistent sender)
+    internal static void UpdateReferenceIndex(AbstractSchemaItem sender)
     {
         if (defferUpdates)
         {
@@ -91,7 +88,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void Update(IPersistent sender)
+    private static void Update(AbstractSchemaItem sender)
     {
         Remove(sender);
         if (!sender.IsDeleted)
@@ -100,7 +97,7 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void RequestDeferredUpdate(IPersistent sender)
+    private static void RequestDeferredUpdate(AbstractSchemaItem sender)
     {
         lock (itemsToUpdateLater)
         {
@@ -209,10 +206,9 @@ public static class ReferenceIndexManager
             });
     }
 
-    public static void AddToBuildIndex(IFilePersistent item)
+    public static void AddToBuildIndex(AbstractSchemaItem item)
     {
-        AbstractSchemaItem schemaItem = (AbstractSchemaItem)item;
-        AddReferences(schemaItem);
+        AddReferences(item);
     }
 
     public static void InitializeReferenceIndex()
