@@ -88,7 +88,7 @@ namespace Origam.DA.Service
             {
                 if (persistent is AbstractSchemaItem item)
                 {
-                    ReferenceIndexManager.UpdateIndex(item);
+                    ReferenceIndexManager.UpdateNowOrDeffer(item);
                 }
             };
             runtimeModelConfig.ConfigurationReloaded += OnRuntimeModelConfigReloaded;

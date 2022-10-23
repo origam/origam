@@ -64,7 +64,7 @@ public static class ReferenceIndexManager
         referenceDictionary.Clear();
     }
     
-    internal static void UpdateIndex(AbstractSchemaItem item)
+    internal static void UpdateNowOrDeffer(AbstractSchemaItem item)
     {
         if (!Initialized)
         { 
@@ -72,11 +72,11 @@ public static class ReferenceIndexManager
         }
         else
         {
-            Update(item);
+            UpdateNow(item);
         }
     }
 
-    private static void Update(AbstractSchemaItem item)
+    private static void UpdateNow(AbstractSchemaItem item)
     {
         referenceDictionary.TryRemove(item.Id, out _);
         if (!item.IsDeleted)
@@ -90,12 +90,6 @@ public static class ReferenceIndexManager
         GetReferencesFromDependencies(item);
         GetReferencesFromText(item);
         GetTypeSpecificReferences(item);
-        foreach (AbstractSchemaItem child in item.ChildItems)
-        {
-            GetReferencesFromDependencies(child);
-            GetReferencesFromText(child);
-            GetTypeSpecificReferences(child);
-        }
     }
 
     private static void GetTypeSpecificReferences(AbstractSchemaItem item)
@@ -165,9 +159,9 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void AddToIndex(Guid referencedItemId, AbstractSchemaItem item)
+    private static void AddToIndex(Guid referencedItemId, AbstractSchemaItem reference)
     {
-        var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
+        var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
         referenceDictionary.AddOrUpdate(referencedItemId,
             new HashSet<ReferenceInfo> { referenceInfo },
             (id, oldSet) =>
@@ -181,7 +175,7 @@ public static class ReferenceIndexManager
     {
         while (updatesRequestedBeforeFullInitialization.TryDequeue(out var item))
         {
-            Update(item);
+            UpdateNow(item);
         }
         Initialized = true;
     }
