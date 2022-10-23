@@ -1546,18 +1546,61 @@ namespace OrigamArchitect
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
            if (!(currentPersistenceService is FilePersistenceService)) return;
+           
+           var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
-	       var cancellationToken = modelCheckCancellationTokenSource.Token;
-	        Task.Factory.StartNew(
-	            () => DoModelChecks(cancellationToken),
-	            cancellationToken 
-            ).ContinueWith(
-	            TaskErrorHandler,
-	            TaskScheduler.FromCurrentSynchronizationContext()
-            );
+           Task.Factory.StartNew(() =>
+           {
+	           using (FilePersistenceService independentPersistenceService =
+	                  new FilePersistenceBuilder()
+		                  .CreateNoBinFilePersistenceService())
+	           {
+		           var cancellationToken =
+			           modelCheckCancellationTokenSource.Token;
+		           Task modelCheckTask = Task.Factory.StartNew(() => DoModelChecks(
+				           independentPersistenceService, cancellationToken),
+			           cancellationToken
+		           ).ContinueWith(
+			           TaskErrorHandler,
+			           taskScheduler
+		           );
+		           Task indexReferencesTask = Task.Factory.StartNew(
+			           () => IndexReferences(
+				           independentPersistenceService, cancellationToken),
+			           cancellationToken
+		           );
+		           Task.WaitAll(modelCheckTask, indexReferencesTask);
+	           }
+           });
 	    }
 
-	    private void TaskErrorHandler(Task previousTask)
+		private void IndexReferences(FilePersistenceService independentPersistenceService,
+			CancellationToken cancellationToken)
+		{
+			try
+			{
+				_statusBarService.SetStatusText("Indexing references...");
+				ReferenceIndexManager.Clear(false);
+				
+				independentPersistenceService
+					.SchemaProvider
+					.RetrieveList<IFilePersistent>()
+					.OfType<AbstractSchemaItem>()
+					.ForEach(item =>
+					{
+						cancellationToken.ThrowIfCancellationRequested();
+						ReferenceIndexManager.Add(item);
+					});
+				
+				ReferenceIndexManager.Initialize();
+			}
+			finally
+			{
+				_statusBarService.SetStatusText("");
+			}
+		}
+
+		private void TaskErrorHandler(Task previousTask)
 	    {
 	        try
 	        {
@@ -1577,49 +1620,50 @@ namespace OrigamArchitect
 	        }
 	    }
 
-	    private void DoModelChecks(CancellationToken cancellationToken)
+	    private void DoModelChecks(
+		    FilePersistenceService independentPersistenceService,
+		    CancellationToken cancellationToken)
 	    {
-            using (FilePersistenceService independentPersistenceService = new FilePersistenceBuilder()
-	            .CreateNoBinFilePersistenceService())
+		    List<Dictionary<IFilePersistent, string>> errorFragments =
+                ModelRules.GetErrors(
+                    schemaProviders: new OrigamProviderBuilder()
+                        .SetSchemaProvider(independentPersistenceService.SchemaProvider)
+                        .GetAll(), 
+                    independentPersistenceService: independentPersistenceService, 
+                    cancellationToken: cancellationToken); 
+
+            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
+            var errorSections = persistenceProvider.GetFileErrors(
+                ignoreDirectoryNames: new []{ ".git","l10n"},
+                cancellationToken: cancellationToken);
+
+            // var retrieveInstance = persistenceProvider.RetrieveInstance<TableMappingItem>(
+	           //  Guid.Parse("ad2aebfe-e684-4e2e-8843-775c468357d5"));
+            
+            if (errorFragments.Count != 0)
             {
-                List<Dictionary<IFilePersistent, string>> errorFragments =
-                    ModelRules.GetErrors(
-                        schemaProviders: new OrigamProviderBuilder()
-                            .SetSchemaProvider(independentPersistenceService.SchemaProvider)
-                            .GetAll(), 
-                        independentPersistenceService: independentPersistenceService, 
-                        cancellationToken: cancellationToken); 
-
-	            var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
-	            var errorSections = persistenceProvider.GetFileErrors(
-	                ignoreDirectoryNames: new []{ ".git","l10n"},
-	                cancellationToken: cancellationToken);
-
-	            if (errorFragments.Count != 0)
-	            {
-                    FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
-                    this.RunWithInvoke(() =>
+                FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
+                this.RunWithInvoke(() =>
+                   {
+                       DialogResult dialogResult = MessageBox.Show(
+                           "Some model elements do not satisfy model integrity rules. Do you want to show the rule violations?",
+                           "Model Errors",
+                           MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                       if (dialogResult == DialogResult.Yes)
                        {
-                           DialogResult dialogResult = MessageBox.Show(
-                               "Some model elements do not satisfy model integrity rules. Do you want to show the rule violations?",
-                               "Model Errors",
-                               MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                           if (dialogResult == DialogResult.Yes)
-                           {
-                               resultsPad.DisplayResults(errorFragments);
-                           }
+                           resultsPad.DisplayResults(errorFragments);
                        }
-                    );
-                }
-	            if (errorSections.Count != 0)
+                   }
+                );
+            }
+            if (errorSections.Count != 0)
+            {
+	            this.RunWithInvoke(() =>
 	            {
-		            this.RunWithInvoke(() =>
-		            {
-			            var modelCheckResultWindow = new ModelCheckResultWindow(errorSections);
-			            modelCheckResultWindow.Show(this);
-			          });
-	            }
-	        }
+		            var modelCheckResultWindow = new ModelCheckResultWindow(errorSections);
+		            modelCheckResultWindow.Show(this);
+		          });
+            }
 	    }
 	    
 	    protected override void WndProc(ref Message m)
