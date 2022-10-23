@@ -66,7 +66,18 @@ namespace Origam.DA.Service.FileSystemModelCheckers
 
         private void PuIdsToDuplicateTracker(FileInfo file)
         {
-            string text = File.ReadAllText(file.FullName);
+            string text;
+            try
+            {
+                text = File.ReadAllText(file.FullName);
+            }
+            catch (FileNotFoundException)
+            {
+                // The file was probably renamed/deleted during the model check
+                // analysis by a user interaction. That is ok.
+                // We will check the file next time the model is open.
+                return;
+            }
 
             var idRegex = "x:id=\"([0-9A-Fa-f]{8}[-]([0-9A-Fa-f]{4}[-]){3}[0-9A-Fa-f]{12})\"";
             foreach (Match match in Regex.Matches(text, idRegex))
