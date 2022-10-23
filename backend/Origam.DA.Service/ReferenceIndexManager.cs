@@ -35,13 +35,13 @@ namespace Origam.DA.Service;
 
 public static class ReferenceIndexManager
 {
-    private static ConcurrentQueue<AbstractSchemaItem> itemsToUpdateLater = new ();
+    private static ConcurrentQueue<AbstractSchemaItem> updatesRequestedBeforeFullInitialization = new ();
 
     private static readonly Regex GuidRegEx =
        new (@"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})");
+    
+    public static bool Initialized { get; private set; }
 
-    public static bool IsReady => !defferUpdates;
-    private static bool defferUpdates = true;
     private static readonly ConcurrentDictionary<Guid, HashSet<ReferenceInfo>>
         referenceDictionary = new ();
 
@@ -56,19 +56,19 @@ public static class ReferenceIndexManager
 
     public static void Clear(bool fullClear)
     {
-        defferUpdates = true;
+        Initialized = false;
         if (fullClear)
         {
-            itemsToUpdateLater = new ConcurrentQueue<AbstractSchemaItem>();
+            updatesRequestedBeforeFullInitialization = new ConcurrentQueue<AbstractSchemaItem>();
         }
         referenceDictionary.Clear();
     }
     
     internal static void UpdateIndex(AbstractSchemaItem item)
     {
-        if (defferUpdates)
+        if (!Initialized)
         { 
-            itemsToUpdateLater.Enqueue(item);
+            updatesRequestedBeforeFullInitialization.Enqueue(item);
         }
         else
         {
@@ -179,11 +179,11 @@ public static class ReferenceIndexManager
 
     public static void Initialize()
     {
-        while (itemsToUpdateLater.TryDequeue(out var item))
+        while (updatesRequestedBeforeFullInitialization.TryDequeue(out var item))
         {
             Update(item);
         }
-        defferUpdates = false;
+        Initialized = true;
     }
 }
 

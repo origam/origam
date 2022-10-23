@@ -97,7 +97,7 @@ namespace Origam.DA.ObjectPersistence
             try
             {
                 RestrictToLoadedPackage(false);
-                if (!ReferenceIndexManager.IsReady)
+                if (!ReferenceIndexManager.Initialized)
                 {
                    return null;
                 }
