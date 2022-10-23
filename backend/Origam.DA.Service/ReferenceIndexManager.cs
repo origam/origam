@@ -85,22 +85,22 @@ public static class ReferenceIndexManager
         }
     }
 
-    public static void Add(AbstractSchemaItem retrievedObj)
+    public static void Add(AbstractSchemaItem item)
     {
-        GetReferencesFromDependencies(retrievedObj);
-        GetReferencesFromText(retrievedObj);
-        GetTypeSpecificReferences(retrievedObj);
-        foreach (AbstractSchemaItem item in retrievedObj.ChildItems)
+        GetReferencesFromDependencies(item);
+        GetReferencesFromText(item);
+        GetTypeSpecificReferences(item);
+        foreach (AbstractSchemaItem child in item.ChildItems)
         {
-            GetReferencesFromDependencies(item);
-            GetReferencesFromText(item);
-            GetTypeSpecificReferences(item);
+            GetReferencesFromDependencies(child);
+            GetReferencesFromText(child);
+            GetTypeSpecificReferences(child);
         }
     }
 
-    private static void GetTypeSpecificReferences(AbstractSchemaItem retrievedObj)
+    private static void GetTypeSpecificReferences(AbstractSchemaItem item)
     {
-        if (retrievedObj is EntityUIAction uiAction)
+        if (item is EntityUIAction uiAction)
         {
             AddToIndex(uiAction.ConfirmationRuleId, uiAction);
             ArrayList screenConditions = uiAction.ChildItemsByType(
@@ -120,20 +120,20 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void GetReferencesFromText(AbstractSchemaItem retrievedObj)
+    private static void GetReferencesFromText(AbstractSchemaItem item)
     {
         MatchCollection matchCollection = null;
-        if (retrievedObj is XslTransformation transformation)
+        if (item is XslTransformation transformation)
         {
             matchCollection = GuidRegEx.Matches(transformation.TextStore);
         }
 
-        if (retrievedObj is XslRule rule)
+        if (item is XslRule rule)
         {
             matchCollection = GuidRegEx.Matches(rule.Xsl);
         }
 
-        if (retrievedObj is XPathRule xPathRule)
+        if (item is XPathRule xPathRule)
         {
             if (xPathRule.XPath == null)
             {
@@ -148,7 +148,7 @@ public static class ReferenceIndexManager
         {
             foreach (var id in matchCollection)
             {
-                AddToIndex(new Guid(id.ToString()), retrievedObj);
+                AddToIndex(new Guid(id.ToString()), item);
             }
         }
     }
@@ -165,10 +165,10 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void AddToIndex(Guid guid, AbstractSchemaItem item)
+    private static void AddToIndex(Guid referencedItemId, AbstractSchemaItem item)
     {
         var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
-        referenceDictionary.AddOrUpdate(guid,
+        referenceDictionary.AddOrUpdate(referencedItemId,
             new HashSet<ReferenceInfo> { referenceInfo },
             (id, oldSet) =>
             {
