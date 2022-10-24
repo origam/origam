@@ -47,7 +47,7 @@ jobs:
       shell: pwsh
       run: |
           (Get-ChildItem "backend/*" -Include "*Tests.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\") | where {$_ -ne ""} | Set-Content r.bat
-          (Get-Content r.bat) -replace "^",'vstest.console.exe /Platform:x86 /Framework:Framework45 /TestAdapterPath:backend /Logger:"trx" ' > runtest.bat
+          (Get-Content r.bat) -replace "^",'vstest.console.exe /Platform:x86 /Framework:Framework45 /TestAdapterPath:backend /Logger:"trx" /blame ' > runtest.bat
           cat .\runtest.bat
           
     - name: VSTest
