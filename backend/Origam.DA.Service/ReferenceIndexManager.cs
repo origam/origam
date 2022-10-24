@@ -103,7 +103,6 @@ public static class ReferenceIndexManager
             {
                 AddToIndex(uiAction.Id, screenCondition.Screen);
             }
-
             ArrayList sectionConditions = uiAction.ChildItemsByType(
                 ScreenSectionCondition.CategoryConst);
             foreach (ScreenSectionCondition sectionCondition in
