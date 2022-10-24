@@ -1246,7 +1246,7 @@ namespace OrigamArchitect
                 {
                     this.RunWithInvokeAsync(() => UpdateUIAfterReload(filePersistenceProvider, args));
                 }
-                this.RunWithInvoke(DoModelChecksAsync); 
+                this.RunWithInvoke(RunBackgroundInitializationTasks); 
             }
 		}
 
@@ -1486,7 +1486,7 @@ namespace OrigamArchitect
                 CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-				DoModelChecksAsync();
+				RunBackgroundInitializationTasks();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1541,7 +1541,7 @@ namespace OrigamArchitect
 			};
 		}
 
-		public void DoModelChecksAsync()
+		public void RunBackgroundInitializationTasks()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
