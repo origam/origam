@@ -185,6 +185,7 @@ export class DataView implements IDataView {
   isMapSupported = false;
   disableActionButtons = false;
   showAddButton = false;
+  hideCopyButton = false;
   showDeleteButton = false;
   showSelectionCheckboxesSetting = false;
   isGridHeightDynamic = false;
