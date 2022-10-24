@@ -1574,8 +1574,7 @@ namespace OrigamArchitect
 			try
 			{
 				_statusBarService.SetStatusText("Indexing references...");
-				ReferenceIndexManager.Clear(false);
-				
+				ReferenceIndexManager.Clear(false);				
 				independentPersistenceService
 					.SchemaProvider
 					.RetrieveList<IFilePersistent>()
@@ -1585,8 +1584,7 @@ namespace OrigamArchitect
 					{
 						cancellationToken.ThrowIfCancellationRequested();
 						ReferenceIndexManager.Add(item);
-					});
-				
+					});				
 				ReferenceIndexManager.Initialize();
 			}
 			finally
@@ -1626,12 +1624,10 @@ namespace OrigamArchitect
                         .GetAll(), 
                     independentPersistenceService: independentPersistenceService, 
                     cancellationToken: cancellationToken); 
-
             var persistenceProvider = (FilePersistenceProvider)independentPersistenceService.SchemaProvider;
             var errorSections = persistenceProvider.GetFileErrors(
                 ignoreDirectoryNames: new []{ ".git","l10n"},
                 cancellationToken: cancellationToken);
-
             if (errorFragments.Count != 0)
             {
                 FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;
