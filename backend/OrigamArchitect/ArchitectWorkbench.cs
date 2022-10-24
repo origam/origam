@@ -1546,32 +1546,26 @@ namespace OrigamArchitect
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
            if (!(currentPersistenceService is FilePersistenceService)) return;
-           
-           var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
+           var cancellationToken =
+	           modelCheckCancellationTokenSource.Token;
            Task.Factory.StartNew(() =>
            {
 	           using (FilePersistenceService independentPersistenceService =
 	                  new FilePersistenceBuilder()
 		                  .CreateNoBinFilePersistenceService())
 	           {
-		           var cancellationToken =
-			           modelCheckCancellationTokenSource.Token;
-		           Task modelCheckTask = Task.Factory.StartNew(() => DoModelChecks(
-				           independentPersistenceService, cancellationToken),
-			           cancellationToken
-		           ).ContinueWith(
-			           TaskErrorHandler,
-			           taskScheduler
-		           );
-		           Task indexReferencesTask = Task.Factory.StartNew(
-			           () => IndexReferences(
-				           independentPersistenceService, cancellationToken),
-			           cancellationToken
-		           );
-		           Task.WaitAll(modelCheckTask, indexReferencesTask);
+		           IndexReferences(
+			           independentPersistenceService, 
+			           cancellationToken);
+		           DoModelChecks(
+			           independentPersistenceService,
+			           cancellationToken);
 	           }
-           });
+           }, cancellationToken).ContinueWith(
+	           TaskErrorHandler,
+	           TaskScheduler.FromCurrentSynchronizationContext()
+           );
 	    }
 
 		private void IndexReferences(FilePersistenceService independentPersistenceService,
@@ -1586,6 +1580,7 @@ namespace OrigamArchitect
 					.SchemaProvider
 					.RetrieveList<IFilePersistent>()
 					.OfType<AbstractSchemaItem>()
+					.AsParallel()
 					.ForEach(item =>
 					{
 						cancellationToken.ThrowIfCancellationRequested();
@@ -1637,9 +1632,6 @@ namespace OrigamArchitect
                 ignoreDirectoryNames: new []{ ".git","l10n"},
                 cancellationToken: cancellationToken);
 
-            // var retrieveInstance = persistenceProvider.RetrieveInstance<TableMappingItem>(
-	           //  Guid.Parse("ad2aebfe-e684-4e2e-8843-775c468357d5"));
-            
             if (errorFragments.Count != 0)
             {
                 FindRulesPad resultsPad = WorkbenchSingleton.Workbench.GetPad(typeof(FindRulesPad)) as FindRulesPad;

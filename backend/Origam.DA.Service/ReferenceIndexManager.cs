@@ -166,6 +166,8 @@ public static class ReferenceIndexManager
             new HashSet<ReferenceInfo> { referenceInfo },
             (id, oldSet) =>
             {
+                // The HashSet is not thread safe. But it does not look like we
+                // need thread safety here based on how this method is called.
                 oldSet.Add(referenceInfo);
                 return oldSet;
             });
