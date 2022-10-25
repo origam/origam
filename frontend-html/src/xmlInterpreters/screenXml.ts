@@ -405,6 +405,7 @@ export function*interpretScreenXml(
         isHeadless: dataView.attributes.IsHeadless === "true",
         disableActionButtons: dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
+        hideCopyButton: dataView.attributes.HideCopyButton === "true",
         showDeleteButton: dataView.attributes.ShowDeleteButton === "true",
         showSelectionCheckboxesSetting: dataView.attributes.ShowSelectionCheckboxes === "true",
         isGridHeightDynamic: dataView.attributes.IsGridHeightDynamic === "true",
