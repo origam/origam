@@ -4857,10 +4857,10 @@ object.assign@^4.1.0:
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
 
-oidc-client-ts@^2.0.5:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/oidc-client-ts/-/oidc-client-ts-2.0.6.tgz#324e632204393c8b744c57768726085c14ec0694"
-  integrity sha512-fh+UXQqUx7kruBSO4sjI24Igo5YNEhYtjt/B78wogwFnGeYsvcw1v/KPRPNBPwQo1PupC3wLU5UDAbqT07PFmw==
+oidc-client-ts@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/oidc-client-ts/-/oidc-client-ts-2.1.0.tgz#903b6d9c94a45f6f6eaa3c0aac7c6953a0f3905b"
+  integrity sha512-Rmfl/10g7tTLy8cXezn0Ek+Wa3bKwNnW7oRzLB/hU5EK/DC1D/W1d0GCjGf23WYd6b4Ifa8ud/NzgsMOnbNp8Q==
   dependencies:
     crypto-js "^4.1.1"
     jwt-decode "^3.1.2"
