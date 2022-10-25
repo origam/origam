@@ -48,12 +48,16 @@ jobs:
       run: |
           (Get-ChildItem "backend/*" -Include "*Tests.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\") | where {$_ -ne ""} | Set-Content r.bat
           (Get-Content r.bat) -replace "^",'vstest.console.exe /Platform:x86 /Framework:Framework45 /TestAdapterPath:backend /Logger:"trx" /blame ' > runtest.bat
-          echo "ls TestResults" >> runtest.bat
-          echo "more TestResults/*.trx" >> runtest.bat
           cat .\runtest.bat
           
     - name: VSTest
       run: .\runtest.bat
       
+    - name: Upload frontend artefact
+      uses: actions/upload-artifact@v2
+      with:
+        name: testresult
+        path: "TestResults"
+        
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
