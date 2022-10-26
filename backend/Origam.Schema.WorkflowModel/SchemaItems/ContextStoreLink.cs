@@ -53,8 +53,7 @@ namespace Origam.Schema.WorkflowModel
 		public ContextStoreLink(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractSchemaItem Members
-		
-		[EntityColumn("ItemType")]
+
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -88,11 +87,9 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("I01")] 
 		[XmlAttribute ("direction")]
 		public ContextStoreLinkDirection Direction { get; set; } = ContextStoreLinkDirection.Input;
 
-		[EntityColumn("G01")]  
 		public Guid CallerContextStoreId;
 
 		[TypeConverter(typeof(ContextStoreConverter))]
@@ -118,8 +115,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid TargetContextStoreId;
 
 		[TypeConverter(typeof(WorkflowCallTargetContextStoreConverter))]
@@ -145,8 +141,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("LS01")] 
+		
         [DefaultValue("/")]
 		[XmlAttribute ("xPath")]
 		public string XPath { get; set; } = "/";

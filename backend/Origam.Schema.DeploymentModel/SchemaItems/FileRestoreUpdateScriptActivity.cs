@@ -67,8 +67,7 @@ namespace Origam.Schema.DeploymentModel
 		private PropertyContainer<byte[]> content;
 
 		[Category("File Information")]
-		[EntityColumn("BLB01")]
-        [XmlExternalFileReference(containerName: nameof(content), 
+		[XmlExternalFileReference(containerName: nameof(content), 
             extension: ExternalFileExtension.Bin)]
         public Byte[] File 
 		{
@@ -78,8 +77,7 @@ namespace Origam.Schema.DeploymentModel
 
         private string _manualLocation;
 		[Category("File Information")]
-		[EntityColumn("LS01")]
-        [XmlAttribute("fileName")]
+		[XmlAttribute("fileName")]
 		public string FileName 
 		{
 			get
@@ -94,8 +92,7 @@ namespace Origam.Schema.DeploymentModel
 
 		private DeploymentFileLocation _targetLocation = DeploymentFileLocation.ReportsFolder;
 		[Category("File Information")]
-		[EntityColumn("I05")]
-        [XmlAttribute("targetLocation")]
+		[XmlAttribute("targetLocation")]
 		public DeploymentFileLocation TargetLocation 
 		{
 			get

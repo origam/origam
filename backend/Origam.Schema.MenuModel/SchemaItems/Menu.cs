@@ -57,7 +57,6 @@ namespace Origam.Schema.MenuModel
 		}
 		#region Overriden AbstractSchemaItem Members
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -80,7 +79,6 @@ namespace Origam.Schema.MenuModel
 		#region Properties
 
 		[Category("Menu Item")]
-		[EntityColumn("SS01")]
 		[XmlAttribute("displayName")]
 		public string DisplayName { get; set; }
 		#endregion

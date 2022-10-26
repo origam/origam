@@ -51,8 +51,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 
 		private ControlPropertyValueType _propertyType;
-
-		[EntityColumn("I01")]
+		
         [XmlAttribute("propertyType")]
 		public ControlPropertyValueType PropertyType
 		{
@@ -67,8 +66,7 @@ namespace Origam.Schema.GuiModel
 		}
 
 		private bool _isBindOnly;
-		[EntityColumn("B01")] 
-        [XmlAttribute("bindOnly")]
+		[XmlAttribute("bindOnly")]
 		public bool IsBindOnly
 		{
 			get
@@ -82,8 +80,7 @@ namespace Origam.Schema.GuiModel
 		}
 
 		private bool _isLocalizable;
-		[EntityColumn("B02")] 
-        [XmlAttribute("localizable")]
+		[XmlAttribute("localizable")]
 		public bool IsLocalizable
 		{
 			get
@@ -98,7 +95,6 @@ namespace Origam.Schema.GuiModel
 		#endregion
 		
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

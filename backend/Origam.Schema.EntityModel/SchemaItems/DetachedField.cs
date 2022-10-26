@@ -44,11 +44,9 @@ namespace Origam.Schema.EntityModel
 		public DetachedField(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G07")]  
 		public Guid ArrayRelationId;
 
 		[NoDuplicateNamesInParentRule]
-		[EntityColumn("Name")] 
 		[Category("(Schema Item)")]
 		[StringNotEmptyModelElementRule]
 		[RefreshProperties(RefreshProperties.Repaint)]
@@ -90,8 +88,7 @@ namespace Origam.Schema.EntityModel
                 this.ArrayValueField = null;
 			}
 		}
-
-		[EntityColumn("G08")]  
+ 
 		public Guid ArrayValueFieldId;
 
 		[Category("Array")]

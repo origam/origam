@@ -107,7 +107,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G07")]  
 		public Guid FunctionId;
 
 		[Category("Function")]
@@ -169,8 +168,7 @@ namespace Origam.Schema.EntityModel
 
 		private bool _forceDatabaseCalculation = false;
 		[Category("Function"), DefaultValue(false)]
-		[EntityColumn("B07")]
-        [XmlAttribute("forceDatabaseCalculation")]
+		[XmlAttribute("forceDatabaseCalculation")]
         public bool ForceDatabaseCalculation
 		{
 			get

@@ -57,7 +57,6 @@ namespace Origam.Schema.EntityModel
 		public DataStructureColumn(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G03")]
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(DataQueryEntityConverterNoSelf))]
@@ -97,8 +96,7 @@ namespace Origam.Schema.EntityModel
 
 			return false;
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid ColumnId;
 
 		private IDataEntityColumn _column;
@@ -147,8 +145,7 @@ namespace Origam.Schema.EntityModel
 				}
 			}
 		}
-
-		[EntityColumn("G02")]  
+        
 		public Guid DefaultLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -182,8 +179,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private string _caption = "";
-		[EntityColumn("SS01")]
-        [XmlAttribute("label")]
+		[XmlAttribute("label")]
 		[Localizable(true)]
         public string Caption
 		{
@@ -199,7 +195,7 @@ namespace Origam.Schema.EntityModel
 
 		private bool _useLookupValue = false;
         [XmlAttribute("useLookupValue")]
-        [EntityColumn("B01"), DefaultValue(false)]
+        [DefaultValue(false)]
 		public bool UseLookupValue
 		{
 			get
@@ -232,7 +228,7 @@ namespace Origam.Schema.EntityModel
 
 		private bool _useCopiedValue = false;
         [XmlAttribute("useCopiedValue")]
-        [EntityColumn("B02"), DefaultValue(false)]
+        [DefaultValue(false)]
 		public bool UseCopiedValue
 		{
 			get
@@ -247,7 +243,7 @@ namespace Origam.Schema.EntityModel
 
 		private bool _isWriteOnly = false;
         [XmlAttribute("writeOnly")]
-        [EntityColumn("B03"), DefaultValue(false)]
+        [DefaultValue(false)]
 		public bool IsWriteOnly
 		{
 			get
@@ -351,8 +347,7 @@ namespace Origam.Schema.EntityModel
 		private AggregationType _aggregationType = AggregationType.None;
         [XmlAttribute("aggregation")]
         [DefaultValue(AggregationType.None)]
-		[EntityColumn("I03")]
-		public AggregationType Aggregation
+        public AggregationType Aggregation
 		{
 			get
 			{
@@ -365,8 +360,7 @@ namespace Origam.Schema.EntityModel
 		}
 		
 		private int _order = 0;
-		[EntityColumn("I02")]
-        [XmlAttribute("order")]
+		[XmlAttribute("order")]
         public int Order
 		{
 			get
@@ -382,7 +376,6 @@ namespace Origam.Schema.EntityModel
 		private DataStructureColumnXmlMappingType _xmlMappingType = DataStructureColumnXmlMappingType.Default;
 		[Category("Entity Column"), DefaultValue(DataStructureColumnXmlMappingType.Default)]
         [XmlAttribute("xmlMappingType")]
-        [EntityColumn("I04")]
 		public DataStructureColumnXmlMappingType XmlMappingType 
 		{
 			get
@@ -403,7 +396,6 @@ namespace Origam.Schema.EntityModel
 		private UpsertType _upsertType = UpsertType.Replace;
 		[Category("Update"), DefaultValue(UpsertType.Replace)]
         [XmlAttribute("upsertType")]
-        [EntityColumn("I05")]
 		public UpsertType UpsertType 
 		{
 			get
@@ -459,8 +451,7 @@ namespace Origam.Schema.EntityModel
 		}
 
         [RelationTypeParentModelElementRule()]
-        [EntityColumn("ItemType")]
-		public override string ItemType
+        public override string ItemType
 		{
 			get
 			{

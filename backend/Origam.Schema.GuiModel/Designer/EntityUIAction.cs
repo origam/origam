@@ -67,7 +67,6 @@ namespace Origam.Schema.GuiModel
 
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public Hashtable ParameterMappings {
@@ -114,7 +113,6 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 
 		[Category("Condition"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("LS01")]
 		[StringNotEmptyModelElementRule()]
         [XmlAttribute("roles")]
 		public string Roles { get; set; } = "";
@@ -131,56 +129,45 @@ namespace Origam.Schema.GuiModel
 			.OfType<ScreenSectionCondition>()
 			.Select(reference => reference.ScreenSectionId);
 
-		[EntityColumn("SS01")]
 		[StringNotEmptyModelElementRule()]
 		[Localizable(true)]
         [XmlAttribute("label")]
 		public string Caption { get; set; } = "";
 
 		[Category("Condition")]
-		[EntityColumn("SS02")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
 		public string Features { get; set; }
 
-		[EntityColumn("I01")]
         [XmlAttribute("order")]
 		public int Order { get; set; } = 10;
 
-		[EntityColumn("I02")]
         [XmlAttribute("actionType")]
 		public virtual PanelActionType ActionType { get; set; } = PanelActionType.OpenForm;
 
-		[EntityColumn("I03")]
         [XmlAttribute("mode")]
 		public PanelActionMode Mode { get; set; } = PanelActionMode.ActiveRecord;
 
 		[Category("Condition")]
 		[DefaultValue(CredentialValueType.SavedValue), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I04")]
-        [XmlAttribute("valueType")]
+		[XmlAttribute("valueType")]
 		public CredentialValueType ValueType { get; set; } = CredentialValueType.SavedValue;
 
 		[DefaultValue(ActionButtonPlacement.Toolbar)]
-		[EntityColumn("I05")]
-        [XmlAttribute("placement")]
+		[XmlAttribute("placement")]
 		public ActionButtonPlacement Placement { get; set; } = ActionButtonPlacement.Toolbar;
 
 		[DefaultValue(ReturnRefreshType.None)]
-		[EntityColumn("I06")]
-        [XmlAttribute("refreshAfterReturn")]
+		[XmlAttribute("refreshAfterReturn")]
 		public ReturnRefreshType RefreshAfterReturn { get; set; } = ReturnRefreshType.None;
 
 		[DefaultValue(0)]
-		[EntityColumn("F01")]
-        [XmlAttribute("modalDialogWidth")]
+		[XmlAttribute("modalDialogWidth")]
 		public int ModalDialogWidth { get; set; } = 0;
 
 		[DefaultValue(0)]
-		[EntityColumn("F02")]
-        [XmlAttribute("modalDialogHeight")]
+		[XmlAttribute("modalDialogHeight")]
 		public int ModalDialogHeight { get; set; } = 0;
 
-		[EntityColumn("G02")]  
 		public Guid GraphicsId;
 
 		[TypeConverter(typeof(GuiModel.GraphicsConverter))]
@@ -190,8 +177,7 @@ namespace Origam.Schema.GuiModel
 			get => (GuiModel.Graphics)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.GraphicsId));
 			set => this.GraphicsId = value?.Id ?? Guid.Empty;
 		}
-
-		[EntityColumn("G03")]  
+ 
 		public Guid RuleId;
 
 		[Category("Condition")]
@@ -203,8 +189,7 @@ namespace Origam.Schema.GuiModel
 			get => (IEntityRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleId));
 			set => this.RuleId = value?.Id ?? Guid.Empty;
 		}
-
-		[EntityColumn("G04")]  
+ 
 		public Guid KeyboardShortcutId;
 
 		[Category("Keyboard")]
@@ -218,23 +203,19 @@ namespace Origam.Schema.GuiModel
 		}
 
 		[Category("Keyboard")]
-		[EntityColumn("SS03")]
-        [XmlAttribute("scannerInputParameter")]
+		[XmlAttribute("scannerInputParameter")]
 		public string ScannerInputParameter { get; set; }
 
 		[Category("Keyboard")]
-		[EntityColumn("SS04")]
-        [XmlAttribute("scannerTerminator")]
+		[XmlAttribute("scannerTerminator")]
 		public string ScannerTerminator { get; set; }
 
 		[DefaultValue(false)]
-		[EntityColumn("B01")]
-        [XmlAttribute("default")]
+		[XmlAttribute("default")]
 		public bool IsDefault { get; set; } = false;
 
 		[DefaultValue(false)]
-		[EntityColumn("B02")]
-        [XmlAttribute("modal")]
+		[XmlAttribute("modal")]
 		public bool IsModalDialog { get; set; } = false;
 
 		public override byte[] NodeImage
@@ -249,7 +230,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-        [EntityColumn("G06")]
         public Guid ConfirmationMessageId;
 
         [Category("References")]
@@ -261,7 +241,6 @@ namespace Origam.Schema.GuiModel
 	        set => this.ConfirmationMessageId =  value?.Id ?? Guid.Empty;
         }
 
-        [EntityColumn("G07")]
         public Guid ConfirmationRuleId;
 
         [Category("References")]

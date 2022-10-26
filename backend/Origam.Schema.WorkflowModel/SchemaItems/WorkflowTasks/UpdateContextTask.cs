@@ -48,7 +48,6 @@ namespace Origam.Schema.WorkflowModel
 		public UpdateContextTask(Key primaryKey) : base(primaryKey)	{}
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -110,7 +109,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 
-		[EntityColumn("G12")]  
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(ContextStoreEntityConverter))]
@@ -143,16 +141,13 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("SS05")]  
 		[UpdateContextTaskValidModelElementRuleAttribute()]
 		[Category("Output"), RefreshProperties(RefreshProperties.Repaint)]
 		[Description("A Name of a field (column) within `Entity' within an `OutputContextStore' which is to be updated for all rows of `Entity'"
 				+ " with a return value of `ValueXPath'. `FieldName' is applicable only if an OutputContextStore is a data struture context store.")]
 		[XmlAttribute ("fieldName")]
 		public string FieldName { get; set; }
-
-
-		[EntityColumn("G10")]  
+		
 		public Guid OutputContextStoreId;
 		[TypeConverter(typeof(ContextStoreConverter))]
 		[Description("Context store to be updated. In case of simple scalar context the value of context is updated with a result value of `ValueXPath'."
@@ -186,7 +181,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G11")]
 		public Guid XPathContextStoreId;
 
 		[TypeConverter(typeof(ContextStoreConverter))]
@@ -216,7 +210,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("LS01")]
 		[Category("Input")]
 		[Description("Result of this XPath is a value which is to be used fo updating a OutputContextStore.")]
 		[StringNotEmptyModelElementRule()]

@@ -47,7 +47,6 @@ namespace Origam.Schema.WorkflowModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -78,7 +77,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid WorkflowTaskId;
         [NotNullModelElementRule]
         [TypeConverter(typeof(WorkflowStepFilteredConverter))]
@@ -101,7 +99,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("I01")] 	
         [DefaultValue(WorkflowStepStartEvent.Success)]
 		[XmlAttribute ("startEvent")]
 		public WorkflowStepStartEvent StartEvent { get; set; } = WorkflowStepStartEvent.Success;

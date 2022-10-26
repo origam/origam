@@ -48,7 +48,6 @@ namespace Origam.Schema.EntityModel
 		#region Properties
 		
 		[NoDuplicateNamesInParentRule]
-		[EntityColumn("Name")] 
 		[Category("(Schema Item)")]
 		[StringNotEmptyModelElementRule]
 		[RefreshProperties(RefreshProperties.Repaint)]
@@ -60,7 +59,6 @@ namespace Origam.Schema.EntityModel
 		}
 		
 		private string _sourceFieldName;
-		[EntityColumn("SS03")]
 		[Category("Mapping")]
 		[StringNotEmptyModelElementRule()]
         [XmlAttribute("mappedColumnName")]
@@ -79,7 +77,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-        [EntityColumn("G10")]
         public Guid dataTypeMappingId;
 
         [Category("Mapping")]
@@ -108,7 +105,6 @@ namespace Origam.Schema.EntityModel
 		protected bool _excludeFromAuditing = false;
 		[Browsable(true)]
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B07")]
 		[Description("When turned on this field's changes will not be recorded in the audit log (e.g. password fields).")]
         [XmlAttribute("excludeFromAuditing")]
         public override bool ExcludeFromAuditing

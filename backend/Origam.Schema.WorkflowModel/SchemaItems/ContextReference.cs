@@ -49,7 +49,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -81,8 +80,7 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region IContextReference Members
-
-		[EntityColumn("G01")]  
+		
 		public Guid ContextStoreId;
 
 		[TypeConverter(typeof(ContextStoreConverter))]
@@ -116,14 +114,12 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("LS01")] 
+		
 		[NotNullModelElementRule()]
 		[DefaultValue("/")]
 		[XmlAttribute ("xPath")]
 		public string XPath { get; set; } = "/";
-
-		[EntityColumn("I01")] 
+		
 		[DefaultValue(OrigamDataType.String)]
 		[Description("Select a data type which will be used to convert a value to. Very handy to use e.g. when called service accepts an array.")]
 		[XmlAttribute ("castToDataType")]

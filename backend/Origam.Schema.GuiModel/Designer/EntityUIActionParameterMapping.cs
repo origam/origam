@@ -46,7 +46,6 @@ namespace Origam.Schema.GuiModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -58,7 +57,6 @@ namespace Origam.Schema.GuiModel
 
 		#region Properties
 		private string _field = "";
-		[EntityColumn("SS01")]
 		[StringNotEmptyModelElementRule()]
         [XmlAttribute("field")]
 		public string Field
@@ -74,8 +72,7 @@ namespace Origam.Schema.GuiModel
 		}
 
 		EntityUIActionParameterMappingType _type = EntityUIActionParameterMappingType.Current;
-		[EntityColumn("I01")] 
-        [XmlAttribute("type")]
+		[XmlAttribute("type")]
 		public EntityUIActionParameterMappingType Type
 		{
 			get

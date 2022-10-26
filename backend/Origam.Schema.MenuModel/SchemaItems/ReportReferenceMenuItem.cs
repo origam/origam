@@ -68,7 +68,6 @@ namespace Origam.Schema.MenuModel
 		}
 
 		#region Properties
-		[EntityColumn("G02")]  
 		public Guid ReportId;
 
 		[Category("Report Reference")]
@@ -86,7 +85,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G03")]  
 		public Guid SelectionPanelId;
 
 		[Category("Selection Dialog")]
@@ -104,7 +102,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G04")]  
 		public Guid SelectionPanelBeforeTransformationId;
 
 		[Category("Selection Dialog")]
@@ -123,7 +120,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G05")]  
 		public Guid SelectionPanelAfterTransformationId;
 
 		[Category("Selection Dialog")]
@@ -142,7 +138,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-		[EntityColumn("G06")]  
 		public Guid SelectionEndRuleId;
 
 		[Category("Selection Dialog")]
@@ -162,7 +157,6 @@ namespace Origam.Schema.MenuModel
 
 		private DataReportExportFormatType _exportFormatType;
 		[Category("Data Report")]
-		[EntityColumn("I01")]
 		[Description("Export Format Type")]
         [XmlAttribute("exportFormatType")]
 		public DataReportExportFormatType ExportFormatType

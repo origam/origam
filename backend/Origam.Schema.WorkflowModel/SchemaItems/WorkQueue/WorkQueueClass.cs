@@ -70,7 +70,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -102,7 +101,6 @@ namespace Origam.Schema.WorkflowModel
 		public ArrayList EntityMappings => 
 			this.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
 
-		[EntityColumn("G01")]  
 		public Guid EntityId;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -117,8 +115,7 @@ namespace Origam.Schema.WorkflowModel
                 this.ConditionFilter = null;
 			}
 		}
-
-		[EntityColumn("G02")]  
+ 
 		public Guid EntityConditionFilterId;
 
 		[TypeConverter(typeof(WorkQueueClassFilterConverter))]
@@ -133,7 +130,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G03")]  
 		public Guid WorkQueueStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -150,8 +146,7 @@ namespace Origam.Schema.WorkflowModel
 				this.WorkQueueStructureUserListMethod = null;
 			}
 		}
-
-		[EntityColumn("G04")]  
+        
 		public Guid RelatedEntity1Id;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -165,8 +160,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RelatedEntity1Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G05")]  
+		
 		public Guid RelatedEntity2Id;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -181,7 +175,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G06")]  
 		public Guid RelatedEntity3Id;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -196,7 +189,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G07")]  
 		public Guid RelatedEntity4Id;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -210,8 +202,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RelatedEntity4Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G08")]  
+		
 		public Guid RelatedEntity5Id;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -225,8 +216,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RelatedEntity5Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G09")]  
+		
 		public Guid RelatedEntity6Id;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -240,8 +230,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RelatedEntity6Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G10")]  
+		
 		public Guid RelatedEntity7Id;
 
 		[TypeConverter(typeof(EntityConverter))]
@@ -255,8 +244,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RelatedEntity7Id = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G11")]  
+		
 		public Guid EntityStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -272,8 +260,7 @@ namespace Origam.Schema.WorkflowModel
                 this.EntityStructurePrimaryKeyMethod = null;
 			}
 		}
-
-		[EntityColumn("G12")]  
+        
 		public Guid EntityStructurePkMethodId;
 
 		[TypeConverter(typeof(WorkQueueClassEntityStructureFilterConverter))]
@@ -289,7 +276,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
         
-		[EntityColumn("G14")]  
 		public Guid WorkQueueStructureUserListMethodId;
 
 		[TypeConverter(typeof(WorkQueueClassWQDataStructureFilterConverter))]
@@ -303,8 +289,7 @@ namespace Origam.Schema.WorkflowModel
 				this.WorkQueueStructureUserListMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G18")]  
+		
 		public Guid WorkQueueStructureSortSetId;
 
 		[TypeConverter(typeof(WorkQueueClassWQDataStructureSortSetConverter))]
@@ -319,8 +304,7 @@ namespace Origam.Schema.WorkflowModel
 				this.WorkQueueStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G15")]  
+		
 		public Guid WorkQueueItemCountLookupId;
 
 		[TypeConverter(typeof(DataLookupConverter))]
@@ -335,8 +319,7 @@ namespace Origam.Schema.WorkflowModel
 				this.WorkQueueItemCountLookupId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G16")]  
+        
 		public Guid NotificationStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -351,8 +334,7 @@ namespace Origam.Schema.WorkflowModel
                 this.NotificationLoadMethod = null;
 			}
 		}
-
-		[EntityColumn("G17")]  
+		
 		public Guid NotificationLoadMethodId;
 
 		[TypeConverter(typeof(WorkQueueClassNotificationStructureFilterConverter))]
@@ -366,13 +348,11 @@ namespace Origam.Schema.WorkflowModel
 				this.NotificationLoadMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("LS01")]  
+		
 		[Category("Notification")]
 		[XmlAttribute ("notificationFilterPkParameter")]
 		public string NotificationFilterPkParameter { get; set; } = "";
-
-		[EntityColumn("M01")]  
+		
 		[Category("UI")]
 		[XmlAttribute ("defaultPanelConfiguration")]
 		public string DefaultPanelConfiguration { get; set; } = "";

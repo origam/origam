@@ -42,7 +42,6 @@ namespace Origam.Schema.GuiModel
 			#region Properties
 			private string _caption = "";
 			[Category("User Interface")]
-			[EntityColumn("SS01")]
 			[Localizable(true)]
 			public string Caption
 			{
@@ -60,7 +59,6 @@ namespace Origam.Schema.GuiModel
 			#endregion
            
 			#region Overriden AbstractSchemaItem Members
-			[EntityColumn("ItemType")]
 			public override string ItemType
 			{
 				get

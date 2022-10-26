@@ -66,7 +66,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -107,12 +106,10 @@ namespace Origam.Schema.WorkflowModel
 
 		[Browsable(false)]
 		public ArrayList FieldDependencies => this.ChildItemsByType(StateMachineEventFieldDependency.CategoryConst);
-
-		[EntityColumn("I01")]
+		
 		[XmlAttribute ("type")]
 		public StateMachineEventType Type { get; set; }
-
-		[EntityColumn("G01")]  
+		
 		public Guid ActionId;
 
 		[TypeConverter(typeof(WorkflowConverter))]
@@ -128,8 +125,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			set => this.ActionId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid OldStateId;
 
 		[TypeConverter(typeof(StateMachineStateConverter))]
@@ -145,8 +141,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			set => this.OldStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G03")]  
+		
 		public Guid NewStateId;
 
 		[TypeConverter(typeof(StateMachineStateConverter))]
@@ -162,12 +157,10 @@ namespace Origam.Schema.WorkflowModel
 			}
 			set => this.NewStateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("LS01")]
+		
 		[XmlAttribute ("roles")]
 		public string Roles { get; set; } = "*";
-
-		[EntityColumn("SS01")]
+		
 		[XmlAttribute ("features")]
 		public string Features { get; set; }
 		#endregion

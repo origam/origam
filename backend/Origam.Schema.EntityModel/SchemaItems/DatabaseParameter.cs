@@ -33,8 +33,7 @@ namespace Origam.Schema.EntityModel
         public DatabaseParameter() : base() { }
         public DatabaseParameter(Guid schemaExtensionId) : base(schemaExtensionId) { }
         public DatabaseParameter(Key primaryKey) : base(primaryKey) { }
-
-        [EntityColumn("G05")]
+        
         public Guid dataTypeMappingId;
 
         [Category("Database Mapping")]

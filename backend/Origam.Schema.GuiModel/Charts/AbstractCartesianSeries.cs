@@ -43,8 +43,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _zAxisField = "";
 		[Category("Series")]
-		[EntityColumn("SS03")]
-        [XmlAttribute("zAxisField")]
+		[XmlAttribute("zAxisField")]
 		public string ZAxisField
 		{
 			get

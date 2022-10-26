@@ -53,7 +53,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _url = "";
 		[Category("Page")]
-		[EntityColumn("SS01"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
 		[XmlAttribute("url")]
 		public string Url
 		{
@@ -70,8 +70,7 @@ namespace Origam.Schema.GuiModel
 		private string _roles;
 		[Category("Security")]
 		[NotNullModelElementRule()]
-		[EntityColumn("LS01")]
-        [XmlAttribute("roles")]
+		[XmlAttribute("roles")]
         public string Roles
 		{
 			get
@@ -84,7 +83,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("G01")]
 		public Guid InputValidationRuleId;
 
 		[Category("InputValidation")]
@@ -104,8 +102,7 @@ namespace Origam.Schema.GuiModel
 		}
 
 		private string _features;
-		[EntityColumn("SS02")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
         public string Features
 		{
 			get
@@ -118,7 +115,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}		
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -127,7 +123,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-        [EntityColumn("G02")]
         public Guid CacheMaxAgeDataConstantId;
 
         [Category("Caching")]
@@ -149,7 +144,7 @@ namespace Origam.Schema.GuiModel
 
         private string _mimeType;
         [Category("Page")]
-        [EntityColumn("SS03"), StringNotEmptyModelElementRule()]
+        [StringNotEmptyModelElementRule()]
         [XmlAttribute("mimeType")]
         public string MimeType
         {
@@ -165,7 +160,6 @@ namespace Origam.Schema.GuiModel
 
         private bool _allowPUT;
         [Category("Updating")]
-        [EntityColumn("B01")]
         [XmlAttribute("allowPut")]
         public bool AllowPUT
         {
@@ -181,7 +175,6 @@ namespace Origam.Schema.GuiModel
 
         private bool _allowDELETE;
         [Category("Updating")]
-        [EntityColumn("B02")]
         [XmlAttribute("allowDelete")]
         public bool AllowDELETE
         {

@@ -49,7 +49,6 @@ namespace Origam.Schema.LookupModel
 		public DataLookupMenuBinding(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -97,7 +96,6 @@ namespace Origam.Schema.LookupModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid MenuItemId;
 
 		[Category("Menu Reference")]
@@ -119,7 +117,7 @@ namespace Origam.Schema.LookupModel
 		
 		private string _roles;
 		[Category("Security")]
-		[EntityColumn("LS01"), NotNullModelElementRule()]
+		[NotNullModelElementRule()]
         [XmlAttribute("roles")]
 		public string Roles
 		{
@@ -132,8 +130,7 @@ namespace Origam.Schema.LookupModel
 				_roles = value;
 			}
 		}
-
-		[EntityColumn("G02")]
+		
 		public Guid SelectionLookupId;
 
 		[Category("Selection")]
@@ -151,8 +148,7 @@ namespace Origam.Schema.LookupModel
 				this.SelectionLookupId = (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G03")]  
+        
 		public Guid SelectionConstantId;
 
 		[Category("Selection")]
@@ -170,8 +166,7 @@ namespace Origam.Schema.LookupModel
 				this.SelectionConstantId = (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G04")]  
+        
 		public Guid _selectionPanelId;
 
 		[Category("Menu Reference")]
@@ -204,7 +199,7 @@ namespace Origam.Schema.LookupModel
 
         private int _level = 100;
         [Category("Selection")]
-        [EntityColumn("I01"), NotNullModelElementRule()]
+        [NotNullModelElementRule()]
         [XmlAttribute("level")]
         public int Level
         {

@@ -45,7 +45,6 @@ namespace Origam.Schema.GuiModel
 
         private string _reportFileName;
 
-        [EntityColumn("G01")]
         public Guid DataStructureId;
 
         [TypeConverter(typeof(DataStructureConverter))]
@@ -65,7 +64,6 @@ namespace Origam.Schema.GuiModel
             }
         }
 
-        [EntityColumn("G02")]
         public Guid DataStructureMethodId;
 
         [TypeConverter(typeof(DataStructureReferenceMethodConverter))]
@@ -82,7 +80,6 @@ namespace Origam.Schema.GuiModel
             }
         }
 
-        [EntityColumn("G03")]
         public Guid DataStructureSortSetId;
 
         [TypeConverter(typeof(DataStructureReferenceSortSetConverter))]
@@ -98,7 +95,6 @@ namespace Origam.Schema.GuiModel
                 this.DataStructureSortSetId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
             }
         }
-        [EntityColumn("G04")]
         public Guid TransformationId;
 
         [TypeConverter(typeof(TransformationConverter))]
@@ -115,7 +111,6 @@ namespace Origam.Schema.GuiModel
             }
         }
 
-        [EntityColumn("LS01")]
         [XmlAttribute("reportFileName")]
         public string ReportFileName
         {
@@ -131,7 +126,6 @@ namespace Origam.Schema.GuiModel
 
         string _localeXPath;
         [Description("XPath should return locale IETF tag (e.g. en-US) to be used as current thread culture and UI culture for the report.")]
-        [EntityColumn("SS02")]
         [XmlAttribute("localeXPath")]
         public string LocaleXPath
         {

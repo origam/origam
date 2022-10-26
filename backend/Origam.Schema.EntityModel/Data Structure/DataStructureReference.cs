@@ -47,7 +47,6 @@ namespace Origam.Schema.EntityModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -81,7 +80,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid DataStructureId;
 
 		[Category("Reference")]
@@ -108,8 +106,7 @@ namespace Origam.Schema.EntityModel
 				this.Name = this.DataStructure.Name;
 			}
 		}
-		
-		[EntityColumn("G02")]  
+
 		public Guid DataStructureMethodId;
 
 		[TypeConverter(typeof(DataStructureReferenceMethodConverter))]
@@ -126,8 +123,7 @@ namespace Origam.Schema.EntityModel
 				this.DataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G03")]  
+        
 		public Guid DataStructureSortSetId;
 
 		[TypeConverter(typeof(DataStructureReferenceSortSetConverter))]

@@ -46,8 +46,7 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		private OrigamDataType _returnValueDataType;
-		[EntityColumn("I01")]
-        [XmlAttribute("returnValueDataType")]
+		[XmlAttribute("returnValueDataType")]
 		public OrigamDataType ReturnValueDataType
 		{
 			get
@@ -62,8 +61,7 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		
-		[EntityColumn("ItemType")]
+
 		public override string ItemType
 		{
 			get

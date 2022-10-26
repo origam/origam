@@ -51,7 +51,6 @@ namespace Origam.Schema.GuiModel
         }
 
         #region Properties
-        [EntityColumn("G01")]
         public Guid ControlStylePropertyId;
 
         [TypeConverter(typeof(ControlStylePropertyConverter))]
@@ -73,7 +72,6 @@ namespace Origam.Schema.GuiModel
         }
 
         private string _value;
-        [EntityColumn("LS01")]
         [RefreshProperties(RefreshProperties.Repaint)]
         [NotNullModelElementRule()]
         [XmlAttribute("value")]
@@ -102,7 +100,6 @@ namespace Origam.Schema.GuiModel
             base.GetExtraDependencies(dependencies);
         }
 
-        [EntityColumn("ItemType")]
         public override string ItemType
         {
             get

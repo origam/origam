@@ -82,7 +82,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G10")]  
 		public Guid ScreenId;
 
 		[TypeConverter(typeof(FormControlSetConverter))]
@@ -100,7 +99,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G11")]  
 		public Guid RefreshDataStructureId;
 
 		[Category("Data Refresh Parameters")]
@@ -129,7 +127,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 		
-		[EntityColumn("G12")]  
 		public Guid RefreshMethodId;
 
 		[TypeConverter(typeof(UIFormTaskMethodConverter))]
@@ -146,8 +143,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RefreshMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G13")]  
+		
 		public Guid RefreshSortSetId;
 
 		[TypeConverter(typeof(UIFormTaskSortSetConverter))]
@@ -164,8 +160,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RefreshSortSetId = (value == null? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G14")]  
+		
 		public Guid SaveDataStructureId;
 
 		[Category("Save Parameters")]
@@ -183,19 +178,16 @@ namespace Origam.Schema.WorkflowModel
 				this.SaveDataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("B05")]  
+		
 		[DefaultValue(false)]
 		[XmlAttribute ("isFinalForm")]
 		public bool IsFinalForm { get; set; } = false;
-
-		[EntityColumn("B06")]  
+		
 		[DefaultValue(false)]
 		[Category("Save Parameters")]
 		[XmlAttribute ("allowSave")]
 		public bool AllowSave { get; set; } = false;
-
-		[EntityColumn("G15")]  
+		
 		public Guid SaveConfirmationRuleId;
 
 		[Category("Save Parameters")]
@@ -212,20 +204,17 @@ namespace Origam.Schema.WorkflowModel
 				this.SaveConfirmationRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("B07")]  
+		
 		[DefaultValue(false)]
 		[XmlAttribute ("autoNext")]
 		public bool AutoNext { get; set; } = false;
-
-		[EntityColumn("B04")]  
+		
 		[DefaultValue(true)]
 		[XmlAttribute ("isRefreshSuppressedBeforeFirstSave")]
 		public bool IsRefreshSuppressedBeforeFirstSave { get; set; } = true;
 
 		[DefaultValue(TrueFalseEnum.False)]
-        [EntityColumn("I06")]
-        [Description("If true, the client will refresh its menu after saving data.")]
+		[Description("If true, the client will refresh its menu after saving data.")]
 		[XmlAttribute ("refreshPortalAfterSave")]
         public TrueFalseEnum RefreshPortalAfterSave { get; set; } = TrueFalseEnum.False;
 

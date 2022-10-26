@@ -48,7 +48,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _caption = "";
 		[Category("Axis")]
-		[EntityColumn("SS01"), Localizable(true)]
+		[Localizable(true)]
         [XmlAttribute("label")]
 		public string Caption
 		{
@@ -64,8 +64,7 @@ namespace Origam.Schema.GuiModel
 
 		private int _min = 0;
 		[Category("Limits"), DefaultValue(0)]
-		[EntityColumn("I01")]
-        [XmlAttribute("minimum")]
+		[XmlAttribute("minimum")]
 		public int Min
 		{
 			get
@@ -80,8 +79,7 @@ namespace Origam.Schema.GuiModel
 
 		private int _max = 0;
 		[Category("Limits"), DefaultValue(0)]
-		[EntityColumn("I02")]
-        [XmlAttribute("maximum")]
+		[XmlAttribute("maximum")]
 		public int Max
 		{
 			get
@@ -96,8 +94,7 @@ namespace Origam.Schema.GuiModel
 
 		private bool _applyMin = false;
 		[Category("Limits"), DefaultValue(false)]
-		[EntityColumn("B01")]
-        [XmlAttribute("applyMinimumLimit")]
+		[XmlAttribute("applyMinimumLimit")]
 		public bool ApplyMinLimit
 		{
 			get
@@ -112,8 +109,7 @@ namespace Origam.Schema.GuiModel
 
 		private bool _applyMax = false;
 		[Category("Limits"), DefaultValue(false)]
-		[EntityColumn("B02")]
-        [XmlAttribute("applyMaximumLimit")]
+		[XmlAttribute("applyMaximumLimit")]
 		public bool ApplyMaxLimit
 		{
 			get
@@ -126,7 +122,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

@@ -58,14 +58,13 @@ namespace Origam.Schema.RuleModel
 		}
 
 		#region Properties
-		[EntityColumn("M01")] 
-        [XmlAttribute("xPath")]
+		[XmlAttribute("xPath")]
 #if !NETSTANDARD
         [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
 #endif
         public string XPath { get; set; } = "";
 
-		[EntityColumn("B01"), DefaultValue(false)] 
+		[DefaultValue(false)] 
         [XmlAttribute("isPathRelative")]
 		public override bool IsPathRelative { get; set; } = false;
 		#endregion

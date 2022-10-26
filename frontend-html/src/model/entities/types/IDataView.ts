@@ -50,6 +50,7 @@ export interface IDataViewData {
   isMapSupported: boolean;
   disableActionButtons: boolean;
   showAddButton: boolean;
+  hideCopyButton: boolean;
   showDeleteButton: boolean;
   showSelectionCheckboxesSetting: boolean;
   type: string;

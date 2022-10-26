@@ -280,9 +280,7 @@ namespace Origam.Workbench
 			{
 				OrigamSettings origamSettings = item.Tag as OrigamSettings;
 				item.SubItems[0].Text = origamSettings.Name;
-				item.SubItems[1].Text = origamSettings.ModelProvider.Contains(nameof(DatabasePersistenceBuilder)) 
-					? origamSettings.SchemaConnectionString 
-					: origamSettings.ModelSourceControlLocation;
+				item.SubItems[1].Text = origamSettings.ModelSourceControlLocation;
 				item.SubItems[2].Text = origamSettings.DataConnectionString;
 			}
 		}

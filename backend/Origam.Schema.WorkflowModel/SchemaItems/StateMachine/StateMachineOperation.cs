@@ -48,7 +48,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -85,8 +84,7 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		private string _roles = "*";
-		[EntityColumn("LS01")]
-        [NotNullModelElementRule()]
+		[NotNullModelElementRule()]
         [DefaultValue("*")]
         [XmlAttribute("roles")]
 		public string Roles
@@ -102,8 +100,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		private string _features;
-		[EntityColumn("SS01")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
         public string Features
 		{
 			get
@@ -115,8 +112,7 @@ namespace Origam.Schema.WorkflowModel
 				_features = value;
 			}
 		}		
-
-		[EntityColumn("G01")]  
+        
 		public Guid RuleId;
 
 		[TypeConverter(typeof(EntityRuleConverter))]
@@ -135,8 +131,7 @@ namespace Origam.Schema.WorkflowModel
 				this.RuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid TargetStateId;
 
 		[TypeConverter(typeof(StateMachineStateConverter))]

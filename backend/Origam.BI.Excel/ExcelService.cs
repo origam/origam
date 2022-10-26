@@ -168,42 +168,51 @@ namespace Origam.BI.Excel
                 value = sourceCell.Value;
             }
             CellType newType = (CellType)Enum.ToObject(typeof(CellType), sourceCell.Type);
-            switch (newType)
+            try
             {
-                case CellType.NUMERIC:
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Numeric);
-                    cell.SetCellValue(XmlConvert.ToDouble(value));
-                    break;
-                case CellType.FORMULA:
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Formula);
-                    cell.SetCellFormula(value);
-                    break;
-                case CellType.Unknown:
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Unknown);
-                    cell.SetCellValue(value);
-                    break;
-                case CellType.STRING:
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.String);
-                    cell.SetCellValue(value);
-                    break;
-                case CellType.BLANK:
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Blank);
-                    break;
-                case CellType.BOOLEAN:
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Boolean);
-                    cell.SetCellValue(XmlConvert.ToBoolean(value));
-                    break;
-                case CellType.ERROR:
-                    cell.SetCellType(NPOI.SS.UserModel.CellType.Error);
-                    cell.SetCellErrorValue(XmlConvert.ToByte(value));
-                    break;
-                case CellType.DATE:
-                    cell.SetCellValue(XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.Local));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (newType)
+                {
+                    case CellType.NUMERIC:
+                        cell.SetCellType(NPOI.SS.UserModel.CellType.Numeric);
+                        cell.SetCellValue(XmlConvert.ToDouble(value));
+                        break;
+                    case CellType.FORMULA:
+                        cell.SetCellType(NPOI.SS.UserModel.CellType.Formula);
+                        cell.SetCellFormula(value);
+                        break;
+                    case CellType.Unknown:
+                        cell.SetCellType(NPOI.SS.UserModel.CellType.Unknown);
+                        cell.SetCellValue(value);
+                        break;
+                    case CellType.STRING:
+                        cell.SetCellType(NPOI.SS.UserModel.CellType.String);
+                        cell.SetCellValue(value);
+                        break;
+                    case CellType.BLANK:
+                        cell.SetCellType(NPOI.SS.UserModel.CellType.Blank);
+                        break;
+                    case CellType.BOOLEAN:
+                        cell.SetCellType(NPOI.SS.UserModel.CellType.Boolean);
+                        cell.SetCellValue(XmlConvert.ToBoolean(value));
+                        break;
+                    case CellType.ERROR:
+                        cell.SetCellType(NPOI.SS.UserModel.CellType.Error);
+                        cell.SetCellErrorValue(XmlConvert.ToByte(value));
+                        break;
+                    case CellType.DATE:
+                        cell.SetCellValue(XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.Local));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                throw new ArgumentException($"Value \"${value}\", from sheet ${cell.Sheet.SheetName}, row index: ${cell.RowIndex}, column index: ${cell.ColumnIndex} could not be converted to ${newType}", ex);
             }
         }
+        
+ 
 
         private static OrigamSpreadsheet GetSpreadsheetData(AbstractDataReport report,
             IXmlContainer data, Hashtable parameters, string dbTransaction)

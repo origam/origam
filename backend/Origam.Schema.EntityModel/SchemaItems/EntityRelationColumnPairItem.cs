@@ -46,7 +46,6 @@ namespace Origam.Schema.EntityModel
 		public EntityRelationColumnPairItem(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid BaseEntityColumnId;
 
 		[TypeConverter(typeof(RelationPrimaryKeyColumnConverter))]
@@ -73,8 +72,7 @@ namespace Origam.Schema.EntityModel
 				}
 			}
 		}
-
-		[EntityColumn("G02")]  
+ 
 		public Guid RelatedEntityColumnId;
 
 		[TypeConverter(typeof(RelationForeignKeyColumnConverter))]
@@ -112,7 +110,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

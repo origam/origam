@@ -40,7 +40,6 @@ namespace Origam.Schema.GuiModel
 
         private string _reportPath;
 
-		[EntityColumn("LS01")]
         [Description("Absolute path to the report. It can contain placeholders inside curly brackets which denote parameters.")]
         [XmlAttribute("reportPath")]
         public string ReportPath
