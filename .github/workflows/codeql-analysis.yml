@@ -5,7 +5,7 @@ on:
     branches: [ master ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master, 20*, testfailreport ]
+    branches: [ master, 20* ]
   schedule:
     - cron: '40 23 * * 2'
 
@@ -55,7 +55,7 @@ jobs:
       
     - name: Check Fail
       shell: pwsh
-      run: .\checknutest.ps1 
+      run: .\checkvstest.ps1 
         
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2

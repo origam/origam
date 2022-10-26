@@ -35,9 +35,5 @@ namespace Origam.Common_net2Tests
                 Thread.Sleep(1000);
             }
         }
-        public void MustFail()
-        {
-            //Assert.Fail();
-        }
     }
 }
