@@ -118,7 +118,6 @@ namespace Origam.Schema.GuiModel
 		private int _intValue = 0;
 
 		#region Properties
-		[EntityColumn("I01")] 
 		public int IntValue
 		{
 			get
@@ -134,7 +133,6 @@ namespace Origam.Schema.GuiModel
 
 		private bool _boolValue = false;
 
-		[EntityColumn("B01")]
         public bool BoolValue
 		{
 			get
@@ -150,7 +148,6 @@ namespace Origam.Schema.GuiModel
 
 		private Guid _guidValue;
 
-		[EntityColumn("G02")]
         public Guid GuidValue
 		{
 			get
@@ -166,7 +163,6 @@ namespace Origam.Schema.GuiModel
 
         private string _stringValue;
 
-        [EntityColumn("LS01")]
         public string StringValue
         {
             get
@@ -214,7 +210,6 @@ namespace Origam.Schema.GuiModel
 
 		#endregion
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -237,7 +232,6 @@ namespace Origam.Schema.GuiModel
 
         private Guid _controlPropertyId;
 
-		[EntityColumn("G01")]
         [XmlAttribute("propertyId")]
 		public Guid ControlPropertyId
         {

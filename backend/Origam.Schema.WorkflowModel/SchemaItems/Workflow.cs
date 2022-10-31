@@ -80,8 +80,7 @@ namespace Origam.Schema.WorkflowModel
         #region IWorkflowStep Members
 		[DefaultValue(WorkflowTransactionBehavior.InheritExisting)]
 		[Category("Transactions"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I02")] 
-        [DisplayName("Transaction Behavior")]
+		[DisplayName("Transaction Behavior")]
 		[XmlAttribute ("transactionBehavior")]
         [Description("Controls how will workflow interact with incoming transactions. The default behavior is to inherit them.")]
         public WorkflowTransactionBehavior TransactionBehavior { get; set; } 
@@ -89,8 +88,7 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
         #region Overriden AbstractSchemaItem Members
-
-        [EntityColumn("ItemType")]
+        
 		public override string ItemType
 		{
 			get
@@ -112,7 +110,6 @@ namespace Origam.Schema.WorkflowModel
 
 		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")] 
 		[RuntimeConfigurable ("traceLevel")]
         [DisplayName("Trace Level")]
 		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;

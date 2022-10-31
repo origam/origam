@@ -43,7 +43,6 @@ namespace Origam.Schema.EntityModel
 		public DataStructureTransformationTemplate(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid TransformationId;
 
 		[Category("Reference")]

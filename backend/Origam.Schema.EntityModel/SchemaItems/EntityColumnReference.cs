@@ -46,8 +46,7 @@ namespace Origam.Schema.EntityModel
 		public EntityColumnReference(Key primaryKey) : base(primaryKey)	{}
 	
 		#region Overriden AbstractDataEntityColumn Members
-		
-		[EntityColumn("ItemType")]
+
 		public override string ItemType
 		{
 			get
@@ -111,7 +110,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid FieldId;
 
 		[Category("Reference")]

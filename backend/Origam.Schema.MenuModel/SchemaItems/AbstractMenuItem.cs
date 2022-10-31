@@ -46,8 +46,7 @@ namespace Origam.Schema.MenuModel
 		#region Overriden AbstractSchemaItem Members
 		
 		public override string ToString() => this.Path;
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType => CategoryConst;
 
 		public override string NodeText
@@ -75,36 +74,30 @@ namespace Origam.Schema.MenuModel
 
 		#region Properties
 		[Category("Security")]
-		[EntityColumn("LS01")]
 		[XmlAttribute ("roles")]
 		[NotNullModelElementRule()]
 		public virtual string Roles { get; set; }
 
 		[Category("Menu Item")]
-		[EntityColumn("SS02")]
 		[XmlAttribute ("features")]
 		public virtual string Features { get; set; }
 
 		[DefaultValue(false)]
-        [EntityColumn("B07")]
-        [Description("When set to true it will be possible to execute this menu item only when other screens are closed.")]
+		[Description("When set to true it will be possible to execute this menu item only when other screens are closed.")]
         [XmlAttribute ("openExclusively")]
         public bool OpenExclusively { get; set; } = false;
 
 		[DefaultValue(false)]
-		[EntityColumn("B07")]
 		[Description("When set to true it will always open a new tab.")]
 		[XmlAttribute("alwaysOpenNew")]
 		public bool AlwaysOpenNew { get; set; } = false;
 
 		[Category("Menu Item")]
-		[EntityColumn("SS01")]
 		[Localizable(true)]
 		[NotNullModelElementRule()]
 		[XmlAttribute ("displayName")]
 		public string DisplayName { get; set; }
-
-		[EntityColumn("G01")]  
+		
 		public Guid GraphicsId;
 
 		[Category("Menu Item")]

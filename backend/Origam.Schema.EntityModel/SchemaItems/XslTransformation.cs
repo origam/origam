@@ -87,7 +87,6 @@ namespace Origam.Schema.EntityModel
 		#region Properties
 		private PropertyContainer<string> text;
 		
-		[EntityColumn("M01")] 
 		[StringNotEmptyModelElementRule()]
         [XmlExternalFileReference(containerName: nameof(text), 
             extension: ExternalFileExtension.Xslt)]
@@ -98,7 +97,7 @@ namespace Origam.Schema.EntityModel
         }
 
         private XsltEngineType _xsltEngineType = XsltEngineType.XslTransform;
-        [EntityColumn("I01"), DefaultValue(XsltEngineType.XslTransform)]
+        [DefaultValue(XsltEngineType.XslTransform)]
         [XmlAttribute("engineType")]
         public XsltEngineType XsltEngineType
         {

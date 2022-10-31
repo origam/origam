@@ -56,8 +56,7 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private int _priority = 100;
-
-		[EntityColumn("I01")]
+		
 		[DefaultValue(100)]
         [XmlAttribute("priority")]
 		public int Priority
@@ -71,8 +70,7 @@ namespace Origam.Schema.EntityModel
 				_priority = value;
 			}
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid DataStructureEntityId;
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
@@ -90,8 +88,7 @@ namespace Origam.Schema.EntityModel
 				this.TargetField = null;
 			}
 		}
-
-		[EntityColumn("G04")]  
+        
 		public Guid TargetFieldId;
 
 		[TypeConverter(typeof(DataStructureEntityFieldConverter))]
@@ -108,8 +105,7 @@ namespace Origam.Schema.EntityModel
 				this.TargetFieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G02")]  
+		
 		public Guid ValueRuleId;
 
 		[TypeConverter(typeof(DataRuleConverter))]
@@ -126,8 +122,7 @@ namespace Origam.Schema.EntityModel
 				this.ValueRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
 			}
 		}
-
-		[EntityColumn("G03")]  
+		
 		public Guid CheckRuleId;
 
 		[TypeConverter(typeof(StartRuleConverter))]
@@ -147,7 +142,6 @@ namespace Origam.Schema.EntityModel
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

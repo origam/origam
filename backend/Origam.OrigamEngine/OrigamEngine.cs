@@ -134,9 +134,6 @@ namespace Origam.OrigamEngine
 			}
 			SchemaService schema 
                 = ServiceManager.Services.GetService<SchemaService>();
-            IPersistenceService persistence 
-                = ServiceManager.Services.GetService<IPersistenceService>();
-			persistence.LoadSchemaList();
 			log.Info("Loading model " + settings.Name + ", Package ID: " + settings.DefaultSchemaExtensionId.ToString());
 			schema.LoadSchema(settings.DefaultSchemaExtensionId, 
                 settings.ExtraSchemaExtensionId, false, 

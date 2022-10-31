@@ -41,7 +41,6 @@ namespace Origam.Schema.EntityModel
 	
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

@@ -125,17 +125,10 @@ namespace Origam.Server
             }
             else
             {
-                // delayed data loading - save after each move
-                // we initialize the full structure
-                data = InitializeFullStructure(_menuItem.DefaultSet);
-                DataSet listData = GetDataSetBuilder().InitializeListStructure(data, _menuItem.ListEntity.Name,true);
-                // we only read the list and leave the full structure empty (it will be loaded later)
-                SetDataList(
-                    GetDataSetBuilder().LoadListData(DataListLoadedColumns, listData, _menuItem.ListEntity.Name, _menuItem.ListSortSet, _menuItem, Request.QueryParameters), 
-                    _menuItem.ListEntity.Name, _menuItem.ListDataStructure, _menuItem.ListMethod);
-                this.IsDelayedLoading = true;
-                if (_menuItem.Method == null) throw new ArgumentNullException("FormReferenceMenuItem.FilterSet", "For delayed data loading you have to specify FilterSet for the main data.");
-                SetDelayedLoadingParameter(_menuItem.Method);
+                throw new Exception("A screen is lazy loaded but the client requested session data on InitUI " +
+                    "call by setting DataRequested=true. Instead the client should set DataRequested=false " +
+                    "and call GetRows in order to get the list data and then MasterRecord to load " +
+                    "one of the records and GetData to request entity data.");
             }
             if (data != null)
             {

@@ -43,6 +43,13 @@ import { MobileFormSection } from "gui/connections/MobileComponents/Form/MobileF
 import { MobileCheckBox } from "gui/connections/MobileComponents/Form/CheckBox";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { findStrings } from "xmlInterpreters/xmlUtils";
+import { ExtraButtonsContext } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
+import { NavigationButton } from "gui/connections/MobileComponents/Navigation/NavigationButton";
+import { IProperty } from "model/entities/types/IProperty";
+import { MobileState } from "model/entities/MobileState/MobileState";
+import { getAllActions } from "model/selectors/DataView/getMobileActions";
+import { IActionType } from "model/entities/types/IAction";
+import { MobileAction, MobileActionLink } from "gui/connections/MobileComponents/Form/MobileAction";
 
 
 @inject(({dataView}) => {
@@ -50,6 +57,7 @@ import { findStrings } from "xmlInterpreters/xmlUtils";
 })
 @observer
 export class MobileFormBuilder extends React.Component<{
+  mobileState: MobileState
   xmlFormRootObject?: any;
   dataView?: IDataView;
 }> {
@@ -95,63 +103,127 @@ export class MobileFormBuilder extends React.Component<{
     }
     const focusManager = self.props.dataView!.formFocusManager;
 
-    function recursive(xfo: any, indexInParent: number): FormItem[] | undefined {
+    function recursiveParse(xfo: any, parent: FormItem | null): FormItem[] | undefined {
       if (xfo.name === "FormRoot") {
-        return [new FormItem("-1",
+        let formItem = new FormItem("-1",
+          parent,
+          xfo,
+          []
+        );
+        formItem.children = xfo.elements
+          .flatMap((child: any, index: number) => recursiveParse(child, formItem))
+          .flat()
+          .filter((item: any) => item)
+          .sort(compareByIsFormSectionThenByTabIndex);
+        return [formItem];
+      } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
+        const formItem = new FormItem((xfo.attributes.TabIndex)?.toString(),
+          parent,
+          xfo,
+          [],
+          undefined,
+          true);
+        formItem.children = xfo.elements
+          .flatMap((child: any, index: number) => recursiveParse(child, formItem))
+          .flat()
+          .filter((item: any) => item)
+          .sort(compareByIsFormSectionThenByTabIndex);
+        return [formItem];
+      } else if (xfo.name === "FormElement" && xfo.attributes.Type === "Label") {
+        return undefined;
+      } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
+        return [new FormItem(xfo.attributes.TabIndex, parent, xfo, [])];
+      } else if (xfo.name === "PropertyNames") {
+        return findPropertiesInPropertyNode(xfo, self.props.dataView)
+          .map((property) => new FormItem(property!.tabIndex, parent, xfo, [], property));
+      } else {
+        return xfo.elements.map((child: any) => recursiveParse(child, parent));
+      }
+    }
+
+    function recursiveBuild(formItem: FormItem): JSX.Element | undefined {
+      if (formItem.xfo.name === "FormRoot") {
+        const actions = getAllActions(self.props.dataView, self.props.mobileState);
+        const noGroupActions = actions.filter(action => !action.groupId)
+
+        return (
           <FormRoot
-            key={xfo.$iid}
+            key={formItem.xfo.$iid}
             style={{backgroundColor}}
             className={"formRootMobile"}
           >
             {
-              xfo.elements
-                .flatMap((child: any, index: number) => recursive(child, index))
+              formItem.children
+                .flatMap((child: any) => recursiveBuild(child))
                 .flat()
                 .filter((item: any) => item)
-                .sort(compareTabIndexOwners)
-                .map((item: FormItem) => item.element)
             }
+            <div key={"divider1"} style={{minHeight: "20px", maxHeight: "20px"}}/>
+            <ExtraButtonsContext.Consumer>
+              {
+                extraButtons => (
+                  (extraButtons && (!extraButtons.node.dataView || extraButtons.node.dataView.isFormViewActive())) &&
+                  extraButtons.node.children.map(node =>
+                    <NavigationButton
+                      key={node.name}
+                      label={node.name}
+                      onClick={() => extraButtons!.onNodeClick(node)}
+                    />)
+                )
+              }
+            </ExtraButtonsContext.Consumer>
+            {noGroupActions.length > 0 && <div key={"divider2"} style={{minHeight: "20px", maxHeight: "20px"}}/>}
+            {noGroupActions.map(action =>
+              action.type === IActionType.Dropdown
+              ? <MobileActionLink
+                  key={action.id}
+                  linkAction={action}
+                  actions={actions.filter(subAction => subAction.groupId === action.id)}
+                  mobileState={self.props.mobileState}/>
+              : <MobileAction
+                  key={action.id}
+                  action={action}
+                  mobileState={self.props.mobileState}/>
+            )}
           </FormRoot>
-        )];
-      } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
-        return [new FormItem((xfo.attributes.TabIndex)?.toString(),
+        );
+      } else if (formItem.xfo.name === "FormElement" && formItem.xfo.attributes.Type === "FormSection") {
+        return (
           <MobileFormSection
-            key={xfo.$iid}
-            title={xfo.attributes.Title}
+            key={formItem.xfo.$iid}
+            title={formItem.xfo.attributes.Title}
+            startOpen={isFirstFormSection(formItem)}
             backgroundColor={backgroundColor}
             foreGroundColor={foreGroundColor}
           >
             {
-              xfo.elements
-                .flatMap((child: any, index: number) => recursive(child, index))
+              formItem.children
+                .flatMap((child: any, index: number) => recursiveBuild(child))
                 .flat()
                 .filter((item: any) => item)
-                .sort(compareTabIndexOwners)
-                .map((item: FormItem) => item.element)
             }
           </MobileFormSection>
-        )];
-      } else if (xfo.name === "FormElement" && xfo.attributes.Type === "Label") {
+        );
+      } else if (formItem.xfo.name === "FormElement" && formItem.xfo.attributes.Type === "Label") {
         return undefined;
-      } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
-        const sourceField = getDataSourceFieldByName(self.props.dataView, xfo.attributes.Id);
-
+      } else if (formItem.xfo.name === "Control" && formItem.xfo.attributes.Column === "RadioButton") {
+        const sourceField = getDataSourceFieldByName(self.props.dataView, formItem.xfo.attributes.Id);
         const checked = row
-          ? String(dataTable.getCellValueByDataSourceField(row, sourceField!)) === xfo.attributes.Value
+          ? String(dataTable.getCellValueByDataSourceField(row, sourceField!)) === formItem.xfo.attributes.Value
           : false;
 
-        return [new FormItem(xfo.attributes.TabIndex,
+        return (
           <RadioButton
-            key={xfo.$iid}
-            caption={xfo.attributes.Name}
+            key={formItem.xfo.$iid}
+            caption={formItem.xfo.attributes.Name}
             className={"formItem"}
             fieldDimensions={new FieldDimensions()}
-            name={xfo.attributes.Id}
-            value={xfo.attributes.Value}
+            name={formItem.xfo.attributes.Id}
+            value={formItem.xfo.attributes.Value}
             checked={checked}
             onKeyDown={(event) => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
-              focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
+              focusManager.subscribe(radioInput, formItem.xfo.attributes.Id, formItem.xfo.attributes.TabIndex)
             }
             labelColor={foreGroundColor}
             onClick={() => self?.props?.dataView?.formFocusManager.stopAutoFocus()}
@@ -161,80 +233,79 @@ export class MobileFormBuilder extends React.Component<{
                 yield*formScreenLifecycle.updateRadioButtonValue(
                   self.props.dataView!,
                   row,
-                  xfo.attributes.Id,
+                  formItem.xfo.attributes.Id,
                   value
                 );
               })();
             }}
-          />
-        )];
-      } else if (xfo.name === "PropertyNames") {
-        return findPropertiesInPropertyNode(xfo, self.props.dataView)
-          .map((property) => {
-            return (new FormItem(property!.tabIndex,
-              <Observer key={property!.id}>
-                {() => {
-                  let value;
-                  let textualValue = value;
-                  if (row && property) {
-                    value = dataTable.getCellValue(row, property);
-                    if (property.isLookup) {
-                      textualValue = dataTable.getCellText(row, property);
-                    }
-                  }
-                  if (!property) {
-                    return <></>;
-                  }
+          />);
+      } else if (formItem.xfo.name === "PropertyNames") {
+        const property = formItem.property;
+        return (<Observer key={property!.id}>
+          {() => {
+            let value;
+            let textualValue = value;
+            if (row && property) {
+              value = dataTable.getCellValue(row, property);
+              if (property.isLookup) {
+                textualValue = dataTable.getCellText(row, property);
+              }
+            }
+            if (!property) {
+              return <></>;
+            }
 
-                  const isHidden =
-                    (!getRowStateAllowRead(property, rowId || "", property.id) ||
-                      getRowStateMayCauseFlicker(property)) && !!row;
+            const isHidden =
+              (!getRowStateAllowRead(property, rowId || "", property.id) ||
+                getRowStateMayCauseFlicker(property)) && !!row;
 
-                  if (property.column === "CheckBox") {
-                    return (
-                      <Provider property={property}>
-                        <MobileCheckBox
-                          isHidden={isHidden}
-                          checked={value}
-                          readOnly={!row || isReadOnly(property, rowId)}
-                          labelColor={foreGroundColor}
-                        />
-                      </Provider>
-                    );
-                  }
+            if (property.column === "CheckBox") {
+              return (
+                <Provider property={property}>
+                  <MobileCheckBox
+                    isHidden={isHidden}
+                    checked={value}
+                    readOnly={!row || isReadOnly(property, rowId)}
+                    labelColor={foreGroundColor}
+                  />
+                </Provider>
+              );
+            }
 
-                  return (
-                    <Provider property={property} key={property.id}>
-                      <MobileFormField
-                        isHidden={isHidden}
-                        caption={property.name}
-                        hideCaption={property.column === "Image"}
-                        captionLength={property.captionLength}
-                        captionColor={foreGroundColor}
-                        dock={property.dock}
-                        toolTip={property.toolTip}
-                        value={value}
-                        isRichText={property.isRichText}
-                        textualValue={textualValue}
-                        xmlNode={property.xmlNode}
-                        backgroundColor={backgroundColor}
-                        fieldDimensions={new FieldDimensions()}
-                      />
-                    </Provider>
-                  );
-                }}
-              </Observer>
-            ));
-          });
+            return (
+              <Provider property={property} key={property.id}>
+                <MobileFormField
+                  isHidden={isHidden}
+                  caption={property.name}
+                  hideCaption={property.column === "Image"}
+                  captionLength={property.captionLength}
+                  captionColor={foreGroundColor}
+                  dock={property.dock}
+                  toolTip={property.toolTip}
+                  value={value}
+                  isRichText={property.isRichText}
+                  textualValue={textualValue}
+                  xmlNode={property.xmlNode}
+                  backgroundColor={backgroundColor}
+                  fieldDimensions={new FieldDimensions()}
+                />
+              </Provider>
+            );
+          }}
+        </Observer>);
       } else {
-        return xfo.elements.map((child: any, index: number) => recursive(child, index));
+        return formItem.xfo.elements.map((child: any) => recursiveBuild(child));
       }
     }
 
-    const form = recursive(this.props.xmlFormRootObject, 0)!
+    const topItems = recursiveParse(this.props.xmlFormRootObject, null)!
       .filter(item => item)
-      .sort(compareTabIndexOwners)
-      .map(item => item.element);
+      .sort(compareByIsFormSectionThenByTabIndex);
+    if (topItems.length !== 1) {
+      return null;
+    }
+    const topItem = topItems[0];
+    const form = recursiveBuild(topItem);
 
     if (this.props.dataView?.isFirst && this.context.isVisible) {
       focusManager.autoFocus();
@@ -250,8 +321,33 @@ export class MobileFormBuilder extends React.Component<{
 class FormItem implements ITabIndexOwner {
   constructor(
     public tabIndex: string | undefined,
-    public element: JSX.Element) {
+    public parent: FormItem | null,
+    public xfo: any,
+    public children: FormItem[],
+    public property: IProperty | undefined = undefined,
+    public isFormSection: boolean = false) {
   }
+}
+
+function isFirstFormSection(formItem: FormItem) {
+  let parent = formItem.parent;
+  while (parent) {
+    if (parent.children.indexOf(formItem) !== 0) {
+      return false;
+    }
+    parent = parent.parent;
+  }
+  return true;
+}
+
+function compareByIsFormSectionThenByTabIndex(x: FormItem, y: FormItem) {
+  if (x.isFormSection && !y.isFormSection) {
+    return 1;
+  }
+  if (!x.isFormSection && y.isFormSection) {
+    return -1;
+  }
+  return compareTabIndexOwners(x, y);
 }
 
 function findPropertiesInPropertyNode(xfo: any, dataView: IDataView | undefined) {

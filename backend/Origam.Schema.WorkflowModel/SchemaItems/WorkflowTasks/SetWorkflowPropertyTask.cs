@@ -57,7 +57,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType 
 		{
 			get
@@ -94,7 +93,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G10")]  
 		public Guid ContextStoreId;
 
 		[TypeConverter(typeof(ContextStoreConverter))]
@@ -120,8 +118,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 			}
 		}
-
-		[EntityColumn("G11")]  
+		
 		public Guid TransformationId;
 
 		[TypeConverter(typeof(TransformationConverter))]
@@ -139,8 +136,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		string _xpath;
-		[EntityColumn("LS01")] 
-        [XmlAttribute("xPath")]
+		[XmlAttribute("xPath")]
 		public string XPath
 		{
 			get
@@ -154,8 +150,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		string _delimiter = "";
-		[EntityColumn("SS03")]
-        [XmlAttribute("delimiter")]
+		[XmlAttribute("delimiter")]
         public string Delimiter
 		{
 			get
@@ -169,8 +164,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		WorkflowProperty _workflowProperty;
-		[EntityColumn("I05")] 
-        [XmlAttribute("workflowProperty")]
+		[XmlAttribute("workflowProperty")]
 		public WorkflowProperty WorkflowProperty
 		{
 			get
@@ -184,8 +178,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		SetWorkflowPropertyMethod _setWorkflowPropertyMethod;
-		[EntityColumn("I06")] 
-        [XmlAttribute("method")]
+		[XmlAttribute("method")]
 		public SetWorkflowPropertyMethod Method
 		{
 			get

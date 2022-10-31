@@ -51,13 +51,6 @@ class MockComponentFactory implements IComponentFactory{
       node: masterNavigationNode,
       props: {id: undefined}};
   }
-
-  getTabNavigator(masterNode: INavigationNode): React.ReactNode {
-    return {
-      name: "MockTabNavigatorComponent",
-      node: masterNode,
-      props: {id: undefined}};
-  }
 }
 
 Array.prototype.remove = function (item) {
@@ -114,7 +107,7 @@ test('Should parse screen with tab panel inside of split panel', () => {
   const node3 = resultNode.node.children[2];
   expect(node3.name).toBe("Consumables");
   expect(node3.children.length).toBe(1);
-  expect(node3.children[0].id).toBe("SplitPanel7_12");
+  expect(node3.children[0].id).toBe("AsPanel6_13");
 
   const node4 = resultNode.node.children[3];
   expect(node4.name).toBe("Accessories");

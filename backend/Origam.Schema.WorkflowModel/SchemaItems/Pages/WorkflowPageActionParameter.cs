@@ -44,7 +44,6 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		#region Properties
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -65,7 +64,6 @@ namespace Origam.Schema.WorkflowModel
 
         [Category("Result")]
 		[Description("An XPath expression from the context of the data returned by the workflow. The result will be used as the URL.")]
-		[EntityColumn("M01")]
         [XmlAttribute("xPath")]
 		public string XPath
 		{

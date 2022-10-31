@@ -44,7 +44,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _svgFileName = "";
 		[Category("SVG Chart")]
-		[EntityColumn("SS02"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("svgFileName")]
 		public string SvgFileName
 		{
@@ -60,7 +60,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _svgObjectField = "";
 		[Category("SVG Chart")]
-		[EntityColumn("SS03"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("svgObjectField")]
         public string SvgObjectField
 		{
@@ -76,7 +76,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _valueField = "";
 		[Category("SVG Chart")]
-		[EntityColumn("SS04"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("valueField")]
         public string ValueField
 		{
@@ -92,7 +92,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _titleField = "";
 		[Category("SVG Chart")]
-		[EntityColumn("SS05"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("titleField")]
         public string TitleField
 		{
@@ -108,8 +108,7 @@ namespace Origam.Schema.GuiModel
 
 		private SvgChartType _type = SvgChartType.HeatMap;
 		[Category("SVG Chart"), DefaultValue(SvgChartType.HeatMap)]
-		[EntityColumn("I03")]
-        [XmlAttribute("type")]
+		[XmlAttribute("type")]
         public SvgChartType Type
 		{
 			get

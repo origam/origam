@@ -50,7 +50,6 @@ namespace Origam.Schema.TestModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -99,7 +98,6 @@ namespace Origam.Schema.TestModel
 		private TestCaseStepType _stepType = TestCaseStepType.Step;
 		
 		[Category("Test Step")]
-		[EntityColumn("I01")] 
 		public TestCaseStepType StepType
 		{
 			get
@@ -111,8 +109,7 @@ namespace Origam.Schema.TestModel
 				_stepType = value;
 			}
 		}
-
-		[EntityColumn("G01")]  
+		
 		public Guid ChecklistRuleId;
 
 		[Category("Test Step")]

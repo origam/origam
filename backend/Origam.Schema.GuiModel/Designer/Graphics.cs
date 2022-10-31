@@ -68,7 +68,6 @@ namespace Origam.Schema.GuiModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -83,7 +82,6 @@ namespace Origam.Schema.GuiModel
 		private PropertyContainer<byte[]> graphicsDataByte;
 		
 		[Browsable(false)]
-		[EntityColumn("BLB01")]
 		[XmlExternalFileReference(containerName: nameof(graphicsDataByte), extension: Png)]
 		public byte[] GraphicsDataByte
 		{

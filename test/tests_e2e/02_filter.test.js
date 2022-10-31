@@ -1,6 +1,4 @@
-const puppeteer = require("puppeteer");
-const { backEndUrl } = require('./additionalConfig');
-const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData} = require('./testTools');
+const { sleep, openMenuItem, login, waitForRowCount, waitForRowCountData, beforeEachTest, afterEachTest} = require('./testTools');
 const {setDateFilter, setTwoFieldDateFilter, setFilter, setTwoFieldFilter, setComboFilter, openFilters} = require("./filterTestTools");
 const {widgetsMenuItemId, allDataTypesMenuId, topMenuHeader} = require("./modelIds");
 const {restoreAllDataTypesTable, clearScreenConfiguration} = require("./dbTools");
@@ -14,34 +12,11 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  browser = await puppeteer.launch({
-    ignoreHTTPSErrors: true,
-    //devtools: true,
-    headless: false,
-    defaultViewport: {
-      width: 1024,
-      height: 2000, // to make all 30 lines visible and avoid the need for scrolling
-    },
-    // slowMo: 50,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  page = await browser.newPage();
-
-  await page.goto(backEndUrl);
-  await page.evaluate(() => {
-    localStorage.setItem("debugCloseAllForms", "1");
-  });
+  [browser, page] = await beforeEachTest()
 });
 
 afterEach(async () => {
-  let pages = await browser.pages();
-  try{
-    await Promise.all(pages.map(async page => await page.close()));
-  }catch(e){
-    console.warn(e);
-  }
-  await sleep(200);
-  if(browser) await browser.close();
+  await afterEachTest(browser);
   browser = undefined;
 });
 

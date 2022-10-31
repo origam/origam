@@ -35,8 +35,7 @@ namespace Origam.Gui.Win.Commands
 			WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 			IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
-			if (_schemaService.IsSchemaChanged &&
-			    _persistence is PersistenceService)
+			if (_schemaService.IsSchemaChanged)
 			{
 				throw new Exception(
 					"Model not saved. Please, save the model before setting the version.");
@@ -49,18 +48,6 @@ namespace Origam.Gui.Win.Commands
 			ext.VersionString = version.VersionString;
 			ext.Persist();
 			_schemaService.ActiveExtension.Refresh();
-
-			IDatabasePersistenceProvider dbProvider = _persistence.SchemaProvider as IDatabasePersistenceProvider;
-			IDatabasePersistenceProvider dbListProvider = _persistence.SchemaListProvider as IDatabasePersistenceProvider;
-			if(dbProvider != null)
-			{
-				dbProvider.Update(null);
-			}
-			if(dbListProvider != null)
-			{
-				dbListProvider.Refresh(false, null);
-			}
-
 			_schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
 			_schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
 			Origam.Workbench.Commands.DeployVersion cmd3 = new Origam.Workbench.Commands.DeployVersion();

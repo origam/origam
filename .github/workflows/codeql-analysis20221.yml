@@ -1,4 +1,4 @@
-name: "Build Backend and Architect 2022.1"
+name: "Backend and Architect 2022.1"
 
 on:
   push:

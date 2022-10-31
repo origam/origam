@@ -53,8 +53,7 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		#region Overriden AbstractSchemaItem Members
-		
-		[EntityColumn("ItemType")]
+
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -100,23 +99,19 @@ namespace Origam.Schema.WorkflowModel
 
 		#region IContextStore Members
 		[DefaultValue(OrigamDataType.Xml)]
-		[EntityColumn("I01")]  	
 		[XmlAttribute ("dataType")]
 		public OrigamDataType DataType { get; set; } = OrigamDataType.Xml;
 
 		[DefaultValue(false)]
-		[EntityColumn("B01")]  
 		[XmlAttribute ("isReturnValue")]
        // [ContexStoreOutputRuleAttribute()]
 		public bool IsReturnValue { get; set; } = false;
 
 		[DefaultValue(false)]
-		[EntityColumn("B02")]
 		[Description("When set to True it will not check for mandatory fields, primary key duplicates or existence of parent records in the in-memory representation of data.")]
 		[XmlAttribute ("disableConstraints")]
 		public bool DisableConstraints { get; set; } = false;
-
-		[EntityColumn("G01")]  
+ 
 		public Guid DataStructureId;
 
 		[TypeConverter(typeof(DataStructureConverter))]
@@ -153,8 +148,7 @@ namespace Origam.Schema.WorkflowModel
 				this.DefaultSet = null;
 			}
 		}
-
-		[EntityColumn("G02")]  
+ 
 		public Guid RuleSetId;
 
 		[TypeConverter(typeof(ContextStoreRuleSetConverter))]
@@ -172,7 +166,6 @@ namespace Origam.Schema.WorkflowModel
 			}
 		}
 
-		[EntityColumn("G03")]  
 		public Guid DefaultSetId;
 
 		[TypeConverter(typeof(ContextStoreDefaultSetConverter))]

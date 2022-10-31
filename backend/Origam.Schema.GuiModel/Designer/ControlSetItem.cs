@@ -45,9 +45,7 @@ namespace Origam.Schema.GuiModel
 		public ControlSetItem(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-
-
-		[EntityColumn("G01")]  
+		
 		public Guid ControlId;
 
         [XmlReference("widget", "ControlId")]
@@ -64,8 +62,7 @@ namespace Origam.Schema.GuiModel
 		}
 		
 		private string _roles;
-		[EntityColumn("LS01")]
-        [XmlAttribute("roles")]
+		[XmlAttribute("roles")]
 		public string Roles
 		{
 			get
@@ -79,8 +76,7 @@ namespace Origam.Schema.GuiModel
 		}		
 
 		private string _features;
-		[EntityColumn("SS01")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
 		public string Features
 		{
 			get
@@ -95,7 +91,6 @@ namespace Origam.Schema.GuiModel
 
 		private Guid _multiColumnAdapterFieldCondition;
 		
-		[EntityColumn("G02")]
         [XmlAttribute("multiColumnAdapterFieldCondition")]
 		public Guid MultiColumnAdapterFieldCondition
 		{
@@ -111,7 +106,6 @@ namespace Origam.Schema.GuiModel
 
 		private bool _isAlternative = false;
 
-		[EntityColumn("B01")]
         [XmlAttribute("isAlternative")]
         public bool IsAlternative
 		{
@@ -126,8 +120,7 @@ namespace Origam.Schema.GuiModel
 		}
 
         private bool _requestSaveAfterChange = false;
-        
-        [EntityColumn("B02")]
+
         [XmlAttribute("requestSaveAfterChange")]
         public bool RequestSaveAfterChange
         {
@@ -144,7 +137,6 @@ namespace Origam.Schema.GuiModel
 
 		private int _level = 100;
 
-		[EntityColumn("I01")]
         [XmlAttribute("level")]
         public int Level
 		{
@@ -160,7 +152,6 @@ namespace Origam.Schema.GuiModel
 		#endregion
 		
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

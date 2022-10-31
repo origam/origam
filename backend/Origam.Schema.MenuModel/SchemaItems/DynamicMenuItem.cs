@@ -56,7 +56,6 @@ namespace Origam.Schema.MenuModel
 
 		string _classPath;
 
-		[EntityColumn("SS03")]
         [XmlAttribute("classPath")]
 		public string ClassPath
 		{

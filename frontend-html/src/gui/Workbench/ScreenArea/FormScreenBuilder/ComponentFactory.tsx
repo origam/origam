@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import React from "react";
 import { StandaloneDetailNavigator } from "gui/connections/MobileComponents/Navigation/DetailNavigator";
 import { INavigationNode } from "gui/connections/MobileComponents/Navigation/NavigationNode";
-import { TabNavigator } from "gui/connections/MobileComponents/Navigation/TabNavigator";
 import { DataView } from "gui/Components/ScreenElements/DataView";
 import { IComponentFactory } from "gui/Workbench/ScreenArea/FormScreenBuilder/IComponentFactory";
 
@@ -29,10 +28,6 @@ export class ComponentFactory implements IComponentFactory {
 
   getDetailNavigator(masterNavigationNode: INavigationNode){
     return <StandaloneDetailNavigator node={masterNavigationNode}/>
-  }
-
-  getTabNavigator(masterNode: INavigationNode){
-    return <TabNavigator rootNode={masterNode}/>
   }
 
   getDataView(args: {key: string, id: string, modelInstanceId: string, isHeadless: boolean} ){

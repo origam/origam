@@ -34,8 +34,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for Schema.
 	/// </summary>
-	[EntityName("SchemaExtension")]
-    [XmlPackageRoot("package")]
+	[XmlPackageRoot("package")]
     [ClassMetaVersion("6.1.0")]
 	public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
@@ -95,7 +94,6 @@ namespace Origam.Schema
 		#region Properties
 		public bool IsFileRootElement => true;
 
-		[EntityColumn("Name")]
 		[XmlAttribute(AttributeName = "name")]
 		public string name  = "";
 
@@ -116,17 +114,14 @@ namespace Origam.Schema
 		/// <summary>
 		/// Gets or sets the version of this schema extension.
 		/// </summary>
-		[EntityColumn("Version")]
-        [XmlAttribute(AttributeName = "version")]
+		[XmlAttribute(AttributeName = "version")]
         public string VersionString { get; set; } = "";
 
 		public PackageVersion Version => new PackageVersion(VersionString);
 
-		[EntityColumn("Copyright")]
         [XmlAttribute(AttributeName = "copyright")]
         public string Copyright { get; set; } = "";
 
-		[EntityColumn("Description")]
         [XmlAttribute(AttributeName = "description")]
         public string Description { get; set; } = "";
 

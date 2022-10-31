@@ -45,8 +45,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private ColumnSeriesType _type = ColumnSeriesType.Clustered;
 		[Category("Series"), DefaultValue(ColumnSeriesType.Clustered)]
-		[EntityColumn("I05")]
-        [XmlAttribute("type")]
+		[XmlAttribute("type")]
 		public ColumnSeriesType Type
 		{
 			get
@@ -59,7 +58,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

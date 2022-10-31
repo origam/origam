@@ -9,7 +9,10 @@ export default defineConfig({
 		react({
 			babel: {
 				plugins: [
-					["@babel/plugin-proposal-decorators", { legacy: true }],
+					[
+						"@babel/plugin-proposal-decorators",
+						{ legacy: true }
+					],
 					[
 						"@babel/plugin-proposal-class-properties",
 						{ loose: true },
@@ -32,6 +35,11 @@ export default defineConfig({
 				replacement: `stream-browserify`,
 			},
 		],
+	},
+	css:{
+		modules: {
+			generateScopedName: "[name]__[local]__[hash:base64:2]"
+		}
 	},
 	build: {
 		commonjsOptions: {

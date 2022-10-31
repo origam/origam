@@ -17,28 +17,16 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-.root{
-  flex-grow: 1;
-}
-
-.root div div div svg {
-  width: var(--mobileBottomToolbarIconSize);
-  height: var(--mobileBottomToolbarIconSize);
-}
-
-.clickArea {
-  width: 100%;
+.root {
+  padding: 5px;
+  background: var(--background3);
+  border-color: var(--background5);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 14px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   cursor: pointer;
-  justify-content: center;
-  display: flex;
-}
-
-.iconContainer {
-  height: 50px;
-  align-items: center;
-  display: flex;
-}
-
-.placeholder {
-  width: 30px;
+  margin-bottom: 15px;
 }

@@ -46,8 +46,7 @@ namespace Origam.Schema.EntityModel
 		#region Properties
 		private bool _read = true;
 		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("B01")]
-        [XmlAttribute("readCredential")]
+		[XmlAttribute("readCredential")]
         public bool ReadCredential
 		{
 			get
@@ -63,8 +62,7 @@ namespace Origam.Schema.EntityModel
 
 		private bool _update = true;
 		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("B02")]
-        [XmlAttribute("updateCredential")]
+		[XmlAttribute("updateCredential")]
         public bool UpdateCredential
 		{
 			get
