@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Attributes;
@@ -72,8 +73,6 @@ namespace Origam.Schema.EntityModel
 				typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
 			set
 			{
-				//				// We have to delete all child items
-				//				this.ChildItems.Clear();
 				if(value == null)
 				{
 					EntityId = Guid.Empty;
@@ -152,7 +151,7 @@ namespace Origam.Schema.EntityModel
 				}
 				if(value)
 				{
-					var list = ChildItemsByType(
+					ArrayList list = ChildItemsByType(
 						DataStructureColumn.CategoryConst);
 					foreach(DataStructureColumn column in list)
 					{
@@ -271,14 +270,7 @@ namespace Origam.Schema.EntityModel
 
         public DataStructureColumn Column(string name)
         {
-            foreach(var column in Columns)
-            {
-                if (column.Name == name)
-                {
-                    return column;
-                }
-            }
-            return null;
+	        return Columns.FirstOrDefault(column => column.Name == name);
         }
 
 		public List<DataStructureColumn> GetColumnsFromEntity()
@@ -307,26 +299,18 @@ namespace Origam.Schema.EntityModel
 
 		public bool ExistsEntityFieldAsColumn(IDataEntityColumn entityField)
 		{
-			foreach(var column in Columns)
-			{
-				if(column.Field.PrimaryKey.Equals(entityField.PrimaryKey))
-				{
-					return true;
-				}
-			}
-			return false;
+			return Columns.Any(column => column.Field.PrimaryKey.Equals(
+				entityField.PrimaryKey));
 		}
 
 		private List<DataStructureColumn> GetColumns()
 		{
 			// columns from entity (AllFields=true)
-			var columns = GetColumnsFromEntity();
+			List<DataStructureColumn> columns = GetColumnsFromEntity();
 			// add all extra columns specified
-			foreach(DataStructureColumn column 
-			        in ChildItemsByType(DataStructureColumn.CategoryConst))
-			{
-				columns.Add(column);
-			}
+			columns.AddRange(
+				ChildItemsByType(DataStructureColumn.CategoryConst)
+					.Cast<DataStructureColumn>());
 			columns.Sort();
 			return columns;
 		}
@@ -334,7 +318,8 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractSchemaItem Members
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+		public override void GetParameterReferences(
+			AbstractSchemaItem parentItem, Hashtable list)
 		{
 			// relation has parameters (i.e. there are parameters in the JOIN clause
 			if(Entity is IAssociation)
@@ -353,13 +338,13 @@ namespace Origam.Schema.EntityModel
 					}
 				}
 			}
-			foreach(var dataStructureColumn in Columns)
+			foreach(DataStructureColumn dataStructureColumn in Columns)
 			{
 				var childList = new Hashtable();
 				dataStructureColumn.GetParameterReferences(
 					dataStructureColumn, childList);
-				// If children had some parameter references, we rename them and add them to the final
-				// collection.
+				// If children had some parameter references,
+				// we rename them and add them to the final collection.
 				foreach(DictionaryEntry entry in childList)
 				{
 					var name = Name + "_" + entry.Key;
