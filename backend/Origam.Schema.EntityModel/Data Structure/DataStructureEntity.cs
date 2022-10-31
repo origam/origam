@@ -233,7 +233,7 @@ namespace Origam.Schema.EntityModel
 		private bool _useUpsert = false;
 		[Category("Update"), DefaultValue(false)]
         [XmlAttribute("useUpsert")]
-        public bool UseUPSERT
+        public bool UseUpsert
 		{
 			get => _useUpsert;
 			set => _useUpsert = value;
