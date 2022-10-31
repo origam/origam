@@ -234,13 +234,7 @@ namespace Origam.Schema.GuiModel
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes => new[]
-		{
-			typeof(PropertyValueItem),
-			typeof(ControlSetItem),
-			typeof(PropertyBindingInfo),
-			typeof(ColumnParameterMapping)
-		};
+		public override Type[] NewItemTypes => new Type[] {};
 		
 		public override T NewItem<T>(
 			Guid schemaExtensionId, SchemaItemGroup group)
