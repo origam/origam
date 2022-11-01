@@ -316,10 +316,6 @@ export class DataView implements IDataView {
 
   @action.bound
   substituteRecord(row: any[]) {
-    if(!getSelectionMember(this)){
-      const rowId = this.dataTable.getRowId(row);
-      this.removeSelectedRowId(rowId);
-    }
     this.dataTable.substituteRecord(row);
     if (getGroupingConfiguration(this).isGrouping) {
       getGrouper(this).substituteRecord(row);
