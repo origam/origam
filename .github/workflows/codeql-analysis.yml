@@ -24,39 +24,8 @@ jobs:
         language: [ 'csharp']
 
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-      
-    - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v1
-    
-    - name: Build Architect
-      run: |
-       msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
-       msbuild backend/Origam.sln /p:Configuration="Release Architect"
-       
-    - name: Create NUnit Test Report
-      uses: zyborg/dotnet-tests-report@v1.4.4
-      with:
-        project_path: backend/Origam.RuleTests/Origam.RuleTests.csproj
-    
-    - name: Setup VSTest Path
-      uses: darenm/Setup-VSTest@v1
-    
-    - name: Create list of testFiles 
-      shell: pwsh
-      run: |
-          (Get-ChildItem "backend/*" -Include "*Tests.dll" -Recurse  | ForEach-Object { $_.FullName } | Select-String -NotMatch "\\obj\\") | where {$_ -ne ""} | Set-Content r.bat
-          (Get-Content r.bat) -replace "^",'vstest.console.exe /Platform:x86 /Framework:Framework45 /TestAdapterPath:backend /Logger:"trx" ' > runtest.bat
-          cat .\runtest.bat
-          
-    - name: VSTest
-      run: .\runtest.bat
-      
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+    - name: Run Tests
+      run: dotnet test
