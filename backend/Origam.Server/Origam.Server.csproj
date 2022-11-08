@@ -72,7 +72,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
     <PackageReference Include="Origam.Service.Core" Version="1.1.0" />
-    <PackageReference Include="SoapCore" Version="1.1.0.10" />
+    <PackageReference Include="SoapCore" Version="1.1.0.35" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
     <PackageReference Include="UAParser" Version="3.1.47" />
