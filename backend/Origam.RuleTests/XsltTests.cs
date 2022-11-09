@@ -259,7 +259,6 @@ public class XsltTests
     [TestCase("Div", "4", "2", "2")]
     [TestCase("Mul", "2", "2", "4")]
     [TestCase("Mod", "5", "2", "1")]
-    [TestCase("Huhu", "5", "2", "1")]
     public void ShouldRunMathFunctions(string functionName, string parameter1,
         string parameter2, string expectedResult)
     {
