@@ -6,8 +6,6 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master, 20* ]
-  schedule:
-    - cron: '40 23 * * 2'
 
 jobs:
   analyze:
@@ -16,14 +14,11 @@ jobs:
     permissions:
       actions: read
       contents: read
-      security-events: write
-      id-token: write
-      checks: write
 
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp']
+        language: ['csharp']
 
     steps:
     - name: Checkout Repository
