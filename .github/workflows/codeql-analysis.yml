@@ -29,11 +29,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
       
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-        
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
@@ -52,6 +47,11 @@ jobs:
         name: NUnit Results
         path: TestResults/test-results.trx
         reporter: dotnet-trx
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
         
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
