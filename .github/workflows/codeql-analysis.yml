@@ -44,3 +44,4 @@ jobs:
       with:
         name: NUnit Results
         path: TestResults/test-results.trx
+        reporter: dotnet-trx
