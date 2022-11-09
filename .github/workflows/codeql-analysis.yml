@@ -17,6 +17,8 @@ jobs:
       actions: read
       contents: read
       security-events: write
+      id-token: write
+      checks: write
 
     strategy:
       fail-fast: false
@@ -24,7 +26,7 @@ jobs:
         language: [ 'csharp']
 
     steps:
-    - name: Checkout
+    - name: Checkout Repository
       uses: actions/checkout@v2
       
     - name: setup-msbuild
@@ -35,5 +37,21 @@ jobs:
        msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
 
-    - name: Run Tests
+    - name: Run NUnit Tests
       run: dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
+      
+    - name: Produce NUnit Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: NUnit Results
+        path: TestResults/test-results.trx
+        reporter: dotnet-trx
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
