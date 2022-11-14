@@ -192,18 +192,16 @@ namespace Origam.DA.Service
 		private IDbDataAdapterFactory _adapterFactory;
 		private string _connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
-        private readonly IDetachedFieldPacker detachedFieldPacker;
         internal abstract string GetAllTablesSQL();
         
 
         #region Constructors
-        public AbstractSqlDataService(IDetachedFieldPacker detachedFieldPacker) : base()
+        public AbstractSqlDataService()
         {
-	        this.detachedFieldPacker = detachedFieldPacker;
         }
 
 		public AbstractSqlDataService(string connection, int bulkInsertThreshold,
-            int updateBatchSize, IDetachedFieldPacker detachedFieldPacker) : this(detachedFieldPacker)
+            int updateBatchSize)
 		{
 			_connectionString = connection;
             UpdateBatchSize = updateBatchSize;
@@ -1717,11 +1715,42 @@ namespace Origam.DA.Service
 				        values[i] = new KeyValuePair<string, object>(
 					        queryColumn.Name , value);
 			        }
-			        yield return detachedFieldPacker.ProcessReaderOutput(
+			        yield return ProcessReaderOutput(
 				        values, queryColumns);
 		        }
 	        }
         }
+        
+        private static List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values, List<ColumnData> columnData)
+        {
+	        if (columnData == null)
+		        throw new ArgumentNullException(nameof(columnData));
+	        var updatedValues = new List<KeyValuePair<string, object>>();
+
+	        for (int i = 0; i < columnData.Count; i++)
+	        {
+		        if (columnData[i].IsVirtual)
+		        {
+			        if (columnData[i].HasRelation && values[i].Value != null && values[i].Value != DBNull.Value)
+			        {
+				        updatedValues.Add(new KeyValuePair<string, object>(
+					        values[i].Key, ((string)values[i].Value).Split((char)1)));
+				        continue;
+			        }
+			        else
+			        {
+				        updatedValues.Add(new KeyValuePair<string, object>
+					        (values[i].Key, columnData[i].DefaultValue));
+				        continue;
+			        }
+		        }
+		        updatedValues.Add(new KeyValuePair<string, object>(
+			        values[i].Key, values[i].Value));
+	        }
+
+	        return updatedValues;
+        }
+        
 
         private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
 	    {
