@@ -1074,7 +1074,7 @@ namespace Origam.DA.Service
             }
 
             // From
-            RenderSelectFromClause(sqlExpression, entity, entity, filter, replaceParameterTexts);
+            RenderSelectFromClause(sqlExpression, entity);
 
             bool whereExists = false;
 
@@ -2571,7 +2571,7 @@ namespace Origam.DA.Service
         }
 
 
-        internal void RenderSelectFromClause(StringBuilder sqlExpression, DataStructureEntity baseEntity, DataStructureEntity stopAtEntity, DataStructureFilterSet filter, Hashtable replaceParameterTexts)
+        internal void RenderSelectFromClause(StringBuilder sqlExpression, DataStructureEntity baseEntity)
         {
             PrettyLine(sqlExpression);
             sqlExpression.Append("FROM");
@@ -3124,7 +3124,7 @@ namespace Origam.DA.Service
             else if (item is DetachedField detachedField)
             {
                 return renderSqlForDetachedFields 
-                    ? detachedFieldPacker.RenderSqlExpression(entity, detachedField) 
+                    ? RenderSqlExpression(entity, detachedField) 
                     : "";
             }
             else if (item is AggregatedColumn)
