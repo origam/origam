@@ -50,4 +50,5 @@ public abstract class SqlRenderer
     internal abstract string CreateDataStructureHead();
     internal abstract string DeclareBegin();
     internal abstract string SetParameter(string name);
+    internal abstract string StringAggregation(string columnToAggregate);
 }

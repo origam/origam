@@ -171,4 +171,9 @@ public class MsSqlRenderer: SqlRenderer {
     {
         return string.Format("SET {0} = NULL{1}", name, Environment.NewLine);
     }
+
+    internal override string StringAggregation(string columnToAggregate)
+    {
+        return $"STRING_AGG(CAST({columnToAggregate} as varchar(max)), CHAR(1))";
+    }
 }

@@ -193,6 +193,11 @@ class PgSqlRenderer : SqlRenderer
         return string.Format("{0} = NULL;{1}", name, Environment.NewLine);
     }
 
+    internal override string StringAggregation(string columnToAggregate)
+    {
+        return $"STRING_AGG(CAST({columnToAggregate} as text), CHAR(1))";
+    }
+
     public override string SelectClause(string finalQuery, int top)
     {
         if (top == 0)
