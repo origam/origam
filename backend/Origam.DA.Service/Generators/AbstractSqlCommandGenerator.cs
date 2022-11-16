@@ -3152,7 +3152,7 @@ namespace Origam.DA.Service
             };
             string columnToAggregate = RenderExpression(columnRenderItem, null, null, null);
             var sqlExpression = new StringBuilder(
-                $"(SELECT STRING_AGG({sqlRenderer.Text(RenderExpression(columnRenderItem, null, null, null))} , CHAR(1))) ");
+                $"(SELECT STRING_AGG({sqlRenderer.Text(RenderExpression(columnRenderItem, null, null, null))} , CHAR(1)) ");
             RenderSelectFromClause(sqlExpression, relation);
             RenderSelectRelation(sqlExpression, relation, relation, null, null, true, true, 0, false, null, null);
             sqlExpression.Append(")");
