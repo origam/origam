@@ -29,58 +29,56 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.MenuModel
 {
-	/// <summary>
-	/// Summary description for Submenu.
-	/// </summary>
 	[SchemaItemDescription("Submenu", "menu_folder.png")]
     [HelpTopic("Submenu")]
     [ClassMetaVersion("6.0.0")]
-	public class Submenu : AbstractMenuItem, ISchemaItemFactory
+	public class Submenu : AbstractMenuItem
 	{
-		public Submenu() : base() {}
+		public Submenu() {}
 
 		public Submenu(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public Submenu(Key primaryKey) : base(primaryKey)	{}
+		public Submenu(Key primaryKey) : base(primaryKey) {}
 
 		[Browsable(false)]
 		public override string Roles
 		{
 			get
 			{
-				ArrayList children = this.ChildItemsRecursive;
-				ArrayList roles = new ArrayList();
-
-				foreach(object child in children)
+				var children = ChildItemsRecursive;
+				var roles = new ArrayList();
+				foreach(var child in children)
 				{
-					AbstractMenuItem menuItem = child as AbstractMenuItem;
-
-					if(menuItem != null & !(menuItem is Submenu))
+					if(child is AbstractMenuItem menuItem 
+					&& !(menuItem is Submenu))
 					{
-						if(menuItem.Roles == "*") return "*";
-
-						string[] childRoles = menuItem.Roles.Split(";".ToCharArray());
-
-						foreach(string role in childRoles)
+						if(menuItem.Roles == "*")
 						{
-							if(! roles.Contains(role)) roles.Add(role);
+							return "*";
+						}
+						var childRoles 
+							= menuItem.Roles.Split(";".ToCharArray());
+						foreach(var role in childRoles)
+						{
+							if(!roles.Contains(role))
+							{
+								roles.Add(role);
+							}
 						}
 					}
 				}
-
-				StringBuilder result = new StringBuilder();
+				var stringBuilder = new StringBuilder();
 				foreach(string role in roles)
 				{
-					if(result.Length > 0) result.Append(";");
-					result.Append(role);
+					if(stringBuilder.Length > 0)
+					{
+						stringBuilder.Append(";");
+					}
+					stringBuilder.Append(role);
 				}
-
-				return result.ToString();
+				return stringBuilder.ToString();
 			}
-			set
-			{
-				base.Roles = value;
-			}
+			set => base.Roles = value;
 		}
 
 		[Browsable(false)]
@@ -88,39 +86,38 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				ArrayList children = this.ChildItemsRecursive;
-				ArrayList features = new ArrayList();
-
-				foreach(object child in children)
+				var children = ChildItemsRecursive;
+				var features = new ArrayList();
+				foreach(var child in children)
 				{
-					AbstractMenuItem menuItem = child as AbstractMenuItem;
-
-					if(menuItem != null & !(menuItem is Submenu))
+					if(child is AbstractMenuItem menuItem 
+					&& !(menuItem is Submenu))
 					{
-						if(menuItem.Features == "" | menuItem.Features == null) return "";
-
-						string[] childFeatures = menuItem.Features.Split(";".ToCharArray());
-
-						foreach(string feature in childFeatures)
+						if((menuItem.Features == "") ||
+						(menuItem.Features == null))
 						{
-							if(! features.Contains(feature)) features.Add(feature);
+							return "";
+						}
+						var childFeatures 
+							= menuItem.Features.Split(";".ToCharArray());
+						foreach(var feature in childFeatures)
+						{
+							if(!features.Contains(feature))
+							{
+								features.Add(feature);
+							}
 						}
 					}
 				}
-
-				StringBuilder result = new StringBuilder();
+				var stringBuilder = new StringBuilder();
 				foreach(string feature in features)
 				{
-					if(result.Length > 0) result.Append(";");
-					result.Append(feature);
+					if(stringBuilder.Length > 0) stringBuilder.Append(";");
+					stringBuilder.Append(feature);
 				}
-
-				return result.ToString();
+				return stringBuilder.ToString();
 			}
-			set
-			{
-				base.Features = value;
-			}
+			set => base.Features = value;
 		}
 
 		[DefaultValue(false)]
@@ -130,99 +127,69 @@ namespace Origam.Schema.MenuModel
 		[Browsable(false)]
         public new bool OpenExclusively
         {
-            get
-            {
-                return base.OpenExclusively;
-            }
-            set
-            {
-                base.OpenExclusively = value;
-            }
+            get => base.OpenExclusively;
+            set => base.OpenExclusively = value;
         }
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] {
+			typeof(Submenu),
+			typeof(FormReferenceMenuItem),
+			typeof(DataConstantReferenceMenuItem),
+			typeof(WorkflowReferenceMenuItem),
+			typeof(ReportReferenceMenuItem),
+			typeof(DashboardMenuItem),
+			typeof(DynamicMenu)
+		};
+
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			get
+			string itemName = null;
+			if(typeof(T) == typeof(WorkflowReferenceMenuItem))
 			{
-				return new Type[] {
-									  typeof(Submenu),
-									  typeof(FormReferenceMenuItem),
-									  typeof(DataConstantReferenceMenuItem),
-									  typeof(WorkflowReferenceMenuItem),
-									  typeof(ReportReferenceMenuItem),
-									  typeof(DashboardMenuItem),
-                                      typeof(DynamicMenu)
-								  };
+				itemName = "<SequentialWorkflowReference_name>";
 			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(WorkflowReferenceMenuItem))
+			else if(typeof(T) == typeof(FormReferenceMenuItem))
 			{
-				item = new WorkflowReferenceMenuItem(schemaExtensionId);
-				item.Name = "<SequentialWorkflowReference_name>";
+				itemName = "<ScreenReference_name>";
 			}
-			else if(type == typeof(FormReferenceMenuItem))
+			else if(typeof(T) == typeof(ReportReferenceMenuItem))
 			{
-				item = new FormReferenceMenuItem(schemaExtensionId);
-				item.Name = "<ScreenReference_name>";
+				itemName = "<ReportReference_name>";
 			}
-			else if(type == typeof(ReportReferenceMenuItem))
+			else if(typeof(T) == typeof(DataConstantReferenceMenuItem))
 			{
-				item = new ReportReferenceMenuItem(schemaExtensionId);
-				item.Name = "<ReportReference_name>";
+				itemName = "<DataConstantReference_name>";
 			}
-			else if(type == typeof(DataConstantReferenceMenuItem))
+			else if(typeof(T) == typeof(Submenu))
 			{
-				item = new DataConstantReferenceMenuItem(schemaExtensionId);
-				item.Name = "<DataConstantReference_name>";
+				itemName = "<Submenu_name>";
 			}
-			else if(type == typeof(Submenu))
+			else if(typeof(T) == typeof(DashboardMenuItem))
 			{
-				item = new Submenu(schemaExtensionId);
-				item.Name = "<Submenu_name>";
+				itemName = "<Dashboard_name>";
 			}
-			else if(type == typeof(DashboardMenuItem))
+			else if(typeof(T) == typeof(DynamicMenu))
 			{
-				item = new DashboardMenuItem(schemaExtensionId);
-				item.Name = "<Dashboard_name>";
+				itemName = "<DynamicMenu_name>";
 			}
-            else if (type == typeof(DynamicMenu))
-            {
-                item = new DynamicMenu(schemaExtensionId);
-                item.Name = "<DynamicMenu_name>";
-            }
-            else
-                throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorMenuUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		public override int CompareTo(object obj)
 		{
-			AbstractMenuItem item = obj as AbstractMenuItem;
-			Submenu submenu = obj as Submenu;
-
-			if(submenu != null)
+			var abstractMenuItem = obj as AbstractMenuItem;
+			if(obj is Submenu)
 			{
-				return this.DisplayName.CompareTo(item.DisplayName);
+				return DisplayName.CompareTo(abstractMenuItem.DisplayName);
 			}
-			else if(item != null)
+			if(abstractMenuItem != null)
 			{
 				return -1;
 			}
-			else
-			{
-				throw new InvalidCastException();
-			}
+			throw new InvalidCastException();
 		}
 
 

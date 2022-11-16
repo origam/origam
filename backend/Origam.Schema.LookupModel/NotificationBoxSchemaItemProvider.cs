@@ -23,95 +23,48 @@ using System;
 
 namespace Origam.Schema.LookupModel
 {
-	/// <summary>
-	/// Summary description for NotificationBoxSchemaItemProvider.
-	/// </summary>
-	public class NotificationBoxSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class NotificationBoxSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public NotificationBoxSchemaItemProvider()
-		{
-		}
+		public NotificationBoxSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return NotificationBox.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
+		public override string RootItemType => NotificationBox.CategoryConst;
+
+		public override string Group => "UI";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_19_notification-boxes.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_19_notification-boxes.png";
 
 		public override string NodeText
 		{
-			get
-			{	
-				return "Notification Boxes";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Notification Boxes";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(NotificationBox)};
-			}
-		}
+			typeof(NotificationBox)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			NotificationBox item;
-
-			if(type == typeof(NotificationBox))
-			{
-				item = new NotificationBox(schemaExtensionId);
-				item.Name = "NewNotificationBox";
-
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataLookupUknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(NotificationBox) ?
+					"NewNotificationBox" : null);
 		}
 
 		#endregion

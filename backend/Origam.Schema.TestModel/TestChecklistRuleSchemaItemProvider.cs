@@ -23,92 +23,49 @@ using System;
 
 namespace Origam.Schema.TestModel
 {
-	/// <summary>
-	/// Summary description for WorkflowSchemaItemProvider.
-	/// </summary>
-	public class TestChecklistRuleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class TestChecklistRuleSchemaItemProvider 
+		: AbstractSchemaItemProvider
 	{
-		public TestChecklistRuleSchemaItemProvider()
-		{
-		}
+		public TestChecklistRuleSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return TestChecklistRule.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "COMMON";
-			}
-		}
+		public override string RootItemType => TestChecklistRule.CategoryConst;
+
+		public override string Group => "COMMON";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "7";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"7";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Test Checklist Rules";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Test Checklist Rules";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(TestChecklistRule)};
-			}
-		}
+			typeof(TestChecklistRule)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(TestChecklistRule))
-			{
-				TestChecklistRule item = new TestChecklistRule(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewTestChecklistRule";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTestCheckListRuleModelUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group,
+				typeof(T) == typeof(TestChecklistRule)
+					? "NewTestChecklistRule" : null);
 		}
 
 		#endregion

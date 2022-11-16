@@ -37,45 +37,92 @@ namespace Origam.Schema.MenuModel
 	[SchemaItemDescription("Screen Reference", "menu_form.png")]
     [HelpTopic("Screen+Menu+Item")]
     [ClassMetaVersion("6.0.0")]
-	public class FormReferenceMenuItem : AbstractMenuItem, ISchemaItemFactory
+	public class FormReferenceMenuItem : AbstractMenuItem
 	{
-		public FormReferenceMenuItem() : base() {}
+		public FormReferenceMenuItem() {}
 
-		public FormReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public FormReferenceMenuItem(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
 		public FormReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.Screen);
-			if(this.DefaultSet != null) dependencies.Add(this.DefaultSet);
-			if(this.Method != null) dependencies.Add(this.Method);
-			if(this.SortSet != null) dependencies.Add(this.SortSet);
-			if(this.RecordEditMethod != null) dependencies.Add(this.RecordEditMethod);
-			if(this.ListDataStructure != null) dependencies.Add(this.ListDataStructure);
-			if(this.ListEntity != null) dependencies.Add(this.ListEntity);
-			if(this.ListMethod != null) dependencies.Add(this.ListMethod);
-			if(this.ListSortSet != null) dependencies.Add(this.ListSortSet);
-			if(this.RuleSet != null) dependencies.Add(this.RuleSet);
-
-			if(this.DefaultSet != null | this.Method != null | this.SortSet != null)
+			dependencies.Add(Screen);
+			if(DefaultSet != null)
 			{
-				dependencies.Add(this.Screen.DataStructure);
+				dependencies.Add(DefaultSet);
 			}
-
-			if(this.SelectionDialogEndRule != null) dependencies.Add(this.SelectionDialogEndRule);
-			if(this.SelectionDialogPanel != null) dependencies.Add(this.SelectionDialogPanel);
-			if(this.TransformationAfterSelection != null) dependencies.Add(this.TransformationAfterSelection);
-			if(this.TransformationBeforeSelection != null) dependencies.Add(this.TransformationBeforeSelection);
-
-			if(this.TemplateSet != null) dependencies.Add(this.TemplateSet);
-			if(this.DefaultTemplate != null) dependencies.Add(this.DefaultTemplate);
-            if (this.ConfirmationRule != null) dependencies.Add(this.ConfirmationRule);
+			if(Method != null)
+			{
+				dependencies.Add(Method);
+			}
+			if(SortSet != null)
+			{
+				dependencies.Add(SortSet);
+			}
+			if(RecordEditMethod != null)
+			{
+				dependencies.Add(RecordEditMethod);
+			}
+			if(ListDataStructure != null)
+			{
+				dependencies.Add(ListDataStructure);
+			}
+			if(ListEntity != null)
+			{
+				dependencies.Add(ListEntity);
+			}
+			if(ListMethod != null)
+			{
+				dependencies.Add(ListMethod);
+			}
+			if(ListSortSet != null)
+			{
+				dependencies.Add(ListSortSet);
+			}
+			if(RuleSet != null)
+			{
+				dependencies.Add(RuleSet);
+			}
+			if((DefaultSet != null) || (Method != null) || (SortSet != null))
+			{
+				dependencies.Add(Screen.DataStructure);
+			}
+			if(SelectionDialogEndRule != null)
+			{
+				dependencies.Add(SelectionDialogEndRule);
+			}
+			if(SelectionDialogPanel != null)
+			{
+				dependencies.Add(SelectionDialogPanel);
+			}
+			if(TransformationAfterSelection != null)
+			{
+				dependencies.Add(TransformationAfterSelection);
+			}
+			if(TransformationBeforeSelection != null)
+			{
+				dependencies.Add(TransformationBeforeSelection);
+			}
+			if(TemplateSet != null)
+			{
+				dependencies.Add(TemplateSet);
+			}
+			if(DefaultTemplate != null)
+			{
+				dependencies.Add(DefaultTemplate);
+			}
+			if(ConfirmationRule != null)
+			{
+				dependencies.Add(ConfirmationRule);
+			}
 
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override Origam.UI.BrowserNodeCollection ChildNodes()
+		public override UI.BrowserNodeCollection ChildNodes()
 		{
 #if ORIGAM_CLIENT
 			return new Origam.UI.BrowserNodeCollection();
@@ -93,10 +140,8 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("screen", "ScreenId")]
 		public FormControlSet Screen
 		{
-			get
-			{
-				return (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenId));
-			}
+			get => (FormControlSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
 			set
 			{
 				if((value == null) 
@@ -111,8 +156,8 @@ namespace Origam.Schema.MenuModel
 					TemplateSet = null;
                     DynamicFormLabelEntity = null;
 				}
-
-				this.ScreenId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+				ScreenId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 			}
 		}
 
@@ -123,15 +168,14 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("templateSet", "TemplateSetId")]
 		public DataStructureTemplateSet TemplateSet
 		{
-			get
-			{
-				return (DataStructureTemplateSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TemplateSetId));
-			}
+			get => (DataStructureTemplateSet)PersistenceProvider
+				.RetrieveInstance(typeof(AbstractSchemaItem), 
+					new ModelElementKey(TemplateSetId));
 			set
 			{
-				this.TemplateSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-
-				this.DefaultTemplate = null;
+				TemplateSetId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+				DefaultTemplate = null;
 			}
 		}
  
@@ -142,14 +186,10 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("defaultTemplate", "DefaultTemplateId")]
 		public DataStructureTemplate DefaultTemplate
 		{
-			get
-			{
-				return (DataStructureTemplate)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultTemplateId));
-			}
-			set
-			{
-				this.DefaultTemplateId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureTemplate)PersistenceProvider.RetrieveInstance(
+			typeof(AbstractSchemaItem), new ModelElementKey(DefaultTemplateId));
+			set => DefaultTemplateId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		
 		public Guid DefaultSetId;
@@ -159,14 +199,11 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("defaultSet", "DefaultSetId")]
 		public DataStructureDefaultSet DefaultSet
 		{
-			get
-			{
-				return (DataStructureDefaultSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.DefaultSetId));
-			}
-			set
-			{
-				this.DefaultSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureDefaultSet)PersistenceProvider
+				.RetrieveInstance(typeof(AbstractSchemaItem), 
+					new ModelElementKey(DefaultSetId));
+			set => DefaultSetId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		
 		public Guid MethodId;
@@ -177,14 +214,10 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("method", "MethodId")]
 		public DataStructureMethod Method
 		{
-			get
-			{
-				return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.MethodId));
-			}
-			set
-			{
-				this.MethodId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(MethodId));
+			set => MethodId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		
 		public Guid ListDataStructureId;
@@ -194,16 +227,15 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("listDataStructure", "ListDataStructureId")]
 		public DataStructure ListDataStructure
 		{
-			get
-			{
-				return (DataStructure)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ListDataStructureId));
-			}
+			get => (DataStructure)PersistenceProvider.RetrieveInstance
+				(typeof(AbstractSchemaItem), 
+					new ModelElementKey(ListDataStructureId));
 			set
 			{
-				this.ListDataStructureId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-
-				this.ListMethod = null;
-				this.ListEntity = null;
+				ListDataStructureId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+				ListMethod = null;
+				ListEntity = null;
 			}
 		}
 		
@@ -214,14 +246,10 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("listMethod", "ListMethodId")]
 		public DataStructureMethod ListMethod
 		{
-			get
-			{
-				return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ListMethodId));
-			}
-			set
-			{
-				this.ListMethodId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ListMethodId));
+			set => ListMethodId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		public Guid ListSortSetId;
@@ -232,14 +260,10 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("listSortSet", "ListSortSetId")]
 		public DataStructureSortSet ListSortSet
 		{
-			get
-			{
-				return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ListSortSetId));
-			}
-			set
-			{
-				this.ListSortSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ListSortSetId));
+			set => ListSortSetId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		public Guid AutoRefreshIntervalConstantId;
@@ -250,30 +274,22 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("autoRefreshInterval", "AutoRefreshIntervalConstantId")]
 		public DataConstant AutoRefreshInterval
 		{
-			get
-			{
-				return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(DataConstant), new ModelElementKey(AutoRefreshIntervalConstantId));
-			}
-			set
-			{
-				this.AutoRefreshIntervalConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (DataConstant)PersistenceProvider.RetrieveInstance(
+				typeof(DataConstant), 
+				new ModelElementKey(AutoRefreshIntervalConstantId));
+			set => AutoRefreshIntervalConstantId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
-		private SaveRefreshType _refreshAfterSaveType = SaveRefreshType.RefreshChangedRecords;
+		private SaveRefreshType _refreshAfterSaveType 
+			= SaveRefreshType.RefreshChangedRecords;
 
 		[Category("Data Loading"), DefaultValue(SaveRefreshType.RefreshChangedRecords)]
 		[XmlAttribute("refreshAfterSaveType")]
 		public SaveRefreshType RefreshAfterSaveType
 		{
-			get
-			{
-				return _refreshAfterSaveType;
-			}
-			set
-			{
-				_refreshAfterSaveType = value;
-			}
+			get => _refreshAfterSaveType;
+			set => _refreshAfterSaveType = value;
 		}
   
 		public Guid RecordEditMethodId;
@@ -283,14 +299,11 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("recordEditMethod", "RecordEditMethodId")]
 		public DataStructureMethod RecordEditMethod
 		{
-			get
-			{
-				return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RecordEditMethodId));
-			}
-			set
-			{
-				this.RecordEditMethodId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(RecordEditMethodId));
+			set => RecordEditMethodId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		public Guid ListEntityId;
@@ -300,14 +313,10 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("listEntity", "ListEntityId")]
 		public DataStructureEntity ListEntity
 		{
-			get
-			{
-				return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ListEntityId));
-			}
-			set
-			{
-				this.ListEntityId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureEntity)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ListEntityId));
+			set => ListEntityId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		public Guid SelectionPanelId;
@@ -317,14 +326,11 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("selectionDialogPanel", "SelectionPanelId")]
 		public PanelControlSet SelectionDialogPanel
 		{
-			get
-			{
-				return (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionPanelId));
-			}
-			set
-			{
-				this.SelectionPanelId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (PanelControlSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionPanelId));
+			set => SelectionPanelId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
   
 		public Guid SelectionPanelBeforeTransformationId;
@@ -334,14 +340,11 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("transformationBeforeSelection", "SelectionPanelBeforeTransformationId")]
 		public AbstractTransformation TransformationBeforeSelection
 		{
-			get
-			{
-				return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionPanelBeforeTransformationId));
-			}
-			set
-			{
-				this.SelectionPanelBeforeTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionPanelBeforeTransformationId));
+			set => SelectionPanelBeforeTransformationId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		public Guid SelectionPanelAfterTransformationId;
@@ -351,14 +354,11 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("transformationAfterSelection", "SelectionPanelAfterTransformationId")]
 		public AbstractTransformation TransformationAfterSelection
 		{
-			get
-			{
-				return (AbstractTransformation)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionPanelAfterTransformationId));
-			}
-			set
-			{
-				this.SelectionPanelAfterTransformationId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (AbstractTransformation)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionPanelAfterTransformationId));
+			set => SelectionPanelAfterTransformationId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		
 		public Guid SelectionEndRuleId;
@@ -368,14 +368,11 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("selectionDialogEndRule", "SelectionEndRuleId")]
 		public IEndRule SelectionDialogEndRule
 		{
-			get
-			{
-				return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SelectionEndRuleId));
-			}
-			set
-			{
-				this.SelectionEndRuleId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (IEndRule)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SelectionEndRuleId));
+			set => SelectionEndRuleId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		[Category("Screen Reference"), DefaultValue(false)]
@@ -383,14 +380,8 @@ namespace Origam.Schema.MenuModel
 		public bool ReadOnlyAccess { get; set; } = false;
 
 		[Browsable(false)]
-		public string SelectionChangeEntity
-		{
-			get
-			{
-				return this.ListEntity != null ? this.ListEntity.Name : null;
-			}
-		}
-		
+		public string SelectionChangeEntity => ListEntity?.Name;
+
 		public Guid RuleSetId;
 
 		[Category("Screen Reference")]
@@ -398,14 +389,10 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("ruleSet", "RuleSetId")]
 		public DataStructureRuleSet RuleSet
 		{
-			get
-			{
-				return (DataStructureRuleSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RuleSetId));
-			}
-			set
-			{
-				this.RuleSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureRuleSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(RuleSetId));
+			set => RuleSetId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		public Guid SortSetId;
@@ -416,14 +403,10 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("sortSet", "SortSetId")]
 		public DataStructureSortSet SortSet
 		{
-			get
-			{
-				return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SortSetId));
-			}
-			set
-			{
-				this.SortSetId = value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
-			}
+			get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(SortSetId));
+			set => SortSetId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
  
 		public Guid ConfirmationRuleId;
@@ -433,14 +416,11 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("confirmationRule", "ConfirmationRuleId")]
 		public IEndRule ConfirmationRule
 		{
-			get
-			{
-				return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ConfirmationRuleId));
-			}
-			set
-			{
-				this.ConfirmationRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IEndRule)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(ConfirmationRuleId));
+			set => ConfirmationRuleId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		[Category("Data Loading"), DefaultValue(false)]
@@ -470,16 +450,12 @@ namespace Origam.Schema.MenuModel
         [XmlReference("dynamicFormLabelEntity", "DynamicFormLabelEntityId")]
         public DataStructureEntity DynamicFormLabelEntity
         {
-            get
-            {
-                return (DataStructureEntity)PersistenceProvider.RetrieveInstance(
-                    typeof(AbstractSchemaItem),
-                    new ModelElementKey(DynamicFormLabelEntityId));
-            }
+            get => (DataStructureEntity)PersistenceProvider.RetrieveInstance(
+	            typeof(AbstractSchemaItem), 
+	            new ModelElementKey(DynamicFormLabelEntityId));
             set
             {
-                DynamicFormLabelEntityId 
-                    = (value == null)
+                DynamicFormLabelEntityId = (value == null)
                     ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
                 DynamicFormLabelField = null;
             }
@@ -494,32 +470,17 @@ namespace Origam.Schema.MenuModel
 
         #region ISchemaItemFactory Members
 
-        public override Type[] NewItemTypes
+        public override Type[] NewItemTypes => new[] 
+        {
+			typeof(SelectionDialogParameterMapping)
+		};
+
+        public override T NewItem<T>(
+	        Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(SelectionDialogParameterMapping)
-								  };
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(SelectionDialogParameterMapping))
-			{
-				item = new SelectionDialogParameterMapping(schemaExtensionId);
-				item.Name = "NewSelectionDialogParameterMapping";
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorMenuUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(SelectionDialogParameterMapping) ?
+					"NewSelectionDialogParameterMapping" : null);
 		}
 
 		public override IList<string> NewTypeNames
@@ -528,9 +489,12 @@ namespace Origam.Schema.MenuModel
 			{
 				try
 				{
-					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-					IServiceAgent agent = agents.GetAgent("DataService", null, null);
-					return agent.ExpectedParameterNames(this, "LoadData", "Parameters");
+					var businessServicesService = ServiceManager.Services
+						.GetService<IBusinessServicesService>();
+					var serviceAgent = businessServicesService.GetAgent(
+						"DataService", null, null);
+					return serviceAgent.ExpectedParameterNames(
+						this, "LoadData", "Parameters");
 				}
 				catch
 				{

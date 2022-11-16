@@ -23,92 +23,45 @@ using System;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for FunctionSchemaItemProvider.
-	/// </summary>
-	public class FunctionSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class FunctionSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public FunctionSchemaItemProvider()
-		{
-		}
+		public FunctionSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return Function.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "DATA";
-			}
-		}
+		public override string RootItemType => Function.CategoryConst;
+
+		public override string Group => "DATA";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_10_functions.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_10_functions.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Functions";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Functions";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] {typeof(Function)};
+
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			get
-			{
-				return new Type[1] {typeof(Function)};
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			if(type == typeof(Function))
-			{
-				Function item = new Function(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewFunction";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorFunctionSchemaUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(Function) ?
+				"NewFunction" : null);
 		}
 
 		#endregion

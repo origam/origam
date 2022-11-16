@@ -23,7 +23,6 @@ using Origam.DA.Common;
 using System;
 using System.Data;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.Services;
@@ -35,30 +34,29 @@ using System.Collections.Generic;
 
 namespace Origam.Schema.MenuModel
 {
-	/// <summary>
-	/// Summary description for WorkflowReferenceMenuItem.
-	/// </summary>
 	[SchemaItemDescription("Sequential Workflow Reference", "menu_workflow.png")]
     [HelpTopic("Sequential+Workflow+Menu+Item")]
     [ClassMetaVersion("6.0.0")]
 	public class WorkflowReferenceMenuItem : AbstractMenuItem
 	{
-		private ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+		private ISchemaService _schemaService 
+			= ServiceManager.Services.GetService<ISchemaService>();
 
-		public WorkflowReferenceMenuItem() : base() {}
+		public WorkflowReferenceMenuItem() {}
 
-		public WorkflowReferenceMenuItem(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public WorkflowReferenceMenuItem(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
 		public WorkflowReferenceMenuItem(Key primaryKey) : base(primaryKey)	{}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.Workflow);
-
-			base.GetExtraDependencies (dependencies);
+			dependencies.Add(Workflow);
+			base.GetExtraDependencies(dependencies);
 		}
 
-		public override Origam.UI.BrowserNodeCollection ChildNodes()
+		public override UI.BrowserNodeCollection ChildNodes()
 		{
 #if ORIGAM_CLIENT
 			return new Origam.UI.BrowserNodeCollection();
@@ -71,10 +69,7 @@ namespace Origam.Schema.MenuModel
 		[Browsable(false)]
 		public bool IsRepeatable
 		{
-			get
-			{
-				return true;
-			}
+			get => true;
 			set
 			{
 			}
@@ -87,40 +82,35 @@ namespace Origam.Schema.MenuModel
 		[XmlReference("workflow", "WorkflowId")]
 		public IWorkflow Workflow
 		{
-			get
-			{
-				return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.WorkflowId));
-			}
-			set
-			{
-				this.WorkflowId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IWorkflow)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(WorkflowId));
+			set => WorkflowId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		#endregion
 
 		#region Private Methods
 		private DataSet LoadData(DataStructureQuery query)
 		{
-			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
-
+			var dataServiceAgent = ServiceManager.Services
+				.GetService<IBusinessServicesService>().GetAgent(
+					"DataService", null, null);
 			dataServiceAgent.MethodName = "LoadDataByQuery";
 			dataServiceAgent.Parameters.Clear();
 			dataServiceAgent.Parameters.Add("Query", query);
-
 			dataServiceAgent.Run();
-
 			return dataServiceAgent.Result as DataSet;
 		}
 
 		private void SaveData(DataStructureQuery query, DataSet data)
 		{
-			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
-
+			var dataServiceAgent = ServiceManager.Services
+				.GetService<IBusinessServicesService>().GetAgent(
+					"DataService", null, null);
 			dataServiceAgent.MethodName = "StoreDataByQuery";
 			dataServiceAgent.Parameters.Clear();
 			dataServiceAgent.Parameters.Add("Query", query);
 			dataServiceAgent.Parameters.Add("Data", data);
-
 			dataServiceAgent.Run();
 		}
 		#endregion
@@ -128,44 +118,30 @@ namespace Origam.Schema.MenuModel
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] 
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(DataConstantReference),
-									  typeof(SystemFunctionCall),
-									  typeof(ReportReference)
-								  };
-			}
-		}
+			typeof(DataConstantReference),
+			typeof(SystemFunctionCall),
+			typeof(ReportReference)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(DataConstantReference))
+			string itemName = null;
+			if(typeof(T) == typeof(DataConstantReference))
 			{
-				item = new DataConstantReference(schemaExtensionId);
-				item.Name = "NewDataConstantReference";
+				itemName = "NewDataConstantReference";
 			}
-			else if(type == typeof(ReportReference))
+			else if(typeof(T) == typeof(ReportReference))
 			{
-				item = new ReportReference(schemaExtensionId);
-				item.Name = "NewReportReference";
+				itemName = "NewReportReference";
 			}
-			else if(type == typeof(SystemFunctionCall))
+			else if(typeof(T) == typeof(SystemFunctionCall))
 			{
-				item = new SystemFunctionCall(schemaExtensionId);
-				item.Name = "NewSystemFunctionCall";
+				itemName = "NewSystemFunctionCall";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		public override IList<string> NewTypeNames
@@ -174,9 +150,14 @@ namespace Origam.Schema.MenuModel
 			{
 				try
 				{
-					IBusinessServicesService agents = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-					IServiceAgent agent = agents.GetAgent("WorkflowService", null, null);
-					return agent.ExpectedParameterNames(this.Workflow as AbstractSchemaItem, "ExecuteWorkflow", "Parameters");
+					var businessServicesService = ServiceManager.Services
+						.GetService<IBusinessServicesService>();
+					var agent = businessServicesService.GetAgent(
+						"WorkflowService", null, null);
+					return agent.ExpectedParameterNames(
+						Workflow as AbstractSchemaItem, 
+						"ExecuteWorkflow", 
+						"Parameters");
 				}
 				catch
 				{

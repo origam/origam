@@ -27,9 +27,6 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for ServiceMethod.
-	/// </summary>
 	[SchemaItemDescription("Method", "Methods", "method-1.png")]
     [HelpTopic("Service+Method")]
 	[XmlModelRoot(CategoryConst)]
@@ -38,9 +35,10 @@ namespace Origam.Schema.WorkflowModel
 	{
 		public const string CategoryConst = "ServiceMethod";
 
-		public ServiceMethod() : base() {}
+		public ServiceMethod() {}
 
-		public ServiceMethod(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public ServiceMethod(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
 		public ServiceMethod(Key primaryKey) : base(primaryKey)	{}
 
@@ -49,64 +47,33 @@ namespace Origam.Schema.WorkflowModel
 		[XmlAttribute("returnValueDataType")]
 		public OrigamDataType ReturnValueDataType
 		{
-			get
-			{
-				return _returnValueDataType;
-			}
-			set
-			{
-				_returnValueDataType = value;
-			}
+			get => _returnValueDataType;
+			set => _returnValueDataType = value;
 		}
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
+		
+		public override string ItemType => CategoryConst;
 
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
-
-        public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(ServiceMethodParameter)};
-			}
-		}
+			typeof(ServiceMethodParameter)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(ServiceMethodParameter))
-			{
-				item = new ServiceMethodParameter(schemaExtensionId);
-				item.Name = "NewParameter";
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, "This type is not supported by ServiceMethod");
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(ServiceMethodParameter) ?
+					"NewParameter" : null);
 		}
 
 		#endregion

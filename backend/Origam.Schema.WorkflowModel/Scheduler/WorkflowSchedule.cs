@@ -22,16 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for WorkflowSchedule.
-	/// </summary>
 	[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
@@ -39,7 +35,7 @@ namespace Origam.Schema.WorkflowModel
 	{
 		public const string CategoryConst = "WorkflowSchedule";
 
-		public WorkflowSchedule() : base() {}
+		public WorkflowSchedule() {}
 
 		public WorkflowSchedule(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -54,20 +50,22 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.WorkflowId;
-
-				return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				var key = new ModelElementKey
+				{
+					Id = WorkflowId
+				};
+				return (IWorkflow)PersistenceProvider.RetrieveInstance(
+					typeof(AbstractSchemaItem), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.WorkflowId = Guid.Empty;
+					WorkflowId = Guid.Empty;
 				}
 				else
 				{
-					this.WorkflowId = (Guid)value.PrimaryKey["Id"];
+					WorkflowId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
 		}
@@ -80,20 +78,22 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.ScheduleTimeId;
-
-				return (AbstractScheduleTime)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				var key = new ModelElementKey
+				{
+					Id = ScheduleTimeId
+				};
+				return (AbstractScheduleTime)PersistenceProvider
+					.RetrieveInstance(typeof(AbstractSchemaItem), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.ScheduleTimeId = Guid.Empty;
+					ScheduleTimeId = Guid.Empty;
 				}
 				else
 				{
-					this.ScheduleTimeId = (Guid)value.PrimaryKey["Id"];
+					ScheduleTimeId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
 		}
@@ -101,74 +101,47 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.Workflow);
-			dependencies.Add(this.ScheduleTime);
-
+			dependencies.Add(Workflow);
+			dependencies.Add(ScheduleTime);
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
-
+		public override bool UseFolders => false;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(DataConstantReference),
-									  typeof(SystemFunctionCall),
-									  typeof(ReportReference)
-								  };
-			}
-		}
+			typeof(DataConstantReference), 
+			typeof(SystemFunctionCall), 
+			typeof(ReportReference)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(DataConstantReference))
+			string itemName = null;
+			if(typeof(T) == typeof(DataConstantReference))
 			{
-				item = new DataConstantReference(schemaExtensionId);
-				item.Name = "NewDataConstantReference";
+				itemName = "NewDataConstantReference";
 			}
-			else if(type == typeof(ReportReference))
+			else if(typeof(T) == typeof(ReportReference))
 			{
-				item = new ReportReference(schemaExtensionId);
-				item.Name = "NewReportReference";
+				itemName = "NewReportReference";
 			}
-			else if(type == typeof(SystemFunctionCall))
+			else if(typeof(T) == typeof(SystemFunctionCall))
 			{
-				item = new SystemFunctionCall(schemaExtensionId);
-				item.Name = "NewSystemFunctionCall";
+				itemName = "NewSystemFunctionCall";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowUknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion

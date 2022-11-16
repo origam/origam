@@ -32,14 +32,17 @@ namespace Origam.Schema
 		/// <summary>
 		/// Provides a new item of a given type.
 		/// </summary>
-		/// <param name="type">Type item we need. It must be one of NewItemTypes</param>
+		/// <param name="schemaExtensionId"></param>
+		/// <param name="group"></param>
 		/// <returns>New schema item.</returns>
-		AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group);
+		T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group) 
+			where T : AbstractSchemaItem;
 		
 		/// <summary>
 		/// Returns new valid group for this item.
 		/// </summary>
 		/// <param name="schemaExtensionId"></param>
+		/// <param name="groupName"></param>
 		/// <returns></returns>
 		SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName="NewGroup");
 

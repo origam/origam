@@ -23,96 +23,46 @@ using System;
 
 namespace Origam.Schema
 {
-	/// <summary>
-	/// Summary description for FeatureSchemaItemProvider.
-	/// </summary>
-	public class FeatureSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class FeatureSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public FeatureSchemaItemProvider()
-		{
-		}
+		public FeatureSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return Feature.CategoryConst;
-			}
-		}
+		public override string RootItemType => Feature.CategoryConst;
 
-		public override string Group
-		{
-			get
-			{
-				return "COMMON";
-			}
-		}
+		public override string Group => "COMMON";
 
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_03_features.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_03_features.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Features";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Features";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] {typeof(Feature)};
+
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
 		{
-			get
-			{
-				return new Type[1] {typeof(Feature)};
-			}
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(Feature) ?
+					"NewFeature" : null);
 		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			if(type == typeof(Feature))
-			{
-				Feature item = new Feature(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewFeature";
-				
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorFeatureModelUnknownType"));
-		}
-
 		#endregion
 	}
 }

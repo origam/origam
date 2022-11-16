@@ -60,8 +60,9 @@ namespace Origam.Gui.Win.Commands
 
             foreach(IDataEntityColumn column in entity.EntityDefinition.EntityColumns)
             {
-                DataStructureColumn newColumn = entity.NewItem(typeof(DataStructureColumn), 
-                    _schema.ActiveSchemaExtensionId, null) as DataStructureColumn;
+                DataStructureColumn newColumn = entity
+                    .NewItem<DataStructureColumn>(
+                        _schema.ActiveSchemaExtensionId, null);
                 newColumn.Field = column;
                 newColumn.Name = column.Name;
                 newColumn.Persist();
