@@ -34,11 +34,10 @@ namespace Origam.DA.Service
 {
     public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
     {
-        public MsSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker) :
+        public MsSqlCommandGenerator() :
             base(
                 trueValue: "1",
                 falseValue: "0",
-                detachedFieldPacker: detachedFieldPacker,
                 sqlValueFormatter: new SQLValueFormatter("1", "0",
                     (text) => text.Replace("%", "[%]").Replace("_", "[_]"))
                 , filterRenderer: new MsSqlFilterRenderer(),
@@ -287,7 +286,7 @@ namespace Origam.DA.Service
         public override object Clone()
         {
             MsSqlCommandGenerator gen =
-                new MsSqlCommandGenerator(new DetachedFieldPackerMs());
+                new MsSqlCommandGenerator();
             return gen;
         }
 

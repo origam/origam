@@ -40,7 +40,6 @@ namespace Origam.DA.Service
     public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisposable
     {
         protected readonly SQLValueFormatter sqlValueFormatter;
-        private readonly IDetachedFieldPacker detachedFieldPacker;
         internal readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         internal readonly ParameterReference PageSizeParameterReference = new ParameterReference();
         internal readonly AbstractFilterRenderer filterRenderer;
@@ -50,14 +49,13 @@ namespace Origam.DA.Service
         protected readonly SqlRenderer sqlRenderer;
 
         public AbstractSqlCommandGenerator(string trueValue, string falseValue, 
-            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter,
-            AbstractFilterRenderer filterRenderer, SqlRenderer sqlRenderer)
+            SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer filterRenderer,
+            SqlRenderer sqlRenderer)
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
             True = trueValue;
             False = falseValue;
-            this.detachedFieldPacker = detachedFieldPacker;
             this.sqlValueFormatter = sqlValueFormatter;
             this.filterRenderer = filterRenderer;
             this.sqlRenderer = sqlRenderer;
@@ -1074,7 +1072,7 @@ namespace Origam.DA.Service
             }
 
             // From
-            RenderSelectFromClause(sqlExpression, entity, entity, filter, replaceParameterTexts);
+            RenderSelectFromClause(sqlExpression, entity);
 
             bool whereExists = false;
 
@@ -2571,7 +2569,7 @@ namespace Origam.DA.Service
         }
 
 
-        internal void RenderSelectFromClause(StringBuilder sqlExpression, DataStructureEntity baseEntity, DataStructureEntity stopAtEntity, DataStructureFilterSet filter, Hashtable replaceParameterTexts)
+        internal void RenderSelectFromClause(StringBuilder sqlExpression, DataStructureEntity baseEntity)
         {
             PrettyLine(sqlExpression);
             sqlExpression.Append("FROM");
@@ -3124,7 +3122,7 @@ namespace Origam.DA.Service
             else if (item is DetachedField detachedField)
             {
                 return renderSqlForDetachedFields 
-                    ? detachedFieldPacker.RenderSqlExpression(entity, detachedField) 
+                    ? RenderSqlExpression(entity, detachedField) 
                     : "";
             }
             else if (item is AggregatedColumn)
@@ -3133,6 +3131,34 @@ namespace Origam.DA.Service
                 throw new NotImplementedException(ResourceUtils.GetString("TypeNotSupported", item.GetType().ToString()));
         }
 
+        public string RenderSqlExpression(DataStructureEntity entity,
+            DetachedField detachedField)
+        {
+            if (detachedField.ArrayRelation == null)
+            {
+                return "";
+            }
+
+            DataStructureEntity relation = entity.ChildItems.ToGeneric()
+                .OfType<DataStructureEntity>()
+                .FirstOrDefault(child =>
+                    child.Entity.PrimaryKey.Equals(detachedField.ArrayRelation.PrimaryKey));
+         
+            var columnRenderItem = new ColumnRenderItem
+            {
+                SchemaItem = detachedField.ArrayValueField,
+                Entity = relation,
+                RenderSqlForDetachedFields = false
+            };
+            string columnToAggregate = RenderExpression(columnRenderItem, null, null, null);
+            var sqlExpression = new StringBuilder(
+                $"(SELECT STRING_AGG({sqlRenderer.Text(RenderExpression(columnRenderItem, null, null, null))} , CHAR(1)) ");
+            RenderSelectFromClause(sqlExpression, relation);
+            RenderSelectRelation(sqlExpression, relation, relation, null, null, true, true, 0, false, null, null);
+            sqlExpression.Append(")");
+            return sqlExpression.ToString();
+        }
+        
         internal string AggregationHelper(AggregatedColumn topLevelItem, DataStructureEntity topLevelEntity, AggregatedColumn item, Hashtable replaceParameterTexts, int level, StringBuilder joins, Hashtable dynamicParameters, Hashtable parameterReferences)
         {
             AggregatedColumn agg2 = item.Field as AggregatedColumn;
