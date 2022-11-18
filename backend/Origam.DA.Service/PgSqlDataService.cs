@@ -219,7 +219,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string GetAllTablesSQL()
+        internal override string GetAllTablesSql()
         {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where table_schema=(select current_schema) ORDER BY TABLE_NAME";
         }

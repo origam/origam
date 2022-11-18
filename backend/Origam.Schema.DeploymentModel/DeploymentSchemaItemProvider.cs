@@ -20,125 +20,86 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Origam.Services;
 using Origam.Workbench.Services;
 
 namespace Origam.Schema.DeploymentModel
 {
-	/// <summary>
-	/// Summary description for WorkflowSchemaItemProvide.
-	/// </summary>
-	public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class DeploymentSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public DeploymentSchemaItemProvider()
-		{
-		}
+		public DeploymentSchemaItemProvider() {}
 
 		public DeploymentVersion CurrentVersion()
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			foreach(DeploymentVersion version in this.ChildItems)
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			foreach(var abstractSchemaItem in ChildItems)
 			{
+				var version = (DeploymentVersion)abstractSchemaItem;
 				// only version from the current extension
-				if(version.Package.PrimaryKey.Equals(schema.ActiveExtension.PrimaryKey))
+				if(version.Package.PrimaryKey.Equals(
+					   schemaService.ActiveExtension.PrimaryKey))
 				{
-					if(version.IsCurrentVersion) return version;
+					if(version.IsCurrentVersion)
+					{
+						return version;
+					}
 				}
 			}
-
 			return null;
 		}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return DeploymentVersion.CategoryConst;
-			}
-		}
+		public override string RootItemType => DeploymentVersion.CategoryConst;
 
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "COMMON";
-			}
-		}
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "COMMON";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				return "icon_02_deployment.png";
-			}
-		}
+		public override string Icon => "icon_02_deployment.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Deployment";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Deployment";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public override string NodeToolTipText => null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(DeploymentVersion)};
-			}
-		}
+			typeof(DeploymentVersion)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(DeploymentVersion))
+			if(typeof(T) != typeof(DeploymentVersion))
 			{
-                ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService))
-                as ISchemaService;
-                IList<Package> packages = schema.ActiveExtension.IncludedPackages;
-
-                DeploymentVersion item = new DeploymentVersion(schemaExtensionId, packages.ToList())
-                {
-                    RootProvider = this,
-                    PersistenceProvider = this.PersistenceProvider,
-                    Name = "NewDeploymentVersion",
-                    Group = group
-                };
-                this.ChildItems.Add(item);
-				return item;
+				return base.NewItem<T>(schemaExtensionId, group);
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowSchedulerUnknownType"));
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var packages = schemaService.ActiveExtension.IncludedPackages;
+			var deploymentVersion = new DeploymentVersion(
+				schemaExtensionId, packages.ToList())
+			{
+				RootProvider = this,
+				PersistenceProvider = PersistenceProvider,
+				Name = "NewDeploymentVersion",
+				Group = group
+			};
+			ChildItems.Add(deploymentVersion);
+			return deploymentVersion as T;
 		}
 
 		#endregion

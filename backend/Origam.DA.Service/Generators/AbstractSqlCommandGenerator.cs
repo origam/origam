@@ -1453,7 +1453,7 @@ namespace Origam.DA.Service
 
         public string InsertSql(DataStructure ds, DataStructureEntity entity)
         {
-            if (entity.UseUPSERT)
+            if (entity.UseUpsert)
             {
                 return UpsertSql(ds, entity);
             }

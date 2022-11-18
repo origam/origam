@@ -24,102 +24,51 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.LookupModel
 {
-	/// <summary>
-	/// Summary description for DataLookupSchemaItemProvider.
-	/// </summary>
-	public class DataLookupSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory, IDataLookupSchemaItemProvider
+	public class DataLookupSchemaItemProvider 
+		: AbstractSchemaItemProvider, IDataLookupSchemaItemProvider
 	{
-		public DataLookupSchemaItemProvider()
-		{
-		}
+		public DataLookupSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return AbstractDataLookup.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "DATA";
-			}
-		}
+		public override string RootItemType => AbstractDataLookup.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "DATA";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_11_lookups.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_11_lookups.png";
 
 		public override string NodeText
 		{
-			get
-			{	
-				return "Lookups";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Lookups";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(DataServiceDataLookup)};
-			}
-		}
+			typeof(DataServiceDataLookup)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractDataLookup item;
-
-			if(type == typeof(DataServiceDataLookup))
-			{
-				item = new DataServiceDataLookup(schemaExtensionId);
-				item.Name = "NewDataServiceDataLookup";
-
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataLookupUknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(DataServiceDataLookup) ?
+					"NewDataServiceDataLookup" : null);
 		}
 
 		#endregion

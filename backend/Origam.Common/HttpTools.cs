@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Web;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
@@ -250,83 +249,90 @@ namespace Origam
 		{
 			try
 			{
-				using (WebResponse response = GetResponse(url, method, content, contentType,
-					headers, authenticationType, userName, password, timeout, null, false))
+				using WebResponse response = GetResponse(url, method, content, 
+					contentType, headers, authenticationType, userName, 
+					password, timeout, null, false);
+				if (response is not HttpWebResponse httpResponse)
 				{
-					HttpWebResponse httpResponse = response as HttpWebResponse;
-					string encodingString = string.IsNullOrEmpty(httpResponse.ContentEncoding)?"":httpResponse.ContentEncoding.ToLower();
-					using (Stream responseStream =
-						encodingString.Contains("gzip") ?
-							new GZipStream(response.GetResponseStream(), CompressionMode.Decompress)
-							: encodingString.Contains("deflate") ?
-								new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress)
-								: response.GetResponseStream()
-
-					)
+					throw new Exception(
+						"WebResponse is not of HttpResponse type.");
+				}
+				using Stream responseStream = StreamFromResponse(httpResponse);
+				if (returnAsStream)
+				{
+					return responseStream;
+				}
+				if (response.ContentType.Equals("text/xml")
+				    || response.ContentType.Equals("application/xml")
+				    || response.ContentType.EndsWith("+xml"))
+				{
+					// for xml we will ignore encoding set in the HTTP header 
+					// because sometimes it is not present
+					// but we have the encoding in the XML header, so we take
+					// it from there
+					IXmlContainer container = new XmlContainer();
+					if (response.ContentLength != 0)
 					{
-						if (returnAsStream)
-						{
-							return responseStream;
-						}
-						if (response.ContentType.Equals("text/xml")
-                        || response.ContentType.Equals("application/xml"))
-						{
-							// for xml we will ignore encoding set in the HTTP header 
-							// because sometimes it is not present
-							// but we have the encoding in the XML header, so we take
-							// it from there
-							IXmlContainer container = new XmlContainer();
-							if (response.ContentLength != 0)
-							{
-								container.Xml.Load(responseStream);
-							}
-							return container;
-						}
-						else if (httpResponse != null && response.ContentType.StartsWith("text/"))
-						{
-							// result is text
-							return ReadResponseText(httpResponse, responseStream);
-						}
-						else if (httpResponse != null && response.ContentType.StartsWith("application/json"))
-						{
-							JsonSerializer js = new JsonSerializer();
-							string body = ReadResponseText(httpResponse, responseStream);
-							// DataSet ds = JsonConvert.DeserializeObject<DataSet>(body);
-							XmlDocument xd = new XmlDocument();
-							// deserialize from JSON to XML
-							try
-							{
-								xd = (XmlDocument)JsonConvert.DeserializeXmlNode(body, "ROOT");
-							}
-							catch (Newtonsoft.Json.JsonSerializationException)
-							{
-								xd = JsonConvert.DeserializeXmlNode("{\"ARRAY\":" + body + "}", "ROOT");
-							}
-
-                            // remove any empty elements because empty guids and dates would
-                            // result in errors and empty strings should always be converted
-                            // to nulls anyway
-                            //RemoveEmptyNodes(ref xd);
-                            return new XmlContainer(xd);
-						}
-						else
-						{
-							// result is binary
-							return StreamTools.ReadToEnd(responseStream);
-						}
+						container.Xml.Load(responseStream);
 					}
+					return container;
 				}
-			}
-			catch (WebException wex)
-			{
-				string info = "";
-				HttpWebResponse httpResponse = wex.Response as HttpWebResponse;
-				if (httpResponse != null)
+				if (response.ContentType.StartsWith("text/"))
 				{
-					info = ReadResponseTextRespectionContentEncoding(httpResponse);
+					// result is text
+					return ReadResponseText(httpResponse, responseStream);
 				}
-				throw new Exception(wex.Message + Environment.NewLine + info, wex);
+				if (response.ContentType.StartsWith("application/json")
+				    || response.ContentType.EndsWith("+json"))
+				{
+					string body = ReadResponseText(
+						httpResponse, responseStream);
+					XmlDocument xmlDocument;
+					// deserialize from JSON to XML
+					try
+					{
+						xmlDocument = JsonConvert.DeserializeXmlNode(
+							body, "ROOT");
+					}
+					catch (JsonSerializationException)
+					{
+						xmlDocument = JsonConvert.DeserializeXmlNode(
+							"{\"ARRAY\":" + body + "}", "ROOT");
+					}
+					return new XmlContainer(xmlDocument);
+				}
+				// result is binary
+				return StreamTools.ReadToEnd(responseStream);
 			}
+			catch (WebException webException)
+			{
+				var info = "";
+				if (webException.Response is HttpWebResponse httpResponse)
+				{
+					info = ReadResponseTextRespectionContentEncoding(
+						httpResponse);
+				}
+				throw new Exception(
+					webException.Message + Environment.NewLine + info, 
+					webException);
+			}
+		}
+
+		private static Stream StreamFromResponse(HttpWebResponse response)
+		{
+			var encodingString = string.IsNullOrEmpty(response.ContentEncoding)
+					? "" : response.ContentEncoding.ToLower();
+			if (encodingString.Contains("gzip"))
+			{
+				return new GZipStream(response.GetResponseStream(),
+					CompressionMode.Decompress);
+			}
+			if (encodingString.Contains("deflate"))
+			{
+				return new DeflateStream(response.GetResponseStream(),
+					CompressionMode.Decompress);
+			}
+			return response.GetResponseStream();
 		}
 
 		public WebResponse GetResponse(string url, string method, string content,

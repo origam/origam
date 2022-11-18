@@ -23,99 +23,57 @@ using System;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for TransformationItemProvider.
-	/// </summary>
-	public class TransformationSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class TransformationSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public TransformationSchemaItemProvider()
-		{
-		}
+		public TransformationSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return AbstractTransformation.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "BL";
-			}
-		}
+		public override string RootItemType => AbstractTransformation.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "BL";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_33_transformations.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_33_transformations.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Transformations";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Transformations";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(XslTransformation)};
-			}
-		}
+			typeof(XslTransformation)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(XslTransformation))
+			if(typeof(T) != typeof(XslTransformation))
 			{
-				XslTransformation item = new XslTransformation(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewXslTransformation";
-                item.XsltEngineType = XsltEngineType.XslCompiledTransform;
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
+				throw new ArgumentOutOfRangeException("type", typeof(T),
+					ResourceUtils.GetString(
+						"ErrorTransformationModelUnknownType"));
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTransformationModelUnknownType"));
+			var item = base.NewItem<T>(schemaExtensionId, 
+				group, "NewXslTransformation");
+			(item as XslTransformation).XsltEngineType =
+				XsltEngineType.XslCompiledTransform;
+			return item;
 		}
 
 		#endregion

@@ -97,19 +97,6 @@ public static class ReferenceIndexManager
         if (item is EntityUIAction uiAction)
         {
             AddToIndex(uiAction.ConfirmationRuleId, uiAction);
-            ArrayList screenConditions = uiAction.ChildItemsByType(
-                ScreenCondition.CategoryConst);
-            foreach (ScreenCondition screenCondition in screenConditions)
-            {
-                AddToIndex(uiAction.Id, screenCondition.Screen);
-            }
-            ArrayList sectionConditions = uiAction.ChildItemsByType(
-                ScreenSectionCondition.CategoryConst);
-            foreach (ScreenSectionCondition sectionCondition in
-                     sectionConditions)
-            {
-                AddToIndex(uiAction.Id, sectionCondition.ScreenSection);
-            }
         }
     }
 

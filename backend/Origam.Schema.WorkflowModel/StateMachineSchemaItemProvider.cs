@@ -24,144 +24,91 @@ using System.Collections;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for StateMachineSchemaItemProvider.
-	/// </summary>
-	public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class StateMachineSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public StateMachineSchemaItemProvider()
-		{
-		}
+		public StateMachineSchemaItemProvider() {}
 
 		#region Public Methods
 		public StateMachine GetMachine(Guid entityId, Guid fieldId)
 		{
-            ArrayList result = new ArrayList();
-			SchemaItemCollection childItems = this.ChildItems;
-			foreach(StateMachine sm in childItems)
+            var result = new ArrayList();
+			var childItems = ChildItems;
+			foreach(StateMachine stateMachine in childItems)
 			{
-				if(sm.EntityId.Equals(entityId) && sm.FieldId.Equals(fieldId))
+				if(stateMachine.EntityId.Equals(entityId) 
+				&& stateMachine.FieldId.Equals(fieldId))
 				{
-					result.Add(sm);
+					result.Add(stateMachine);
 				}
 			}
-
-            if (result.Count == 1)
+            if(result.Count == 1)
             {
                 return (StateMachine)result[0];
             }
-            else if (result.Count > 1)
+            if(result.Count > 1)
             {
-                StateMachine sm = (StateMachine)result[0];
-                throw new Exception(string.Format("More than 1 state machine defined on an entity {0} field {1}. Only one state machine can be defined.",
-                    sm.Entity.Name, sm.Field.Name));
+	            var stateMachine = (StateMachine)result[0];
+	            throw new Exception(
+		            $"More than 1 state machine defined on an entity {stateMachine.Entity.Name} field {stateMachine.Field.Name}. Only one state machine can be defined.");
             }
-            else
-            {
-			    return null;
-            }
+            return null;
 		}
 
         public ArrayList GetMachines(Guid entityId)
         {
-            ArrayList result = new ArrayList();
-            SchemaItemCollection childItems = this.ChildItems;
-            foreach (StateMachine sm in childItems)
+            var result = new ArrayList();
+            var childItems = ChildItems;
+            foreach (StateMachine stateMachine in childItems)
             {
-                if (sm.EntityId.Equals(entityId) && sm.FieldId.Equals(Guid.Empty))
+                if (stateMachine.EntityId.Equals(entityId) 
+				&& stateMachine.FieldId.Equals(Guid.Empty))
                 {
-                    result.Add(sm);
+                    result.Add(stateMachine);
                 }
             }
-
             return result;
         }
         #endregion
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return StateMachine.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "BL";
-			}
-		}
+		public override string RootItemType => StateMachine.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "BL";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "state-workflows-2.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"state-workflows-2.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "State Workflows";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "State Workflows";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(StateMachine)};
-			}
-		}
+			typeof(StateMachine)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(StateMachine))
-			{
-				StateMachine item = new StateMachine(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewStateMachine";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowModelUknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(StateMachine) ?
+					"NewStateMachine" : null);
 		}
 
 		#endregion

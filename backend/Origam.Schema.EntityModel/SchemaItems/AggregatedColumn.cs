@@ -39,16 +39,13 @@ namespace Origam.Schema.EntityModel
 		CumulativeSum = 6
 	}
 
-	/// <summary>
-	/// Summary description for AggregatedColumn.
-	/// </summary>
 	[SchemaItemDescription("Aggregated Field", "Fields", "icon_agregated-field.png")]
     [HelpTopic("Aggregated+Field")]
     [DefaultProperty("Relation")]
     [ClassMetaVersion("6.0.0")]
 	public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
 	{
-		public AggregatedColumn() : base() {}
+		public AggregatedColumn() {}
 
 		public AggregatedColumn(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -56,41 +53,32 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractDataEntityColumn Members
 
-		public override string FieldType { get; } = "AggregatedColumn";
+		public override string FieldType => "AggregatedColumn";
 
-		public override bool ReadOnly
+		public override bool ReadOnly => true;
+
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.Field);
-			dependencies.Add(this.Relation);
-
+			dependencies.Add(Field);
+			dependencies.Add(Relation);
 			base.GetExtraDependencies (dependencies);
 		}
 
         public override void UpdateReferences()
         {
-            if (this.Relation != null)
+            if(Relation != null)
             {
-                foreach (ISchemaItem item in this.RootItem.ChildItemsRecursive)
+                foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
                 {
-                    if (item.OldPrimaryKey != null)
-                    {
-                        if (item.OldPrimaryKey.Equals(this.Relation.PrimaryKey))
-                        {
-                            // store the old field because setting an entity will reset the field
-                            IDataEntityColumn oldField = this.Field;
-                            this.Relation = item as IAssociation;
-                            this.Field = oldField;
-                            break;
-                        }
-                    }
+	                if(item.OldPrimaryKey?.Equals(Relation.PrimaryKey) == true)
+	                {
+		                // store the old field because setting an entity will reset the field
+		                var oldField = Field;
+		                Relation = item as IAssociation;
+		                Field = oldField;
+		                break;
+	                }
                 }
             }
             base.UpdateReferences();
@@ -118,14 +106,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("aggregationType")]
 		public AggregationType AggregationType
 		{
-			get
-			{
-				return _aggregationType;
-			}
-			set
-			{
-				_aggregationType = value;
-			}
+			get => _aggregationType;
+			set => _aggregationType = value;
 		}
 
 		public Guid RelationId;
@@ -137,14 +119,13 @@ namespace Origam.Schema.EntityModel
         [XmlReference("relation", "RelationId")]
 		public IAssociation Relation
 		{
-			get
-			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RelationId)) as IAssociation;
-			}
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(RelationId)) 
+				as IAssociation;
 			set
 			{
-				this.RelationId = (Guid)value.PrimaryKey["Id"];
-                this.Field = null;
+				RelationId = (Guid)value.PrimaryKey["Id"];
+                Field = null;
 			}
 		}
 		
@@ -157,64 +138,53 @@ namespace Origam.Schema.EntityModel
         [XmlReference("field", "ColumnId")]
         public IDataEntityColumn Field
 		{
-			get
-			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ColumnId)) as IDataEntityColumn;
-			}
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ColumnId)) 
+				as IDataEntityColumn;
 			set
 			{
-				this.ColumnId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-                if (Field != null)
-                {
-                    this.DataType = this.Field.DataType;
-                    this.DataLength = this.Field.DataLength;
-                    this.Name = this.AggregationType.ToString() + this.Field.Name;
-                    this.Caption = this.Field.Caption;
-                }
-            }
+				ColumnId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+				if(Field == null)
+				{
+					return;
+				}
+				DataType = Field.DataType;
+                DataLength = Field.DataLength;
+                Name = AggregationType + Field.Name;
+                Caption = Field.Caption;
+			}
 		}
 		#endregion
 
 		#region Convert
 		public override bool CanConvertTo(Type type)
 		{
-			return
-				(
-				(
-				type == typeof(FieldMappingItem)
-				| type == typeof(DetachedField)
-				)
-				&
-				(
-				this.ParentItem is IDataEntity
-				)
-				);
+			return (type == typeof(FieldMappingItem) 
+			        || type == typeof(DetachedField)) 
+			       && (ParentItem is IDataEntity);
 		}
 
-		public override ISchemaItem ConvertTo(Type type)
+		protected override ISchemaItem ConvertTo<T>()
 		{
-			AbstractSchemaItem converted = this.ParentItem.NewItem(type, this.SchemaExtensionId, this.Group) as AbstractSchemaItem;
-
-			if(converted is AbstractDataEntityColumn)
+			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+			if(converted is AbstractDataEntityColumn abstractDataEntityColumn)
 			{
-				AbstractDataEntityColumn.CopyFieldMembers(this, converted as AbstractDataEntityColumn);
+				CopyFieldMembers(this, abstractDataEntityColumn);
 			}
-
-			if(converted is FieldMappingItem)
+			if(converted is FieldMappingItem fieldMappingItem)
 			{
-				(converted as FieldMappingItem).MappedColumnName = this.Name;
+				fieldMappingItem.MappedColumnName = Name;
 			}
-			else if(type == typeof(DetachedField))
+			else if(typeof(T) == typeof(DetachedField))
 			{
 			}
 			else
 			{
-				return base.ConvertTo(type);
+				return base.ConvertTo<T>();
 			}
-
 			// does the common conversion tasks and persists both this and converted objects
-			AbstractSchemaItem.FinishConversion(this, converted);
-
+			FinishConversion(this, converted);
 			return converted;
 		}
 		#endregion
