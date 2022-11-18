@@ -115,7 +115,7 @@ namespace Origam.Workflow
 
         public static void ClearThreadLoggingContext()
         {
-            ThreadContext.Properties["currentTaskpath"] = null;
+            ThreadContext.Properties["currentTaskPath"] = null;
             ThreadContext.Properties["currentTaskId"] = null;
             ThreadContext.Properties["ServiceMethodName"] = null;
         }
@@ -123,7 +123,7 @@ namespace Origam.Workflow
         public static void SetCurrentTaskToThreadLoggingContext(
             ServiceMethodCallTask task)
         {
-            ThreadContext.Properties["currentTaskpath"] = task.Path;
+            ThreadContext.Properties["currentTaskPath"] = task.Path;
             ThreadContext.Properties["currentTaskId"] = task.NodeId;
             ThreadContext.Properties["ServiceMethodName"] =
                 task.ServiceMethod.Name;

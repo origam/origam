@@ -284,7 +284,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string GetAllTablesSQL()
+        internal override string GetAllTablesSql()
         {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME";
         }
