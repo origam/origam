@@ -21,79 +21,44 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.TestModel
 {
-	/// <summary>
-	/// Summary description for TestScenario.
-	/// </summary>
 	[SchemaItemDescription("Test Scenario", 16)]
     [ClassMetaVersion("6.0.0")]
-	public class TestScenario : AbstractSchemaItem, ISchemaItemFactory
+	public class TestScenario : AbstractSchemaItem
 	{
 		public const string CategoryConst = "TestScenario";
 
-		public TestScenario() : base() {}
+		public TestScenario() {}
 
 		public TestScenario(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public TestScenario(Key primaryKey) : base(primaryKey)	{}
+		public TestScenario(Key primaryKey) : base(primaryKey) {}
 
 		#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override string Icon
-		{
-			get
-			{
-				return "16";
-			}
-		}
+		public override string Icon => "16";
 
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(TestCase)};
-			}
-		}
+			typeof(TestCase)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(TestCase))
-			{
-				TestCase item = new TestCase(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewTestCase";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTestScenarioUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group,
+				typeof(T) == typeof(TestCase)
+					? "NewTestCase" : null);
 		}
 
 		#endregion

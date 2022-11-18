@@ -2571,10 +2571,8 @@ namespace Origam.DA.Service
 		            foreach(DataRow columnRow in columns.Tables[0].Select(
 			                    "TABLE_NAME = '" + entity.Name + "'"))
 		            {
-			            FieldMappingItem fieldMappingItem = entity.NewItem(
-					            typeof(FieldMappingItem), 
-					            schemaService.ActiveSchemaExtensionId, null) 
-				            as FieldMappingItem;
+			            var fieldMappingItem = entity.NewItem<FieldMappingItem>(
+					            schemaService.ActiveSchemaExtensionId, null);
 			            fieldMappingItem.Name 
 				            = (string)columnRow["COLUMN_NAME"];
 			            fieldMappingItem.AllowNulls 

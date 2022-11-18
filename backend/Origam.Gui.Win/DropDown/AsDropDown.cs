@@ -560,21 +560,16 @@ namespace Origam.Gui.Win
 
 			if(this.DataLookup != null)
 			{
-				try
+				var _dataServiceAgent = ServiceManager.Services.GetService<IBusinessServicesService>()
+					.GetAgent("DataService", null, null);
+				var parameters = _dataServiceAgent.ExpectedParameterNames(this.DataLookup, "LoadData", "Parameters");
+				foreach (string parameterName in parameters)
 				{
-					 var _dataServiceAgent = ServiceManager.Services.GetService<IBusinessServicesService>()
-																	.GetAgent("DataService", null, null);
-					var parameters = _dataServiceAgent.ExpectedParameterNames(this.DataLookup, "LoadData", "Parameters");
-					foreach (string parameterName in parameters)
-					{
-						ColumnParameterMapping mapping = this._origamMetadata.NewItem(
-							typeof(ColumnParameterMapping),
-							this._origamMetadata.SchemaExtensionId, null) as ColumnParameterMapping;
-
-						mapping.Name = parameterName;
-					}
+					ColumnParameterMapping mapping = _origamMetadata
+						.NewItem<ColumnParameterMapping>(
+							_origamMetadata.SchemaExtensionId, null);
+					mapping.Name = parameterName;
 				}
-				finally {}
 			}
 
 			//Refill Parameter collection (and dictionary)

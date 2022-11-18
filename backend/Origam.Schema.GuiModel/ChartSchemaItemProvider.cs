@@ -21,128 +21,80 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace Origam.Schema.GuiModel
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class ChartSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class ChartSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public ChartSchemaItemProvider() { }
+		public ChartSchemaItemProvider() {}
 		
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return AbstractChart.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
+		public override string RootItemType => AbstractChart.CategoryConst;
+
+		public override string Group => "UI";
+
 		#endregion
 
 		public ArrayList Charts(Guid formId, string entity)
 		{
-			ArrayList result = new ArrayList();
-
-			foreach(AbstractChart chart in this.ChildItems)
+			var result = new ArrayList();
+			foreach(var abstractSchemaItem in ChildItems)
 			{
-				foreach(ChartFormMapping m in chart.ChildItemsByType(ChartFormMapping.CategoryConst))
+				var chart = (AbstractChart)abstractSchemaItem;
+				if(chart.ChildItemsByType(ChartFormMapping.CategoryConst)
+				   .Cast<ChartFormMapping>().Any(chartFormMapping => 
+					   formId.Equals(chartFormMapping.Screen.Id) 
+					   && entity.Equals(chartFormMapping.Entity.Name)))
 				{
-					if(formId.Equals(m.Screen.Id) && entity.Equals(m.Entity.Name))
-					{
-						result.Add(chart);
-						break;
-					}
+					result.Add(chart);
 				}
 			}
-
 			return result;
 		}
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_14_charts.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_14_charts.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Charts";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Charts";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return "List of Charts";
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			"List of Charts";
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(CartesianChart), 
-									  typeof(PieChart),
-									typeof(SvgChart)};
-			}
-		}
+			typeof(CartesianChart), typeof(PieChart), typeof(SvgChart)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(CartesianChart))
+			string itemName = null;
+			if(typeof(T) == typeof(CartesianChart))
 			{
-				item =  new CartesianChart(schemaExtensionId);
-				item.Name = "NewCartesianChart";
+				itemName = "NewCartesianChart";
 			}
-			else if(type == typeof(PieChart))
+			else if(typeof(T) == typeof(PieChart))
 			{
-				item =  new PieChart(schemaExtensionId);
-				item.Name = "NewPieChart";
+				itemName = "NewPieChart";
 			}
-			else if(type == typeof(SvgChart))
+			else if(typeof(T) == typeof(SvgChart))
 			{
-				item =  new SvgChart(schemaExtensionId);
-				item.Name = "NewSvgChart";
+				itemName = "NewSvgChart";
 			}
-			else
-			{
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorGraphicsUnknownType"));
-			}
-
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			item.Group = group;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion

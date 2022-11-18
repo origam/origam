@@ -24,92 +24,45 @@ using System;
 
 namespace Origam.Schema
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class StringSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class StringSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public StringSchemaItemProvider() { }
+		public StringSchemaItemProvider() {}
 		
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return StringItem.CategoryConst;
-			}
-		}
+		public override string RootItemType => StringItem.CategoryConst;
 
-		public override string Group
-		{
-			get
-			{
-				return "COMMON";
-			}
-		}
+		public override string Group => "COMMON";
 
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_04_string-library.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_04_string-library.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "String Library";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "String Library";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return "List of Strings";
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			"List of Strings";
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] {typeof(StringItem)};
+
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
 		{
-			get
-			{
-				return new Type[] {typeof(StringItem)};
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			if(type == typeof(StringItem))
-			{
-				StringItem item =  new StringItem(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewString";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTypeNotSupported", this.GetType().Name));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(StringItem) ?
+					"NewString" : null);
 		}
 
 		#endregion

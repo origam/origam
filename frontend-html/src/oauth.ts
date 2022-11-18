@@ -46,10 +46,14 @@ export async function ensureLogin() {
     );
     const [urlpart] = window.location.href.split("#");
     window.history.replaceState(null, "", urlpart);
-    return user;
+    if(!user.access_token){
+      await userManager.signinRedirect();
+    }else{
+      return user;
+    }
   } else {
     const user = await userManager.getUser();
-    if (user) {
+    if (user && user.access_token) {
       return user;
     } else {
       await userManager.signinRedirect();

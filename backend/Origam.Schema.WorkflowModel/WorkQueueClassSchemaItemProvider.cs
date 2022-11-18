@@ -23,92 +23,48 @@ using System;
 
 namespace Origam.Schema.WorkflowModel.WorkQueue
 {
-	/// <summary>
-	/// Summary description for WorkflowSchemaItemProvider.
-	/// </summary>
-	public class WorkQueueClassSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class WorkQueueClassSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public WorkQueueClassSchemaItemProvider()
-		{
-		}
+		public WorkQueueClassSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return WorkQueueClass.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "BL";
-			}
-		}
+		public override string RootItemType => WorkQueueClass.CategoryConst;
+
+		public override string Group => "BL";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_34_work-queue-classes.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_34_work-queue-classes.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Work Queue Classes";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Work Queue Classes";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(WorkQueueClass)};
-			}
-		}
+			typeof(WorkQueueClass)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(WorkQueueClass))
-			{
-				WorkQueueClass item = new WorkQueueClass(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewWorkQueueClass";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowModelUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(WorkQueueClass) ?
+					"NewWorkQueueClass" : null);
 		}
 
 		#endregion

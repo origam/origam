@@ -23,99 +23,50 @@ using System;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for WorkflowSchemaItemProvider.
-	/// </summary>
-	public class WorkflowSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class WorkflowSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public WorkflowSchemaItemProvider()
-		{
-		}
+		public WorkflowSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return Workflow.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "BL";
-			}
-		}
+		public override string RootItemType => Workflow.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "BL";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_30_sequential-workflows.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_30_sequential-workflows.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Sequential Workflows";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Sequential Workflows";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(Workflow)};
-			}
-		}
+			typeof(Workflow)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(Workflow))
-			{
-				Workflow item = new Workflow(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewWorkflow";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowModelUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(Workflow) ?
+					"NewWorkflow" : null);
 		}
 
 		#endregion

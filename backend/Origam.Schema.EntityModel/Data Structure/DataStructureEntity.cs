@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Attributes;
@@ -39,19 +40,16 @@ namespace Origam.Schema.EntityModel
 		InnerJoin
 	}
 
-	/// <summary>
-	/// Summary description for EntityRelationItem.
-	/// </summary>
 	[SchemaItemDescription("Entity", "Entities", "icon_entity.png")]
     [HelpTopic("Entities")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Entity")]
     [ClassMetaVersion("6.0.0")]
-    public class DataStructureEntity : AbstractSchemaItem, ISchemaItemFactory
+    public class DataStructureEntity : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureEntity";
 
-		public DataStructureEntity() : base()	{}
+		public DataStructureEntity() {}
 		
 		public DataStructureEntity(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -66,34 +64,30 @@ namespace Origam.Schema.EntityModel
 		/// </summary>
 		[TypeConverter(typeof(DataStructureEntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
-        [NotNullModelElementRuleAttribute()]
-        [RelationshipWithKeyRuleAttribute()]
+        [NotNullModelElementRule()]
+        [RelationshipWithKeyRule()]
         [XmlReference("entity", "EntityId")]
         public AbstractSchemaItem Entity
 		{
-			get
-			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.EntityId));
-			}
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(EntityId));
 			set
 			{
-				//				// We have to delete all child items
-				//				this.ChildItems.Clear();
-
 				if(value == null)
 				{
-					this.EntityId = Guid.Empty;
-
-					this.Name = "";
+					EntityId = Guid.Empty;
+					Name = "";
 				}
 				else
 				{
-					if(!(value is IDataEntity | value is IAssociation))
-						throw new ArgumentOutOfRangeException("Entity", value, ResourceUtils.GetString("ErrorNotIDataItem"));
-
-					this.EntityId = (Guid)value.PrimaryKey["Id"];
-
-					this.Name = this.Entity.Name;
+					if(!(value is IDataEntity || value is IAssociation))
+					{
+						throw new ArgumentOutOfRangeException(
+							"Entity", value, 
+							ResourceUtils.GetString("ErrorNotIDataItem"));
+					}
+					EntityId = (Guid)value.PrimaryKey["Id"];
+					Name = Entity.Name;
 				}
 			}
 		}
@@ -103,32 +97,36 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				if(this.Entity is IDataEntity)
-					return this.Entity as IDataEntity;
-				else if(this.Entity is IAssociation)
-					return (this.Entity as IAssociation).AssociatedEntity;
-				else if(this.Entity != null)
-					throw new ArgumentOutOfRangeException("Entity", this.Entity, ResourceUtils.GetString("ErrorNotIDataEntity"));
-
+				switch(Entity)
+				{
+					case IDataEntity _:
+						return Entity as IDataEntity;
+					case IAssociation _:
+						return ((IAssociation)Entity).AssociatedEntity;
+					default:
+					{
+						if(Entity != null)
+						{
+							throw new ArgumentOutOfRangeException(
+								"Entity", this.Entity, 
+								ResourceUtils.GetString("ErrorNotIDataEntity"));
+						}
+						break;
+					}
+				}
 				return null;
 			}
 		}
 
 		[Browsable(false)]
-		public DataStructureEntity RootEntity
-		{
-			get
-			{
-				return this.GetRootEntity(this);
-			}
-		}
+		public DataStructureEntity RootEntity => GetRootEntity(this);
 
-		private DataStructureEntity GetRootEntity(DataStructureEntity parentEntity)
+		private DataStructureEntity GetRootEntity(
+			DataStructureEntity parentEntity)
 		{
-			if(parentEntity.ParentItem is DataStructure)
-				return parentEntity;
-			else
-				return GetRootEntity(parentEntity.ParentItem as DataStructureEntity);
+			return parentEntity.ParentItem is DataStructure 
+				? parentEntity 
+				: GetRootEntity(parentEntity.ParentItem as DataStructureEntity);
 		}
 
 		private string _caption = "";
@@ -136,42 +134,35 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("label")]
         public string Caption
 		{
-			get
-			{
-				return _caption;
-			}
-			set
-			{
-				_caption = value;
-			}
+			get => _caption;
+			set => _caption = value;
 		}
 
 		private bool _allFields = true;
 		[XmlAttribute("allFields")]
         public bool AllFields
 		{
-			get
-			{
-				return _allFields;
-			}
+			get => _allFields;
 			set
 			{
-				if(value == _allFields) return;
-
+				if(value == _allFields)
+				{
+					return;
+				}
 				if(value)
 				{
-					ArrayList list = this.ChildItemsByType(DataStructureColumn.CategoryConst);
-
+					ArrayList list = ChildItemsByType(
+						DataStructureColumn.CategoryConst);
 					foreach(DataStructureColumn column in list)
 					{
-						if(column.Entity == null && ! column.UseCopiedValue 
-							&& ! column.UseLookupValue && column.Field.Name == column.Name)
+						if(column.Entity == null && !column.UseCopiedValue 
+							&& !column.UseLookupValue 
+							&& column.Field.Name == column.Name)
 						{
 							column.IsDeleted = true;
 						}
 					}
 				}
-
 				_allFields = value;
 			}
 		}
@@ -182,30 +173,19 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("ignoreImplicitFilters")]
         public bool IgnoreImplicitFilters
 		{
-			get
-			{
-				return _ignoreImplicitFilters;
-			}
-			set
-			{
-				_ignoreImplicitFilters = value;
-			}
+			get => _ignoreImplicitFilters;
+			set => _ignoreImplicitFilters = value;
 		}
 
-		private DataStructureIgnoreCondition _ignoreCondition = DataStructureIgnoreCondition.None;
+		private DataStructureIgnoreCondition _ignoreCondition 
+			= DataStructureIgnoreCondition.None;
 		[DefaultValue(DataStructureIgnoreCondition.None)]
 		[Description("Specify the condition resulting in not adding the whole entity to data query. Value 'IgnoreWhenNoFilters' means that the entity is skipped when neither one filter would be constructed for that entity. Value 'IgnoreWhenNoExplicitFilters' means the same as 'IgnoreWhenNoFilters' but it doesn't count implicit filters (aka row level security filters), so only datastructure filters are examined. Note, that filters can be avoided from construction according to their ignore condition settings and provided the whole corresponding filterset is 'dynamic'")]
         [XmlAttribute("ignoreCondition")]
         public DataStructureIgnoreCondition IgnoreCondition
 		{
-			get
-			{
-				return _ignoreCondition;
-			}
-			set
-			{
-				_ignoreCondition = value;
-			}
+			get => _ignoreCondition;
+			set => _ignoreCondition = value;
 		}
 
         private DataStructureConcurrencyHandling _concurrencyHandling 
@@ -215,14 +195,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("concurrencyHandling")]
         public DataStructureConcurrencyHandling ConcurrencyHandling
         {
-            get
-            {
-                return _concurrencyHandling;
-            }
-            set
-            {
-                _concurrencyHandling = value;
-            }
+            get => _concurrencyHandling;
+            set => _concurrencyHandling = value;
         }
 
 		private RelationType _relationType = RelationType.Normal;
@@ -230,14 +204,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("relationType")]
         public RelationType RelationType
 		{
-			get
-			{
-				return _relationType;
-			}
-			set
-			{
-				_relationType = value;
-			}
+			get => _relationType;
+			set => _relationType = value;
 		}
 
 		public Guid ConditionEntityConstantId;
@@ -246,14 +214,11 @@ namespace Origam.Schema.EntityModel
         [XmlReference("conditionEntityConstant", "ConditionEntityConstantId")]
         public DataConstant ConditionEntityConstant
 		{
-			get
-			{
-				return (DataConstant)this.PersistenceProvider.RetrieveInstance(typeof(EntityFilter), new ModelElementKey(this.ConditionEntityConstantId));
-			}
-			set
-			{
-				this.ConditionEntityConstantId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (DataConstant)PersistenceProvider.RetrieveInstance(
+				typeof(EntityFilter), 
+				new ModelElementKey(ConditionEntityConstantId));
+			set => ConditionEntityConstantId 
+				= (value == null) ? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
 		private string _conditionEntityParameterName;
@@ -261,29 +226,17 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("conditionEntityParameterName")]
         public string ConditionEntityParameterName
 		{
-			get
-			{
-				return _conditionEntityParameterName;
-			}
-			set
-			{
-				_conditionEntityParameterName = (value == "") ? null : value; 
-			}
+			get => _conditionEntityParameterName;
+			set => _conditionEntityParameterName = (value == "") ? null : value;
 		}
 
 		private bool _useUpsert = false;
 		[Category("Update"), DefaultValue(false)]
         [XmlAttribute("useUpsert")]
-        public bool UseUPSERT
+        public bool UseUpsert
 		{
-			get
-			{
-				return _useUpsert;
-			}
-			set
-			{
-				_useUpsert = value;
-			}
+			get => _useUpsert;
+			set => _useUpsert = value;
 		}
 
 #if ORIGAM_CLIENT
@@ -303,75 +256,61 @@ namespace Origam.Schema.EntityModel
 					{
 						if(!_columnsPopulated)
 						{
-							_columns = this.GetColumns();
+							_columns = GetColumns();
 							_columnsPopulated = true;
 						}
 					}
 				}
 				return _columns;
 #else
-				return this.GetColumns();
+				return GetColumns();
 #endif
 			}
 		}
 
         public DataStructureColumn Column(string name)
         {
-            foreach (DataStructureColumn col in Columns)
-            {
-                if (col.Name == name)
-                {
-                    return col;
-                }
-            }
-            return null;
+	        return Columns.FirstOrDefault(column => column.Name == name);
         }
 
 		public List<DataStructureColumn> GetColumnsFromEntity()
 		{
-			List<DataStructureColumn> columns = new List<DataStructureColumn>();
-			if(this.AllFields & this.EntityId != Guid.Empty) {
-				foreach(IDataEntityColumn column in this.EntityDefinition.EntityColumns)
+			var columns = new List<DataStructureColumn>();
+			if(!(AllFields && EntityId != Guid.Empty))
+			{
+				return columns;
+			}
+			foreach(IDataEntityColumn column in EntityDefinition.EntityColumns)
+			{
+				if(column.ExcludeFromAllFields)
 				{
-					if(! column.ExcludeFromAllFields)
-					{
-						DataStructureColumn newColumn = new DataStructureColumn(this.SchemaExtensionId);
-						newColumn.IsPersistable = false;
-						newColumn.PersistenceProvider = this.PersistenceProvider;
-						newColumn.Field = column;
-						newColumn.Name = column.Name;
-						newColumn.ParentItem = this;
-
-						columns.Add(newColumn);
-					}
+					continue;
 				}
+				var newColumn = new DataStructureColumn(SchemaExtensionId);
+				newColumn.IsPersistable = false;
+				newColumn.PersistenceProvider = PersistenceProvider;
+				newColumn.Field = column;
+				newColumn.Name = column.Name;
+				newColumn.ParentItem = this;
+				columns.Add(newColumn);
 			}
 			return columns;
 		}
 
 		public bool ExistsEntityFieldAsColumn(IDataEntityColumn entityField)
 		{
-			foreach (DataStructureColumn column in Columns)
-			{
-				if (column.Field.PrimaryKey.Equals(entityField.PrimaryKey))
-				{
-					return true;
-				}
-			}
-			return false;
+			return Columns.Any(column => column.Field.PrimaryKey.Equals(
+				entityField.PrimaryKey));
 		}
 
 		private List<DataStructureColumn> GetColumns()
 		{
 			// columns from entity (AllFields=true)
 			List<DataStructureColumn> columns = GetColumnsFromEntity();
-			
 			// add all extra columns specified
-			foreach(DataStructureColumn column in this.ChildItemsByType(DataStructureColumn.CategoryConst))
-			{
-				columns.Add(column);
-			}
-
+			columns.AddRange(
+				ChildItemsByType(DataStructureColumn.CategoryConst)
+					.Cast<DataStructureColumn>());
 			columns.Sort();
 			return columns;
 		}
@@ -379,46 +318,36 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractSchemaItem Members
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
+		public override void GetParameterReferences(
+			AbstractSchemaItem parentItem, Hashtable list)
 		{
 			// relation has parameters (i.e. there are parameters in the JOIN clause
-			if(this.Entity is IAssociation)
+			if(Entity is IAssociation)
 			{
-				Hashtable childList = new Hashtable();
-				this.Entity.GetParameterReferences(this.Entity, childList);
-
+				var childList = new Hashtable();
+				Entity.GetParameterReferences(Entity, childList);
 				// If children had some parameter references, we rename them and add them to the final
 				// collection.
 				foreach(DictionaryEntry entry in childList)
 				{
 					// we rename it using parent data structure entity name
-					string name = this.ParentItem.Name + "_" + entry.Key;
+					var name = ParentItem.Name + "_" + entry.Key;
 					if(!list.ContainsKey(name))
 					{
 						list.Add(name, entry.Value);
 					}
 				}
 			}
-
-			foreach(AbstractSchemaItem item in this.Columns)
+			foreach(DataStructureColumn dataStructureColumn in Columns)
 			{
-				if(item is ParameterReference)
-				{
-					string name = this.Name + "_" + (item as ParameterReference).Parameter.Name;
-					
-					if(!list.ContainsKey(name))
-						list.Add(name, item);
-				}
-
-				Hashtable childList = new Hashtable();
-
-				item.GetParameterReferences(item, childList);
-
-				// If children had some parameter references, we rename them and add them to the final
-				// collection.
+				var childList = new Hashtable();
+				dataStructureColumn.GetParameterReferences(
+					dataStructureColumn, childList);
+				// If children had some parameter references,
+				// we rename them and add them to the final collection.
 				foreach(DictionaryEntry entry in childList)
 				{
-					string name = this.Name + "_" + entry.Key;
+					var name = Name + "_" + entry.Key;
 					if(!list.ContainsKey(name))
 					{
 						list.Add(name, entry.Value);
@@ -427,56 +356,16 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 		
-		public override string ItemType
-		{
-			get
-			{
-				return DataStructureEntity.CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-//		private bool _allColumnsPopulated = false;
-//		public override SchemaItemCollection ChildItems
-//		{
-//			get
-//			{
-//				if(this.AllColumns && !_allColumnsPopulated && !_isPopulating)
-//				{
-//					PopulateColumns();
-//					_allColumnsPopulated = true;
-//				}
-//				
-//				return base.ChildItems;
-//			}
-//		}
-		
-//		[Browsable(false)]
-//		public override bool PersistChildItems
-//		{
-//			get
-//			{
-//				return false;
-//			}
-//		}
-
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
-		{
+		public override bool CanMove(UI.IBrowserNode2 newNode) =>
 			// can move to the root only
-			if(newNode.Equals(this.RootItem))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+			newNode.Equals(RootItem);
 
 		public override void GetExtraDependencies(ArrayList dependencies)
 		{
-			dependencies.Add(this.Entity);
-			dependencies.Add(this.ConditionEntityConstant);
-
+			dependencies.Add(Entity);
+			dependencies.Add(ConditionEntityConstant);
 			base.GetExtraDependencies (dependencies);
 		}
 
@@ -485,39 +374,11 @@ namespace Origam.Schema.EntityModel
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
-		{
-			get
-			{
-				return new Type[] {
-									   typeof(DataStructureEntity),
-									   typeof(DataStructureColumn)//,
-//									   typeof(DataStructureEntityFilter)
-								   };
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			AbstractSchemaItem item;
-			
-			if(type == typeof(DataStructureEntity))
-			{
-				item = new DataStructureEntity(schemaExtensionId);
-			}
-			else if(type == typeof(DataStructureColumn))
-			{
-				item = new DataStructureColumn(schemaExtensionId);
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataStructureEntityUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
-		}
-
+		public override Type[] NewItemTypes =>
+			new[] {
+				typeof(DataStructureEntity),
+				typeof(DataStructureColumn)
+			};
 		#endregion
 	}
 }

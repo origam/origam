@@ -26,132 +26,89 @@ using Origam.UI;
 
 namespace Origam.Schema
 {
-	/// <summary>
-	/// Summary description for NonpersistentSchemaItemNode.
-	/// </summary>
-	public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory, IComparable
+	public class NonpersistentSchemaItemNode : IBrowserNode2, ISchemaItemFactory
 	{
-		public NonpersistentSchemaItemNode()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
+		public NonpersistentSchemaItemNode() {}
 
 		#region IBrowserNode2 Members
 
-		public bool CanMove(IBrowserNode2 newNode)
-		{
+		public bool CanMove(IBrowserNode2 newNode) =>
 			// TODO:  Add NonpersistentSchemaItemNode.CanMove implementation
-			return false;
-		}
+			false;
 
 		private IBrowserNode2 _parentNode;
 		public IBrowserNode2 ParentNode
 		{
-			get
-			{
-				return _parentNode;
-			}
-			set
-			{
-				_parentNode = value;
-			}
+			get => _parentNode;
+			set => _parentNode = value;
 		}
 
-		public bool CanDelete
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public bool CanDelete => false;
 
 		public void Delete()
 		{
-			throw new InvalidOperationException(ResourceUtils.GetString("ErrorDeleteIndividual"));
+			throw new InvalidOperationException(
+				ResourceUtils.GetString("ErrorDeleteIndividual"));
 		}
 
 		public bool Hide
 		{
-			get
-			{
+			get =>
 				// TODO:  Add NonpersistentSchemaItemNode.Hide getter implementation
-				return false;
-			}
+				false;
 			set
 			{
 				// TODO:  Add NonpersistentSchemaItemNode.Hide setter implementation
 			}
 		}
 
-		public byte[] NodeImage
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public byte[] NodeImage => null;
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public bool HasChildNodes
-		{
-			get
-			{
-				return this.ChildNodes().Count > 0;
-			}
-		}
+		public bool HasChildNodes => this.ChildNodes().Count > 0;
 
-		public bool CanRename
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public bool CanRename => false;
 
 		public BrowserNodeCollection ChildNodes()
 		{
-			BrowserNodeCollection result = new BrowserNodeCollection();
-
-			SchemaItemAncestor ancestor = this.ParentNode as SchemaItemAncestor;
+			var result = new BrowserNodeCollection();
 			AbstractSchemaItem parent;
-			if(ancestor == null)
+			if(ParentNode is not SchemaItemAncestor ancestor)
 			{
-				parent = this.ParentNode as AbstractSchemaItem;
+				parent = ParentNode as AbstractSchemaItem;
 			}
 			else
 			{
 				parent = ancestor.Ancestor;
 			}
-
-			if(this.NodeText == "_Ancestors")
+			if(NodeText == "_Ancestors")
 			{
 				if(parent != null)
 				{
 					// All ancestors
-					foreach(IBrowserNode nod in parent.AllAncestors)
+					foreach(IBrowserNode node in parent.AllAncestors)
 					{
-						result.Add(nod);
+						result.Add(node);
 					}
 				}
 			}
 			else
 			{
 				// All other child items
-				foreach(AbstractSchemaItem item in parent.ChildItems)
+				foreach(var item in parent.ChildItems)
 				{
                     // and only own (not derived) items, they will be returned by SchemaItemAncestor
-                    if (item.DerivedFrom == null & item.IsDeleted == false)
+                    if(item.DerivedFrom == null & item.IsDeleted == false)
                     {
-                        if (parent.UseFolders)
+                        if(parent.UseFolders)
                         {
-                            string description = SchemaItemDescription(item.GetType());
-                            if (description == null) description = item.ItemType;
-
-                            if (this.NodeText == description)
+                            var description 
+	                            = SchemaItemDescription(item.GetType()) 
+	                              ?? item.ItemType;
+                            if (NodeText == description)
                             {
                                 result.Add(item);
                             }
@@ -159,61 +116,40 @@ namespace Origam.Schema
                     }
 				}
 			}
-
 			return result;
 		}
 
-		public string NodeId
-		{
-			get
-			{
-				return this.ParentNode.NodeId;
-			}
-		}
+		public string NodeId => ParentNode.NodeId;
 
 		private string _nodeText = "";
 		public string NodeText
 		{
-			get
-			{
-				return _nodeText;
-			}
-			set
-			{
-				_nodeText = value;
-			}
+			get => _nodeText;
+			set => _nodeText = value;
 		}
 
-		public string Icon
-		{
-			get
-			{
-				return "38_folder-categories-1.png";
-            }
-		}
+		public string Icon => "38_folder-categories-1.png";
 
-        public virtual string FontStyle
-        {
-            get
-            {
-                return "Regular";
-            }
-        }
-        #endregion
+		public virtual string FontStyle => "Regular";
+
+		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public virtual T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
+			where T : AbstractSchemaItem
 		{
-			AbstractSchemaItem newItem;
-
-			if(this.ParentNode is ISchemaItemFactory)
+			T newItem;
+			if(ParentNode is ISchemaItemFactory)
 			{
-				newItem = (this.ParentNode as ISchemaItemFactory).NewItem(type, schemaExtensionId, group);
+				newItem = (ParentNode as ISchemaItemFactory).NewItem<T>(
+					schemaExtensionId, group);
 			}
 			else
 			{
-				throw new Exception(ResourceUtils.GetString("ErrorUnknownParent"));
+				throw new Exception(
+					ResourceUtils.GetString("ErrorUnknownParent"));
 			}
 			ItemCreated?.Invoke(newItem);
 			return newItem;
@@ -229,26 +165,20 @@ namespace Origam.Schema
 		{
 			get
 			{
-				ISchemaItemFactory parent = this.ParentNode as ISchemaItemFactory;
-				if(parent != null)
+				if(ParentNode is not ISchemaItemFactory parent)
 				{
-					ArrayList types = new ArrayList();
-
-					foreach(Type type in parent.NewItemTypes)
+					return new Type[] { };
+				}
+				var types = new ArrayList();
+				foreach(var type in parent.NewItemTypes)
+				{
+					var description = SchemaItemDescription(type);
+					if(description == NodeText)
 					{
-						string description = SchemaItemDescription(type);
-						if(description == this.NodeText)
-						{
-							types.Add(type);
-						}
+						types.Add(type);
 					}
-
-					return types.ToArray(typeof(Type)) as Type[];
 				}
-				else
-				{
-					return new Type[] {};
-				}
+				return types.ToArray(typeof(Type)) as Type[];
 			}
 		}
 
@@ -256,25 +186,15 @@ namespace Origam.Schema
 		{
 			get
 			{
-				ISchemaItemFactory parent = this.ParentNode as ISchemaItemFactory;
-				if(parent != null)
+				if(ParentNode is ISchemaItemFactory parent)
 				{
 					return parent.NewTypeNames;
 				}
-				else
-				{
-					return new List<string>();
-				}
+				return new List<string>();
 			}
 		}
 
-		public virtual Type[] NameableTypes
-		{
-			get
-			{
-				return NewItemTypes;
-			}
-		}
+		public virtual Type[] NameableTypes => NewItemTypes;
 
 		public event Action<ISchemaItem> ItemCreated;
 
@@ -282,35 +202,22 @@ namespace Origam.Schema
 
 		private string SchemaItemDescription(Type type)
 		{
-			SchemaItemDescriptionAttribute attr = type.SchemaItemDescription();
-            if (attr == null)
-            {
-                return null;
-            }
-            else
-            {
-                return attr.FolderName;
-            }
+			var schemaItemDescriptionAttribute = type.SchemaItemDescription();
+			return schemaItemDescriptionAttribute?.FolderName;
 		}
 
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
-			NonpersistentSchemaItemNode npsin = obj as NonpersistentSchemaItemNode;
-			IBrowserNode other = obj as IBrowserNode;
-
-			if(other == null)
+			if(obj is not IBrowserNode other)
 			{
 				return -1;
 			}
-			else if(npsin != null)
+			if(obj is NonpersistentSchemaItemNode nonpersistentSchemaItemNode)
 			{
-				return this.NodeText.CompareTo(npsin.NodeText);
+				return NodeText.CompareTo(nonpersistentSchemaItemNode.NodeText);
 			}
-			else
-			{
-				throw new InvalidCastException();
-			}
+			throw new InvalidCastException();
 		}
         #endregion
     }
