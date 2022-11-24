@@ -5,6 +5,7 @@
     <UserSecretsId>8a03936d-700c-4edd-9ffa-e3df428dc822</UserSecretsId>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <LangVersion>7.1</LangVersion>
+	<GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
   </PropertyGroup>
 
   <PropertyGroup>
