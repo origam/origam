@@ -512,7 +512,7 @@ namespace Origam.Security.Identity
             user.Email = Parameters.ContainsKey("Email") 
                 ? Parameters["Email"].ToString() : null;
             user.IsApproved = Parameters.ContainsKey("IsApproved") 
-                ? (Boolean)Parameters["IsApproved"] : IsApprovedMySelf(user);
+                ? (Boolean)Parameters["IsApproved"] : true;
             user.TransactionId = TransactionId;
             Task<InternalIdentityResult> task = userManager.UpdateAsync(user);
             if (task.IsFaulted)
@@ -524,17 +524,6 @@ namespace Origam.Security.Identity
                 result = task.Result.Succeeded;
             }
         }
-
-        private bool IsApprovedMySelf(IOrigamUser user)
-        {
-            var currentProfile = SecurityManager.CurrentUserProfile();
-            if(currentProfile.Id.ToString() == user.BusinessPartnerId)
-            {
-                return true;
-            }
-            return false;
-        }
-
         private void SendEmailConfirmationToken()
 		{
 			// Check input parameters
