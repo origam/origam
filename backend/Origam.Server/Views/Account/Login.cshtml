@@ -9,8 +9,10 @@
 @inject IViewLocalizer Localizer
 @inject LanguageConfig languageConfig
 @inject IOptions<IdentityGuiConfig> ConfigOptions;
+@inject IOptions<UserConfig> userConfig;
 @{
     IdentityGuiConfig guiConfig = ConfigOptions.Value;
+    UserConfig guiUserConfig = userConfig.Value;
 }
 
 
@@ -85,7 +87,15 @@
         </div>
     </div>
 }
-    <br/>
+@if (guiUserConfig.UserRegistrationAllowed)
+{
+    <div class="left-aligned">
+        <div class="initial-user-statement">
+            @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+        </div>
+    </div>
+}
+<br />
 }
 @if (Model.VisibleExternalProviders.Any())
 {
