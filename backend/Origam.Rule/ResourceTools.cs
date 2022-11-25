@@ -39,6 +39,9 @@ public class ResourceTools : IResourceTools
 
     private ResourceTools()
     {
+        userProfileGetter = () => SecurityManager.CurrentUserProfile();
+        businessService = ServiceManager.Services
+                .GetService<IBusinessServicesService>();
     }
 
     public ResourceTools(IBusinessServicesService businessService, Func<UserProfile> userProfileGetter)
