@@ -98,7 +98,9 @@ export default class Scroller extends React.Component<IScrollerProps> {
   }
 
   public focus() {
-    this.elmScrollerDiv && this.elmScrollerDiv.focus();
+    setTimeout(()=>{
+      this.elmScrollerDiv && this.elmScrollerDiv.focus();
+    });
   }
 
   @action.bound
