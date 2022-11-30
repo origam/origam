@@ -2,6 +2,7 @@ import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IFocusable } from "./FormFocusManager";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { requestFocus } from "utils/focus";
 
 export class GridFocusManager {
   private _activeEditor: IFocusable | undefined;
@@ -30,7 +31,7 @@ export class GridFocusManager {
   }
 
   focusEditor() {
-    this._activeEditor?.focus();
+    requestFocus(this._activeEditor as any);
   }
 }
 
