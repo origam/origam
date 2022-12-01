@@ -220,7 +220,7 @@ namespace Origam.Schema.WorkflowModel
 						new Guid("e9d8e455-02de-4ae7-914e-9a3064e52bd6"))
 				) as DataStructure;
 			// get a clone and save
-			var workQueueStructure 
+			var workQueueStructure
 				= workQueueTemplateStructure.Clone() as DataStructure;
 			workQueueStructure.Name = "WQ_" + entity.Name;
 			workQueueStructure.Group = EntityHelper.GetDataStructureGroup(
@@ -232,6 +232,12 @@ namespace Origam.Schema.WorkflowModel
 			workQueueStructure.Persist();
 			workQueueStructure.UpdateReferences();
 			workQueueStructure.ClearCacheOnPersist = true;
+			DataStructureSortSet sortSet = EntityHelper.CreateSortSet(
+				workQueueStructure, "Default", true);
+			EntityHelper.CreateSortSetItem(sortSet,
+				workQueueStructure.Entities[0] as DataStructureEntity,
+				"RecordCreated",
+				DataStructureColumnSortDirection.Ascending, true);
 			workQueueStructure.ThrowEventOnPersist = true;
 			workQueueStructure.Persist();
 			var workQueueEntity 
@@ -267,6 +273,7 @@ namespace Origam.Schema.WorkflowModel
 			workQueueClass.WorkQueueStructureUserListMethod = workQueueStructure
 				.GetChildByName("GetByQueueId", 
 					DataStructureMethod.CategoryConst) as DataStructureMethod;
+			workQueueClass.WorkQueueStructureSortSet = sortSet;
 			workQueueClass.Persist();
 			GenerateWorkQueueClassEntityMappings(workQueueClass);
 			if(generatedElements == null)
