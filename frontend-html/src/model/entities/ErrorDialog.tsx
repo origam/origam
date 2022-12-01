@@ -29,6 +29,7 @@ import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
 import { Icon } from "@origam/components";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -135,7 +136,7 @@ export class ErrorDialogController implements IErrorDialogController {
                 closeDialog();
                 this.isDialogDisplayed = false;
                 this.dismissErrors();
-                setTimeout(() => previouslyFocusedElement?.focus(), 100);
+                setTimeout(() => requestFocus(previouslyFocusedElement), 100);
               })}
             />
           )}

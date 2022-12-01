@@ -30,6 +30,7 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 import { IFocusable } from "../../../../model/entities/FormFocusManager";
 import cx from "classnames";
+import { requestFocus } from "utils/focus";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -294,7 +295,7 @@ export const CheckListItem: React.FC<{
       <div
         onClick={onLabelClick}
         onMouseUp={()=> {
-          refInput?.current?.focus();
+          requestFocus(refInput?.current);
         }}
         className={"content " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}>
         {props.label}
@@ -340,6 +341,6 @@ class InputReference {
   }
 
   focus() {
-    this.inputRef.current?.focus();
+    requestFocus(this.inputRef.current);
   }
 }

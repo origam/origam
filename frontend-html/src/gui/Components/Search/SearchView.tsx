@@ -29,6 +29,7 @@ import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { ISearcher } from "model/entities/types/ISearcher";
 import Measure from "react-measure";
+import { requestFocus } from "utils/focus";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -46,7 +47,7 @@ export class SearchView extends React.Component<{
   }
 
   componentDidMount() {
-    this.viewState.input?.focus();
+    requestFocus(this.viewState.input);
   }
 
   render() {

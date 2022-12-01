@@ -24,6 +24,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { T } from "utils/translation";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 @observer
 export class NewConfigurationDialog extends React.Component<{
@@ -44,7 +45,7 @@ export class NewConfigurationDialog extends React.Component<{
   }
 
   componentDidMount() {
-    this.refInput.current?.focus();
+    requestFocus(this.refInput.current);
   }
 
   onKeydown(event: React.KeyboardEvent<HTMLInputElement>) {
