@@ -87,7 +87,7 @@ public static class ReferenceIndexManager
 
     public static void Add(AbstractSchemaItem item)
     {
-        GetReferencesFromDependencies(item);
+        Addreference(item);
         GetReferencesFromText(item);
         GetTypeSpecificReferences(item);
     }
@@ -132,7 +132,14 @@ public static class ReferenceIndexManager
             }
         }
     }
-
+    private static void Addreference(AbstractSchemaItem retrievedObj)
+    {
+        GetReferencesFromDependencies(retrievedObj);
+        foreach (AbstractSchemaItem item in retrievedObj.ChildItems)
+        {
+            GetReferencesFromDependencies(item);
+        }
+    }
     private static void GetReferencesFromDependencies(AbstractSchemaItem item)
     {
         ArrayList dependencies = item.GetDependencies(false);
