@@ -27,7 +27,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using LibGit2Sharp;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -89,21 +88,20 @@ public static class ReferenceIndexManager
 
     private static void RemoveAllReferencs(AbstractSchemaItem reference)
     {
-        //referenceDictionary.TryRemove(item.Id, out _);
         var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
-        var list =  referenceDictionary
-            .Where(it => it.Value.Contains(referenceInfo))
+        var referencelist =  referenceDictionary
+            .Where(refReference => refReference.Value
+            .Contains(referenceInfo))
             .ToList();
-        foreach (var l in list)
+        foreach (var referenceFound in referencelist)
         {
-            l.Value.Remove(referenceInfo);
-            if (l.Value.Count==0)
+            referenceFound.Value.Remove(referenceInfo);
+            if (referenceFound.Value.Count==0)
             {
-                referenceDictionary.TryRemove(l.Key, out _);
+                referenceDictionary.TryRemove(referenceFound.Key, out _);
             }
         }
     }
-
 
     public static void Add(AbstractSchemaItem item)
     {
