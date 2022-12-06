@@ -25,7 +25,9 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using LibGit2Sharp;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
@@ -78,12 +80,30 @@ public static class ReferenceIndexManager
 
     private static void UpdateNow(AbstractSchemaItem item)
     {
-        referenceDictionary.TryRemove(item.Id, out _);
+        RemoveAllReferencs(item);
         if (!item.IsDeleted)
         {
             Add(item);
         }
     }
+
+    private static void RemoveAllReferencs(AbstractSchemaItem reference)
+    {
+        //referenceDictionary.TryRemove(item.Id, out _);
+        var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
+        var list =  referenceDictionary
+            .Where(it => it.Value.Contains(referenceInfo))
+            .ToList();
+        foreach (var l in list)
+        {
+            l.Value.Remove(referenceInfo);
+            if (l.Value.Count==0)
+            {
+                referenceDictionary.TryRemove(l.Key, out _);
+            }
+        }
+    }
+
 
     public static void Add(AbstractSchemaItem item)
     {
@@ -152,10 +172,10 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void AddToIndex(Guid referencedItemId, AbstractSchemaItem reference)
+    private static void AddToIndex(Guid dependencyItemId, AbstractSchemaItem reference)
     {
         var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
-        referenceDictionary.AddOrUpdate(referencedItemId,
+        referenceDictionary.AddOrUpdate(dependencyItemId,
             new HashSet<ReferenceInfo> { referenceInfo },
             (id, oldSet) =>
             {
