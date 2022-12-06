@@ -23,6 +23,7 @@ import { IScrollerProps } from "./types";
 import { observer } from "mobx-react";
 import S from "./Scroller.module.css";
 import { busyDelayMillis } from "../../../../utils/flow";
+import { requestFocus } from "utils/focus";
 
 /*
   Two divs broadcasting the outer one's scroll state to scrollOffsetTarget.
@@ -99,7 +100,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
 
   public focus() {
     setTimeout(()=>{
-      this.elmScrollerDiv && this.elmScrollerDiv.focus();
+      requestFocus(this.elmScrollerDiv);
     });
   }
 

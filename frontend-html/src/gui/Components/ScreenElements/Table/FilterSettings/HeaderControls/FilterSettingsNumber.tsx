@@ -30,6 +30,7 @@ import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "./Operator";
 import { getCurrentDecimalSeparator } from "model/entities/NumberFormating";
 import { ClearableInput } from "gui/connections/MobileComponents/Grid/ClearableInput";
+import { requestFocus } from "utils/focus";
 
 const OPERATORS =
   [
@@ -89,7 +90,7 @@ class OpEditors extends React.Component<{
   componentDidMount() {
     if (this.props.autoFocus) {
       setTimeout(() => {
-        this.inputRef.current?.focus();
+        requestFocus(this.inputRef.current);
       });
     }
   }

@@ -30,6 +30,7 @@ import {
   DateEditorModel,
   IEditorState
 } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
+import { requestFocus } from "utils/focus";
 
 
 class DesktopEditorState implements IEditorState{
@@ -131,7 +132,7 @@ export class DateTimeEditor extends React.Component<{
     setTimeout(() => {
       if ((this.props.autoFocus) && this.elmInput) {
         this.elmInput.select();
-        this.elmInput.focus();
+        requestFocus(this.elmInput);
         this.elmInput.scrollLeft = 0;
       }
     });
@@ -171,7 +172,7 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleContainerMouseDown(event: any) {
     setTimeout(() => {
-      this.elmInput?.focus();
+      requestFocus(this.elmInput);
     }, 30);
   }
 

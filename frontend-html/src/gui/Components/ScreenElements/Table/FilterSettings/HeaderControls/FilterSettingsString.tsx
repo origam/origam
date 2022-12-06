@@ -29,6 +29,7 @@ import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { ClearableInput } from "gui/connections/MobileComponents/Grid/ClearableInput";
+import { requestFocus } from "utils/focus";
 
 const OPERATORS = [
   Operator.contains,
@@ -87,7 +88,7 @@ class OpEditors extends React.Component<{
   componentDidMount() {
     if (this.props.autoFocus) {
       setTimeout(() => {
-        this.inputTag?.focus();
+        requestFocus(this.inputTag);
       });
     }
   }
