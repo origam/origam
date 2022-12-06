@@ -79,7 +79,9 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
           dataView.reselectOrSelectFirst();
         }
         dataView.formFocusManager.stopAutoFocus();
-        dataView.gridFocusManager.focusTableIfNeeded();
+        if(dataView.isRootGrid){
+          dataView.gridFocusManager.focusTableIfNeeded();
+        }
       }
       getFormScreen(ctx).setDirty(true);
       break;
