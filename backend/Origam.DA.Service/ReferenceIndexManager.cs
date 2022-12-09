@@ -79,16 +79,16 @@ public static class ReferenceIndexManager
 
     private static void UpdateNow(AbstractSchemaItem item)
     {
-        RemoveAllReferencs(item);
+        RemoveAllReferences(item);
         if (!item.IsDeleted)
         {
             Add(item);
         }
     }
 
-    private static void RemoveAllReferencs(AbstractSchemaItem reference)
+    private static void RemoveAllReferences(AbstractSchemaItem referencesToRemove)
     {
-        var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
+        var referenceInfo = new ReferenceInfo(referencesToRemove.Id, referencesToRemove.GetType());
         var referencelist =  referenceDictionary
             .Where(refReference => refReference.Value
             .Contains(referenceInfo))
@@ -105,7 +105,7 @@ public static class ReferenceIndexManager
 
     public static void Add(AbstractSchemaItem item)
     {
-        Addreference(item);
+        AddReference(item);
         GetReferencesFromText(item);
         GetTypeSpecificReferences(item);
     }
@@ -150,12 +150,12 @@ public static class ReferenceIndexManager
             }
         }
     }
-    private static void Addreference(AbstractSchemaItem retrievedObj)
+    private static void AddReference(AbstractSchemaItem item)
     {
-        GetReferencesFromDependencies(retrievedObj);
-        foreach (AbstractSchemaItem item in retrievedObj.ChildItems)
+        GetReferencesFromDependencies(item);
+        foreach (AbstractSchemaItem childItem in item.ChildItems)
         {
-            GetReferencesFromDependencies(item);
+            GetReferencesFromDependencies(childItem);
         }
     }
     private static void GetReferencesFromDependencies(AbstractSchemaItem item)
