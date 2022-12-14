@@ -86,14 +86,14 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void RemoveAllReferences(AbstractSchemaItem referencesToRemove)
+    private static void RemoveAllReferences(AbstractSchemaItem item)
     {
-        var referenceInfo = new ReferenceInfo(referencesToRemove.Id, referencesToRemove.GetType());
-        var referenceToRemove =  referenceDictionary
+        var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
+        var referencesToRemove =  referenceDictionary
             .Where(refReference => refReference.Value
             .Contains(referenceInfo))
             .ToList();
-        foreach (var referenceFound in referenceToRemove)
+        foreach (var referenceFound in referencesToRemove)
         {
             referenceFound.Value.Remove(referenceInfo);
             if (referenceFound.Value.Count==0)
