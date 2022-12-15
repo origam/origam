@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require('path');
 
 const pluginRegistrationFilePath = "src/plugins/tools/PluginRegistration.ts"
 const envFilePath = ".env.production.local";
@@ -32,6 +33,19 @@ function setVariableValue(variableName, value, envFile) {
   }
 }
 
+function isPathInImplementationsFolder(packageName){
+  return packageName.startsWith("plugins/implementations");
+}
+
+function findPackageJsonOnRelativePath(relativePathFromRoot){
+  while(path.basename(relativePathFromRoot) !== "implementations"){
+    if(fs.readdirSync(relativePathFromRoot).includes("package.json")){
+      return path.join(relativePathFromRoot, "package.json");
+    }
+    relativePathFromRoot = path.dirname(relativePathFromRoot);
+  }
+}
+
 if (!fs.existsSync(pluginRegistrationFilePath)) {
   throw new Error(
     `File '${pluginRegistrationFilePath}' was not found.`
@@ -43,8 +57,15 @@ const usedPluginNames = findUsedPackageNames(registrationFile)
 const packageNamesAndVersions = usedPluginNames
   .map(pluginName => {
     const packageName = getPackageName(pluginName, registrationFile);
-    const packageReference = require(`../node_modules/${packageName}/package.json`);
-    return `${packageName}: ${packageReference.version}`;
+    let packageReference;
+    if(isPathInImplementationsFolder(packageName)){
+      const relativePathFromRoot = path.join("src", packageName);
+      const pathToPackageJsonRelativeToRoot = findPackageJsonOnRelativePath(relativePathFromRoot);
+      packageReference = require(path.join("..", pathToPackageJsonRelativeToRoot));
+    }else{
+      packageReference = require(`../node_modules/${packageName}/package.json`);
+    }
+    return `${packageReference.name}: ${packageReference.version}`;
   })
   .join(";")
 

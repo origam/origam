@@ -89,7 +89,9 @@
     "//": "See https://github.com/facebook/create-react-app/issues/11773",
     "react-error-overlay": "6.0.9",
     "@types/react": "17.0.40",
-    "@types/react-dom": "17.0.2"
+    "@types/react-dom": "17.0.2",
+    "@types/leaflet": "1.8.0",
+    "leaflet": "1.9.2"
   },
   "eslintConfig": {
     "extends": [
