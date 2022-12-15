@@ -1462,8 +1462,8 @@ namespace OrigamArchitect
 				// Init services
 				InitializeConnectedServices();
 
-				// Initialize model-connected user interface
-				InitializeConnectedPads();
+                // Initialize model-connected user interface
+                InitializeConnectedPads();
                 CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
@@ -1503,7 +1503,7 @@ namespace OrigamArchitect
 #endif
 			this.LoadWorkspace();
 			cmd.Run();
-		}
+        }
 
 		private void SubscribeToUpgradeServiceEvents()
 		{
@@ -1709,7 +1709,7 @@ namespace OrigamArchitect
 
 				UpdateTitle();
 
-				modelCheckCancellationTokenSource.Cancel();
+                modelCheckCancellationTokenSource.Cancel();
 				modelCheckCancellationTokenSource =
 					new CancellationTokenSource();
 				return true;
@@ -2066,9 +2066,9 @@ namespace OrigamArchitect
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-		private void _schema_SchemaLoaded(object sender, EventArgs e)
+        private void _schema_SchemaLoaded(object sender, EventArgs e)
 		{
-			OrigamEngine.InitializeSchemaItemProviders(_schema);
+            OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
                 = ServiceManager.Services.GetService<IDeploymentService>();
 			IParameterService parameterService 
@@ -2177,7 +2177,7 @@ namespace OrigamArchitect
             UpdateTitle();
 		}
 
-        private void UpdateTitle()
+        public void UpdateTitle()
         {
 #if ORIGAM_CLIENT
 			Title = "";
@@ -2269,7 +2269,7 @@ namespace OrigamArchitect
 		private void _schema_SchemaUnloading(object sender, CancelEventArgs e)
 		{
 			e.Cancel = ! UnloadSchema();
-		}
+        }
 
 		private void CheckModelRootPackageVersion()
 		{
