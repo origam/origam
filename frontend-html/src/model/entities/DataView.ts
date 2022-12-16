@@ -115,6 +115,7 @@ export class DataView implements IDataView {
     this.clientSideGrouper.parent = this;
     this.serverSideGrouper.parent = this;
     this.focusManager.registerGridFocusManager(this.id, this.gridFocusManager);
+    this.focusManager.registerFormFocusManager(this.id, this.formFocusManager);
 
     this.gridDimensions = new GridDimensions({
       getTableViewProperties: () => getTableViewProperties(this),
