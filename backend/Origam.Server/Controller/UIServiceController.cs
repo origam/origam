@@ -67,7 +67,6 @@ namespace Origam.Server.Controller
         private readonly CustomAssetsConfig customAssetsConfig;
         private readonly HtmlClientConfig htmlClientConfig;
         private readonly ChatConfig chatConfig;
-        private readonly string workQueueEntity = "WorkQueueEntry";
 
         public UIServiceController(
             SessionObjects sessionObjects,
@@ -937,62 +936,6 @@ namespace Origam.Server.Controller
             return query;
         }
         
-         private Result<DataStructureQuery, IActionResult> WorkQueueGetRowsGetRowsQuery(
-            ILazyRowLoadInput input, WorkQueueSessionStore sessionStore)
-        {
-            var customOrderings = GetOrderings(input.OrderingList);
-            if(input.RowOffset != 0 && customOrderings.IsEmpty)
-            {
-                return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
-            }
-            var query = new DataStructureQuery
-            {
-                Entity = workQueueEntity,
-                CustomFilters = new CustomFilters
-                {
-                    Filters = input.Filter,
-                    FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
-                },
-                CustomOrderings = customOrderings,
-                RowLimit = input.RowLimit,
-                RowOffset = input.RowOffset,
-                ColumnsInfo = new ColumnsInfo(input.ColumnNames
-                        .Select(colName =>
-                        {
-                            return new ColumnData(
-                                name: colName,
-                                isVirtual: false,
-                                defaultValue: null,
-                            hasRelation: false);
-                        })
-                        .ToList(),
-                    renderSqlForDetachedFields: true),
-                ForceDatabaseCalculation = true,
-                MethodId = sessionStore.WQClass.WorkQueueStructureUserListMethodId,
-                SortSetId = sessionStore.WQClass.WorkQueueStructureSortSetId,
-                DataSourceId = sessionStore.WQClass.WorkQueueStructureId
-            };
-            if (input.Parameters != null)
-            {
-                foreach (var pair in input.Parameters)
-                {
-                    query.Parameters.Add(new QueryParameter(
-                        pair.Key, pair.Value));
-                } 
-            }
-            var parameters = sessionObjects.UIService.GetParameters(
-                sessionStore.Id);
-            foreach(var key in parameters.Keys)
-            {
-                query.Parameters.Add(
-                    new QueryParameter(key.ToString(),
-                        parameters[key]));
-            }
-            query.Parameters.Add(new QueryParameter(
-                "WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId));
-            return query;
-        }
-
         private Result<DataStructureQuery, IActionResult> GetRowsGetAggregationQuery(
             GetGroupsAggregations input, EntityData entityData)
         {
