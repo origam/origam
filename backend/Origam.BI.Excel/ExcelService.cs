@@ -130,11 +130,11 @@ namespace Origam.BI.Excel
             {
                 sheet.TabColorIndex = Convert.ToInt16(sourceSheet.TabColorIndex);
             }
-            if(!sourceSheet.IsDefaultColumnWidthNull())
+            if (!sourceSheet.IsDefaultColumnWidthNull())
             {
                 sheet.DefaultColumnWidth = sourceSheet.DefaultColumnWidth;
             }
-            if(!sourceSheet.IsDefaultRowHeightNull())
+            if (!sourceSheet.IsDefaultRowHeightNull())
             {
                 sheet.DefaultRowHeight = Convert.ToInt16(sourceSheet.DefaultRowHeight);
             }
