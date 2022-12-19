@@ -349,11 +349,11 @@ namespace Origam.Server.Controller
         [HttpPost("[action]")]
         public IActionResult GetRows([FromBody]GetRowsInput input)
         {
-            var sessionStore = sessionObjects.SessionManager.GetSession(
-                input.SessionFormIdentifier);
-            if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
+            return RunWithErrorHandler(() =>
             {
-                return RunWithErrorHandler(() =>
+                var sessionStore = sessionObjects.SessionManager.GetSession(
+                    input.SessionFormIdentifier);
+                if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
                 {
                     return WorkQueueGetRowsGetRowsQuery(input, workQueueSessionStore)
                         .Bind(dataStructureQuery=>
@@ -362,10 +362,7 @@ namespace Origam.Server.Controller
                                 methodId: input.MenuId))
                         .Map(ToActionResult)
                         .Finally(UnwrapReturnValue);
-                });
-            }
-            return RunWithErrorHandler(() =>
-            {
+                }
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetQuery(input, entityData))
                     .Bind(dataStructureQuery=>
@@ -382,24 +379,22 @@ namespace Origam.Server.Controller
         {
             return RunWithErrorHandler(() 
                 => Ok(sessionObjects.UIService.GetRow(input)));
-        }       
-        
+        }
+
         [HttpPost("[action]")]
         public IActionResult GetAggregations([FromBody]GetGroupsAggregations input)
         {
-            var sessionStore = sessionObjects.SessionManager.GetSession(
-                input.SessionFormIdentifier);
-            if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
-            {
-                return RunWithErrorHandler(() => 
-                    WorkQueueGetRowsGetAggregationQuery(input, workQueueSessionStore)
+            return RunWithErrorHandler(() => { 
+               var sessionStore = sessionObjects.SessionManager.GetSession(
+                    input.SessionFormIdentifier);
+                if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
+                {
+                   return WorkQueueGetRowsGetAggregationQuery(input, workQueueSessionStore)
                         .Bind(ExecuteDataReaderGetPairs)
                         .Bind(ExtractAggregationList)
                         .Map(ToActionResult)
-                        .Finally(UnwrapReturnValue));
-            }
-            return RunWithErrorHandler(() =>
-            {
+                        .Finally(UnwrapReturnValue);
+                }
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetAggregationQuery(input, entityData))                    
                     .Bind(ExecuteDataReaderGetPairs)
