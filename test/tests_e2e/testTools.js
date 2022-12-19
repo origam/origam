@@ -23,6 +23,47 @@ async function login(page) {
   await loginButton.click();
 }
 
+
+async function afterEachTest(browser){
+  const pages = await browser.pages();
+  try{
+    await Promise.all(pages.map(async page => await page.close()));
+  }catch(e){
+    console.warn(e);
+  }
+  await sleep(200);
+  if(browser) {
+    await browser.close();
+  }
+}
+
+async function beforeEachTest(){
+  const browser = await puppeteer.launch({
+    ignoreHTTPSErrors: true,
+    //devtools: true,
+    headless: false,
+    defaultViewport: {
+      width: 1024,
+      height: 2000, // to make all 30 lines visible and avoid the need for scrolling
+    },
+    args: [
+      "--disable-gpu",
+      "--disable-dev-shm-usage",
+      "--disable-setuid-sandbox",
+      "--no-sandbox",
+    ]
+  });
+  const page = await browser.newPage();
+  // await installMouseHelper(page); // uncomment to see the mouse movement
+  await page.goto(backEndUrl);
+  await sleep(500);
+  await page.evaluate(() => {
+    localStorage.setItem("debugCloseAllForms", "1");
+  });
+  return [browser, page]
+}
+
+
 async function openMenuItem(page, menuItemIdList) {
   for (const menuItemId of menuItemIdList) {
     const menuItem = await page.waitForXPath(
