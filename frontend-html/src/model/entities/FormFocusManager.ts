@@ -29,7 +29,7 @@ export class FormFocusManager {
 
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusAbleContainers: IFocusAbleObjectContainer[] = [];
-  private lastFocused: IFocusable | undefined;
+  public lastFocused: IFocusable | undefined;
 
   setLastFocused(focusable: IFocusable) {
     this.lastFocused = focusable;

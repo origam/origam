@@ -36,6 +36,7 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { getApi } from "model/selectors/getApi";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 export class FormScreen implements IFormScreen {
 
@@ -47,7 +48,10 @@ export class FormScreen implements IFormScreen {
     this.dataViews.forEach((o) => (o.parent = this));
     this.dataSources.forEach((o) => (o.parent = this));
     this.componentBindings.forEach((o) => (o.parent = this));
+    this.focusManager.parent = this;
   }
+
+  focusManager: ScreenFocusManager = null as any;
 
   parent?: any;
 

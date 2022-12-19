@@ -39,11 +39,13 @@ import { RowCursor } from "../../../modules/DataView/TableCursor";
 import { IInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IAggregation } from "./IAggregation";
 import { GridFocusManager } from "../GridFocusManager";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 export interface IDataViewData {
   id: string;
   modelInstanceId: string;
   name: string;
+  focusManager: ScreenFocusManager;
   modelId: string;
   defaultPanelView: IPanelViewType;
   isHeadless: boolean;

@@ -162,6 +162,7 @@ describe("Html client", () => {
       `//div[@id='${masterDataViewId}']//div[${xPathContainsClass("deleteRow")}]`,
       { visible: true }
     );
+    await sleep(500);
     const rowCountDataBeforeDelete = await getRowCountData(page, masterDataViewId);
     expect(rowCountDataBeforeDelete.selectedRow).toBe("2");
     expect(rowCountDataBeforeDelete.rowCount).toBe("3");

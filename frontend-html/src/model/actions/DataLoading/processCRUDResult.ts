@@ -28,6 +28,7 @@ import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataViewCache } from "../../selectors/FormScreen/getDataViewCache";
+import { getFocusManager } from "model/selectors/getFocusManager";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -79,9 +80,8 @@ export function*processCRUDResult(ctx: any, result: ICRUDResult,
           dataView.reselectOrSelectFirst();
         }
         dataView.formFocusManager.stopAutoFocus();
-        if(dataView.isRootGrid){
-          dataView.gridFocusManager.focusTableIfNeeded();
-        }
+        const focusManager = getFocusManager(dataView);
+        focusManager.setFocus();
       }
       getFormScreen(ctx).setDirty(true);
       break;
