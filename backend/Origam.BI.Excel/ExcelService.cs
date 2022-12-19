@@ -138,6 +138,11 @@ namespace Origam.BI.Excel
             {
                 sheet.DefaultRowHeight = Convert.ToInt16(sourceSheet.DefaultRowHeight);
             }
+            if (!sourceSheet.IsHiddenNull())
+            {
+                sheet.Workbook.SetSheetHidden(sourceSheet.Index, 
+                                        sourceSheet.Hidden?SheetState.Hidden:SheetState.Visible);
+            }
             if (!sourceSheet.IsFreezeRowIndexNull() && !sourceSheet.IsFreezeColumnIndexNull())
             {
                 sheet.CreateFreezePane(sourceSheet.FreezeColumnIndex, sourceSheet.FreezeRowIndex);
