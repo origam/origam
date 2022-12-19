@@ -117,9 +117,21 @@ export class ErrorDialogController implements IErrorDialogController {
   *pushError(error: any) {
     const myId = this.idGen++;
     const promise = NewExternalPromise();
-    this.errorStack.push({id: myId, error, promise, timestamp: moment()});
+
+    if (!this.theSameErrorAlreadyDisplayed(error)) {
+      this.errorStack.push({id: myId, error, promise, timestamp: moment()});
+    }
     this.displayDialog();
     yield promise;
+  }
+
+  theSameErrorAlreadyDisplayed(error: any){
+    if(this.errorStack.length == 0 || error?.name !== "AxiosError"){
+      return false;
+    }
+
+    const lastError = this.errorStack[this.errorStack.length - 1];
+    return lastError.error?.name === error.name && lastError.error?.message === error.message;
   }
 
   @action.bound displayDialog() {
