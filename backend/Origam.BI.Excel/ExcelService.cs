@@ -140,8 +140,9 @@ namespace Origam.BI.Excel
             }
             if (!sourceSheet.IsHiddenNull())
             {
-                sheet.Workbook.SetSheetHidden(sourceSheet.Index, 
-                                        sourceSheet.Hidden?SheetState.Hidden:SheetState.Visible);
+                sheet.Workbook.SetSheetHidden(
+                    sourceSheet.Index, 
+                    sourceSheet.Hidden ? SheetState.Hidden : SheetState.Visible);
             }
             if (!sourceSheet.IsFreezeRowIndexNull() && !sourceSheet.IsFreezeColumnIndexNull())
             {
@@ -149,7 +150,7 @@ namespace Origam.BI.Excel
             }
             else if (!sourceSheet.IsFreezeColumnIndexNull())
             {
-                sheet.CreateFreezePane(sourceSheet.FreezeColumnIndex,0);
+                sheet.CreateFreezePane(sourceSheet.FreezeColumnIndex, 0);
             }
             else if (!sourceSheet.IsFreezeRowIndexNull())
             {
