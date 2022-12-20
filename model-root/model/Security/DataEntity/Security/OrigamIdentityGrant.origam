@@ -425,7 +425,7 @@
     </ef:EntityFilter>
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataLength="100"
       adec:dataType="String"

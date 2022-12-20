@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [OrigamIdentityGrant] (
-	[Key] NVarChar(100) NULL PRIMARY KEY NONCLUSTERED,
+	[Key] NVarChar(100) PRIMARY KEY NONCLUSTERED,
 	[ClientId] NVarChar(100) NULL,
 	[SessionId] NVarChar(100) NULL,
 	[Expiration] DateTime NULL,

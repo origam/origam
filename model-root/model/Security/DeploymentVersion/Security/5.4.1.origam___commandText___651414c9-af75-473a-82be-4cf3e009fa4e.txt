@@ -1,5 +1,5 @@
 ﻿CREATE TABLE "OrigamIdentityGrant" (
-	"Key" Varchar(100) NULL PRIMARY KEY,
+	"Key" Varchar(100) PRIMARY KEY,
 	"ClientId" Varchar(100) NULL,
 	"SessionId" Varchar(100) NULL,
 	"Expiration" Timestamp(3) NULL,

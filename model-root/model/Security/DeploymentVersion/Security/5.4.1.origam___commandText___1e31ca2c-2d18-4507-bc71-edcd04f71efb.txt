@@ -1,1 +1,7 @@
-﻿DROP table OrigamIdentityGrant;
+﻿IF (EXISTS (SELECT * 
+                 FROM INFORMATION_SCHEMA.TABLES 
+                 WHERE TABLE_SCHEMA = 'dbo' 
+                 AND  TABLE_NAME = 'OrigamIdentityGrant'))
+BEGIN 
+DROP table OrigamIdentityGrant;
+END
