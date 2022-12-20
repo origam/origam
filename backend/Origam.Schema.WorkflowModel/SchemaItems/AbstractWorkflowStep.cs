@@ -67,7 +67,7 @@ namespace Origam.Schema.WorkflowModel
                 destinationSchemaItem.RootItem == null ||
                 this.RootItem != destinationSchemaItem.RootItem ||
                 !(destinationNode is IWorkflowBlock) ||
-                destinationNode is AbstractWorkflowBlock)
+                destinationNode is AbstractWorkflowBlock && Dependencies.Count > 0)
             {
                 return false;
             }
