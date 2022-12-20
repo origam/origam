@@ -1,1 +1,1 @@
-﻿drop table "OrigamIdentityGrant";
+﻿drop table IF EXISTS  "OrigamIdentityGrant";
