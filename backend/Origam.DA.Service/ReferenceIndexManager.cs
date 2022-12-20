@@ -89,7 +89,7 @@ public static class ReferenceIndexManager
     private static void RemoveAllReferences(AbstractSchemaItem item)
     {
         var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
-        var referencesToRemove =  referenceDictionary
+        var referencesToRemove = referenceDictionary
             .Where(refReference => refReference.Value
             .Contains(referenceInfo))
             .ToList();
