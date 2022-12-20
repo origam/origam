@@ -61,19 +61,18 @@ namespace Origam.Schema.WorkflowModel
 		}
 
 		[Browsable(false)] 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 destinationNode)
 		{
-			// can move inside the same workflow and we can move it under any block
-			if(this.RootItem == (newNode as ISchemaItem).RootItem && 
-				newNode is IWorkflowBlock)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+            if (!(destinationNode is ISchemaItem destinationSchemaItem) ||
+                destinationSchemaItem.RootItem == null ||
+                this.RootItem != destinationSchemaItem.RootItem ||
+                !(destinationNode is IWorkflowBlock) ||
+                destinationNode is AbstractWorkflowBlock)
+            {
+                return false;
+            }
+            return true;
+        }
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
