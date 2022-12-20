@@ -678,7 +678,7 @@
       <Version>3.0.6</Version>
     </PackageReference>
     <PackageReference Include="Origam.Service.Core">
-      <Version>1.1.0</Version>
+      <Version>2.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets">
