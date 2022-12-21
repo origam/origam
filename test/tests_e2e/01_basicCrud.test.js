@@ -1,7 +1,8 @@
 const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount, afterEachTest,
   beforeEachTest
 } = require('./testTools');
-const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader} = require("./modelIds");
+const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId,
+  topMenuHeader, masterDataViewId, detailDataViewId, detailEditorId, detailTabHandelId} = require("./modelIds");
 const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
 const {installMouseHelper} = require("./instalMouseHelper_");
 
@@ -21,12 +22,6 @@ afterEach(async () => {
   await afterEachTest(browser);
   browser = undefined;
 });
-
-const masterDataViewId = "dataView_775fa5ea-fa75-40a7-8c39-7828f7cdf508";
-const detailDataViewId = "dataView_b11ffa85-7507-475c-af50-ef08fd56072c";
-const detailEditorId = "editor_89be97a4-86e8-4036-b57a-36155e3f2322";
-const detailTabHandelId = "tabHandle_823ea459-bca5-476f-ab6f-9cb07769923e";
-
 
 async function addRowToMaster(firstColumnValue, secondColumnValue) {
   const firstColumnEditorId = "editor_b2adeca9-7f20-410d-bbe5-fb78e29614c2";
