@@ -22,10 +22,13 @@ import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 export function onNextRowClick(ctx: any) {
   return flow(function*onNextRowClick(event: any) {
     try {
+      const gridFocusManager = getGridFocusManager(ctx);
+      yield gridFocusManager.activeEditorCloses();
       const dataView = getDataView(ctx);
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
