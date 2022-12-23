@@ -28,8 +28,7 @@ export class FormFocusManager {
     this.autoFocusDisabled = true;
   }
 
-  objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
-  focusAbleContainers: IFocusAbleObjectContainer[] = [];
+  focusAbleContainers: FocusAbleObjectContainer[] = [];
   public lastFocused: IFocusable | undefined;
 
   setLastFocused(focusable: IFocusable) {
@@ -39,11 +38,13 @@ export class FormFocusManager {
   constructor(public parent: any) {
   }
 
-  subscribe(focusAbleObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
+  subscribe(focusAbleObject: IFocusable, name: string | undefined,
+            tabIndex: string | undefined,
+            onBlur?: ()=>Promise<void>) {
     if (!focusAbleObject) {
       return;
     }
-    const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex);
+    const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex, onBlur);
     const existingContainer = this.focusAbleContainers
       .find(container => container.name && container.name === name ||
         container.focusable === focusAbleObject);
@@ -128,19 +129,29 @@ export class FormFocusManager {
       });
     }
   }
+
+  async activeEditorCloses(){
+    const lastFocusedContainer = this.focusAbleContainers.find(x => x.focusable === this.lastFocused);
+    if(lastFocusedContainer?.onBlur){
+      await lastFocusedContainer.onBlur();
+    }
+  }
 }
 
-export interface IFocusAbleObjectContainer extends ITabIndexOwner{
-  name: string | undefined;
-  focusable: IFocusable;
-  tabIndex: string | undefined;
-}
-
-export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
+export class FocusAbleObjectContainer {
   constructor(
     public focusable: IFocusable,
     public name: string | undefined,
-    public tabIndex: string | undefined
+    public tabIndex: string | undefined,
+    public onBlur?: ()=>Promise<void>
+  ) {
+  }
+}
+
+class EditorContainer {
+  constructor(
+    public focusable: IFocusable,
+    public onBlur: () => Promise<void>
   ) {
   }
 }

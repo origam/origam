@@ -98,7 +98,7 @@ export class TableViewEditor extends React.Component<{
       : customBackgroundColor;
 
     const isFirsColumn = getTablePanelView(dataView).firstColumn === this.props.property;
-    const focusManager = getGridFocusManager(this.props.property);
+    const gridFocusManager = getGridFocusManager(this.props.property);
     switch (this.props.property!.column) {
       case "Number":
         return (
@@ -117,8 +117,8 @@ export class TableViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
             customStyle={resolveCellAlignment(this.props.property?.style, isFirsColumn, "Number")}
             subscribeToFocusManager={(editor, onBlur) =>{
-                focusManager.activeEditor = editor
-                focusManager.editorBlur = onBlur;
+                gridFocusManager.activeEditor = editor
+                gridFocusManager.editorBlur = onBlur;
               }
             }
           />
@@ -144,8 +144,8 @@ export class TableViewEditor extends React.Component<{
             isMultiline={this.props.property!.multiline}
             subscribeToFocusManager={(editor) =>
             {
-              focusManager.activeEditor = editor
-              focusManager.editorBlur = this.props.onEditorBlur;
+              gridFocusManager.activeEditor = editor
+              gridFocusManager.editorBlur = this.props.onEditorBlur;
             }}
           />
         );
@@ -165,8 +165,8 @@ export class TableViewEditor extends React.Component<{
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor, onBlur) =>
             {
-              focusManager.activeEditor = editor;
-              focusManager.editorBlur = onBlur;
+              gridFocusManager.activeEditor = editor;
+              gridFocusManager.editorBlur = onBlur;
             }}
           />
         );
@@ -180,7 +180,7 @@ export class TableViewEditor extends React.Component<{
             onClick={undefined}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );
@@ -196,7 +196,7 @@ export class TableViewEditor extends React.Component<{
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );
@@ -211,7 +211,7 @@ export class TableViewEditor extends React.Component<{
             onKeyDown={this.props.onEditorKeyDown}
             isReadOnly={readOnly}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );
@@ -224,7 +224,7 @@ export class TableViewEditor extends React.Component<{
               isReadOnly={readOnly}
               autoSort={this.props.property!.autoSort}
               subscribeToFocusManager={(editor) =>
-                focusManager.activeEditor = editor
+                gridFocusManager.activeEditor = editor
               }
               tagEditor={
                 <TagInputEditor
@@ -250,7 +250,7 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );
