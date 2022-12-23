@@ -25,10 +25,13 @@ import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreen
 import { handleError } from "../../actions/handleError";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { getFocusManager } from "model/selectors/getFocusManager";
 
 export function onCopyRowClick(ctx: any, switchToFormPerspective?: boolean) {
   return flow(function*onCopyRowClick(event: any) {
     try {
+      const focusManager = getFocusManager(ctx);
+      yield focusManager.activeEditorCloses();
       const selectedRowId = getDataView(ctx).selectedRowId;
       if (!selectedRowId) {
         return;

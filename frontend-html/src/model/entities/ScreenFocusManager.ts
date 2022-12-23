@@ -31,12 +31,11 @@ export class ScreenFocusManager {
   async activeEditorCloses(){
     for (const gridManager of this.gridManagers) {
       const dataView = getDataView(gridManager);
-      const activePerspective = getActivePerspective(dataView);
-      if(activePerspective === IPanelViewType.Form)
+      if(dataView.isFormViewActive())
       {
         await dataView.formFocusManager.activeEditorCloses();
       }
-      else if (activePerspective === IPanelViewType.Table)
+      else if (dataView.isTableViewActive())
       {
         await dataView.gridFocusManager.activeEditorCloses();
       }
