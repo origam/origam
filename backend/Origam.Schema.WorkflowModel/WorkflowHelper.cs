@@ -25,207 +25,265 @@ using Origam.Services;
 using Origam.Workbench.Services;
 using Origam.Schema.EntityModel;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for WorkflowHelper.
-	/// </summary>
-	public class WorkflowHelper
+	public static class WorkflowHelper
 	{
-		public static ServiceMethodCallTask CreateServiceMethodCallTask(ContextStore contextStore, string serviceName, string methodName, bool persist)
+		public static ServiceMethodCallTask CreateServiceMethodCallTask(
+			ContextStore contextStore, 
+			string serviceName, 
+			string methodName, 
+			bool persist)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			ServiceSchemaItemProvider ssip = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
-			Service svc = ssip.GetChildByName(serviceName, Service.CategoryConst) as Service;
-
-			if(svc == null)
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var serviceSchemaItemProvider 
+				= schemaService.GetProvider<ServiceSchemaItemProvider>();
+			if(!(serviceSchemaItemProvider.GetChildByName(
+				    serviceName, Service.CategoryConst) is Service service))
 			{
-				throw new ArgumentOutOfRangeException("serviceName", serviceName, "Service not found.");
+				throw new ArgumentOutOfRangeException(
+					nameof(serviceName), serviceName, @"Service not found.");
 			}
-
-			ServiceMethod method = svc.GetChildByName(methodName, ServiceMethod.CategoryConst) as ServiceMethod;
-
-			if(svc == null)
+			if(!(service.GetChildByName(
+				    methodName, ServiceMethod.CategoryConst) 
+				    is ServiceMethod serviceMethod))
 			{
-				throw new ArgumentOutOfRangeException("methodName", methodName, "Method not found for service " + serviceName + ".");
+				throw new ArgumentOutOfRangeException(
+					nameof(methodName), methodName,
+					$@"Method not found for service {serviceName}.");
 			}
-
-			ServiceMethodCallTask t = contextStore.ParentItem.NewItem(typeof(ServiceMethodCallTask), schema.ActiveSchemaExtensionId, null) as ServiceMethodCallTask;
-			t.Name = methodName + "_" + contextStore.Name;
-			t.OutputContextStore = contextStore;
-			t.Service = svc;
-			t.ServiceMethod = method;
-
-			if(persist) t.Persist();
-
-			return t;
-		}
-
-		public static ContextReference CreateContextReference(AbstractSchemaItem parentItem, ContextStore context, string xpath, bool persist)
-		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			ContextReference cr = parentItem.NewItem(typeof(ContextReference), schema.ActiveSchemaExtensionId, null) as ContextReference;
-			cr.ContextStore = context;
-			cr.XPath = xpath;
-
-			if(persist) cr.Persist();
-
-			return cr;
-		}
-
-		public static WorkflowTaskDependency CreateTaskDependency(IWorkflowStep step, IWorkflowStep dependencyStep, bool persist)
-		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			WorkflowTaskDependency dep = step.NewItem(typeof(WorkflowTaskDependency), schema.ActiveSchemaExtensionId, null) as WorkflowTaskDependency;
-			dep.Task = dependencyStep;
-
-			if(persist) dep.Persist();
-
-			return dep;
-		}
-
-		public static ServiceMethodCallTask CreateDataServiceLoadDataTask(ContextStore context, bool persist)
-		{
-			if(! (context.Structure is DataStructure))
+			var serviceMethodCallTask = contextStore.ParentItem
+				.NewItem<ServiceMethodCallTask>(
+					schemaService.ActiveSchemaExtensionId, null); 
+			serviceMethodCallTask.Name = methodName + "_" + contextStore.Name;
+			serviceMethodCallTask.OutputContextStore = contextStore;
+			serviceMethodCallTask.Service = service;
+			serviceMethodCallTask.ServiceMethod = serviceMethod;
+			if(persist)
 			{
-				throw new ArgumentOutOfRangeException("Structure", context.Structure, "Context structure must be of type DataStructure.");
+				serviceMethodCallTask.Persist();
 			}
-
-			ServiceMethodCallTask task = WorkflowHelper.CreateServiceMethodCallTask(context, "DataService", "LoadData", persist);
-
-			ServiceMethodCallParameter p1 = task.GetChildByName("DataStructure", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
-			EntityHelper.CreateDataStructureReference(p1, context.Structure as DataStructure, null, null, persist);
-
-			return task;
+			return serviceMethodCallTask;
 		}
 
-		public static ServiceMethodCallTask CreateDataServiceStoreDataTask(ContextStore context, bool persist)
+		public static ContextReference CreateContextReference(
+			AbstractSchemaItem parentItem, 
+			ContextStore contextStore, 
+			string xpath, 
+			bool persist)
 		{
-			if(! (context.Structure is DataStructure))
+			var schemaService = ServiceManager.Services
+				.GetService<ISchemaService>();
+			var contextReference = parentItem.NewItem<ContextReference>(
+					schemaService.ActiveSchemaExtensionId, null);
+			contextReference.ContextStore = contextStore;
+			contextReference.XPath = xpath;
+			if(persist)
 			{
-				throw new ArgumentOutOfRangeException("Structure", context.Structure, "Context structure must be of type DataStructure.");
+				contextReference.Persist();
 			}
-
-			ServiceMethodCallTask task = WorkflowHelper.CreateServiceMethodCallTask(context, "DataService", "StoreData", persist);
-
-			ServiceMethodCallParameter p1 = task.GetChildByName("DataStructure", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
-			EntityHelper.CreateDataStructureReference(p1, context.Structure as DataStructure, null, null, persist);
-
-			ServiceMethodCallParameter p2 = task.GetChildByName("Data", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
-			ContextReference cr = WorkflowHelper.CreateContextReference(p2, context, "/", false);
-			cr.Name = cr.ContextStore.Name;
-			if(persist) cr.Persist();
-
-			return task;
+			return contextReference;
 		}
 
-		public static ServiceMethodCallTask CreateDataTransformationServiceTransformTask(ContextStore context, bool persist)
+		public static WorkflowTaskDependency CreateTaskDependency(
+			IWorkflowStep step, 
+			IWorkflowStep dependencyStep, 
+			bool persist)
 		{
-			ServiceMethodCallTask task = WorkflowHelper.CreateServiceMethodCallTask(context, "DataTransformationService", "Transform", persist);
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var workflowTaskDependency = step.NewItem<WorkflowTaskDependency>(
+					schemaService.ActiveSchemaExtensionId, null);
+			workflowTaskDependency.Task = dependencyStep;
+			if(persist)
+			{
+				workflowTaskDependency.Persist();
+			}
+			return workflowTaskDependency;
+		}
 
-			ServiceMethodCallParameter p1 = task.GetChildByName("Data", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
-			ContextReference cr = WorkflowHelper.CreateContextReference(p1, context, "/", false);
-			cr.Name = cr.ContextStore.Name;
-			if(persist) cr.Persist();
+		public static ServiceMethodCallTask CreateDataServiceLoadDataTask(
+			ContextStore contextStore, bool persist)
+		{
+			if(!(contextStore.Structure is DataStructure dataStructure))
+			{
+				throw new ArgumentOutOfRangeException(@"Structure", 
+					contextStore.Structure, 
+					@"Context structure must be of type DataStructure.");
+			}
+			var serviceMethodCallTask = CreateServiceMethodCallTask(
+				contextStore, "DataService", "LoadData", persist);
+			var serviceMethodCallParameterDataStructure = serviceMethodCallTask
+				.GetChildByName("DataStructure", 
+					ServiceMethodCallParameter.CategoryConst) 
+				as ServiceMethodCallParameter;
+			EntityHelper.CreateDataStructureReference(
+				serviceMethodCallParameterDataStructure, dataStructure, 
+				null, null, persist);
+			return serviceMethodCallTask;
+		}
 
-			return task;
+		public static ServiceMethodCallTask CreateDataServiceStoreDataTask(
+			ContextStore contextStore, bool persist)
+		{
+			if(!(contextStore.Structure is DataStructure structure))
+			{
+				throw new ArgumentOutOfRangeException(
+					@"Structure", contextStore.Structure, 
+					@"Context structure must be of type DataStructure.");
+			}
+			var serviceMethodCallTask = CreateServiceMethodCallTask(
+				contextStore, "DataService", "StoreData", persist);
+			var serviceMethodCallParameterDataStructure = serviceMethodCallTask
+				.GetChildByName("DataStructure", 
+					ServiceMethodCallParameter.CategoryConst) 
+				as ServiceMethodCallParameter;
+			EntityHelper.CreateDataStructureReference(
+				serviceMethodCallParameterDataStructure, 
+				structure, null, null, persist);
+			var serviceMethodCallParameterData = serviceMethodCallTask
+				.GetChildByName("Data", 
+					ServiceMethodCallParameter.CategoryConst) 
+				as ServiceMethodCallParameter;
+			var contextReference = CreateContextReference(
+				serviceMethodCallParameterData, contextStore, "/", false);
+			contextReference.Name = contextReference.ContextStore.Name;
+			if (persist)
+			{
+				contextReference.Persist();
+			}
+			return serviceMethodCallTask;
+		}
+
+		public static ServiceMethodCallTask 
+			CreateDataTransformationServiceTransformTask(
+				ContextStore contextStore, bool persist)
+		{
+			var serviceMethodCallTask = CreateServiceMethodCallTask(
+				contextStore, "DataTransformationService", "Transform", 
+				persist);
+			var serviceMethodCallParameterData = serviceMethodCallTask
+				.GetChildByName("Data", 
+					ServiceMethodCallParameter.CategoryConst) 
+				as ServiceMethodCallParameter;
+			var contextReference = CreateContextReference(
+				serviceMethodCallParameterData, contextStore, "/", false);
+			contextReference.Name = contextReference.ContextStore.Name;
+			if(persist)
+			{
+				contextReference.Persist();
+			}
+			return serviceMethodCallTask;
 		}
 
 		public static WorkQueueClass CreateWorkQueueClass(
-            IDataEntity entity, ICollection fields, IList<AbstractSchemaItem> generatedElements)
+            IDataEntity entity, 
+            ICollection fields, 
+            IList<AbstractSchemaItem> generatedElements)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			WorkQueue.WorkQueueClassSchemaItemProvider wqProvider =
-                schema.GetProvider(typeof(WorkQueue.WorkQueueClassSchemaItemProvider)) 
-                as WorkQueue.WorkQueueClassSchemaItemProvider;
-			WorkQueueClass  wqc = wqProvider.NewItem(typeof(WorkQueueClass), schema.ActiveSchemaExtensionId, null) as WorkQueueClass;
-			wqc.Name = entity.Name;
-			wqc.Entity = entity;
-			wqc.EntityStructure = EntityHelper.CreateDataStructure(entity, entity.Name, true);
-			wqc.EntityStructurePrimaryKeyMethod = EntityHelper.CreateFilterSet(wqc.EntityStructure, "GetId", true);
-            DataStructureEntity dsEntity = wqc.EntityStructure.Entities[0] as DataStructureEntity;
-			EntityFilter primaryKeyFilter = null;
-			foreach(EntityFilter filter in entity.EntityFilters)
-			{
-				if(filter.Name == "GetId")
-				{
-					primaryKeyFilter = filter;
-					break;
-				}
-			}
-
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var workQueueProvider = schemaService
+					.GetProvider<WorkQueue.WorkQueueClassSchemaItemProvider>();
+			var workQueueClass = workQueueProvider.NewItem<WorkQueueClass>(
+					schemaService.ActiveSchemaExtensionId, null);
+			workQueueClass.Name = entity.Name;
+			workQueueClass.Entity = entity;
+			workQueueClass.EntityStructure = EntityHelper
+				.CreateDataStructure(entity, entity.Name, true);
+			workQueueClass.EntityStructurePrimaryKeyMethod = EntityHelper
+				.CreateFilterSet(workQueueClass.EntityStructure, "GetId", true);
+            var dataStructureEntity = workQueueClass.EntityStructure.Entities[0] 
+	            as DataStructureEntity;
+			var primaryKeyFilter = entity.EntityFilters.Cast<EntityFilter>()
+				.FirstOrDefault(filter => filter.Name == "GetId");
 			EntityHelper.CreateFilterSetFilter(
-				wqc.EntityStructurePrimaryKeyMethod as DataStructureFilterSet,
-				dsEntity, primaryKeyFilter, true);
-
-			IPersistenceService persistence = 
-				ServiceManager.Services.GetService(typeof(IPersistenceService)) 
-				as IPersistenceService;
-
-			IDataLookup countLookup = persistence.SchemaProvider.RetrieveInstance(
+				(DataStructureFilterSet)workQueueClass
+					.EntityStructurePrimaryKeyMethod,
+				dataStructureEntity, primaryKeyFilter, true);
+			var persistenceService = ServiceManager.Services
+				.GetService<IPersistenceService>();
+			var countLookup = persistenceService.SchemaProvider.RetrieveInstance(
 				typeof(AbstractSchemaItem),
-				new ModelElementKey(new Guid("2a953c7d-0276-42c4-99b9-aa484808bbcb"))
+				new ModelElementKey(
+					new Guid("2a953c7d-0276-42c4-99b9-aa484808bbcb"))
 				) as IDataLookup;
-			wqc.WorkQueueItemCountLookup = countLookup;
-
+			workQueueClass.WorkQueueItemCountLookup = countLookup;
 			// load wq_template data structure
-			DataStructure wqTemplateStructure = persistence.SchemaProvider.RetrieveInstance(
-				typeof(AbstractSchemaItem),
-				new ModelElementKey(new Guid("e9d8e455-02de-4ae7-914e-9a3064e52bd6"))
+			var workQueueTemplateStructure = persistenceService.SchemaProvider
+				.RetrieveInstance(
+					typeof(AbstractSchemaItem), 
+					new ModelElementKey(
+						new Guid("e9d8e455-02de-4ae7-914e-9a3064e52bd6"))
 				) as DataStructure;
-
 			// get a clone and save
-			DataStructure wqStructure = wqTemplateStructure.Clone() as DataStructure;
-			wqStructure.Name = "WQ_" + entity.Name;
-			wqStructure.Group = EntityHelper.GetDataStructureGroup(entity.Group.Name);;
-			wqStructure.SetExtensionRecursive(schema.ActiveExtension);
-			wqStructure.ClearCacheOnPersist = false;
-			wqStructure.ThrowEventOnPersist = false;
-			wqStructure.Persist();
-			wqStructure.UpdateReferences();
-			wqStructure.ClearCacheOnPersist = true;
-			wqStructure.ThrowEventOnPersist = true;
-			wqStructure.Persist();
-
-			IDataEntity wqEntity = (wqStructure.Entities[0] as DataStructureEntity).EntityDefinition;
-			Hashtable wqFieldTypes = new Hashtable();
+			var workQueueStructure
+				= workQueueTemplateStructure.Clone() as DataStructure;
+			workQueueStructure.Name = "WQ_" + entity.Name;
+			workQueueStructure.Group = EntityHelper.GetDataStructureGroup(
+				entity.Group.Name);;
+			workQueueStructure.SetExtensionRecursive(
+				schemaService.ActiveExtension);
+			workQueueStructure.ClearCacheOnPersist = false;
+			workQueueStructure.ThrowEventOnPersist = false;
+			workQueueStructure.Persist();
+			workQueueStructure.UpdateReferences();
+			workQueueStructure.ClearCacheOnPersist = true;
+			DataStructureSortSet sortSet = EntityHelper.CreateSortSet(
+				workQueueStructure, "Default", true);
+			EntityHelper.CreateSortSetItem(sortSet,
+				workQueueStructure.Entities[0] as DataStructureEntity,
+				"RecordCreated",
+				DataStructureColumnSortDirection.Ascending, true);
+			workQueueStructure.ThrowEventOnPersist = true;
+			workQueueStructure.Persist();
+			var workQueueEntity 
+				= ((DataStructureEntity)workQueueStructure.Entities[0])
+				.EntityDefinition;
+			var workQueueFieldTypes = new Hashtable();
 			// add fields to the structure
 			foreach(IDataEntityColumn column in fields)
 			{
-				if(! wqFieldTypes.Contains(column.DataType))
+				if(!workQueueFieldTypes.Contains(column.DataType))
 				{
-					wqFieldTypes.Add(column.DataType, 0);
+					workQueueFieldTypes.Add(column.DataType, 0);
 				}
-				int fieldCount = (int)wqFieldTypes[column.DataType];
+				var fieldCount = (int)workQueueFieldTypes[column.DataType];
 				fieldCount++;
-				wqFieldTypes[column.DataType] = fieldCount;
-				string fieldName = DecodeWorkQueueFieldName(column.DataType) + fieldCount.ToString();
+				workQueueFieldTypes[column.DataType] = fieldCount;
+				var fieldName 
+					= DecodeWorkQueueFieldName(column.DataType) + fieldCount;
 				// find wq field (eg. "g1" for the first guid field)
-				IDataEntityColumn wqField = wqEntity.GetChildByName(fieldName, AbstractDataEntityColumn.CategoryConst) as IDataEntityColumn;
-				DataStructureColumn wqDsField = EntityHelper.CreateDataStructureField(wqStructure.Entities[0] as DataStructureEntity, wqField, false);
+				var workQueueField = workQueueEntity.GetChildByName(
+					fieldName, AbstractDataEntityColumn.CategoryConst) 
+					as IDataEntityColumn;
+				var workQueueDataStructureField = EntityHelper
+					.CreateDataStructureField(
+						(DataStructureEntity)workQueueStructure.Entities[0], 
+						workQueueField, false);
 				// finally rename the field e.g. "g1" to "refSomethingId"
-				wqDsField.Name = column.Name;
-				wqDsField.Caption = column.Caption;
-				wqDsField.Persist();
+				workQueueDataStructureField.Name = column.Name;
+				workQueueDataStructureField.Caption = column.Caption;
+				workQueueDataStructureField.Persist();
 			}
-
-			wqc.WorkQueueStructure = wqStructure; 
-			wqc.WorkQueueStructureUserListMethod = wqStructure.GetChildByName("GetByQueueId", DataStructureMethod.CategoryConst) as DataStructureMethod;
-			wqc.Persist();
-
-			GenerateWorkQueueClassEntityMappings(wqc);
-
-            if (generatedElements != null)
-            {
-                generatedElements.Add(wqc);
-                generatedElements.Add(wqc.EntityStructure);
-                generatedElements.Add(wqStructure);
-            }
-            return wqc;
+			workQueueClass.WorkQueueStructure = workQueueStructure; 
+			workQueueClass.WorkQueueStructureUserListMethod = workQueueStructure
+				.GetChildByName("GetByQueueId", 
+					DataStructureMethod.CategoryConst) as DataStructureMethod;
+			workQueueClass.WorkQueueStructureSortSet = sortSet;
+			workQueueClass.Persist();
+			GenerateWorkQueueClassEntityMappings(workQueueClass);
+			if(generatedElements == null)
+			{
+				return workQueueClass;
+			}
+			generatedElements.Add(workQueueClass);
+            generatedElements.Add(workQueueClass.EntityStructure);
+            generatedElements.Add(workQueueStructure);
+            return workQueueClass;
 		}
 
 		private static string DecodeWorkQueueFieldName(OrigamDataType dataType)
@@ -253,26 +311,28 @@ namespace Origam.Schema.WorkflowModel
 				case OrigamDataType.UniqueIdentifier:
 					return "g";
 			}
-
-			throw new ArgumentOutOfRangeException("dataType", dataType, ResourceUtils.GetString("ErrorWorkQueueWizardUnknownType"));
+			throw new ArgumentOutOfRangeException(nameof(dataType), dataType, 
+				ResourceUtils.GetString("ErrorWorkQueueWizardUnknownType"));
 		}
 
-		public static void GenerateWorkQueueClassEntityMappings(WorkQueueClass wqc)
+		public static void GenerateWorkQueueClassEntityMappings(
+			WorkQueueClass workQueueClass)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			foreach(WorkQueueClassEntityMapping m in wqc.EntityMappings)
+			var schemaService = ServiceManager.Services
+				.GetService<ISchemaService>();
+			foreach(WorkQueueClassEntityMapping workQueueClassEntityMapping 
+			        in workQueueClass.EntityMappings)
 			{
-				m.IsDeleted = true;
-				m.Persist();
+				workQueueClassEntityMapping.IsDeleted = true;
+				workQueueClassEntityMapping.Persist();
 			}
-
-			DataStructureEntity entity = (DataStructureEntity)wqc.WorkQueueStructure.Entities[0];
-
-			foreach(DataStructureColumn column in entity.Columns)
+			var dataStructureEntity = (DataStructureEntity)workQueueClass
+				.WorkQueueStructure.Entities[0];
+			foreach(var column in dataStructureEntity.Columns)
 			{
-				WorkQueueClassEntityMapping newMapping = wqc.NewItem(typeof(WorkQueueClassEntityMapping), schema.ActiveSchemaExtensionId, null) as WorkQueueClassEntityMapping;
-
+				var newMapping = workQueueClass
+					.NewItem<WorkQueueClassEntityMapping>(
+						schemaService.ActiveSchemaExtensionId, null);
 				if(column.Name == "refId")
 				{
 					newMapping.Name = column.Name;
@@ -281,15 +341,27 @@ namespace Origam.Schema.WorkflowModel
 				}
 				else
 				{
-					foreach(IDataEntityColumn entityColumn in wqc.Entity.EntityColumns)
+					foreach(IDataEntityColumn entityColumn
+					        in workQueueClass.Entity.EntityColumns)
 					{
-						if(entityColumn.Name == column.Name & column.Name != "IsLocked" & column.Name != "RecordCreated" & column.Name != "RecordUpdated" & column.Name != "RecordCreatedBy" & column.Name != "RecordUpdatedBy" & column.Name != "Id" & column.Name != "refLockedByBusinessPartnerId" & column.Name != "refWorkQueueId")
+						if((entityColumn.Name == column.Name)
+						   && (column.Name != "IsLocked")
+						   && (column.Name != "RecordCreated")
+						   && (column.Name != "RecordUpdated")
+						   && (column.Name != "RecordCreatedBy")
+						   && (column.Name != "RecordUpdatedBy")
+						   && (column.Name != "Id")
+						   && (column.Name != "refLockedByBusinessPartnerId")
+						   && (column.Name != "refWorkQueueId"))
 						{
 							newMapping.Name = column.Name;
-
-							newMapping.XPath = "/row/" + (entityColumn.XmlMappingType == EntityColumnXmlMapping.Attribute ? "@" : "") + entityColumn.Name;
+							newMapping.XPath 
+								= "/row/" 
+								  + (entityColumn.XmlMappingType 
+								     == EntityColumnXmlMapping.Attribute 
+									  ? "@" : "") 
+								  + entityColumn.Name;
 							newMapping.Persist();
-
 							break;
 						}
 					}

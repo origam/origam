@@ -52,8 +52,9 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 				TableMappingItem table = dsEntity.Entity as TableMappingItem;
 				ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 				// create new datastructure entity using localization relation
-				DataStructureEntity localizationDSEntity = dsEntity.NewItem(
-                    typeof(DataStructureEntity), schema.ActiveSchemaExtensionId, null) as DataStructureEntity;
+				DataStructureEntity localizationDSEntity 
+					= dsEntity.NewItem<DataStructureEntity>(
+						schema.ActiveSchemaExtensionId, null);
 				localizationDSEntity.RelationType = RelationType.LeftJoin;
 				localizationDSEntity.AllFields = false;
 				localizationDSEntity.Entity = table.LocalizationRelation;

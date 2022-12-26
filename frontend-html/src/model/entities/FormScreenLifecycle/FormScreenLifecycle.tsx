@@ -404,7 +404,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           const rootDataView = rootDataViews[0];
           const filtersDisplayed = getTablePanelView(rootDataView).filterConfiguration
             .isFilterControlsDisplayed
-          if(workFinished && filtersDisplayed && rootDataView.isTableViewActive()){
+          if(workFinished && !filtersDisplayed && rootDataView.isTableViewActive()){
               rootDataView.formFocusManager.refocusLast();
           }
         }
@@ -1055,7 +1055,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const newRowOrderMap = {} as any;
     if (orderMember) {
       const dataSourceField = getDataSourceFieldByName(targetDataView, orderMember)!;
-      targetDataView.dataTable.allRows
+      targetDataView.dataTable.rows
         .filter((row) => row[dataSourceField.index] > rowToDelete[dataSourceField.index])
         .forEach((row) => {
           const rowId = targetDataView.dataTable.getRowId(row);

@@ -27,32 +27,24 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for AbstractService.
-	/// </summary>
 	[SchemaItemDescription("Service", "service.png")]
     [HelpTopic("Services")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class Service : AbstractSchemaItem, IService, ISchemaItemFactory
+	public class Service : AbstractSchemaItem, IService
 	{
 		public const string CategoryConst = "Service";
 
-		public Service() : base() {}
+		public Service() {}
 
 		public Service(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public Service(Key primaryKey) : base(primaryKey)	{}
+		public Service(Key primaryKey) : base(primaryKey) {}
 
 		#region Overriden AbstractSchemaItem Members
 		
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
+		
 		#endregion
 
 		#region Properties
@@ -60,46 +52,26 @@ namespace Origam.Schema.WorkflowModel
 		[XmlAttribute("classPath")]
 		public string ClassPath
 		{
-			get
-			{
-				return _classPath;
-			}
-			set
-			{
-				_classPath = value;
-			}
+			get => _classPath;
+			set => _classPath = value;
 		}
 		#endregion
 
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(ServiceMethod)};
-			}
-		}
+			typeof(ServiceMethod)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(ServiceMethod))
-			{
-				item = new ServiceMethod(schemaExtensionId);
-				item.Name = "NewServiceMethod";
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, "This type is not supported by ServiceModel");
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(ServiceMethod) ?
+					"NewServiceMethod" : null);
 		}
-
 		#endregion
 	}
 }

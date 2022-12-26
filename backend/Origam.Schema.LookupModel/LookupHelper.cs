@@ -25,84 +25,105 @@ using Origam.Workbench.Services;
 
 namespace Origam.Schema.LookupModel
 {
-	/// <summary>
-	/// Summary description for LookupHelper.
-	/// </summary>
 	public class LookupHelper
 	{
-		public static DataServiceDataLookup CreateDataServiceLookup(string name, SchemaItemGroup group, DataStructure listDS, DataStructureFilterSet listFS, string listValueMember, string listDisplayMember, DataStructure valueDS, DataStructureFilterSet valueFS, string valueValueMember, string valueDisplayMember, bool persist)
+		public static DataServiceDataLookup CreateDataServiceLookup(
+			string name, 
+			SchemaItemGroup group, 
+			DataStructure listDataStructure, 
+			DataStructureFilterSet listFilterSet, 
+			string listValueMember, 
+			string listDisplayMember, 
+			DataStructure valueDataStructure, 
+			DataStructureFilterSet valueFilterSet, 
+			string valueValueMember, 
+			string valueDisplayMember, 
+			bool persist)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-			DataLookupSchemaItemProvider lookupprovider = schema.GetProvider(typeof(DataLookupSchemaItemProvider)) as DataLookupSchemaItemProvider;
-
-			DataServiceDataLookup lookup = lookupprovider.NewItem(typeof(DataServiceDataLookup), schema.ActiveSchemaExtensionId, null) as DataServiceDataLookup;
-			lookup.Name = name;
-			lookup.Group = group;
-				
-			lookup.ListDataStructure = listDS;
-			lookup.ListMethod = listFS;
-			lookup.ListValueMember = listValueMember;
-			lookup.ListDisplayMember = listDisplayMember;
-
-			lookup.ValueDataStructure = valueDS;
-			lookup.ValueMethod = valueFS;
-			lookup.ValueValueMember = valueValueMember;
-			lookup.ValueDisplayMember = valueDisplayMember;
-
-			if(persist) lookup.Persist();
-
-			return lookup;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var dataLookupSchemaItemProvider 
+				= schemaService.GetProvider<DataLookupSchemaItemProvider>();
+			var dataServiceDataLookup = dataLookupSchemaItemProvider
+				.NewItem<DataServiceDataLookup>(
+					schemaService.ActiveSchemaExtensionId, null);
+			dataServiceDataLookup.Name = name;
+			dataServiceDataLookup.Group = group;
+			dataServiceDataLookup.ListDataStructure = listDataStructure;
+			dataServiceDataLookup.ListMethod = listFilterSet;
+			dataServiceDataLookup.ListValueMember = listValueMember;
+			dataServiceDataLookup.ListDisplayMember = listDisplayMember;
+			dataServiceDataLookup.ValueDataStructure = valueDataStructure;
+			dataServiceDataLookup.ValueMethod = valueFilterSet;
+			dataServiceDataLookup.ValueValueMember = valueValueMember;
+			dataServiceDataLookup.ValueDisplayMember = valueDisplayMember;
+			if(persist)
+			{
+				dataServiceDataLookup.Persist();
+			}
+			return dataServiceDataLookup;
 		}
 
-		public static DataServiceDataLookup CreateDataServiceLookup(string name, 
-            IDataEntity fromEntity, IDataEntityColumn idField, 
-            IDataEntityColumn nameField, IDataEntityColumn codeField, 
-            EntityFilter idFilter, EntityFilter listFilter, 
+		public static DataServiceDataLookup CreateDataServiceLookup(
+			string name, 
+            IDataEntity fromEntity, 
+			IDataEntityColumn idField, 
+            IDataEntityColumn nameField, 
+			IDataEntityColumn codeField, 
+            EntityFilter idFilter, 
+			EntityFilter listFilter, 
             string listDisplayMember)
 		{
-			DataStructure ds = EntityHelper.CreateDataStructure(
+			var dataStructure = EntityHelper.CreateDataStructure(
                 fromEntity, "Lookup" + name, true);
-			DataStructureEntity entity = ds.Entities[0] as DataStructureEntity;
-			entity.AllFields = false;
-			entity.Persist();
-			DataStructureColumn idColumn = 
-                EntityHelper.CreateDataStructureField(entity, idField, true);
+			var dataStructureEntity 
+				= dataStructure.Entities[0] as DataStructureEntity;
+			dataStructureEntity.AllFields = false;
+			dataStructureEntity.Persist();
+			var idColumn = EntityHelper.CreateDataStructureField(
+				dataStructureEntity, idField, true);
             DataStructureColumn nameColumn;
-            if (idField.PrimaryKey.Equals(nameField.PrimaryKey))
+            if(idField.PrimaryKey.Equals(nameField.PrimaryKey))
             {
                 nameColumn = idColumn;
             }
             else
             {
                 nameColumn = EntityHelper.CreateDataStructureField(
-                    entity, nameField, true);
+                    dataStructureEntity, nameField, true);
             }
-            if (codeField != null 
-                && !codeField.PrimaryKey.Equals(idField.PrimaryKey))
+            if ((codeField != null)
+			&& !codeField.PrimaryKey.Equals(idField.PrimaryKey))
             {
-                EntityHelper.CreateDataStructureField(entity, codeField, true);
+                EntityHelper.CreateDataStructureField(
+	                dataStructureEntity, codeField, true);
             }
-            // DS Fiter Sets
-            DataStructureFilterSet fsId = EntityHelper.CreateFilterSet(
-                ds, idFilter.Name, true);
-			EntityHelper.CreateFilterSetFilter(fsId, entity, idFilter, true);
-			DataStructureFilterSet fsList = null;
+            // DS Filter Sets
+            var dataStructureFilterSetId = EntityHelper.CreateFilterSet(
+                dataStructure, idFilter.Name, true);
+			EntityHelper.CreateFilterSetFilter(
+				dataStructureFilterSetId, dataStructureEntity, idFilter, true);
+			DataStructureFilterSet dataStructureFilterSetList = null;
 			if(listFilter != null)
 			{
-				fsList = EntityHelper.CreateFilterSet(ds, listFilter.Name, true);
-				EntityHelper.CreateFilterSetFilter(fsList, entity, listFilter, true);
+				dataStructureFilterSetList = EntityHelper.CreateFilterSet(
+					dataStructure, listFilter.Name, true);
+				EntityHelper.CreateFilterSetFilter(
+					dataStructureFilterSetList, dataStructureEntity, 
+					listFilter, true);
 			}
-			ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-			DataLookupSchemaItemProvider lookupprovider = 
-                schema.GetProvider(typeof(DataLookupSchemaItemProvider)) 
-                as DataLookupSchemaItemProvider;
-			SchemaItemGroup group = lookupprovider.GetGroup(fromEntity.Group.Name);
-			DataServiceDataLookup lookup = CreateDataServiceLookup(name, 
-                group, ds, fsList, idColumn.Name, 
-                listDisplayMember ?? nameColumn.Name, ds, fsId, 
-                idColumn.Name, nameColumn.Name, true);
-			return lookup;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var dataLookupSchemaItemProvider 
+					= schemaService.GetProvider<DataLookupSchemaItemProvider>();
+			var schemaItemGroup = dataLookupSchemaItemProvider.GetGroup(
+				fromEntity.Group.Name);
+			var dataServiceLookup = CreateDataServiceLookup(name, 
+                schemaItemGroup, dataStructure, dataStructureFilterSetList, 
+                idColumn.Name, listDisplayMember ?? nameColumn.Name, 
+                dataStructure, dataStructureFilterSetId, idColumn.Name, 
+                nameColumn.Name, true);
+			return dataServiceLookup;
 		}
 	}
 }

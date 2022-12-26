@@ -27,165 +27,233 @@ using System.Collections.Generic;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for EntityHelper.
-	/// </summary>
-	public class EntityHelper
+	public static class EntityHelper
 	{
-		public static FieldMappingItem CreateForeignKey(string name, string caption, bool allowNulls, IDataEntity masterEntity, IDataEntity foreignEntity, IDataEntityColumn foreignField, IDataLookup lookup, bool persist)
+		public static FieldMappingItem CreateForeignKey(
+			string name, string caption, bool allowNulls, 
+			IDataEntity masterEntity, IDataEntity foreignEntity, 
+			IDataEntityColumn foreignField, IDataLookup lookup, bool persist)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			EntityModelSchemaItemProvider entityProvider = schema.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
-
-			FieldMappingItem fk = masterEntity.NewItem(typeof(FieldMappingItem), schema.ActiveSchemaExtensionId, null) as FieldMappingItem;
-			fk.Name = name;
-			fk.MappedColumnName = name;
-			fk.AllowNulls = allowNulls;
-			fk.DataLength = foreignField.DataLength;
-			fk.DataType = foreignField.DataType;
-			fk.Caption = caption;
-			fk.DefaultLookup = lookup;
-			fk.XmlMappingType = EntityColumnXmlMapping.Attribute;
-
-			fk.ForeignKeyEntity = foreignEntity;
-			fk.ForeignKeyField = foreignField;
-
-			if(persist) fk.Persist();
-
-			return fk;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var fieldMappingItem = masterEntity.NewItem<FieldMappingItem>(
+				schemaService.ActiveSchemaExtensionId, null);
+			fieldMappingItem.Name = name;
+			fieldMappingItem.MappedColumnName = name;
+			fieldMappingItem.AllowNulls = allowNulls;
+			fieldMappingItem.DataLength = foreignField.DataLength;
+			fieldMappingItem.DataType = foreignField.DataType;
+			fieldMappingItem.Caption = caption;
+			fieldMappingItem.DefaultLookup = lookup;
+			fieldMappingItem.XmlMappingType = EntityColumnXmlMapping.Attribute;
+			fieldMappingItem.ForeignKeyEntity = foreignEntity;
+			fieldMappingItem.ForeignKeyField = foreignField;
+			if(persist)
+			{
+				fieldMappingItem.Persist();
+			}
+			return fieldMappingItem;
 		}
 
-		public static DataStructure CreateDataStructure(IDataEntity entity, string name, bool persist)
+		public static DataStructure CreateDataStructure(
+			IDataEntity entity, string name, bool persist)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-
+			var schemaService = ServiceManager.Services
+				.GetService<ISchemaService>();
+			var dataStructureSchemaItemProvider = schemaService
+				.GetProvider<DataStructureSchemaItemProvider>();
 			// Data Structure
-			DataStructure ds = dsprovider.NewItem(typeof(DataStructure), schema.ActiveSchemaExtensionId, null) as DataStructure;
-			ds.Name = name;
-
+			var dataStructure = dataStructureSchemaItemProvider
+				.NewItem<DataStructure>(
+				schemaService.ActiveSchemaExtensionId, null);
+			dataStructure.Name = name;
 			if(entity.Group != null)
 			{
-				SchemaItemGroup group = GetDataStructureGroup(entity.Group.Name);
-				if(group != null)
+				var schemaItemGroup = GetDataStructureGroup(entity.Group.Name);
+				if(schemaItemGroup != null)
 				{
-					if(ds.Name.StartsWith("Lookup"))
+					if(dataStructure.Name.StartsWith("Lookup"))
 					{
-						SchemaItemGroup lookupGroup = group.GetGroup("Lookups");
-						if(lookupGroup == null)
-						{
-							ds.Group = group;
-						}
-						else
-						{
-							ds.Group = lookupGroup;
-						}
+						var lookupGroup = schemaItemGroup.GetGroup("Lookups");
+						dataStructure.Group = lookupGroup ?? schemaItemGroup;
 					}
 					else
 					{
-						ds.Group = group;
+						dataStructure.Group = schemaItemGroup;
 					}
 				}
 			}
-
 			// DS Entity
-			DataStructureEntity dsEntity = ds.NewItem(typeof(DataStructureEntity), schema.ActiveSchemaExtensionId, null) as DataStructureEntity;
-			dsEntity.Entity = entity as AbstractSchemaItem;
-			dsEntity.Name = entity.Name;
-			dsEntity.AllFields = true;
-
-			ds.Persist();
-
-			return ds;
+			var dataStructureEntity = dataStructure
+				.NewItem<DataStructureEntity>(
+					schemaService.ActiveSchemaExtensionId, null);
+			dataStructureEntity.Entity = entity as AbstractSchemaItem;
+			dataStructureEntity.Name = entity.Name;
+			dataStructureEntity.AllFields = true;
+			if(persist)
+			{
+				dataStructure.Persist();
+			}
+			return dataStructure;
 		}
 
-        public static DataStructure CreateDataStructure(IDataEntity entity, object nameOfEntity, bool v)
+        public static DataStructure CreateDataStructure(
+	        IDataEntity entity, object nameOfEntity, bool v)
         {
             throw new NotImplementedException();
         }
 
-        public static DataStructureColumn CreateDataStructureField(DataStructureEntity dataSturctureEntity, IDataEntityColumn field, bool persist)
+        public static DataStructureColumn CreateDataStructureField(
+	        DataStructureEntity dataStructureEntity, 
+	        IDataEntityColumn field, 
+	        bool persist)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			DataStructureColumn c = dataSturctureEntity.NewItem(typeof(DataStructureColumn), schema.ActiveSchemaExtensionId, null) as DataStructureColumn;
-			c.Field = field;
-			c.Name = field.Name;
-
-			if(persist) c.Persist();
-
-			return c;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var dataStructureColumn = dataStructureEntity
+				.NewItem<DataStructureColumn>(
+					schemaService.ActiveSchemaExtensionId, null);
+			dataStructureColumn.Field = field;
+			dataStructureColumn.Name = field.Name;
+			if(persist)
+			{
+				dataStructureColumn.Persist();
+			}
+			return dataStructureColumn;
 		}
 
-		public static DataStructureFilterSet CreateFilterSet(DataStructure ds, string name, bool persist)	
+		public static DataStructureFilterSet CreateFilterSet(
+			DataStructure dataStructure, 
+			string name, 
+			bool persist)	
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			DataStructureFilterSet fs = ds.NewItem(typeof(DataStructureFilterSet), schema.ActiveSchemaExtensionId, null) as DataStructureFilterSet;
-			fs.Name = name;
-			
-			if(persist) fs.Persist();
-
-			return fs;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var dataStructureFilterSet = dataStructure
+				.NewItem<DataStructureFilterSet>(
+					schemaService.ActiveSchemaExtensionId, null);
+			dataStructureFilterSet.Name = name;
+			if(persist)
+			{
+				dataStructureFilterSet.Persist();
+			}
+			return dataStructureFilterSet;
 		}
 
-		public static DataStructureFilterSetFilter CreateFilterSetFilter(DataStructureFilterSet fs, DataStructureEntity dataStructureEntity, EntityFilter filter, bool persist)
+		public static DataStructureFilterSetFilter CreateFilterSetFilter(
+			DataStructureFilterSet dataStructureFilterSet, 
+			DataStructureEntity dataStructureEntity, 
+			EntityFilter filter, 
+			bool persist)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			DataStructureFilterSetFilter fsf = fs.NewItem(typeof(DataStructureFilterSetFilter), schema.ActiveSchemaExtensionId, null) as DataStructureFilterSetFilter ;
-			fsf.Entity = dataStructureEntity;
-			fsf.Filter = filter;
-
-			if(persist) fsf.Persist();
-
-			return fsf;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var dataStructureFilterSetFilter = dataStructureFilterSet
+				.NewItem<DataStructureFilterSetFilter>(
+					schemaService.ActiveSchemaExtensionId, null);
+			dataStructureFilterSetFilter.Entity = dataStructureEntity;
+			dataStructureFilterSetFilter.Filter = filter;
+			if(persist)
+			{
+				dataStructureFilterSetFilter.Persist();
+			}
+			return dataStructureFilterSetFilter;
+		}
+		
+		public static DataStructureSortSet CreateSortSet(
+			DataStructure dataStructure, string name, bool persist)
+		{
+			var schemaService
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var sortSet = dataStructure.NewItem<DataStructureSortSet>(
+					schemaService.ActiveSchemaExtensionId, null);
+			sortSet.Name = name;
+			if(persist)
+			{
+				sortSet.Persist();
+			}
+			return sortSet;
 		}
 
-        public static TableMappingItem CreateTable(string name, SchemaItemGroup group,
+		public static DataStructureSortSetItem CreateSortSetItem(
+			DataStructureSortSet sortSet,
+			DataStructureEntity entity,
+			string fieldName,
+			DataStructureColumnSortDirection direction,
+			bool persist)
+		{
+			var schemaService
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var sortSetItem = sortSet.NewItem<DataStructureSortSetItem>(
+					schemaService.ActiveSchemaExtensionId, null);
+			sortSetItem.Entity = entity;
+			sortSetItem.FieldName = fieldName;
+			sortSetItem.SortDirection = direction;
+			if(persist)
+			{
+				sortSetItem.Persist();
+			}
+			return sortSetItem;
+		}
+        public static TableMappingItem CreateTable(
+	        string name, 
+	        SchemaItemGroup group,
             bool persist)
         {
             return CreateTable(name, group, persist, true);
         }
 
-        public static TableMappingItem CreateTable(string name, SchemaItemGroup group, 
-            bool persist, bool useDefaultAncestor)
+        public static TableMappingItem CreateTable(
+	        string name, 
+	        SchemaItemGroup group, 
+            bool persist, 
+            bool useDefaultAncestor)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-			EntityModelSchemaItemProvider entityProvider = schema.GetProvider(
-                typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
-            TableMappingItem newEntity = entityProvider.NewItem(typeof(TableMappingItem), 
-                schema.StorageSchemaExtensionId, null) as TableMappingItem;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var entityModelSchemaItemProvider = schemaService
+				.GetProvider<EntityModelSchemaItemProvider>();
+            var newEntity = entityModelSchemaItemProvider
+	            .NewItem<TableMappingItem>(
+		            schemaService.StorageSchemaExtensionId, null);
 			newEntity.Name = name;
 			newEntity.MappedObjectName = name;
 			newEntity.Group = group;
-            if (!useDefaultAncestor)
+            if(!useDefaultAncestor)
             {
                 newEntity.Ancestors.RemoveAt(0);
             }
-			if(persist) newEntity.Persist();
+            if(persist)
+            {
+	            newEntity.Persist();
+            }
             return newEntity;
 		}
 
-        public static DataConstant CreateConstant(string name, IDataLookup lookup, 
-            OrigamDataType dataType, object value, SchemaItemGroup group, bool persist)
+        public static DataConstant CreateConstant(
+	        string name, 
+	        IDataLookup lookup, 
+            OrigamDataType dataType, 
+	        object value, 
+	        SchemaItemGroup group, 
+	        bool persist)
         {
-            ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-            DataConstantSchemaItemProvider constantProvider = schema.GetProvider(
-                typeof(DataConstantSchemaItemProvider)) as DataConstantSchemaItemProvider;
-
-            DataConstant newConstant = constantProvider.NewItem(
-                typeof(DataConstant), schema.ActiveSchemaExtensionId, null) as DataConstant;
+            var schemaService 
+	            = ServiceManager.Services.GetService<ISchemaService>();
+            var dataConstantSchemaItemProvider = schemaService
+	            .GetProvider<DataConstantSchemaItemProvider>();
+            var newConstant = dataConstantSchemaItemProvider
+	            .NewItem<DataConstant>(
+		            schemaService.ActiveSchemaExtensionId, null);
             newConstant.Name = name;
             newConstant.DataLookup = lookup;
             newConstant.Group = group;
             newConstant.DataType = dataType;
             newConstant.Value = value;
-            if (persist) newConstant.Persist();
+            if(persist)
+            {
+	            newConstant.Persist();
+            }
             return newConstant;
         }
         
@@ -193,48 +261,60 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-				EntityModelSchemaItemProvider entityProvider = schema.GetProvider(typeof(EntityModelSchemaItemProvider)) as EntityModelSchemaItemProvider;
-
+				var schemaService 
+					= ServiceManager.Services.GetService<ISchemaService>();
+				var entityModelSchemaItemProvider = schemaService
+					.GetProvider<EntityModelSchemaItemProvider>();
 				// Set IOrigamEntity as an ancestor, so we get primary key
 				IDataEntity origamEntity = null;
-
-				foreach(IDataEntity x in entityProvider.ChildItems)
+				foreach(var abstractSchemaItem 
+				        in entityModelSchemaItemProvider.ChildItems)
 				{
-                    if (x.Name == DefaultAncestorName)
+					var dataEntity = (IDataEntity)abstractSchemaItem;
+					if(dataEntity.Name == DefaultAncestorName)
 					{
-						origamEntity = x;
+						origamEntity = dataEntity;
 						break;
 					}
 				}
-
-				if(origamEntity == null) throw new Exception(ResourceUtils.GetString("ErrorIOrigamEntity2NotFound"));
-
+				if(origamEntity == null)
+				{
+					throw new Exception(
+						ResourceUtils.GetString("ErrorIOrigamEntity2NotFound"));
+				}
 				return origamEntity;
 			}
 		}
 
         public static string DefaultAncestorName => "IOrigamEntity2";
 
-	    public static Guid LanguageEntityId => new Guid("efdff1b5-916a-4036-977e-e34f59e72d41");
+	    public static Guid LanguageEntityId 
+		    => new Guid("efdff1b5-916a-4036-977e-e34f59e72d41");
 
-	    public static Guid GetByLanguageIdFilterId => new Guid("afb5b84b-f4a3-4e3a-a382-c110624f71c9");
+	    public static Guid GetByLanguageIdFilterId 
+		    => new Guid("afb5b84b-f4a3-4e3a-a382-c110624f71c9");
 
-	    public static Guid refLanguageIdColymId => new Guid("13a2f9f8-c3e8-49fb-86e0-0515a72a10f2");
+	    public static Guid refLanguageIdColumnId 
+		    => new Guid("13a2f9f8-c3e8-49fb-86e0-0515a72a10f2");
 
-	    public static Guid ILocalizationEntityId => new Guid("b822344b-e1a6-4de0-ae41-ea49e9f981ac");
+	    public static Guid ILocalizationEntityId 
+		    => new Guid("b822344b-e1a6-4de0-ae41-ea49e9f981ac");
 
 	    public static IDataEntityColumn DefaultPrimaryKey
 		{
 			get
 			{
-				foreach(IDataEntityColumn col in EntityHelper.DefaultAncestor.EntityColumns)
+				foreach(IDataEntityColumn dataEntityColumn 
+				        in DefaultAncestor.EntityColumns)
 				{
-					if(col.IsPrimaryKey && !col.ExcludeFromAllFields) return col;
+					if(dataEntityColumn.IsPrimaryKey
+					&& !dataEntityColumn.ExcludeFromAllFields)
+					{
+						return dataEntityColumn;
+					}
 				}
-
-				throw new Exception(ResourceUtils.GetString("ErrorDefaultPrimaryKey"));
+				throw new Exception(
+					ResourceUtils.GetString("ErrorDefaultPrimaryKey"));
 			}
 		}
 
@@ -242,139 +322,193 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				foreach(EntityFilter filter in EntityHelper.DefaultAncestor.EntityFilters)
+				foreach(EntityFilter filter in DefaultAncestor.EntityFilters)
 				{
 					if(filter.Name == "GetId") return filter;
 				}
-
-				throw new Exception(ResourceUtils.GetString("ErrorDefaultPrimaryKey"));
+				throw new Exception(
+					ResourceUtils.GetString("ErrorDefaultPrimaryKey"));
 			}
 		}
 
-		public static SchemaItemAncestor AddAncestor(IDataEntity entity, IDataEntity ancestorEntity, bool persist)
+		public static SchemaItemAncestor AddAncestor(
+			IDataEntity entity, 
+			IDataEntity ancestorEntity, 
+			bool persist)
 		{
-			AbstractSchemaItem e = entity as AbstractSchemaItem;
-
-			SchemaItemAncestor ancestor = new SchemaItemAncestor();
+			var abstractSchemaItem = entity as AbstractSchemaItem;
+			var ancestor = new SchemaItemAncestor();
 			ancestor.SchemaItem = entity as AbstractSchemaItem;
 			ancestor.Ancestor = ancestorEntity as AbstractSchemaItem;
-			ancestor.PersistenceProvider = e.PersistenceProvider;
-			e.Ancestors.Add(ancestor);
-
-			if(persist) ancestor.Persist();
-
+			ancestor.PersistenceProvider = abstractSchemaItem.PersistenceProvider;
+			abstractSchemaItem.Ancestors.Add(ancestor);
+			if(persist)
+			{
+				ancestor.Persist();
+			}
 			return ancestor;
 		}
 
-        public static FieldMappingItem CreateColumn(IDataEntity entity, 
-            string name,bool allowNulls, OrigamDataType dataType, int dataLength,
-            string caption, IDataEntity foreignKeyEntity, 
-            IDataEntityColumn foreignKeyField, bool persist)
+        public static FieldMappingItem CreateColumn(
+	        IDataEntity entity, 
+            string name,
+	        bool allowNulls, 
+	        OrigamDataType dataType, 
+	        int dataLength,
+            string caption, 
+	        IDataEntity foreignKeyEntity, 
+            IDataEntityColumn foreignKeyField, 
+	        bool persist)
         {
             return CreateColumn(entity, name, allowNulls, dataType,  dataLength, 
                 null, caption, foreignKeyEntity, foreignKeyField, persist);
         }
 
-        public static FieldMappingItem CreateColumn(IDataEntity entity,
-            string name, bool allowNulls, OrigamDataType dataType, int dataLength,
-            DatabaseDataType databaseType, string caption, 
-            IDataEntity foreignKeyEntity, IDataEntityColumn foreignKeyField,
+        public static FieldMappingItem CreateColumn(
+	        IDataEntity entity,
+            string name, 
+	        bool allowNulls, 
+	        OrigamDataType dataType, 
+            int dataLength, 
+	        DatabaseDataType databaseType, 
+	        string caption, 
+            IDataEntity foreignKeyEntity, 
+	        IDataEntityColumn foreignKeyField,
             bool persist)
-		{
-			ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-			FieldMappingItem f = entity.NewItem(typeof(FieldMappingItem), 
-                schema.StorageSchemaExtensionId, null) as FieldMappingItem;
-			f.Name = name;
-			f.MappedColumnName = name;
-			f.AllowNulls = allowNulls;
-			f.DataLength = dataLength;
-			f.DataType = dataType;
-            f.MappedDataType = databaseType;
-			f.Caption = caption;
-			f.XmlMappingType = EntityColumnXmlMapping.Attribute;
-			f.ForeignKeyEntity = foreignKeyEntity;
-			f.ForeignKeyField = foreignKeyField;
-			if(persist) f.Persist();
-			return f;
-		}
-
-		public static EntityRelationItem CreateRelation(IDataEntity parentEntity, IDataEntity relatedEntity, bool masterDetail, bool persist)
-		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			EntityRelationItem r = (parentEntity as AbstractSchemaItem).NewItem(typeof(EntityRelationItem), schema.ActiveSchemaExtensionId, null) as EntityRelationItem;
-			r.Name = relatedEntity.Name;
-			r.RelatedEntity = relatedEntity;
-			r.IsParentChild = masterDetail;
-
-			if(persist) r.Persist();
-
-			return r;
-		}
-
-		public static EntityRelationColumnPairItem CreateRelationKey(EntityRelationItem relation, IDataEntityColumn baseField, IDataEntityColumn relatedField, bool persist)
-		{
-			return CreateRelationKey(relation,baseField,relatedField,persist,null);
-		}
-
-		public static EntityRelationColumnPairItem CreateRelationKey(EntityRelationItem relation, IDataEntityColumn baseField, IDataEntityColumn relatedField, bool persist,string NameOfKey)
-		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
-
-			EntityRelationColumnPairItem key = relation.NewItem(typeof(EntityRelationColumnPairItem), schema.ActiveSchemaExtensionId, null) as EntityRelationColumnPairItem;
-			key.BaseEntityField = baseField;
-			key.RelatedEntityField = relatedField;
-			if(!string.IsNullOrEmpty(NameOfKey))
-            {
-				key.Name = NameOfKey;
+        {
+	        var schemaService 
+		        = ServiceManager.Services.GetService<ISchemaService>();
+			var fieldMappingItem = entity.NewItem<FieldMappingItem>( 
+                schemaService.StorageSchemaExtensionId, null);
+			fieldMappingItem.Name = name;
+			fieldMappingItem.MappedColumnName = name;
+			fieldMappingItem.AllowNulls = allowNulls;
+			fieldMappingItem.DataLength = dataLength;
+			fieldMappingItem.DataType = dataType;
+            fieldMappingItem.MappedDataType = databaseType;
+			fieldMappingItem.Caption = caption;
+			fieldMappingItem.XmlMappingType = EntityColumnXmlMapping.Attribute;
+			fieldMappingItem.ForeignKeyEntity = foreignKeyEntity;
+			fieldMappingItem.ForeignKeyField = foreignKeyField;
+			if(persist)
+			{
+				fieldMappingItem.Persist();
 			}
-			if(persist) key.Persist();
-
-			return key;
+			return fieldMappingItem;
 		}
 
-		public static DataStructureReference CreateDataStructureReference(AbstractSchemaItem parentItem, DataStructure structure, DataStructureMethod method, DataStructureSortSet sortSet, bool persist)
+		public static EntityRelationItem CreateRelation(
+			IDataEntity parentEntity, 
+			IDataEntity relatedEntity, 
+			bool masterDetail, 
+			bool persist)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var entityRelationItem = ((AbstractSchemaItem)parentEntity)
+				.NewItem<EntityRelationItem>(
+					schemaService.ActiveSchemaExtensionId, null);
+			entityRelationItem.Name = relatedEntity.Name;
+			entityRelationItem.RelatedEntity = relatedEntity;
+			entityRelationItem.IsParentChild = masterDetail;
+			if(persist)
+			{
+				entityRelationItem.Persist();
+			}
+			return entityRelationItem;
+		}
 
-			DataStructureReference dsr = parentItem.NewItem(typeof(DataStructureReference), schema.ActiveSchemaExtensionId, null) as DataStructureReference;
-			dsr.DataStructure = structure;
-			dsr.Method = method;
-			dsr.SortSet = sortSet;
+		public static EntityRelationColumnPairItem CreateRelationKey(
+			EntityRelationItem relation, 
+			IDataEntityColumn baseField, 
+			IDataEntityColumn relatedField, 
+			bool persist)
+		{
+			return CreateRelationKey(relation, baseField, relatedField, persist,
+				null);
+		}
 
-			if(persist) dsr.Persist();
+		public static EntityRelationColumnPairItem CreateRelationKey(
+			EntityRelationItem relation, 
+			IDataEntityColumn baseField, 
+			IDataEntityColumn relatedField, 
+			bool persist,
+			string nameOfKey)
+		{
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var entityRelationColumnPairItem = relation
+				.NewItem<EntityRelationColumnPairItem>(
+					schemaService.ActiveSchemaExtensionId, null);
+			entityRelationColumnPairItem.BaseEntityField = baseField;
+			entityRelationColumnPairItem.RelatedEntityField = relatedField;
+			if(!string.IsNullOrEmpty(nameOfKey))
+            {
+				entityRelationColumnPairItem.Name = nameOfKey;
+			}
+			if(persist)
+			{
+				entityRelationColumnPairItem.Persist();
+			}
+			return entityRelationColumnPairItem;
+		}
 
-			return dsr;
+		public static DataStructureReference CreateDataStructureReference(
+			AbstractSchemaItem parentItem, 
+			DataStructure structure, 
+			DataStructureMethod method, 
+			DataStructureSortSet sortSet, 
+			bool persist)
+		{
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var dataStructureReference = parentItem
+				.NewItem<DataStructureReference>(
+					schemaService.ActiveSchemaExtensionId, null);
+			dataStructureReference.DataStructure = structure;
+			dataStructureReference.Method = method;
+			dataStructureReference.SortSet = sortSet;
+			if(persist)
+			{
+				dataStructureReference.Persist();
+			}
+			return dataStructureReference;
 		}
 
 		public static SchemaItemGroup GetDataStructureGroup(string name)
 		{
-			ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-			DataStructureSchemaItemProvider dsprovider = schema.GetProvider(
-                typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
-			return dsprovider.GetGroup(name);
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+			var dataStructureSchemaItemProvider 
+				= schemaService.GetProvider<DataStructureSchemaItemProvider>();
+			return dataStructureSchemaItemProvider.GetGroup(name);
 		}
 
         public static SchemaItemGroup GetDataConstantGroup(string name)
         {
-            ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-            DataConstantSchemaItemProvider dsprovider = schema.GetProvider(
-                typeof(DataConstantSchemaItemProvider)) as DataConstantSchemaItemProvider;
-            return dsprovider.GetGroup(name);
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+            var dataConstantSchemaItemProvider 
+	            = schemaService.GetProvider<DataConstantSchemaItemProvider>();
+            return dataConstantSchemaItemProvider.GetGroup(name);
         }
 
-        public static EntityFilter CreateFilter(IDataEntityColumn field, string functionName,
-            string filterPrefix, bool createParameter)
+        public static EntityFilter CreateFilter(
+	        IDataEntityColumn field, 
+	        string functionName,
+            string filterPrefix, 
+	        bool createParameter)
         {
-            return CreateFilter(field, functionName, filterPrefix, createParameter,
-                null);
+            return CreateFilter(field, functionName, filterPrefix, 
+	            createParameter, null);
         }
 
-        public static EntityFilter CreateFilter(IDataEntityColumn field, string functionName, 
-            string filterPrefix, bool createParameter, IList<AbstractSchemaItem> generatedElements)
+        public static EntityFilter CreateFilter(
+	        IDataEntityColumn field, 
+	        string functionName, 
+            string filterPrefix, 
+	        bool createParameter, 
+	        IList<AbstractSchemaItem> generatedElements)
 		{
 			switch (functionName)
 			{
@@ -389,150 +523,185 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 	
-		private static EntityFilter CreateFilter(IDataEntityColumn field, string functionName, string filterPrefix, 
-			bool createParameter, string leftName, string rightName, bool isRightArray, 
+		private static EntityFilter CreateFilter(
+			IDataEntityColumn field, 
+			string functionName, 
+			string filterPrefix, 
+			bool createParameter, 
+			string leftName, 
+			string rightName, 
+			bool isRightArray, 
             IList<AbstractSchemaItem> generatedElements)
 		{
-		    if (field.Name == null) throw new ArgumentException("Filed Name is not set.");
-            ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-			IDataEntity entity = field.ParentItem as IDataEntity;
+			if(field.Name == null)
+			{
+				throw new ArgumentException("Field Name is not set.");
+			}
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
+            var entity = (IDataEntity)field.ParentItem;
             // filter
-			EntityFilter filter = entity.NewItem(
-                typeof(EntityFilter), schema.ActiveSchemaExtensionId, null) as EntityFilter;
-			filter.Name = filterPrefix 
-                + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name);
+			var filter = entity.NewItem<EntityFilter>(
+				schemaService.ActiveSchemaExtensionId, null);
+			filter.Name = filterPrefix + (field.Name.StartsWith("ref") 
+				? field.Name.Substring(3) : field.Name);
 			if(isRightArray)
 			{
 				filter.Name += "List";
 			}
 			filter.Persist();
-            if (generatedElements != null) generatedElements.Add(filter);
+			generatedElements?.Add(filter);
             // function call
-			FunctionCall call = filter.NewItem(
-                typeof(FunctionCall), schema.ActiveSchemaExtensionId, null) as FunctionCall;
-			FunctionSchemaItemProvider functionProvider = 
-                schema.GetProvider(typeof(FunctionSchemaItemProvider)) as FunctionSchemaItemProvider;
-			Function function = (Function)functionProvider.GetChildByName(functionName, Function.CategoryConst);
-			if(function == null) throw new Exception(functionName + " function not found. Cannot create filter.");
-			call.Function = function;
-			call.Name = functionName;
-			call.Persist();
-            // field reference
-			EntityColumnReference reference1 = 
-                call.GetChildByName(leftName).NewItem(
-                    typeof(EntityColumnReference), 
-                    schema.ActiveSchemaExtensionId, null) as EntityColumnReference;
-			reference1.Field = field;
-			reference1.Persist();
-            // parameter
-			if(createParameter)
+			var functionCall = filter.NewItem<FunctionCall>(
+				schemaService.ActiveSchemaExtensionId, null);
+			var functionSchemaItemProvider 
+				= schemaService.GetProvider<FunctionSchemaItemProvider>();
+			var function = (Function)functionSchemaItemProvider.GetChildByName(
+				functionName, Function.CategoryConst);
+			if(function == null)
 			{
-				DatabaseParameter param = entity.NewItem(
-                    typeof(DatabaseParameter), 
-                    schema.ActiveSchemaExtensionId, null) as DatabaseParameter;
-				if(isRightArray)
+				throw new Exception(
+					$"{functionName} function not found. Cannot create filter.");
+			}
+			functionCall.Function = function;
+			functionCall.Name = functionName;
+			functionCall.Persist();
+            // field reference
+			var entityColumnReference = functionCall.GetChildByName(leftName)
+				.NewItem<EntityColumnReference>(
+					schemaService.ActiveSchemaExtensionId, null);
+			entityColumnReference.Field = field;
+			entityColumnReference.Persist();
+			if(!createParameter)
+			{
+				return filter;
+			}
+            // parameter
+            var databaseParameter = entity.NewItem<DatabaseParameter>(
+	            schemaService.ActiveSchemaExtensionId, null);
+			if(isRightArray)
+			{
+				databaseParameter.DataType = OrigamDataType.Array;
+			}
+			else
+			{
+				databaseParameter.DataType = field.DataType;
+				if (field is IDatabaseDataTypeMapping mappableDataType)
 				{
-					param.DataType = OrigamDataType.Array;
+					databaseParameter.MappedDataType 
+						= mappableDataType.MappedDataType;
 				}
-				else
-				{
-					param.DataType = field.DataType;
-                    IDatabaseDataTypeMapping mappableDataType = 
-                        field as IDatabaseDataTypeMapping;
-                    if (mappableDataType != null)
-                    {
-                        param.MappedDataType = mappableDataType.MappedDataType;
-                    }
-                    param.DataLength = field.DataLength;
-				}
-				param.Name = "par" + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name);
-				if(isRightArray)
-				{
-					param.Name += "List";
-				}
-				param.Persist();
-				ParameterReference reference2 = call.GetChildByName(rightName).NewItem(
-                    typeof(ParameterReference), schema.ActiveSchemaExtensionId, null) as ParameterReference;
-				reference2.Parameter = param;
-				reference2.Persist();
-                if (generatedElements != null) generatedElements.Add(reference2);
-            }
-            return filter;
+				databaseParameter.DataLength = field.DataLength;
+			}
+			databaseParameter.Name = "par" + (field.Name.StartsWith("ref") 
+				? field.Name.Substring(3) : field.Name);
+			if(isRightArray)
+			{
+				databaseParameter.Name += "List";
+			}
+			databaseParameter.Persist();
+			var parameterReference = functionCall.GetChildByName(rightName)
+				.NewItem<ParameterReference>(
+					schemaService.ActiveSchemaExtensionId, null);
+			parameterReference.Parameter = databaseParameter;
+			parameterReference.Persist();
+			generatedElements?.Add(parameterReference);
+			return filter;
         }
 
         public static TableMappingItem CreateLanguageTranslationChildEntity(
             TableMappingItem parentEntity, ICollection selectedFields)
         {
-            return CreateLanguageTranslationChildEntity(parentEntity, selectedFields, null);
+            return CreateLanguageTranslationChildEntity(
+	            parentEntity, selectedFields, null);
         }
 
         public static TableMappingItem CreateLanguageTranslationChildEntity(
             TableMappingItem parentEntity, ICollection selectedFields,
             IList<AbstractSchemaItem> generatedElements)
 		{			
-			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+			var schemaService 
+				= ServiceManager.Services.GetService<ISchemaService>();
 			// create child entity (based on IOrigamEntity2)
-			TableMappingItem newEntity = EntityHelper.CreateTable(String.Format("{0}_l10n", parentEntity.Name), parentEntity.Group, false);
-		    string entityCaption = string.IsNullOrEmpty(parentEntity.Caption)
+			var newEntity = CreateTable($"{parentEntity.Name}_l10n", 
+				parentEntity.Group, false);
+		    var entityCaption = string.IsNullOrEmpty(parentEntity.Caption)
 		        ? parentEntity.Name
 		        : parentEntity.Caption;
-		    newEntity.Caption = String.Format("{0} Localization", entityCaption);
-            if (generatedElements != null) generatedElements.Add(newEntity);
-			// create unique composite index on foreign key to parent entity and reference to language
-			DataEntityIndex index = newEntity.NewItem(typeof(DataEntityIndex), schema.ActiveSchemaExtensionId, null) as DataEntityIndex;
-			index.Name = "ix_unq_" + parentEntity.Name;
-			index.IsUnique = true;
-			index.Persist();
+		    newEntity.Caption = $"{entityCaption} Localization";
+		    generatedElements?.Add(newEntity);
+            // create unique composite index on foreign key to parent entity and reference to language
+			var dataEntityIndex = newEntity.NewItem<DataEntityIndex>(
+				schemaService.ActiveSchemaExtensionId, null);
+			dataEntityIndex.Name = "ix_unq_" + parentEntity.Name;
+			dataEntityIndex.IsUnique = true;
+			dataEntityIndex.Persist();
 		    newEntity.Persist();
             // Create relation from the parent entity
-            EntityRelationItem parentRelation = EntityHelper.CreateRelation(parentEntity, newEntity, true, true);
+            var parentRelation = CreateRelation(
+	            parentEntity, newEntity, true, true);
 			parentEntity.LocalizationRelation = parentRelation;
-            if (generatedElements != null) generatedElements.Add(parentRelation);
-            EntityRelationItem parentRelationAll = EntityHelper.CreateRelation(parentEntity, newEntity, true, false);
-			parentRelationAll.Name = parentRelationAll.Name + "_all";
+			generatedElements?.Add(parentRelation);
+            var parentRelationAll = CreateRelation(
+	            parentEntity, newEntity, true, false);
+			parentRelationAll.Name += "_all";
 			parentRelationAll.Persist();
-            if (generatedElements != null) generatedElements.Add(parentRelationAll);
-            ArrayList indexColumns = new ArrayList();
+			generatedElements?.Add(parentRelationAll);
+            var indexColumns = new ArrayList();
 			// Create reference columns
-			foreach (IDataEntityColumn pk in parentEntity.EntityPrimaryKey)
+			foreach(IDataEntityColumn primaryKey in parentEntity.EntityPrimaryKey)
 			{
-				if (!pk.ExcludeFromAllFields)
+				if(primaryKey.ExcludeFromAllFields)
 				{
-					FieldMappingItem refParentColumn = EntityHelper.CreateColumn(newEntity, "ref" + parentEntity.Name + pk.Name, false, pk.DataType, pk.DataLength, parentEntity.Caption, parentEntity, pk, true);
-					EntityRelationColumnPairItem key = EntityHelper.CreateRelationKey(parentRelation, pk, refParentColumn, true);
-					EntityRelationColumnPairItem keyAll = EntityHelper.CreateRelationKey(parentRelationAll, pk, refParentColumn, true);
-					indexColumns.Add(refParentColumn);
+					continue;
 				}
+				var refParentColumn = CreateColumn(
+					newEntity, $"ref{parentEntity.Name}{primaryKey.Name}", 
+					false, primaryKey.DataType, primaryKey.DataLength, 
+					parentEntity.Caption, parentEntity, primaryKey, true);
+				var key = CreateRelationKey(
+					parentRelation, primaryKey, refParentColumn, true);
+				var keyAll = CreateRelationKey(
+					parentRelationAll, primaryKey, refParentColumn, true);
+				indexColumns.Add(refParentColumn);
 			}
 			// get language entity
-			IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			// get ILocalization
-			ModelElementKey ILocalizationKey = new ModelElementKey(ILocalizationEntityId);
-			IDataEntity ILocalization = (IDataEntity)persistenceService.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), ILocalizationKey);
+			var persistenceService 
+				= ServiceManager.Services.GetService<IPersistenceService>();
+			// get localization
+			var localizationKey = new ModelElementKey(ILocalizationEntityId);
+			var localizationEntity = (IDataEntity)persistenceService
+				.SchemaProvider.RetrieveInstance<AbstractSchemaItem>(
+					localizationKey.Id);
 			// and set ancestor
-			EntityHelper.AddAncestor(newEntity, ILocalization, true);
+			AddAncestor(newEntity, localizationEntity, true);
 			// use language filter in parent relation
-			EntityRelationFilter relationFilter = parentRelation.NewItem(typeof(EntityRelationFilter), schema.ActiveSchemaExtensionId, null) as EntityRelationFilter;
-			relationFilter.Filter = ILocalization.GetChildById(GetByLanguageIdFilterId) as EntityFilter;
-			relationFilter.Persist();	
+			var entityRelationFilter = parentRelation
+				.NewItem<EntityRelationFilter>(
+					schemaService.ActiveSchemaExtensionId, null);
+			entityRelationFilter.Filter = localizationEntity.GetChildById(
+				GetByLanguageIdFilterId) as EntityFilter;
+			entityRelationFilter.Persist();	
 			// add refLanguageId to unique index
-			indexColumns.Add(ILocalization.GetChildById(refLanguageIdColymId) as FieldMappingItem);
+			indexColumns.Add(localizationEntity.GetChildById(
+				refLanguageIdColumnId) as FieldMappingItem);
 			// create index items
-			int i = 0;
-			foreach (IDataEntityColumn col in indexColumns)
+			var i = 0;
+			foreach(IDataEntityColumn column in indexColumns)
 			{
-				DataEntityIndexField field = index.NewItem(typeof(DataEntityIndexField), schema.ActiveSchemaExtensionId, null) as DataEntityIndexField;
-				field.Field = col;
+				var field = dataEntityIndex.NewItem<DataEntityIndexField>(
+					schemaService.ActiveSchemaExtensionId, null);
+				field.Field = column;
 				field.OrdinalPosition = i;
 				field.Persist();
-
 				i++;
 			}
 			// create selected fields
-			foreach (IDataEntityColumn col in selectedFields)
+			foreach(IDataEntityColumn column in selectedFields)
 			{
-				EntityHelper.CreateColumn(newEntity, col.Name, col.AllowNulls, col.DataType, col.DataLength, col.Caption, null, null, true);
+				CreateColumn(newEntity, column.Name, column.AllowNulls, 
+					column.DataType, column.DataLength, column.Caption, null, 
+					null, true);
 			}
 			newEntity.Persist();
 			parentEntity.Persist();
@@ -542,29 +711,34 @@ namespace Origam.Schema.EntityModel
         public static DataEntityIndex CreateIndex(IDataEntity entity, 
             IDataEntityColumn field, bool unique, bool persist)
         {
-            ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-            DataEntityIndex result = (entity as AbstractSchemaItem).NewItem(
-                typeof(DataEntityIndex), schema.ActiveSchemaExtensionId, null)
-                as DataEntityIndex;
-            result.Name = "ix" + (unique ? "Unique": "") + field.Name;
-            result.IsUnique = unique;
-            if (persist) result.Persist();
-            CreateIndexField(result, field, persist);
-            return result;
+            var schemaService 
+	            = ServiceManager.Services.GetService<ISchemaService>();
+            var dataEntityIndex = ((AbstractSchemaItem)entity)
+	            .NewItem<DataEntityIndex>(
+		            schemaService.ActiveSchemaExtensionId, null);
+            dataEntityIndex.Name = $"ix{(unique ? "Unique" : "")}{field.Name}";
+            dataEntityIndex.IsUnique = unique;
+            if(persist)
+            {
+	            dataEntityIndex.Persist();
+            }
+            CreateIndexField(dataEntityIndex, field, persist);
+            return dataEntityIndex;
         }
 
         public static DataEntityIndexField CreateIndexField(
             DataEntityIndex index, IDataEntityColumn field, bool persist)
         {
-            ISchemaService schema = ServiceManager.Services.GetService(
-                typeof(ISchemaService)) as ISchemaService;
-            DataEntityIndexField result = index.NewItem(typeof(
-                DataEntityIndexField), schema.ActiveSchemaExtensionId, null) 
-                as DataEntityIndexField;
-            result.Field = field;
-            if (persist) result.Persist();
-            return result;
+            var schemaService 
+	            = ServiceManager.Services.GetService<ISchemaService>();
+            var dataEntityIndexField = index.NewItem<DataEntityIndexField>(
+		            schemaService.ActiveSchemaExtensionId, null);
+            dataEntityIndexField.Field = field;
+            if(persist)
+            {
+	            dataEntityIndexField.Persist();
+            }
+            return dataEntityIndexField;
         }
     }
 }

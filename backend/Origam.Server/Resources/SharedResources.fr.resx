@@ -279,6 +279,15 @@
   <data name="ToResetPassword3" xml:space="preserve">
     <value> pour réinitialiser votre mot de passe.</value>
   </data>
+  <data name="ToInitialUser1" xml:space="preserve">
+    <value>Cliquez </value>
+  </data>
+	<data name="ToInitialUser2" xml:space="preserve">
+    <value>ici</value>
+  </data>
+	<data name="ToInitialUser3" xml:space="preserve">
+    <value> pour créer un nouvel utilisateur.</value>
+  </data>
   <data name="UserName" xml:space="preserve">
     <value>Nom d’utilisateur</value>
   </data>

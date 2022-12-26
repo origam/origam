@@ -98,26 +98,29 @@ namespace Origam.Workbench.Commands
         public event EventHandler<AbstractSchemaItem> ItemCreated ;
         public override void Run()
 		{
-			AbstractSchemaItem item = ParentElement.NewItem(this.Owner as Type, _schema.ActiveSchemaExtensionId, null);
+			var newItemMethodInfo 
+				= typeof(ISchemaItemFactory).GetMethod("NewItem");
+			var newItemGenericMethodInfo
+				= newItemMethodInfo.MakeGenericMethod(Owner as Type);
+			var item = newItemGenericMethodInfo.Invoke(
+				ParentElement,
+				new object[] { _schema.ActiveSchemaExtensionId, null });
+			var abstractSchemaItem = (AbstractSchemaItem)item;
 			if(_name != null)
 			{
-				item.Name = _name;
+				abstractSchemaItem.Name = _name;
 			}
-
 			// set abstract, if parent is abstract
-			if(item.ParentItem != null && item.ParentItem.IsAbstract)
+			if((abstractSchemaItem.ParentItem != null) 
+			&& abstractSchemaItem.ParentItem.IsAbstract)
 			{
-				item.IsAbstract = true;
+				abstractSchemaItem.IsAbstract = true;
 			}
-
-			//_schema.SchemaBrowser.ebrSchemaBrowser.RefreshActiveNode();
-
 			EditSchemaItem cmd = new EditSchemaItem(ShowDialog);
 			cmd.Owner = item;
-
 			_schema.LastAddedNodeParent = ParentElement;
 			_schema.LastAddedType = this.Owner as Type;
-			ItemCreated?.Invoke(this, item);
+			ItemCreated?.Invoke(this, abstractSchemaItem);
 			cmd.Run();
 		}
 	
@@ -149,12 +152,19 @@ namespace Origam.Workbench.Commands
 
 		public override void Run()
 		{
-			AbstractSchemaItem item = _schema.LastAddedNodeParent.NewItem(
-                _schema.LastAddedType, _schema.ActiveSchemaExtensionId, null);
+			var newItemMethodInfo 
+				= typeof(ISchemaItemFactory).GetMethod("NewItem");
+			var newItemGenericMethodInfo
+				= newItemMethodInfo.MakeGenericMethod(_schema.LastAddedType);
+			var item = newItemGenericMethodInfo.Invoke(
+				_schema.LastAddedNodeParent,
+				new object[] { _schema.ActiveSchemaExtensionId, null });
+			var abstractSchemaItem = (AbstractSchemaItem)item;
 			// set abstract, if parent is abstract
-			if(item.ParentItem != null && item.ParentItem.IsAbstract)
+			if((abstractSchemaItem.ParentItem != null)
+			&& abstractSchemaItem.ParentItem.IsAbstract)
 			{
-				item.IsAbstract = true;
+				abstractSchemaItem.IsAbstract = true;
 			}
 			EditSchemaItem cmd = new EditSchemaItem();
 			cmd.Owner = item;

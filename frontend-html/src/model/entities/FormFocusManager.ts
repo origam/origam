@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { isGlobalAutoFocusDisabled } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
+import { requestFocus } from "utils/focus";
 
 export class FormFocusManager {
   autoFocusDisabled = false;
@@ -29,7 +30,7 @@ export class FormFocusManager {
 
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusAbleContainers: IFocusAbleObjectContainer[] = [];
-  private lastFocused: IFocusable | undefined;
+  public lastFocused: IFocusable | undefined;
 
   setLastFocused(focusable: IFocusable) {
     this.lastFocused = focusable;
@@ -63,11 +64,11 @@ export class FormFocusManager {
       return;
     }
     this.lastFocused = focusable;
-    focusable.focus();
+    requestFocus(focusable as any);
   }
 
   refocusLast() {
-    this.lastFocused?.focus();
+    requestFocus(this.lastFocused as any);
   }
 
   forceAutoFocus() {

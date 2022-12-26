@@ -28,82 +28,64 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for UpdateContextTask.
-	/// </summary>
 	[SchemaItemDescription("(Task) Update context by Xpath", "Tasks", "task-update-context-by-xpath.png")]
     [HelpTopic("Update+Context+Task")]
     [ClassMetaVersion("6.0.0")]
-	public class UpdateContextTask : AbstractWorkflowStep, ISchemaItemFactory
+	public class UpdateContextTask : AbstractWorkflowStep
 	{
-		public UpdateContextTask() : base()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
+		public UpdateContextTask() {}
 
-		public UpdateContextTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public UpdateContextTask(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
 		public UpdateContextTask(Key primaryKey) : base(primaryKey)	{}
 		#region Overriden AbstractSchemaItem Members
 		
 		public override string ItemType => CategoryConst;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			XsltDependencyHelper.GetDependencies(this, dependencies, this.ValueXPath);
-
-			dependencies.Add(this.OutputContextStore);
-			dependencies.Add(this.XPathContextStore);
-			dependencies.Add(this.Entity);
-
-			base.GetExtraDependencies (dependencies);
+			XsltDependencyHelper.GetDependencies(
+				this, dependencies, ValueXPath);
+			dependencies.Add(OutputContextStore);
+			dependencies.Add(XPathContextStore);
+			dependencies.Add(Entity);
+			base.GetExtraDependencies(dependencies);
 		}
 
 		public override void UpdateReferences()
 		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+			foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
 			{
-				if(item.OldPrimaryKey != null)
+				if(item.OldPrimaryKey?.Equals(OutputContextStore.PrimaryKey) 
+				== true)
 				{
-					if(item.OldPrimaryKey.Equals(this.OutputContextStore.PrimaryKey))
-					{
-						this.OutputContextStore = item as IContextStore;
-					}
-					if(item.OldPrimaryKey.Equals(this.XPathContextStore.PrimaryKey))
-					{
-						this.XPathContextStore = item as IContextStore;
-					}
+					OutputContextStore = item as IContextStore;
+				}
+				if(item.OldPrimaryKey?.Equals(XPathContextStore.PrimaryKey) 
+				== true)
+				{
+					XPathContextStore = item as IContextStore;
 				}
 			}
-
 			base.UpdateReferences ();
 		}
 		#endregion
 
-
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes =>
-			new [] {typeof(WorkflowTaskDependency)};
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override Type[] NewItemTypes => new []
 		{
-			AbstractSchemaItem item;
+			typeof(WorkflowTaskDependency)
+		};
 
-			if(type == typeof(WorkflowTaskDependency))
-			{
-				item = new WorkflowTaskDependency(schemaExtensionId);
-				item.Name = "NewWorkflowTaskDependency";
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorSetWorkflowPropertyTaskUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
+		{
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(WorkflowTaskDependency) ?
+					"NewWorkflowTaskDependency" : null);
 		}
 		#endregion
 
@@ -121,23 +103,23 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.DataStructureEntityId;
-
-				return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), key);
+				var key = new ModelElementKey
+				{
+					Id = DataStructureEntityId
+				};
+				return (DataStructureEntity)PersistenceProvider
+					.RetrieveInstance(typeof(DataStructureEntity), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.DataStructureEntityId = Guid.Empty;
+					DataStructureEntityId = Guid.Empty;
 				}
 				else
 				{
-					this.DataStructureEntityId = (Guid)value.PrimaryKey["Id"];
+					DataStructureEntityId = (Guid)value.PrimaryKey["Id"];
 				}
-
-				//UpdateName();
 			}
 		}
 
@@ -160,24 +142,29 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.OutputContextStoreId;
-
-				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				var key = new ModelElementKey
+				{
+					Id = OutputContextStoreId
+				};
+				return (IContextStore)PersistenceProvider.RetrieveInstance(
+					typeof(AbstractSchemaItem), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.OutputContextStoreId = Guid.Empty;
+					OutputContextStoreId = Guid.Empty;
 				}
 				else
 				{
-					this.OutputContextStoreId = (Guid)value.PrimaryKey["Id"];
+					OutputContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
                 // clear entity and field properties only if copying 
                 // of whole workflow is not in progress (caller is UpdateReferences())
-                if (this.OldPrimaryKey == null) this.clearEntityAndField();
+                if(OldPrimaryKey == null)
+                {
+	                ClearEntityAndField();
+                }
 			}
 		}
 
@@ -192,20 +179,22 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.XPathContextStoreId;
-
-				return (IContextStore)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				var key = new ModelElementKey
+				{
+					Id = XPathContextStoreId
+				};
+				return (IContextStore)PersistenceProvider.RetrieveInstance(
+					typeof(AbstractSchemaItem), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.XPathContextStoreId = Guid.Empty;
+					XPathContextStoreId = Guid.Empty;
 				}
 				else
 				{
-					this.XPathContextStoreId = (Guid)value.PrimaryKey["Id"];
+					XPathContextStoreId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
 		}
@@ -219,31 +208,32 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Private Methods
 		
-		private void clearEntityAndField()
+		private void ClearEntityAndField()
 		{
-			this.FieldName = null;
-			this.Entity = null;
+			FieldName = null;
+			Entity = null;
 		}
-		
 
 		public DataStructureColumn GetFieldSchemaItem()
 		{
-			if (this.Entity == null) return null;
-			foreach (DataStructureColumn col in
-				Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
+			if(Entity == null)
 			{
-				if (col.Name == FieldName)
+				return null;
+			}
+			foreach(DataStructureColumn dataStructureColumn 
+			        in Entity.ChildItemsByType(
+				        DataStructureColumn.CategoryConst))
+			{
+				if(dataStructureColumn.Name == FieldName)
 				{
-					return col;
+					return dataStructureColumn;
 				}
 			}
-
-			foreach (DataStructureColumn col in 
-				Entity.GetColumnsFromEntity())
+			foreach(var dataStructureColumn in Entity.GetColumnsFromEntity())
 			{
-				if (col.Name == FieldName)
+				if(dataStructureColumn.Name == FieldName)
 				{
-					return col;
+					return dataStructureColumn;
 				}
 			}
 			return null;

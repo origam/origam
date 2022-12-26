@@ -37,9 +37,9 @@ namespace Origam.DA.Service
 	{
         private const DatabaseType _PlatformName = DatabaseType.PgSql;
         private string _DbUser = "";
-        private static readonly IDetachedFieldPacker detachedFieldPacker = new DetachedFieldPackerPostgre();
+
         #region Constructors
-        public PgSqlDataService() : base(detachedFieldPacker)
+        public PgSqlDataService()
 		{
 			Init();
 		}
@@ -54,7 +54,7 @@ namespace Origam.DA.Service
 
         public PgSqlDataService(string connection, int bulkInsertThreshold,
             int updateBatchSize) : base(connection, bulkInsertThreshold,
-            updateBatchSize, detachedFieldPacker)
+            updateBatchSize)
 		{
 			Init();
 		}
@@ -62,7 +62,7 @@ namespace Origam.DA.Service
 
 		private void Init()
 		{
-			this.DbDataAdapterFactory = new PgSqlCommandGenerator(detachedFieldPacker);
+			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
         }
 
         internal override IDbConnection GetConnection(string connectionString)
@@ -219,7 +219,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string GetAllTablesSQL()
+        internal override string GetAllTablesSql()
         {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where table_schema=(select current_schema) ORDER BY TABLE_NAME";
         }

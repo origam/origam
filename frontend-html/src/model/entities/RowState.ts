@@ -211,6 +211,7 @@ export class RowState implements IRowState {
       rowStateContainer.isValid = false;
       rowStateContainer.processingSate = undefined;
     }
+    this.containers.clear();
     this.firstLoadingPerformed = false;
     this.temporaryContainersValues = undefined;
     // TODO: Wait when something is currently loading.

@@ -14,7 +14,7 @@
         "UserRegistrationMailSubject": "Register",
         "UserRegistrationMailBodyFileName": "testNewUserFile.txt",
         "MailQueueName": "",
-        "UserRegistrationAllowed": "true"
+        "UserRegistrationAllowed": "false"
     },
     "IdentityGuiConfig": {
         "PathToBrandIcon": "icons/origam.png"

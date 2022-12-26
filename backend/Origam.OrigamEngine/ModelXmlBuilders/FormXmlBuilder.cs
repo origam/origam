@@ -106,8 +106,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			FormControlSet form = new FormControlSet();
 
 			form.PersistenceProvider = persistence.SchemaProvider;
-			ControlSetItem control = form.NewItem(typeof(ControlSetItem), 
-                form.SchemaExtensionId, form.Group) as ControlSetItem;
+			ControlSetItem control = form.NewItem<ControlSetItem>( 
+                form.SchemaExtensionId, form.Group);
 			control.PrimaryKey = new ModelElementKey(instanceId);
 
 			control.ControlItem = panel.PanelControl;
@@ -127,9 +127,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				control.ChildItems.Add(copy);
 			}
 
-			PropertyValueItem dataMemberProperty = control.NewItem(
-                typeof(PropertyValueItem), control.SchemaExtensionId, 
-                null) as PropertyValueItem;
+			PropertyValueItem dataMemberProperty = control
+				.NewItem<PropertyValueItem>(control.SchemaExtensionId, null);
 			dataMemberProperty.Name = "DataMember";
 			dataMemberProperty.Value = panel.DataEntity.Name;
 			dataMemberProperty.ControlPropertyItem = 

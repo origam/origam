@@ -43,18 +43,17 @@ namespace Origam.DA.Service
         private static readonly log4net.ILog log = 
             log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private static readonly IDetachedFieldPacker detachedFieldPacker = new DetachedFieldPackerMs();
+        
         
         #region Constructors
-		public MsSqlDataService() : base(detachedFieldPacker)
-		{
+		public MsSqlDataService()
+        {
 			Init();
 		}
 
 		public MsSqlDataService(string connection, int bulkInsertThreshold,
             int updateBatchSize) : base(connection, bulkInsertThreshold,
-            updateBatchSize, detachedFieldPacker)
+            updateBatchSize)
 		{
 			Init();
 		}
@@ -62,7 +61,7 @@ namespace Origam.DA.Service
 
 		private void Init()
 		{
-			this.DbDataAdapterFactory = new MsSqlCommandGenerator(detachedFieldPacker);
+			this.DbDataAdapterFactory = new MsSqlCommandGenerator();
 		}
 
         public override DatabaseType PlatformName
@@ -284,7 +283,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string GetAllTablesSQL()
+        internal override string GetAllTablesSql()
         {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME";
         }

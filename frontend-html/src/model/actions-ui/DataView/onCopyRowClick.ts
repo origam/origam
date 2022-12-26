@@ -24,6 +24,7 @@ import { getEntity } from "../../selectors/DataView/getEntity";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { handleError } from "../../actions/handleError";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 
 export function onCopyRowClick(ctx: any, switchToFormPerspective?: boolean) {
   return flow(function*onCopyRowClick(event: any) {
@@ -42,10 +43,18 @@ export function onCopyRowClick(ctx: any, switchToFormPerspective?: boolean) {
       if(switchToFormPerspective){
         dataView.activateFormView?.({saveNewState: false});
       }
+      hideFilters(ctx, event);
       yield*formScreenLifecycle.onCopyRow(entity, gridId, selectedRowId);
     } catch (e) {
       yield*handleError(ctx)(e);
       throw e;
     }
   });
+}
+
+function hideFilters(ctx: any, event: any){
+  const filterConfiguration = getFilterConfiguration(ctx);
+  if(filterConfiguration.isFilterControlsDisplayed){
+    filterConfiguration.onFilterDisplayClick(event);
+  }
 }

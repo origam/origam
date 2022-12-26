@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
@@ -59,6 +60,11 @@ namespace Origam.Schema.GuiModel
 
         public ScreenCondition()
         {
+        }
+        
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
+            dependencies.Add(Screen);
         }
     }
 }

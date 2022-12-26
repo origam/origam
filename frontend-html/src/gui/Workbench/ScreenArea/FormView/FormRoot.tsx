@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import S from "./FormRoot.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { action } from "mobx";
+import { action, observable } from "mobx";
 import cx from "classnames";
 
 @observer
@@ -28,8 +28,26 @@ export class FormRoot extends React.Component<{
   className?: string;
   style?: any
 }> {
+
+  @observable
+  disableOverflow = false;
+
   componentDidMount() {
     window.addEventListener("click", this.handleWindowClick);
+    this.adjustOverflow();
+  }
+
+  componentDidUpdate() {
+    this.adjustOverflow();
+  }
+
+  // overflow has to be set to "unset" in the FormRoot div to avoid flickering in case there is a react-virtualized List
+  // component directly under it. This is the case of readOnly, multiline TextEditor with a lot of text in it.
+  private adjustOverflow() {
+    const divFourLevelsDown = getFirstDivChild(this.elmFormRoot, 4);
+    if (divFourLevelsDown && divFourLevelsDown.className.includes("ReactVirtualized__List")) {
+      this.disableOverflow = true;
+    }
   }
 
   componentWillUnmount() {
@@ -48,11 +66,29 @@ export class FormRoot extends React.Component<{
     return (
       <div
         ref={this.refFormRoot}
-        className={cx(this.props.className, S.formRoot)}
+        className={cx(this.props.className, S.formRoot) + " " +  (this.disableOverflow ? S.noOverflow : "")}
         style={this.props.style}
       >
         {this.props.children}
       </div>
     );
+  }
+}
+
+function getFirstDivChild(element: HTMLDivElement | null, depth: number, currentDepth: number=0)
+  : HTMLDivElement | null{
+
+  if(!element || element.childNodes.length !== 1){
+    return null;
+  }
+  const child = element.childNodes[0] ;
+  if(child.nodeName !== "div"){
+    return null;
+  }
+  if(currentDepth >= depth){
+    return child as HTMLDivElement;
+  }
+  else{
+    return getFirstDivChild(child as HTMLDivElement, depth, ++currentDepth);
   }
 }

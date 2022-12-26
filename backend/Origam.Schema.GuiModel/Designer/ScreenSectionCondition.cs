@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.ComponentModel;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -34,6 +35,11 @@ namespace Origam.Schema.GuiModel
 
         public ScreenSectionCondition()
         {
+        }
+        
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
+            dependencies.Add(ScreenSection);
         }
     }
 }

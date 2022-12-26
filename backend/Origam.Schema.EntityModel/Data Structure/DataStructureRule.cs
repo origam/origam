@@ -29,9 +29,6 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for DataStructureRule.
-	/// </summary>
 	[SchemaItemDescription("Rule", "icon_rule.png")]
     [HelpTopic("Rule+Set+Rule")]
 	[XmlModelRoot(CategoryConst)]
@@ -40,20 +37,16 @@ namespace Origam.Schema.EntityModel
 	{
 		public const string CategoryConst = "DataStructureRule";
 
-		public DataStructureRule() : base(){}
+		public DataStructureRule() {}
 		
-		public DataStructureRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public DataStructureRule(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
 		public DataStructureRule(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		public ArrayList RuleDependencies
-		{
-			get
-			{
-				return this.ChildItemsByType(DataStructureRuleDependency.CategoryConst);
-			}
-		}
+		public ArrayList RuleDependencies => ChildItemsByType(
+			DataStructureRuleDependency.CategoryConst);
 
 		private int _priority = 100;
 		
@@ -61,14 +54,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("priority")]
 		public int Priority
 		{
-			get
-			{
-				return _priority;
-			}
-			set
-			{
-				_priority = value;
-			}
+			get => _priority;
+			set => _priority = value;
 		}
 		
 		public Guid DataStructureEntityId;
@@ -78,14 +65,14 @@ namespace Origam.Schema.EntityModel
         [XmlReference("entity", "DataStructureEntityId")]
         public DataStructureEntity Entity
 		{
-			get
-			{
-				return (DataStructureEntity)this.PersistenceProvider.RetrieveInstance(typeof(DataStructureEntity), new ModelElementKey(this.DataStructureEntityId));
-			}
+			get => (DataStructureEntity)PersistenceProvider.RetrieveInstance(
+				typeof(DataStructureEntity), 
+				new ModelElementKey(DataStructureEntityId));
 			set
 			{
-				this.DataStructureEntityId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-				this.TargetField = null;
+				DataStructureEntityId = (value == null) 
+					? Guid.Empty : (Guid)value.PrimaryKey["Id"];
+				TargetField = null;
 			}
 		}
         
@@ -96,14 +83,10 @@ namespace Origam.Schema.EntityModel
         [XmlReference("targetField", "TargetFieldId")]
 		public IDataEntityColumn TargetField
 		{
-			get
-			{
-				return (IDataEntityColumn)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.TargetFieldId));
-			}
-			set
-			{
-				this.TargetFieldId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IDataEntityColumn)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(TargetFieldId));
+			set => TargetFieldId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		
 		public Guid ValueRuleId;
@@ -113,14 +96,10 @@ namespace Origam.Schema.EntityModel
         [XmlReference("valueRule", "ValueRuleId")]
 		public IDataRule ValueRule
 		{
-			get
-			{
-				return (IDataRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ValueRuleId));
-			}
-			set
-			{
-				this.ValueRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IDataRule)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ValueRuleId));
+			set => ValueRuleId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		
 		public Guid CheckRuleId;
@@ -130,92 +109,72 @@ namespace Origam.Schema.EntityModel
         [XmlReference("conditionRule", "CheckRuleId")]
 		public IStartRule ConditionRule
 		{
-			get
-			{
-				return (IStartRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.CheckRuleId));
-			}
-			set
-			{
-				this.CheckRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IStartRule)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(CheckRuleId));
+			set => CheckRuleId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 		#endregion
 
 		#region Overriden AbstractSchemaItem Members
-		public override string ItemType
+		
+		public override string ItemType => CategoryConst;
+
+		public override void GetExtraDependencies(ArrayList dependencies)
 		{
-			get
+			dependencies.Add(Entity);
+			if(TargetField != null)
 			{
-				return CategoryConst;
+				dependencies.Add(TargetField);
 			}
-		}
-
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
-		{
-			dependencies.Add(this.Entity);
-			if(this.TargetField != null) dependencies.Add(this.TargetField);
-			if(this.ValueRule != null) dependencies.Add(this.ValueRule);
-			if(this.ConditionRule != null) dependencies.Add(this.ConditionRule);
-
+			if(ValueRule != null)
+			{
+				dependencies.Add(ValueRule);
+			}
+			if(ConditionRule != null)
+			{
+				dependencies.Add(ConditionRule);
+			}
 			base.GetExtraDependencies (dependencies);
 		}
 
 		public override void UpdateReferences()
 		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+			foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
 			{
-				if(item.OldPrimaryKey != null)
+				if(item.OldPrimaryKey?.Equals(Entity.PrimaryKey) == true)
 				{
-					if(item.OldPrimaryKey.Equals(this.Entity.PrimaryKey))
-					{
-                        IDataEntityColumn targetFieldBck = this.TargetField;
-                        // setting the Entity normally resets TargetField as well
-						this.Entity = item as DataStructureEntity;
-                        this.TargetField = targetFieldBck;
-						break;
-					}
+					var targetFieldBck = TargetField;
+					// setting the Entity normally resets TargetField as well
+					Entity = item as DataStructureEntity;
+					TargetField = targetFieldBck;
+					break;
 				}
 			}
 
 			base.UpdateReferences ();
 		}
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 newNode)
 		{
-			return newNode.Equals(this.ParentItem);
+			return newNode.Equals(ParentItem);
 		}
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(DataStructureRuleDependency)};
-			}
-		}
+			typeof(DataStructureRuleDependency)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(DataStructureRuleDependency))
-			{
-				item = new DataStructureRuleDependency(schemaExtensionId);
-				item.Name = "NewDependency";
-
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataStructureRuleUnknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group,
+				typeof(T) == typeof(DataStructureRuleDependency)
+					? "NewDependency" : null);
 		}
 	#endregion
 	}

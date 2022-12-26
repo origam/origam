@@ -35,11 +35,10 @@ namespace Origam.DA.Service
     public class PgSqlCommandGenerator : AbstractSqlCommandGenerator
 	{
 
-		public PgSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker) 
+		public PgSqlCommandGenerator() 
 			: base(
 				trueValue: "true",
 				falseValue: "false",
-				detachedFieldPacker: detachedFieldPacker, 
 				sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")),
                 filterRenderer: new PgSqlFilterRenderer(),
 				new PgSqlRenderer())
@@ -242,7 +241,7 @@ namespace Origam.DA.Service
         
         public override object Clone()
         {
-            PgSqlCommandGenerator gen = new PgSqlCommandGenerator(new DetachedFieldPackerPostgre());
+            PgSqlCommandGenerator gen = new PgSqlCommandGenerator();
             return gen;
         }
 

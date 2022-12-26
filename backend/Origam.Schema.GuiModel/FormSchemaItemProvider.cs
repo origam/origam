@@ -23,97 +23,50 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	/// <summary>
-	/// Summary description for FormSchemaItemProvider.
-	/// </summary>
-	public class FormSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class FormSchemaItemProvider : AbstractSchemaItemProvider
 	{
 		public FormSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return FormControlSet.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
+		public override string RootItemType => FormControlSet.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "UI";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_22_screens.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_22_screens.png";
 
 		public override string NodeText
 		{
-			get
-			{	
-				return "Screens";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Screens";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(FormControlSet)};
-			}
-		}
+			typeof(FormControlSet)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(FormControlSet))
-			{
-				FormControlSet item = new FormControlSet(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewForm";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorFormSchemaProviderUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(FormControlSet) ?
+					"NewForm" : null);
 		}
 
 		#endregion
