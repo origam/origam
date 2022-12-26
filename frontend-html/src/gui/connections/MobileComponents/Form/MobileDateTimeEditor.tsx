@@ -53,7 +53,7 @@ export const MobileDateTimeEditor: React.FC<{
   onClick?: (event: any) => void;
   onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
-  onEditorBlur: (event: any) => Promise<void>;
+  onEditorBlur?: (event: any) => Promise<void>;
   property: IProperty;
   editorState?: IEditorState;
   showClearButton?: boolean;
