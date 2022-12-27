@@ -656,15 +656,47 @@ namespace Origam.Server.Controller
                 ReferenceId: input.ReferenceId))
             );
         }
+        
         [HttpPost("[action]")]
         public IActionResult GetFilterListValues(
             [FromBody] GetFilterListValuesInput input)
         {
             return RunWithErrorHandler(() =>
             {
+                var sessionStore = sessionObjects.SessionManager.GetSession(
+                    input.SessionFormIdentifier);
+                if (sessionStore is WorkQueueSessionStore workQueueSessionStore)
+                {
+                    return GetFilterListValuesQuery(
+                            input,
+                            GetWorkQueueEntityData(workQueueSessionStore))
+                        .Map(queryData =>
+                        {
+                            var query = queryData.DataStructureQuery;
+                            query.MethodId = workQueueSessionStore.WQClass
+                                .WorkQueueStructureUserListMethodId;
+                            query.SortSetId = workQueueSessionStore.WQClass
+                                .WorkQueueStructureSortSetId;
+                            query.DataSourceId = workQueueSessionStore
+                                .WQClass.WorkQueueStructureId;
+                            query.Parameters.Add(new QueryParameter(
+                                "WorkQueueEntry_parWorkQueueId", sessionStore.Request.ObjectId));
+                            return query;
+                        })
+                        .Bind(ExecuteDataReaderGetPairs)
+                        .Bind(StreamlineFilterListValues)
+                        .Map(ToActionResult)
+                        .Finally(UnwrapReturnValue);
+                }
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetFilterListValuesQuery(
-                        input, entityData))                    
+                        input, entityData))
+                    .Bind(queryData =>
+                        AddMethodAndSource(
+                            queryData.SessionFormIdentifier, 
+                            Guid.Empty, 
+                            queryData.EntityData,
+                            queryData.DataStructureQuery))
                     .Bind(ExecuteDataReaderGetPairs)
                     .Bind(StreamlineFilterListValues)
                     .Map(ToActionResult)
@@ -672,6 +704,27 @@ namespace Origam.Server.Controller
             });
         }
         #endregion
+        
+        
+        private EntityData GetWorkQueueEntityData(WorkQueueSessionStore workQueueSessionStore)
+        {
+            ArrayList entities = workQueueSessionStore.WQClass
+                .WorkQueueStructure
+                .Entities;
+            var structureEntity = entities
+                .Cast<DataStructureEntity>()
+                .FirstOrDefault(entity => entity.Name == workQueueEntity);
+            if (entities.Count != 1 || structureEntity == null)
+            {
+                throw new ArgumentException($"WorkQueueStructure {workQueueSessionStore.WQClass.WorkQueueStructure.Id} must contain exactly one {nameof(DataStructureEntity)} called \"{workQueueEntity}\"");
+            }
+
+            return new EntityData
+            {
+                Entity = structureEntity,
+                MenuItem = null
+            };
+        }
         
         private string GetMenuId(Guid lookupId, Guid ReferenceId)
         {
@@ -952,13 +1005,13 @@ namespace Origam.Server.Controller
                 input.SessionFormIdentifier, input.MasterRowId, entityData, query);
         }
 
-        private Result<DataStructureQuery, IActionResult> GetFilterListValuesQuery(
+        private Result<QueryData, IActionResult> GetFilterListValuesQuery(
             GetFilterListValuesInput input, EntityData entityData)
         {
             var column = entityData.Entity.Column(input.Property);
             if (column == null)
             {
-                return Result.Failure<DataStructureQuery, IActionResult>(
+                return Result.Failure<QueryData, IActionResult>(
                     BadRequest($"Cannot get values for \"{input.Property}\" because the column does not exist."));
             }
             var field = column.Field;
@@ -1008,9 +1061,22 @@ namespace Origam.Server.Controller
                     columnData.Name, Guid.Empty, null),
                 AggregatedColumns = new List<Aggregation>()
             };
-            return AddMethodAndSource(
-                input.SessionFormIdentifier, Guid.Empty, entityData, query);
+
+            return new QueryData
+            {
+                SessionFormIdentifier = input.SessionFormIdentifier,
+                DataStructureQuery = query,
+                EntityData = entityData
+            };
         }
+
+        private class QueryData
+        {
+            public Guid SessionFormIdentifier { get; set; }
+            public DataStructureQuery DataStructureQuery { get; set; }
+            public EntityData EntityData { get; set; }
+        }
+
         private Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
             GetGroupsInput input, EntityData entityData)
         {
