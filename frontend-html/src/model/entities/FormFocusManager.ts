@@ -28,7 +28,7 @@ export class FormFocusManager {
     this.autoFocusDisabled = true;
   }
 
-  focusableContainers: FocusAbleObjectContainer[] = [];
+  focusableContainers: FocusableObjectContainer[] = [];
   public lastFocused: IFocusable | undefined;
 
   setLastFocused(focusable: IFocusable) {
@@ -44,7 +44,7 @@ export class FormFocusManager {
     if (!focusableObject) {
       return;
     }
-    const focusableContainer = new FocusAbleObjectContainer(focusableObject, name, tabIndex, onBlur);
+    const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex, onBlur);
     const existingContainer = this.focusableContainers
       .find(container => container.name && container.name === name ||
         container.focusable === focusableObject);
@@ -138,7 +138,7 @@ export class FormFocusManager {
   }
 }
 
-export class FocusAbleObjectContainer {
+class FocusableObjectContainer {
   constructor(
     public focusable: IFocusable,
     public name: string | undefined,
