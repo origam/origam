@@ -1364,12 +1364,12 @@
   dependencies:
     make-plural "^7.0.0"
 
-"@origam/components@^1.0.0", "@origam/components@^1.5.4":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.5.4.tgz#33e528a4452c8f8f735d00be6163368c2ab7b725"
-  integrity sha512-wZOtLHQub9bW5D1GpEesP0jUOgqFTr9mem6pDyfK10jnxW4xJgWo5hDni9rSHEVQ0NsuI02EJP36iQjhL1dh2g==
+"@origam/components@^1.0.0", "@origam/components@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.6.1.tgz#aec56ffca179a1499f6756e195d502d963899772"
+  integrity sha512-Stw+bikH2JExaYvnOSBPChsrhbzJsi1JHiFhPq0CSqye4wydjxFDNxCF7HN5wzEahCtWxaRYbTMxzGHhcxVwfw==
   dependencies:
-    react-inlinesvg "^2.3.0"
+    react-inlinesvg "^3.0.1"
 
 "@origam/plugin-audit@^2.0.0":
   version "2.0.0"
@@ -1634,21 +1634,14 @@
     "@types/tough-cookie" "*"
     parse5 "^7.0.0"
 
-"@types/leaflet-draw@^1.0.5":
+"@types/leaflet-draw@1.0.5", "@types/leaflet-draw@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.5.tgz#9e65c1261d055b62b38c542ce7d49be67ddf8581"
   integrity sha512-m/vmhI1XjiBZphwKwmmcOoxbMd0ybN78uZb1c9//zOG0aWVYJd3XTnIW1pnPhxhIB4EB1tgjmWjq0YQM/IyuXg==
   dependencies:
     "@types/leaflet" "*"
 
-"@types/leaflet@*":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.9.0.tgz#8caf452255e16cb15e0eabcb0d2a26793da0a6a2"
-  integrity sha512-7LeOSj7EloC5UcyOMo+1kc3S1UT3MjJxwqsMT1d2PTyvQz53w0Y0oSSk9nwZnOZubCmBvpSNGceucxiq+ZPEUw==
-  dependencies:
-    "@types/geojson" "*"
-
-"@types/leaflet@1.7.11":
+"@types/leaflet@*", "@types/leaflet@1.7.11":
   version "1.7.11"
   resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.7.11.tgz#48b33b7a15b015bbb1e8950399298a112c3220c8"
   integrity sha512-VwAYom2pfIAf/pLj1VR5aLltd4tOtHyvfaJlNYCoejzP2nu52PrMi1ehsLRMUS+bgafmIIKBV1cMfKeS+uJ0Vg==
@@ -5781,7 +5774,7 @@ react-draft-wysiwyg@^1.15.0:
     linkify-it "^2.2.0"
     prop-types "^15.7.2"
 
-react-from-dom@^0.6.0, react-from-dom@^0.6.2:
+react-from-dom@^0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/react-from-dom/-/react-from-dom-0.6.2.tgz#9da903a508c91c013b55afcd59348b8b0a39bdb4"
   integrity sha512-qvWWTL/4xw4k/Dywd41RBpLQUSq97csuv15qrxN+izNeLYlD9wn5W8LspbfYe5CWbaSdkZ72BsaYBPQf2x4VbQ==
@@ -5795,21 +5788,13 @@ react-highlight-words@^0.18.0:
     memoize-one "^4.0.0"
     prop-types "^15.5.8"
 
-react-inlinesvg@*, react-inlinesvg@^3.0.0:
+react-inlinesvg@*, react-inlinesvg@^3.0.0, react-inlinesvg@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-3.0.1.tgz#2133f5d2c770ac405060db2ce1c13eed30e7e83b"
   integrity sha512-cBfoyfseNI2PkDA7ZKIlDoHq0eMfpoC3DhKBQNC+/X1M4ZQB+aXW+YiNPUDDDKXUsGDUIZWWiZWNFeauDIVdoA==
   dependencies:
     exenv "^1.2.2"
     react-from-dom "^0.6.2"
-
-react-inlinesvg@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-2.3.0.tgz#62283c0ce7e9d11d8190ec3e89589102288830fd"
-  integrity sha512-fEGOdDf4k4bcveArbEpj01pJcH8pOCKLxmSj2POFdGvEk5YK0NZVnH6BXpW/PzACHPRsuh1YKAhNZyFnD28oxg==
-  dependencies:
-    exenv "^1.2.2"
-    react-from-dom "^0.6.0"
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

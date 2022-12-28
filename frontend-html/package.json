@@ -16,7 +16,7 @@
     "@decorize/bind": "^1.0.3",
     "@mapbox/geojson-area": "^0.2.2",
     "@messageformat/core": "^3.0.1",
-    "@origam/components": "^1.6.0",
+    "@origam/components": "^1.6.1",
     "@origam/plugin-audit": "^2.0.0",
     "@origam/plugin-chart": "^2.0.1",
     "@origam/plugin-filter": "^2.0.1",
@@ -102,7 +102,9 @@
   },
   "resolutions": {
     "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2"
+    "@types/react-dom": "17.0.2",
+    "@types/leaflet": "1.7.11",
+    "@types/leaflet-draw": "1.0.5"
   },
   "jest": {
     "testEnvironment": "jsdom",
