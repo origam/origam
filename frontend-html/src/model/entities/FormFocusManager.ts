@@ -28,7 +28,7 @@ export class FormFocusManager {
     this.autoFocusDisabled = true;
   }
 
-  focusAbleContainers: FocusAbleObjectContainer[] = [];
+  focusableContainers: FocusAbleObjectContainer[] = [];
   public lastFocused: IFocusable | undefined;
 
   setLastFocused(focusable: IFocusable) {
@@ -38,25 +38,25 @@ export class FormFocusManager {
   constructor(public parent: any) {
   }
 
-  subscribe(focusAbleObject: IFocusable, name: string | undefined,
+  subscribe(focusableObject: IFocusable, name: string | undefined,
             tabIndex: string | undefined,
             onBlur?: ()=>Promise<void>) {
-    if (!focusAbleObject) {
+    if (!focusableObject) {
       return;
     }
-    const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex, onBlur);
-    const existingContainer = this.focusAbleContainers
+    const focusableContainer = new FocusAbleObjectContainer(focusableObject, name, tabIndex, onBlur);
+    const existingContainer = this.focusableContainers
       .find(container => container.name && container.name === name ||
-        container.focusable === focusAbleObject);
+        container.focusable === focusableObject);
     if (existingContainer) {
-      this.focusAbleContainers.remove(existingContainer);
+      this.focusableContainers.remove(existingContainer);
     }
-    this.focusAbleContainers.push(focusAbleContainer);
-    this.focusAbleContainers = this.focusAbleContainers.sort(compareTabIndexOwners);
+    this.focusableContainers.push(focusableContainer);
+    this.focusableContainers = this.focusableContainers.sort(compareTabIndexOwners);
   }
 
   focus(name: string) {
-    let focusable = this.focusAbleContainers.find((container) => container.name === name)?.focusable;
+    let focusable = this.focusableContainers.find((container) => container.name === name)?.focusable;
     this.focusAndRemember(focusable);
   }
 
@@ -73,7 +73,7 @@ export class FormFocusManager {
   }
 
   forceAutoFocus() {
-    const focusable = this.focusAbleContainers[0].focusable;
+    const focusable = this.focusableContainers[0].focusable;
     if (focusable.disabled) {
       //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
       this.focusNext(focusable);
@@ -85,7 +85,7 @@ export class FormFocusManager {
   }
 
   autoFocus() {
-    if (this.focusAbleContainers.length === 0 || this.autoFocusDisabled || isGlobalAutoFocusDisabled(this.parent)) {
+    if (this.focusableContainers.length === 0 || this.autoFocusDisabled || isGlobalAutoFocusDisabled(this.parent)) {
       return;
     }
     this.forceAutoFocus();
@@ -99,12 +99,12 @@ export class FormFocusManager {
     if (callNumber > 20) {
       return;
     }
-    const currentContainerIndex = this.focusAbleContainers.findIndex(
+    const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
     const nextIndex =
-      this.focusAbleContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
-    const focusable = this.focusAbleContainers[nextIndex].focusable;
+      this.focusableContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
+    const focusable = this.focusableContainers[nextIndex].focusable;
     if (focusable !== activeElement && focusable.disabled) {
       this.focusNextInternal(focusable, callNumber + 1);
     } else {
@@ -115,12 +115,12 @@ export class FormFocusManager {
   }
 
   focusPrevious(activeElement: any) {
-    const currentContainerIndex = this.focusAbleContainers.findIndex(
+    const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
     const previousIndex =
-      currentContainerIndex === 0 ? this.focusAbleContainers.length - 1 : currentContainerIndex - 1;
-    const focusable = this.focusAbleContainers[previousIndex].focusable;
+      currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
+    const focusable = this.focusableContainers[previousIndex].focusable;
     if (focusable.disabled) {
       this.focusPrevious(focusable);
     } else {
@@ -131,7 +131,7 @@ export class FormFocusManager {
   }
 
   async activeEditorCloses(){
-    const lastFocusedContainer = this.focusAbleContainers.find(x => x.focusable === this.lastFocused);
+    const lastFocusedContainer = this.focusableContainers.find(x => x.focusable === this.lastFocused);
     if(lastFocusedContainer?.onBlur){
       await lastFocusedContainer.onBlur();
     }
