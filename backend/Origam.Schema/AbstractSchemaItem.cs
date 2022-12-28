@@ -642,7 +642,20 @@ namespace Origam.Schema
 				return GetRootItem(parentItem.ParentItem);
 		}
 
-	    [XmlParent(typeof(Package))]
+		public IEnumerable<AbstractSchemaItem> Parents
+		{
+			get
+			{
+				var parent = ParentItem;
+				while (parent != null)
+				{
+					yield return parent;
+					parent = parent.ParentItem;
+				}
+			}
+		}
+
+		[XmlParent(typeof(Package))]
         [Browsable(false)]
 	    public Guid SchemaExtensionId { get; set; }
     
