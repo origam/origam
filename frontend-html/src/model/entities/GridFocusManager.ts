@@ -30,6 +30,14 @@ export class GridFocusManager {
     this.focusEditor();
   }
 
+  editorBlur?: () => Promise<void>
+
+  async activeEditorCloses(){
+    if(this.editorBlur){
+      await this.editorBlur();
+      this.editorBlur = undefined;
+    }
+  }
   focusEditor() {
     requestFocus(this._activeEditor as any);
   }

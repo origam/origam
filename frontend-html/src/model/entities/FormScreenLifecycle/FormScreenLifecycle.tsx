@@ -185,7 +185,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
     const formScreen = getFormScreen(this);
     for (let dataView of formScreen.dataViews) {
-      yield onFieldBlur(dataView)(null);
+      yield onFieldBlur(dataView)();
     }
 
     // Just wait if there is some data manipulation in progress.
