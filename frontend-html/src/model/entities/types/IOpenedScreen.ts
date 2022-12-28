@@ -60,6 +60,9 @@ export interface IOpenedScreen extends IOpenedScreenData {
   screenUrl?: string;
   parent?: any;
   hasDynamicTitle: boolean;
+
+  onWindowMove(top: number, left: number): void;
+  get positionOffset(): {[key: string]: number};
 }
 
 export const isIOpenedScreen = (o: any): o is IOpenedScreen =>
