@@ -315,7 +315,7 @@ export class DateTimeEditor extends React.Component<{
             backgroundColor: this.props.backgroundColor,
           }}
           title={this.editorModel.autocompletedText + '\n' + this.props.outputFormat}
-          className={S.input}
+          className={S.input + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
           type="text"
           onBlur={this.handleInputBlur}
           onFocus={this.handleFocus}
