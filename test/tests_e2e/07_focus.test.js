@@ -3,7 +3,7 @@ const { sleep, openMenuItem, login, waitForRowCountData, switchToFormPerspective
   switchToTablePerspective, catchRequests, beforeEachTest, afterEachTest, xPathContainsClass
 } = require('./testTools');
 const {widgetsMenuItemId,topMenuHeader, allDataTypesLazyDatViewId,
-  masterDataViewId, sectionsMenuItemId, masterDerailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId
+  masterDataViewId, sectionsMenuItemId, masterDetailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId
 } = require("./modelIds");
 const { clearScreenConfiguration,
   restoreAllDataTypesTable} = require("./dbTools");
@@ -43,7 +43,7 @@ describe("Html client", () => {
         topMenuHeader,
         widgetsMenuItemId,
         sectionsMenuItemId,
-        masterDerailLazyLoadedMenuItemId,
+        masterDetailLazyLoadedMenuItemId,
       ]);
     let waitForRequests = catchRequests(page);
     await page.waitForXPath(

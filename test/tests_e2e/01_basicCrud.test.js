@@ -1,7 +1,7 @@
 const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount, afterEachTest,
   beforeEachTest
 } = require('./testTools');
-const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId,
+const {widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
   topMenuHeader, masterDataViewId, detailDataViewId, detailEditorId, detailTabHandelId} = require("./modelIds");
 const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
 const {installMouseHelper} = require("./instalMouseHelper_");
@@ -98,7 +98,7 @@ describe("Html client", () => {
         topMenuHeader,
         widgetsMenuItemId,
         sectionsMenuItemId,
-        masterDerailMenuItemId,
+        masterDetailMenuItemId,
       ]);
 
     // Add three rows
@@ -191,7 +191,7 @@ describe("Html client", () => {
         topMenuHeader,
         widgetsMenuItemId,
         sectionsMenuItemId,
-        masterDerailMenuItemId,
+        masterDetailMenuItemId,
       ]);
     // Add rows to master
     await page.waitForXPath(
