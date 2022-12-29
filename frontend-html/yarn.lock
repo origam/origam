@@ -1359,10 +1359,10 @@
   dependencies:
     make-plural "^7.0.0"
 
-"@origam/components@^1.0.0", "@origam/components@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.6.1.tgz#aec56ffca179a1499f6756e195d502d963899772"
-  integrity sha512-Stw+bikH2JExaYvnOSBPChsrhbzJsi1JHiFhPq0CSqye4wydjxFDNxCF7HN5wzEahCtWxaRYbTMxzGHhcxVwfw==
+"@origam/components@^1.0.0", "@origam/components@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.6.2.tgz#9fce4349cb3aaf02692c6b730dec999dd9421065"
+  integrity sha512-E5kJL0hO3RaldC5YS3Ft1Kl5gvqzmtSe8XS+ZfVbZBC2g33XJztMfZOPaehepXi/vegOvyK09fIKc9/VSuIK3Q==
   dependencies:
     react-inlinesvg "^3.0.1"
 
