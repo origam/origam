@@ -1629,10 +1629,10 @@
     "@types/tough-cookie" "*"
     parse5 "^7.0.0"
 
-"@types/leaflet-draw@1.0.5", "@types/leaflet-draw@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.5.tgz#9e65c1261d055b62b38c542ce7d49be67ddf8581"
-  integrity sha512-m/vmhI1XjiBZphwKwmmcOoxbMd0ybN78uZb1c9//zOG0aWVYJd3XTnIW1pnPhxhIB4EB1tgjmWjq0YQM/IyuXg==
+"@types/leaflet-draw@1.0.6", "@types/leaflet-draw@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.6.tgz#7d6388d517494df769bfda39fe638a61eea0f211"
+  integrity sha512-MetIzhPfUVypp742iRV2Tg/JTnjaloJzBDuMzFglodfYrPaDxNhkm1PueN8KAUmV/aWxvicwHVsfrVc6MCFAWA==
   dependencies:
     "@types/leaflet" "*"
 
