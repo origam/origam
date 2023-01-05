@@ -406,6 +406,7 @@
   "preview": "aperçu",
   "format": "format",
   "row_count": "les lignes",
+  "row_not_found": "La ligne que vous avez demandée est introuvable sur le serveur. Veuillez actualiser les données.",
   "column_width": "largeur",
   "order_columns_button": "organiser",
   "order_columns_title": "organiser les colonnes"
