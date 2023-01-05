@@ -34,13 +34,7 @@ namespace Origam.Gui.Win.Commands
 		{
 			WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 			IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-
-			if (_schemaService.IsSchemaChanged)
-			{
-				throw new Exception(
-					"Model not saved. Please, save the model before setting the version.");
-			}
-
+			
 			DeploymentVersion version = this.Owner as DeploymentVersion;
 
 			Package ext = _persistence.SchemaProvider.RetrieveInstance(typeof(Package), _schemaService.ActiveExtension.PrimaryKey) as Package;
