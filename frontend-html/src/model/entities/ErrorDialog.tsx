@@ -126,7 +126,7 @@ export class ErrorDialogController implements IErrorDialogController {
   }
 
   theSameErrorAlreadyDisplayed(error: any){
-    if(this.errorStack.length == 0 || error?.name !== "AxiosError"){
+    if(this.errorStack.length == 0){
       return false;
     }
 

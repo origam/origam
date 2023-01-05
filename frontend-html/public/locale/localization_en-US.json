@@ -422,6 +422,7 @@
   "preview": "Preview",
   "format": "Format",
   "row_count": "Rows",
+  "row_not_found": "The row you requested was not found on the server. Please refresh the data.",
   "column_width": "Width",
   "order_columns_button": "Order",
   "order_columns_title": "Order Columns"
