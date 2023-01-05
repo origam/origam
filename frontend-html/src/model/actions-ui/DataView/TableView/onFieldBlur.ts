@@ -24,7 +24,7 @@ import { crs_fieldBlur_ActionClick } from "model/actions/actionSync";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 export function onFieldBlur(ctx: any) {
-  return flow(function*onFieldBlur(event: any) {
+  return flow(function*onFieldBlur() {
     try {
       yield*crs_fieldBlur_ActionClick.runGenerator(function*() {
         yield*flushCurrentRowData(ctx)();

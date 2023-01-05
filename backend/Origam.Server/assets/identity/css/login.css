@@ -15,3 +15,8 @@
 .inactiveLanguageLink{
     pointer-events: none;
 }
+
+.logo{
+    width: 100%;
+    height: 100%;
+}
