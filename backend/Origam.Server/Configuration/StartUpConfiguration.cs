@@ -97,13 +97,6 @@ namespace Origam.Server.Configuration
                     return Array.Empty<string>();
                 }
                 return subSection.GetStringArrayOrEmpty();
-                // string externalControllerDlls = configuration["ExternalControllerDlls"];
-                // if (externalControllerDlls == null)
-                // {
-                //     return Array.Empty<string>();
-                // }
-                //
-                // return externalControllerDlls.GetStringArrayOrThrow();
             }
         }   
         
