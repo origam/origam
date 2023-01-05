@@ -65,6 +65,9 @@ namespace Origam.Rule
 		private IDocumentationService _documentationService;
 		private IOrigamAuthorizationProvider _authorizationProvider;
 		private Func<UserProfile> _userProfileGetter;
+		private readonly ResourceTools resourceTools = new(        
+			ServiceManager.Services.GetService<IBusinessServicesService>(), 
+			SecurityManager.CurrentUserProfile); 
 		
 		public static RuleEngine Create(Hashtable contextStores, string transactionId,
 			Guid workflowInstanceId)
@@ -2138,7 +2141,7 @@ namespace Origam.Rule
 					return this.ActiveProfileId();
 
 				case SystemFunction.ResourceIdByActiveProfile:
-					return ResourceTools.Instance.ResourceIdByActiveProfile();
+					return resourceTools.ResourceIdByActiveProfile();
 
 				default:
 					throw new ArgumentOutOfRangeException("Function", functionCall.Function, ResourceUtils.GetString("ErrorUnsupportedFunction"));
