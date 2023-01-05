@@ -99,6 +99,7 @@ namespace Origam.Schema.MenuModel
 		[Category("References")]
 		[TypeConverter(typeof(ReportConverter))]
         [XmlReference("report", "ReportId")]
+		[NotNullModelElementRule]
 		public AbstractReport Report
 		{
 			get

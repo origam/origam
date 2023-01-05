@@ -27,6 +27,7 @@ import { IPanelConfiguration } from "./IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
 import { ScreenPictureCache } from "../ScreenPictureCache";
 import { DataViewCache } from "../DataViewCache";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 /*
 export interface ILoadedFormScreenData {
@@ -135,6 +136,7 @@ export interface IFormScreenData {
   sessionId: string;
   workflowTaskId: string | null;
   uiRootType: string;
+  focusManager: ScreenFocusManager;
 }
 
 export interface IFormScreen extends IFormScreenData {

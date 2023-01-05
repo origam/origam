@@ -54,6 +54,7 @@ namespace Origam.Gui.Win.Commands
             MakeVersionCurrent cmd = new MakeVersionCurrent();
             cmd.Owner = Owner as DeploymentVersion;
             cmd.Run();
+            WorkbenchSingleton.Workbench.UpdateTitle();
         }
 
         public override void Dispose()

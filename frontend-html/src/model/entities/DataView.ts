@@ -88,6 +88,7 @@ import { runInFlowWithHandler, } from "utils/runInFlowWithHandler";
 import { IAggregation } from 'model/entities/types/IAggregation';
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { GridFocusManager } from "model/entities/GridFocusManager";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {
@@ -113,6 +114,8 @@ export class DataView implements IDataView {
     this.lookupLoader.parent = this;
     this.clientSideGrouper.parent = this;
     this.serverSideGrouper.parent = this;
+    this.focusManager.registerGridFocusManager(this.gridFocusManager);
+    this.focusManager.registerFormFocusManager(this.formFocusManager);
 
     this.gridDimensions = new GridDimensions({
       getTableViewProperties: () => getTableViewProperties(this),
@@ -204,7 +207,7 @@ export class DataView implements IDataView {
   actions: IAction[] = [];
   defaultActions: IAction[] = [];
   type: string = "";
-
+  focusManager: ScreenFocusManager = null as any;
   @observable tableViewProperties: IProperty[] = [];
   dataTable: IDataTable = null as any;
   formViewUI: any;

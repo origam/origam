@@ -43,6 +43,7 @@ async function beforeEachTest(){
   const browser = await puppeteer.launch({
     ignoreHTTPSErrors: true,
     //devtools: true,
+    // slowMo: 50,
     headless: false,
     defaultViewport: {
       width: 1024,

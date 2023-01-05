@@ -78,7 +78,7 @@ const OpCombo: React.FC<{
 const OpEditors: React.FC<{
   setting: IFilterSetting;
   onChange?: (newSetting: any) => void;
-  onBlur?: (event: any) => void;
+  onBlur?: (event: any) => Promise<void>;
   onKeyDown?: (event: any) => void;
   autoFocus: boolean;
   id: string;
@@ -101,15 +101,13 @@ const OpEditors: React.FC<{
             property={props.property}
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
-            onChange={(event, isoDay) => {
+            onChange={async (event, isoDay) => {
               runInAction(() => {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
                 props.onChange && props.onChange(setting)
               })
             }}
             autoFocus={props.autoFocus}
-            onEditorBlur={() => {
-            }}
             onKeyDown={props.onKeyDown}
             editorState={new MobileFilterEditorStateVal1(setting)}
             showClearButton={true}
@@ -122,7 +120,7 @@ const OpEditors: React.FC<{
             value={setting.val1 ?? ""}
             outputFormat={dateFormatMoment}
             outputFormatToShow={dateFormatCs}
-            onChange={(event, isoDay) => {
+            onChange={async (event, isoDay) => {
               runInAction(() => {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
                 props.onChange && props.onChange(setting)
@@ -145,15 +143,13 @@ const OpEditors: React.FC<{
               property={props.property}
               outputFormat={dateFormatMoment}
               outputFormatToShow={dateFormatCs}
-              onChange={(event, isoDay) => {
-                runInAction(() => {
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
                   setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
                   props.onChange && props.onChange(setting)
                 })
               }}
               autoFocus={props.autoFocus}
-              onEditorBlur={() => {
-              }}
               onKeyDown={props.onKeyDown}
               editorState={new MobileFilterEditorStateVal1(setting)}
               showClearButton={true}
@@ -164,15 +160,13 @@ const OpEditors: React.FC<{
               property={props.property}
               outputFormat={dateFormatMoment}
               outputFormatToShow={dateFormatCs}
-              onChange={(event, isoDay) => {
-                runInAction(() => {
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
                   setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
                   props.onChange && props.onChange(setting)
                 })
               }}
               autoFocus={props.autoFocus}
-              onEditorBlur={() => {
-              }}
               onKeyDown={props.onKeyDown}
               editorState={new MobileFilterEditorStateVal2(setting)}
               showClearButton={true}
@@ -188,8 +182,8 @@ const OpEditors: React.FC<{
               value={setting.val1}
               outputFormat={dateFormatMoment}
               outputFormatToShow={dateFormatCs}
-              onChange={(event, isoDay) => {
-                runInAction(() => {
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
                   setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
                   props.onChange &&
                   props.onChange(setting)
@@ -204,8 +198,8 @@ const OpEditors: React.FC<{
               value={setting.val2}
               outputFormat={dateFormatMoment}
               outputFormatToShow={dateFormatCs}
-              onChange={(event, isoDay) => {
-                runInAction(() => {
+              onChange={async (event, isoDay) => {
+                await runInAction(() => {
                   setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
                   props.onChange &&
                   props.onChange(setting)
@@ -240,6 +234,7 @@ export class FilterSettingsDate extends React.Component<{
   @action.bound
   handleChange(newSetting: any) {
     this.handleSettingChange();
+    return Promise.resolve();
   }
 
   handleSettingChange() {

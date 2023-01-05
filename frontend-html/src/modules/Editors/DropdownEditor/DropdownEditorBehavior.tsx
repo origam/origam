@@ -28,6 +28,7 @@ import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { compareStrings } from "../../../utils/string";
 import { IDriverState } from "modules/Editors/DropdownEditor/Cells/IDriverState";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
+import { requestFocus } from "utils/focus";
 
 export const  dropdownPageSize = 100;
 
@@ -152,7 +153,7 @@ export class DropdownEditorBehavior implements IDropdownEditorBehavior{
 
   makeFocused() {
     if (this.elmInputElement) {
-      this.elmInputElement.focus();
+      requestFocus(this.elmInputElement);
     }
   }
 

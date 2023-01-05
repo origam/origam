@@ -45,13 +45,14 @@ namespace Origam.Gui.Win.Commands
 
 			Package ext = _persistence.SchemaProvider.RetrieveInstance(typeof(Package), _schemaService.ActiveExtension.PrimaryKey) as Package;
 
+			Origam.Workbench.Commands.DeployVersion cmd3 = new Origam.Workbench.Commands.DeployVersion();
+			cmd3.Run();
+
 			ext.VersionString = version.VersionString;
 			ext.Persist();
 			_schemaService.ActiveExtension.Refresh();
 			_schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
 			_schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
-			Origam.Workbench.Commands.DeployVersion cmd3 = new Origam.Workbench.Commands.DeployVersion();
-			cmd3.Run();
 		}
 	}
 }

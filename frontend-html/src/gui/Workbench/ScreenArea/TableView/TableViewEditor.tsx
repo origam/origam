@@ -62,7 +62,7 @@ import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRenderin
         property: actualProperty,
         value: value,
       }),
-    onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
+    onEditorBlur: async () => await onFieldBlur(tablePanelView)(),
     onEditorKeyDown: (event: any) => {
       event.persist();
       onFieldKeyDown(tablePanelView)(event);
@@ -74,7 +74,7 @@ export class TableViewEditor extends React.Component<{
   property?: IProperty;
   getCellValue?: () => any;
   onChange?: (event: any, value: any) => Promise<void>;
-  onEditorBlur?: (event: any) => void;
+  onEditorBlur?: () => Promise<void>;
   onEditorKeyDown?: (event: any) => void;
 }> {
 
@@ -98,7 +98,7 @@ export class TableViewEditor extends React.Component<{
       : customBackgroundColor;
 
     const isFirsColumn = getTablePanelView(dataView).firstColumn === this.props.property;
-    const focusManager = getGridFocusManager(this.props.property);
+    const gridFocusManager = getGridFocusManager(this.props.property);
     switch (this.props.property!.column) {
       case "Number":
         return (
@@ -116,8 +116,10 @@ export class TableViewEditor extends React.Component<{
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             customStyle={resolveCellAlignment(this.props.property?.style, isFirsColumn, "Number")}
-            subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+            subscribeToFocusManager={(editor, onBlur) =>{
+                gridFocusManager.activeEditor = editor
+                gridFocusManager.editorBlur = onBlur;
+              }
             }
           />
         );
@@ -141,8 +143,10 @@ export class TableViewEditor extends React.Component<{
             isRichText={false}
             isMultiline={this.props.property!.multiline}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
-            }
+            {
+              gridFocusManager.activeEditor = editor
+              gridFocusManager.editorBlur = this.props.onEditorBlur;
+            }}
           />
         );
       case "Date":
@@ -159,9 +163,11 @@ export class TableViewEditor extends React.Component<{
             onDoubleClick={(event) => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             onKeyDown={this.props.onEditorKeyDown}
-            subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
-            }
+            subscribeToFocusManager={(editor, onBlur) =>
+            {
+              gridFocusManager.activeEditor = editor;
+              gridFocusManager.editorBlur = onBlur;
+            }}
           />
         );
       case "CheckBox":
@@ -174,7 +180,7 @@ export class TableViewEditor extends React.Component<{
             onClick={undefined}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );
@@ -190,7 +196,7 @@ export class TableViewEditor extends React.Component<{
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );
@@ -201,11 +207,11 @@ export class TableViewEditor extends React.Component<{
           <ColorEditor
             value={flashColor2htmlColor(this.props.getCellValue!()) || null}
             onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
-            onBlur={() => this.props.onEditorBlur?.(undefined)}
+            onBlur={() => this.props.onEditorBlur?.()}
             onKeyDown={this.props.onEditorKeyDown}
             isReadOnly={readOnly}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );
@@ -218,7 +224,7 @@ export class TableViewEditor extends React.Component<{
               isReadOnly={readOnly}
               autoSort={this.props.property!.autoSort}
               subscribeToFocusManager={(editor) =>
-                focusManager.activeEditor = editor
+                gridFocusManager.activeEditor = editor
               }
               tagEditor={
                 <TagInputEditor
@@ -244,7 +250,7 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(editor) =>
-              focusManager.activeEditor = editor
+              gridFocusManager.activeEditor = editor
             }
           />
         );

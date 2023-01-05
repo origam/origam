@@ -2,6 +2,7 @@ import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IFocusable } from "./FormFocusManager";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { requestFocus } from "utils/focus";
 
 export class GridFocusManager {
   private _activeEditor: IFocusable | undefined;
@@ -29,8 +30,16 @@ export class GridFocusManager {
     this.focusEditor();
   }
 
+  editorBlur?: () => Promise<void>
+
+  async activeEditorCloses(){
+    if(this.editorBlur){
+      await this.editorBlur();
+      this.editorBlur = undefined;
+    }
+  }
   focusEditor() {
-    this._activeEditor?.focus();
+    requestFocus(this._activeEditor as any);
   }
 }
 

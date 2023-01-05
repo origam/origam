@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema
@@ -66,6 +67,8 @@ namespace Origam.Schema
 		/// Gets or sets the group where this item is located.
 		/// </summary>
 		SchemaItemGroup Group{get; set;}
+
+		IEnumerable<AbstractSchemaItem> Parents{get;}
 
 		/// <summary>
 		/// Gets or sets the item from which this item has been derived

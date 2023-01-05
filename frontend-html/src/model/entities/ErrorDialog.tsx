@@ -29,6 +29,7 @@ import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
 import { Icon } from "@origam/components";
 import { ModalDialog } from "gui/Components/Dialog/ModalDialog";
+import { requestFocus } from "utils/focus";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -116,9 +117,21 @@ export class ErrorDialogController implements IErrorDialogController {
   *pushError(error: any) {
     const myId = this.idGen++;
     const promise = NewExternalPromise();
-    this.errorStack.push({id: myId, error, promise, timestamp: moment()});
+
+    if (!this.theSameErrorAlreadyDisplayed(error)) {
+      this.errorStack.push({id: myId, error, promise, timestamp: moment()});
+    }
     this.displayDialog();
     yield promise;
+  }
+
+  theSameErrorAlreadyDisplayed(error: any){
+    if(this.errorStack.length == 0 || error?.name !== "AxiosError"){
+      return false;
+    }
+
+    const lastError = this.errorStack[this.errorStack.length - 1];
+    return lastError.error?.name === error.name && lastError.error?.message === error.message;
   }
 
   @action.bound displayDialog() {
@@ -135,7 +148,7 @@ export class ErrorDialogController implements IErrorDialogController {
                 closeDialog();
                 this.isDialogDisplayed = false;
                 this.dismissErrors();
-                setTimeout(() => previouslyFocusedElement?.focus(), 100);
+                setTimeout(() => requestFocus(previouslyFocusedElement), 100);
               })}
             />
           )}

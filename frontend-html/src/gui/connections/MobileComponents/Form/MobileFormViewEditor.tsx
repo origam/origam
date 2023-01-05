@@ -54,7 +54,7 @@ export const MobileFormViewEditor: React.FC<{
     ? shadeHexColor(props.backgroundColor, -0.1)
     : props.backgroundColor;
 
-  function onChange(event: any, newValue: any) {
+  async function onChange(event: any, newValue: any) {
     const row = getSelectedRow(props.property);
     if(!row){
       return;
@@ -67,7 +67,7 @@ export const MobileFormViewEditor: React.FC<{
     });
   }
 
-  const onEditorBlur = (event: any) => onFieldBlur(props.property)(event);
+  const onEditorBlur = (event: any) => onFieldBlur(props.property)();
 
   if (props.property!.column === "ComboBox") {
     return (
