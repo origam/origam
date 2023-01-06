@@ -32,6 +32,17 @@ export function handleError(ctx: any) {
       // finished (RowStates for example)
       return;
     }
+    if (error.response &&
+        error.response.status === 404 &&
+        error.response.data.message.includes("Origam.Server.RowNotFoundException")) {
+      yield*selectors.error.getDialogController(ctx).pushError(
+        T(
+          `The row you requested was not found on the server. Please refresh the data.`,
+          "row_not_found"
+        )
+      );
+      return;
+    }
     if (error.response && error.response.status === 401) {
       yield*stopWorkQueues(ctx)();
       selectors.error.getDialogController(ctx).dismissErrors();

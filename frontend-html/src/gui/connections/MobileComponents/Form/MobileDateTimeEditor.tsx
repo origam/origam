@@ -48,12 +48,12 @@ export const MobileDateTimeEditor: React.FC<{
   autoFocus?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
-  onChange: (event: any, isoDay: string | undefined | null) => void;
+  onChange: (event: any, isoDay: string | undefined | null) => Promise<void>;
   onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
   onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
-  onEditorBlur: (event: any) => void;
+  onEditorBlur?: (event: any) => Promise<void>;
   property: IProperty;
   editorState?: IEditorState;
   showClearButton?: boolean;

@@ -24,48 +24,27 @@ using System;
 
 namespace Origam.Schema.GuiModel 
 {
-	public class UserControlSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class UserControlSchemaItemProvider : AbstractSchemaItemProvider
 	{
 		public UserControlSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return ControlItem.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
+		public override string RootItemType => ControlItem.CategoryConst;
+
+		public override string Group => "UI";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_25_widgets.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_25_widgets.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Widgets";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Widgets";
+			set => base.NodeText = value;
 		}
 
 		public override string NodeToolTipText
@@ -81,31 +60,18 @@ namespace Origam.Schema.GuiModel
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(ControlItem)};
-			}
-		}
+			typeof(ControlItem)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(ControlItem))
-			{
-				ControlItem item =  new ControlItem(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewControl";
-				
-				item.Group = group;
-				this.ChildItems.Add(item);
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorEntityModelUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(ControlItem) ?
+					"NewControl" : null);
 		}
-
 		#endregion
 	}
 }

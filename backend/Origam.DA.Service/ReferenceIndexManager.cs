@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -78,16 +79,33 @@ public static class ReferenceIndexManager
 
     private static void UpdateNow(AbstractSchemaItem item)
     {
-        referenceDictionary.TryRemove(item.Id, out _);
+        RemoveAllReferences(item);
         if (!item.IsDeleted)
         {
             Add(item);
         }
     }
 
+    private static void RemoveAllReferences(AbstractSchemaItem item)
+    {
+        var referenceInfo = new ReferenceInfo(item.Id, item.GetType());
+        var referencesToRemove = referenceDictionary
+            .Where(refReference => refReference.Value
+            .Contains(referenceInfo))
+            .ToList();
+        foreach (var referenceFound in referencesToRemove)
+        {
+            referenceFound.Value.Remove(referenceInfo);
+            if (referenceFound.Value.Count==0)
+            {
+                referenceDictionary.TryRemove(referenceFound.Key, out _);
+            }
+        }
+    }
+
     public static void Add(AbstractSchemaItem item)
     {
-        GetReferencesFromDependencies(item);
+        AddReference(item);
         GetReferencesFromText(item);
         GetTypeSpecificReferences(item);
     }
@@ -97,19 +115,6 @@ public static class ReferenceIndexManager
         if (item is EntityUIAction uiAction)
         {
             AddToIndex(uiAction.ConfirmationRuleId, uiAction);
-            ArrayList screenConditions = uiAction.ChildItemsByType(
-                ScreenCondition.CategoryConst);
-            foreach (ScreenCondition screenCondition in screenConditions)
-            {
-                AddToIndex(uiAction.Id, screenCondition.Screen);
-            }
-            ArrayList sectionConditions = uiAction.ChildItemsByType(
-                ScreenSectionCondition.CategoryConst);
-            foreach (ScreenSectionCondition sectionCondition in
-                     sectionConditions)
-            {
-                AddToIndex(uiAction.Id, sectionCondition.ScreenSection);
-            }
         }
     }
 
@@ -145,7 +150,14 @@ public static class ReferenceIndexManager
             }
         }
     }
-
+    private static void AddReference(AbstractSchemaItem item)
+    {
+        GetReferencesFromDependencies(item);
+        foreach (AbstractSchemaItem childItem in item.ChildItems)
+        {
+            GetReferencesFromDependencies(childItem);
+        }
+    }
     private static void GetReferencesFromDependencies(AbstractSchemaItem item)
     {
         ArrayList dependencies = item.GetDependencies(false);
@@ -158,10 +170,10 @@ public static class ReferenceIndexManager
         }
     }
 
-    private static void AddToIndex(Guid referencedItemId, AbstractSchemaItem reference)
+    private static void AddToIndex(Guid dependencyItemId, AbstractSchemaItem reference)
     {
         var referenceInfo = new ReferenceInfo(reference.Id, reference.GetType());
-        referenceDictionary.AddOrUpdate(referencedItemId,
+        referenceDictionary.AddOrUpdate(dependencyItemId,
             new HashSet<ReferenceInfo> { referenceInfo },
             (id, oldSet) =>
             {

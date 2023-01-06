@@ -149,5 +149,6 @@ namespace Origam.UI
         bool PopulateEmptyDatabaseOnLoad { get; set; }
 
 		void OpenForm(object owner,Hashtable parameters);
-	}
+        void UpdateTitle();
+    }
 }

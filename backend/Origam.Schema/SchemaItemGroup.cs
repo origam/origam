@@ -31,33 +31,32 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA;
 using Origam.DA.Common.ObjectPersistence.Attributes;
+using InvalidCastException = System.InvalidCastException;
 
 namespace Origam.Schema
 {
-	/// <summary>
-	/// Summary description for SchemaItemGroup.
-	/// </summary>
 	[XmlModelRoot("group")]
     [ClassMetaVersion("6.0.0")]
 	[XmlNamespaceName("g")]
-    public class SchemaItemGroup : AbstractPersistent, IBrowserNode2, 
-        ISchemaItemFactory, ISchemaItemProvider, IComparable, IFilePersistent
+    public class SchemaItemGroup : AbstractPersistent, ISchemaItemProvider, 
+	    IFilePersistent
 	{
 		public SchemaItemGroup()
 		{
-			this.PrimaryKey = new ModelElementKey();
+			PrimaryKey = new ModelElementKey();
 		}
 
 		public SchemaItemGroup(Guid extensionId) : this()
 		{
-			this.SchemaExtensionId = extensionId;
+			SchemaExtensionId = extensionId;
 		}
 
-		public SchemaItemGroup(Key primaryKey) : base(primaryKey, primaryKey.KeyArray)
+		public SchemaItemGroup(Key primaryKey) 
+			: base(primaryKey, primaryKey.KeyArray)
 		{
 		}
 
-		public override string ToString() => this.Name;
+		public override string ToString() => Name;
 
 		#region Properties
 		[XmlAttribute(AttributeName = "rootItemType")] 
@@ -74,12 +73,14 @@ namespace Origam.Schema
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.SchemaExtensionId;
-
-				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), key);
+				var key = new ModelElementKey
+				{
+					Id = SchemaExtensionId
+				};
+				return (Package)PersistenceProvider.RetrieveInstance(
+					typeof(Package), key);
 			}
-			set => this.SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
+			set => SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
         }
 
 		[Browsable(false)]
@@ -93,20 +94,22 @@ namespace Origam.Schema
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.ParentGroupId;
-
-				return (SchemaItemGroup)this.PersistenceProvider.RetrieveInstance(typeof(SchemaItemGroup), key);
+				var key = new ModelElementKey
+				{
+					Id = ParentGroupId
+				};
+				return (SchemaItemGroup)PersistenceProvider.RetrieveInstance(
+					typeof(SchemaItemGroup), key);
 			}
 			set
 			{
 				if(value == null)
 				{
-					this.ParentGroupId = Guid.Empty;
+					ParentGroupId = Guid.Empty;
 				}
 				else
 				{
-					this.ParentGroupId = (Guid)value.PrimaryKey["Id"];
+					ParentGroupId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
 		}
@@ -119,50 +122,42 @@ namespace Origam.Schema
 
 		private string GetPath(SchemaItemGroup item)
 		{
-			if(this.ParentGroup == null)
+			if(ParentGroup == null)
 			{
-				return this.Name;
+				return Name;
 			}
-			else
-			{
-				return this.ParentGroup.Path + "/" + this.Name;
-			}
+			return ParentGroup.Path + "/" + Name;
 		}
 
 		[Browsable(false)]
-		public SchemaItemGroup RootGroup => this.GetRootGroup(this);
+		public SchemaItemGroup RootGroup => GetRootGroup(this);
 
 		private SchemaItemGroup GetRootGroup(SchemaItemGroup parentItem)
 		{
-			if(parentItem.ParentGroup == null)
-				return parentItem;
-			else
-				return GetRootGroup(parentItem.ParentGroup);
+			return parentItem.ParentGroup == null 
+				? parentItem : GetRootGroup(parentItem.ParentGroup);
 		}
 		
 		private ArrayList GetChildItemsRecursive(AbstractSchemaItem parentItem)
 		{
-			ArrayList items = new ArrayList();
-
-			foreach(AbstractSchemaItem childItem in parentItem.ChildItems)
+			var items = new ArrayList();
+			foreach(var childItem in parentItem.ChildItems)
 			{
 				items.Add(childItem);
 				items.AddRange(GetChildItemsRecursive(childItem));
 			}
-
 			return items;
 		}
 
 		public AbstractSchemaItem GetChildByName(string name, string itemType)
 		{
-			foreach(AbstractSchemaItem item in this.ChildItems)
+			foreach(var item in ChildItems)
 			{
-				if(item.Name == name & item.ItemType == itemType)
+				if((item.Name == name) && (item.ItemType == itemType))
 				{
 					return item;
 				}
 			}
-
 			return null;
 		}
 		
@@ -170,26 +165,26 @@ namespace Origam.Schema
 		[Browsable(false)] 
 		public bool Hide
 		{
-			get => !this.IsPersisted;
-			set
-			{
-				throw new InvalidOperationException(ResourceUtils.GetString("ErrorSetHide"));
-			}
+			get => !IsPersisted;
+			set => throw new InvalidOperationException(
+				ResourceUtils.GetString("ErrorSetHide"));
 		}
 
 		public bool CanDelete => true;
 
 		public void Delete()
 		{
-			if(this.ParentItem != null)
-				if(this.ParentItem.DerivedFrom != null)
-					throw new InvalidOperationException(ResourceUtils.GetString("ErrorDeleteDerivedGroup"));
-
-			foreach(IBrowserNode2 nod in this.ChildNodes())
-				nod.Delete();
-
-			this.IsDeleted = true;
-			this.Persist();
+			if(ParentItem?.DerivedFrom != null)
+			{
+				throw new InvalidOperationException(
+					ResourceUtils.GetString("ErrorDeleteDerivedGroup"));
+			}
+			foreach(IBrowserNode2 node in ChildNodes())
+			{
+				node.Delete();
+			}
+			IsDeleted = true;
+			Persist();
 		}
 
 		public bool CanMove(IBrowserNode2 newNode) => false;
@@ -198,16 +193,14 @@ namespace Origam.Schema
 		public IBrowserNode2 ParentNode
 		{
 			get => null;
-			set
-			{
-				throw new InvalidOperationException(ResourceUtils.GetString("ErrorMoveGroup"));
-			}
+			set => throw new InvalidOperationException(
+				ResourceUtils.GetString("ErrorMoveGroup"));
 		}
 
 		public byte[] NodeImage => null;
 
 		[Browsable(false)] 
-		public string NodeId => this.PrimaryKey["Id"].ToString();
+		public string NodeId => PrimaryKey["Id"].ToString();
 
 		[Browsable(false)]
         public virtual string FontStyle => "Regular";
@@ -221,31 +214,30 @@ namespace Origam.Schema
 
 		public BrowserNodeCollection ChildNodes()
 		{
-			BrowserNodeCollection col = new BrowserNodeCollection();
-
+			var browserNodeCollection = new BrowserNodeCollection();
 			// Child groups
-			foreach(IBrowserNode2 nod in this.ChildGroups)
-				col.Add(nod);
-
-			// Child nodes
-			foreach(IBrowserNode2 nod in this.ChildItems)
+			foreach(IBrowserNode2 node in ChildGroups)
 			{
-				if(!(nod as ISchemaItem).IsDeleted)
+				browserNodeCollection.Add(node);
+			}
+			// Child nodes
+			foreach(IBrowserNode2 node in this.ChildItems)
+			{
+				if(!((ISchemaItem)node).IsDeleted)
 				{
-					col.Add(nod);
+					browserNodeCollection.Add(node);
 				}
 			}
-
-			return col;
+			return browserNodeCollection;
 		}
 
 		public string NodeText
 		{
-			get => this.Name;
+			get => Name;
 			set
 			{
-				this.Name = value;
-				this.Persist();
+				Name = value;
+				Persist();
 			}
 		}
 
@@ -262,83 +254,71 @@ namespace Origam.Schema
 			{
 				// We look for all child items of our parent schema item that have this group
 				// We browse the collection because it has all the items correctly set
-				ISchemaItemProvider provider;
-				if(this.ParentItem != null)
-					provider = this.ParentItem;
-				else
+				var provider = ParentItem ?? RootProvider;
+				var schemaItemCollection = new SchemaItemCollection(
+					PersistenceProvider, provider, ParentItem);
+				foreach(AbstractSchemaItem item 
+				        in provider.ChildItemsByGroup(this))
 				{
-					provider = this.RootProvider;
+					schemaItemCollection.Add(item);
 				}
-
-				SchemaItemCollection col = new SchemaItemCollection(this.PersistenceProvider, provider, this.ParentItem);
-
-				foreach(AbstractSchemaItem item in provider.ChildItemsByGroup(this))
-				{
-					col.Add(item);
-				}
-
-				return col;
+				return schemaItemCollection;
 			}
 		}
 
 		public ArrayList ChildItemsByType(string itemType)
 		{
-			ArrayList list = new ArrayList();
-
+			var list = new ArrayList();
 			// We look for all child items of our parent schema item that have this group
 			// We browse the collection because it has all the items correctly set
-			foreach(AbstractSchemaItem item in this.ParentItem.ChildItemsByGroup(this))
+			foreach(AbstractSchemaItem item in ParentItem.ChildItemsByGroup(this))
 			{
 				list.Add(item);
 			}
-
 			return list;
 		}
 
 		public ArrayList ChildItemsByGroup(SchemaItemGroup group)
 		{
-			ArrayList list = new ArrayList();
-
-			foreach(AbstractSchemaItem item in this.ChildItems)
+			var list = new ArrayList();
+			foreach(var item in ChildItems)
 			{
-				if((item.Group == null && group == null) || item.Group.PrimaryKey.Equals(group.PrimaryKey))
+				if((item.Group == null && group == null) ||
+			    item.Group.PrimaryKey.Equals(group.PrimaryKey))
+				{
 					list.Add(item);
+				}
 			}
-
 			return list;
 		}
 
 		public SchemaItemGroup GetGroup(string name)
 		{
-			foreach(SchemaItemGroup group in this.ChildGroups)
-			{
-				if(group.Name == name) return group;
-			}
-
-			return null;
+			return ChildGroups.FirstOrDefault(group => group.Name == name);
 		}
 
-		public bool HasChildItems => this.ChildItems.Count > 0;
+		public bool HasChildItems => ChildItems.Count > 0;
 
-		public bool HasChildItemsByType(string itemType) => this.ChildItemsByType(itemType).Count > 0;
+		public bool HasChildItemsByType(string itemType) 
+			=> ChildItemsByType(itemType).Count > 0;
 
-		public bool HasChildItemsByGroup(SchemaItemGroup group) => this.ChildItemsByGroup(group).Count > 0;
+		public bool HasChildItemsByGroup(SchemaItemGroup group) 
+			=> ChildItemsByGroup(group).Count > 0;
 
 		public List<SchemaItemGroup> ChildGroups
 		{
 			get
 			{
-				// We retrive all child groups
-				List<SchemaItemGroup> list = this.PersistenceProvider.RetrieveListByGroup<SchemaItemGroup>( PrimaryKey);
-
+				// We retrieve all child groups
+				var list = PersistenceProvider
+					.RetrieveListByGroup<SchemaItemGroup>(PrimaryKey);
 				// Set parent for each child
-				foreach(SchemaItemGroup group in list)
+				foreach(var group in list)
 				{
-					group.RootProvider = this.RootProvider;
-					group.ParentItem = this.ParentItem;
+					group.RootProvider = RootProvider;
+					group.ParentItem = ParentItem;
 					group.ParentGroup = this;
 				}
-
 				return list;
 			}
 		}
@@ -349,14 +329,12 @@ namespace Origam.Schema
 		{
 			get
 			{
-				ArrayList items = new ArrayList();
-
-				foreach(AbstractSchemaItem item in this.ChildItems)
+				var items = new ArrayList();
+				foreach(var item in ChildItems)
 				{
 					items.Add(item);
 					items.AddRange(GetChildItemsRecursive(item));
 				}
-
 				return items;
 			}
 		}
@@ -365,37 +343,31 @@ namespace Origam.Schema
 
 		public void ClearCache()
         {
-
         }
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public ArrayList ChildItemTypes => new ArrayList(this.NewItemTypes);
+		public ArrayList ChildItemTypes => new(NewItemTypes);
 
 		[Browsable(false)]
 		public Type[] NewItemTypes
 		{
 			get
 			{
-				if(this.ParentItem == null)
+				if(ParentItem == null)
+				{
 					return RootProvider?.NewItemTypes ?? new Type[0];
-				else
-					return (this.ParentItem as ISchemaItemFactory).NewItemTypes;
+				}
+				return (ParentItem as ISchemaItemFactory).NewItemTypes;
 			}
 		}
 
 		[Browsable(false)]
-		public virtual IList<string> NewTypeNames
-		{
-			get
-			{
-				if(this.ParentItem == null)
-					return this.RootProvider.NewTypeNames;
-				else
-					return (this.ParentItem as ISchemaItemFactory).NewTypeNames;
-			}
-		}
+		public virtual IList<string> NewTypeNames =>
+			ParentItem == null 
+				? RootProvider.NewTypeNames 
+				: (ParentItem as ISchemaItemFactory).NewTypeNames;
 
 		/// <summary>
 		/// By default all NewItemTypes are nameable. Override if only a subset of types can
@@ -406,7 +378,10 @@ namespace Origam.Schema
 
 		public event Action<ISchemaItem> ItemCreated;
 
-		public string RelativeFilePath => Package.Name + "\\" + RootItemType + "\\" + Path.Replace("/", "\\") + "\\"+PersistenceFiles.GroupFileName;
+		public string RelativeFilePath 
+			=> Package.Name + "\\" + RootItemType + "\\" 
+			   + Path.Replace("/", "\\") + "\\" 
+			   + PersistenceFiles.GroupFileName;
 
 		public bool IsFolder => true;
 
@@ -416,48 +391,55 @@ namespace Origam.Schema
 			set { }
 		}
 
-		public IDictionary<string, Guid> ParentFolderIds
-        {
-            get
-            {
-	            return 
-		            new Dictionary<string, Guid>
-		            {
-			            {
-				            CategoryFactory.Create(typeof(Package)),
-				            SchemaExtensionId
-			            },
-			            {
-				            CategoryFactory.Create(typeof(SchemaItemGroup)),
-				            ParentGroupId
-			            }
-		            };
-            }
-        }
+		public IDictionary<string, Guid> ParentFolderIds =>
+			new Dictionary<string, Guid>
+			{
+				{
+					CategoryFactory.Create(typeof(Package)),
+					SchemaExtensionId
+				},
+				{
+					CategoryFactory.Create(typeof(SchemaItemGroup)),
+					ParentGroupId
+				}
+			};
 
-        public AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public virtual T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group) 
+			where T : AbstractSchemaItem
 		{
-			AbstractSchemaItem newItem;
-
-			if(this.ParentItem == null)
-				newItem = this.RootProvider.NewItem(type, schemaExtensionId, this);
+			T newItem;
+			if(ParentItem == null)
+			{
+				newItem = RootProvider.NewItem<T>(schemaExtensionId, this);
+			}
 			else
-				newItem = (this.ParentItem as ISchemaItemFactory).NewItem(type, schemaExtensionId, this);
+			{
+				newItem = (ParentItem as ISchemaItemFactory).NewItem<T>(
+					schemaExtensionId, this);
+			}
 			ItemCreated?.Invoke(newItem);
 			return newItem;
 		}
 
 		public bool CanRenameTo(string nameCandidate)
 		{
-			if (string.IsNullOrEmpty(nameCandidate?.Trim())) return false;
-			if (nameCandidate.EndsWith(" ")) return false;
+			if(string.IsNullOrEmpty(nameCandidate?.Trim()))
+			{
+				return false;
+			}
+			if(nameCandidate.EndsWith(" "))
+			{
+				return false;
+			}
 			return GetGroupsOnTheSameLevel()
-				.All(x => x.NodeText.ToLower().Trim() != nameCandidate.ToLower().Trim());
+				.All(x => x.NodeText.ToLower().Trim() 
+				          != nameCandidate.ToLower().Trim());
 		}
 
 		private IEnumerable<SchemaItemGroup> GetGroupsOnTheSameLevel()
 		{
-			if (ParentGroup != null)
+			if(ParentGroup != null)
 			{
 				return ParentGroup.ChildGroups
 					.Where(x => x != this);	
@@ -472,12 +454,15 @@ namespace Origam.Schema
 		public static string GetNextDefaultName(string defaultName,
 			List<SchemaItemGroup> childGroups)
 		{
-			bool defaultNamedGroupsExist= childGroups
+			var defaultNamedGroupsExists= childGroups
 				.Any(x => x.NodeText.Contains(defaultName));
-			if (!defaultNamedGroupsExist) return defaultName;
-			
+			if(!defaultNamedGroupsExists)
+			{
+				return defaultName;
+			}
 			var nextGroupNumber = childGroups
-			  .Select(x => Regex.Match(x.NodeText, defaultName + @"\s*(\d*)",RegexOptions.IgnoreCase))
+			  .Select(x => Regex.Match(x.NodeText, 
+				  defaultName + @"\s*(\d*)",RegexOptions.IgnoreCase))
 			  .Where(match => match.Success)
 			  .Select(match => match.Groups[1].Value)
 			  .Select(x => x=="" ? "0" : x)
@@ -488,16 +473,15 @@ namespace Origam.Schema
 
 		public virtual SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
 		{	
-			SchemaItemGroup group = new SchemaItemGroup(schemaExtensionId);
+			var group = new SchemaItemGroup(schemaExtensionId);
 			group.Name = GetNextDefaultName(groupName, ChildGroups);
-			group.PersistenceProvider = this.PersistenceProvider;
-			group.RootItemType = this.RootItemType;
-			group.RootProvider = this.RootProvider;
-			group.ParentItem = this.ParentItem;
+			group.PersistenceProvider = PersistenceProvider;
+			group.RootItemType = RootItemType;
+			group.RootProvider = RootProvider;
+			group.ParentItem = ParentItem;
 			group.ParentGroup = this;
-			this.ChildGroups.Add(group);
+			ChildGroups.Add(group);
 			group.Persist();
-
 			return group;
 		}
 
@@ -506,21 +490,12 @@ namespace Origam.Schema
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
-			ISchemaItem item = obj as ISchemaItem;
-			SchemaItemGroup group = obj as SchemaItemGroup;
-
-			if(item != null)
+			return obj switch
 			{
-				return -1;
-			}
-			else if(group != null)
-			{
-				return this.Name.CompareTo(group.Name);
-			}
-			else
-			{
-				throw new InvalidCastException();
-			}
+				ISchemaItem item => -1,
+				SchemaItemGroup group => Name.CompareTo(group.Name),
+				_ => throw new InvalidCastException()
+			};
 		}
 		#endregion
 	}

@@ -130,6 +130,32 @@ namespace Origam.BI.Excel
             {
                 sheet.TabColorIndex = Convert.ToInt16(sourceSheet.TabColorIndex);
             }
+            if (!sourceSheet.IsDefaultColumnWidthNull())
+            {
+                sheet.DefaultColumnWidth = sourceSheet.DefaultColumnWidth;
+            }
+            if (!sourceSheet.IsDefaultRowHeightNull())
+            {
+                sheet.DefaultRowHeight = Convert.ToInt16(sourceSheet.DefaultRowHeight);
+            }
+            if (!sourceSheet.IsHiddenNull())
+            {
+                sheet.Workbook.SetSheetHidden(
+                    sourceSheet.Index, 
+                    sourceSheet.Hidden ? SheetState.Hidden : SheetState.Visible);
+            }
+            if (!sourceSheet.IsFreezeRowIndexNull() && !sourceSheet.IsFreezeColumnIndexNull())
+            {
+                sheet.CreateFreezePane(sourceSheet.FreezeColumnIndex, sourceSheet.FreezeRowIndex);
+            }
+            else if (!sourceSheet.IsFreezeColumnIndexNull())
+            {
+                sheet.CreateFreezePane(sourceSheet.FreezeColumnIndex, 0);
+            }
+            else if (!sourceSheet.IsFreezeRowIndexNull())
+            {
+                sheet.CreateFreezePane(0, sourceSheet.FreezeRowIndex);
+            }
         }
 
         private static void ProcessRow(ISheet sheet, OrigamSpreadsheet.RowRow sourceRow)

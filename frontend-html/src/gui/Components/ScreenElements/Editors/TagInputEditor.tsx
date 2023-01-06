@@ -28,6 +28,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { CtxDropdownRefCtrl } from "@origam/components";
+import { requestFocus } from "utils/focus";
 
 export const TagInputEditor = inject(({property}: { property: IProperty }, {value}) => {
   const dataTable = getDataTable(property);
@@ -146,7 +147,7 @@ export const TagInputEditor = inject(({property}: { property: IProperty }, {valu
             {props.isReadOnly ? null : (
               <TagInputAdd onClick={(event) => {
                 beh.handleInputBtnClick(event);
-                beh.elmInputElement.focus();
+                requestFocus(beh.elmInputElement);
               }}/>
             )}
             <input

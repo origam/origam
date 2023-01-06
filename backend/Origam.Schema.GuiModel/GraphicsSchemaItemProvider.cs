@@ -24,90 +24,48 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	/// <summary>
-	/// Summary description for Class1.
-	/// </summary>
-	public class GraphicsSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class GraphicsSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public GraphicsSchemaItemProvider() { }
+		public GraphicsSchemaItemProvider() {}
 		
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return Graphics.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
+		public override string RootItemType => Graphics.CategoryConst;
+
+		public override string Group => "UI";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_16_images.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_16_images.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Images";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Images";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return "List of Graphics";
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			"List of Graphics";
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(Graphics)};
-			}
-		}
+			typeof(Graphics)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(Graphics))
-			{
-				Graphics item =  new Graphics(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewGraphics";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorGraphicsUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(Graphics) ?
+					"NewGraphics" : null);
 		}
 
 		#endregion

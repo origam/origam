@@ -5,6 +5,7 @@
     <UserSecretsId>8a03936d-700c-4edd-9ffa-e3df428dc822</UserSecretsId>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <LangVersion>7.1</LangVersion>
+	<GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -60,7 +61,7 @@
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.1.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.9" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
@@ -71,10 +72,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
     <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
-    <PackageReference Include="Origam.Service.Core" Version="1.1.0" />
+    <PackageReference Include="Origam.Service.Core" Version="2.0.2" />
     <PackageReference Include="SoapCore" Version="1.1.0.10" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
   </ItemGroup>
 
@@ -118,9 +119,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\identity\js\form-sumbit.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="assets\identity\js\signin-redirect.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="Views\Account\LoginTwoStep.cshtml">

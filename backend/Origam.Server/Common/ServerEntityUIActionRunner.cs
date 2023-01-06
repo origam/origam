@@ -100,13 +100,10 @@ namespace Origam.Server
                 throw new Exception("Rows for the selected Ids were not loaded");
             }
             DataSet copy = processData.DataTable.DataSet.Clone();
-            foreach (string id in processData.SelectedIds)
+            foreach (DataRow selectedRow in processData.SelectedRows)
             {
-                DataRow row = processData.SelectedRows[0].Table.Rows.Find(id);
-                if (row != null)
-                {
-                    copy.Tables[processData.DataTable.TableName].LoadDataRow(row.ItemArray, true);
-                }
+                copy.Tables[processData.DataTable.TableName].LoadDataRow(
+                    selectedRow.ItemArray, true);
             }
             DataTable selectedRows = copy.Tables[processData.DataTable.TableName];
             DataSet command = DataService.Instance.LoadData(

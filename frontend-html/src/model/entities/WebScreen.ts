@@ -85,4 +85,11 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   parentContext: IOpenedScreen | undefined;
 
   activationHandler = new EventHandler();
+
+  onWindowMove(top: number, left: number): void {
+  }
+
+  get positionOffset(): { [p: string]: number } {
+    return {topOffset: 0, leftOffset: 0};
+  }
 }

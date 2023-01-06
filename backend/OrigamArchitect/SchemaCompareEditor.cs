@@ -602,10 +602,12 @@ namespace OrigamArchitect
 			}
 		}
 
-		private ServiceCommandUpdateScriptActivity AddActivity(string name, string command, DeploymentVersion version, 
-            Origam.Schema.WorkflowModel.IService dataService, DatabaseType databaseType)
+		private ServiceCommandUpdateScriptActivity AddActivity(
+			string name, string command, DeploymentVersion version, 
+            IService dataService, DatabaseType databaseType)
 		{
-			ServiceCommandUpdateScriptActivity activity = version.NewItem(typeof(ServiceCommandUpdateScriptActivity), _schema.ActiveSchemaExtensionId, null) as ServiceCommandUpdateScriptActivity;
+			var activity = version.NewItem<ServiceCommandUpdateScriptActivity>(
+				_schema.ActiveSchemaExtensionId, null);
 			activity.Name = activity.ActivityOrder.ToString("00000") + "_" + name.Replace(" ", "_");
 			activity.Service = dataService;
 			activity.CommandText = command;

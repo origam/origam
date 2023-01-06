@@ -24,20 +24,18 @@ using Origam.UI;
 
 namespace Origam.Schema.GuiModel
 {
-	/// <summary>
-	/// Summary description for AbstractControlSet.
-	/// </summary>
-	public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet, ISchemaItemFactory 
+	public abstract class AbstractControlSet : AbstractSchemaItem, IControlSet 
 	{
-		public AbstractControlSet() : base() {}
+		public AbstractControlSet() {}
 		public AbstractControlSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
 		public AbstractControlSet(Key primaryKey) : base(primaryKey) {}
 
 		public BrowserNodeCollection Alternatives
 		{
 			get {
-				BrowserNodeCollection result = new BrowserNodeCollection ();
-				foreach (ControlSetItem item in ChildItemsByType(ControlSetItem.CategoryConst)) {
+				var result = new BrowserNodeCollection ();
+				foreach (ControlSetItem item 
+				         in ChildItemsByType(ControlSetItem.CategoryConst)) {
 					if (item.IsAlternative) {
 						result.Add (item);
 					}
@@ -49,42 +47,31 @@ namespace Origam.Schema.GuiModel
 		public ControlSetItem MainItem
 		{
 			get {
-				foreach (ControlSetItem item in ChildItemsByType(ControlSetItem.CategoryConst)) {
-					if (! item.IsAlternative) {
+				foreach (ControlSetItem item 
+				         in ChildItemsByType(ControlSetItem.CategoryConst)) {
+					if(!item.IsAlternative) {
 						return item;
 					}
 				}
-				throw new Exception ("Main item was not found for a control set " + this.Path);
+				throw new Exception (
+					$"Main item was not found for a control set {Path}");
 			}
 		}
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(ControlSetItem)};
-			}
-		}
+			typeof(ControlSetItem)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(ControlSetItem))
-			{
-				ControlSetItem item = new ControlSetItem(schemaExtensionId);
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewComponent";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorFormControlSetUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(ControlSetItem) ?
+					"NewComponent" : null);
 		}
-
 	
 		#endregion
 	}

@@ -51,6 +51,7 @@ import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { ColumnConfigurationModel } from "model/entities/TablePanelView/ColumnConfigurationModel";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -460,7 +461,15 @@ export class TablePanelView implements ITablePanelView {
         rowHeight: 0,
       };
     }
-    return this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
+    const rectangle = this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
+    const openedScreen = getOpenedScreen(this);
+
+    return {
+      columnLeft: rectangle.columnLeft + openedScreen.positionOffset.leftOffset,
+      columnWidth: rectangle.columnWidth,
+      rowTop: rectangle.rowTop + openedScreen.positionOffset.topOffset,
+      rowHeight: rectangle.rowHeight
+    };
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {

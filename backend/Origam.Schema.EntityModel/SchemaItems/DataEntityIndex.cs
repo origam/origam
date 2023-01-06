@@ -34,16 +34,13 @@ namespace Origam.Schema.EntityModel
 		Descending
 	}
 
-	/// <summary>
-	/// Summary description for DataEntityIndex.
-	/// </summary>
 	[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
     [HelpTopic("Indexes")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class DataEntityIndex : AbstractSchemaItem, ISchemaItemFactory
+	public class DataEntityIndex : AbstractSchemaItem
 	{
-		public DataEntityIndex() : base(){}
+		public DataEntityIndex() {}
 		
 		public DataEntityIndex(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -58,14 +55,8 @@ namespace Origam.Schema.EntityModel
         [XmlAttribute("unique")]
         public bool IsUnique
 		{
-			get
-			{
-				return _isUnique;
-			}
-			set
-			{
-				_isUnique = value;
-			}
+			get => _isUnique;
+			set => _isUnique = value;
 		}
 
 		private bool _generateDeploymentScript = true;
@@ -105,35 +96,23 @@ namespace Origam.Schema.EntityModel
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(DataEntityIndexField)};
-			}
-		}
+			typeof(DataEntityIndexField)
+		};
 
-		public override SchemaItemGroup NewGroup(Guid schemaExtensionId, string groupName)
+		public override SchemaItemGroup NewGroup(
+			Guid schemaExtensionId, string groupName)
 		{
 			return null;
 		}
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(DataEntityIndexField))
-			{
-				item = new DataEntityIndexField(schemaExtensionId);
-				item.Name = this.Name + "Field" + (this.ChildItems.Count + 1);
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataEntityIndexUknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(DataEntityIndexField) ?
+					Name + "Field" + (ChildItems.Count + 1) : null);
 		}
 
 		#endregion

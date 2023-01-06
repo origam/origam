@@ -94,6 +94,7 @@ import { createConfigurationManager } from "xmlInterpreters/createConfigurationM
 import { getMomentFormat, replaceDefaultDateFormats } from "./getMomentFormat";
 import { getTablePanelView } from "../model/selectors/TablePanelView/getTablePanelView";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 
 function getPropertyParameters(node: any) {
@@ -301,8 +302,10 @@ export function*interpretScreenXml(
   const foundLookupIds = new Set<string>();
   const uiRoot = findUIRoot(windowXml);
 
+  const focusManager = new ScreenFocusManager();
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
+    focusManager: focusManager,
     uiRootType: uiRoot.attributes.Type,
     menuId: windowXml.attributes.MenuId,
     dynamicTitleSource: screenDoc.elements[0].attributes.DynamicFormLabelSource,
@@ -393,6 +396,7 @@ export function*interpretScreenXml(
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
+        focusManager: focusManager,
         attributes: dataView.attributes,
         type: dataView.attributes.Type,
         modelInstanceId: dataView.attributes.ModelInstanceId,

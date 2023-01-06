@@ -23,99 +23,50 @@ using System;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for DataConstantItemProvider.
-	/// </summary>
-	public class DataConstantSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class DataConstantSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public DataConstantSchemaItemProvider()
-		{
-		}
+		public DataConstantSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return DataConstant.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "DATA";
-			}
-		}
+		public override string RootItemType => DataConstant.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "DATA";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_06_constants.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_06_constants.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Constants";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Constants";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(DataConstant)};
-			}
-		}
+			typeof(DataConstant)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(DataConstant))
-			{
-				DataConstant item = new DataConstant(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewDataConstant";
-				
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataConstantUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(DataConstant) ?
+				"NewDataConstant" : null);
 		}
 
 		#endregion

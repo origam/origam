@@ -23,113 +23,70 @@ using System;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for EntityModelSchemaItemProvider.
-	/// </summary>
-	public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class EntityModelSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public EntityModelSchemaItemProvider()
-		{
-		}
+		public EntityModelSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return AbstractDataEntity.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "DATA";
-			}
-		}
+		public override string RootItemType => AbstractDataEntity.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "DATA";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_09_entities.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_09_entities.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Entities";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Entities";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(TableMappingItem), typeof(DetachedEntity)};
-			}
-		}
+			typeof(TableMappingItem), typeof(DetachedEntity)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(TableMappingItem))
+			T item;
+			if(typeof(T) == typeof(TableMappingItem))
 			{
-				item = new TableMappingItem(schemaExtensionId);
-				item.Name = "NewTable";
+				item = base.NewItem<T>(schemaExtensionId, group, 
+					"NewTable");
 			}
-			else if(type == typeof(DetachedEntity))
+			else if(typeof(T) == typeof(DetachedEntity))
 			{
-				item = new DetachedEntity(schemaExtensionId);
-				item.Name = "NewEntity";
+				item = base.NewItem<T>(schemaExtensionId, group, 
+					"NewEntity");
 			}
 			else
 			{
-				throw new ArgumentOutOfRangeException("type", type, "This type is not supported by EntityModel");
+				throw new ArgumentOutOfRangeException(
+					"type", typeof(T), 
+					"This type is not supported by EntityModel");
 			}
-
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			item.Group = group;
-			this.ChildItems.Add(item);
-
 			// add default ancestor to all database entities
-			if(type == typeof(TableMappingItem))
+			if(typeof(T) == typeof(TableMappingItem))
 			{
-				EntityHelper.AddAncestor(item as IDataEntity, EntityHelper.DefaultAncestor, false);
+				EntityHelper.AddAncestor(
+					item as IDataEntity, EntityHelper.DefaultAncestor, false);
 			}
-
 			return item;
 		}
 

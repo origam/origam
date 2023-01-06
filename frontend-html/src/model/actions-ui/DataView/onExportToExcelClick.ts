@@ -20,10 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getFocusManager } from "model/selectors/getFocusManager";
 
 export function onExportToExcelClick(ctx: any) {
   return flow(function*onExportToExcelClick(event: any) {
     try {
+      const focusManager = getFocusManager(ctx);
+      yield focusManager.activeEditorCloses();
       getDataView(ctx).exportToExcel();
     } catch (e) {
       yield*handleError(ctx)(e);

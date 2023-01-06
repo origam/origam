@@ -26,6 +26,7 @@ import { ColorResult, SketchPicker } from "react-color";
 import { createMachine, interpret } from "xstate";
 
 import { IFocusable } from "model/entities/FormFocusManager";
+import { requestFocus } from "utils/focus";
 
 @observer
 export default class ColorEditor extends React.Component<{
@@ -168,7 +169,7 @@ export default class ColorEditor extends React.Component<{
             this.setDropped(false);
           },
           focusPickerContainer: (ctx, event) => {
-            this.elmDroppedPanelContainer?.focus();
+            requestFocus(this.elmDroppedPanelContainer);
           },
           focusInputField: (ctx, event) => {
             this.elmInput?.select();
