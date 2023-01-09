@@ -36,8 +36,10 @@ public static class XsltFunctionContainerFactory
     public static IEnumerable<XsltFunctionsDefinition> Create(
         string transactionId = null)
     {
+        var businessServicesService = ServiceManager.Services
+            .GetService<IBusinessServicesService>();
         return Create(
-            ServiceManager.Services.GetService<IBusinessServicesService>(),
+            businessServicesService,
             ServiceManager.Services.GetService<SchemaService>()
                 .GetProvider<XsltFunctionSchemaItemProvider>(),
             ServiceManager.Services.GetService<IPersistenceService>(),
@@ -51,7 +53,9 @@ public static class XsltFunctionContainerFactory
             SecurityManager.CurrentUserProfile,
             XpathEvaluator.Instance,
             HttpTools.Instance,
-            ResourceTools.Instance,
+            new ResourceTools(
+                businessServicesService, 
+                SecurityManager.CurrentUserProfile),
             transactionId);
     }
 
