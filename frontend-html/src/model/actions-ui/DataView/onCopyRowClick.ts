@@ -46,18 +46,10 @@ export function onCopyRowClick(ctx: any, switchToFormPerspective?: boolean) {
       if(switchToFormPerspective){
         dataView.activateFormView?.({saveNewState: false});
       }
-      hideFilters(ctx, event);
       yield*formScreenLifecycle.onCopyRow(entity, gridId, selectedRowId);
     } catch (e) {
       yield*handleError(ctx)(e);
       throw e;
     }
   });
-}
-
-function hideFilters(ctx: any, event: any){
-  const filterConfiguration = getFilterConfiguration(ctx);
-  if(filterConfiguration.isFilterControlsDisplayed){
-    filterConfiguration.onFilterDisplayClick(event);
-  }
 }

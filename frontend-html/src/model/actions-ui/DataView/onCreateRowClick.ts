@@ -42,8 +42,6 @@ export function onCreateRowClick(ctx: any, switchToFormPerspective?: boolean) {
       if(switchToFormPerspective){
         dataView.activateFormView?.({saveNewState: false});
       }
-      const filterConfiguration = getFilterConfiguration(ctx);
-      filterConfiguration.clearFilters();
       yield*formScreenLifecycle.onCreateRow(entity, gridId);
     } catch (e) {
       yield*handleError(ctx)(e);
