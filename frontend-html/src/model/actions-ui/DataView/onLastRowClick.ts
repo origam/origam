@@ -21,12 +21,18 @@ import { flow } from "mobx";
 import { selectLastRow } from "../../actions/DataView/selectLastRow";
 import { handleError } from "../../actions/handleError";
 import { getFocusManager } from "model/selectors/getFocusManager";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 
 export function onLastRowClick(ctx: any) {
   return flow(function*onLastRowClick(event: any) {
     try {
       const focusManager = getFocusManager(ctx);
       yield focusManager.activeEditorCloses();
+      const dataView = getDataView(ctx);
+      if (!(yield shouldProceedToChangeRow(dataView))) {
+        return;
+      }
       yield*selectLastRow(ctx)();
     } catch (e) {
       yield*handleError(ctx)(e);

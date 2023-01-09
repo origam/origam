@@ -2,7 +2,7 @@ const { sleep, openMenuItem, login, waitForRowCountData, switchToFormPerspective
   inputByPressingKeys, switchLanguageTo, waitForFocus,
   switchToTablePerspective, catchRequests, beforeEachTest, afterEachTest, xPathContainsClass
 } = require('./testTools');
-const {widgetsMenuItemId,topMenuHeader, allDataTypesLazyDatViewId,
+const {widgetsMenuItemId,topMenuHeader, allDataTypesLazyDataViewId,
   masterDataViewId, sectionsMenuItemId, masterDetailLazyLoadedMenuItemId, allDataTypesLazyMenuItemsId
 } = require("./modelIds");
 const { clearScreenConfiguration,
@@ -123,7 +123,7 @@ describe("Html client", () => {
     await waitForRowCountData(page, dataViewId,2099);
 
     await page.waitForXPath(
-      `//div[@id='${allDataTypesLazyDatViewId}']//div[${xPathContainsClass("addRow")}]`,
+      `//div[@id='${allDataTypesLazyDataViewId}']//div[${xPathContainsClass("addRow")}]`,
       { visible: true }
     );
 
@@ -131,7 +131,7 @@ describe("Html client", () => {
     await waitForRequests;
     await sleep(300);
     waitForRequests = catchRequests(page);
-    await page.$eval(`#${allDataTypesLazyDatViewId} .addRow`, elem => elem.click());
+    await page.$eval(`#${allDataTypesLazyDataViewId} .addRow`, elem => elem.click());
 
     await waitForRequests;
 
