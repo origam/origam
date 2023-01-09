@@ -141,15 +141,7 @@ namespace Origam.Workbench.Services
 				return _isSchemaLoaded;
 			}
 		}
-
-		protected bool _isSchemaChanged = false;
-		public bool IsSchemaChanged
-		{
-			get
-			{
-				return _isSchemaChanged;
-			}
-		}
+		
 		#endregion
 
 		#region Public Methods
@@ -229,9 +221,7 @@ namespace Origam.Workbench.Services
 			}
 
 			RemoveAllProviders();
-
 			
-			_isSchemaChanged = false;
 			_lastAddedNodeParent = null;
 			_lastAddedType = null;
 			_activeExtension = null;
@@ -437,7 +427,6 @@ namespace Origam.Workbench.Services
 
 		protected void OnSchemaLoaded(EventArgs e)
 		{
-			_isSchemaChanged = false;
 			_isSchemaLoaded = true;
 
 			if (SchemaLoaded != null) 
@@ -464,7 +453,6 @@ namespace Origam.Workbench.Services
         
         protected void OnSchemaChanged(object sender, EventArgs e)
 		{
-			_isSchemaChanged = true;
 			if (SchemaChanged != null) 
 			{
 				SchemaChanged(sender, e);

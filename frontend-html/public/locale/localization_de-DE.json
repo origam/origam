@@ -418,6 +418,7 @@
   "preview": "Vorschau",
   "format": "Format",
   "row_count": "Reihen",
+  "row_not_found": "Die angeforderte Zeile wurde auf dem Server nicht gefunden. Bitte aktualisieren Sie die Daten.",
   "column_width": "Breite",
   "order_columns_button": "Sortieren",
   "order_columns_title": "Spalten sortieren"

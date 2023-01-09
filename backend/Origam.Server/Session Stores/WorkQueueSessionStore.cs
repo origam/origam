@@ -119,6 +119,10 @@ namespace Origam.Server
                 this.CurrentRecordId = id;
         
                 DataRow actualDataRow = GetSessionRow(entity, id);
+                if (actualDataRow == null)
+                {
+                    throw new RowNotFoundException();
+                }
                 UpdateListRow(actualDataRow);
         
                 ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);

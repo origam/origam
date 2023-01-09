@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard20</TargetFrameworks>
+	<LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
