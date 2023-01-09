@@ -33,14 +33,9 @@ public interface IResourceTools
 
 public class ResourceTools : IResourceTools
 {
-    public static ResourceTools Instance { get; } = new ();
     private readonly IBusinessServicesService businessService;
     private readonly Func<UserProfile> userProfileGetter;
-
-    private ResourceTools()
-    {
-    }
-
+    
     public ResourceTools(IBusinessServicesService businessService, Func<UserProfile> userProfileGetter)
     {
         this.businessService = businessService;
