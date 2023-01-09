@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using IdentityServer4.Services;
@@ -185,6 +186,13 @@ namespace Origam.Server
                 options.RequestCultureProviders.Insert(0, 
                     new OrigamCookieRequestCultureProvider(languageConfig));
             });
+            foreach (var controllerDllName in startUpConfiguration.ExternalControllerDlls)
+            {
+                var customControllerAssembly = Assembly.LoadFrom(
+                    controllerDllName);
+                services.AddControllers()
+                    .AddApplicationPart(customControllerAssembly);
+            }
         }
 
         private void ConfigureAuthentication(IServiceCollection services)

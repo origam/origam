@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Origam.Extensions;
 
 namespace Origam.Server.Configuration
 {
@@ -83,6 +84,19 @@ namespace Origam.Server.Configuration
                     throw new Exception($"The PathToClientApp \"{pathToClientApp}\" must be an absolute path");
                 }
                 return pathToClientApp;
+            }
+        } 
+        
+        public string[] ExternalControllerDlls
+        {
+            get
+            {
+                var subSection = configuration.GetSection("ExternalControllerDlls");
+                if (!subSection.Exists())
+                {
+                    return Array.Empty<string>();
+                }
+                return subSection.GetStringArrayOrEmpty();
             }
         }   
         
