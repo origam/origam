@@ -29,6 +29,7 @@ using Origam.Schema.GuiModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Origam.Schema.MenuModel
 {
@@ -311,6 +312,7 @@ namespace Origam.Schema.MenuModel
 		[Category("Data Loading")]
 		[TypeConverter(typeof(MenuFormReferenceListEntityConverter))]
 		[XmlReference("listEntity", "ListEntityId")]
+		[MergeIgnoreEntityActionsOnlyRule]
 		public DataStructureEntity ListEntity
 		{
 			get => (DataStructureEntity)PersistenceProvider.RetrieveInstance(
@@ -506,5 +508,86 @@ namespace Origam.Schema.MenuModel
 		public bool IsLazyLoaded => ListDataStructure != null;
 
 		#endregion
+	}
+	
+	[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+	public class MergeIgnoreEntityActionsOnlyRule : AbstractModelElementRuleAttribute 
+	{
+		public MergeIgnoreEntityActionsOnlyRule()
+		{
+		}
+
+		public override Exception CheckRule(object instance)
+		{
+			return new NotSupportedException(ResourceUtils.GetString("MemberNameRequired"));
+		}
+
+		public override Exception CheckRule(object instance, string memberName)
+		{
+			if(string.IsNullOrEmpty(memberName)) CheckRule(instance);
+			if(memberName != "ListEntity") throw new Exception(nameof(MergeIgnoreEntityActionsOnlyRule)+" can be only applied to ListEntity property");  
+			if (instance is not FormReferenceMenuItem menuItem) return null;
+			if (menuItem.ListEntity == null) return null;
+			
+			string errorMessages = string.Join("\n", 
+				menuItem.ListEntity.Entity.ChildItems
+					.ToGeneric()
+					.OfType<EntityWorkflowAction>()
+					.Select(action => GetErrorOrNull(action, menuItem))
+					.Where(error => error != null));
+			if (string.IsNullOrWhiteSpace(errorMessages))
+			{
+				return null;
+			}
+			return new Exception($"All {nameof(EntityWorkflowAction)}s defined under the ListEntity must have their MergeType se to \"Ignore\"\n{errorMessages}");
+		}
+		
+		private string GetErrorOrNull(EntityWorkflowAction action, FormReferenceMenuItem menuItem)
+		{
+			if (action.MergeType == ServiceOutputMethod.Ignore)
+			{
+				return null;
+			}
+			if (menuItem.Screen == null)
+			{
+				return null;
+			}
+
+			var screenConditions = action.ChildItems
+				.ToGeneric()
+				.OfType<ScreenCondition>()
+				.ToList();
+			bool shouldShowOnScreen = screenConditions.Any(
+				screenCondition =>
+					screenCondition.ScreenId == menuItem.ScreenId);
+			if (screenConditions.Count > 0 && shouldShowOnScreen ||
+			    screenConditions.Count == 0)
+			{
+				return
+					$"Action {action.Name} ({action.Id}) does not have the MergeType set to \"Ignore\"";
+			}
+
+			var screenSectionIds = menuItem.Screen.ChildItems
+				.ToGeneric()
+				.OfType<ControlSetItem>()
+				.Select(x => x.Id)
+				.ToList();
+
+			var screenSectionConditions = action.ChildItems
+				.ToGeneric()
+				.OfType<ScreenSectionCondition>()
+				.ToList();
+			bool shouldShowOnScreenSection = screenSectionConditions
+				.Any(screenCondition =>
+					screenSectionIds.Contains(screenCondition
+						.ScreenSectionId));
+			if (screenSectionConditions.Count > 0 && shouldShowOnScreenSection ||
+			    screenSectionConditions.Count == 0)
+			{
+				return
+					$"Action {action.Name} ({action.Id}) does not have the MergeType set to \"Ignore\"";
+			}
+			return null;
+		}
 	}
 }
