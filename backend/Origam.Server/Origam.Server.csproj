@@ -66,7 +66,7 @@
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
