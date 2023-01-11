@@ -122,7 +122,6 @@
     <Compile Include="IProjectBuilder.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectBuilder.cs" />
-    <Compile Include="Builders\SettingsFinalConnectionStringBuilder.cs" />
     <Compile Include="TaskListViewItem.cs" />
     <Compile Include="TaskState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

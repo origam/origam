@@ -103,7 +103,7 @@ namespace OrigamArchitect
             this.pageDocker = new AeroWizard.WizardPage();
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
+            this.dockerPortLabel = new System.Windows.Forms.Label();
             this.txtDockerPort = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -844,7 +844,7 @@ namespace OrigamArchitect
             // 
             this.pageDocker.Controls.Add(this.label23);
             this.pageDocker.Controls.Add(this.label22);
-            this.pageDocker.Controls.Add(this.label20);
+            this.pageDocker.Controls.Add(this.dockerPortLabel);
             this.pageDocker.Controls.Add(this.txtDockerPort);
             this.pageDocker.Controls.Add(this.label21);
             this.pageDocker.Controls.Add(this.label19);
@@ -876,12 +876,12 @@ namespace OrigamArchitect
             // 
             // label20
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(16, 115);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(69, 15);
-            this.label20.TabIndex = 18;
-            this.label20.Text = "Docker Port";
+            this.dockerPortLabel.AutoSize = true;
+            this.dockerPortLabel.Location = new System.Drawing.Point(16, 115);
+            this.dockerPortLabel.Name = "dockerPortLabel";
+            this.dockerPortLabel.Size = new System.Drawing.Size(69, 15);
+            this.dockerPortLabel.TabIndex = 18;
+            this.dockerPortLabel.Text = "Docker Port";
             // 
             // txtDockerPort
             // 
@@ -1440,7 +1440,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label dockerPortLabel;
         private System.Windows.Forms.TextBox txtDockerPort;
         private WizardPage pageWebUser;
         private System.Windows.Forms.TextBox txtWebUserPassword;

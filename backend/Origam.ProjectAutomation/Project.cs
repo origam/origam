@@ -260,18 +260,6 @@ namespace Origam.ProjectAutomation
             }
         }
 
-        public string BuilderModelConnectionString
-        {
-            get
-            {
-                return _builderModelConnectionString;
-            }
-            set
-            {
-                _builderModelConnectionString = value;
-            }
-        }
-
         public string BasePackageId
         {
             get
@@ -331,14 +319,6 @@ namespace Origam.ProjectAutomation
             set
             {
                 _baseUrl = value;
-            }
-        }
-
-        public string FullUrl
-        {
-            get
-            {
-                return BaseUrl + "/" + Url;
             }
         }
 
