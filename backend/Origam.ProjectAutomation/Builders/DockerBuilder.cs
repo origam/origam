@@ -30,11 +30,12 @@ namespace Origam.ProjectAutomation.Builders
 {
     public class DockerBuilder : AbstractBuilder
     {
+        public static readonly string DockerFolderName = "Docker";
         public override string Name => "Create Docker run script";
         private string newProjectFolder;
         public override void Execute(Project project)
         {
-            newProjectFolder = Path.Combine(project.SourcesFolder, "NewProject");
+            newProjectFolder = Path.Combine(project.SourcesFolder, DockerFolderName);
             if (Directory.Exists(newProjectFolder))
             {
                 string envfile = Path.Combine(newProjectFolder, project.Name + ".env");
@@ -56,7 +57,7 @@ namespace Origam.ProjectAutomation.Builders
                 {
                     string text = File.ReadAllText(cmdfile);
                     text = text.Replace("{envfilepath}", Path.Combine(project.SourcesFolder,
-                        "NewProject", project.DockerEnvPath));
+                        DockerFolderName, project.DockerEnvPath));
                     text = text.Replace("{parentpathproject}", project.SourcesFolder);
                     text = text.Replace("{dockerport}", project.DockerPort.ToString());
                     File.WriteAllText(cmdfile, text);

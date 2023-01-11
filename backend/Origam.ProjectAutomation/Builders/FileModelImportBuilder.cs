@@ -28,13 +28,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using Origam.ProjectAutomation.Builders;
 using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
 {
     public class FileModelImportBuilder: AbstractBuilder
     {
-        private const string ModelZipName = "DefaultModel.zip";
         private string modelSourcesFolder;
         private string sourcesFolder;
         public override string Name => "Import Model";
@@ -70,7 +70,7 @@ namespace Origam.ProjectAutomation
             DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
             if (dir.Exists)
             {
-                string newdir = Path.Combine(sourcesFolder, "NewProject");
+                string newdir = Path.Combine(sourcesFolder, DockerBuilder.DockerFolderName);
                 if (!Directory.Exists(newdir))
                 {
                     Directory.CreateDirectory(newdir);
@@ -155,7 +155,7 @@ namespace Origam.ProjectAutomation
         }
         private string GetFromDockerEnvFile(Project project)
         {
-            string path = Path.Combine(project.SourcesFolder, "NewProject");
+            string path = Path.Combine(project.SourcesFolder, DockerBuilder.DockerFolderName);
             if(!Directory.Exists(path))
             {
                 return null;
