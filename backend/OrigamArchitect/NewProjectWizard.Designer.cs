@@ -88,7 +88,7 @@ namespace OrigamArchitect
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.pageGit = new AeroWizard.WizardPage();
-            this.dockerSourceFolder = new System.Windows.Forms.Label();
+            this.dockerSourceFolderLabel = new System.Windows.Forms.Label();
             this.txtdosourcefolder = new System.Windows.Forms.TextBox();
             this.lblgitemail = new System.Windows.Forms.Label();
             this.lblgituser = new System.Windows.Forms.Label();
@@ -715,7 +715,7 @@ namespace OrigamArchitect
             // 
             // pageGit
             // 
-            this.pageGit.Controls.Add(this.dockerSourceFolder);
+            this.pageGit.Controls.Add(this.dockerSourceFolderLabel);
             this.pageGit.Controls.Add(this.txtdosourcefolder);
             this.pageGit.Controls.Add(this.lblgitemail);
             this.pageGit.Controls.Add(this.lblgituser);
@@ -737,12 +737,12 @@ namespace OrigamArchitect
             // 
             // dockerSourceFolder
             // 
-            this.dockerSourceFolder.AutoSize = true;
-            this.dockerSourceFolder.Location = new System.Drawing.Point(3, 280);
-            this.dockerSourceFolder.Name = "dockerSourceFolder";
-            this.dockerSourceFolder.Size = new System.Drawing.Size(117, 15);
-            this.dockerSourceFolder.TabIndex = 1;
-            this.dockerSourceFolder.Text = "Docker Model Folder";
+            this.dockerSourceFolderLabel.AutoSize = true;
+            this.dockerSourceFolderLabel.Location = new System.Drawing.Point(3, 280);
+            this.dockerSourceFolderLabel.Name = "dockerSourceFolderLabel";
+            this.dockerSourceFolderLabel.Size = new System.Drawing.Size(117, 15);
+            this.dockerSourceFolderLabel.TabIndex = 1;
+            this.dockerSourceFolderLabel.Text = "Docker Model Folder";
             // 
             // txtdosourcefolder
             // 
@@ -1461,7 +1461,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.TextBox txtWebUserPasswordConfirmed;
         private System.Windows.Forms.Label dockerlabel;
         private System.Windows.Forms.TextBox txtDockerApiAdress;
-        private System.Windows.Forms.Label dockerSourceFolder;
+        private System.Windows.Forms.Label dockerSourceFolderLabel;
         private System.Windows.Forms.TextBox txtdosourcefolder;
         private System.Windows.Forms.Label dockerlabeldescription;
     }

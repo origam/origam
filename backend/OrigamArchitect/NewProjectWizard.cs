@@ -526,6 +526,7 @@ namespace OrigamArchitect
         {
             if (Deployment == DeploymentType.DockerPostgres)
             {
+                dockerSourceFolderLabel.Show();
                 txtdosourcefolder.Show();
                 dockerlabel.Show();
                 dockerlabeldescription.Show();
@@ -533,6 +534,7 @@ namespace OrigamArchitect
             }
             else
             {
+                dockerSourceFolderLabel.Hide();
                 txtdosourcefolder.Hide();
                 dockerlabel.Hide();
                 dockerlabeldescription.Hide();
