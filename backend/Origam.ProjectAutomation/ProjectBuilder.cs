@@ -103,7 +103,6 @@ namespace Origam.ProjectAutomation
                 tasks.Add(new DataDatabaseStructureBuilder());
                 if (_project.Deployment == DeploymentType.Local)
                 {
-                    tasks.Add(new CopyServerFilesBuilder());
                     tasks.Add(new ModifyConfigurationFilesBuilder());
                     tasks.Add(configureWebServerBuilder);
                 }
@@ -127,7 +126,6 @@ namespace Origam.ProjectAutomation
 
                 if (_project.Deployment == DeploymentType.Local)
                 {
-                    tasks.Add(new CopyServerFilesBuilder());
                     tasks.Add(new ModifyConfigurationFilesBuilder());
                     tasks.Add(configureWebServerBuilder);
                 }

@@ -114,7 +114,6 @@
     <Compile Include="Builders\DataDatabaseStructureBuilder.cs" />
     <Compile Include="Builders\DataDatabaseBuilder.cs" />
     <Compile Include="AbstractDatabaseBuilder.cs" />
-    <Compile Include="Builders\CopyServerFilesBuilder.cs" />
     <Compile Include="Builders\ConfigureWebServerBuilder.cs" />
     <Compile Include="Builders\ModifyConfigurationFilesBuilder.cs" />
     <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />

@@ -25,6 +25,7 @@ using Origam.Git;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using static Origam.NewProjectEnums;
@@ -171,9 +172,7 @@ namespace Origam.ProjectAutomation
         }
         private void UnzipDefaultModel(Project project)
         {
-            string zipPath =
-                Path.Combine(project.ServerTemplateFolder,"Model", ModelZipName);
-            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, sourcesFolder);
+            ZipFile.ExtractToDirectory(project.DefaultModelPath, sourcesFolder);
         }
         private void CreateSourceFolder()
         {

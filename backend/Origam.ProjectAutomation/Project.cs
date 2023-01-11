@@ -45,7 +45,6 @@ namespace Origam.ProjectAutomation
         private string _builderDataConnectionString;
         private string _builderModelConnectionString;
         private string _architectUserName;
-        private string _serverTemplateFolder;
         private string _newPackageId;
         private string _sourcesFolder;
         private string _baseUrl;
@@ -309,17 +308,7 @@ namespace Origam.ProjectAutomation
             }
         }
 
-        public string ServerTemplateFolder
-        {
-            get
-            {
-                return _serverTemplateFolder;
-            }
-            set
-            {
-                _serverTemplateFolder = value;
-            }
-        }
+        public string DefaultModelPath { get; set; }
 
         public string SourcesFolder
         {
