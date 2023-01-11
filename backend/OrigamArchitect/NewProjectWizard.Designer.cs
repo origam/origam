@@ -169,9 +169,6 @@ namespace OrigamArchitect
             // 
             // wizard1
             // 
-            this.wizard1.BackColor = System.Drawing.Color.White;
-            this.wizard1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wizard1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wizard1.Location = new System.Drawing.Point(0, 0);
             this.wizard1.Name = "wizard1";
             this.wizard1.Pages.Add(this.pageWelcome);
@@ -541,11 +538,11 @@ namespace OrigamArchitect
             this.lblTemplateFolder.AutoSize = true;
             this.lblTemplateFolder.Location = new System.Drawing.Point(4, 114);
             this.lblTemplateFolder.Name = "lblTemplateFolder";
-            this.lblTemplateFolder.Size = new System.Drawing.Size(91, 15);
+            this.lblTemplateFolder.Size = new System.Drawing.Size(82, 15);
             this.lblTemplateFolder.TabIndex = 7;
             this.lblTemplateFolder.Text = "Default Model";
             // 
-            // txtTemplateFolder
+            // defaultModelpath
             // 
             this.defaultModelpath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -735,7 +732,7 @@ namespace OrigamArchitect
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
             this.pageGit.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageGit_Init);
             // 
-            // dockerSourceFolder
+            // dockerSourceFolderLabel
             // 
             this.dockerSourceFolderLabel.AutoSize = true;
             this.dockerSourceFolderLabel.Location = new System.Drawing.Point(3, 280);
@@ -746,7 +743,7 @@ namespace OrigamArchitect
             // 
             // txtdosourcefolder
             // 
-            this.txtdosourcefolder.Location = new System.Drawing.Point(163, 276);
+            this.txtdosourcefolder.Location = new System.Drawing.Point(160, 277);
             this.txtdosourcefolder.Name = "txtdosourcefolder";
             this.txtdosourcefolder.Size = new System.Drawing.Size(530, 23);
             this.txtdosourcefolder.TabIndex = 18;
@@ -754,7 +751,7 @@ namespace OrigamArchitect
             // lblgitemail
             // 
             this.lblgitemail.AutoSize = true;
-            this.lblgitemail.Location = new System.Drawing.Point(19, 122);
+            this.lblgitemail.Location = new System.Drawing.Point(3, 122);
             this.lblgitemail.Name = "lblgitemail";
             this.lblgitemail.Size = new System.Drawing.Size(36, 15);
             this.lblgitemail.TabIndex = 17;
@@ -763,7 +760,7 @@ namespace OrigamArchitect
             // lblgituser
             // 
             this.lblgituser.AutoSize = true;
-            this.lblgituser.Location = new System.Drawing.Point(19, 76);
+            this.lblgituser.Location = new System.Drawing.Point(3, 76);
             this.lblgituser.Name = "lblgituser";
             this.lblgituser.Size = new System.Drawing.Size(30, 15);
             this.lblgituser.TabIndex = 16;
@@ -771,14 +768,14 @@ namespace OrigamArchitect
             // 
             // txtGitEmail
             // 
-            this.txtGitEmail.Location = new System.Drawing.Point(163, 119);
+            this.txtGitEmail.Location = new System.Drawing.Point(160, 119);
             this.txtGitEmail.Name = "txtGitEmail";
             this.txtGitEmail.Size = new System.Drawing.Size(204, 23);
             this.txtGitEmail.TabIndex = 15;
             // 
             // txtGitUser
             // 
-            this.txtGitUser.Location = new System.Drawing.Point(163, 73);
+            this.txtGitUser.Location = new System.Drawing.Point(160, 73);
             this.txtGitUser.Name = "txtGitUser";
             this.txtGitUser.Size = new System.Drawing.Size(204, 23);
             this.txtGitUser.TabIndex = 14;
