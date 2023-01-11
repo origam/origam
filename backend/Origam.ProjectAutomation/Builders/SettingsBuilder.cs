@@ -60,10 +60,6 @@ namespace Origam.ProjectAutomation
             _setting.ServerUrl = project.FullUrl;
             _setting.DataDataService = project.GetDataDataService;
             _setting.SchemaDataService = project.GetDataDataService;
-            if (project.Deployment == DeploymentType.Local)
-            {
-                _setting.ServerLocalPath = project.BinFolder;
-            }
             _settingsIndex = _settings.Add(_setting);
             project.ActiveConfigurationIndex = _settingsIndex;
             ConfigurationManager.SetActiveConfiguration(_setting);
