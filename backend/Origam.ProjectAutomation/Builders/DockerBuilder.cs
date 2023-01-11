@@ -56,10 +56,11 @@ namespace Origam.ProjectAutomation.Builders
                 if (project.Deployment == DeploymentType.Docker)
                 {
                     string text = File.ReadAllText(cmdFile);
-                    text = text.Replace("{envfilepath}", Path.Combine(project.SourcesFolder,
+                    text = text.Replace("{envFilePath}", Path.Combine(project.SourcesFolder,
                         DockerFolderName, project.DockerEnvPath));
-                    text = text.Replace("{parentpathproject}", project.SourcesFolder);
-                    text = text.Replace("{dockerport}", project.DockerPort.ToString());
+                    text = text.Replace("{parentPathProject}", project.SourcesFolder);
+                    text = text.Replace("{dockerPort}", project.DockerPort.ToString());
+                    text = text.Replace("{projectName}", project.Name);
                     File.WriteAllText(cmdFile, text);
                 }
                 else if(project.Deployment == DeploymentType.DockerPostgres)

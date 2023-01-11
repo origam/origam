@@ -70,15 +70,15 @@ namespace Origam.ProjectAutomation
             DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
             if (dir.Exists)
             {
-                string newdir = Path.Combine(sourcesFolder, DockerBuilder.DockerFolderName);
-                if (!Directory.Exists(newdir))
+                string newDir = Path.Combine(sourcesFolder, DockerBuilder.DockerFolderName);
+                if (!Directory.Exists(newDir))
                 {
-                    Directory.CreateDirectory(newdir);
+                    Directory.CreateDirectory(newDir);
                 }
-                string cmddocker = Path.Combine(newdir, project.Name + ".cmd");
-                if (!File.Exists(cmddocker))
+                string cmdDocker = Path.Combine(newDir, project.Name + ".cmd");
+                if (!File.Exists(cmdDocker))
                 {
-                  using (StreamWriter writer = new StreamWriter(cmddocker, false))
+                  using (StreamWriter writer = new StreamWriter(cmdDocker, false))
                   {
                      writer.WriteLine(CreateCmdTemplate());
                   }
@@ -93,7 +93,7 @@ namespace Origam.ProjectAutomation
         private StringBuilder CreateCmdTemplate()
         {
             StringBuilder template = new StringBuilder();
-            template.AppendLine("docker run --env-file {envfilepath} -it -v {parentpathproject}:/home/origam/HTML5/data/origam -p {dockerport}:8080 origam/server:master-latest");
+            template.AppendLine("docker run --name {projectName} --env-file {envFilePath} -it -v {parentPathProject}:/home/origam/HTML5/data/origam -p {dockerPort}:8080 origam/server:master-latest");
             return template;
         }
 
