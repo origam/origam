@@ -633,14 +633,10 @@
               </Component>
             </Directory>
             <Directory Id="ProjectTemplates" Name="Project Templates">
-              <Directory Id="DefaultTemplate" Name="Default">
-                <Directory Id="MODEL_ROOT_SOURCE" Name="Model">
-                  <Component Id="DEFAULTMODEL.ZIP" DiskId="1" Guid="2267E558-BAE7-456E-869B-B27313A916D0">
-                    <File Id="DEFAULTMODEL.ZIP" Name="DefaultModel.zip" Source="model_root_source\DefaultModel.zip">
-                    </File>
-                  </Component>
-                </Directory>
-              </Directory>
+             <Component Id="DEFAULTMODEL.ZIP" DiskId="1" Guid="2267E558-BAE7-456E-869B-B27313A916D0">
+				<File Id="DEFAULTMODEL.ZIP" Name="DefaultModel.zip" Source="model_root_source\DefaultModel.zip">
+				</File>
+			  </Component>
             </Directory>
           </Directory>
         </Directory>
