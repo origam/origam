@@ -243,6 +243,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			idPropertyElement.SetAttribute("Name", primaryKeyColumnName);
 			idPropertyElement.SetAttribute("Entity", "String");
 			idPropertyElement.SetAttribute("Column", "Text");
+			idPropertyElement.SetAttribute("AlwaysHidden", "true");
 
 			XmlElement formRootElement = parentNode.OwnerDocument.CreateElement("FormRoot");
 			formRootElement.SetAttribute("Type", "Canvas");
