@@ -36,6 +36,10 @@ export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
         <div>
           {T("Origam image version: {0}","origam_image_version", this.props.aboutInfo.serverVersion)}
         </div>
+        <div>
+          {"Commit: "}
+          <a href={this.props.aboutInfo.linkToCommit}>{this.props.aboutInfo.commitId}</a>
+        </div>
         <br/>
         {customClientBuildVersion &&
           <>
