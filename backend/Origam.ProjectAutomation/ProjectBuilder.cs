@@ -98,12 +98,10 @@ namespace Origam.ProjectAutomation
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);
                 tasks.Add(new FileModelImportBuilder());
-                tasks.Add(new SettingsFinalConnectionStringBuilder());
                 tasks.Add(new FileModelInitBuilder());
                 tasks.Add(new DataDatabaseStructureBuilder());
                 if (_project.Deployment == DeploymentType.Local)
                 {
-                    tasks.Add(new CopyServerFilesBuilder());
                     tasks.Add(new ModifyConfigurationFilesBuilder());
                     tasks.Add(configureWebServerBuilder);
                 }
@@ -121,13 +119,11 @@ namespace Origam.ProjectAutomation
                 tasks.Add(settingsBuilder);
                 tasks.Add(dataDatabaseBuilder);
                 tasks.Add(new ApplyDatabasePermissionsBuilder());
-                tasks.Add(new SettingsFinalConnectionStringBuilder());
                 tasks.Add(new FileModelInitBuilder());
                 tasks.Add(new DataDatabaseStructureBuilder());
 
                 if (_project.Deployment == DeploymentType.Local)
                 {
-                    tasks.Add(new CopyServerFilesBuilder());
                     tasks.Add(new ModifyConfigurationFilesBuilder());
                     tasks.Add(configureWebServerBuilder);
                 }

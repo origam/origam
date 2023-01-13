@@ -250,6 +250,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default model file does not exist..
+        /// </summary>
+        internal static string DefaultModelFileNotExists_Message {
+            get {
+                return ResourceManager.GetString("DefaultModelFileNotExists_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deployment Scripts.
         /// </summary>
         internal static string DeploymentScripts_Title {
@@ -1155,15 +1164,6 @@ namespace OrigamArchitect {
         internal static string SourceXml_MenuItem {
             get {
                 return ResourceManager.GetString("SourceXml_MenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Template folder does not exist..
-        /// </summary>
-        internal static string TemplateFolderNotExists_Message {
-            get {
-                return ResourceManager.GetString("TemplateFolderNotExists_Message", resourceCulture);
             }
         }
         
