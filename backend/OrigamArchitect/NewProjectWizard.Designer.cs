@@ -69,7 +69,7 @@ namespace OrigamArchitect
             this.btnSelectBinFolderRoot = new System.Windows.Forms.Button();
             this.lblTemplateFolderDescription = new System.Windows.Forms.Label();
             this.lblTemplateFolder = new System.Windows.Forms.Label();
-            this.defaultModelpath = new System.Windows.Forms.TextBox();
+            this.defaultModelPath = new System.Windows.Forms.TextBox();
             this.lblBinFolderRootDescription = new System.Windows.Forms.Label();
             this.lblBinFolderRoot = new System.Windows.Forms.Label();
             this.txtBinFolderRoot = new System.Windows.Forms.TextBox();
@@ -490,7 +490,7 @@ namespace OrigamArchitect
             this.pagePaths.Controls.Add(this.btnSelectBinFolderRoot);
             this.pagePaths.Controls.Add(this.lblTemplateFolderDescription);
             this.pagePaths.Controls.Add(this.lblTemplateFolder);
-            this.pagePaths.Controls.Add(this.defaultModelpath);
+            this.pagePaths.Controls.Add(this.defaultModelPath);
             this.pagePaths.Controls.Add(this.lblBinFolderRootDescription);
             this.pagePaths.Controls.Add(this.lblBinFolderRoot);
             this.pagePaths.Controls.Add(this.txtBinFolderRoot);
@@ -544,12 +544,12 @@ namespace OrigamArchitect
             // 
             // defaultModelpath
             // 
-            this.defaultModelpath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.defaultModelPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.defaultModelpath.Location = new System.Drawing.Point(161, 110);
-            this.defaultModelpath.Name = "defaultModelpath";
-            this.defaultModelpath.Size = new System.Drawing.Size(533, 23);
-            this.defaultModelpath.TabIndex = 6;
+            this.defaultModelPath.Location = new System.Drawing.Point(161, 110);
+            this.defaultModelPath.Name = "defaultModelPath";
+            this.defaultModelPath.Size = new System.Drawing.Size(533, 23);
+            this.defaultModelPath.TabIndex = 6;
             // 
             // lblBinFolderRootDescription
             // 
@@ -1369,7 +1369,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label lblBinFolderRootDescription;
         private System.Windows.Forms.Label lblTemplateFolderDescription;
         private System.Windows.Forms.Label lblTemplateFolder;
-        private System.Windows.Forms.TextBox defaultModelpath;
+        private System.Windows.Forms.TextBox defaultModelPath;
         private System.Windows.Forms.Label lblSourcesFolderDescription;
         private System.Windows.Forms.Label lblSourcesFolder;
         private System.Windows.Forms.TextBox txtSourcesFolder;

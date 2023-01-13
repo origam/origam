@@ -321,7 +321,7 @@ namespace OrigamArchitect
         }
         private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
         {
-            if (string.IsNullOrEmpty(defaultModelpath.Text))
+            if (string.IsNullOrEmpty(defaultModelPath.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterTemplateFolder_Message, strings.NewProjectWizard_Title, null);
                 e.Cancel = true;
@@ -333,7 +333,7 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if (!File.Exists(defaultModelpath.Text))
+            if (!File.Exists(defaultModelPath.Text))
             {
                 AsMessageBox.ShowError(this, strings.DefaultModelFileNotExists_Message, strings.NewProjectWizard_Title, null);
                 e.Cancel = true;
@@ -350,7 +350,7 @@ namespace OrigamArchitect
                 }
                 _project.BinFolder = Path.Combine(txtBinFolderRoot.Text, txtName.Text);
             }
-            _project.DefaultModelPath = defaultModelpath.Text;
+            _project.DefaultModelPath = defaultModelPath.Text;
             _project.GitRepository = gitrepo.Checked;
         }
 
@@ -366,7 +366,7 @@ namespace OrigamArchitect
 
         private void btnSelectTemplateFolder_Click(object sender, EventArgs e)
         {
-            SelectFolder(defaultModelpath);
+            SelectFolder(defaultModelPath);
         }
 
         private void SelectFolder(TextBox targetControl)
@@ -385,7 +385,7 @@ namespace OrigamArchitect
             txtSourcesFolder.Text = _settings.SourcesFolder;
             txtdosourcefolder.Text = _settings.DockerSourceFolder;
             txtBinFolderRoot.Text = _settings.BinFolder;
-            defaultModelpath.Text = Path.Combine(Application.StartupPath, @"Project Templates\DefaultModel.zip");
+            defaultModelPath.Text = Path.Combine(Application.StartupPath, @"Project Templates\DefaultModel.zip");
             txtBinFolderRoot.Visible = false;
             btnSelectBinFolderRoot.Visible = false;
             lblBinFolderRoot.Visible = false;
