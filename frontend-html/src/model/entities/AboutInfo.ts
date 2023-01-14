@@ -24,7 +24,7 @@ import { getApi } from "model/selectors/getApi";
 
 export class About {
   @observable
-  info: IAboutInfo = {serverVersion: ""};
+  info: IAboutInfo = {commitId: "", linkToCommit: "", serverVersion: ""};
 
   update(): Promise<void> {
     return runInFlowWithHandler({
