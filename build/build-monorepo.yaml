@@ -64,7 +64,7 @@ jobs:
          restoreSolution: '$(Agent.BuildDirectory)/s/backend/**/*.sln'
          feedsToUse: 'select'
      - powershell: |
-         $commitId = (git -C $(Agent.BuildDirectory)\s\origam rev-parse HEAD)
+         $commitId = (git -C $(Agent.BuildDirectory)\s rev-parse HEAD)
          Write-Host $commitId
          Write-Host "##vso[task.setvariable variable=ORIGAM_ORIGAM_COMMIT_ID;]$commitId"
        displayName: Store origam-origam commit id
