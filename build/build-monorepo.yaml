@@ -80,6 +80,7 @@ jobs:
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "ServerVersion Placeholder to be changed at build time", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "LinkToCommit Placeholder to be changed at build time", "https://github.com/origam/origam/commit/$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
         (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs") -replace "CommitId Placeholder to be changed at build time", "$(ORIGAM_ORIGAM_COMMIT_ID)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Controller\AboutController.cs"
+        (Get-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml") -replace "0.0.0.0", "$(VERSION_NUMBER)" | Set-Content "$(Agent.BuildDirectory)\s\backend\Origam.Server\Views\Shared\_Layout.cshtml"
        displayName: 'Build Number'
      - task: VSBuild@1
        displayName: 'Build architect'
