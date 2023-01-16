@@ -51,7 +51,7 @@
   "metric_middle_tool_tip": "Compact",
   "metric_small_tool_tip": "Extra Compact",
   "about_application": "sur",
-  "origam_image_version": "Version de l'image Origam: {0}",
+  "origam_image_version": "Version de Origam: {0}",
   "custom_client_version": "Version de compilation de client personnalisée: {0}",
   "used_origam_plugins": "Plugins Origam utilisés:",
   "copyright_attributions": "Attribution des droits d'auteur",
