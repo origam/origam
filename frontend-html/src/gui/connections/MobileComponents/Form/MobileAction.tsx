@@ -68,7 +68,7 @@ export const MobileActionLink: React.FC<{
       className={S.root}
       onClick={onClick}
     >
-      {props.linkAction.caption})
+      {props.linkAction.caption}
     </button>
   );
 }
