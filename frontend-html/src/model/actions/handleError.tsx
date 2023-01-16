@@ -32,6 +32,15 @@ export function handleError(ctx: any) {
       // finished (RowStates for example)
       return;
     }
+    if (error.code === "ERR_NETWORK" && error.name === "AxiosError"){
+      yield*selectors.error.getDialogController(ctx).pushError(
+        T(
+          "Network Unavailable",
+          "network_unavailable"
+        )
+      );
+      return;
+    }
     if (error.response &&
         error.response.status === 404 &&
         error.response.data.message.includes("Origam.Server.RowNotFoundException")) {
