@@ -33,6 +33,8 @@ export const ActionList: React.FC<{
     >
       {props.actions.map(action =>
         <MobileAction
+          key={action.id}
+          onClick={async () => await props.mobileState.close()}
           action={action}
           mobileState={props.mobileState}/>
       )}

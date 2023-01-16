@@ -28,11 +28,15 @@ import { ActionList } from "gui/connections/MobileComponents/Form/ActionList";
 
 export const MobileAction: React.FC<{
   action: IAction,
-  mobileState: MobileState
+  mobileState: MobileState,
+  onClick?: ()=> Promise<void>
 }> = (props) => {
 
-  function onClick(event: React.MouseEvent<HTMLButtonElement>) {
-    uiActions.actions.onActionClick(props.action)(event, props.action)
+  async function onClick(event: React.MouseEvent<HTMLButtonElement>) {
+    if (props.onClick){
+      await props.onClick();
+    }
+    await uiActions.actions.onActionClick(props.action)(event, props.action);
   }
 
   return (
