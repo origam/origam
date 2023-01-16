@@ -27,6 +27,7 @@ using Origam.Schema;
 using Origam.Services;
 using Origam.Workbench.Services;
 using System.Data;
+using Origam.DA.ObjectPersistence;
 using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
@@ -146,8 +147,8 @@ namespace Origam.Workflow
                 
                 case "TraceObject":
                     Guid objectId = Parameters.Get<Guid>("ObjectId");
-                    var step = persistenceService.SchemaProvider
-                        .RetrieveInstance<IWorkflowStep>(
+                    var traceable = persistenceService.SchemaProvider
+                        .RetrieveInstance<ITraceable>(
                             objectId, 
                             useCache: true);
                     string traceType = Parameters.Get<string>("TraceType");
@@ -155,9 +156,9 @@ namespace Origam.Workflow
                     {
                         throw new ArgumentException($"\"{traceType}\" cannot be parsed to {nameof(Trace)}");
                     }
-                    step.TraceLevel = trace;
-                    persistenceService.SchemaProvider.Persist(step);
-                    _result = step.TraceLevel;
+                    traceable.TraceLevel = trace;
+                    persistenceService.SchemaProvider.Persist(traceable as IPersistent);
+                    _result = traceable.TraceLevel;
                     break;
 
                 default:

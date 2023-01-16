@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2021 Advantage Solutions, s. r. o.
 
@@ -19,19 +19,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Xml;
-using System.Collections;
-using Origam.Service.Core;
+namespace Origam;
 
-namespace Origam.BI
+public interface ITraceInfoContainer
 {
-	/// <summary>
-	/// Summary description for IReportService.
-	/// </summary>
-	public interface IReportService : ITraceInfoContainer
-    {
-		void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters);
-		object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction);
-	}
+    void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo);
 }

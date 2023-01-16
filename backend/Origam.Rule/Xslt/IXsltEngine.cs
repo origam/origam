@@ -32,7 +32,7 @@ namespace Origam.Rule.Xslt
     /// <summary>
     /// Summary description for AsXslTransform.
     /// </summary>
-    public interface IXsltEngine : ITracable
+    public interface IXsltEngine : ITraceInfoContainer
     {
         IPersistenceProvider PersistenceProvider {get; set;}
         string TraceStepName {get; set;}
@@ -40,6 +40,7 @@ namespace Origam.Rule.Xslt
         Guid TraceWorkflowId {get; set;}
         bool Trace { get; set; }
 
+        void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo);
         IXmlContainer Transform(IXmlContainer data, Guid transformationId, Hashtable parameters, string transactionId,
             IDataStructure outputStructure, bool validateOnly);
         IXmlContainer Transform(IXmlContainer data, Guid transformationId, 
