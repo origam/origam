@@ -88,7 +88,7 @@ export class TextEditor extends React.Component<{
     if (this.props.value.includes("\\n")) {
       this.longTextRowList = this.props.value.split("\\n");
     } else {
-      this.longTextRowList = [this.props.value.substring(0, 5000) + "...(TRUNCATED)"]
+      this.longTextRowList = [this.props.value.substring(0, 5000) + "\n...(TRUNCATED)"]
     }
   }
 
