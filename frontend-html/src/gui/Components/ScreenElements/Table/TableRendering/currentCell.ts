@@ -106,7 +106,7 @@ export const currentProperty = () => {
 export const currentCellText = Memoized(() => {
   const value = currentCellValue();
   let text = dataTable().resolveCellText(currentProperty(), value);
-  if(text !== undefined && text !== null && text.length > 500){
+  if (text !== undefined && text !== null && text.length > 500){
     text = text.substring(0, 500) + "...(TRUNCATED)";
   }
   if (text && currentProperty().multiline) {
