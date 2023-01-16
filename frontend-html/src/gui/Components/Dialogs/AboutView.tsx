@@ -38,7 +38,7 @@ export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
         </div>
         <div>
           {"Commit: "}
-          <a href={this.props.aboutInfo.linkToCommit}>{this.props.aboutInfo.commitId}</a>
+          <a target="_blank" rel="noopener noreferrer" href={this.props.aboutInfo.linkToCommit}>{this.props.aboutInfo.commitId}</a>
         </div>
         <br/>
         {customClientBuildVersion &&
