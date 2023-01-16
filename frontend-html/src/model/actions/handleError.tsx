@@ -32,7 +32,7 @@ export function handleError(ctx: any) {
       // finished (RowStates for example)
       return;
     }
-    if(error.code === "ERR_NETWORK" && error.name === "AxiosError"){
+    if (error.code === "ERR_NETWORK" && error.name === "AxiosError"){
       yield*selectors.error.getDialogController(ctx).pushError(
         T(
           "Network Unavailable",
