@@ -22,6 +22,7 @@ import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import React from "react";
 import { getMobileState } from "model/selectors/getMobileState";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { EditLayoutState } from "model/entities/MobileState/MobileLayoutState";
 
 export function getDialogStack(ctx: any) {
   return getApplication(ctx).dialogStack;
@@ -29,14 +30,14 @@ export function getDialogStack(ctx: any) {
 
 export function showDialog(ctx: any, key: string, component: React.ReactElement) {
   if(isMobileLayoutActive(ctx)){
-    const closeFunction = () => {
-      runInFlowWithHandler({ctx: ctx, action: async ()=> {
-          getMobileState(ctx).dialogComponent = null;
-        }
-      })
-    };
-    getMobileState(ctx).dialogComponent = component;
-    return closeFunction;
+    const mobileState =  getMobileState(ctx);
+    let layoutBefore = mobileState.layoutState;
+    mobileState.layoutState = new EditLayoutState(
+      component,
+    "",
+      layoutBefore
+  );
+    return () => mobileState.layoutState = layoutBefore;
   }
   return getDialogStack(ctx).pushDialog(key, component);
 }
