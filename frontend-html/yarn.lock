@@ -1450,6 +1450,13 @@
   dependencies:
     moment "^2.29.1"
 
+"@origam/utils@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.2.0.tgz#2c19717654ef1566307e2f173fc83f7afe6d6f1c"
+  integrity sha512-lLVY0mAO/7M/vIzzxPXplgcY0bfe/mXNclEDXd+DFdVGG3u5C1CXhUfEFnbKqn9PP4CfYfjMOCq3Q5hkteJIlA==
+  dependencies:
+    moment "^2.29.1"
+
 "@sinclair/typebox@^0.24.1":
   version "0.24.51"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.24.51.tgz#645f33fe4e02defe26f2f5c0410e1c094eac7f5f"
