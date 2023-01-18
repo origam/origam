@@ -358,7 +358,7 @@ namespace Origam.Workbench.Editors
 
         private void DockCmd_Click(object sender, EventArgs e)
         {
-            AbstractEditor newEditor = (AbstractEditor)Activator.CreateInstance(this.GetType());
+            AbstractEditor newEditor = (AbstractEditor)Activator.CreateInstance(this.GetType(),new object[] { false });
             newEditor.LoadObject(ModelContent);
             newEditor.TitleName = ModelContent.Name;
 	        WorkbenchSingleton.Workbench.ShowView(newEditor);
