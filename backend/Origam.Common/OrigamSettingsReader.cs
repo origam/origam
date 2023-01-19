@@ -21,9 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using Origam.Extensions;
+
 
 namespace Origam
 {
@@ -32,13 +35,30 @@ namespace Origam
         private static string DefaultPathToOrigamSettings => 
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
 
+        private static string UserProfileFolder =>
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "ORIGAM", GetVersion(), "OrigamSettings.config");
+
+        private static string GetVersion()
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            return assembly.GetName().Version.Major + "." + assembly.GetName().Version.Minor;
+        }
+
         private readonly string pathToOrigamSettings;
 
         public OrigamSettingsReader(string pathToOrigamSettings = null)
         {
 
-            this.pathToOrigamSettings = pathToOrigamSettings 
-                                        ?? DefaultPathToOrigamSettings;
+            this.pathToOrigamSettings = pathToOrigamSettings ??
+                                        (File.Exists(DefaultPathToOrigamSettings) ?
+                                            DefaultPathToOrigamSettings : UserProfileFolder);
+            if (!File.Exists(this.pathToOrigamSettings))
+            {
+                FileInfo file = new(this.pathToOrigamSettings);
+                file.Directory.Create();
+                Write(new OrigamSettingsCollection());
+            }
         }
         public OrigamSettingsCollection GetAll()
         {
