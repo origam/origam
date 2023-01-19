@@ -343,6 +343,11 @@ namespace Origam.Server
                         }
                     }
                 });
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    RequestPath = new PathString("/assets"),
+                    FileProvider = new PhysicalFileProvider(Path.Combine(startUpConfiguration.PathToChatApp, "assets"))
+                });
             }
             app.UseStaticFiles(new StaticFileOptions
             {
