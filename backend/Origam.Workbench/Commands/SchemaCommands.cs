@@ -433,6 +433,7 @@ namespace Origam.Workbench.Commands
 		{
 			EditSchemaItem cmd = new EditSchemaItem();
 			cmd.Owner = _schema.ActiveNode;
+			cmd.ShowDialog = true;
 			cmd.Run();
 		}
 
