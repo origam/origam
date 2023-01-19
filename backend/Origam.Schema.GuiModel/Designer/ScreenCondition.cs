@@ -24,7 +24,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
@@ -47,7 +46,16 @@ namespace Origam.Schema.GuiModel
         public FormControlSet Screen
         {
             get => (FormControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
-            set => ScreenId = value?.Id ?? Guid.Empty;
+            set 
+            {
+                ScreenId = value?.Id ?? Guid.Empty;
+                if(ScreenId != null && ScreenId != Guid.Empty)
+                {
+                    var formControl = (FormControlSet)PersistenceProvider.
+                                      RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+                    Name = formControl.Name;
+                }
+            }
         }
         
         public ScreenCondition(Guid extensionId) : base(extensionId)
