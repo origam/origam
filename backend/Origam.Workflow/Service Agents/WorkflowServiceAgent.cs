@@ -39,8 +39,6 @@ namespace Origam.Workflow
 		public WorkflowServiceAgent()
 		{
 		}
-		private readonly int ChildWorkflowTimeoutMs = 60_000_000;
-		private bool workflowFinished = false;
 		#region Private Methods
 		private object ExecuteWorkflow(Guid workflowId, Hashtable parameters)
 		{
@@ -99,7 +97,6 @@ namespace Origam.Workflow
             host.WorkflowMessage += Host_WorkflowMessage;
             
             host.ExecuteWorkflow(engine);
-            // WaitForChildWorkflow().Wait();
             if(engine.Exception != null)
 			{
 				throw engine.Exception;
@@ -107,19 +104,7 @@ namespace Origam.Workflow
 
 			return engine.ReturnValue;
 		}
-
-		private async Task WaitForChildWorkflow()
-		{
-			async Task Wait()
-			{
-				while (!workflowFinished)
-				{
-					await Task.Delay(50);
-				}
-			}
-			await Task.WhenAny(Wait(), Task.Delay(ChildWorkflowTimeoutMs));
-		}
-
+		
 		private WorkflowHost GetHost()
 		{
 			return WorkflowEngine != null 
@@ -133,7 +118,6 @@ namespace Origam.Workflow
 			{
 				UnsubscribeEvents();
 				AsyncCallFinished?.Invoke(null, new AsyncReturnValues{Result = e.Engine.ReturnValue});
-				workflowFinished = true;
 			}
 		}
 
