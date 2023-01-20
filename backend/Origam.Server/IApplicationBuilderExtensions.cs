@@ -1,10 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
+using MoreLinq.Extensions;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
+using Origam.Service.Core;
 using SoapCore;
 
 namespace Origam.Server
@@ -30,6 +35,20 @@ namespace Origam.Server
             {
                 FileProvider = new PhysicalFileProvider(pathToClientApp)
             });
+        }  
+         public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
+             IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
+        {
+            foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
+            {
+                var customControllerAssembly = Assembly.LoadFrom(
+                    controllerDllName);
+                customControllerAssembly
+                    .GetTypes()
+                    .Where(type => typeof(IWebApplicationExtender).IsAssignableFrom(type))
+                    .Select(type => (IWebApplicationExtender)Activator.CreateInstance(type))
+                    .ForEach(extender => extender.Extend(app, configuration));
+            }
         }  
         
         public static void UseUserApi(this IApplicationBuilder app, StartUpConfiguration startUpConfiguration)

@@ -87,11 +87,11 @@ namespace Origam.Server.Configuration
             }
         } 
         
-        public string[] ExternalControllerDlls
+        public string[] ExtensionDlls
         {
             get
             {
-                var subSection = configuration.GetSection("ExternalControllerDlls");
+                var subSection = configuration.GetSection("ExtensionDlls");
                 if (!subSection.Exists())
                 {
                     return Array.Empty<string>();

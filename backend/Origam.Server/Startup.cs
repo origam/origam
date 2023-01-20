@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
@@ -43,6 +44,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
+using MoreLinq;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.Server.Authorization;
@@ -186,7 +188,7 @@ namespace Origam.Server
                 options.RequestCultureProviders.Insert(0, 
                     new OrigamCookieRequestCultureProvider(languageConfig));
             });
-            foreach (var controllerDllName in startUpConfiguration.ExternalControllerDlls)
+            foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
             {
                 var customControllerAssembly = Assembly.LoadFrom(
                     controllerDllName);
@@ -327,23 +329,7 @@ namespace Origam.Server
                     RequestPath = new PathString(startUpConfiguration.RouteToCustomAssetsFolder)
                 });                
             }
-            
-            if(!string.IsNullOrEmpty(startUpConfiguration.PathToChatApp))
-            {
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToChatApp),
-                    RequestPath = new PathString("/chatrooms"),
-                    OnPrepareResponse = ctx =>
-                    {
-                        if (ctx.File.Name == "index.html")
-                        {
-                            ctx.Context.Response.Headers.Append(
-                                "Cache-Control", $"no-store, max-age=0");
-                        }
-                    }
-                });
-            }
+            app.UseCustomWebAppExtenders(Configuration, startUpConfiguration);
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp)
