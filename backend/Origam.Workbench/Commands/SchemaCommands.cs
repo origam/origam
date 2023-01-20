@@ -431,10 +431,11 @@ namespace Origam.Workbench.Commands
 
 		public override void Run()
 		{
-			EditSchemaItem cmd = new EditSchemaItem();
-			cmd.Owner = _schema.ActiveNode;
-			cmd.ShowDialog = true;
-			cmd.Run();
+            AbstractSchemaItem item = _schema.ActiveNode as AbstractSchemaItem;
+            PropertyGridEditor newEditor = new(false);
+            newEditor.LoadObject(item);
+            newEditor.TitleName = item.Name;
+            WorkbenchSingleton.Workbench.ShowView(newEditor);
 		}
 
 		public override void Dispose()
