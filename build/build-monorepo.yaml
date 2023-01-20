@@ -284,7 +284,7 @@ jobs:
      - task: PublishBuildArtifacts@1
        displayName: 'Publish artifact: origam-html-chat'
        inputs:
-         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\build'
+         PathtoPublish: '$(Agent.BuildDirectory)\s\origam-html-chat\client\dist'
          ArtifactName: origam-html-chat
        condition: succeededOrFailed()
   - job: build_release
