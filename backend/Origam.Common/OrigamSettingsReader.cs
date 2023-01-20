@@ -51,13 +51,20 @@ namespace Origam
         {
 
             this.pathToOrigamSettings = pathToOrigamSettings ??
-                                        (File.Exists(DefaultPathToOrigamSettings) ?
-                                            DefaultPathToOrigamSettings : UserProfileFolder);
-            if (!File.Exists(this.pathToOrigamSettings))
+                                        (File.Exists(UserProfileFolder) ?
+                                            UserProfileFolder : DefaultPathToOrigamSettings);
+            if (!File.Exists(UserProfileFolder))
             {
-                FileInfo file = new(this.pathToOrigamSettings);
+                FileInfo file = new(UserProfileFolder);
                 file.Directory.Create();
-                Write(new OrigamSettingsCollection());
+                if (File.Exists(DefaultPathToOrigamSettings))
+                {
+                    File.Copy(DefaultPathToOrigamSettings, UserProfileFolder);
+                }
+                else
+                {
+                    Write(new OrigamSettingsCollection());
+                }
             }
         }
         public OrigamSettingsCollection GetAll()
