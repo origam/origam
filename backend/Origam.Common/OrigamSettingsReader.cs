@@ -32,38 +32,15 @@ namespace Origam
 {
     public class OrigamSettingsReader
     {
-        private static string DefaultPathToOrigamSettings => 
+        public string DefaultPathToOrigamSettings => 
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
-
-        private static string UserProfileFolder =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "ORIGAM", GetVersion(), "OrigamSettings.config");
-
-        private static string GetVersion()
-        {
-            Assembly assembly = Assembly.GetEntryAssembly();
-            return assembly.GetName().Version.Major + "." + assembly.GetName().Version.Minor;
-        }
 
         private readonly string pathToOrigamSettings;
 
-        public OrigamSettingsReader(string pathToOrigamSettings = null)
+        public OrigamSettingsReader(string pathToOrigamSettings = null )
         {
-            if (!File.Exists(UserProfileFolder) && pathToOrigamSettings == null)
-            {
-                FileInfo file = new(UserProfileFolder);
-                file.Directory.Create();
-                if (File.Exists(DefaultPathToOrigamSettings))
-                {
-                    File.Copy(DefaultPathToOrigamSettings, UserProfileFolder);
-                }
-                else
-                {
-                    Write(new OrigamSettingsCollection());
-                }
-            }
-            this.pathToOrigamSettings = pathToOrigamSettings ??
-                                        UserProfileFolder;
+            this.pathToOrigamSettings = pathToOrigamSettings??
+                                        DefaultPathToOrigamSettings;
         }
         public OrigamSettingsCollection GetAll()
         {
