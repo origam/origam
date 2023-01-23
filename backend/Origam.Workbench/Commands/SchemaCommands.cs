@@ -431,12 +431,13 @@ namespace Origam.Workbench.Commands
 
 		public override void Run()
 		{
-            AbstractSchemaItem item = _schema.ActiveNode as AbstractSchemaItem;
-            PropertyGridEditor newEditor = new(false);
-            newEditor.LoadObject(item);
-            newEditor.TitleName = item.Name;
-            WorkbenchSingleton.Workbench.ShowView(newEditor);
-		}
+            EditSchemaItem cmd = new()
+            {
+                Owner = _schema.ActiveNode,
+                ShowDock = true
+            };
+            cmd.Run();
+        }
 
 		public override void Dispose()
 		{
@@ -498,6 +499,8 @@ namespace Origam.Workbench.Commands
 
         public bool ShowDialog { get; set; }
         public bool ShowDiagramEditorAfterSave { get; set; }
+		public bool ShowDock { get; set; }
+
         IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 		WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 //		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
@@ -567,7 +570,7 @@ namespace Origam.Workbench.Commands
             {
                editor = new UiActionEditor(ShowDialog);
             }
-            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && ! ShowDialog)
+            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && ! ShowDialog && ! ShowDock)
             {
                 if (item.IsPersisted)
                 {
