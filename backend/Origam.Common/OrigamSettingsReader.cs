@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using Origam.Extensions;
@@ -32,15 +31,15 @@ namespace Origam
 {
     public class OrigamSettingsReader
     {
-        public string DefaultPathToOrigamSettings => 
+        private static string DefaultPathToOrigamSettings => 
             Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OrigamSettings.config");
 
         private readonly string pathToOrigamSettings;
 
-        public OrigamSettingsReader(string pathToOrigamSettings = null )
+        public OrigamSettingsReader(string pathToOrigamSettings = null)
         {
-            this.pathToOrigamSettings = pathToOrigamSettings??
-                                        DefaultPathToOrigamSettings;
+            this.pathToOrigamSettings = pathToOrigamSettings
+                                        ?? DefaultPathToOrigamSettings;
         }
         public OrigamSettingsCollection GetAll()
         {
@@ -126,6 +125,11 @@ namespace Origam
             }
             xmlSerializerNode.InnerXml = xmlDocument.InnerXml;
             document.Save(pathToOrigamSettings);
+        }
+
+        public string GetDefaultPathToOrigamSettings()
+        {
+            return DefaultPathToOrigamSettings;
         }
     }
 }

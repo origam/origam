@@ -1811,9 +1811,9 @@ namespace OrigamArchitect
                 FileInfo file = new(UserProfileFolder);
                 file.Directory.Create();
                 OrigamSettingsReader origamSetting = new(UserProfileFolder);
-                if (File.Exists(origamSetting.DefaultPathToOrigamSettings))
+                if (File.Exists(origamSetting.GetDefaultPathToOrigamSettings()))
                 {
-                    File.Copy(origamSetting.DefaultPathToOrigamSettings, UserProfileFolder);
+                    File.Copy(origamSetting.GetDefaultPathToOrigamSettings(), UserProfileFolder);
                 }
 				else
 				{
