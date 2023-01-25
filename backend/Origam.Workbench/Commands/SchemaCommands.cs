@@ -431,13 +431,10 @@ namespace Origam.Workbench.Commands
 
 		public override void Run()
 		{
-            EditSchemaItem cmd = new()
-            {
-                Owner = _schema.ActiveNode,
-                ShowDocked = true
-            };
-            cmd.Run();
-        }
+			EditSchemaItem cmd = new EditSchemaItem();
+			cmd.Owner = _schema.ActiveNode;
+			cmd.Run();
+		}
 
 		public override void Dispose()
 		{
@@ -499,8 +496,6 @@ namespace Origam.Workbench.Commands
 
         public bool ShowDialog { get; set; }
         public bool ShowDiagramEditorAfterSave { get; set; }
-		public bool ShowDocked { get; set; }
-
         IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 		WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
 //		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
@@ -570,7 +565,7 @@ namespace Origam.Workbench.Commands
             {
                editor = new UiActionEditor(ShowDialog);
             }
-            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && !ShowDialog && !ShowDocked)
+            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && ! ShowDialog)
             {
                 if (item.IsPersisted)
                 {
