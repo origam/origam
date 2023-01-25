@@ -47,7 +47,7 @@
     "@xstate/inspect": "^0.7.0",
     "axios": "^1.2.4",
     "bind-decorator": "^1.0.11",
-    "chart.js": "^3.9.1",
+    "chart.js": "^4.2.0",
     "classnames": "^2.3.2",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
