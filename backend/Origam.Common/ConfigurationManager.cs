@@ -28,8 +28,20 @@ namespace Origam
 	public class ConfigurationManager
 	{
 		private static OrigamSettings _activeConfiguration;
-		
-		public static void SetActiveConfiguration(OrigamSettings configuration)
+
+		private static string _pathToOrigamSettings;
+
+		public static string GetPathOrigamSettings()
+		{
+			return _pathToOrigamSettings;
+		}
+
+		public static void SetPathOrigamSettings(string pathToOrigamSettings)
+		{
+			_pathToOrigamSettings = pathToOrigamSettings;
+        }
+
+        public static void SetActiveConfiguration(OrigamSettings configuration)
 		{
 			_activeConfiguration = configuration;
 		}
@@ -41,7 +53,7 @@ namespace Origam
 
 		public static OrigamSettingsCollection GetAllConfigurations()
 		{
-			return new OrigamSettingsReader().GetAll();
+			return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
 		}
 
 		public static void WriteConfiguration(OrigamSettingsCollection configuration)
@@ -60,7 +72,7 @@ namespace Origam
 				}
 			}
 
-            new OrigamSettingsReader().Write(configuration);
+            new OrigamSettingsReader(_pathToOrigamSettings).Write(configuration);
 		}
 	}
 
