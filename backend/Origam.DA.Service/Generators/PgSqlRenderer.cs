@@ -237,4 +237,9 @@ class PgSqlRenderer : SqlRenderer
     {
         return "COUNT";
     }
+
+    internal override string Char(int number)
+    {
+        return "CHR(" + number + ")";
+    }
 }
