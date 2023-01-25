@@ -87,11 +87,11 @@ namespace Origam.Server.Configuration
             }
         } 
         
-        public string[] ExternalControllerDlls
+        public string[] ExtensionDlls
         {
             get
             {
-                var subSection = configuration.GetSection("ExternalControllerDlls");
+                var subSection = configuration.GetSection("ExtensionDlls");
                 if (!subSection.Exists())
                 {
                     return Array.Empty<string>();
@@ -102,18 +102,5 @@ namespace Origam.Server.Configuration
         
         public bool ReloadModelWhenFilesChangesDetected =>
             configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
-
-        public string PathToChatApp
-        {
-            get
-            {
-                string pathToChatApp = configuration.GetSection("ChatConfig")["PathToChatApp"];
-                if(!string.IsNullOrEmpty(pathToChatApp) && !Path.IsPathRooted(pathToChatApp))
-                {
-                    throw new Exception($"The PathToChatApp \"{pathToChatApp}\" must be an absolute path");
-                }
-                return pathToChatApp;
-            }
-        }
     }
 }

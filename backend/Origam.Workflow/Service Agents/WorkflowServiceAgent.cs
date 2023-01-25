@@ -26,6 +26,7 @@ using System.Collections;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Origam.Workflow
 {
@@ -38,7 +39,6 @@ namespace Origam.Workflow
 		public WorkflowServiceAgent()
 		{
 		}
-
 		#region Private Methods
 		private object ExecuteWorkflow(Guid workflowId, Hashtable parameters)
 		{
@@ -97,7 +97,6 @@ namespace Origam.Workflow
             host.WorkflowMessage += Host_WorkflowMessage;
             
             host.ExecuteWorkflow(engine);
-
             if(engine.Exception != null)
 			{
 				throw engine.Exception;
@@ -105,7 +104,7 @@ namespace Origam.Workflow
 
 			return engine.ReturnValue;
 		}
-
+		
 		private WorkflowHost GetHost()
 		{
 			return WorkflowEngine != null 
