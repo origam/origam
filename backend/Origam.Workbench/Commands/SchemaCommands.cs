@@ -29,6 +29,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using LibGit2Sharp;
+using Org.BouncyCastle.Asn1.Mozilla;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.Extensions;
@@ -409,7 +410,7 @@ namespace Origam.Workbench.Commands
 	public class EditActiveSchemaItem : AbstractMenuCommand
 	{
 		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
+		public bool ShowDocked {get; set;}
 		public override bool IsEnabled
 		{
 			get
@@ -433,6 +434,7 @@ namespace Origam.Workbench.Commands
 		{
 			EditSchemaItem cmd = new EditSchemaItem();
 			cmd.Owner = _schema.ActiveNode;
+			cmd.ShowDocked = ShowDocked;
 			cmd.Run();
 		}
 
@@ -495,6 +497,7 @@ namespace Origam.Workbench.Commands
         }
 
         public bool ShowDialog { get; set; }
+        public bool ShowDocked { get; set; }
         public bool ShowDiagramEditorAfterSave { get; set; }
         IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 		WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
@@ -565,7 +568,7 @@ namespace Origam.Workbench.Commands
             {
                editor = new UiActionEditor(ShowDialog);
             }
-            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && ! ShowDialog)
+            else if (itemType == "Origam.Schema.WorkflowModel.Workflow" && !ShowDialog && !ShowDocked)
             {
                 if (item.IsPersisted)
                 {
