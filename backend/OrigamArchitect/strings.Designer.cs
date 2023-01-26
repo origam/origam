@@ -502,7 +502,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;Edit item.
+        ///   Looks up a localized string similar to &amp;Edit.
         /// </summary>
         internal static string EditItem_MenuItem {
             get {

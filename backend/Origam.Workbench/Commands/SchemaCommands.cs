@@ -35,6 +35,7 @@ using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.UI;
 using Origam.Windows.Editor.GIT;
@@ -410,14 +411,13 @@ namespace Origam.Workbench.Commands
 	public class EditActiveSchemaItem : AbstractMenuCommand
 	{
 		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-		public bool ShowDocked {get; set;}
 		public override bool IsEnabled
 		{
 			get
 			{
 				if(_schema.IsSchemaLoaded)
 				{
-					return _schema.CanEditItem(_schema.ActiveNode);
+                    return _schema.CanEditItem(_schema.ActiveNode);
 				}
 				else
 				{
@@ -432,9 +432,8 @@ namespace Origam.Workbench.Commands
 
 		public override void Run()
 		{
-			EditSchemaItem cmd = new EditSchemaItem();
+			EditSchemaItem cmd = new();
 			cmd.Owner = _schema.ActiveNode;
-			cmd.ShowDocked = ShowDocked;
 			cmd.Run();
 		}
 
@@ -447,6 +446,46 @@ namespace Origam.Workbench.Commands
 
 	}
 
+    public class EditActiveSchemaItemDocked : AbstractMenuCommand
+    {
+        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        public bool ShowDocked { get; set; } = false;
+        public override bool IsEnabled
+        {
+            get
+            {
+                if (_schema.IsSchemaLoaded)
+                {
+					return Owner is Schema.WorkflowModel.Workflow &&
+						_schema.CanEditItem(_schema.ActiveNode);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+            }
+        }
+
+        public override void Run()
+        {
+            EditSchemaItem cmd = new();
+            cmd.Owner = _schema.ActiveNode;
+            cmd.ShowDocked = ShowDocked;
+            cmd.Run();
+        }
+
+        public override void Dispose()
+        {
+            _schema = null;
+
+            base.Dispose();
+        }
+
+    }
 
     public class ExpandAllActiveSchemaItem : AbstractMenuCommand
     {

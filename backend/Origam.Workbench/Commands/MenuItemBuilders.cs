@@ -24,13 +24,10 @@ using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Origam.Gui.UI;
 using Origam.UI;
 using Origam.Workbench.Services;
 using Origam.Schema;
-using Origam.Workbench.Editors;
 using Origam.Git;
-using Org.BouncyCastle.Utilities;
 
 namespace Origam.Workbench.Commands
 {
@@ -386,14 +383,14 @@ namespace Origam.Workbench.Commands
     public class EditItemMenuBuilder : ISubmenuBuilder
     {
         WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        readonly object _owner = null;
+        object _owner = null;
 
         #region ISubmenuBuilder Members
         public bool LateBound
         {
             get
             {
-                return false;
+                return true;
             }
         }
         public bool HasItems()
@@ -410,13 +407,10 @@ namespace Origam.Workbench.Commands
 
         public AsMenuCommand[] BuildSubmenu(object owner)
         {
+            _owner = owner ?? _schema.ActiveNode;
             var list = new List<AsMenuCommand>();
-            CreateMenuItem(list, "Edit Item", new EditActiveSchemaItem(), null);
-            EditActiveSchemaItem activeEditItem = new()
-            {
-                ShowDocked = true
-            };
-            CreateMenuItem(list, "Edit Item by Dock", activeEditItem , null);
+            CreateMenuItem(list, "Item", new EditActiveSchemaItem(), null);
+            CreateMenuItem(list, "By GridEditor", new EditActiveSchemaItemDocked() { ShowDocked = true, }, null);
             return list.ToArray();
         }
 
