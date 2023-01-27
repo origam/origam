@@ -135,8 +135,8 @@ namespace Origam.Server
                 {
                     apiBranch.UseMiddleware<ReturnOldDotNetAssemblyReferencesInSoapMiddleware>();
                 }
-                apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new BasicHttpBinding());
-                apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new BasicHttpBinding());
+                apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new SoapEncoderOptions());
+                apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new SoapEncoderOptions());
             });
         }
         
