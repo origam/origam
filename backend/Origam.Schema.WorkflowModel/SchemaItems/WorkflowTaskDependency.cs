@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
@@ -79,6 +80,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Properties
 		public Guid WorkflowTaskId;
         [NotNullModelElementRule]
+        [NoParentDependenciesRule]
         [TypeConverter(typeof(WorkflowStepFilteredConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[XmlReference("task", "WorkflowTaskId")]
@@ -103,5 +105,34 @@ namespace Origam.Schema.WorkflowModel
 		[XmlAttribute ("startEvent")]
 		public WorkflowStepStartEvent StartEvent { get; set; } = WorkflowStepStartEvent.Success;
 		#endregion
+	}
+	
+	[AttributeUsage(AttributeTargets.Property, AllowMultiple=false, Inherited=true)]
+	public class NoParentDependenciesRule : AbstractModelElementRuleAttribute 
+	{
+		public override Exception CheckRule(object instance)
+		{
+			if (!(instance is WorkflowTaskDependency taskDependency))
+			{
+				throw new Exception(
+					$"{nameof(NoParentDependenciesRule)} can be only applied to type {nameof(WorkflowTaskDependency)}");  
+			}
+			if (taskDependency.Task == null)
+			{
+				return null;
+			}
+			AbstractSchemaItem workflowStep = taskDependency.ParentItem;
+			var parentInDependencies = workflowStep.Parents
+				.OfType<IWorkflowStep>()
+				.Any(parent => taskDependency.Task == parent);
+			return parentInDependencies
+				? new Exception($"Invalid dependency detected. Workflow step cannot depend on one of its parents.")
+				: null;
+		}
+		
+		public override Exception CheckRule(object instance, string memberName)
+		{
+			return CheckRule(instance);
+		}
 	}
 }

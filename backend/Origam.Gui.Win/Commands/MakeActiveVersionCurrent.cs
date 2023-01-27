@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Linq;
 using Origam.Schema.DeploymentModel;
 using Origam.UI;
 using Origam.Workbench;
@@ -51,9 +52,18 @@ namespace Origam.Gui.Win.Commands
 
         public override void Run()
         {
+            bool dirtyDocumentExists = WorkbenchSingleton.Workbench.ViewContentCollection
+                .Cast<IViewContent>()
+                .Any(x => x.IsDirty);
+            if (dirtyDocumentExists)
+            {
+                throw new Exception(
+                    "Model not saved. Please, save the model before setting the version.");
+            }
             MakeVersionCurrent cmd = new MakeVersionCurrent();
             cmd.Owner = Owner as DeploymentVersion;
             cmd.Run();
+            WorkbenchSingleton.Workbench.UpdateTitle();
         }
 
         public override void Dispose()

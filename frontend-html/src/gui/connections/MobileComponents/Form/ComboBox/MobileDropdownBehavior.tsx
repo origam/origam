@@ -35,6 +35,7 @@ import {
   IDropdownEditorBehavior
 } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { DropdownEditorSetup } from "modules/Editors/DropdownEditor/DropdownEditorSetup";
+import { requestFocus } from "utils/focus";
 
 export interface IMobileBehaviorData {
   api: IDropdownEditorApi,
@@ -89,7 +90,7 @@ export class MobileDropdownBehavior implements IDropdownEditorBehavior{
 
   makeFocused() {
     if (this.elmInputElement) {
-      this.elmInputElement.focus();
+      requestFocus(this.elmInputElement);
     }
   }
 

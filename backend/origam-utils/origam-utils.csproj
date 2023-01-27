@@ -7,13 +7,18 @@
     <ProjectGuid>{3896810A-D91A-48AB-B6D8-DB2306F0B62D}</ProjectGuid>
     <DefineConstants Condition="'$(TargetFramework)'=='netcoreapp2.1'">NETCORE2_1</DefineConstants>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net472;net6.0</TargetFrameworks>
     <RootNamespace>Origam.Utils</RootNamespace>
     <AssemblyName>origam-utils</AssemblyName>
 	<FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   
+
+  <PropertyGroup>
+	<TargetFrameworks>net472;net6.0</TargetFrameworks>
+	<LangVersion>10</LangVersion>
+  </PropertyGroup>
+
   <PropertyGroup>
    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 </PropertyGroup> 

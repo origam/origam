@@ -43,7 +43,7 @@ export const CheckBox: React.FC<{
   const row = getSelectedRow(formPanelView)!;
   return {
     property,
-    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
+    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(),
     onChange: (event: any, value: any) => onFieldChange(formPanelView)({
       event: event,
       row: row,

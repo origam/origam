@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.WorkflowModel
@@ -44,10 +45,8 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for IWorkflowStep.
 	/// </summary>
-	public interface IWorkflowStep : ISchemaItem
+	public interface IWorkflowStep : ISchemaItem, ITraceable
 	{
-		Trace TraceLevel{get; set;}
-        Trace Trace { get;}
 		StartRule StartConditionRule{get; set;}
 		IContextStore StartConditionRuleContextStore{get; set;}
 		IEndRule ValidationRule{get; set;}

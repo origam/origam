@@ -69,7 +69,7 @@ namespace OrigamArchitect
             this.btnSelectBinFolderRoot = new System.Windows.Forms.Button();
             this.lblTemplateFolderDescription = new System.Windows.Forms.Label();
             this.lblTemplateFolder = new System.Windows.Forms.Label();
-            this.txtTemplateFolder = new System.Windows.Forms.TextBox();
+            this.defaultModelPath = new System.Windows.Forms.TextBox();
             this.lblBinFolderRootDescription = new System.Windows.Forms.Label();
             this.lblBinFolderRoot = new System.Windows.Forms.Label();
             this.txtBinFolderRoot = new System.Windows.Forms.TextBox();
@@ -88,7 +88,7 @@ namespace OrigamArchitect
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.pageGit = new AeroWizard.WizardPage();
-            this.dockerSourceFolder = new System.Windows.Forms.Label();
+            this.dockerSourceFolderLabel = new System.Windows.Forms.Label();
             this.txtdosourcefolder = new System.Windows.Forms.TextBox();
             this.lblgitemail = new System.Windows.Forms.Label();
             this.lblgituser = new System.Windows.Forms.Label();
@@ -103,7 +103,7 @@ namespace OrigamArchitect
             this.pageDocker = new AeroWizard.WizardPage();
             this.label23 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
+            this.dockerPortLabel = new System.Windows.Forms.Label();
             this.txtDockerPort = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -169,9 +169,6 @@ namespace OrigamArchitect
             // 
             // wizard1
             // 
-            this.wizard1.BackColor = System.Drawing.Color.White;
-            this.wizard1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wizard1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wizard1.Location = new System.Drawing.Point(0, 0);
             this.wizard1.Name = "wizard1";
             this.wizard1.Pages.Add(this.pageWelcome);
@@ -493,7 +490,7 @@ namespace OrigamArchitect
             this.pagePaths.Controls.Add(this.btnSelectBinFolderRoot);
             this.pagePaths.Controls.Add(this.lblTemplateFolderDescription);
             this.pagePaths.Controls.Add(this.lblTemplateFolder);
-            this.pagePaths.Controls.Add(this.txtTemplateFolder);
+            this.pagePaths.Controls.Add(this.defaultModelPath);
             this.pagePaths.Controls.Add(this.lblBinFolderRootDescription);
             this.pagePaths.Controls.Add(this.lblBinFolderRoot);
             this.pagePaths.Controls.Add(this.txtBinFolderRoot);
@@ -534,26 +531,25 @@ namespace OrigamArchitect
             this.lblTemplateFolderDescription.Name = "lblTemplateFolderDescription";
             this.lblTemplateFolderDescription.Size = new System.Drawing.Size(370, 41);
             this.lblTemplateFolderDescription.TabIndex = 8;
-            this.lblTemplateFolderDescription.Text = "Enter a path where a template of your application is stored. It must contain \"Mod" +
-    "el\" and \"ServerApplication\" subfolders.";
+            this.lblTemplateFolderDescription.Text = "Enter a path to DefaultModel.zip file which contains the initial model files.";
             // 
             // lblTemplateFolder
             // 
             this.lblTemplateFolder.AutoSize = true;
             this.lblTemplateFolder.Location = new System.Drawing.Point(4, 114);
             this.lblTemplateFolder.Name = "lblTemplateFolder";
-            this.lblTemplateFolder.Size = new System.Drawing.Size(91, 15);
+            this.lblTemplateFolder.Size = new System.Drawing.Size(82, 15);
             this.lblTemplateFolder.TabIndex = 7;
-            this.lblTemplateFolder.Text = "Template Folder";
+            this.lblTemplateFolder.Text = "Default Model";
             // 
-            // txtTemplateFolder
+            // defaultModelpath
             // 
-            this.txtTemplateFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.defaultModelPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtTemplateFolder.Location = new System.Drawing.Point(161, 110);
-            this.txtTemplateFolder.Name = "txtTemplateFolder";
-            this.txtTemplateFolder.Size = new System.Drawing.Size(533, 23);
-            this.txtTemplateFolder.TabIndex = 6;
+            this.defaultModelPath.Location = new System.Drawing.Point(161, 110);
+            this.defaultModelPath.Name = "defaultModelPath";
+            this.defaultModelPath.Size = new System.Drawing.Size(533, 23);
+            this.defaultModelPath.TabIndex = 6;
             // 
             // lblBinFolderRootDescription
             // 
@@ -716,7 +712,7 @@ namespace OrigamArchitect
             // 
             // pageGit
             // 
-            this.pageGit.Controls.Add(this.dockerSourceFolder);
+            this.pageGit.Controls.Add(this.dockerSourceFolderLabel);
             this.pageGit.Controls.Add(this.txtdosourcefolder);
             this.pageGit.Controls.Add(this.lblgitemail);
             this.pageGit.Controls.Add(this.lblgituser);
@@ -736,18 +732,18 @@ namespace OrigamArchitect
             this.pageGit.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.PageGit_Commit);
             this.pageGit.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.PageGit_Init);
             // 
-            // dockerSourceFolder
+            // dockerSourceFolderLabel
             // 
-            this.dockerSourceFolder.AutoSize = true;
-            this.dockerSourceFolder.Location = new System.Drawing.Point(3, 280);
-            this.dockerSourceFolder.Name = "dockerSourceFolder";
-            this.dockerSourceFolder.Size = new System.Drawing.Size(117, 15);
-            this.dockerSourceFolder.TabIndex = 1;
-            this.dockerSourceFolder.Text = "Docker Model Folder";
+            this.dockerSourceFolderLabel.AutoSize = true;
+            this.dockerSourceFolderLabel.Location = new System.Drawing.Point(3, 280);
+            this.dockerSourceFolderLabel.Name = "dockerSourceFolderLabel";
+            this.dockerSourceFolderLabel.Size = new System.Drawing.Size(117, 15);
+            this.dockerSourceFolderLabel.TabIndex = 1;
+            this.dockerSourceFolderLabel.Text = "Docker Model Folder";
             // 
             // txtdosourcefolder
             // 
-            this.txtdosourcefolder.Location = new System.Drawing.Point(163, 276);
+            this.txtdosourcefolder.Location = new System.Drawing.Point(160, 277);
             this.txtdosourcefolder.Name = "txtdosourcefolder";
             this.txtdosourcefolder.Size = new System.Drawing.Size(530, 23);
             this.txtdosourcefolder.TabIndex = 18;
@@ -755,7 +751,7 @@ namespace OrigamArchitect
             // lblgitemail
             // 
             this.lblgitemail.AutoSize = true;
-            this.lblgitemail.Location = new System.Drawing.Point(19, 122);
+            this.lblgitemail.Location = new System.Drawing.Point(3, 122);
             this.lblgitemail.Name = "lblgitemail";
             this.lblgitemail.Size = new System.Drawing.Size(36, 15);
             this.lblgitemail.TabIndex = 17;
@@ -764,7 +760,7 @@ namespace OrigamArchitect
             // lblgituser
             // 
             this.lblgituser.AutoSize = true;
-            this.lblgituser.Location = new System.Drawing.Point(19, 76);
+            this.lblgituser.Location = new System.Drawing.Point(3, 76);
             this.lblgituser.Name = "lblgituser";
             this.lblgituser.Size = new System.Drawing.Size(30, 15);
             this.lblgituser.TabIndex = 16;
@@ -772,14 +768,14 @@ namespace OrigamArchitect
             // 
             // txtGitEmail
             // 
-            this.txtGitEmail.Location = new System.Drawing.Point(163, 119);
+            this.txtGitEmail.Location = new System.Drawing.Point(160, 119);
             this.txtGitEmail.Name = "txtGitEmail";
             this.txtGitEmail.Size = new System.Drawing.Size(204, 23);
             this.txtGitEmail.TabIndex = 15;
             // 
             // txtGitUser
             // 
-            this.txtGitUser.Location = new System.Drawing.Point(163, 73);
+            this.txtGitUser.Location = new System.Drawing.Point(160, 73);
             this.txtGitUser.Name = "txtGitUser";
             this.txtGitUser.Size = new System.Drawing.Size(204, 23);
             this.txtGitUser.TabIndex = 14;
@@ -848,7 +844,7 @@ namespace OrigamArchitect
             // 
             this.pageDocker.Controls.Add(this.label23);
             this.pageDocker.Controls.Add(this.label22);
-            this.pageDocker.Controls.Add(this.label20);
+            this.pageDocker.Controls.Add(this.dockerPortLabel);
             this.pageDocker.Controls.Add(this.txtDockerPort);
             this.pageDocker.Controls.Add(this.label21);
             this.pageDocker.Controls.Add(this.label19);
@@ -880,12 +876,12 @@ namespace OrigamArchitect
             // 
             // label20
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(16, 115);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(69, 15);
-            this.label20.TabIndex = 18;
-            this.label20.Text = "Docker Port";
+            this.dockerPortLabel.AutoSize = true;
+            this.dockerPortLabel.Location = new System.Drawing.Point(16, 115);
+            this.dockerPortLabel.Name = "dockerPortLabel";
+            this.dockerPortLabel.Size = new System.Drawing.Size(69, 15);
+            this.dockerPortLabel.TabIndex = 18;
+            this.dockerPortLabel.Text = "Docker Port";
             // 
             // txtDockerPort
             // 
@@ -1373,7 +1369,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label lblBinFolderRootDescription;
         private System.Windows.Forms.Label lblTemplateFolderDescription;
         private System.Windows.Forms.Label lblTemplateFolder;
-        private System.Windows.Forms.TextBox txtTemplateFolder;
+        private System.Windows.Forms.TextBox defaultModelPath;
         private System.Windows.Forms.Label lblSourcesFolderDescription;
         private System.Windows.Forms.Label lblSourcesFolder;
         private System.Windows.Forms.TextBox txtSourcesFolder;
@@ -1444,7 +1440,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label dockerPortLabel;
         private System.Windows.Forms.TextBox txtDockerPort;
         private WizardPage pageWebUser;
         private System.Windows.Forms.TextBox txtWebUserPassword;
@@ -1462,7 +1458,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.TextBox txtWebUserPasswordConfirmed;
         private System.Windows.Forms.Label dockerlabel;
         private System.Windows.Forms.TextBox txtDockerApiAdress;
-        private System.Windows.Forms.Label dockerSourceFolder;
+        private System.Windows.Forms.Label dockerSourceFolderLabel;
         private System.Windows.Forms.TextBox txtdosourcefolder;
         private System.Windows.Forms.Label dockerlabeldescription;
     }

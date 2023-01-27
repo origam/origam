@@ -26,21 +26,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@string.Format(SharedLocalizer.GetString("IdentityServerTitle"), settings.TitleText )</title>
-    <link rel="stylesheet" href="~/assets/identity/css/css.css" />
-    <link rel="stylesheet" href="~/assets/identity/css/main.css" />
-    <link rel="stylesheet" href="~/assets/identity/css/login.css" />
+    <link rel="stylesheet" href="~/assets/identity/css/css.css?version=0.0.0.0" />
+    <link rel="stylesheet" href="~/assets/identity/css/main.css?version=0.0.0.0" />
+    <link rel="stylesheet" href="~/assets/identity/css/login.css?version=0.0.0.0" />
 </head>
 <body>
 
 <div id="page-container" class="page-content">
         <div class="logo-container centered">
-            <img src=@logoUrl />
+            <img class="logo" src=@logoUrl />
         </div>
     @RenderBody()
 </div>
 
-<script src="~/assets/identity/js/form-sumbit.js"></script>
-<script src="~/assets/identity/js/custom.js"></script>
+<script src="~/assets/identity/js/form-sumbit.js?version=0.0.0.0"></script>
+<script src="~/assets/identity/js/custom.js?version=0.0.0.0"></script>
 @RenderSection("scripts", required: false)
 </body>
 </html>

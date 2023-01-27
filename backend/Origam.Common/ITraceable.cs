@@ -18,17 +18,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
 
-namespace Origam.Server.Model.Chat
+namespace Origam;
+
+public interface ITraceable
 {
-    public class InviteUser
-    {
-        public InviteUser(Guid userId)
-        {
-            Id = userId;
-        }
-
-        public Guid Id { get; set; }
-    }
+    Trace TraceLevel{get; set;}
+    Trace Trace { get;}
 }

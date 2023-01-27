@@ -120,10 +120,7 @@ namespace Origam
 		[Category("Server Connection")]
         public string ServerUrl { get; set; }
 
-		[Category("Server Connection")]
-        public string ServerLocalPath { get; set; }
-
-		[Category("Model Connection")]
+        [Category("Model Connection")]
 		public string SchemaConnectionString { get; set; } = "Server=?;database=?;Integrated Security=SSPI;";
 
 		[Category("Model Connection")]

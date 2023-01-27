@@ -43,6 +43,7 @@ export interface IPropertyData {
   column: IPropertyColumn;
   dock?: IDockType;
   multiline: boolean;
+  alwaysHidden: boolean;
   isPassword: boolean;
   isRichText: boolean;
   maxLength: number;
@@ -77,6 +78,7 @@ export interface IProperty extends IPropertyData {
   dataSourceIndex: number;
   dataIndex: number;
   isLookup: boolean;
+  alwaysHidden: boolean;
   lookupEngine?: ILookupIndividualEngine;
 
   childProperties: IProperty[];

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Origam.Extensions;
 
 namespace Origam.Server.Configuration
 {
@@ -84,22 +85,22 @@ namespace Origam.Server.Configuration
                 }
                 return pathToClientApp;
             }
+        } 
+        
+        public string[] ExtensionDlls
+        {
+            get
+            {
+                var subSection = configuration.GetSection("ExtensionDlls");
+                if (!subSection.Exists())
+                {
+                    return Array.Empty<string>();
+                }
+                return subSection.GetStringArrayOrEmpty();
+            }
         }   
         
         public bool ReloadModelWhenFilesChangesDetected =>
             configuration.GetValue<bool>("ReloadModelWhenFilesChangesDetected");
-
-        public string PathToChatApp
-        {
-            get
-            {
-                string pathToChatApp = configuration.GetSection("ChatConfig")["PathToChatApp"];
-                if(!string.IsNullOrEmpty(pathToChatApp) && !Path.IsPathRooted(pathToChatApp))
-                {
-                    throw new Exception($"The PathToChatApp \"{pathToChatApp}\" must be an absolute path");
-                }
-                return pathToChatApp;
-            }
-        }
     }
 }

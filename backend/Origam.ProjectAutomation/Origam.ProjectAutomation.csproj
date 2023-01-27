@@ -14,6 +14,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
@@ -113,7 +114,6 @@
     <Compile Include="Builders\DataDatabaseStructureBuilder.cs" />
     <Compile Include="Builders\DataDatabaseBuilder.cs" />
     <Compile Include="AbstractDatabaseBuilder.cs" />
-    <Compile Include="Builders\CopyServerFilesBuilder.cs" />
     <Compile Include="Builders\ConfigureWebServerBuilder.cs" />
     <Compile Include="Builders\ModifyConfigurationFilesBuilder.cs" />
     <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />
@@ -122,7 +122,6 @@
     <Compile Include="IProjectBuilder.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectBuilder.cs" />
-    <Compile Include="Builders\SettingsFinalConnectionStringBuilder.cs" />
     <Compile Include="TaskListViewItem.cs" />
     <Compile Include="TaskState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

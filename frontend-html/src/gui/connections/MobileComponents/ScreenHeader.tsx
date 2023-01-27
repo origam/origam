@@ -27,7 +27,7 @@ export const ScreenHeader: React.FC<{}> = observer((props) => {
   const application = useContext(MobXProviderContext).application;
   const activeScreen = getActiveScreen(application);
 
-  if(!activeScreen || !activeScreen.content.formScreen?.workflowTaskId){
+  if(!activeScreen || !activeScreen.content?.formScreen?.workflowTaskId){
     return null;
   }
 

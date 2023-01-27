@@ -39,6 +39,7 @@ namespace Origam.Workbench.Services
 		
 		private SchemaService _schema;
 		IServiceAgent _dataServiceAgent;
+		private bool? _enabled;
 
 		public TracingService()
 		{
@@ -47,7 +48,7 @@ namespace Origam.Workbench.Services
 		#region Public Methods
 		public void TraceWorkflow(Guid workflowInstanceId, Guid workflowId, string workflowName)
 		{
-			if (IsTraceDisabled())
+			if (!Enabled)
 			{
 				if (log.IsDebugEnabled)
 				{
@@ -81,7 +82,7 @@ namespace Origam.Workbench.Services
 			string category, string subCategory, string remark, string data1,
 			string data2, string message)
 		{
-			if (IsTraceDisabled())
+			if (!Enabled)
 			{
 				if (log.IsDebugEnabled)
 				{
@@ -134,7 +135,7 @@ namespace Origam.Workbench.Services
 
 		public void TraceRule(Guid ruleId, string ruleName, string ruleInput, string ruleResult, Guid workflowInstanceId)
 		{
-			if (IsTraceDisabled())
+			if (!Enabled)
 			{
 				if (log.IsDebugEnabled)
 				{
@@ -187,14 +188,7 @@ namespace Origam.Workbench.Services
 
 			_dataServiceAgent.Run();
 		}
-
-		private bool IsTraceDisabled()
-		{
-			OrigamSettings settings 
-				= (OrigamSettings)ConfigurationManager.GetActiveConfiguration();
-			return !settings.TraceEnabled;
-		}
-
+		
 		#endregion
 
 		#region IService Members
@@ -203,6 +197,20 @@ namespace Origam.Workbench.Services
 		{
 			_dataServiceAgent = null;
 			_schema = null;
+		}
+
+		public bool Enabled
+		{
+			get
+			{
+				if (_enabled.HasValue)
+				{
+					return _enabled.Value;
+				}
+				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
+				return settings.TraceEnabled;
+			}
+			set => _enabled = value;
 		}
 
 		public void InitializeService()

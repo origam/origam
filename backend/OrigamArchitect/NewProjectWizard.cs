@@ -321,7 +321,7 @@ namespace OrigamArchitect
         }
         private void pagePaths_Commit(object sender, WizardPageConfirmEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtTemplateFolder.Text))
+            if (string.IsNullOrEmpty(defaultModelPath.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterTemplateFolder_Message, strings.NewProjectWizard_Title, null);
                 e.Cancel = true;
@@ -333,16 +333,15 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            DirectoryInfo dir = new DirectoryInfo(txtTemplateFolder.Text);
-            if (!dir.Exists)
+            if (!File.Exists(defaultModelPath.Text))
             {
-                AsMessageBox.ShowError(this, strings.TemplateFolderNotExists_Message, strings.NewProjectWizard_Title, null);
+                AsMessageBox.ShowError(this, strings.DefaultModelFileNotExists_Message, strings.NewProjectWizard_Title, null);
                 e.Cancel = true;
                 return;
             }
             if (Deployment == DeploymentType.Local)
             {
-                dir = new DirectoryInfo(txtBinFolderRoot.Text);
+                DirectoryInfo dir = new DirectoryInfo(txtBinFolderRoot.Text);
                 if (!dir.Exists)
                 {
                     AsMessageBox.ShowError(this, strings.WebAppFolderNotExists_Message, strings.NewProjectWizard_Title, null);
@@ -351,7 +350,7 @@ namespace OrigamArchitect
                 }
                 _project.BinFolder = Path.Combine(txtBinFolderRoot.Text, txtName.Text);
             }
-            _project.ServerTemplateFolder = txtTemplateFolder.Text;
+            _project.DefaultModelPath = defaultModelPath.Text;
             _project.GitRepository = gitrepo.Checked;
         }
 
@@ -367,7 +366,7 @@ namespace OrigamArchitect
 
         private void btnSelectTemplateFolder_Click(object sender, EventArgs e)
         {
-            SelectFolder(txtTemplateFolder);
+            SelectFolder(defaultModelPath);
         }
 
         private void SelectFolder(TextBox targetControl)
@@ -386,7 +385,7 @@ namespace OrigamArchitect
             txtSourcesFolder.Text = _settings.SourcesFolder;
             txtdosourcefolder.Text = _settings.DockerSourceFolder;
             txtBinFolderRoot.Text = _settings.BinFolder;
-            txtTemplateFolder.Text = Path.Combine(Application.StartupPath, @"Project Templates\Default");
+            defaultModelPath.Text = Path.Combine(Application.StartupPath, @"Project Templates\DefaultModel.zip");
             txtBinFolderRoot.Visible = false;
             btnSelectBinFolderRoot.Visible = false;
             lblBinFolderRoot.Visible = false;
@@ -527,6 +526,7 @@ namespace OrigamArchitect
         {
             if (Deployment == DeploymentType.DockerPostgres)
             {
+                dockerSourceFolderLabel.Show();
                 txtdosourcefolder.Show();
                 dockerlabel.Show();
                 dockerlabeldescription.Show();
@@ -534,6 +534,7 @@ namespace OrigamArchitect
             }
             else
             {
+                dockerSourceFolderLabel.Hide();
                 txtdosourcefolder.Hide();
                 dockerlabel.Hide();
                 dockerlabeldescription.Hide();

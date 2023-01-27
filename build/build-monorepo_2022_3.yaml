@@ -374,26 +374,10 @@ jobs:
      - task: GitHubRelease@1
        inputs:
          gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam'
-         action: 'delete'
-         tag: '$(TAG_LATEST)'
-       displayName: Delete previous GitHub origam/$(TAG_LATEST) release
-       continueOnError: true
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
          repositoryName: 'origam/origam-html-chat'
          action: 'delete'
          tag: '$(TAG)'
        displayName: Delete previous GitHub origam-html-chat/$(TAG) release
-       continueOnError: true
-     - task: GitHubRelease@1
-       inputs:
-         gitHubConnection: 'https://github.com/origam/'
-         repositoryName: 'origam/origam-html-chat'
-         action: 'delete'
-         tag: '$(TAG_LATEST)'
-       displayName: Delete previous GitHub origam-html-chat/$(TAG_LATEST) release
        continueOnError: true
      - script: |
         git tag -f $(TAG)

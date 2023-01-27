@@ -49,7 +49,7 @@ export class StandaloneDetailNavigator extends React.Component<{
     if (this.props.node.dataView) {
       getOpenedScreen(this.props.node.dataView)
         .activationHandler
-        .add(() => this.onScreenActivation());
+        .set(() => this.onScreenActivation());
       this.onScreenActivation();
     }
   }
@@ -58,7 +58,7 @@ export class StandaloneDetailNavigator extends React.Component<{
     if (this.props.node.dataView) {
       getOpenedScreen(this.props.node.dataView)
         .activationHandler
-        .remove(() => this.onScreenActivation());
+        .clear();
     }
   }
 

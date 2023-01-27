@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import { requestFocus } from "utils/focus";
 
 export function openNewUrl(ctx: any) {
   return function*openNewUrl(
@@ -33,7 +34,7 @@ export function openNewUrl(ctx: any) {
       default:
         // TODO: Transform url to be absolute to urlroot?
         const win = window.open(`${url}`, "_blank");
-        win && win.focus();
+        win && requestFocus(win as any);
         break;
     }
   };

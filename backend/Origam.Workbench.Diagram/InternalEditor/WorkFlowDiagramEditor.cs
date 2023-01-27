@@ -221,7 +221,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 	        var workflowTaskDependency = dependentItem.ChildItems
 		        .ToGeneric()
 		        .OfType<WorkflowTaskDependency>()
-		        .Single(x => x.WorkflowTaskId == sourceId);
+		        .First(x => x.WorkflowTaskId == sourceId);
 	        workflowTaskDependency.IsDeleted = true;
 	        workflowTaskDependency.Persist();
         }

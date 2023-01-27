@@ -34,5 +34,6 @@ namespace Origam.Workbench.Services
 			string ruleResult,  Guid workflowInstanceId);		
 		void TraceRule(Guid ruleId, string ruleName, string ruleInput,
 			string ruleResult);
+		bool Enabled { get; set; }
 	}
 }

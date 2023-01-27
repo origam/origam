@@ -23,7 +23,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -40,7 +39,6 @@ using Newtonsoft.Json.Linq;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using Origam;
-using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
@@ -93,6 +91,9 @@ namespace OrigamArchitect
 		WorkbenchSchemaService _schema;
 		private StatusBarService _statusBarService;
 		bool closeAll = false;
+        private static string UserProfileFolder =>
+							  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+							  "ORIGAM", GetVersion(), "OrigamSettings.config");
 
 		// Toolboxes
 		SchemaBrowser _schemaBrowserPad;
@@ -1462,8 +1463,8 @@ namespace OrigamArchitect
 				// Init services
 				InitializeConnectedServices();
 
-				// Initialize model-connected user interface
-				InitializeConnectedPads();
+                // Initialize model-connected user interface
+                InitializeConnectedPads();
                 CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
@@ -1503,7 +1504,7 @@ namespace OrigamArchitect
 #endif
 			this.LoadWorkspace();
 			cmd.Run();
-		}
+        }
 
 		private void SubscribeToUpgradeServiceEvents()
 		{
@@ -1709,7 +1710,7 @@ namespace OrigamArchitect
 
 				UpdateTitle();
 
-				modelCheckCancellationTokenSource.Cancel();
+                modelCheckCancellationTokenSource.Cancel();
 				modelCheckCancellationTokenSource =
 					new CancellationTokenSource();
 				return true;
@@ -1755,6 +1756,7 @@ namespace OrigamArchitect
 		/// </summary>
 		private bool LoadConfiguration(string configurationName)
 		{
+			CreateUserProfileConfigFile();
 			OrigamSettingsCollection configurations =
 				ConfigurationManager.GetAllConfigurations();
 
@@ -1801,6 +1803,24 @@ namespace OrigamArchitect
 
 			return true;
 		}
+
+        private void CreateUserProfileConfigFile()
+        {
+            if (!File.Exists(UserProfileFolder))
+            {
+                FileInfo file = new(UserProfileFolder);
+                file.Directory.Create();
+                OrigamSettingsReader origamSetting = new(UserProfileFolder);
+                if (File.Exists(origamSetting.GetDefaultPathToOrigamSettings()))
+                {
+                    File.Copy(origamSetting.GetDefaultPathToOrigamSettings(), UserProfileFolder);
+                }
+				else
+				{
+                    new OrigamSettingsReader(UserProfileFolder).Write(new OrigamSettingsCollection());
+                }
+            }
+        }
 
 		private void UnloadConnectedServices()
 		{
@@ -2066,9 +2086,9 @@ namespace OrigamArchitect
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-		private void _schema_SchemaLoaded(object sender, EventArgs e)
+        private void _schema_SchemaLoaded(object sender, EventArgs e)
 		{
-			OrigamEngine.InitializeSchemaItemProviders(_schema);
+            OrigamEngine.InitializeSchemaItemProviders(_schema);
             IDeploymentService deployment 
                 = ServiceManager.Services.GetService<IDeploymentService>();
 			IParameterService parameterService 
@@ -2177,7 +2197,7 @@ namespace OrigamArchitect
             UpdateTitle();
 		}
 
-        private void UpdateTitle()
+        public void UpdateTitle()
         {
 #if ORIGAM_CLIENT
 			Title = "";
@@ -2269,7 +2289,7 @@ namespace OrigamArchitect
 		private void _schema_SchemaUnloading(object sender, CancelEventArgs e)
 		{
 			e.Cancel = ! UnloadSchema();
-		}
+        }
 
 		private void CheckModelRootPackageVersion()
 		{
@@ -2548,6 +2568,12 @@ namespace OrigamArchitect
             {
                 return false;
             }
+        }
+
+        private static string GetVersion()
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            return assembly.GetName().Version.Major + "." + assembly.GetName().Version.Minor;
         }
     }
 }

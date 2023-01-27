@@ -43,7 +43,10 @@ namespace Origam.Workflow
 	public class DebugInfo : IDebugInfoProvider
 	{
 		private IDeploymentService _deployment = null;
-
+		private readonly ResourceTools resourceTools = new ResourceTools(
+			ServiceManager.Services.GetService<IBusinessServicesService>(),
+			SecurityManager.CurrentUserProfile);
+		
 		public DebugInfo()
 		{
 		}
@@ -236,7 +239,7 @@ namespace Origam.Workflow
 			AddHeader("Resource Management Information", result);
 			try
 			{
-				AddInfo("Active Resource Id", ResourceTools.Instance.ResourceIdByActiveProfile(), result);
+				AddInfo("Active Resource Id", resourceTools.ResourceIdByActiveProfile(), result);
 			}
 			catch(Exception ex)
 			{
