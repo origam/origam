@@ -2430,7 +2430,7 @@ namespace OrigamArchitect
 
                 using(Stream s = sfd.OpenFile())
                 {
-                    workbook.Write(s);
+                    workbook.Write(s, false);
                 }
 
                 System.Diagnostics.Process.Start(sfd.FileName);
