@@ -115,7 +115,7 @@ namespace Origam.Server.Controller
                 return new FileCallbackResult(new MediaTypeHeaderValue(Response.ContentType),
                     async (outputStream, _) =>
                     {
-                        workbookResult.Value.Write(outputStream);
+                        workbookResult.Value.Write(outputStream, false);
                     });
 #pragma warning restore 1998
             });
