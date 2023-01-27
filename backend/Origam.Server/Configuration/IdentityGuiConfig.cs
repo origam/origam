@@ -21,10 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using Origam.Server.Authorization;
+
 namespace Origam.Server.Configuration
 {
     public class IdentityGuiConfig
     {
         public bool AllowPasswordReset { get; set; }
+        public bool IsInitialSetupNeeded => UserTools.IsInitialSetupNeeded();
     }
 }

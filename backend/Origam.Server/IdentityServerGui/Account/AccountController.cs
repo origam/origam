@@ -226,7 +226,8 @@ namespace Origam.Server.IdentityServerGui.Account
                     Email = model.Email,
                     FirstName = model.FirstName,
                     Name = model.Name,
-                    RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
+                    RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE,
+                    SecurityStamp = ""
                 };
                 IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
                 user = await _userManager.FindByNameAsync(user.UserName);

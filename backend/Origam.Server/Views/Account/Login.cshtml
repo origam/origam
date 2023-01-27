@@ -91,7 +91,14 @@
 {
     <div class="left-aligned">
         <div class="initial-user-statement">
-            @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+                @if(guiConfig.IsInitialSetupNeeded)
+                {
+                @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+                }
+                else
+                {
+                @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/register">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+                }
         </div>
     </div>
 }
