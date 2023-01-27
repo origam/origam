@@ -59,7 +59,7 @@ export class ChangeMasterRecordDialog extends React.Component<{
             <button tabIndex={0} onClick={this.props.onDontSaveClick}>
               {T("No", "button_no")}
             </button>
-            <button tabIndex={0} onClick={this.props.onCancelClick}>
+            <button id={"cancelRecordChangeButton"} tabIndex={0} onClick={this.props.onCancelClick}>
               {T("Cancel", "button_cancel")}
             </button>
           </>

@@ -1786,13 +1786,16 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 									.ExtendedProperties["OrigamDataType"]));
 								break;
 						}
-
-						// copy all attributes to the displayed primary key column
+						// The Id column was created earlier in AsPanelBuilder.cs
+						// and is meant to be invisible.
+						// If the Id column was added to the model in the Architect
+						// and thus should be the invisible, the original invisible
+						// Id column is removed. Duplicated Id column would create
+						// problems in the client
 						XmlElement zeroColumn = propertiesElement.FirstChild as XmlElement;
 						if(propertyElement.GetAttribute("Id") == zeroColumn.GetAttribute("Id"))
 						{
-							XmlNode clone = propertyElement.CloneNode(true);
-							propertiesElement.ReplaceChild(clone, zeroColumn);
+							propertiesElement.RemoveChild(zeroColumn);
 						}
 						if(csi.MultiColumnAdapterFieldCondition != Guid.Empty)
 						{

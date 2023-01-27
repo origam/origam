@@ -117,56 +117,57 @@ export function fixColumnWidth(width: number) {
   }
 }
 
-function parseProperty(property: any, idx: number): IProperty {
+function parseProperty(node: any, idx: number): IProperty {
   const propertyObject = new Property({
-    xmlNode: property,
-    id: property.attributes.Id,
-    tabIndex: property.attributes.TabIndex,
-    controlPropertyId: property.attributes.ControlPropertyId,
-    controlPropertyValue: property.attributes.ControlPropertyValue,
-    modelInstanceId: property.attributes.ModelInstanceId || "",
-    name: property.attributes.Name,
-    readOnly: property.attributes.ReadOnly === "true",
-    x: parseInt(property.attributes.X, 10),
-    y: parseInt(property.attributes.Y, 10),
-    width: parseInt(property.attributes.Width, 10),
-    height: parseInt(property.attributes.Height, 10),
-    captionLength: parseInt(property.attributes.CaptionLength, 10),
-    captionPosition: property.attributes.CaptionPosition,
-    entity: property.attributes.Entity,
-    column: property.attributes.Column,
-    parameters: getPropertyParameters(property),
-    dock: property.attributes.Dock,
-    multiline: property.attributes.Multiline === "true",
-    isPassword: property.attributes.IsPassword === "true",
-    isRichText: property.attributes.IsRichText === "true",
-    autoSort: property.attributes.AutoSort === "true",
-    maxLength: parseInt(property.attributes.MaxLength, 10),
-    modelFormatterPattern: replaceDefaultDateFormats(property.attributes.FormatterPattern),
-    formatterPattern: property.attributes.FormatterPattern
-      ? getMomentFormat(property)
+    xmlNode: node,
+    id: node.attributes.Id,
+    tabIndex: node.attributes.TabIndex,
+    controlPropertyId: node.attributes.ControlPropertyId,
+    controlPropertyValue: node.attributes.ControlPropertyValue,
+    modelInstanceId: node.attributes.ModelInstanceId || "",
+    name: node.attributes.Name,
+    readOnly: node.attributes.ReadOnly === "true",
+    x: parseInt(node.attributes.X, 10),
+    y: parseInt(node.attributes.Y, 10),
+    width: parseInt(node.attributes.Width, 10),
+    height: parseInt(node.attributes.Height, 10),
+    captionLength: parseInt(node.attributes.CaptionLength, 10),
+    captionPosition: node.attributes.CaptionPosition,
+    entity: node.attributes.Entity,
+    column: node.attributes.Column,
+    alwaysHidden: node.attributes.AlwaysHidden === "true",
+    parameters: getPropertyParameters(node),
+    dock: node.attributes.Dock,
+    multiline: node.attributes.Multiline === "true",
+    isPassword: node.attributes.IsPassword === "true",
+    isRichText: node.attributes.IsRichText === "true",
+    autoSort: node.attributes.AutoSort === "true",
+    maxLength: parseInt(node.attributes.MaxLength, 10),
+    modelFormatterPattern: replaceDefaultDateFormats(node.attributes.FormatterPattern),
+    formatterPattern: node.attributes.FormatterPattern
+      ? getMomentFormat(node)
       : "",
-    customNumericFormat: property.attributes.CustomNumericFormat,
-    identifier: property.attributes.Identifier,
-    gridColumnWidth: property.attributes.GridColumnWidth
-      ? parseInt(property.attributes.GridColumnWidth)
+    customNumericFormat: node.attributes.CustomNumericFormat,
+    identifier: node.attributes.Identifier,
+    gridColumnWidth: node.attributes.GridColumnWidth
+      ? parseInt(node.attributes.GridColumnWidth)
       : 100,
     columnWidth: fixColumnWidth(
-      property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100
+      node.attributes.GridColumnWidth ? parseInt(node.attributes.GridColumnWidth) : 100
     ),
-    suppressEmptyColumns: property.attributes.SuppressEmptyColumns === "true",
-    lookupId: property.attributes.LookupId,
-    lookup: !property.attributes.LookupId
+    suppressEmptyColumns: node.attributes.SuppressEmptyColumns === "true",
+    lookupId: node.attributes.LookupId,
+    lookup: !node.attributes.LookupId
       ? undefined
       : new Lookup({
-        dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
-        lookupId: property.attributes.LookupId,
-        identifier: property.attributes.Identifier,
-        identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
-        dropDownType: property.attributes.DropDownType,
-        cached: property.attributes.Cached === "true",
-        searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
-        dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
+        dropDownShowUniqueValues: node.attributes.DropDownShowUniqueValues === "true",
+        lookupId: node.attributes.LookupId,
+        identifier: node.attributes.Identifier,
+        identifierIndex: parseInt(node.attributes.IdentifierIndex, 10),
+        dropDownType: node.attributes.DropDownType,
+        cached: node.attributes.Cached === "true",
+        searchByFirstColumnOnly: node.attributes.SearchByFirstColumnOnly === "true",
+        dropDownColumns: findStopping(node, (n) => n.name === "Property").map(
           (ddProperty) => {
             return new DropDownColumn({
               id: ddProperty.attributes.Id,
@@ -178,7 +179,7 @@ function parseProperty(property: any, idx: number): IProperty {
           }
         ),
         dropDownParameters: findStopping(
-          property,
+          node,
           (n) => n.name === "ComboBoxParameterMapping"
         ).map((ddParam) => {
           return {
@@ -188,17 +189,17 @@ function parseProperty(property: any, idx: number): IProperty {
         }),
       }),
 
-    allowReturnToForm: property.attributes.AllowReturnToForm === "true",
-    isTree: property.attributes.IsTree === "true",
-    isAggregatedColumn: property.attributes.Aggregated || false,
-    isLookupColumn: property.attributes.IsLookupColumn || false,
-    style: cssString2Object(property.attributes.Style),
-    toolTip: property.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
-    supportsServerSideSorting: property.attributes.SupportsServerSideSorting === "true",
-    fieldType: property.attributes.FieldType
+    allowReturnToForm: node.attributes.AllowReturnToForm === "true",
+    isTree: node.attributes.IsTree === "true",
+    isAggregatedColumn: node.attributes.Aggregated || false,
+    isLookupColumn: node.attributes.IsLookupColumn || false,
+    style: cssString2Object(node.attributes.Style),
+    toolTip: node.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text,
+    supportsServerSideSorting: node.attributes.SupportsServerSideSorting === "true",
+    fieldType: node.attributes.FieldType
   });
-  if (property.elements && property.elements.length > 0) {
-    property.elements
+  if (node.elements && node.elements.length > 0) {
+    node.elements
       .filter((element: any) => element.name === "Property")
       .map((childProperty: any, idx: number) => parseProperty(childProperty, idx))
       .forEach((childProperty: IProperty) => {
@@ -440,7 +441,9 @@ export function*interpretScreenXml(
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
-          tablePropertyIds: properties.slice(1).map((prop) => prop.id),
+          tablePropertyIds: properties
+            .filter(x => !x.alwaysHidden)
+            .map((prop) => prop.id),
           columnConfigurationModel: new ColumnConfigurationModel(),
           filterConfiguration: filterConfiguration,
           filterGroupManager: filterGroupManager,

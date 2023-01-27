@@ -86,6 +86,7 @@ export const DialogScreen: React.FC<{
             }
             buttonsCenter={null}
             buttonsLeft={null}
+            onWindowMove={(top, left)=> props.openedScreen.onWindowMove(top, left)}
             buttonsRight={
               <Observer>
                 {() =>

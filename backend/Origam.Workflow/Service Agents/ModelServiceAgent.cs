@@ -27,6 +27,8 @@ using Origam.Schema;
 using Origam.Services;
 using Origam.Workbench.Services;
 using System.Data;
+using Origam.DA.ObjectPersistence;
+using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -40,6 +42,12 @@ namespace Origam.Workflow
         const string GENERATED_PACKAGE_NAME = "_generated";
         public ModelServiceAgent()
         {
+            persistenceService = ServiceManager
+                .Services
+                .GetService<IPersistenceService>();
+            tracingService = ServiceManager
+                .Services
+                .GetService<TracingService>();
         }
 
         #region Private Methods
@@ -96,6 +104,9 @@ namespace Origam.Workflow
 
         #region IServiceAgent Members
         private object _result;
+        private readonly TracingService tracingService;
+        private IPersistenceService persistenceService;
+
         public override object Result
         {
             get
@@ -123,6 +134,31 @@ namespace Origam.Workflow
                     _result = ElementList(
                         Parameters.Get<Guid>("ParentId"),
                         Parameters.Get<string>("ItemType"));
+                    break;  
+                
+                case "SetTrace":
+                    tracingService.Enabled = Parameters.Get<bool>("Enabled");
+                    _result = tracingService.Enabled;
+                    break;  
+                
+                case "GetTrace":
+                    _result = tracingService.Enabled;
+                    break;             
+                
+                case "TraceObject":
+                    Guid objectId = Parameters.Get<Guid>("ObjectId");
+                    var traceable = persistenceService.SchemaProvider
+                        .RetrieveInstance<ITraceable>(
+                            objectId, 
+                            useCache: true);
+                    string traceType = Parameters.Get<string>("TraceType");
+                    if (!Enum.TryParse(traceType, out Trace trace))
+                    {
+                        throw new ArgumentException($"\"{traceType}\" cannot be parsed to {nameof(Trace)}");
+                    }
+                    traceable.TraceLevel = trace;
+                    persistenceService.SchemaProvider.Persist(traceable as IPersistent);
+                    _result = traceable.TraceLevel;
                     break;
 
                 default:

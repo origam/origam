@@ -282,6 +282,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           <>
                             <DataViewHeaderGroup noShrink={true}>
                               <DataViewHeaderAction
+                                className={"firstRowButton"}
                                 onMouseDown={onFirstRowClickEvt}
                                 isDisabled={goToFirstRowDisabled}
                               >
@@ -290,19 +291,20 @@ export class CDataViewHeaderInner extends React.Component<{
                                   tooltip={T("First", "move_first_tool_tip")}
                                 />
                               </DataViewHeaderAction>
-                              <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
+                              <DataViewHeaderAction className={"previousRowButton"} onMouseDown={onPrevRowClickEvt}>
                                 <Icon
                                   src="./icons/list-arrow-previous.svg"
                                   tooltip={T("Previous", "move_prev_tool_tip")}
                                 />
                               </DataViewHeaderAction>
-                              <DataViewHeaderAction onMouseDown={onNextRowClickEvt}>
+                              <DataViewHeaderAction className={"nextRowButton"} onMouseDown={onNextRowClickEvt}>
                                 <Icon
                                   src="./icons/list-arrow-next.svg"
                                   tooltip={T("Next", "move_next_tool_tip")}
                                 />
                               </DataViewHeaderAction>
                               <DataViewHeaderAction
+                                className={"lastRowButton"}
                                 onMouseDown={onLastRowClickEvt}
                                 isDisabled={goToLastRowDisabled}
                               >

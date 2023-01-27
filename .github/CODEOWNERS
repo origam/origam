@@ -1,3 +1,5 @@
 * @tvavrda @washibana
-backend/Origam.DA.Service @tvavrda @washibana @JiriPrajz
-frontend-html/* @JindrichSusen
+/backend/Origam.DA.Service/ @tvavrda @washibana @JiriPrajz @JindrichSusen
+/backend/ @tvavrda @washibana @JindrichSusen
+/frontend-html/ @tvavrda @washibana @JindrichSusen
+/test/tests_e2e/ @tvavrda @washibana @JindrichSusen

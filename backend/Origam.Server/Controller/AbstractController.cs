@@ -91,6 +91,10 @@ namespace Origam.Server.Controller
             {
                 return NotFound(ex);
             }
+            catch (RowNotFoundException ex)
+            {
+                return NotFound(ex);
+            }
             catch (DBConcurrencyException ex)
             {
                 log.LogError(ex, ex.Message);

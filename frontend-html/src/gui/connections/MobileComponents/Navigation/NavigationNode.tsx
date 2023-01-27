@@ -25,6 +25,7 @@ import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/Brea
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 export interface INavigationNode {
   readonly name: string;
@@ -175,6 +176,9 @@ export class NavigatorState{
   private onNodeClick(node: INavigationNode){
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
+    getOpenedScreen(node.dataView)
+      .activationHandler
+      .set(() => this.mobileState.activeDataViewId = node.dataView?.id);
     const nodes = this.currentNode.parentChain
       .map(navNode =>
         new BreadCrumbNode(

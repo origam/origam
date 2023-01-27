@@ -4,6 +4,7 @@
     "PathToChatApp": "",
     "ChatRefreshInterval": 1000
   },
+  "ExtensionDlls": ["C:\\someDirectory\\controller.dll"],
   "ReloadModelWhenFilesChangesDetected": "false",
   "UserConfig": {
     "FromAddress": "admin@localhost",

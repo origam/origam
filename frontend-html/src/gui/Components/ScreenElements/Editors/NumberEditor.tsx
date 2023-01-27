@@ -44,8 +44,8 @@ export class NumberEditor extends React.Component<{
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
-  onEditorBlur?(event: any): void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  onEditorBlur?(event: any): Promise<void>;
+  subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   id?: string
 }> {
@@ -84,7 +84,9 @@ export class NumberEditor extends React.Component<{
 
   componentDidMount() {
     if (this.inputRef.current && this.props.subscribeToFocusManager) {
-      this.props.subscribeToFocusManager(this.inputRef.current);
+      this.props.subscribeToFocusManager(
+        this.inputRef.current,
+        async()=> await this.handleBlur(null));
     }
     this.updateTextOverflowState();
   }
@@ -124,11 +126,8 @@ export class NumberEditor extends React.Component<{
     await runInFlowWithHandler({
       ctx: this.props.property,
       action: async () => {
-        let value = this.formatForOnChange(this.state.value);
-        if(this.formatForOnChange(this.props.value) !== value){
-          this.props.onChange && await this.props.onChange(null, value);
-        }
-        this.props.onEditorBlur?.(event);
+        await this.onChange();
+        await this.props.onEditorBlur?.(event);
         this.setState(
           { value: this.formatForDisplay(this.state.value)}
         );
@@ -160,13 +159,17 @@ export class NumberEditor extends React.Component<{
       ctx: this.props.property,
       action: async () => {
         if (event.key === "Enter" || event.key === "Tab"){
-          let value = this.formatForOnChange(this.state.value);
-          if(this.formatForOnChange(this.props.value) !== value){
-            this.props.onChange && await this.props.onChange(null, value);
-          }
+          await this.onChange();
         }
         this.props.onKeyDown && this.props.onKeyDown(event);
       }})
+  }
+
+  private async onChange() {
+    let value = this.formatForOnChange(this.state.value);
+    if (this.formatForOnChange(this.props.value) !== value) {
+      this.props.onChange && await this.props.onChange(null, value);
+    }
   }
 
   getStyle() {

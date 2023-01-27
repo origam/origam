@@ -23,7 +23,16 @@ namespace Origam.Schema.GuiModel
         public PanelControlSet ScreenSection
         {
             get => (PanelControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
-            set => ScreenSectionId = value?.Id ?? Guid.Empty;
+            set
+            {
+                ScreenSectionId = value?.Id ?? Guid.Empty;
+                if (ScreenSectionId != null && ScreenSectionId != Guid.Empty)
+                {
+                    var panelControl = (PanelControlSet)PersistenceProvider.
+                                       RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
+                    Name = panelControl.Name;
+                }
+            }
         }
         public ScreenSectionCondition(Guid extensionId) : base(extensionId)
         {

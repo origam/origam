@@ -20,10 +20,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 import { flow } from "mobx";
 import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
 import { handleError } from "../../actions/handleError";
+import { getFocusManager } from "model/selectors/getFocusManager";
+import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export function onFirstRowClick(ctx: any) {
   return flow(function*onPrevRowClick(event: any) {
     try {
+      const focusManager = getFocusManager(ctx);
+      yield focusManager.activeEditorCloses();
+      const dataView = getDataView(ctx);
+      if (!(yield shouldProceedToChangeRow(dataView))) {
+        return;
+      }
       yield*selectFirstRow(ctx)();
     } catch (e) {
       yield*handleError(ctx)(e);

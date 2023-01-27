@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard20</TargetFrameworks>
+	<LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Docker.DotNet" Version="3.125.2" />
+    <PackageReference Include="Docker.DotNet" Version="3.125.12" />
   </ItemGroup>
 
 </Project>

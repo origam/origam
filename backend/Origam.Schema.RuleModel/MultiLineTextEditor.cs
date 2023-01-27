@@ -50,8 +50,9 @@ namespace Origam.Schema.RuleModel
             textEditorBox.AcceptsReturn = true;
             textEditorBox.Text = value as string;
             _editorService.DropDownControl(textEditorBox);
-            return textEditorBox.Text;
-
+            return textEditorBox.Text == (string)value
+                ? value 
+                : textEditorBox.Text;
         }
     }
 #endif

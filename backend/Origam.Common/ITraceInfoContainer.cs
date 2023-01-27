@@ -18,12 +18,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
 
-namespace Origam.Server.Model.Chat
+namespace Origam;
+
+public interface ITraceInfoContainer
 {
-    public class RequestUserId
-    {
-        public Guid UserId { get; set; }
-    }
+    void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo);
 }
