@@ -48,10 +48,11 @@ export function mobileRecursiveBuilder(args:{
       let detailNavigationNode = new NavigationNode();
 
       const [masterXmlNode, detailXmlNode] = findUIChildren(xso);
-      const masterReactElement = run(masterXmlNode, masterNavigationNode).navigatorElement;
+      const parsingResult = run(masterXmlNode, masterNavigationNode);
+      const masterReactElement = parsingResult.navigatorElement;
       if (!detailXmlNode) {
         if (masterReactElement) {
-          return masterReactElement;
+          return parsingResult;
         } else {
           return {
             navigatorElement: args.componentFactory.getDetailNavigator(masterNavigationNode),
@@ -189,5 +190,6 @@ export function mobileRecursiveBuilder(args:{
     }
   }
 
-  return run(args.uiRoot, undefined).navigatorElement;
+  const iParsingResult = run(args.uiRoot, undefined);
+  return iParsingResult.navigatorElement;
 }
