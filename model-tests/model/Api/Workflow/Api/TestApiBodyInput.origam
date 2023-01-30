@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2">
   <w:Workflow
     asi:abstract="false"
     x:id="e6235f64-bf67-4391-b346-d745c9a1be27"
     asi:name="TestApiBodyInput"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
+    <crs:WorkflowTask
+      asi:abstract="false"
+      x:id="af0156f8-ee95-4fbf-9a51-e41ea88dacc7"
+      asi:name="CheckInput"
+      aws:onFailure="WorkflowFails"
+      aws:roles="*"
+      aws:validationRule="Api/Rule/Api/TestApiBodyInputResponseCheck.origam#TestApiBodyInputResponseCheck/e0b5439a-3a4c-45d8-98f5-865271c14797"
+      aws:validationRuleContextStore="Api/Workflow/Api/TestApiBodyInput.origam#TestApiBodyInput/TestApiBodyInput/cb52771f-9381-4609-b68d-696b55ca3593" />
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -13,12 +28,5 @@
       cs:isReturnValue="true"
       asi:name="TestApiBodyInput"
       cs:structure="Api/DataStructure/Api/TestApiBodyInput.origam#TestApiBodyInput/06db1d62-3019-4dfe-8393-645f2d78ec11" />
-    <crs:WorkflowTask
-      asi:abstract="false"
-      x:id="af0156f8-ee95-4fbf-9a51-e41ea88dacc7"
-      asi:name="CheckInput"
-      aws:roles="*"
-      aws:validationRule="Api/Rule/Api/TestApiBodyInputResponseCheck.origam#TestApiBodyInputResponseCheck/e0b5439a-3a4c-45d8-98f5-865271c14797"
-      aws:validationRuleContextStore="Api/Workflow/Api/TestApiBodyInput.origam#TestApiBodyInput/TestApiBodyInput/cb52771f-9381-4609-b68d-696b55ca3593" />
   </w:Workflow>
 </x:file>

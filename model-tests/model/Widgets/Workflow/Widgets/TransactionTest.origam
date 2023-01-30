@@ -2,8 +2,7 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:awb="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowBlock/6.0.1"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
@@ -11,13 +10,14 @@
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="05247e6b-5569-49e0-99ae-7bb7af402198"
     asi:name="TransactionTest"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -31,12 +31,14 @@
       asi:abstract="false"
       x:id="397f578b-30ef-4eab-a07f-ad217282f640"
       asi:name="Transaction"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       twb:transactionType="Atomic">
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="a553d3f5-bdd8-4717-9a2a-1d13795b8966"
         asi:name="0200_Store"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Widgets/Workflow/Widgets/TransactionTest.origam#TransactionTest/AllDataTypes/bb99bcb7-9643-4047-8cb8-5f365ab2540b"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
@@ -84,6 +86,7 @@
         asi:abstract="false"
         x:id="e8f3b0eb-dc7d-4477-a82b-61b9210c50d4"
         asi:name="0100_New_record"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Widgets/Workflow/Widgets/TransactionTest.origam#TransactionTest/AllDataTypes/bb99bcb7-9643-4047-8cb8-5f365ab2540b"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"

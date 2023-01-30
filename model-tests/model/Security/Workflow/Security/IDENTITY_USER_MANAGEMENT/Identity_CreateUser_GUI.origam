@@ -2,20 +2,21 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="79726423-e658-44ea-b9ad-0c82cfc234d0"
     asi:name="Identity_CreateUser_GUI"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -31,6 +32,7 @@
       aws:features="IDENTITY_USER_MANAGEMENT"
       x:id="ca76b432-8df6-4470-97e2-3ea9218d924b"
       asi:name="01_CreateBusinessPartner"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI.origam#Identity_CreateUser_GUI/UserProfile_New/d96d3fd3-0d28-44ec-b5cd-be60d1ea0f48"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -74,6 +76,7 @@
       uift:isFinalForm="true"
       uift:isRefreshSuppressedBeforeFirstSave="true"
       asi:name="02_FillOutBusinessPartner"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser_GUI.origam#Identity_CreateUser_GUI/UserProfile_New/d96d3fd3-0d28-44ec-b5cd-be60d1ea0f48"
       wt:outputMethod="FullMerge"
       uift:refreshPortalAfterSave="False"

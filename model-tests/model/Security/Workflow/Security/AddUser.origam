@@ -2,7 +2,7 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
@@ -10,13 +10,14 @@
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="7ab2867c-b653-4611-bbb7-d5d8c10f4790"
     asi:name="AddUser"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -82,6 +83,7 @@
       asi:abstract="false"
       x:id="08ec6e97-1f85-4b11-a98d-ec81f4522775"
       asi:name="01_CreateBusinessPartner"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/AddUser.origam#AddUser/UserProfile_New/e40c0e9d-74ae-40fb-b83a-adce569ada32"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -150,12 +152,14 @@
       asi:abstract="false"
       x:id="039ea279-2300-42f2-8718-ff3a43512195"
       asi:name="02_Save"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       twb:transactionType="Atomic">
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="293e08d2-24f2-468e-88e4-6836d8fc2cab"
         asi:name="01_SaveBusinessPartner"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/AddUser.origam#AddUser/UserProfile_New/e40c0e9d-74ae-40fb-b83a-adce569ada32"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
@@ -190,6 +194,7 @@
         asi:abstract="false"
         x:id="552b2634-fa01-455b-ac81-f00fc7b3f694"
         asi:name="03_SaveRole"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/AddUser.origam#AddUser/UserProfile_New/e40c0e9d-74ae-40fb-b83a-adce569ada32"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
@@ -230,6 +235,7 @@
         asi:abstract="false"
         x:id="9aad06c7-3968-4b5a-9758-742e998cd2c3"
         asi:name="02_SaveResource"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/AddUser.origam#AddUser/UserProfile_New/e40c0e9d-74ae-40fb-b83a-adce569ada32"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
