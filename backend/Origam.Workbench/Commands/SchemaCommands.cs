@@ -29,13 +29,11 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using LibGit2Sharp;
-using Org.BouncyCastle.Asn1.Mozilla;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Schema;
-using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.UI;
 using Origam.Windows.Editor.GIT;
@@ -410,7 +408,12 @@ namespace Origam.Workbench.Commands
 	/// </summary>
 	public class EditActiveSchemaItem : AbstractMenuCommand
 	{
-		WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+		private WorkbenchSchemaService _schema;
+
+        public EditActiveSchemaItem(WorkbenchSchemaService schema)
+		{
+			_schema = schema;
+		}
 		public override bool IsEnabled
 		{
 			get
@@ -426,15 +429,18 @@ namespace Origam.Workbench.Commands
 			}
 			set
 			{
-				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), 
+																	"IsEnabled");
 			}
 		}
 
 		public override void Run()
 		{
-			EditSchemaItem cmd = new();
-			cmd.Owner = _schema.ActiveNode;
-			cmd.Run();
+            EditSchemaItem cmd = new()
+            {
+                Owner = _schema.ActiveNode
+            };
+            cmd.Run();
 		}
 
 		public override void Dispose()
@@ -448,8 +454,12 @@ namespace Origam.Workbench.Commands
 
     public class EditActiveSchemaItemDocked : AbstractMenuCommand
     {
-        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-        public bool ShowDocked { get; set; } = false;
+		private WorkbenchSchemaService _schema;
+
+        public EditActiveSchemaItemDocked(WorkbenchSchemaService schema)
+		{
+			_schema= schema;
+		}
         public override bool IsEnabled
         {
             get
@@ -466,15 +476,18 @@ namespace Origam.Workbench.Commands
             }
             set
             {
-                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+                throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), 
+																	"IsEnabled");
             }
         }
 
         public override void Run()
         {
-            EditSchemaItem cmd = new();
-            cmd.Owner = _schema.ActiveNode;
-            cmd.ShowDocked = ShowDocked;
+            EditSchemaItem cmd = new()
+            {
+                Owner = _schema.ActiveNode,
+                ShowDocked = true
+            };
             cmd.Run();
         }
 

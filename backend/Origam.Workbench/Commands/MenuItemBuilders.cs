@@ -382,7 +382,12 @@ namespace Origam.Workbench.Commands
 
     public class EditItemMenuBuilder : ISubmenuBuilder
     {
-        WorkbenchSchemaService _schema = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        private WorkbenchSchemaService _schema;
+        public EditItemMenuBuilder(WorkbenchSchemaService schema) 
+        {
+            _schema = schema;
+        }
+
         object _owner = null;
 
         #region ISubmenuBuilder Members
@@ -409,8 +414,8 @@ namespace Origam.Workbench.Commands
         {
             _owner = owner ?? _schema.ActiveNode;
             var list = new List<AsMenuCommand>();
-            CreateMenuItem(list, "Item", new EditActiveSchemaItem(), null);
-            CreateMenuItem(list, "By GridEditor", new EditActiveSchemaItemDocked() { ShowDocked = true, }, null);
+            CreateMenuItem(list, "Item", new EditActiveSchemaItem(_schema), null);
+            CreateMenuItem(list, "By GridEditor", new EditActiveSchemaItemDocked(_schema), null);
             return list.ToArray();
         }
 
@@ -424,7 +429,8 @@ namespace Origam.Workbench.Commands
             }
             catch (Exception ex)
             {
-                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
+                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message,
+                                       ResourceUtils.GetString("ErrorTitle"), ex);
             }
         }
 
@@ -436,7 +442,8 @@ namespace Origam.Workbench.Commands
 
             if (_owner != null)
             {
-                policy = LicensePolicy.ModelElementPolicy(_owner.GetType().Name, ModelElementPolicyCommand.CustomAction, command.GetType().FullName);
+                policy = LicensePolicy.ModelElementPolicy(_owner.GetType().Name, 
+                         ModelElementPolicyCommand.CustomAction, command.GetType().FullName);
             }
 
             if (menuItem.IsEnabled & policy)
@@ -533,7 +540,8 @@ namespace Origam.Workbench.Commands
             }
             catch (Exception ex)
             {
-                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, ResourceUtils.GetString("ErrorTitle"), ex);
+                AsMessageBox.ShowError(WorkbenchSingleton.Workbench as Form, ex.Message, 
+                                       ResourceUtils.GetString("ErrorTitle"), ex);
             }
         }
 
