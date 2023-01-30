@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Options
 @using Origam.Server
 @using Origam.Server.Configuration
+@using Origam.Server.Authorization
 @inject IHtmlLocalizer<SharedResources> SharedLocalizer
 @model Origam.Server.IdentityServerGui.Account.LoginViewModel
 @inject IViewLocalizer Localizer
@@ -91,7 +92,7 @@
 {
     <div class="left-aligned">
         <div class="initial-user-statement">
-                @if(guiConfig.IsInitialSetupNeeded)
+                @if (UserTools.IsInitialSetupNeeded())
                 {
                 @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
                 }
