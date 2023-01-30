@@ -36,7 +36,7 @@ namespace Origam.Schema.WorkflowModel
     /// Summary description for AbstractWorkflowStep.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.1")]
+    [ClassMetaVersion("6.0.2")]
     public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	{															
 		public const string CategoryConst = "WorkflowTask";
@@ -116,6 +116,10 @@ namespace Origam.Schema.WorkflowModel
 				return this.ChildItemsByType(WorkflowTaskDependency.CategoryConst);
 			}
 		}
+		[Category("Error Handling")]
+		[XmlAttribute("onFailure")]
+		[Description($"Exception thrown in this step will cause the parent workflow to fail when set to {nameof(StepFailureMode.WorkflowFails)}. The exception will be ignored when set to {nameof(StepFailureMode.Suppress)}.")]
+		public StepFailureMode OnFailure { set; get; }
 
 		[DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]

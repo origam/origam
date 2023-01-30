@@ -41,6 +41,11 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
                 new Version("6.0.1"),
                 (node, doc) =>
                     RemoveAttribute(node, "traceLevel")));
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.1"),
+                new Version("6.0.2"),
+                (node, doc) =>
+                    AddAttribute(node, "onFailure","WorkflowFails")));
         }
     }
 }
