@@ -1853,36 +1853,48 @@ namespace OrigamArchitect
 
 		private void frmMain_Load(object sender, EventArgs e)
 		{
-			AppDomain.CurrentDomain.SetPrincipalPolicy(System.Security.Principal.PrincipalPolicy.WindowsPrincipal);
-			AsMessageBox.DebugInfoProvider = new Origam.Workflow.DebugInfo();
-			SplashScreen splash = new SplashScreen();
-			splash.Show();
-			Application.DoEvents();
-			InitializeDefaultServices();
-			SubscribeToUpgradeServiceEvents();
-			InitializeDefaultPads();
+			try
+			{
+				AppDomain.CurrentDomain.SetPrincipalPolicy(System.Security
+					.Principal.PrincipalPolicy.WindowsPrincipal);
+				AsMessageBox.DebugInfoProvider =
+					new Origam.Workflow.DebugInfo();
+				SplashScreen splash = new SplashScreen();
+				splash.Show();
+				Application.DoEvents();
+				InitializeDefaultServices();
+				SubscribeToUpgradeServiceEvents();
+				InitializeDefaultPads();
 
-			//this.LoadWorkspace();
-			
-			// Menu and toolbars
-			PrepareMenuBars();
-			CreateMainMenu();
-			FinishMenuBars();
-	
-			this.dockPanel.ActiveDocumentChanged += dockPanel_ActiveDocumentChanged;
-            this.dockPanel.ContentRemoved += dockPanel_ContentRemoved;
-			this.dockPanel.ActiveContentChanged += dockPanel_ActiveContentChanged;
+				//this.LoadWorkspace();
+
+				// Menu and toolbars
+				PrepareMenuBars();
+				CreateMainMenu();
+				FinishMenuBars();
+
+				this.dockPanel.ActiveDocumentChanged +=
+					dockPanel_ActiveDocumentChanged;
+				this.dockPanel.ContentRemoved += dockPanel_ContentRemoved;
+				this.dockPanel.ActiveContentChanged +=
+					dockPanel_ActiveContentChanged;
 
 
 
 #if !ORIGAM_CLIENT
-			// auto-update within release-branch
-			AutoUpdateBackgroudFinder.RunWorkerAsync();
-			// search Origam.com for whether there is a newer architect version within the same release branch
-			// as the current branch
+				// auto-update within release-branch
+				AutoUpdateBackgroudFinder.RunWorkerAsync();
+				// search Origam.com for whether there is a newer architect version within the same release branch
+				// as the current branch
 #endif
-			Connect();
-			splash.Dispose();
+				Connect();
+				splash.Dispose();
+			}
+			catch(Exception ex)
+			{
+				this.RunWithInvoke(() => AsMessageBox.ShowError(
+					this, ex.Message, strings.GenericError_Title, ex));
+			}
 		}
 
 

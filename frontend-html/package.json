@@ -45,7 +45,7 @@
     "@types/string-strip-html": "^5.0.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "@xstate/inspect": "^0.7.0",
-    "axios": "^1.2.5",
+    "axios": "^1.2.6",
     "bind-decorator": "^1.0.11",
     "classnames": "^2.3.2",
     "draft-js": "^0.11.7",
@@ -86,7 +86,7 @@
     "vite-tsconfig-paths": "^4.0.5",
     "wkt": "^0.1.1",
     "xml-js": "^1.6.11",
-    "xstate": "^4.35.2"
+    "xstate": "^4.35.4"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
