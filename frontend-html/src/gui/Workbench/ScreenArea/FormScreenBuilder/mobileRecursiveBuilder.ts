@@ -190,6 +190,5 @@ export function mobileRecursiveBuilder(args:{
     }
   }
 
-  const iParsingResult = run(args.uiRoot, undefined);
-  return iParsingResult.navigatorElement;
+  return run(args.uiRoot, undefined).navigatorElement;
 }
