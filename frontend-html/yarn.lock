@@ -1527,13 +1527,6 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@origam/components@^1.0.0":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.6.1.tgz#aec56ffca179a1499f6756e195d502d963899772"
-  integrity sha512-Stw+bikH2JExaYvnOSBPChsrhbzJsi1JHiFhPq0CSqye4wydjxFDNxCF7HN5wzEahCtWxaRYbTMxzGHhcxVwfw==
-  dependencies:
-    react-inlinesvg "^3.0.1"
-
 "@origam/components@^1.6.2":
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@origam/components/-/components-1.6.2.tgz#9fce4349cb3aaf02692c6b730dec999dd9421065"
@@ -1574,22 +1567,21 @@
     react-chartjs-2 "^4.0.0"
     rollup-plugin-postcss "^4.0.1"
 
-"@origam/plugin-filter@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-filter/-/plugin-filter-2.0.1.tgz#f9da15f2e827472cac41648059faf38f450935ac"
-  integrity sha512-E4C+xFKzKfqJg/m8SFhUMMYV1cEgy8LsK7fKsaHV906awr/AgCpcNvg7SsroI+Yx9aDkT4mDvnVjSzXRdWwm/A==
+"@origam/plugin-filter@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-filter/-/plugin-filter-2.0.2.tgz#4e1bf66342eadac5b7ecc5f65365a6e1a214b16b"
+  integrity sha512-Sy+ee7H5jI3avOJFdkXgVjHl79u1BDG1zPnTSOVD3NPIot+sJ5VK5Fta2py9NooR7euzeaUc3v1GpQ9XGHYH6A==
   dependencies:
-    "@origam/components" "^1.0.0"
-    "@origam/plugins" "^1.0.2"
+    "@origam/components" "^1.6.2"
+    "@origam/plugins" "^1.1.0"
     "@origam/styles" "^2.0.0"
-    "@origam/utils" "^1.0.1"
+    "@origam/utils" "^1.2.0"
     "@types/classnames" "^2.3.1"
     mobx "5"
     mobx-react "6"
-    moment "^2.29.1"
-    node-sass "5"
-    postcss "^8.4.5"
-    react-chartjs-2 "^3.3.0"
+    moment "^2.29.4"
+    node-sass "8"
+    postcss "^8.4.21"
     rollup-plugin-postcss "^4.0.2"
 
 "@origam/plugins@^1.0.2", "@origam/plugins@^1.1.0":
@@ -1610,7 +1602,7 @@
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.2.tgz#505dade3528f969895fdd931391eeae43ae51257"
   integrity sha512-MPp0M+w2f3ovN3O5jnGyvN1gWZvpzeDbOjqAEzN6Xw6lgZZeT+OFUk4Hul/Qpav0EDklDFuqHu66p9JRMhReKQ==
 
-"@origam/utils@^1.0.0", "@origam/utils@^1.0.1", "@origam/utils@^1.1.1", "@origam/utils@^1.2.0":
+"@origam/utils@^1.0.0", "@origam/utils@^1.1.1", "@origam/utils@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.2.0.tgz#2c19717654ef1566307e2f173fc83f7afe6d6f1c"
   integrity sha512-lLVY0mAO/7M/vIzzxPXplgcY0bfe/mXNclEDXd+DFdVGG3u5C1CXhUfEFnbKqn9PP4CfYfjMOCq3Q5hkteJIlA==
@@ -2024,10 +2016,10 @@
     magic-string "^0.27.0"
     react-refresh "^0.14.0"
 
-"@xstate/inspect@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.7.0.tgz#0e3011d0fb8eca6d68f06a7c384ab1390801e176"
-  integrity sha512-3wrTf8TfBYprH1gBFdxmOQUBDpBazlICWvGdFzr8IHFL4MbiexEZdAsL2QC/WAmW9BqNYTWTwgfbvKHKg+FrlA==
+"@xstate/inspect@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.7.1.tgz#db337fb0e34d5497a91cdbf085b7aff8ef254513"
+  integrity sha512-lEIi6cSvzA9f+GzaJMRVe4xnNjPY/oKdU8rjb+qxqUYx2evLuqysFu0XbPmEjMCwpfdIvG4FFsZJ7Ng7+k9UHw==
   dependencies:
     fast-safe-stringify "^2.1.1"
 
@@ -2224,10 +2216,10 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
-axios@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.2.6.tgz#eacb6d065baa11bad5959e7ffa0cb6745c65f392"
-  integrity sha512-rC/7F08XxZwjMV4iuWv+JpD3E0Ksqg9nac4IIg6RwNuF0JTeWoCo/mBNG54+tNhhI11G3/VDRbdDQTs9hGp4pQ==
+axios@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.3.0.tgz#4cb0d72213989dec08d4b10129e42063bcb3dc78"
+  integrity sha512-oCye5nHhTypzkdLIvF9SaHfr8UAquqCn1KY3j8vsrjeol8yohAdGxIpRPbF1bOLsx33HOAatdfMX1yzsj2cHwg==
   dependencies:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
@@ -6314,10 +6306,10 @@ sass-graph@^4.0.1:
     scss-tokenizer "^0.4.3"
     yargs "^17.2.1"
 
-sass@^1.56.1:
-  version "1.57.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.57.1.tgz#dfafd46eb3ab94817145e8825208ecf7281119b5"
-  integrity sha512-O2+LwLS79op7GI0xZ8fqzF7X2m/m8WFfI02dHOdsK5R2ECeS5F62zrwg/relM1rjSLy7Vd/DiMNIvPrQGsA0jw==
+sass@^1.58.0:
+  version "1.58.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.58.0.tgz#ee8aea3ad5ea5c485c26b3096e2df6087d0bb1cc"
+  integrity sha512-PiMJcP33DdKtZ/1jSjjqVIKihoDc6yWmYr9K/4r3fVVIEDAluD0q7XZiRKrNJcPK3qkLRF/79DND1H5q1LBjgg==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -6881,10 +6873,10 @@ type-fest@^0.8.1:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
-typescript@^4.8.4:
-  version "4.9.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.4.tgz#a2a3d2756c079abda241d75f149df9d561091e78"
-  integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
+typescript@^4.9.5:
+  version "4.9.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
+  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
 
 ua-parser-js@^0.7.18:
   version "0.7.33"
