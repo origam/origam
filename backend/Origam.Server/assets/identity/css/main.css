@@ -281,7 +281,7 @@ div.input-row a.btn{
 }
 
 #page-container{
-  display: none;
+  display: block;
 }
 
 #browserLinks a{
