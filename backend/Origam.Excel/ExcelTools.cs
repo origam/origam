@@ -324,7 +324,7 @@ namespace Origam.Excel
             {
                 wb.GetSheetAt(i).ForceFormulaRecalculation = true;
             }
-            wb.Write(stream);
+            wb.Write(stream, false);
             stream.Close();
         }
 

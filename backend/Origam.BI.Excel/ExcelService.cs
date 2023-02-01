@@ -91,7 +91,7 @@ namespace Origam.BI.Excel
                     }
                     SetWorkbookProperties(sourceWorkbook, wb);
                     MemoryStream ms = new MemoryStream();
-                    wb.Write(ms);
+                    wb.Write(ms, false);
                     return ms.ToArray();
                 }
                 else
