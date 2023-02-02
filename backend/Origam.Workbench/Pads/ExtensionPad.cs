@@ -221,7 +221,20 @@ namespace Origam.Workbench.Pads
             tbrRemove.Enabled = true;
         }
 
-        public void UnloadPackages()
+		public void UpdateExtensionInfo(Package updatedPackage)
+		{
+			foreach (ListViewItem item in lvwPackages.Items)
+			{
+				if (item.Tag is Package package && package.Id == updatedPackage.Id)
+				{
+					item.Tag = updatedPackage;
+					item.SubItems[1].Text = updatedPackage.VersionString;
+					return;
+				}
+			}
+		}
+
+		public void UnloadPackages()
         {
             lvwPackages.Items.Clear();
             tbrNew.Enabled = false;
