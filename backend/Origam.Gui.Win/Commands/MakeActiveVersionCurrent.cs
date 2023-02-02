@@ -24,6 +24,7 @@ using System.Linq;
 using Origam.Schema.DeploymentModel;
 using Origam.UI;
 using Origam.Workbench;
+using Origam.Workbench.Pads;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Commands
@@ -64,6 +65,9 @@ namespace Origam.Gui.Win.Commands
             cmd.Owner = Owner as DeploymentVersion;
             cmd.Run();
             WorkbenchSingleton.Workbench.UpdateTitle();
+            ExtensionPad extensionPad = WorkbenchSingleton.Workbench.GetPad(typeof(ExtensionPad)) as ExtensionPad;
+            WorkbenchSchemaService schema = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+            extensionPad!.UpdateExtensionInfo(schema.ActiveExtension);
         }
 
         public override void Dispose()
