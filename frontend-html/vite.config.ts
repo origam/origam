@@ -41,6 +41,10 @@ export default defineConfig({
 				find: 'events',
 				replacement: 'rollup-plugin-node-polyfills/polyfills/events',
 			},
+			{
+				find: 'buffer',
+				replacement: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
+			}
 		],
 	},
 	css:{
