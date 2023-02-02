@@ -70,6 +70,7 @@ export default class ColorEditor extends React.Component<{
   machine = interpret(
     createMachine(
       {
+        predictableActionArguments: true,
         id: "colorEditor",
         type: "parallel",
         states: {
