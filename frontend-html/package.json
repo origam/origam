@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node ./custom-scripts/updateVersions.cjs && tsc && vite build",
+    "build": "(echo const supportedBrowserRegEx = && browserslist-useragent-regexp --allowHigherVersions) > public/supportedBrowserRegEx.js && node ./custom-scripts/updateVersions.cjs && tsc && vite build",
     "preview": "vite preview",
     "postinstall": "patch-package",
     "test": "jest"
@@ -96,7 +96,8 @@
     "@types/uuid": "^9.0.0",
     "@vitejs/plugin-react": "^3.0.1",
     "identity-obj-proxy": "^3.0.0",
-    "vite": "^4.0.4"
+    "vite": "^4.0.4",
+    "browserslist-useragent-regexp": "^3.0.2"
   },
   "resolutions": {
     "@types/react": "17.0.2",
@@ -119,5 +120,11 @@
       "node_modules",
       "src"
     ]
-  }
+  },
+  "browserslist": [
+    "Chrome >=87",
+    "Firefox >=78",
+    "Safari >=13",
+    "Edge >=88"
+  ]
 }

@@ -435,4 +435,10 @@
   <data name="SignInWithAzureAd" xml:space="preserve">
     <value>Sign in with Azure AD</value>
   </data>
+  <data name="BrowserNotCompatible" xml:space="preserve">
+    <value>Your browser is not compatible with our application. Please install latest version of one of the browsers below:</value>
+  </data>
+  <data name="ContinueAnyway" xml:space="preserve">
+    <value>Continue Anyway</value>
+  </data>
 </root>

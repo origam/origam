@@ -438,4 +438,10 @@
   <data name="SignInWithAzureAd" xml:space="preserve">
     <value>Přihlášení přes Azure AD</value>
   </data>
+  <data name="ContinueAnyway" xml:space="preserve">
+    <value>Přesto pokračovat</value>
+  </data>
+  <data name="BrowserNotCompatible" xml:space="preserve">
+    <value>Váš prohlížeč není kompatibilní s naší aplikací. Nainstalujte si prosím nejnovější verzi jednoho s těchto prohlížečů: </value>
+  </data>
 </root>
