@@ -159,12 +159,6 @@ namespace Origam.Server
                     identityServerConfig.PasswordForJwtCertificate))
                 .AddInMemoryApiScopes(Settings.GetApiScopes());
            
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
-                options.SlidingExpiration = identityServerConfig.CookieSlidingExpiration;
-            });
-           
             services.AddSoapCore();
             services.AddSingleton<DataServiceSoap>();
             services.AddSingleton<WorkflowServiceSoap>();

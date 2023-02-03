@@ -83,18 +83,7 @@ namespace Origam.Server
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
                 apiBranch =>
             {
-                apiBranch.UseAuthentication();
-                apiBranch.Use(async (context, next) =>
-                {
-                    // Authentication middleware doesn't short-circuit the request itself
-                    // we must do that here.
-                    if (!context.User.Identity.IsAuthenticated)
-                    {
-                        context.Response.StatusCode = 401;
-                        return;
-                    }
-                    await next.Invoke();
-                });
+                apiBranch.UseMiddleware<UserApiAuthenticationMiddleware>();
                 apiBranch.UseMiddleware<UserApiMiddleware>();
             });
         } 
