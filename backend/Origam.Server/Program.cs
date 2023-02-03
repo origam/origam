@@ -42,6 +42,7 @@ namespace Origam.Server
             options.Watch = true;
             log4NetProvider = new Log4NetProvider(options);
             ILogger startupLogger = log4NetProvider.CreateLogger();
+            AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
             try
             {
                 CreateWebHostBuilder(args).Build().Run();
