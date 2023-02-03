@@ -61,6 +61,7 @@ export class UpdateRequestAggregator {
   interpreter = interpret(
     createMachine(
       {
+        predictableActionArguments: true,
         id: "updateObject",
         initial: "IDLE",
         states: {
