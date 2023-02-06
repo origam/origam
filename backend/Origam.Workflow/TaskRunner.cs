@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Origam.Extensions;
 
 namespace Origam.Workflow
 {
@@ -101,28 +102,6 @@ namespace Origam.Workflow
             log.Error(ex);
             log.Error(ex.Message);
             log.Error("---------------------------------------");
-        }
-    }
-
-    public static class IEnumerableExtensions
-    {
-        public static IEnumerable<T> Peek<T>(this IEnumerable<T> source,
-            Action<T>
-                action)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (action == null) throw new ArgumentNullException(nameof(action));
-
-            return Iterator();
-
-            IEnumerable<T> Iterator() 
-            {
-                foreach (var item in source)
-                {
-                    action(item);
-                    yield return item;
-                }
-            }
         }
     }
 }

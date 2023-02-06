@@ -68,8 +68,5 @@ namespace Origam.Utils
             log.Info("DONE");
 
         }
-
-
     }
-    
 }
