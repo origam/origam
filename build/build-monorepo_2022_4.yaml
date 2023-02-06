@@ -15,7 +15,7 @@ variables:
 - name: TAG # tag to be used
   value: 2022.4
 - name: TAG_LATEST # tag to be used
-  value: master-latest
+  value: 2022.4
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2022.3.0
 - name: IS_PRERELASE
