@@ -1,22 +1,10 @@
-# For most projects, this workflow file will not need changing; you simply need
-# to commit it to your repository.
-#
-# You may wish to alter this file to override the set of languages analyzed,
-# or to provide custom queries or build logic.
-#
-# ******** NOTE ********
-# We have attempted to detect the languages in your repository. Please check
-# the `language` matrix defined below to confirm you have the correct set of
-# supported CodeQL languages.
-#
 name: "RunTests"
 
 on:
   push:
-    branches: [ 20* ]
+    branches: [ master ]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ 20* ]
+    branches: [ master ]
 
 jobs:
 
@@ -32,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp']
-        node-version: [12.x]
+        node-version: [14.x]
         
     steps:
     - name: Checkout repository
@@ -41,7 +29,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v2
       with:
-       node-version: '12'
+       node-version: '14'
      
     - name: Install Yarn
       run: npm install -g yarn
@@ -58,7 +46,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: htmlfrontendbuild
-        path: "frontend-html/build"   
+        path: "frontend-html/dist"   
 
     
   analyze:
@@ -74,9 +62,6 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'csharp']
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
-        # Learn more:
-        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
     - name: Checkout repository
