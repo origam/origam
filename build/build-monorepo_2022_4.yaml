@@ -7,7 +7,7 @@ variables:
 - name: YARN_CACHE_FOLDER # location of yarn cache
   value: $(Pipeline.Workspace)/.yarn
 - name: BRANCH # branch to be used
-  value: master
+  value: 2022.4
 - name: VERSION_NUMBER # version number of the build
   value: 2022.4.0.$(Build.BuildId)
 - name: PRODUCT_NUMBER # product number to be used in the installation file
