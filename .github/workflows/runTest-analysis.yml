@@ -2,9 +2,9 @@ name: "RunTests"
 
 on:
   push:
-    branches: [ master ]
+    branches: [ 20* ]
   pull_request:
-    branches: [ master ]
+    branches: [ 20* ]
 
 jobs:
 
