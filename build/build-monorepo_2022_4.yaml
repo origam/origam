@@ -13,9 +13,9 @@ variables:
 - name: PRODUCT_NUMBER # product number to be used in the installation file
   value: 22.4.0.$(Build.BuildId)
 - name: TAG # tag to be used
-  value: 2022.4
+  value: 2022.4.0
 - name: TAG_LATEST # tag to be used
-  value: 2022.4
+  value: 2022.4.0
 - name: TAG_PREVIOUS # tag to compare changelog to
   value: 2022.3.0
 - name: IS_PRERELASE
