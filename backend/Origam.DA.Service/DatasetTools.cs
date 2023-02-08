@@ -1314,7 +1314,14 @@ namespace Origam.DA
 
 			return changedTable;
 		}
-
+		
+		public static DataRow CloneRow(DataRow queueRow)
+		{
+			DataSet oneRowDataSet = CloneDataSet(queueRow.Table.DataSet);
+			GetDataSlice(oneRowDataSet, new List<DataRow> { queueRow });
+			DataRow oneRow = oneRowDataSet.Tables[0].Rows[0];
+			return oneRow;
+		}
 		public static void AddSortColumns(DataSet data)
 		{
 			foreach(DataTable table in data.Tables)

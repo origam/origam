@@ -57,7 +57,9 @@ namespace Origam.Workflow.WorkQueue
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private const string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";
         private readonly core.ICoreDataService dataService = core.DataService.Instance;
-
+        private  CancellationTokenSource cancellationTokenSource = new ();
+        private readonly WorkQueueUtils workQueueUtils;
+        private readonly AutoProcessor autoProcessor;
         private readonly Timer _t = new Timer(60000);
         private readonly Timer _queueAutoProcessTimer;
         private Boolean serviceBeingUnloaded = false;
@@ -70,9 +72,13 @@ namespace Origam.Workflow.WorkQueue
         {
             _queueAutoProcessTimer = new Timer(queueProcessIntervalMillis);
             SchemaService schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
+            IDataLookupService dataLookupService = ServiceManager.Services
+                .GetService<IDataLookupService>();
+            workQueueUtils = new WorkQueueUtils(dataLookupService);
             schemaService.SchemaLoaded += new EventHandler(schemaService_SchemaLoaded);
             schemaService.SchemaUnloaded += new EventHandler(schemaService_SchemaUnloaded);
             schemaService.SchemaUnloading += new CancelEventHandler(schemaService_SchemaUnloading);
+            autoProcessor = new AutoProcessor(ProcessQueueItem, workQueueUtils);
         }
 
 
@@ -85,6 +91,7 @@ namespace Origam.Workflow.WorkQueue
                 log.DebugFormat("UnloadService");
             }
             serviceBeingUnloaded = true;
+            cancellationTokenSource.Cancel();
             // unsubscribe from 'Elapsed' events
             _t.Elapsed -= new ElapsedEventHandler(_t_Elapsed);
             _queueAutoProcessTimer.Elapsed -= new ElapsedEventHandler(_queueAutoProcessTimer_Elapsed);
@@ -100,6 +107,7 @@ namespace Origam.Workflow.WorkQueue
                 System.Threading.Thread.Sleep(1000);
             }
             serviceBeingUnloaded = false;
+            cancellationTokenSource = new();
         }
 
         public void InitializeService()
@@ -139,74 +147,22 @@ namespace Origam.Workflow.WorkQueue
 
         public ISchemaItem WQClass(string name)
         {
-            SchemaService s = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-
-            foreach (WorkQueueClass c in s.GetProvider(typeof(WorkQueueClassSchemaItemProvider)).ChildItems)
-            {
-                if (c.Name == name) return c;
-            }
-
-#if ORIGAM_CLIENT
-            throw new ArgumentOutOfRangeException("name", name, "Work Queue Class not defined. Check Work Queue setup.");
-#else
-            return null;
-#endif
+            return workQueueUtils.WQClass(name);
         }
+         public ISchemaItem WQClass(Guid queueId)
+         {
+             return workQueueUtils.WQClass(queueId);
+         }
 
-        private WorkQueueClass WQClassInternal(string name)
+         public DataSet LoadWorkQueueData(string workQueueClass, object queueId)
         {
-            return WQClass(name) as WorkQueueClass;
-        }
-
-        private string WQClassName(Guid queueId)
-        {
-            IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-
-            return (string)ls.GetDisplayText(new Guid("46976056-f906-47ae-95e7-83d8c65412a3"), queueId, false, false, null);
-        }
-
-        private string WQClassNameFromMessage(Guid workQueueMessageId)
-        {
-            IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-            return (string)ls.GetDisplayText(new Guid("0ec49729-0981-49d7-a8e6-2160d949234e"), workQueueMessageId, false, false, null);
-        }
-
-        public ISchemaItem WQClass(Guid queueId)
-        {
-            return WQClass(WQClassName(queueId));
-        }
-
-        public DataSet LoadWorkQueueData(string workQueueClass, object queueId)
-        {
-            return LoadWorkQueueData(workQueueClass, queueId, 0, 0, null);
-        }
-
-        private DataSet LoadWorkQueueData(string workQueueClass, object queueId,
-            int pageSize, int pageNumber, string transactionId)
-        {
-            WorkQueueClass wqc = WQClass(workQueueClass) as WorkQueueClass;
-            if (wqc == null)
-            {
-                throw new ArgumentOutOfRangeException("workQueueClass",
-                    workQueueClass,
-                    "Work queue class not found in the current model.");
-            }
-            QueryParameterCollection parameters = new QueryParameterCollection();
-            parameters.Add(new QueryParameter("WorkQueueEntry_parWorkQueueId", queueId));
-            if (pageSize > 0)
-            {
-                parameters.Add(new QueryParameter("_pageSize", pageSize));
-                parameters.Add(new QueryParameter("_pageNumber", pageNumber));
-            }
-            return dataService.LoadData(wqc.WorkQueueStructureId,
-                wqc.WorkQueueStructureUserListMethodId, Guid.Empty,
-                wqc.WorkQueueStructureSortSetId, transactionId, parameters);
+            return workQueueUtils.LoadWorkQueueData(workQueueClass, queueId, 0, 0, null);
         }
 
         public Guid WorkQueueAdd(string workQueueName, IXmlContainer data, string transactionId)
         {
-            Guid workQueueId = GetQueueId(workQueueName);
-            string workQueueClass = WQClassName(workQueueId);
+            Guid workQueueId = workQueueUtils.GetQueueId(workQueueName);
+            string workQueueClass = workQueueUtils.WQClassName(workQueueId);
             string condition = "";
 
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, null, transactionId);
@@ -214,8 +170,8 @@ namespace Origam.Workflow.WorkQueue
 
         public Guid WorkQueueAdd(string workQueueName, IXmlContainer data, WorkQueueAttachment[] attachments, string transactionId)
         {
-            Guid workQueueId = GetQueueId(workQueueName);
-            string workQueueClass = WQClassName(workQueueId);
+            Guid workQueueId = workQueueUtils.GetQueueId(workQueueName);
+            string workQueueClass = workQueueUtils.WQClassName(workQueueId);
             string condition = "";
 
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, attachments, transactionId);
@@ -235,7 +191,7 @@ namespace Origam.Workflow.WorkQueue
             RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
             UserProfile profile = SecurityManager.CurrentUserProfile();
 
-            WorkQueueClass wqc = WQClassInternal(workQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueClass);
 
             if (wqc != null)
             {
@@ -286,7 +242,7 @@ namespace Origam.Workflow.WorkQueue
 
         public IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId)
         {
-            WorkQueueClass wqc = WQClass(WQClassNameFromMessage(workQueueMessageId)) as WorkQueueClass;
+            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueMessageId);
             DataSet ds = FetchSingleQueueEntry(wqc, workQueueMessageId, transactionId);
             return DataDocumentFactory.New(ds);
         }
@@ -649,7 +605,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 log.Debug("Removing Work Queue Entries for Queue: " + queueRow.Name);
             }
-            WorkQueueClass wqc = WQClassInternal(queueRow.WorkQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WQClass(queueRow.WorkQueueClass);
             if (wqc != null)
             {
                 DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, transactionId);
@@ -671,7 +627,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 log.Debug("Removing Work Queue Entries for Queue: " + workQueueName + " for row Id " + rowKey);
             }
-            WorkQueueClass wqc = WQClassInternal(workQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueClass);
 
             if (wqc != null)
             {
@@ -718,7 +674,7 @@ namespace Origam.Workflow.WorkQueue
         {
             if (rowKey == null) return;
 
-            WorkQueueClass wqc = WQClassInternal(workQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueClass);
 
             RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
             UserProfile profile = SecurityManager.CurrentUserProfile();
@@ -829,7 +785,7 @@ namespace Origam.Workflow.WorkQueue
             }
             // set all rows to be actual values, not added (in case the calling function did not do that)
             selectedRows.AcceptChanges();
-            WorkQueueClass wqc = WQClassInternal(queueClass);
+            WorkQueueClass wqc = workQueueUtils.WQClass(queueClass);
             try
             {
                 if (lockItems) LockQueueItems(wqc, selectedRows);
@@ -909,7 +865,7 @@ namespace Origam.Workflow.WorkQueue
         public void HandleAction(Guid queueEntryId, Guid commandId, bool calledFromApi, string transactionId)
         {
             // get info about queue (from command)
-            Guid queueId = GetQueueId(commandId);
+            Guid queueId = workQueueUtils.GetQueueId(commandId);
             // get all queue data from database (no entries)
             WorkQueueData queue = GetQueue(queueId);
             // extract WorkQueueClass name and construct WorkQueueClass from name
@@ -957,101 +913,20 @@ namespace Origam.Workflow.WorkQueue
                 transactionId);
         }
         
-        public DataRow GetNextItem(WorkQueueData.WorkQueueRow q, string transactionId,
-            bool processErrors)
-        {
-            return  GetNextItem(q.Id,transactionId,processErrors);
-        }
-        
         public DataRow GetNextItem(string workQueueName, string transactionId,
             bool processErrors)
         {
-            var queueId = GetQueueId(workQueueName);
-            return  GetNextItem(queueId,transactionId,processErrors);
-        }
-
-        private DataRow GetNextItem(Guid workQueueId, string transactionId,
-            bool processErrors)
-        {
-            const int pageSize = 10;
-            int pageNumber = 1;
-            WorkQueueClass workQueueClass = WQClass(workQueueId) as WorkQueueClass;
-            DataRow result = null;
-            do
-            {
-                DataSet queueItems = LoadWorkQueueData(
-                    workQueueClass.Name, workQueueId, pageSize, pageNumber,
-                    transactionId);
-                DataTable queueTable = queueItems.Tables[0];
-                if (queueTable.Rows.Count > 0)
-                {
-                    foreach (DataRow queueRow in queueTable.Rows)
-                    {
-                        if ((bool)queueRow["IsLocked"] == false
-                            && (queueRow.IsNull("ErrorText") || processErrors))
-                        {
-                            result = CloneRow(queueRow);
-                            if (LockQueueItemsInternal(workQueueClass, result.Table))
-                            {
-                                // item successfully locked, we finish
-                                break;
-                            }
-                            else
-                            {
-                                // could not be locked, we start over
-                                pageNumber = 0;
-                                result = null;
-                                break;
-                            }
-                        }
-                    }
-                    pageNumber++;
-                }
-                else
-                {
-                    // no more queue items
-                    break;
-                }
-            } while (!serviceBeingUnloaded && (result == null));
-            return result;
+            var queueId = workQueueUtils.GetQueueId(workQueueName);
+            return autoProcessor.GetNextItem(queueId, transactionId,
+                processErrors, cancellationTokenSource.Token);
         }
 
         private void LockQueueItems(WorkQueueClass wqc, DataTable selectedRows)
         {
-            if (!LockQueueItemsInternal(wqc, selectedRows))
+            if (!workQueueUtils.LockQueueItems(wqc, selectedRows))
             {
                 throw new WorkQueueItemLockedException();
             }
-        }
-
-        private bool LockQueueItemsInternal(WorkQueueClass wqc,
-            DataTable selectedRows)
-        {
-            UserProfile profile = SecurityManager.CurrentUserProfile();
-            foreach (DataRow row in selectedRows.Rows)
-            {
-                Guid id = (Guid)row["Id"];
-                if (log.IsDebugEnabled)
-                {
-                    log.Debug("Locking work queue item id " + id.ToString());
-                }
-                if ((bool)row["IsLocked"])
-                {
-                    throw new WorkQueueItemLockedException();
-                }
-                row["IsLocked"] = true;
-                row["refLockedByBusinessPartnerId"] = profile.Id;
-            }
-            try
-            {
-                dataService.StoreData(wqc.WorkQueueStructureId,
-                    selectedRows.DataSet, true, null);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
         }
 
         /// <summary>
@@ -1309,7 +1184,7 @@ namespace Origam.Workflow.WorkQueue
                 log.Info("Begin HandleMove() queue class: " + queueClass);
             }
 
-            Guid newQueueId = GetQueueId(newQueueReferenceCode);
+            Guid newQueueId = workQueueUtils.GetQueueId(newQueueReferenceCode);
             WorkQueueClass wqc = (WorkQueueClass)WQClass(queueClass);
             HandleMoveQueue(wqc, selectedRows, newQueueId, null, transactionId, resetErrors);
 
@@ -1363,30 +1238,6 @@ namespace Origam.Workflow.WorkQueue
             return queues;
         }
 
-        private Guid GetQueueId(string referenceCode)
-        {
-            IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-
-            object id = ls.GetDisplayText(new Guid("930ae1c9-0267-4c8d-b637-6988745fd44c"), referenceCode, false, false, null);
-
-            if (id == null)
-            {
-                throw new ArgumentOutOfRangeException(ResourceUtils.GetString("ErrorWorkQueueNotFoundByReferenceCode", referenceCode));
-            }
-
-            return (Guid)id;
-        }
-
-        private Guid GetQueueId(Guid commandId)
-        {
-            IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-            object id = ls.GetDisplayText(new Guid("2a1596d1-96ee-402d-b935-93e5484cd48e"), commandId, false, false, null);
-            if (id == null)
-            {
-                throw new ArgumentOutOfRangeException("commandId", commandId, ResourceUtils.GetString("ErrorWorkQueueCommandNotFound", commandId));
-            }
-            return (Guid)id;
-        }
 
         bool _externalQueueAdapterBusy = false;
 
@@ -1485,51 +1336,10 @@ namespace Origam.Workflow.WorkQueue
             return false;
         }
 
-        private void ProcessAutoQueueCommands(WorkQueueData.WorkQueueRow q,
-            CancellationToken cancToken ,int forceWait_ms=0)
+        private void ProcessQueueItem(WorkQueueData.WorkQueueRow q, DataRow queueItemRow)
         {
-            WorkQueueClass wqc = this.WQClassInternal(q.WorkQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WQClass(q.WorkQueueClass);
             IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-            DataRow queueItemRow = null;
-
-            var processErrors = IsAnyCmdSetToAutoProcessedWithErrors(q);
-
-            do
-            {
-                if (cancToken.IsCancellationRequested)
-                {
-                    log.Info($"Stoping worker on thread " +
-                             $"{Thread.CurrentThread.ManagedThreadId}");
-                    cancToken.ThrowIfCancellationRequested();
-                }
-                queueItemRow = GetNextItem(q, null, processErrors);
-                if (queueItemRow == null)
-                {
-                    return;
-                }
-                if (log.IsDebugEnabled)
-                {
-                    log.Debug("Checking whether processing failed - IsLocked: "
-                        + queueItemRow["IsLocked"].ToString()
-                        + ", ErrorText: "
-                        + (queueItemRow.IsNull("ErrorText") ? "NULL" : queueItemRow["ErrorText"].ToString()));
-                }
-                // we have to store the item id now because later the queue entry can be removed by HandleRemove() command
-                ProcessQueueItem(q, queueItemRow, ps, wqc);
-                
-                if (forceWait_ms != 0)
-                {
-                    log.Info(
-                        $"forceWait parameter causes worker on thread {Thread.CurrentThread.ManagedThreadId} to sleep for: {forceWait_ms} ms");
-                    Thread.Sleep(forceWait_ms);
-                }
-            } while (!serviceBeingUnloaded);
-        }
-
-        private void ProcessQueueItem(WorkQueueData.WorkQueueRow q, DataRow queueItemRow,
-            IParameterService ps, WorkQueueClass wqc)
-        {
-            
             log.Info(
                 $"Running ProcessQueueItem in Thread: {Thread.CurrentThread.ManagedThreadId}");
             
@@ -1617,30 +1427,7 @@ namespace Origam.Workflow.WorkQueue
                 }
             }
         }
-
-        private static bool IsAnyCmdSetToAutoProcessedWithErrors(WorkQueueData.WorkQueueRow q)
-        {
-            bool processErrors = false;
-            foreach (WorkQueueData.WorkQueueCommandRow cmd in
-                q.GetWorkQueueCommandRows())
-            {
-                if (cmd.IsAutoProcessedWithErrors)
-                {
-                    processErrors = true;
-                    break;
-                }
-            }
-            return processErrors;
-        }
-
-        private static DataRow CloneRow(DataRow queueRow)
-        {
-            DataSet oneRowDataSet = DatasetTools.CloneDataSet(queueRow.Table.DataSet);
-            DatasetTools.GetDataSlice(oneRowDataSet, new List<DataRow> { queueRow });
-            DataRow oneRow = oneRowDataSet.Tables[0].Rows[0];
-            return oneRow;
-        }
-
+        
         private bool IsAutoProcessed(WorkQueueData.WorkQueueCommandRow cmd,
             WorkQueueData.WorkQueueRow q, DataRow queueRow, string transactionId)
         {
@@ -1862,7 +1649,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     try
                     {
-                        ProcessAutoQueueCommands(queueToProcess,cancToken, forceWait_ms);
+                        autoProcessor.ProcessAutoQueueCommands(queueToProcess, cancToken, forceWait_ms);
                     }
                     catch (OrigamException ex)
                     {
@@ -1920,23 +1707,11 @@ namespace Origam.Workflow.WorkQueue
             if(log.IsInfoEnabled) log.Info("Starting auto processing work queues.");
             try
             {
-                WorkQueueData queues = GetQueues();
-                foreach(WorkQueueData.WorkQueueRow q in queues.WorkQueue.Rows)
-                {
-                    if(serviceBeingUnloaded)
-                    {
-                        if(log.IsDebugEnabled)
-                        {
-                            log.Debug(
-                                "Service is being unloaded. Stopping auto process.");
-                        }
-                        return;
-                    }
-                    if(HasAutoCommand(q))
-                    {						
-                        ProcessAutoQueueCommands(q,CancellationToken.None);
-                    }
-                }
+                IEnumerable<WorkQueueData.WorkQueueRow> queues = GetQueues()
+                    .WorkQueue.Rows
+                    .Cast<WorkQueueData.WorkQueueRow>()
+                    .Where(HasAutoCommand);
+                autoProcessor.Run(queues, cancellationTokenSource.Token);
             }
             catch (Exception ex)
             {
