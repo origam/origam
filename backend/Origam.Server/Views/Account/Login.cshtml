@@ -1,4 +1,3 @@
-@using Microsoft.AspNetCore.Builder
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Options
@@ -16,7 +15,6 @@
     UserConfig guiUserConfig = userConfig.Value;
 }
 
-
 @{
     var currentCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.Name;
     var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
@@ -24,38 +22,38 @@
 
 @if (Model.EnableLocalLogin)
 {
-        <div class="detailview-container">
-            <div class="detailview-module with-title">
-                <h2>@SharedLocalizer["LocalLogin"]</h2>
-                <div class="input-form">
-                    <form asp-route="Login">
-                        <input type="hidden" asp-for="ReturnUrl"/>
-                        <div class="input-row">
-                            <label asp-for="Username">@SharedLocalizer["UserName"]</label>
-                            <input id="userNameInput" placeholder="@SharedLocalizer["UserName"]" asp-for="Username" autofocus>
-                        </div>
-                        <div class="input-row">
-                            <label asp-for="Password">@SharedLocalizer["Password"]</label>
-                            <input id="passInput" type="password" placeholder="@SharedLocalizer["Password"]" asp-for="Password" autocomplete="off">
-                        </div>
+    <div class="detailview-container">
+        <div class="detailview-module with-title">
+            <h2>@SharedLocalizer["LocalLogin"]</h2>
+            <div class="input-form">
+                <form asp-route="Login">
+                    <input type="hidden" asp-for="ReturnUrl"/>
+                    <div class="input-row">
+                        <label asp-for="Username">@SharedLocalizer["UserName"]</label>
+                        <input id="userNameInput" placeholder="@SharedLocalizer["UserName"]" asp-for="Username" autofocus>
+                    </div>
+                    <div class="input-row">
+                        <label asp-for="Password">@SharedLocalizer["Password"]</label>
+                        <input id="passInput" type="password" placeholder="@SharedLocalizer["Password"]" asp-for="Password" autocomplete="off">
+                    </div>
 
-                        @if (Model.AllowRememberLogin)
-                        {
-                            <div class="form-group login-remember">
-                                <label asp-for="RememberLogin">
-                                    <input asp-for="RememberLogin">
-                                    <strong>@SharedLocalizer["RememberLogin"]</strong>
-                                </label>
-                            </div>
-                        }
-                        <div class="input-row">
-                            <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
-                            <a id="cancelButton" class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
+                    @if (Model.AllowRememberLogin)
+                    {
+                        <div class="form-group login-remember">
+                            <label asp-for="RememberLogin">
+                                <input asp-for="RememberLogin">
+                                <strong>@SharedLocalizer["RememberLogin"]</strong>
+                            </label>
                         </div>
-                    </form>
-                </div>
+                    }
+                    <div class="input-row">
+                        <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
+                        <a id="cancelButton" class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
     <div class="centered">
         <form id="languageSelectForm" asp-controller="Account"
               asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
@@ -92,14 +90,14 @@
 {
     <div class="centered">
         <div class="initial-user-statement">
-                @if (UserTools.IsInitialSetupNeeded())
-                {
-                @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
-                }
-                else
-                {
-                @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/register">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
-                }
+            @if (UserTools.IsInitialSetupNeeded())
+            {
+            @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/registerinitialuser">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+            }
+            else
+            {
+            @SharedLocalizer["ToInitialUser1"]<a class="in-page-link" href="/account/register">@SharedLocalizer["ToInitialUser2"]</a>@SharedLocalizer["ToInitialUser3"]
+            }
         </div>
     </div>
 }
@@ -127,7 +125,6 @@
         </div>
     </div>
 }
-
 
 <partial name="_ValidationSummary"/>
 
