@@ -31,11 +31,12 @@ using Origam.Service.Core;
 
 namespace Origam.Security.Identity
 {
-    public class IdentityServiceAgent : AbstractServiceAgent
+    public class IdentityServiceAgent : AbstractServiceAgent, IDisposable
     {
 		protected static readonly ILog log
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
         private IManager userManager;
+        private IServiceScope serviceScope;
 
         public IdentityServiceAgent()
         {
@@ -45,9 +46,15 @@ namespace Origam.Security.Identity
             userManager = SecurityManager.DIServiceProvider
                 .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
                 .HttpContext?.RequestServices?.GetService<IManager>();
+            if (userManager == null)
+            {
+                serviceScope = SecurityManager.DIServiceProvider.CreateScope();
+                userManager = serviceScope.ServiceProvider.GetService<IManager>();
+            }
         }
 
         private object result;
+        private bool disposedValue;
 
         public override object Result
         {
@@ -772,6 +779,34 @@ namespace Origam.Security.Identity
             root.AppendChild(userData);
             xmlDoc.AppendChild(root);
             return xmlDoc;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    serviceScope?.Dispose();
+                }
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~IdentityServiceAgent()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 
