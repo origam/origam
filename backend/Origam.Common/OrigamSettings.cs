@@ -247,6 +247,9 @@ namespace Origam
 		[Category("Work Queue"), DefaultValue(60)]
 		public int ExternalWorkQueueCheckPeriod { get; set; } = 60;
 		
+		[Category("Work Queue"), DefaultValue(false)]
+		public bool AutoProcessWorkQueues { get; set; } = false;
+		
 		[Category("Work Queue"), DefaultValue(WorkQueueProcessingMode.Linear)]
 		public WorkQueueProcessingMode WorkQueueProcessingMode { get; set; }
 		

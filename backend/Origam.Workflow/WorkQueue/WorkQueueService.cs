@@ -60,7 +60,7 @@ namespace Origam.Workflow.WorkQueue
         private  CancellationTokenSource cancellationTokenSource = new ();
         private readonly WorkQueueUtils workQueueUtils;
         private readonly IWorkQueueProcessor queueProcessor;
-        private readonly Timer _t = new Timer(60000);
+        private readonly Timer _loadExternalWorkQueuesTimer = new Timer(60000);
         private readonly Timer _queueAutoProcessTimer;
         private Boolean serviceBeingUnloaded = false;
 
@@ -110,11 +110,11 @@ namespace Origam.Workflow.WorkQueue
             serviceBeingUnloaded = true;
             cancellationTokenSource.Cancel();
             // unsubscribe from 'Elapsed' events
-            _t.Elapsed -= new ElapsedEventHandler(_t_Elapsed);
-            _queueAutoProcessTimer.Elapsed -= new ElapsedEventHandler(_queueAutoProcessTimer_Elapsed);
+            _loadExternalWorkQueuesTimer.Elapsed -= new ElapsedEventHandler(LoadExternalWorkQueuesElapsed);
+            _queueAutoProcessTimer.Elapsed -= new ElapsedEventHandler(WorkQueueAutoProcessTimerElapsed);
             // stop timers
             _queueAutoProcessTimer.Stop();
-            _t.Stop();
+            _loadExternalWorkQueuesTimer.Stop();
             while (_queueAutoProcessBusy || _externalQueueAdapterBusy)
             {
                 if (log.IsInfoEnabled)
@@ -1258,7 +1258,7 @@ namespace Origam.Workflow.WorkQueue
 
         bool _externalQueueAdapterBusy = false;
 
-        private void _t_Elapsed(object sender, ElapsedEventArgs e)
+        private void LoadExternalWorkQueuesElapsed(object sender, ElapsedEventArgs e)
         {
             // LoadFromExternalSource();
         }
@@ -1623,9 +1623,9 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private void _t_Disposed(object sender, EventArgs e)
+        private void LoadExternalWorkQueuesDisposed(object sender, EventArgs e)
         {
-            _t.Elapsed -= new ElapsedEventHandler(_t_Elapsed);
+            _loadExternalWorkQueuesTimer.Elapsed -= new ElapsedEventHandler(LoadExternalWorkQueuesElapsed);
         }
 
         bool _queueAutoProcessBusy = false;
@@ -1704,7 +1704,7 @@ namespace Origam.Workflow.WorkQueue
                    ex.InnerException.Message.Contains("deadlocked");
         }
 
-        private void _queueAutoProcessTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void WorkQueueAutoProcessTimerElapsed(object sender, ElapsedEventArgs e)
         {
             ISchemaService schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as ISchemaService;
             if(_queueAutoProcessBusy || !schemaService.IsSchemaLoaded
@@ -1747,9 +1747,9 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private void _queueAutoProcessTimer_Disposed(object sender, EventArgs e)
+        private void WorkQueueAutoProcessTimerDisposed(object sender, EventArgs e)
         {
-            _queueAutoProcessTimer.Elapsed -= new ElapsedEventHandler(_queueAutoProcessTimer_Elapsed);
+            _queueAutoProcessTimer.Elapsed -= WorkQueueAutoProcessTimerElapsed;
         }
 
         private void schemaService_SchemaLoaded(object sender, EventArgs e)
@@ -1757,18 +1757,25 @@ namespace Origam.Workflow.WorkQueue
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
             if(settings.LoadExternalWorkQueues)
             {
-                if(log.IsInfoEnabled) log.Info("LoadExternalWorkQueues Enabled. Interval: " + settings.ExternalWorkQueueCheckPeriod.ToString());
-                _t.Interval = settings.ExternalWorkQueueCheckPeriod * 1000;
-                _t.Elapsed += new ElapsedEventHandler(_t_Elapsed);
-                _t.Disposed += new EventHandler(_t_Disposed);
-                _queueAutoProcessTimer.Elapsed += new ElapsedEventHandler(_queueAutoProcessTimer_Elapsed);
-                _queueAutoProcessTimer.Disposed += new EventHandler(_queueAutoProcessTimer_Disposed);
-                _t.Start();
+                if(log.IsInfoEnabled) log.Info("LoadExternalWorkQueues Enabled. Interval: " + settings.ExternalWorkQueueCheckPeriod);
+                _loadExternalWorkQueuesTimer.Interval = settings.ExternalWorkQueueCheckPeriod * 1000;
+                _loadExternalWorkQueuesTimer.Elapsed += LoadExternalWorkQueuesElapsed;
+                _loadExternalWorkQueuesTimer.Disposed += LoadExternalWorkQueuesDisposed;
+                _loadExternalWorkQueuesTimer.Start();
+            }
+            else
+            {
+                _loadExternalWorkQueuesTimer.Stop();
+            }   
+            
+            if(settings.AutoProcessWorkQueues)
+            {
+                _queueAutoProcessTimer.Elapsed += WorkQueueAutoProcessTimerElapsed;
+                _queueAutoProcessTimer.Disposed += WorkQueueAutoProcessTimerDisposed;
                 _queueAutoProcessTimer.Start();
             }
             else
             {
-                _t.Stop();
                 _queueAutoProcessTimer.Stop();
             }
         }
