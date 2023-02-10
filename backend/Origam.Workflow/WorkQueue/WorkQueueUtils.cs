@@ -1,8 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region license
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
 using System.Data;
 using Origam.DA;
-using Origam.Schema;
 using Origam.Schema.WorkflowModel;
 using Origam.Schema.WorkflowModel.WorkQueue;
 using Origam.Workbench.Services;
@@ -15,10 +34,12 @@ public class WorkQueueUtils
     private static readonly log4net.ILog log = log4net.LogManager
         .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     private readonly IDataLookupService lookupService;
+    private readonly SchemaService schemaService;
 
-    public WorkQueueUtils(IDataLookupService lookupService )
+    public WorkQueueUtils(IDataLookupService lookupService, SchemaService schemaService)
     {
         this.lookupService = lookupService;
+        this.schemaService = schemaService;
     }
 
     public Guid GetQueueId(string referenceCode)
@@ -43,13 +64,11 @@ public class WorkQueueUtils
         return (Guid)id;
     }
     
-    public WorkQueueClass WQClass(string name)
+    public WorkQueueClass WorkQueueClass(string name)
     {
-        SchemaService s = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
-
-        foreach (WorkQueueClass c in s.GetProvider(typeof(WorkQueueClassSchemaItemProvider)).ChildItems)
+        foreach (WorkQueueClass queueClass in schemaService.GetProvider(typeof(WorkQueueClassSchemaItemProvider)).ChildItems)
         {
-            if (c.Name == name) return c;
+            if (queueClass.Name == name) return queueClass;
         }
 
 #if ORIGAM_CLIENT
@@ -59,23 +78,22 @@ public class WorkQueueUtils
 #endif
     }
     
-    public string WQClassName(Guid queueId)
+    public string WorkQueueClassName(Guid queueId)
     {
-        IDataLookupService ls = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-
-        return (string)ls.GetDisplayText(new Guid("46976056-f906-47ae-95e7-83d8c65412a3"), queueId, false, false, null);
+        return (string)lookupService.GetDisplayText(
+            new Guid("46976056-f906-47ae-95e7-83d8c65412a3"), queueId, false, false, null);
     }
     
-    public WorkQueueClass WQClass(Guid queueId)
+    public WorkQueueClass WorkQueueClass(Guid queueId)
     {
-        return WQClass(WQClassName(queueId));
+        return WorkQueueClass(WorkQueueClassName(queueId));
     }
     
     public DataSet LoadWorkQueueData(string workQueueClass, object queueId,
         int pageSize, int pageNumber, string transactionId)
     {
-        WorkQueueClass wqc = WQClass(workQueueClass);
-        if (wqc == null)
+        WorkQueueClass queueClass = WorkQueueClass(workQueueClass);
+        if (queueClass == null)
         {
             throw new ArgumentOutOfRangeException("workQueueClass",
                 workQueueClass,
@@ -88,12 +106,12 @@ public class WorkQueueUtils
             parameters.Add(new QueryParameter("_pageSize", pageSize));
             parameters.Add(new QueryParameter("_pageNumber", pageNumber));
         }
-        return core.DataService.Instance.LoadData(wqc.WorkQueueStructureId,
-            wqc.WorkQueueStructureUserListMethodId, Guid.Empty,
-            wqc.WorkQueueStructureSortSetId, transactionId, parameters);
+        return core.DataService.Instance.LoadData(queueClass.WorkQueueStructureId,
+            queueClass.WorkQueueStructureUserListMethodId, Guid.Empty,
+            queueClass.WorkQueueStructureSortSetId, transactionId, parameters);
     }
     
-    public bool LockQueueItems(WorkQueueClass wqc,
+    public bool LockQueueItems(WorkQueueClass queueClass,
         DataTable selectedRows)
     {
         UserProfile profile = SecurityManager.CurrentUserProfile();
@@ -113,7 +131,7 @@ public class WorkQueueUtils
         }
         try
         {
-            core.DataService.Instance.StoreData(wqc.WorkQueueStructureId,
+            core.DataService.Instance.StoreData(queueClass.WorkQueueStructureId,
                 selectedRows.DataSet, true, null);
         }
         catch

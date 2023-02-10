@@ -32,7 +32,6 @@ using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Schema.WorkflowModel;
-using Origam.Schema.WorkflowModel.WorkQueue;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 using System.ComponentModel;
@@ -74,7 +73,7 @@ namespace Origam.Workflow.WorkQueue
             SchemaService schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
             IDataLookupService dataLookupService = ServiceManager.Services
                 .GetService<IDataLookupService>();
-            workQueueUtils = new WorkQueueUtils(dataLookupService);
+            workQueueUtils = new WorkQueueUtils(dataLookupService, schemaService);
             schemaService.SchemaLoaded += new EventHandler(schemaService_SchemaLoaded);
             schemaService.SchemaUnloaded += new EventHandler(schemaService_SchemaUnloaded);
             schemaService.SchemaUnloading += new CancelEventHandler(schemaService_SchemaUnloading);
@@ -164,11 +163,11 @@ namespace Origam.Workflow.WorkQueue
 
         public ISchemaItem WQClass(string name)
         {
-            return workQueueUtils.WQClass(name);
+            return workQueueUtils.WorkQueueClass(name);
         }
          public ISchemaItem WQClass(Guid queueId)
          {
-             return workQueueUtils.WQClass(queueId);
+             return workQueueUtils.WorkQueueClass(queueId);
          }
 
          public DataSet LoadWorkQueueData(string workQueueClass, object queueId)
@@ -179,7 +178,7 @@ namespace Origam.Workflow.WorkQueue
         public Guid WorkQueueAdd(string workQueueName, IXmlContainer data, string transactionId)
         {
             Guid workQueueId = workQueueUtils.GetQueueId(workQueueName);
-            string workQueueClass = workQueueUtils.WQClassName(workQueueId);
+            string workQueueClass = workQueueUtils.WorkQueueClassName(workQueueId);
             string condition = "";
 
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, null, transactionId);
@@ -188,7 +187,7 @@ namespace Origam.Workflow.WorkQueue
         public Guid WorkQueueAdd(string workQueueName, IXmlContainer data, WorkQueueAttachment[] attachments, string transactionId)
         {
             Guid workQueueId = workQueueUtils.GetQueueId(workQueueName);
-            string workQueueClass = workQueueUtils.WQClassName(workQueueId);
+            string workQueueClass = workQueueUtils.WorkQueueClassName(workQueueId);
             string condition = "";
 
             return WorkQueueAdd(workQueueClass, workQueueName, workQueueId, condition, data, attachments, transactionId);
@@ -208,7 +207,7 @@ namespace Origam.Workflow.WorkQueue
             RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
             UserProfile profile = SecurityManager.CurrentUserProfile();
 
-            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueClass);
 
             if (wqc != null)
             {
@@ -259,7 +258,7 @@ namespace Origam.Workflow.WorkQueue
 
         public IDataDocument WorkQueueGetMessage(Guid workQueueMessageId, string transactionId)
         {
-            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueMessageId);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueMessageId);
             DataSet ds = FetchSingleQueueEntry(wqc, workQueueMessageId, transactionId);
             return DataDocumentFactory.New(ds);
         }
@@ -622,7 +621,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 log.Debug("Removing Work Queue Entries for Queue: " + queueRow.Name);
             }
-            WorkQueueClass wqc = workQueueUtils.WQClass(queueRow.WorkQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(queueRow.WorkQueueClass);
             if (wqc != null)
             {
                 DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, transactionId);
@@ -644,7 +643,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 log.Debug("Removing Work Queue Entries for Queue: " + workQueueName + " for row Id " + rowKey);
             }
-            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueClass);
 
             if (wqc != null)
             {
@@ -691,7 +690,7 @@ namespace Origam.Workflow.WorkQueue
         {
             if (rowKey == null) return;
 
-            WorkQueueClass wqc = workQueueUtils.WQClass(workQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(workQueueClass);
 
             RuleEngine ruleEngine = RuleEngine.Create(new Hashtable(), transactionId);
             UserProfile profile = SecurityManager.CurrentUserProfile();
@@ -802,7 +801,7 @@ namespace Origam.Workflow.WorkQueue
             }
             // set all rows to be actual values, not added (in case the calling function did not do that)
             selectedRows.AcceptChanges();
-            WorkQueueClass wqc = workQueueUtils.WQClass(queueClass);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(queueClass);
             try
             {
                 if (lockItems) LockQueueItems(wqc, selectedRows);
@@ -1355,7 +1354,7 @@ namespace Origam.Workflow.WorkQueue
 
         private void ProcessQueueItem(WorkQueueData.WorkQueueRow q, DataRow queueItemRow)
         {
-            WorkQueueClass wqc = workQueueUtils.WQClass(q.WorkQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(q.WorkQueueClass);
             IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             log.Info(
                 $"Running ProcessQueueItem in Thread: {Thread.CurrentThread.ManagedThreadId}");

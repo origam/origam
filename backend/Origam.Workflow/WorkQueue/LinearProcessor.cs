@@ -120,7 +120,7 @@ public class LinearProcessor : IWorkQueueProcessor
     {
         const int pageSize = 10;
         int pageNumber = 1;
-        WorkQueueClass workQueueClass = workQueueUtils.WQClass(workQueueId);
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(workQueueId);
         DataRow result = null;
         do
         {
