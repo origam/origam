@@ -31,7 +31,8 @@ using Origam.Service.Core;
 
 namespace Origam.Security.Identity
 {
-    public class IdentityServiceAgent : AbstractServiceAgent, IDisposable
+    // class is sealed because of a simplified IDisposable pattern implementation
+    public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
     {
 		protected static readonly ILog log
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
@@ -54,7 +55,6 @@ namespace Origam.Security.Identity
         }
 
         private object result;
-        private bool disposedValue;
 
         public override object Result
         {
@@ -781,33 +781,7 @@ namespace Origam.Security.Identity
             return xmlDoc;
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    serviceScope?.Dispose();
-                }
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                disposedValue = true;
-            }
-        }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~IdentityServiceAgent()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+        public void Dispose() => serviceScope?.Dispose();        
     }
 
 }
