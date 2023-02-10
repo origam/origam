@@ -59,6 +59,8 @@ namespace Origam
 			int workQueueListRefreshPeriod,
 			bool loadExternalWorkQueues,
 			int externalWorkQueueCheckPeriod,
+			WorkQueueProcessingMode workQueueProcessingMode,
+			int roundRobinBatchSize,
 			string slogan,
 			string localizationFolder,
 			bool executeUpgradeScriptsOnStart,
@@ -91,6 +93,8 @@ namespace Origam
 			this.WorkQueueListRefreshPeriod = workQueueListRefreshPeriod;
 			this.LoadExternalWorkQueues = loadExternalWorkQueues;
 			this.ExternalWorkQueueCheckPeriod = externalWorkQueueCheckPeriod;
+			this.RoundRobinBatchSize = roundRobinBatchSize;
+			this.WorkQueueProcessingMode = workQueueProcessingMode;
 			this.Slogan = slogan;
 			this.LocalizationFolder = localizationFolder;
 			this.ExecuteUpgradeScriptsOnStart = executeUpgradeScriptsOnStart;
@@ -320,6 +324,8 @@ namespace Origam
 				this.WorkQueueListRefreshPeriod,
 				this.LoadExternalWorkQueues,
 				this.ExternalWorkQueueCheckPeriod,
+				this.WorkQueueProcessingMode,
+				this.RoundRobinBatchSize,
 				this.Slogan,
 				this.LocalizationFolder,
 				this.ExecuteUpgradeScriptsOnStart,
