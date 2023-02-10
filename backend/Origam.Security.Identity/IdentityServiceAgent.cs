@@ -31,11 +31,13 @@ using Origam.Service.Core;
 
 namespace Origam.Security.Identity
 {
-    public class IdentityServiceAgent : AbstractServiceAgent
+    // class is sealed because of a simplified IDisposable pattern implementation
+    public sealed class IdentityServiceAgent : AbstractServiceAgent, IDisposable
     {
 		protected static readonly ILog log
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
         private IManager userManager;
+        private IServiceScope serviceScope;
 
         public IdentityServiceAgent()
         {
@@ -45,6 +47,11 @@ namespace Origam.Security.Identity
             userManager = SecurityManager.DIServiceProvider
                 .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
                 .HttpContext?.RequestServices?.GetService<IManager>();
+            if (userManager == null)
+            {
+                serviceScope = SecurityManager.DIServiceProvider.CreateScope();
+                userManager = serviceScope.ServiceProvider.GetService<IManager>();
+            }
         }
 
         private object result;
@@ -773,6 +780,8 @@ namespace Origam.Security.Identity
             xmlDoc.AppendChild(root);
             return xmlDoc;
         }
+
+        public void Dispose() => serviceScope?.Dispose();        
     }
 
 }
