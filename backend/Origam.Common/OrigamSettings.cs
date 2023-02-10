@@ -242,6 +242,12 @@ namespace Origam
 
 		[Category("Work Queue"), DefaultValue(60)]
 		public int ExternalWorkQueueCheckPeriod { get; set; } = 60;
+		
+		[Category("Work Queue"), DefaultValue(WorkQueueProcessingMode.Linear)]
+		public WorkQueueProcessingMode WorkQueueProcessingMode { get; set; }
+		
+		[Category("Work Queue"), DefaultValue(3)]
+		public int RoundRobinBatchSize { get; set; } = 3;
 
 		[Category("Services"), DefaultValue(-1)]
 		public int ExportRecordsLimit { get; set; } = -1;
@@ -406,5 +412,10 @@ namespace Origam
             return  dataDataService
                     .Split(",".ToCharArray())[0].Trim().Split("\\.".ToCharArray())[3].Trim().Replace("DataService","");
         }
+    }
+
+    public enum WorkQueueProcessingMode
+    {
+	    Linear, RoundRobin
     }
 }

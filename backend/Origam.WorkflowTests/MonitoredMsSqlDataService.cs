@@ -29,13 +29,14 @@ public class MonitoredMsSqlDataService : MsSqlDataService
         {
             dataset.Tables[0].Rows[0].RejectChanges();
             var deletedRowId = (Guid)dataset.Tables[0].Rows[0]["Id"];
+            var refWorkQueueId = (Guid)dataset.Tables[0].Rows[0]["refWorkQueueId"];
             dataset.Tables[0].Rows[0].Delete();
 
             AddOperation(
                 new DeleteWorkQueueEntryOperation("UpdateData",
                     new Dictionary<string, object>
                     {
-                        { "query.DataSourceId", query.DataSourceId },
+                        { "refWorkQueueId", refWorkQueueId },
                         { "deletedRowId", deletedRowId },
                     }));
         }

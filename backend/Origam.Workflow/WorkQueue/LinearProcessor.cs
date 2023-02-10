@@ -1,4 +1,25 @@
-﻿using System;
+﻿#region license
+/*
+Copyright 2005 - 2023 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading;
@@ -7,13 +28,15 @@ using Origam.Schema.WorkflowModel;
 using WorkQueueRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueRow;
 namespace Origam.Workflow.WorkQueue;
 
-public class AutoProcessor
+public class LinearProcessor : IWorkQueueProcessor
 {
-    private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly log4net.ILog log = log4net.LogManager
+        .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     private readonly WorkQueueUtils workQueueUtils;
     private readonly Action<WorkQueueRow, DataRow> itemProcessAction;
 
-    public AutoProcessor(Action<WorkQueueRow, DataRow> itemProcessAction, WorkQueueUtils workQueueUtils)
+    public LinearProcessor(Action<WorkQueueRow, DataRow> itemProcessAction,
+        WorkQueueUtils workQueueUtils)
     {
         this.itemProcessAction = itemProcessAction;
         this.workQueueUtils = workQueueUtils;
@@ -23,17 +46,19 @@ public class AutoProcessor
     {
         foreach (WorkQueueRow queue in queues)
         {
-            ProcessAutoQueueCommands(queue, cancellationToken);
+            ProcessAutoQueueCommands(
+                queue: queue,
+                cancellationToken: cancellationToken,
+                maxItemsToProcess: null);
         }
     }
     
-    public void ProcessAutoQueueCommands(WorkQueueRow q,
-        CancellationToken cancellationToken ,int forceWait_ms=0)
+    public int ProcessAutoQueueCommands(WorkQueueRow queue,
+        CancellationToken cancellationToken, int? maxItemsToProcess=null, 
+        int forceWait_ms=0)
     {
-        DataRow queueItemRow;
-
-        var processErrors = IsAnyCmdSetToAutoProcessedWithErrors(q);
-
+        var processErrors = IsAnyCmdSetToAutoProcessedWithErrors(queue);
+        int itemsProcessed = 0;
         while(true)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -42,10 +67,11 @@ public class AutoProcessor
                          $"{Thread.CurrentThread.ManagedThreadId}");
                 cancellationToken.ThrowIfCancellationRequested();
             }
-            queueItemRow = GetNextItem(q.Id, null, processErrors, cancellationToken);
+            var queueItemRow = GetNextItem(
+                queue.Id, null, processErrors, cancellationToken);
             if (queueItemRow == null)
             {
-                return;
+                return itemsProcessed;
             }
             if (log.IsDebugEnabled)
             {
@@ -55,16 +81,38 @@ public class AutoProcessor
                           + (queueItemRow.IsNull("ErrorText") ? "NULL" : queueItemRow["ErrorText"].ToString()));
             }
             // we have to store the item id now because later the queue entry can be removed by HandleRemove() command
-            // ProcessQueueItem(q, queueItemRow, ps, wqc);
-            itemProcessAction(q, queueItemRow);
-                
+            itemProcessAction(queue, queueItemRow);
+            itemsProcessed++;
+            if (maxItemsToProcess.HasValue && 
+                itemsProcessed >= maxItemsToProcess.Value)
+            {
+                return itemsProcessed;
+            }
+            
             if (forceWait_ms != 0)
             {
                 log.Info(
-                    $"forceWait parameter causes worker on thread {Thread.CurrentThread.ManagedThreadId} to sleep for: {forceWait_ms} ms");
+                    $"forceWait parameter causes worker on thread " +
+                    $"{Thread.CurrentThread.ManagedThreadId} to sleep for: " +
+                    $"{forceWait_ms} ms");
                 Thread.Sleep(forceWait_ms);
             }
         }
+    }
+    
+    private bool IsAnyCmdSetToAutoProcessedWithErrors(WorkQueueRow queue)
+    {
+        bool processErrors = false;
+        foreach (WorkQueueData.WorkQueueCommandRow cmd in
+                 queue.GetWorkQueueCommandRows())
+        {
+            if (cmd.IsAutoProcessedWithErrors)
+            {
+                processErrors = true;
+                break;
+            }
+        }
+        return processErrors;
     }
     
     public DataRow GetNextItem(Guid workQueueId, string transactionId, bool processErrors,
@@ -115,20 +163,5 @@ public class AutoProcessor
             }
         } while (result == null);
         return result;
-    }
-    
-    private static bool IsAnyCmdSetToAutoProcessedWithErrors(WorkQueueRow q)
-    {
-        bool processErrors = false;
-        foreach (WorkQueueData.WorkQueueCommandRow cmd in
-                 q.GetWorkQueueCommandRows())
-        {
-            if (cmd.IsAutoProcessedWithErrors)
-            {
-                processErrors = true;
-                break;
-            }
-        }
-        return processErrors;
     }
 }

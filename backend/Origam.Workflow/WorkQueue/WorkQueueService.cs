@@ -59,7 +59,7 @@ namespace Origam.Workflow.WorkQueue
         private readonly core.ICoreDataService dataService = core.DataService.Instance;
         private  CancellationTokenSource cancellationTokenSource = new ();
         private readonly WorkQueueUtils workQueueUtils;
-        private readonly AutoProcessor autoProcessor;
+        private readonly IWorkQueueProcessor queueProcessor;
         private readonly Timer _t = new Timer(60000);
         private readonly Timer _queueAutoProcessTimer;
         private Boolean serviceBeingUnloaded = false;
@@ -78,7 +78,24 @@ namespace Origam.Workflow.WorkQueue
             schemaService.SchemaLoaded += new EventHandler(schemaService_SchemaLoaded);
             schemaService.SchemaUnloaded += new EventHandler(schemaService_SchemaUnloaded);
             schemaService.SchemaUnloading += new CancelEventHandler(schemaService_SchemaUnloading);
-            autoProcessor = new AutoProcessor(ProcessQueueItem, workQueueUtils);
+            
+            OrigamSettings settings 
+                = ConfigurationManager.GetActiveConfiguration();
+            LinearProcessor linearProcessor = new LinearProcessor(
+                ProcessQueueItem,
+                workQueueUtils);
+            queueProcessor = settings.WorkQueueProcessingMode switch
+            {
+                WorkQueueProcessingMode.Linear => 
+                    linearProcessor,
+                WorkQueueProcessingMode.RoundRobin => 
+                    new RoundRobinProcessor(
+                        linearProcessor, 
+                        settings.RoundRobinBatchSize),
+                _ => 
+                    throw new NotImplementedException(
+                    $"Option {settings.WorkQueueProcessingMode} not implemented")
+            };
         }
 
 
@@ -917,7 +934,7 @@ namespace Origam.Workflow.WorkQueue
             bool processErrors)
         {
             var queueId = workQueueUtils.GetQueueId(workQueueName);
-            return autoProcessor.GetNextItem(queueId, transactionId,
+            return queueProcessor.GetNextItem(queueId, transactionId,
                 processErrors, cancellationTokenSource.Token);
         }
 
@@ -1649,7 +1666,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     try
                     {
-                        autoProcessor.ProcessAutoQueueCommands(queueToProcess, cancToken, forceWait_ms);
+                        queueProcessor.ProcessAutoQueueCommands(queueToProcess, cancToken, forceWait_ms);
                     }
                     catch (OrigamException ex)
                     {
@@ -1711,7 +1728,7 @@ namespace Origam.Workflow.WorkQueue
                     .WorkQueue.Rows
                     .Cast<WorkQueueData.WorkQueueRow>()
                     .Where(HasAutoCommand);
-                autoProcessor.Run(queues, cancellationTokenSource.Token);
+                queueProcessor.Run(queues, cancellationTokenSource.Token);
             }
             catch (Exception ex)
             {
