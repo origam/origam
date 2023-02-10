@@ -88,6 +88,10 @@ namespace Origam.Workflow.Tasks
 			{
 				OnFinished(new WorkflowEngineTaskEventArgs(exception));
 			}
+			if (ServiceAgent is IDisposable disposableServiceAgent)
+			{
+				disposableServiceAgent.Dispose();
+			}
 		}
 		private void OnAsyncAgentOnAsyncCallFinished(object sender, AsyncReturnValues args)
 		{
