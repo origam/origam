@@ -102,9 +102,18 @@ namespace Origam.Workflow.WorkQueue
 
         public void UnloadService()
         {
+            SchemaService schemaService = ServiceManager.Services.GetService<SchemaService>();
+            schemaService.SchemaLoaded -= schemaService_SchemaLoaded;
+            schemaService.SchemaUnloaded -= schemaService_SchemaUnloaded;
+            schemaService.SchemaUnloading -= schemaService_SchemaUnloading;
+            StopTimers();
+        }
+
+        private void StopTimers()
+        {
             if(log.IsDebugEnabled)
             {
-                log.DebugFormat("UnloadService");
+                log.DebugFormat("Stopping WorkQueueService Timers");
             }
             serviceBeingUnloaded = true;
             cancellationTokenSource.Cancel();
@@ -1770,7 +1779,7 @@ namespace Origam.Workflow.WorkQueue
             if(settings.AutoProcessWorkQueues)
             {
                 _queueAutoProcessTimer.Elapsed += WorkQueueAutoProcessTimerElapsed;
-                _queueAutoProcessTimer.Disposed += WorkQueueAutoProcessTimerDisposed;
+                // _queueAutoProcessTimer.Disposed += WorkQueueAutoProcessTimerDisposed;
                 _queueAutoProcessTimer.Start();
             }
             else
@@ -1788,7 +1797,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 log.Debug("schemaService_SchemaUnloading");
             }
-            UnloadService();
+            StopTimers();
         }
 
         void schemaService_SchemaUnloaded(object sender, EventArgs e)

@@ -35,8 +35,8 @@ public class WorkQueueTests
 {
     private readonly SqlManager sqlManager = new (DataService.Instance);
     
-    // [TestCase("LinearWorkQueueProcessor")]
-    // [TestCase("RoundRobinWorkQueueProcessor")]
+    [TestCase("LinearWorkQueueProcessor")]
+    [TestCase("RoundRobinWorkQueueProcessor")]
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
     {
         // ConnectRuntime should start a timer which will cause the work queues
@@ -61,7 +61,8 @@ public class WorkQueueTests
         CollectionAssert.AreEquivalent(
             createdWorkQueueEntryIds,
             deletedWorkQueueEntryIds);
-        ServiceManager.Services.UnloadAllServices();
+        OrigamEngine.OrigamEngine.DisconnectRuntime();
+        Thread.Sleep(1000);
     }
     
     [Test]
@@ -111,7 +112,7 @@ public class WorkQueueTests
             Assert.That(numberOfWorkQueuesInTheBatchCall, Is.EqualTo(1));
         }
 
-        ServiceManager.Services.UnloadAllServices();
+        OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
 }
 

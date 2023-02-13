@@ -77,12 +77,13 @@ namespace Origam.DA.Service
                     QueueOperation(Operation.clear, null);
                     filePersistenceIndex.PersistActualIndex(this);
                 }
-                else
+                for (int i = 0; i < 10; i++)
                 {
-                    if (!cancellationToken.IsCancellationRequested)
+                    if (cancellationToken.IsCancellationRequested)
                     {
-                        Thread.Sleep(2000);
+                        return;
                     }
+                    Thread.Sleep(200);
                 }
             }
         }
@@ -296,10 +297,22 @@ namespace Origam.DA.Service
         public void StopTask()
         {
             IndexTaskCancellationTokenSource.Cancel();
-            while(task.Status==TaskStatus.Running)
-            {
-                Thread.Sleep(200);
-            }
+            // try
+            // {
+                task.Wait();
+            // }
+            // catch (AggregateException ex)
+            // {
+            //     if (ex.InnerException is not TaskCanceledException)
+            //     {
+            //         throw;
+            //     }
+            // }
+
+            // while(task.Status==TaskStatus.Running)
+            // {
+            //     Thread.Sleep(200);
+            // }
         }
     }
 

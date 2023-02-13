@@ -51,7 +51,7 @@ namespace Origam.OrigamEngine
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static System.Timers.Timer RestartTimer = new System.Timers.Timer(1000);
         private static DateTime LastRestartRequestDate;
-        private static readonly IRuntimeServiceFactory standardServiceFactory = new RuntimeServiceFactory();
+        private static IRuntimeServiceFactory serviceFactory = new RuntimeServiceFactory();
         #endregion
 
         #region Constructors
@@ -104,13 +104,19 @@ namespace Origam.OrigamEngine
 
 		public static void InitializeRuntimeServices()
 		{
-			standardServiceFactory.InitializeServices();
+			serviceFactory.InitializeServices();
 		}
 
         public static void UnloadConnectedServices()
         {
-            standardServiceFactory.UnloadServices();
+            serviceFactory.UnloadServices();
             DataServiceFactory.ClearDataService();
+        }
+        
+        public static void DisconnectRuntime()
+        {
+	        UnloadConnectedServices();
+	        RestartTimer?.Stop();
         }
 
 		public static void ConnectRuntime(
@@ -124,14 +130,11 @@ namespace Origam.OrigamEngine
             SecurityManager.SetServerIdentity();
 			SetActiveConfiguration(configName);
 			var settings = ConfigurationManager.GetActiveConfiguration();
-			if (customServiceFactory == null)
+			if (customServiceFactory != null)
 			{
-				standardServiceFactory.InitializeServices();
+				serviceFactory = customServiceFactory;
 			}
-			else
-			{
-				customServiceFactory.InitializeServices();
-			}
+			serviceFactory.InitializeServices();
 			SchemaService schema 
                 = ServiceManager.Services.GetService<SchemaService>();
 			log.Info("Loading model " + settings.Name + ", Package ID: " + settings.DefaultSchemaExtensionId.ToString());
@@ -197,12 +200,12 @@ namespace Origam.OrigamEngine
 
         public static IPersistenceService CreatePersistenceService()
         {
-	        return standardServiceFactory.CreatePersistenceService();
+	        return serviceFactory.CreatePersistenceService();
         }
 
         public static IDocumentationService CreateDocumentationService()
         {
-	        return standardServiceFactory.CreateDocumentationService();
+	        return serviceFactory.CreateDocumentationService();
         }
 
 		private static DateTime GetLastRestartRequestDate()
