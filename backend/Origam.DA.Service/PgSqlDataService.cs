@@ -62,6 +62,7 @@ namespace Origam.DA.Service
 
 		private void Init()
 		{
+			AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
 			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
         }
 

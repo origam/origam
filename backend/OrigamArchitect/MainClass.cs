@@ -44,7 +44,6 @@ namespace OrigamArchitect
 		static void Main(string[] args) 
 		{
 			log.Info("ORIGAM Desktop starting.");
-            AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
 			Application.ThreadException += Application_ThreadException;
 			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 			try

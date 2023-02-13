@@ -20,13 +20,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -42,7 +37,7 @@ namespace Origam.Server
             options.Watch = true;
             log4NetProvider = new Log4NetProvider(options);
             ILogger startupLogger = log4NetProvider.CreateLogger();
-            AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
+            
             try
             {
                 CreateWebHostBuilder(args).Build().Run();
