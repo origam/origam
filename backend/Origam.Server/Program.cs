@@ -37,7 +37,6 @@ namespace Origam.Server
             options.Watch = true;
             log4NetProvider = new Log4NetProvider(options);
             ILogger startupLogger = log4NetProvider.CreateLogger();
-            
             try
             {
                 CreateWebHostBuilder(args).Build().Run();
