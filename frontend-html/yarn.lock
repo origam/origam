@@ -1546,10 +1546,10 @@
     postcss "^8.4.21"
     rollup-plugin-postcss "^4.0.2"
 
-"@origam/plugin-chart@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-2.0.2.tgz#9b56079da27256e632fe2452805e592e0ab4253d"
-  integrity sha512-juj4vYyk7e/OJJKMPPpySqaZI8npXpoRmxWPwxROxHu0ay5kXuSovMTryF8uE3jOMO7x6lWr+uHWvz3Hnb9Q6w==
+"@origam/plugin-chart@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@origam/plugin-chart/-/plugin-chart-2.0.3.tgz#ea205601bc07d8b8a7a1c6468dbfd40733eecec1"
+  integrity sha512-07XuJks4k5uT1xIz7FFyRgzqgBWjHwWK9aoWsyVB8zgygBmuqnAb0uMy/CC6ipH3StH/AH0GJ+Tf1DEPG6r9LQ==
   dependencies:
     "@origam/plugins" "^1.0.2"
     "@origam/styles" "^1.0.0"
