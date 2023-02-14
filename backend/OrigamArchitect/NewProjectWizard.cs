@@ -64,9 +64,11 @@ namespace OrigamArchitect
         private WebGitXmlParser XmlParser = new WebGitXmlParser();
         private List<WebGitData> repositories = new List<WebGitData>();
         private const bool NEEDS_ELEVATED_PRIVILEDGES = false;
+        private readonly string defaultModelZip;
 
         public NewProjectWizard()
         {
+            defaultModelZip = "DefaultModel.zip";
             InitializeComponent();
             InitGitConfig();
             wizard1.FinishButtonText = "Run";
@@ -333,7 +335,12 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if (!File.Exists(defaultModelPath.Text))
+            string rootModelPath = defaultModelPath.Text;
+            if (!rootModelPath.EndsWith(defaultModelZip))
+            {
+                rootModelPath = Path.Combine(defaultModelPath.Text, defaultModelZip);
+            }
+            if (!File.Exists(rootModelPath))
             {
                 AsMessageBox.ShowError(this, strings.DefaultModelFileNotExists_Message, strings.NewProjectWizard_Title, null);
                 e.Cancel = true;
@@ -385,7 +392,7 @@ namespace OrigamArchitect
             txtSourcesFolder.Text = _settings.SourcesFolder;
             txtdosourcefolder.Text = _settings.DockerSourceFolder;
             txtBinFolderRoot.Text = _settings.BinFolder;
-            defaultModelPath.Text = Path.Combine(Application.StartupPath, @"Project Templates\DefaultModel.zip");
+            defaultModelPath.Text = Path.Combine(Application.StartupPath, @"Project Templates\" + defaultModelZip);
             txtBinFolderRoot.Visible = false;
             btnSelectBinFolderRoot.Visible = false;
             lblBinFolderRoot.Visible = false;
