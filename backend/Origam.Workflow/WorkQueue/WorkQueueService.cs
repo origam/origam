@@ -1779,7 +1779,7 @@ namespace Origam.Workflow.WorkQueue
             if(settings.AutoProcessWorkQueues)
             {
                 _queueAutoProcessTimer.Elapsed += WorkQueueAutoProcessTimerElapsed;
-                // _queueAutoProcessTimer.Disposed += WorkQueueAutoProcessTimerDisposed;
+                _queueAutoProcessTimer.Disposed += WorkQueueAutoProcessTimerDisposed;
                 _queueAutoProcessTimer.Start();
             }
             else
