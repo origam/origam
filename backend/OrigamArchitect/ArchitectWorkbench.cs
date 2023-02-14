@@ -91,9 +91,6 @@ namespace OrigamArchitect
 		WorkbenchSchemaService _schema;
 		private StatusBarService _statusBarService;
 		bool closeAll = false;
-        private static string UserProfileFolder =>
-							  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-							  "ORIGAM", GetVersion(), "OrigamSettings.config");
 
 		// Toolboxes
 		SchemaBrowser _schemaBrowserPad;
@@ -1756,9 +1753,8 @@ namespace OrigamArchitect
 		/// </summary>
 		private bool LoadConfiguration(string configurationName)
 		{
-			CreateUserProfileConfigFile();
 			OrigamSettingsCollection configurations =
-				ConfigurationManager.GetAllConfigurations();
+				ConfigurationManager.GetAllUserHomeConfigurations();
 
             if (configurationName != null)
             {
@@ -1803,24 +1799,6 @@ namespace OrigamArchitect
 
 			return true;
 		}
-
-        private void CreateUserProfileConfigFile()
-        {
-            if (!File.Exists(UserProfileFolder))
-            {
-                FileInfo file = new(UserProfileFolder);
-                file.Directory.Create();
-                OrigamSettingsReader origamSetting = new(UserProfileFolder);
-                if (File.Exists(origamSetting.GetDefaultPathToOrigamSettings()))
-                {
-                    File.Copy(origamSetting.GetDefaultPathToOrigamSettings(), UserProfileFolder);
-                }
-				else
-				{
-                    new OrigamSettingsReader(UserProfileFolder).Write(new OrigamSettingsCollection());
-                }
-            }
-        }
 
 		private void UnloadConnectedServices()
 		{
@@ -2580,12 +2558,6 @@ namespace OrigamArchitect
             {
                 return false;
             }
-        }
-
-        private static string GetVersion()
-        {
-            Assembly assembly = Assembly.GetEntryAssembly();
-            return assembly.GetName().Version.Major + "." + assembly.GetName().Version.Minor;
         }
     }
 }
