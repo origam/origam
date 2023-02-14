@@ -111,9 +111,9 @@
       <dsssi:DataStructureSortSetItem
         asi:abstract="false"
         dsssi:entity="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/WorkQueue/142da199-f5db-4690-a8c5-17e24b380733"
-        dsssi:fieldName="Name"
+        dsssi:fieldName="ReferenceCode"
         x:id="c95f9c96-39c7-4298-aae9-02bd59b955a4"
-        asi:name="WorkQueue_0_Name"
+        asi:name="WorkQueue_0_ReferenceCode"
         dsssi:sortDirection="Ascending" />
       <dsssi:DataStructureSortSetItem
         asi:abstract="false"
