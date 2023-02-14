@@ -99,7 +99,7 @@ namespace Origam.Workbench.Commands
 		{
 			OrigamSettingsEditor editor = new OrigamSettingsEditor();
 
-			editor.LoadObject(ConfigurationManager.GetAllConfigurations());
+			editor.LoadObject(ConfigurationManager.GetAllUserHomeConfigurations());
 			WorkbenchSingleton.Workbench.ShowView(editor);
 		}		
 	}
