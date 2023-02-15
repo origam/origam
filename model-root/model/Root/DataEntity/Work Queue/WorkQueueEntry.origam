@@ -1348,9 +1348,9 @@
       fmi:excludeFromAuditing="false"
       x:id="8515c4dc-c84a-4680-80a1-432f46a617fe"
       adec:isPrimaryKey="false"
-      adec:label="Number of Processed Retries"
-      fmi:mappedColumnName="RetryCount"
-      asi:name="RetryCount"
+      adec:label="Number of Attempts"
+      fmi:mappedColumnName="AttemptCount"
+      asi:name="AttemptCount"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -1563,9 +1563,9 @@
       fmi:excludeFromAuditing="false"
       x:id="b6ffd643-fe5a-4397-b195-89cce5879eff"
       adec:isPrimaryKey="false"
-      adec:label="Time of Last Retry"
-      fmi:mappedColumnName="RetryLastTimestamp"
-      asi:name="RetryLastTimestamp"
+      adec:label="Time of Last Attempt"
+      fmi:mappedColumnName="LastAttemptTime"
+      asi:name="LastAttemptTime"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -1774,9 +1774,9 @@
       fmi:excludeFromAuditing="false"
       x:id="e147e0de-0cb7-4342-b16b-7196f9b7b04f"
       adec:isPrimaryKey="false"
-      adec:label="Time of Next Retry"
-      fmi:mappedColumnName="RetryNextTimestamp"
-      asi:name="RetryNextTimestamp"
+      adec:label="Time of Next Attempt"
+      fmi:mappedColumnName="NextAttemptTime"
+      asi:name="NextAttemptTime"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn

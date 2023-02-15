@@ -371,9 +371,9 @@
       fmi:excludeFromAuditing="false"
       x:id="1dbc7efc-428f-47fe-9fc3-d7adb3ef3e52"
       adec:isPrimaryKey="false"
-      adec:label="Retry Time Interval"
-      fmi:mappedColumnName="RetryTimeInterval"
-      asi:name="RetryTimeInterval"
+      adec:label="Retry Time Interval in Seconds"
+      fmi:mappedColumnName="RetryIntervalSeconds"
+      asi:name="RetryIntervalSeconds"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -640,9 +640,9 @@
       fmi:excludeFromAuditing="false"
       x:id="e35ae850-878e-4e54-a4ac-94559e6d6218"
       adec:isPrimaryKey="false"
-      adec:label="Number of Retries"
-      fmi:mappedColumnName="RetryQuantity"
-      asi:name="RetryQuantity"
+      adec:label="Maximum Retries"
+      fmi:mappedColumnName="MaxRetries"
+      asi:name="MaxRetries"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn

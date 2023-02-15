@@ -1,1 +1,1 @@
-﻿ALTER TABLE [WorkQueue] ADD [RetryTimeInterval] Int NULL
+﻿ALTER TABLE [WorkQueue] ADD [RetryIntervalSeconds] Int NULL
