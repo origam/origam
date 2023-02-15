@@ -29,11 +29,11 @@ import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
 import { MapLayer } from "./stores/MapSetupStore";
 import Measure, { ContentRect } from "react-measure";
-import { flashColor2htmlColor } from "utils/flashColorFormat";
 import { ring as area } from "@mapbox/geojson-area";
 import marker2xIcon from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { flashColor2htmlColor } from "@origam/utils";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
