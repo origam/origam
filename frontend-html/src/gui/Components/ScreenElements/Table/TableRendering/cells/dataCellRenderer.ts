@@ -45,9 +45,9 @@ import {
   rowHeight,
   rowIndex,
 } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
-import { flashColor2htmlColor } from "utils/flashColorFormat";
 import { setTableDebugValue } from "gui/Components/ScreenElements/Table/TableRendering/DebugTableMonitor";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
+import { flashColor2htmlColor } from "@origam/utils";
 
 interface IDataCellRenderer {
   drawCellText(): void;
