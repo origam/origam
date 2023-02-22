@@ -44,15 +44,12 @@ namespace Origam.Server
 
             if (identityServerConfig.MobileClient != null)
             {
-                var mobileClient = new Client
+                Client mobileClient = new Client
                 {
                     ClientId = "origamMobileClient",
-                    AllowedGrantTypes = GrantTypes.Hybrid,
-                    ClientSecrets =
-                    {
-                        new Secret(identityServerConfig.MobileClient.ClientSecret.Sha256())
-                    },
-                    RedirectUris = identityServerConfig.MobileClient.RedirectUris,
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+                    RedirectUris =  identityServerConfig.MobileClient.RedirectUris,
                     RequireConsent = false,
                     RequirePkce = true,
                     PostLogoutRedirectUris = identityServerConfig.MobileClient.PostLogoutRedirectUris,
