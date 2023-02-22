@@ -108,8 +108,7 @@ namespace Origam.Server.Configuration
                         .GetStringArrayOrThrow(),
                     RedirectUris = mobileClientSection
                         .GetSectionOrThrow("RedirectUris")
-                        .GetStringArrayOrThrow(),
-                    ClientSecret= mobileClientSection.GetStringOrThrow("ClientSecret")
+                        .GetStringArrayOrThrow()
                 }; 
             }
             return null;
@@ -227,7 +226,6 @@ namespace Origam.Server.Configuration
     {
         public string[] RedirectUris { get; set; }
         public string[] PostLogoutRedirectUris { get; set; }
-        public string ClientSecret { get; set; }
     }
 
     public abstract class ExternalCallbackProcessingInfo
