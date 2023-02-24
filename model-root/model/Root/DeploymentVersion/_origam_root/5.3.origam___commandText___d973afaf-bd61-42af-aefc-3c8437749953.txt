@@ -1,1 +1,1 @@
-﻿ALTER TABLE [WorkQueueEntry] ADD [RetryCount] Int NULL
+﻿ALTER TABLE [WorkQueueEntry] ADD [AttemptCount] Int NULL

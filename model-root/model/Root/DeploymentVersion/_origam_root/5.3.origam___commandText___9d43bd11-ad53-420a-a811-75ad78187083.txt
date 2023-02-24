@@ -1,1 +1,1 @@
-﻿ALTER TABLE [WorkQueue] ADD [RetryQuantity] Int NULL
+﻿ALTER TABLE [WorkQueue] ADD [MaxRetries] Int NULL

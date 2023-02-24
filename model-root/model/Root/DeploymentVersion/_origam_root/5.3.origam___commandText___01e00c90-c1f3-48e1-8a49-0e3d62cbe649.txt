@@ -1,1 +1,1 @@
-﻿ALTER TABLE [WorkQueueEntry] ADD [RetryLastTimestamp] DateTime NULL
+﻿ALTER TABLE [WorkQueueEntry] ADD [LastAttemptTime] DateTime NULL
