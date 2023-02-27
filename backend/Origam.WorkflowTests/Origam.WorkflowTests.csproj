@@ -24,4 +24,12 @@
       <ProjectReference Include="..\Origam.Security\Origam.Security.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="_log4net.config">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

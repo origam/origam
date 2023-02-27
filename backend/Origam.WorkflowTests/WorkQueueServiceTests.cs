@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using log4net.Config;
 using NUnit.Framework;
 using Origam.OrigamEngine;
 using Origam.Workbench.Services;
@@ -34,7 +35,18 @@ namespace Origam.WorkflowTests;
 public class WorkQueueTests
 {
     private readonly SqlManager sqlManager = new (DataService.Instance);
+
+    public WorkQueueTests()
+    {
+        XmlConfigurator.Configure(new FileInfo("log4net.config")); 
+    }
     
+    [SetUp]
+    public void Setup()
+    {
+        BasicConfigurator.Configure();
+    }
+
     [TestCase("LinearWorkQueueProcessor")]
     [TestCase("RoundRobinWorkQueueProcessor")]
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
