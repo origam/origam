@@ -598,6 +598,7 @@
       fmi:excludeFromAuditing="false"
       x:id="931d00c6-83ef-453d-bf2d-3c69faf10052"
       adec:isPrimaryKey="false"
+      adec:label="Enable Throttling"
       fmi:mappedColumnName="EnableThrottling"
       asi:name="EnableThrottling"
       adec:onCopyAction="Copy"

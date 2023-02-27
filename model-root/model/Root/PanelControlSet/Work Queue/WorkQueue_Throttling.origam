@@ -81,7 +81,7 @@
           x:id="5ff13dfb-6b58-4399-b070-1c25524553ab"
           asi:name="TabIndex"
           apvi:propertyId="47cd5ccd-1e49-40d0-bc82-ac6c98fee39f"
-          pvi1:value="7" />
+          pvi1:value="1" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="6cbcde66-da56-4041-8ba0-87829dfecd50"
@@ -265,7 +265,7 @@
           x:id="eb1c55a5-0ebe-43ca-aede-fd30264405c3"
           asi:name="TabIndex"
           apvi:propertyId="47cd5ccd-1e49-40d0-bc82-ac6c98fee39f"
-          pvi1:value="9" />
+          pvi1:value="2" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="eeef1237-9274-42d5-85c4-4c36aab5a2da"
@@ -317,7 +317,7 @@
           x:id="33c3ebfd-70d0-4eb4-bcf8-6c3d40364ee1"
           asi:name="Width"
           apvi:propertyId="99ff07e3-5f43-4bb2-b3de-46657a2f4bfb"
-          pvi1:value="104" />
+          pvi1:value="199" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="33fedec8-87a4-4a7e-b12a-af65fe02b7f4"
@@ -329,7 +329,7 @@
           x:id="6e7c0ce8-c8b6-4dce-b419-33102b8e0e06"
           asi:name="Text"
           apvi:propertyId="562004f3-48f7-460d-b8f6-e8c911235a36"
-          pvi1:value="EnableThrottling" />
+          pvi1:value="Enable Throttling" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="831e1de9-283c-46a5-ac7b-de60d9b54ffc"
@@ -353,7 +353,7 @@
           x:id="e3396c4d-03e4-4549-9653-87828868b821"
           asi:name="TabIndex"
           apvi:propertyId="3e03172f-fc92-4f7b-b09d-9f562c256040"
-          pvi1:value="6" />
+          pvi1:value="0" />
       </csi:ControlSetItem>
       <pvi1:PropertyValueItem
         asi:abstract="false"
