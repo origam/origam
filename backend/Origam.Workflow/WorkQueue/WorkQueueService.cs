@@ -62,7 +62,7 @@ namespace Origam.Workflow.WorkQueue
         private readonly Timer _loadExternalWorkQueuesTimer = new Timer(60000);
         private readonly Timer _queueAutoProcessTimer;
         private Boolean serviceBeingUnloaded = false;
-
+        private readonly RetryManager retryManager = new ();
         public WorkQueueService(): this(10_000)
         {
         }   
@@ -82,7 +82,8 @@ namespace Origam.Workflow.WorkQueue
                 = ConfigurationManager.GetActiveConfiguration();
             LinearProcessor linearProcessor = new LinearProcessor(
                 ProcessQueueItem,
-                workQueueUtils);
+                workQueueUtils,
+                retryManager);
             queueProcessor = settings.WorkQueueProcessingMode switch
             {
                 WorkQueueProcessingMode.Linear => 
@@ -942,7 +943,8 @@ namespace Origam.Workflow.WorkQueue
             bool processErrors)
         {
             var queueId = workQueueUtils.GetQueueId(workQueueName);
-            return queueProcessor.GetNextItem(queueId, transactionId,
+            WorkQueueData.WorkQueueRow queue = GetQueue(queueId).WorkQueue[0];
+            return queueProcessor.GetNextItem(queue, transactionId,
                 processErrors, cancellationTokenSource.Token);
         }
 
@@ -1361,30 +1363,33 @@ namespace Origam.Workflow.WorkQueue
             return false;
         }
 
-        private void ProcessQueueItem(WorkQueueData.WorkQueueRow q, DataRow queueItemRow)
+        private void ProcessQueueItem(WorkQueueData.WorkQueueRow queue, DataRow queueEntryRow)
         {
-            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(q.WorkQueueClass);
+            WorkQueueClass wqc = workQueueUtils.WorkQueueClass(queue.WorkQueueClass);
             IParameterService ps = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
             log.Info(
                 $"Running ProcessQueueItem in Thread: {Thread.CurrentThread.ManagedThreadId}");
             
-            string itemId = queueItemRow["Id"].ToString();
+            string itemId = queueEntryRow["Id"].ToString();
             string transactionId = Guid.NewGuid().ToString();
             try
             {
-                foreach (WorkQueueData.WorkQueueCommandRow cmd in q
+                foreach (WorkQueueData.WorkQueueCommandRow cmd in queue
                     .GetWorkQueueCommandRows())
                 {
                     try
                     {
-                        if (IsAutoProcessed(cmd, q, queueItemRow, transactionId))
+                        if (IsAutoProcessed(cmd, queue, queueEntryRow,
+                                transactionId))
                         {
                             if (log.IsInfoEnabled)
                             {
-                                log.Info("Auto processing work queue item. Id: " +
-                                          itemId + ", Queue: "
-                                          + q.Name + ", Command: " + cmd?.Text);
+                                log.Info(
+                                    "Auto processing work queue item. Id: " +
+                                    itemId + ", Queue: "
+                                    + queue.Name + ", Command: " + cmd?.Text);
                             }
+
                             string param1 = null;
                             string param2 = null;
                             string command = null;
@@ -1395,7 +1400,8 @@ namespace Origam.Workflow.WorkQueue
                             if (!cmd.IsrefErrorWorkQueueIdNull())
                                 errorQueueId = cmd.refErrorWorkQueueId;
                             // actual processing
-                            HandleAction(q.Id, q.WorkQueueClass, queueItemRow.Table,
+                            HandleAction(queue.Id, queue.WorkQueueClass,
+                                queueEntryRow.Table,
                                 cmd.refWorkQueueCommandTypeId,
                                 command, param1, param2, false, errorQueueId,
                                 transactionId);
@@ -1404,10 +1410,11 @@ namespace Origam.Workflow.WorkQueue
                                 log.Info(
                                     "Finished auto processing work queue item. Id: " +
                                     itemId + ", Queue: "
-                                    + q.Name + ", Command: " + cmd.Text);
+                                    + queue.Name + ", Command: " + cmd.Text);
                             }
+
                             if (cmd.refWorkQueueCommandTypeId ==
-                                (Guid) ps.GetParameterValue(
+                                (Guid)ps.GetParameterValue(
                                     "WorkQueueCommandType_Remove"))
                             {
                                 break;
@@ -1421,17 +1428,21 @@ namespace Origam.Workflow.WorkQueue
                         {
                             ResourceMonitor.Rollback(transactionId);
                         }
-                        if (queueItemRow.RowState == DataRowState.Deleted)
+
+                        if (queueEntryRow.RowState == DataRowState.Deleted)
                         {
-                            queueItemRow.RejectChanges();
+                            queueEntryRow.RejectChanges();
                         }
+
                         // if not moved to the error queue, record the message
                         if (cmd.IsrefErrorWorkQueueIdNull())
                         {
-                            StoreQueueError(wqc, queueItemRow, ex.Message);
+                            retryManager.SetEntryRetryData(queueEntryRow, queue, ex.Message);
+                            StoreFailedEntry(wqc, queueEntryRow);
                         }
+
                         // unlock the queue item
-                        UnlockQueueItems(wqc, queueItemRow.Table, true);
+                        UnlockQueueItems(wqc, queueEntryRow.Table, true);
                         // do not process any other commands on this queue entry
                         throw;
                     }
@@ -1439,7 +1450,7 @@ namespace Origam.Workflow.WorkQueue
                 // commit the transaction
                 ResourceMonitor.Commit(transactionId);
                 // unlock the queue item
-                UnlockQueueItems(wqc, queueItemRow.Table);
+                UnlockQueueItems(wqc, queueEntryRow.Table);
             }
             catch (Exception ex)
             {
@@ -1448,7 +1459,7 @@ namespace Origam.Workflow.WorkQueue
                 {
                     log.Fatal(
                         "Queue item processing failed. Id: " + itemId + ", Queue: " +
-                        q?.Name, ex);
+                        queue?.Name, ex);
                 }
             }
         }
@@ -1517,19 +1528,12 @@ namespace Origam.Workflow.WorkQueue
 
             return false;
         }
-
-        /// <summary>
-        /// Records the message to the queue entry.
-        /// </summary>
-        /// <param name="wqc"></param>
-        /// <param name="queueRow"></param>
-        /// <param name="message"></param>
-        private void StoreQueueError(WorkQueueClass wqc, DataRow queueRow, string message)
+        
+        private void StoreFailedEntry(WorkQueueClass wqc, DataRow queueEntryRow)
         {
-            queueRow["ErrorText"] = DateTime.Now.ToString() + ": " + message;
             try
             {
-                StoreQueueItems(wqc, queueRow.Table, null);
+                StoreQueueItems(wqc, queueEntryRow.Table, null);
             } catch (DBConcurrencyException)
             {
                 var dataStructureQuery = new DataStructureQuery {
@@ -1537,9 +1541,56 @@ namespace Origam.Workflow.WorkQueue
                     MethodId = new Guid("ea139b9a-3048-4cd5-bf9a-04a91590624a"),
                     LoadActualValuesAfterUpdate = false };
                 dataService.StoreData(dataStructureQuery,
-                   queueRow.Table.DataSet, null);
+                   queueEntryRow.Table.DataSet, null);
             }
         }
+
+        // private static void SetRetryData(DataRow queueEntryRow,
+        //     WorkQueueData.WorkQueueRow queue, string message)
+        // {
+        //     var failureTime = DateTime.Now;
+        //     queueEntryRow["ErrorText"] = failureTime + ": " + message;
+        //     queueEntryRow["LastAttemptTime"] = failureTime;
+        //     int attemptCountAfterFailure = queueEntryRow["AttemptCount"] == DBNull.Value
+        //         ? 1
+        //         : (int)queueEntryRow["AttemptCount"] + 1;
+        //     queueEntryRow["AttemptCount"] = attemptCountAfterFailure;
+        //     
+        //     object retryType = queue["refWorkQueueRetryTypeId"];
+        //     int maxRetries = queue["MaxRetries"] == DBNull.Value 
+        //         ? 0 
+        //         : (int)queue["MaxRetries"];
+        //     
+        //     if(Equals(retryType, WorkQueueRetryType.NoRetry) ||
+        //        attemptCountAfterFailure >= maxRetries )
+        //     {
+        //         queueEntryRow["NextAttemptTime"] = DateTime.MinValue;
+        //         return;
+        //     }
+        //     
+        //     if (queue["RetryIntervalSeconds"] == DBNull.Value)
+        //     {
+        //         throw new ArgumentException($"RetryIntervalSeconds in queue {queue["Name"]} is null while the retry type is not NoRetry");
+        //     }
+        //     int retryIntervalSeconds = (int)queue["RetryIntervalSeconds"];
+        //     
+        //     if(Equals(retryType, WorkQueueRetryType.LinearRetry))
+        //     {
+        //         queueEntryRow["NextAttemptTime"] =
+        //             failureTime.AddSeconds(retryIntervalSeconds);
+        //         return;
+        //     }
+        //     if(Equals(retryType, WorkQueueRetryType.ExponentialRetry))
+        //     {
+        //         // queueEntryRow["NextAttemptTime"] =
+        //         //     failureTime.AddSeconds(retryIntervalSeconds);
+        //         return;
+        //     }
+        //
+        //     throw NotImplementedException(
+        //         $"retryType: {retryType} not implemented");
+        // }
+
         private void ProcessExternalQueue(WorkQueueData.WorkQueueRow q)
         {
             string transactionId = Guid.NewGuid().ToString();
@@ -1807,5 +1858,12 @@ namespace Origam.Workflow.WorkQueue
                 log.Debug("schemaService_SchemaUnloaded");
             }
         }
+    }
+    
+    public static class WorkQueueRetryType
+    {
+        public static readonly Guid NoRetry = Guid.Parse("69460BCF-81D4-4A97-94F7-5A391D16F771");
+        public static readonly Guid LinearRetry = Guid.Parse("8A5C793F-73B8-41EF-A459-618A8E6FE4FA");
+        public static readonly Guid ExponentialRetry = Guid.Parse("57AD4C10-1F43-4CCF-A48A-132E7E418D53");
     }
 }

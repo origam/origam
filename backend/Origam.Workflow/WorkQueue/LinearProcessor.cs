@@ -26,6 +26,8 @@ using System.Threading;
 using Origam.DA;
 using Origam.Schema.WorkflowModel;
 using WorkQueueRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueRow;
+using WorkQueueEntryDataTable = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueEntryDataTable;
+using WorkQueueEntryRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueEntryRow;
 namespace Origam.Workflow.WorkQueue;
 
 public class LinearProcessor : IWorkQueueProcessor
@@ -33,13 +35,15 @@ public class LinearProcessor : IWorkQueueProcessor
     private static readonly log4net.ILog log = log4net.LogManager
         .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     private readonly WorkQueueUtils workQueueUtils;
+    private readonly RetryManager retryManager;
     private readonly Action<WorkQueueRow, DataRow> itemProcessAction;
 
     public LinearProcessor(Action<WorkQueueRow, DataRow> itemProcessAction,
-        WorkQueueUtils workQueueUtils)
+        WorkQueueUtils workQueueUtils, RetryManager retryManager)
     {
         this.itemProcessAction = itemProcessAction;
         this.workQueueUtils = workQueueUtils;
+        this.retryManager = retryManager;
     }
 
     public void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
@@ -68,7 +72,7 @@ public class LinearProcessor : IWorkQueueProcessor
                 cancellationToken.ThrowIfCancellationRequested();
             }
             var queueItemRow = GetNextItem(
-                queue.Id, null, processErrors, cancellationToken);
+                queue, null, processErrors, cancellationToken);
             if (queueItemRow == null)
             {
                 return itemsProcessed;
@@ -115,12 +119,12 @@ public class LinearProcessor : IWorkQueueProcessor
         return processErrors;
     }
     
-    public DataRow GetNextItem(Guid workQueueId, string transactionId, bool processErrors,
+    public DataRow GetNextItem(WorkQueueRow queue, string transactionId, bool processErrors,
         CancellationToken cancellationToken)
     {
         const int pageSize = 10;
         int pageNumber = 1;
-        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(workQueueId);
+        WorkQueueClass workQueueClass = workQueueUtils.WorkQueueClass(queue.Id);
         DataRow result = null;
         do
         {
@@ -128,16 +132,16 @@ public class LinearProcessor : IWorkQueueProcessor
             {
                 return null;
             }
-            DataSet queueItems = workQueueUtils.LoadWorkQueueData(
-                workQueueClass.Name, workQueueId, pageSize, pageNumber,
+            WorkQueueData queueItems = workQueueUtils.LoadWorkQueueData(
+                workQueueClass.Name, queue.Id, pageSize, pageNumber,
                 transactionId);
-            DataTable queueTable = queueItems.Tables[0];
+            WorkQueueEntryDataTable queueTable = queueItems.WorkQueueEntry;
             if (queueTable.Rows.Count > 0)
             {
-                foreach (DataRow queueRow in queueTable.Rows)
+                foreach (WorkQueueEntryRow queueRow in queueTable.Rows)
                 {
-                    if ((bool)queueRow["IsLocked"] == false
-                        && (queueRow.IsNull("ErrorText") || processErrors))
+                    if (!queueRow.IsLocked 
+                        && retryManager.CanRunNow(queueRow, queue))
                     {
                         result = DatasetTools.CloneRow(queueRow);
                         if (workQueueUtils.LockQueueItems(workQueueClass, result.Table))

@@ -34,6 +34,6 @@ public interface IWorkQueueProcessor
         CancellationToken cancellationToken, int? maxItemsToProcess = null,
         int forceWait_ms = 0);
 
-    public DataRow GetNextItem(Guid workQueueId, string transactionId,
+    public DataRow GetNextItem(WorkQueueData.WorkQueueRow queue, string transactionId,
         bool processErrors, CancellationToken cancellationToken);
 }
