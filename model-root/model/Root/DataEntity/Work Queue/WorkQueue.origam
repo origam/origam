@@ -299,6 +299,36 @@
         asi:name="WorkQueueCommandKey1"
         ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/refWorkQueueId/c74dd80c-e74e-4c3c-a4a0-555b097c5859" />
     </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="dcbe1795-2d35-4b7a-b874-a1aecdc9fd18"
+      asi:name="WorkQueueState"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueState.origam#WorkQueueState/e3c6d184-8d16-4a28-ab45-3c41e754a656"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c74d78d2-4e1e-4ef1-b388-fad663a294e5"
+        asi:name="WorkQueueStateKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueState.origam#WorkQueueState/refWorkQueueId/5b864691-d70b-435c-895b-ebc226bcc61b" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="0f9ce7d6-47e4-4a13-931d-faf98fb33ae3"
+      adec:isPrimaryKey="false"
+      adec:label="Throttling Time Interval in Seconds"
+      fmi:mappedColumnName="ThrottlingIntervalSeconds"
+      asi:name="ThrottlingIntervalSeconds"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -367,6 +397,22 @@
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="1d0a083e-6c93-4b6b-acda-6d62d6efbb57"
+      adec:isPrimaryKey="false"
+      adec:label="Throttling Items Per Interval"
+      fmi:mappedColumnName="ThrottlingItemsPerInterval"
+      asi:name="ThrottlingItemsPerInterval"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="1dbc7efc-428f-47fe-9fc3-d7adb3ef3e52"
@@ -547,6 +593,20 @@
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="931d00c6-83ef-453d-bf2d-3c69faf10052"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="EnableThrottling"
+      asi:name="EnableThrottling"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
       adec:defaultValue="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
@@ -636,6 +696,7 @@
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="e35ae850-878e-4e54-a4ac-94559e6d6218"
