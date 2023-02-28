@@ -26,8 +26,6 @@ using System.Threading;
 using Origam.DA;
 using Origam.Schema.WorkflowModel;
 using WorkQueueRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueRow;
-using WorkQueueEntryDataTable = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueEntryDataTable;
-using WorkQueueEntryRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueEntryRow;
 namespace Origam.Workflow.WorkQueue;
 
 public class LinearProcessor : IWorkQueueProcessor
@@ -132,15 +130,15 @@ public class LinearProcessor : IWorkQueueProcessor
             {
                 return null;
             }
-            WorkQueueData queueItems = workQueueUtils.LoadWorkQueueData(
+            DataSet queueItems = workQueueUtils.LoadWorkQueueData(
                 workQueueClass.Name, queue.Id, pageSize, pageNumber,
                 transactionId);
-            WorkQueueEntryDataTable queueTable = queueItems.WorkQueueEntry;
+            DataTable queueTable = queueItems.Tables[0];
             if (queueTable.Rows.Count > 0)
             {
-                foreach (WorkQueueEntryRow queueRow in queueTable.Rows)
+                foreach (DataRow queueRow in queueTable.Rows)
                 {
-                    if (!queueRow.IsLocked 
+                    if ((bool)queueRow["IsLocked"] == false 
                         && retryManager.CanRunNow(queueRow, queue))
                     {
                         result = DatasetTools.CloneRow(queueRow);

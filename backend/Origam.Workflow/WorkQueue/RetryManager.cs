@@ -45,7 +45,7 @@ public class RetryManager
             $"retryType: {retryType} not implemented");
     }
     
-    public bool CanRunNow(WorkQueueData.WorkQueueEntryRow queueEntryRow,
+    public bool CanRunNow(DataRow queueEntryRow,
         WorkQueueData.WorkQueueRow queue)
     {
         var (retryType, maxRetries, _) = GetRetryData(queue);
@@ -106,6 +106,7 @@ public class RetryManager
     }
     private int GetAttemptCount(DataRow queueEntryRow)
     {
+        "
         return queueEntryRow["AttemptCount"] == DBNull.Value
             ? 0
             : (int)queueEntryRow["AttemptCount"];

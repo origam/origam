@@ -89,7 +89,7 @@ public class WorkQueueUtils
         return WorkQueueClass(WorkQueueClassName(queueId));
     }
     
-    public WorkQueueData LoadWorkQueueData(string workQueueClass, object queueId,
+    public DataSet LoadWorkQueueData(string workQueueClass, object queueId,
         int pageSize, int pageNumber, string transactionId)
     {
         WorkQueueClass queueClass = WorkQueueClass(workQueueClass);
@@ -106,12 +106,10 @@ public class WorkQueueUtils
             parameters.Add(new QueryParameter("_pageSize", pageSize));
             parameters.Add(new QueryParameter("_pageNumber", pageNumber));
         }
-        WorkQueueData queues = new WorkQueueData();
-        var dataSet = core.DataService.Instance.LoadData(queueClass.WorkQueueStructureId,
+
+        return core.DataService.Instance.LoadData(queueClass.WorkQueueStructureId,
             queueClass.WorkQueueStructureUserListMethodId, Guid.Empty,
             queueClass.WorkQueueStructureSortSetId, transactionId, parameters);
-        queues.Merge(dataSet);
-        return queues;
     }
     
     public bool LockQueueItems(WorkQueueClass queueClass,
