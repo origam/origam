@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="_log4net.config">
+      <Content Include="log4net.config">
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

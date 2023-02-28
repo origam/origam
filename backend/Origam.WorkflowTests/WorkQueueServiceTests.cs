@@ -73,6 +73,8 @@ public class WorkQueueTests
         CollectionAssert.AreEquivalent(
             createdWorkQueueEntryIds,
             deletedWorkQueueEntryIds);
+        
+        Console.WriteLine("\nRunning DisconnectRuntime. There might be some errors logged here. These are probably not a problem.\n");
         OrigamEngine.OrigamEngine.DisconnectRuntime();
         Thread.Sleep(1000);
     }
@@ -131,7 +133,7 @@ public class WorkQueueTests
 class TestRuntimeServiceFactory: RuntimeServiceFactory {
     protected override IWorkQueueService CreateWorkQueueService()
     {
-        return new WorkQueueService(queueProcessIntervalMillis: 100);
+        return new WorkQueueService(queueProcessIntervalMillis: 1000);
     }
 }
 
