@@ -1344,6 +1344,7 @@
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="8515c4dc-c84a-4680-80a1-432f46a617fe"

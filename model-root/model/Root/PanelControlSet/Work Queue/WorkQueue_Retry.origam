@@ -654,7 +654,7 @@
         x:id="b5c1df1d-8891-434c-9ed3-5057d9e14052"
         asi:name="HideNavigationPanel"
         apvi:propertyId="298b927a-509d-4c65-930c-c871746fb7e2"
-        pvi1:value="false" />
+        pvi1:value="true" />
       <pvi1:PropertyValueItem
         asi:abstract="false"
         x:id="bdb9e744-4401-4f46-b7ce-e2101f263bed"

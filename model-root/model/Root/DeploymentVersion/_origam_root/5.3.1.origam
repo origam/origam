@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="42ff8c60-b038-4b1a-9bbc-e76cbde34143"
+    asi:name="5.3.1"
+    dv:version="5.3.1">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___7be3dcc9-ee62-4cff-8830-ab5af54ebc16.txt"
+      x:id="7be3dcc9-ee62-4cff-8830-ab5af54ebc16"
+      asi:name="00020_Database_Field_WorkQueue.ThrottlingItemsPerInterval"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___c7d5843f-8325-4c80-9f84-5bcc4edc831b.txt"
+      x:id="c7d5843f-8325-4c80-9f84-5bcc4edc831b"
+      asi:name="00030_Database_Field_WorkQueue.EnableThrottling"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___f7a99ffa-8b0d-43c4-8f45-0a9f5a6c6f07.txt"
+      x:id="f7a99ffa-8b0d-43c4-8f45-0a9f5a6c6f07"
+      asi:name="00010_Database_Field_WorkQueue.ThrottlingIntervalSeconds"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>
