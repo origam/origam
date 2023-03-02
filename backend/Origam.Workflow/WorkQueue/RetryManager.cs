@@ -106,7 +106,6 @@ public class RetryManager
     }
     private int GetAttemptCount(DataRow queueEntryRow)
     {
-        "
         return queueEntryRow["AttemptCount"] == DBNull.Value
             ? 0
             : (int)queueEntryRow["AttemptCount"];
