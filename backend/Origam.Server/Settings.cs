@@ -44,7 +44,7 @@ namespace Origam.Server
 
             if (identityServerConfig.MobileClient != null)
             {
-                Client mobileClient = new Client
+                var mobileClient = new Client
                 {
                     ClientId = "origamMobileClient",
                     AllowedGrantTypes = GrantTypes.Code,
@@ -69,7 +69,7 @@ namespace Origam.Server
 
             if (identityServerConfig.WebClient != null)
             {
-                Client webClient = new Client
+                var webClient = new Client
                 {
                     ClientId = "origamWebClient",
                     AllowedGrantTypes = GrantTypes.Code,
