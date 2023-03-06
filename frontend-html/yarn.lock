@@ -2044,10 +2044,10 @@
     magic-string "^0.27.0"
     react-refresh "^0.14.0"
 
-"@xstate/inspect@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.7.1.tgz#db337fb0e34d5497a91cdbf085b7aff8ef254513"
-  integrity sha512-lEIi6cSvzA9f+GzaJMRVe4xnNjPY/oKdU8rjb+qxqUYx2evLuqysFu0XbPmEjMCwpfdIvG4FFsZJ7Ng7+k9UHw==
+"@xstate/inspect@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@xstate/inspect/-/inspect-0.8.0.tgz#f99d3706cd823d4922c47ce4f4376eecac502cc7"
+  integrity sha512-wSkFeOnp+7dhn+zTThO0M4D2FEqZN9lGIWowJu5JLa2ojjtlzRwK8SkjcHZ4rLX8VnMev7kGjgQLrGs8kxy+hw==
   dependencies:
     fast-safe-stringify "^2.1.1"
 
