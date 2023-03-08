@@ -36,6 +36,7 @@
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Date"
+      adec:defaultValue="Root/DataConstant/_dates/_minDate.origam#_minDate/66f34839-6a92-4284-a25c-5d7c38de0d4b"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="a40d57f1-df84-42a8-8a93-6314e1b2dfdb"

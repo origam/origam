@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [WorkQueueRetryType] (
-	[Name] NVarChar(200) NULL,
+	[Name] NVarChar(200) NOT NULL,
 	[RecordCreated] DateTime NULL,
 	[RecordUpdatedBy] UniqueIdentifier NULL,
 	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,

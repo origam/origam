@@ -1,2 +1,1 @@
-﻿ALTER TABLE [WorkQueue] ADD [RetryIntervalSeconds] Int NULL CONSTRAINT [DF_WorkQueue_RetryIntervalSeconds] DEFAULT 0;
-ALTER TABLE [WorkQueue] DROP CONSTRAINT [DF_WorkQueue_RetryIntervalSeconds];
+﻿ALTER TABLE [WorkQueue] ADD [RetryIntervalSeconds] Int NULL;

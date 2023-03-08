@@ -1,2 +1,1 @@
-﻿ALTER TABLE [WorkQueue] ADD [ThrottlingIntervalSeconds] Int NULL CONSTRAINT [DF_WorkQueue_ThrottlingIntervalSeconds] DEFAULT 0;
-ALTER TABLE [WorkQueue] DROP CONSTRAINT [DF_WorkQueue_ThrottlingIntervalSeconds];
+﻿ALTER TABLE [WorkQueue] ADD [ThrottlingIntervalSeconds] Int NULL;

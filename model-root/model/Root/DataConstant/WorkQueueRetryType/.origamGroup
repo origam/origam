@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="1799ddcf-cb81-4ebd-b94c-cb8e797cd83a"
+    x:isFolder="true"
+    g:name="WorkQueueRetryType"
+    g:rootItemType="DataConstant" />
+</x:file>
