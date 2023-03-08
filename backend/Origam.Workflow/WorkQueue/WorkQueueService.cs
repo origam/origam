@@ -1719,13 +1719,13 @@ namespace Origam.Workflow.WorkQueue
                                             $"or does not have autoprocess set.");
             }
             
-            Action<CancellationToken> actionToRunInEachTask = cancToken =>
+            Action<CancellationToken> actionToRunInEachTask = cancellationToken =>
             {
                 while (true)
                 {
                     try
                     {
-                        queueProcessor.ProcessAutoQueueCommands(queueToProcess, cancToken, forceWait_ms);
+                        queueProcessor.ProcessAutoQueueCommands(queueToProcess, cancellationToken, forceWait_ms);
                     }
                     catch (OrigamException ex)
                     {
@@ -1735,11 +1735,11 @@ namespace Origam.Workflow.WorkQueue
                             throw;
                     }
                     
-                    const int miliesToSleep = 1000;
+                    const int millisToSleep = 1000;
                     log.Info($"Worker in thread {Thread.CurrentThread.ManagedThreadId} " +
                              $"cannot get next Item from the queue, sleeping for " +
-                             $"{miliesToSleep} ms before trying again...");
-                    Thread.Sleep(miliesToSleep);
+                             $"{millisToSleep} ms before trying again...");
+                    Thread.Sleep(millisToSleep);
                 }
             };
             
