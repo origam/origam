@@ -65,7 +65,7 @@
               <File Id="MICROSOFT.BCL.HASHCODE.DLL" Name="Microsoft.Bcl.HashCode.dll" Source="source\Microsoft.Bcl.HashCode.dll">
               </File>
             </Component>
-			  <Component Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL" DiskId="1" Guid="03EFFB26-4461-4384-91AD-A73532D68233">
+            <Component Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL" DiskId="1" Guid="03EFFB26-4461-4384-91AD-A73532D68233">
               <File Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.Logging.Abstractions.dll" Source="source\Microsoft.Extensions.Logging.Abstractions.dll">
               </File>
             </Component>
@@ -671,7 +671,7 @@
       <ComponentRef Id="SYSTEM.THREADING.CHANNELS.DLL"></ComponentRef>
       <ComponentRef Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL"></ComponentRef>
       <ComponentRef Id="MICROSOFT.BCL.HASHCODE.DLL"></ComponentRef>
-	  <ComponentRef Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL"></ComponentRef>
+      <ComponentRef Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.TEXT.JSON.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL"></ComponentRef>
       <ComponentRef Id="ORIGAM.EXCEL.DLL"></ComponentRef>
