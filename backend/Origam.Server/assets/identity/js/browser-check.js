@@ -6,7 +6,7 @@ function onContinueAnywayClicked(){
 
 function hideOverlay(){
     document.getElementById("overlay").style.display = "none";
-    document.getElementById("page-container").style.display = "block";
+    document.getElementById("page-container").style.display = "flex";
 }
 
 function showOverlay(){
