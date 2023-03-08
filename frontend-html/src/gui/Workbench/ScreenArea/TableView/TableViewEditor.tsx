@@ -105,6 +105,7 @@ export class TableViewEditor extends React.Component<{
           <NumberEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
+            property={this.props.property}
             isPassword={this.props.property!.isPassword}
             maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
