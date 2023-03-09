@@ -34,14 +34,17 @@ public class LinearProcessor : IWorkQueueProcessor
         .GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     private readonly WorkQueueUtils workQueueUtils;
     private readonly RetryManager retryManager;
+    private readonly WorkQueueThrottle workQueueThrottle;
     private readonly Action<WorkQueueRow, DataRow> itemProcessAction;
 
     public LinearProcessor(Action<WorkQueueRow, DataRow> itemProcessAction,
-        WorkQueueUtils workQueueUtils, RetryManager retryManager)
+        WorkQueueUtils workQueueUtils, RetryManager retryManager,
+        WorkQueueThrottle workQueueThrottle)
     {
         this.itemProcessAction = itemProcessAction;
         this.workQueueUtils = workQueueUtils;
         this.retryManager = retryManager;
+        this.workQueueThrottle = workQueueThrottle;
     }
 
     public void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
@@ -139,7 +142,8 @@ public class LinearProcessor : IWorkQueueProcessor
                 foreach (DataRow queueRow in queueTable.Rows)
                 {
                     if ((bool)queueRow["IsLocked"] == false 
-                        && retryManager.CanRunNow(queueRow, queue))
+                        && retryManager.CanRunNow(queueRow, queue)
+                        && workQueueThrottle.CanRunNow(queue))
                     {
                         result = DatasetTools.CloneRow(queueRow);
                         if (workQueueUtils.LockQueueItems(workQueueClass, result.Table))

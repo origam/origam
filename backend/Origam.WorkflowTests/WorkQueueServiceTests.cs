@@ -128,6 +128,56 @@ public class WorkQueueTests
 
         OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
+    
+    [Test]
+    public void ShouldTestThrottling()
+    {
+        // ConnectRuntime should start a timer which will cause the work queues
+        // to be processed automatically
+        OrigamEngine.OrigamEngine.ConnectRuntime(
+            configName: "RoundRobinWorkQueueProcessor",
+            customServiceFactory: new TestRuntimeServiceFactory());
+        
+        List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
+        
+        Thread.Sleep(1000);
+        sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
+        
+        // MonitoredMsSqlDataService must be set in "DataDataService" element
+        // in OrigamSettings.config
+        var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+        var deleteOperations = dataService.Operations
+            .OfType<DeleteWorkQueueEntryOperation>()
+            .ToList();
+        var deletedWorkQueueEntryIds = deleteOperations
+            .Select(x => x.RowId)
+            .Reverse()
+            .ToList();
+        
+        CollectionAssert.AreEquivalent(
+            createdWorkQueueEntryIds,
+            deletedWorkQueueEntryIds);
+        
+        int batchSize = ConfigurationManager
+            .GetActiveConfiguration()
+            .RoundRobinBatchSize;
+
+        int numberOfGroups = deleteOperations.Count / batchSize;
+        int numberOfGroupsWhereWeExpectEntriesFromASingleQueue =
+            numberOfGroups - 3; 
+        for (int i = 0; i < numberOfGroupsWhereWeExpectEntriesFromASingleQueue; i++)
+        {
+            var numberOfWorkQueuesInTheBatchCall = deleteOperations
+                .Skip(batchSize * i)
+                .Take(batchSize)
+                .Select(operation => operation.Parameters["refWorkQueueId"])
+                .Distinct()
+                .Count();
+            Assert.That(numberOfWorkQueuesInTheBatchCall, Is.EqualTo(1));
+        }
+
+        OrigamEngine.OrigamEngine.DisconnectRuntime();
+    }
 }
 
 class TestRuntimeServiceFactory: RuntimeServiceFactory {

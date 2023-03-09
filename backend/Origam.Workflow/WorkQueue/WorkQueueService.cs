@@ -59,7 +59,8 @@ namespace Origam.Workflow.WorkQueue
         private  CancellationTokenSource cancellationTokenSource = new ();
         private readonly WorkQueueUtils workQueueUtils;
         private readonly IWorkQueueProcessor queueProcessor;
-        private readonly Timer _loadExternalWorkQueuesTimer = new Timer(60000);
+        private readonly WorkQueueThrottle workQueueThrottle;
+        private readonly Timer _loadExternalWorkQueuesTimer = new (60000);
         private readonly Timer _queueAutoProcessTimer;
         private Boolean serviceBeingUnloaded = false;
         private readonly RetryManager retryManager = new ();
@@ -73,6 +74,9 @@ namespace Origam.Workflow.WorkQueue
             SchemaService schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
             IDataLookupService dataLookupService = ServiceManager.Services
                 .GetService<IDataLookupService>();
+            IPersistenceService persistenceService = ServiceManager.Services
+                .GetService<IPersistenceService>();
+            workQueueThrottle = new WorkQueueThrottle(persistenceService);
             workQueueUtils = new WorkQueueUtils(dataLookupService, schemaService);
             schemaService.SchemaLoaded += new EventHandler(schemaService_SchemaLoaded);
             schemaService.SchemaUnloaded += new EventHandler(schemaService_SchemaUnloaded);
@@ -83,7 +87,8 @@ namespace Origam.Workflow.WorkQueue
             LinearProcessor linearProcessor = new LinearProcessor(
                 ProcessQueueItem,
                 workQueueUtils,
-                retryManager);
+                retryManager,
+                workQueueThrottle);
             queueProcessor = settings.WorkQueueProcessingMode switch
             {
                 WorkQueueProcessingMode.Linear => 
@@ -1412,7 +1417,7 @@ namespace Origam.Workflow.WorkQueue
                                     itemId + ", Queue: "
                                     + queue.Name + ", Command: " + cmd.Text);
                             }
-
+                            workQueueThrottle.ReportProcessed(queue);
                             if (cmd.refWorkQueueCommandTypeId ==
                                 (Guid)ps.GetParameterValue(
                                     "WorkQueueCommandType_Remove"))
