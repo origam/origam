@@ -53,7 +53,7 @@
           x:id="1264655b-e200-47e2-bdd8-6ec1b8ce91bc"
           asi:name="Width"
           apvi:propertyId="f40ac6ea-026c-4e8d-89e7-a13db97bd37c"
-          pvi1:value="100" />
+          pvi1:value="80" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="24c1b455-1a5f-4ef8-b303-dae77deed9a0"
@@ -373,7 +373,7 @@
           x:id="e3f97206-b805-42ae-ac1c-72a83e0177bc"
           asi:name="Width"
           apvi:propertyId="f40ac6ea-026c-4e8d-89e7-a13db97bd37c"
-          pvi1:value="100" />
+          pvi1:value="80" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="f1ea8a30-37fa-4a8d-80ed-e18e819b9091"
@@ -500,7 +500,7 @@
           x:id="b9f750f4-6c37-4087-819f-21bd3bf540a5"
           asi:name="Width"
           apvi:propertyId="f40ac6ea-026c-4e8d-89e7-a13db97bd37c"
-          pvi1:value="100" />
+          pvi1:value="80" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="c752fbbf-c481-4831-b290-869b3d757222"
@@ -608,7 +608,7 @@
           x:id="73e5db76-d32f-43d2-a159-4036af99a7b8"
           asi:name="Width"
           apvi:propertyId="f40ac6ea-026c-4e8d-89e7-a13db97bd37c"
-          pvi1:value="100" />
+          pvi1:value="80" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="a36bd1a5-ccb2-4886-8474-432bf06b334b"

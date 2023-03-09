@@ -1,1 +1,2 @@
-﻿ALTER TABLE [WorkQueue] ADD [MaxRetries] Int NULL;
+﻿ALTER TABLE [WorkQueue] ADD [MaxRetries] Int NOT NULL CONSTRAINT [DF_WorkQueue_MaxRetries] DEFAULT 3;
+ALTER TABLE [WorkQueue] DROP CONSTRAINT [DF_WorkQueue_MaxRetries];
