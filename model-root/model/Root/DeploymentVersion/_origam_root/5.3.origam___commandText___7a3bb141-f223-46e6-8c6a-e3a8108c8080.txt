@@ -1,1 +1,1 @@
-﻿ALTER TABLE [WorkQueueEntry] ADD [NextAttemptTime] DateTime NULL
+﻿ALTER TABLE [WorkQueueEntry] ADD [NextAttemptTime] DateTime NULL;

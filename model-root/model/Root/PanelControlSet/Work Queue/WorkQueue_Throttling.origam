@@ -59,7 +59,7 @@
           x:id="2c493ecd-9a60-40cd-9626-68f1276c8b46"
           asi:name="Width"
           apvi:propertyId="f40ac6ea-026c-4e8d-89e7-a13db97bd37c"
-          pvi1:value="100" />
+          pvi1:value="80" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="2c6c5986-8ffa-4fe9-a360-f38d6111b04e"
@@ -236,7 +236,7 @@
           x:id="b3314a4a-d2f1-4a80-99b2-d2e4a4862122"
           asi:name="Width"
           apvi:propertyId="f40ac6ea-026c-4e8d-89e7-a13db97bd37c"
-          pvi1:value="100" />
+          pvi1:value="80" />
         <pvi1:PropertyValueItem
           asi:abstract="false"
           x:id="d1d2e08d-e702-4789-b1f3-ec6815214ab1"

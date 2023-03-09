@@ -41,7 +41,7 @@
     </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataLength="200"
       adec:dataType="String"

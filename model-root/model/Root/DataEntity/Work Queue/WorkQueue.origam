@@ -316,10 +316,10 @@
     </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_60.origam#_Number_60/6d2b3bb0-bb7a-4caf-a26e-394dca636e68"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="0f9ce7d6-47e4-4a13-931d-faf98fb33ae3"
@@ -377,10 +377,11 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
       adec:defaultLookup="Root/DataLookup/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/f8d63dba-7d1b-4440-85f3-4ef52675ff52"
+      adec:defaultValue="Root/DataConstant/WorkQueueRetryType/WorkQueueRetryType_NoRetry.origam#WorkQueueRetryType_NoRetry/3e04c0f5-164e-4b89-ba02-cf2040d8e871"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/8e7e0ad5-169e-41af-879d-dfb963cf17b6"
@@ -394,10 +395,10 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_10.origam#_Number_10/33088ae6-940e-4060-afc7-21551afbc8cb"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="1d0a083e-6c93-4b6b-acda-6d62d6efbb57"
@@ -409,10 +410,10 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_30.origam#_Number_30/1463511f-a52c-4043-b2b9-6373688349b8"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="1dbc7efc-428f-47fe-9fc3-d7adb3ef3e52"
@@ -590,6 +591,20 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="8abb14dc-82ba-4524-a10b-50f4615ed759"
+      adec:isPrimaryKey="false"
+      adec:label="Min Retry Time Interval in Seconds"
+      fmi:mappedColumnName="MinRetryIntervalSeconds"
+      asi:name="MinRetryIntervalSeconds"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Boolean"
@@ -665,6 +680,20 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="b50eef66-459f-4fe0-bc25-8b994a488de2"
+      adec:isPrimaryKey="false"
+      adec:label="Max Retry Time Interval in Seconds"
+      fmi:mappedColumnName="MaxRetryIntervalSeconds"
+      asi:name="MaxRetryIntervalSeconds"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataLength="200"
@@ -694,10 +723,10 @@
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_3.origam#_Number_3/1e4627b1-c5ec-4517-a4b2-b8c76a494bef"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="e35ae850-878e-4e54-a4ac-94559e6d6218"

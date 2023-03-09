@@ -1341,7 +1341,7 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
       adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
