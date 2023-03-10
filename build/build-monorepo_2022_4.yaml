@@ -302,7 +302,7 @@ jobs:
          path: '$(YARN_CACHE_FOLDER)'
          restoreKeys: 'yarn-2021-05-13-01 | "$(Agent.OS)"'
      - script: |
-        yarn
+        yarn install --frozen-lockfile
        workingDirectory: $(Agent.BuildDirectory)\s\origam\frontend-html\
        displayName: 'origam-html yarn'
      - script: |
@@ -316,7 +316,7 @@ jobs:
          ArtifactName: origam-html-client
        condition: succeededOrFailed()
      - script: |
-        yarn
+        yarn install --frozen-lockfile
        workingDirectory: $(Agent.BuildDirectory)\s\origam-html-chat\client
        displayName: 'origam-html-chat yarn'
      - script: |
