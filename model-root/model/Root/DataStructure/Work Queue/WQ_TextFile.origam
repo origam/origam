@@ -97,6 +97,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/NextAttemptTime/e147e0de-0cb7-4342-b16b-7196f9b7b04f"
+        dsc:hideInOutput="false"
+        x:id="2df646d4-2261-452d-96a5-3e92978a66e8"
+        asi:name="NextAttemptTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreated/6a92781b-ac57-4b24-a2a3-7ff772747431"
         x:id="309da15c-666f-40da-b379-ad379806e858"
         asi:name="RecordCreated"
@@ -186,9 +198,33 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/LastAttemptTime/b6ffd643-fe5a-4397-b195-89cce5879eff"
+        dsc:hideInOutput="false"
+        x:id="7f6e0a67-495d-4a41-a805-7fccef346d8b"
+        asi:name="LastAttemptTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="9f5f281b-9937-46de-bf5a-2577a3a7e708"
         asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/AttemptCount/8515c4dc-c84a-4680-80a1-432f46a617fe"
+        dsc:hideInOutput="false"
+        x:id="c2da15d0-cacb-4420-a684-4046222f0ebf"
+        asi:name="AttemptCount"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"

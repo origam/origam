@@ -98,6 +98,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/NextAttemptTime/e147e0de-0cb7-4342-b16b-7196f9b7b04f"
+        dsc:hideInOutput="false"
+        x:id="68fa4558-045c-4ab2-954e-563ab844829e"
+        asi:name="NextAttemptTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m4/1153d64f-b1a9-41eb-845a-5b5727b42112"
         dsc:hideInOutput="false"
         x:id="788910e9-5d27-4d6d-aad1-a46cc551f952"
@@ -122,6 +134,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/AttemptCount/8515c4dc-c84a-4680-80a1-432f46a617fe"
+        dsc:hideInOutput="false"
+        x:id="8c84c62a-210b-4fa2-83e1-c543172403db"
+        asi:name="AttemptCount"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refWorkQueueId/f37a5473-98ef-4e6b-9c30-ccc12e99adcc"
         x:id="9a5ad4d4-3c52-40f2-90e9-f51b3f8f429b"
         asi:name="refWorkQueueId"
@@ -137,6 +161,18 @@
         x:id="b379806c-6d43-4fcf-b1b2-7a7255220e97"
         dsc:label="Date Received"
         asi:name="DateReceived"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/LastAttemptTime/b6ffd643-fe5a-4397-b195-89cce5879eff"
+        dsc:hideInOutput="false"
+        x:id="b51ec72f-3c27-4f8d-b311-e829becffa54"
+        asi:name="LastAttemptTime"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"

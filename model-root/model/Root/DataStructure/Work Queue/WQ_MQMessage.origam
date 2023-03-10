@@ -84,6 +84,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/LastAttemptTime/b6ffd643-fe5a-4397-b195-89cce5879eff"
+        dsc:hideInOutput="false"
+        x:id="4dddfeb5-5a06-4e56-90d9-f56604d3c75a"
+        asi:name="LastAttemptTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/m1/bd384927-d6ca-43b6-bbab-cda60627cb88"
         x:id="559c647f-1aea-451c-9975-a294e77e92aa"
         asi:name="Message"
@@ -106,9 +118,33 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/NextAttemptTime/e147e0de-0cb7-4342-b16b-7196f9b7b04f"
+        dsc:hideInOutput="false"
+        x:id="6888c9a1-8613-4081-ade6-505fd563ebd2"
+        asi:name="NextAttemptTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         x:id="95f5ebeb-e80a-4d5a-8fb0-2071cf7c5183"
         asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/AttemptCount/8515c4dc-c84a-4680-80a1-432f46a617fe"
+        dsc:hideInOutput="false"
+        x:id="a827e8a6-dfe0-49cf-ba3c-012d2557ae46"
+        asi:name="AttemptCount"
         dsc:upsertType="Replace"
         dsc:useCopiedValue="false"
         dsc:useLookupValue="false"
