@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using log4net.Config;
 using NUnit.Framework;
 using Origam.OrigamEngine;
 using Origam.Workbench.Services;
@@ -34,7 +35,18 @@ namespace Origam.WorkflowTests;
 public class WorkQueueTests
 {
     private readonly SqlManager sqlManager = new (DataService.Instance);
+
+    public WorkQueueTests()
+    {
+        XmlConfigurator.Configure(new FileInfo("log4net.config")); 
+    }
     
+    [SetUp]
+    public void Setup()
+    {
+        BasicConfigurator.Configure();
+    }
+
     [TestCase("LinearWorkQueueProcessor")]
     [TestCase("RoundRobinWorkQueueProcessor")]
     public void ShouldTestAllWorkQueueEntriesAreProcessed(string configName)
@@ -61,6 +73,8 @@ public class WorkQueueTests
         CollectionAssert.AreEquivalent(
             createdWorkQueueEntryIds,
             deletedWorkQueueEntryIds);
+        
+        Console.WriteLine("\nRunning DisconnectRuntime. There might be some errors logged here. These are probably not a problem.\n");
         OrigamEngine.OrigamEngine.DisconnectRuntime();
         Thread.Sleep(1000);
     }
@@ -114,12 +128,62 @@ public class WorkQueueTests
 
         OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
+    
+    [Test]
+    public void ShouldTestThrottling()
+    {
+        // ConnectRuntime should start a timer which will cause the work queues
+        // to be processed automatically
+        OrigamEngine.OrigamEngine.ConnectRuntime(
+            configName: "RoundRobinWorkQueueProcessor",
+            customServiceFactory: new TestRuntimeServiceFactory());
+        
+        List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
+        
+        Thread.Sleep(1000);
+        sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
+        
+        // MonitoredMsSqlDataService must be set in "DataDataService" element
+        // in OrigamSettings.config
+        var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+        var deleteOperations = dataService.Operations
+            .OfType<DeleteWorkQueueEntryOperation>()
+            .ToList();
+        var deletedWorkQueueEntryIds = deleteOperations
+            .Select(x => x.RowId)
+            .Reverse()
+            .ToList();
+        
+        CollectionAssert.AreEquivalent(
+            createdWorkQueueEntryIds,
+            deletedWorkQueueEntryIds);
+        
+        int batchSize = ConfigurationManager
+            .GetActiveConfiguration()
+            .RoundRobinBatchSize;
+
+        int numberOfGroups = deleteOperations.Count / batchSize;
+        int numberOfGroupsWhereWeExpectEntriesFromASingleQueue =
+            numberOfGroups - 3; 
+        for (int i = 0; i < numberOfGroupsWhereWeExpectEntriesFromASingleQueue; i++)
+        {
+            var numberOfWorkQueuesInTheBatchCall = deleteOperations
+                .Skip(batchSize * i)
+                .Take(batchSize)
+                .Select(operation => operation.Parameters["refWorkQueueId"])
+                .Distinct()
+                .Count();
+            Assert.That(numberOfWorkQueuesInTheBatchCall, Is.EqualTo(1));
+        }
+
+        OrigamEngine.OrigamEngine.DisconnectRuntime();
+    }
 }
 
 class TestRuntimeServiceFactory: RuntimeServiceFactory {
     protected override IWorkQueueService CreateWorkQueueService()
     {
-        return new WorkQueueService(queueProcessIntervalMillis: 100);
+        return new WorkQueueService(queueProcessIntervalMillis: 1000);
     }
 }
 

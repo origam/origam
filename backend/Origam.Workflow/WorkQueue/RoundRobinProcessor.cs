@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
+using Origam.Mail;
 using WorkQueueRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueRow;
 
 namespace Origam.Workflow.WorkQueue;
@@ -67,10 +68,10 @@ public class RoundRobinProcessor : IWorkQueueProcessor
             queue, cancellationToken, maxItemsToProcess, forceWait_ms);
     }
 
-    public DataRow GetNextItem(Guid workQueueId, string transactionId, bool processErrors,
+    public DataRow GetNextItem(WorkQueueRow queue, string transactionId, bool processErrors,
         CancellationToken cancellationToken)
     {
         return linearProcessor.GetNextItem(
-            workQueueId, transactionId, processErrors, cancellationToken);
+            queue, transactionId, processErrors, cancellationToken);
     }
 }

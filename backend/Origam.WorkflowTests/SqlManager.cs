@@ -57,8 +57,8 @@ public class SqlManager
     {
         string countResult =
             dataService.ExecuteSql(
-                "SELECT COUNT(*) FROM [bes].[dbo].[WorkQueueEntry]");
-        var regex = new Regex("-\\s\r?\n(\\d)");
+                "SELECT COUNT(*) FROM [dbo].[WorkQueueEntry]");
+        var regex = new Regex("-\\s\r?\n(\\d+)");
         Match match = regex.Match(countResult);
         if (!match.Success)
         {

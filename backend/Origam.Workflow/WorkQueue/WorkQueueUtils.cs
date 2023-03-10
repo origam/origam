@@ -106,11 +106,31 @@ public class WorkQueueUtils
             parameters.Add(new QueryParameter("_pageSize", pageSize));
             parameters.Add(new QueryParameter("_pageNumber", pageNumber));
         }
-        return core.DataService.Instance.LoadData(queueClass.WorkQueueStructureId,
+
+        DataSet dataSet = core.DataService.Instance.LoadData(queueClass.WorkQueueStructureId,
             queueClass.WorkQueueStructureUserListMethodId, Guid.Empty,
             queueClass.WorkQueueStructureSortSetId, transactionId, parameters);
+        
+        CheckContainsRequiredColumns(
+            new []{"AttemptCount", "LastAttemptTime", "NextAttemptTime"}, 
+            dataSet.Tables["WorkQueueEntry"], 
+            queueClass.WorkQueueStructureId);
+        return dataSet;
     }
-    
+
+    private void CheckContainsRequiredColumns(string[] fieldNames,
+        DataTable table, Guid workQueueStructureId)
+    {
+        foreach (string fieldName in fieldNames)
+        {
+            DataColumnCollection entryColumns = table.Columns;
+            if (!entryColumns.Contains(fieldName))
+            {
+                throw new Exception($"Work queue data structure {workQueueStructureId} does not contain the required field {fieldName}");
+            }
+        }
+    }
+
     public bool LockQueueItems(WorkQueueClass queueClass,
         DataTable selectedRows)
     {

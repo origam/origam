@@ -94,7 +94,11 @@
     </Compile>
     <Compile Update="WorkQueue\WorkQueueData.Designer.cs">
       <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>WorkQueueData.xsd</DependentUpon>
     </Compile>
+    <Compile Remove="WorkQueue\WorkQueueData.cs" />
   </ItemGroup>
 
  
@@ -103,6 +107,15 @@
     <PackageReference Include="Origam-sms">
       <Version>1.0.2</Version>
     </PackageReference>
+  </ItemGroup>
+
+ 
+
+  <ItemGroup>
+    <None Update="WorkQueue\WorkQueueData.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>WorkQueueData.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
