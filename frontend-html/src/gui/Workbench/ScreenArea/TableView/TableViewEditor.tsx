@@ -81,6 +81,7 @@ export class TableViewEditor extends React.Component<{
           <NumberEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
+            property={this.props.property}
             isInvalid={false}
             isFocused={true}
             isPassword={this.props.property!.isPassword}
