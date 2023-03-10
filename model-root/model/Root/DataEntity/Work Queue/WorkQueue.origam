@@ -3,6 +3,7 @@
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
   xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:aesr="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractEntitySecurityRule/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
   xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
@@ -10,6 +11,8 @@
   xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
   xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:efd1="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldDependency/6.0.0"
+  xmlns:efsr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldSecurityRule/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
   xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
@@ -328,7 +331,24 @@
       fmi:mappedColumnName="ThrottlingIntervalSeconds"
       asi:name="ThrottlingIntervalSeconds"
       adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
+        x:id="b5e20094-2b88-4b8e-9dfa-321f92d4706b"
+        asi:name="EnableThrottling" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="b06cfddb-ebf7-429d-aa8d-70f7e31a2733"
+        aesr:level="100"
+        asi:name="100_Permit_Update_SR_WorkQueue_ThrottlingIsEnabled_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_WorkQueue_ThrottlingIsEnabled.origam#SR_WorkQueue_ThrottlingIsEnabled/f73da2db-19d9-4029-a6d8-6188b526c2cc"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="SavedValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -407,7 +427,24 @@
       fmi:mappedColumnName="ThrottlingItemsPerInterval"
       asi:name="ThrottlingItemsPerInterval"
       adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
+        x:id="b140fd18-e148-495d-b29b-b68b01688460"
+        asi:name="EnableThrottling" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="e1fb78bc-e2c7-4e5d-b333-325d88c01bf6"
+        aesr:level="100"
+        asi:name="100_Permit_Update_SR_WorkQueue_ThrottlingIsEnabled_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_WorkQueue_ThrottlingIsEnabled.origam#SR_WorkQueue_ThrottlingIsEnabled/f73da2db-19d9-4029-a6d8-6188b526c2cc"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="SavedValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
