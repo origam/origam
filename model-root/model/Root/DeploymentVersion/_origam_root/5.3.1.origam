@@ -66,5 +66,13 @@
       asi:name="00010_Database_Field_WorkQueue.ThrottlingIntervalSeconds"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___f997df5c-0b57-4a3b-b12c-a1a56ded8d7f.txt"
+      x:id="f997df5c-0b57-4a3b-b12c-a1a56ded8d7f"
+      asi:name="00080_Database_Entity_WorkQueueState_UniqueConstraint"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
   </dv:DeploymentVersion>
 </x:file>
