@@ -1341,6 +1341,21 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="8515c4dc-c84a-4680-80a1-432f46a617fe"
+      adec:isPrimaryKey="false"
+      adec:label="Number of Attempts"
+      fmi:mappedColumnName="AttemptCount"
+      asi:name="AttemptCount"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
@@ -1544,6 +1559,20 @@
       asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="b6ffd643-fe5a-4397-b195-89cce5879eff"
+      adec:isPrimaryKey="false"
+      adec:label="Time of Last Attempt"
+      fmi:mappedColumnName="LastAttemptTime"
+      asi:name="LastAttemptTime"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
       adec:dataType="Memo"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
@@ -1735,6 +1764,20 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="g19"
       asi:name="g19"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="e147e0de-0cb7-4342-b16b-7196f9b7b04f"
+      adec:isPrimaryKey="false"
+      adec:label="Time of Next Attempt"
+      fmi:mappedColumnName="NextAttemptTime"
+      asi:name="NextAttemptTime"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn

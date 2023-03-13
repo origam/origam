@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="0c1dd6b4-6790-4353-993f-99e30e05a62c"
+    dc:lookup="Root/DataLookup/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/f8d63dba-7d1b-4440-85f3-4ef52675ff52"
+    asi:name="WorkQueueRetryType_LinearRetry"
+    dc:userDefinable="false"
+    dc:value="8a5c793f-73b8-41ef-a459-618a8e6fe4fa" />
+</x:file>
