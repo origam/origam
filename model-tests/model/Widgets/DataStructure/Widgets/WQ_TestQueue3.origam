@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+  <ds1:DataStructure
+    asi:abstract="false"
+    x:id="1448ff71-4e7b-4cbd-8d2e-0c3e6750fc1b"
+    ds1:localized="false"
+    asi:name="WQ_TestQueue3">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/76efc330-faab-45f4-9760-9aa5a6e42078"
+      x:id="016e6b61-9572-466c-88f7-259580a31558"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WorkQueueEntry"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/ErrorText/4bfd4aa8-2d12-4293-9360-542e23e904ce"
+        dsc:hideInOutput="false"
+        x:id="091274a4-b9dc-4dfc-a962-260939a21dc7"
+        asi:name="ErrorText"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s1/a115749e-6c25-4395-967d-ba92da75171c"
+        dsc:hideInOutput="false"
+        x:id="0ed91e59-2077-4b60-a841-dfdb3e852917"
+        dsc:label="Some text 1"
+        asi:name="Text1"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/s2/abbc4d5e-aa24-4633-923b-5ff5075d9e7d"
+        dsc:hideInOutput="false"
+        x:id="1701d605-ace6-4d5f-9b15-d6f0b52f0e6b"
+        dsc:label="Some text 2"
+        asi:name="Text2"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreatedBy/cbcf7bb8-10d0-4576-98f5-1210b10bae5f"
+        dsc:hideInOutput="false"
+        x:id="29674b86-3bf0-45f1-a67a-b4f21d881fa7"
+        asi:name="RecordCreatedBy"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/IsLocked/c019bbfc-551e-4dee-abe6-f777a13b77a9"
+        dsc:hideInOutput="false"
+        x:id="75088152-30ef-449f-84d5-b2f2cc1587ee"
+        asi:name="IsLocked"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refId/127907f1-e422-46bb-85d1-898b232d027d"
+        dsc:hideInOutput="false"
+        x:id="851356d5-ab62-452b-af92-ab1d86f583b0"
+        asi:name="refId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordCreated/6a92781b-ac57-4b24-a2a3-7ff772747431"
+        dsc:hideInOutput="false"
+        x:id="85722011-415f-4e79-af54-060c707c3331"
+        asi:name="RecordCreated"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordUpdated/d245e9df-9a2f-4196-89de-b86faaaeb624"
+        dsc:hideInOutput="false"
+        x:id="96a768b1-f19d-45e6-8165-fa555f8f1515"
+        asi:name="RecordUpdated"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        dsc:hideInOutput="false"
+        x:id="cffd858b-6cd1-4f05-a352-26ad6735c31b"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refLockedByBusinessPartnerId/1883087e-d17b-43e0-81ae-4019a9ce3021"
+        dsc:hideInOutput="false"
+        x:id="db462fbd-6d33-4f68-970b-80523a72702d"
+        asi:name="refLockedByBusinessPartnerId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refWorkQueueId/f37a5473-98ef-4e6b-9c30-ccc12e99adcc"
+        dsc:hideInOutput="false"
+        x:id="e73467ea-5951-4b79-8a02-4c8223a432ed"
+        asi:name="refWorkQueueId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/RecordUpdatedBy/ad2d2efe-9cb0-4141-ac28-25b8ed68580b"
+        dsc:hideInOutput="false"
+        x:id="eed6138a-64ba-4062-84d2-c08f71956f9b"
+        asi:name="RecordUpdatedBy"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="208374a0-9889-479e-93a6-5a6f19e07c55"
+      asi:name="GetByRel4">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel4Id/a5dd5456-9af9-47ae-bf01-f95e89d0f8f8"
+        x:id="05ec7fa0-7409-443d-af19-47e21dc5fb35"
+        asi:name="WorkQueueEntry_GetByrefRel4Id"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="c08bd4e9-a7ab-4a7e-9d63-ea290b72d8f3"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="271b42ba-1889-431d-8da7-e8b4dbc2d03d"
+      asi:name="GetByRel5">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel5Id/8754075e-5086-4806-bf6e-b5591f50f9b5"
+        x:id="6520757f-1b0c-4c77-9335-8afb2d4cc15c"
+        asi:name="WorkQueueEntry_GetByrefRel5Id"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="e6a52559-c7e7-43b4-9693-9166c746b93b"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="31f45437-98c3-439f-937e-81b4185f4a03"
+      asi:name="GetByRel3">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="c30ffe9c-5d52-4656-b852-783e639ae27c"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel3Id/51bd863a-1a1d-435e-b70a-afdf937b0358"
+        x:id="c85eeea6-78f4-4c74-a780-aa2605c143eb"
+        asi:name="WorkQueueEntry_GetByrefRel3Id"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="36b41c1f-f9fe-45b8-8bfd-72007cc1bf44"
+      asi:name="GetByRel6">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel6Id/09b292b0-8a9e-4516-95e1-a3aad8b1d7cf"
+        x:id="21b06aeb-d1d7-4dfb-8dfd-388176ebb9c1"
+        asi:name="WorkQueueEntry_GetByrefRel6Id"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="dd557650-085c-4c6e-9d64-855aa0c7f0c7"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="59dd9a58-7fdc-4500-a380-8c0624831fd8"
+      asi:name="GetByRel2">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="4aeefda1-b4ec-4e95-914d-05a6950be340"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel2Id/90f68b03-0bf9-49fa-82d4-8884a97c59cd"
+        x:id="8614db4d-1465-41d8-bede-4094cc9e6fce"
+        asi:name="WorkQueueEntry_GetByrefRel2Id"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="6402c631-a207-4091-8097-26f52d01ada6"
+      asi:name="GetByMasterId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByMasterd/74f64f7c-d692-4712-ab8e-b0cbcd1d7541"
+        x:id="5acac6ef-b521-464e-bc6d-fc8de96de22b"
+        asi:name="WorkQueueEntry_GetByMasterd"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="a8592d2f-ff79-434f-9a46-61cbc72990fb"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="6853b9bc-2852-4b36-a728-36614622c38b"
+      asi:name="GetByRel1">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel1Id/a83f681e-41d1-4ff1-84a0-cfa86196dec2"
+        x:id="69504cf6-812e-4f64-b013-d774789cdbea"
+        asi:name="WorkQueueEntry_GetByrefRel1Id"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="878fafd2-5fb4-4d58-8a6c-c83d851defcd"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="80741c7c-c470-4cca-9d97-d17fdc11ff5f"
+      asi:name="GetById">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="39b20fac-dee3-4c0c-9c74-6f735a333bb5"
+        asi:name="WorkQueueEntry_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="eb7707b1-cb3b-4e78-878e-9c53d03a03e5"
+      asi:name="GetByRel7">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="4215dd31-33dd-4da6-a8ac-bf1cb3cbee6b"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefRel7Id/c6a2495b-48a0-4b34-b89e-ef40ab5f1bcf"
+        x:id="45be5361-0575-4302-9577-1b3401e38a7f"
+        asi:name="WorkQueueEntry_GetByrefRel7Id"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="ee9a4641-6282-4fde-a528-0044253dd3df"
+      asi:name="GetByQueueId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsfsf:filter="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/GetByrefWorkQueueId/84d973db-d31e-4eb0-9763-63be80a2b27d"
+        x:id="6e7e0846-23d2-45d8-91b2-9abea4996e96"
+        asi:name="WorkQueueEntry_GetByrefWorkQueueId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="e41c97d5-af3d-4b83-96ad-e7be65627df1"
+      asi:name="Default">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Widgets/DataStructure/Widgets/WQ_TestQueue3.origam#WQ_TestQueue3/WorkQueueEntry/016e6b61-9572-466c-88f7-259580a31558"
+        dsssi:fieldName="RecordCreated"
+        x:id="f70406ce-eb10-4028-8396-092d37ed17ef"
+        asi:name="WorkQueueEntry_0_RecordCreated"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
+  </ds1:DataStructure>
+</x:file>
