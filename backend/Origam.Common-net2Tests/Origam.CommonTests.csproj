@@ -112,7 +112,7 @@
       <Version>2.0.15</Version>
     </PackageReference>
     <PackageReference Include="morelinq">
-      <Version>3.4.0</Version>
+      <Version>3.4.1</Version>
     </PackageReference>
     <PackageReference Include="NUnit">
       <Version>3.13.3</Version>
