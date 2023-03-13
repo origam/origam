@@ -59,6 +59,7 @@ public class MonitoredMsSqlDataService : MsSqlDataService
                     {
                         { "refWorkQueueId", refWorkQueueId },
                         { "deletedRowId", deletedRowId },
+                        { "executedAt", DateTime.Now }
                     }));
         }
 
@@ -82,4 +83,5 @@ public record DeleteWorkQueueEntryOperation(string Name,
     : Operation(Name, Parameters)
 {
     public Guid RowId => (Guid)Parameters["deletedRowId"];
+    public DateTime ExecutedAt => (DateTime)Parameters["executedAt"];
 }

@@ -28,15 +28,12 @@ using Origam.Workflow.WorkQueue;
 
 namespace Origam.WorkflowTests;
 
-// Running more than one test where ConnectRuntime is called will cause an
-// error because there is not way to completely rollback all effects of the
-// ConnectRuntime call. Hence the commented [Test]/[TestCase] attributes
 [TestFixture]
-public class WorkQueueTests
+public class WorkQueueIntegrationTests
 {
     private readonly SqlManager sqlManager = new (DataService.Instance);
 
-    public WorkQueueTests()
+    public WorkQueueIntegrationTests()
     {
         XmlConfigurator.Configure(new FileInfo("log4net.config")); 
     }
@@ -132,51 +129,66 @@ public class WorkQueueTests
     [Test]
     public void ShouldTestThrottling()
     {
+        int throttlingIntervalSeconds = 20;
+        int throttlingItemsPerInterval = 3;
+        
         // ConnectRuntime should start a timer which will cause the work queues
         // to be processed automatically
         OrigamEngine.OrigamEngine.ConnectRuntime(
-            configName: "RoundRobinWorkQueueProcessor",
+            configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
-        
-        List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
-        
-        Thread.Sleep(1000);
-        sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
-        
-        // MonitoredMsSqlDataService must be set in "DataDataService" element
-        // in OrigamSettings.config
-        var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
-        var deleteOperations = dataService.Operations
-            .OfType<DeleteWorkQueueEntryOperation>()
-            .ToList();
-        var deletedWorkQueueEntryIds = deleteOperations
-            .Select(x => x.RowId)
-            .Reverse()
-            .ToList();
-        
-        CollectionAssert.AreEquivalent(
-            createdWorkQueueEntryIds,
-            deletedWorkQueueEntryIds);
-        
-        int batchSize = ConfigurationManager
-            .GetActiveConfiguration()
-            .RoundRobinBatchSize;
-
-        int numberOfGroups = deleteOperations.Count / batchSize;
-        int numberOfGroupsWhereWeExpectEntriesFromASingleQueue =
-            numberOfGroups - 3; 
-        for (int i = 0; i < numberOfGroupsWhereWeExpectEntriesFromASingleQueue; i++)
+        try
         {
-            var numberOfWorkQueuesInTheBatchCall = deleteOperations
-                .Skip(batchSize * i)
-                .Take(batchSize)
-                .Select(operation => operation.Parameters["refWorkQueueId"])
-                .Distinct()
-                .Count();
-            Assert.That(numberOfWorkQueuesInTheBatchCall, Is.EqualTo(1));
+            sqlManager.EnableThrottling(
+                throttlingIntervalSeconds: throttlingIntervalSeconds, 
+                throttlingItemsPerInterval: throttlingItemsPerInterval);
+            List<Guid> createdWorkQueueEntryIds = sqlManager.InsertThrottlingTestWorkQueueEntries();
+            
+            Thread.Sleep(1000);
+            sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
+            
+            // MonitoredMsSqlDataService must be set in "DataDataService" element
+            // in OrigamSettings.config
+            var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+            var deleteOperations = dataService.Operations
+                .OfType<DeleteWorkQueueEntryOperation>()
+                .OrderBy(operation => operation.ExecutedAt)
+                .ToList();
+            
+            var firstIntervalOperations = deleteOperations
+                .Take(throttlingItemsPerInterval)
+                .ToList();
+            var firstOperationInFirstInterval = firstIntervalOperations
+                .First();
+            
+            var firstOperationInSecondInterval = deleteOperations
+                .Skip(throttlingItemsPerInterval)
+                .First();
+            DateTime expectedSecondIntervalStart = firstOperationInFirstInterval
+                .ExecutedAt
+                .AddSeconds(throttlingIntervalSeconds);
+            
+            Assert.That(
+                firstOperationInSecondInterval.ExecutedAt > expectedSecondIntervalStart);
+            foreach (var operation in firstIntervalOperations)
+            {
+                Assert.That(operation.ExecutedAt < expectedSecondIntervalStart);
+            }
+            
+            var deletedWorkQueueEntryIds = deleteOperations
+                .Select(x => x.RowId)
+                .Reverse()
+                .ToList();
+        
+            CollectionAssert.AreEquivalent(
+                createdWorkQueueEntryIds,
+                deletedWorkQueueEntryIds);
         }
-
-        OrigamEngine.OrigamEngine.DisconnectRuntime();
+        finally
+        {
+            sqlManager.DisableThrottling();
+            OrigamEngine.OrigamEngine.DisconnectRuntime();
+        }
     }
 }
 

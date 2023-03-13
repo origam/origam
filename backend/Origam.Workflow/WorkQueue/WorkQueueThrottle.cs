@@ -17,7 +17,12 @@ public class WorkQueueThrottle
         this.persistenceService = persistenceService;
     }
 
-    private static readonly Guid WorkQueueStateDataStructureId = Guid.Empty;
+    private static readonly Guid WorkQueueStateDataStructureId = 
+        new ("954f8044-54b8-4554-8777-f5ecc8a839b0");
+
+    private static readonly Guid GetByWorkQueueId = 
+        new ("7ee32027-ffe9-486c-83ca-e10699475618");
+
     public bool CanRunNow(WorkQueueData.WorkQueueRow queue)
     {
         if (Equals(queue["EnableThrottling"], false))
@@ -25,11 +30,19 @@ public class WorkQueueThrottle
             return true;
         }
         DataRow stateRow = GetThrottlingState(queue.Id);
-        if (stateRow == null ||
-            ((DateTime)stateRow["ThrottlingIntervalStart"]).AddSeconds(
-                (int)queue["ThrottlingIntervalSeconds"]) < DateTime.Now)
+        if (stateRow == null)
         {
             StoreThrottlingState(queue.Id, DateTime.Now, 0);
+            return (int)queue["ThrottlingItemsPerInterval"] > 0;
+        }
+
+        DateTime endOfInterval = ((DateTime)stateRow["ThrottlingIntervalStart"]).AddSeconds(
+            (int)queue["ThrottlingIntervalSeconds"]);
+        if (endOfInterval < DateTime.Now)
+        {
+            stateRow["ThrottlingItemsProcessed"] = 0;
+            stateRow["ThrottlingIntervalStart"] = DateTime.Now;
+            StoreThrottlingState(stateRow);
             return (int)queue["ThrottlingItemsPerInterval"] > 0;
         }
 
@@ -64,6 +77,7 @@ public class WorkQueueThrottle
         var datasetGenerator = new DatasetGenerator(false);
         var dataSet = datasetGenerator.CreateDataSet(dataStructure);
         var row = dataSet.Tables["WorkQueueState"].NewRow();
+        row["Id"] = Guid.NewGuid();
         row["refWorkQueueId"] = queueId;
         row["ThrottlingIntervalStart"] = intervalStart;
         row["ThrottlingItemsProcessed"] = itemsProcessed;
@@ -79,21 +93,23 @@ public class WorkQueueThrottle
 
     private DataRow? GetThrottlingState(Guid queueId)
     {
-        DataSet dataSet = new DataSet();
         var parameters = new QueryParameterCollection
         {
-            new ("queueId", queueId)
+            new ("WorkQueueState_parWorkQueueId", queueId)
         };
-
-        core.DataService.Instance.LoadRow(WorkQueueStateDataStructureId,
-            Guid.Empty, parameters, dataSet, null);
+        DataSet dataSet = core.DataService.Instance.LoadData(
+            dataStructureId: WorkQueueStateDataStructureId, 
+            methodId: GetByWorkQueueId,
+            defaultSetId: Guid.Empty,
+            sortSetId: Guid.Empty, 
+            transactionId: null, 
+            parameters: parameters);
         if (dataSet.Tables.Count == 0 || 
             dataSet.Tables["WorkQueueState"] == null || 
             dataSet.Tables["WorkQueueState"].Rows.Count == 0)
         {
             return null;
         }
-
         return dataSet.Tables["WorkQueueState"].Rows[0];
     }
 }
