@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1">
+  <w:Workflow
+    asi:abstract="false"
+    x:id="ddb1cedf-c05a-472f-bb5d-f5d070e627ed"
+    asi:name="FailingWorkQueueTest"
+    w:transactionBehavior="InheritExisting">
+    <crs:WorkflowTask
+      asi:abstract="false"
+      x:id="efdadd32-d170-4b1e-8295-efcf98bdcdf0"
+      asi:name="ReturnErrorMessage"
+      aws:roles="*"
+      aws:validationRule="Widgets/Rule/Widgets/ER_IntentionalTestError.origam#ER_IntentionalTestError/de8fe24a-ce63-4db6-96c1-7e7841fbc447"
+      aws:validationRuleContextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="Xml"
+      cs:disableConstraints="false"
+      x:id="964d748e-77bc-45db-b098-2c8ed6b1c487"
+      cs:isReturnValue="false"
+      asi:name="WQ_FailingTestQueue1"
+      cs:structure="Widgets/DataStructure/Widgets/WQ_FailingTestQueue1.origam#WQ_FailingTestQueue1/7f2ce718-926d-490f-b4a4-89df1d8ddeb2" />
+  </w:Workflow>
+</x:file>

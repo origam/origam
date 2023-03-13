@@ -628,9 +628,10 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_3.origam#_Number_3/1e4627b1-c5ec-4517-a4b2-b8c76a494bef"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="8abb14dc-82ba-4524-a10b-50f4615ed759"
@@ -717,9 +718,10 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_10.origam#_Number_10/33088ae6-940e-4060-afc7-21551afbc8cb"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="b50eef66-459f-4fe0-bc25-8b994a488de2"
