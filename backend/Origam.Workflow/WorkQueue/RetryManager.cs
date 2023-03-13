@@ -26,24 +26,36 @@ namespace Origam.Workflow.WorkQueue;
 
 public class RetryManager
 {
+    private readonly Func<DateTime> getTimeNow;
     private static readonly Random RandomGenerator = new();
 
+    public RetryManager(Func<DateTime> getTimeNow=null)
+    {
+        DateTime GetTimeNowDefault()
+        {
+            return DateTime.Now;
+        }
+
+        this.getTimeNow = getTimeNow ?? GetTimeNowDefault;
+    }
+
     public void SetEntryRetryData(DataRow queueEntryRow,
-        WorkQueueData.WorkQueueRow queue, string message)
+        WorkQueueData.WorkQueueRow queue, string errorMessage)
     {
         Guid retryType = (Guid)queue["refWorkQueueRetryTypeId"];
         int maxRetries = (int)queue["MaxRetries"];
         int retryIntervalSeconds = (int)queue["RetryIntervalSeconds"];
         
-        var failureTime = DateTime.Now;
-        queueEntryRow["ErrorText"] = failureTime + ": " + message;
+        var failureTime = getTimeNow();
+        queueEntryRow["ErrorText"] = failureTime + ": " + errorMessage;
         queueEntryRow["LastAttemptTime"] = failureTime;
         int attemptCount = GetAttemptCount(queueEntryRow);
-        int attemptCountAfterFailure = attemptCount + 1;
-        queueEntryRow["AttemptCount"] = attemptCountAfterFailure;
+        int newAttemptCount = attemptCount + 1; // = 2 after the first failure
+        int retryNumber = newAttemptCount - 1;
+        queueEntryRow["AttemptCount"] = newAttemptCount;
 
         if (Equals(retryType, WorkQueueRetryType.NoRetry) ||
-            attemptCountAfterFailure >= maxRetries)
+            retryNumber > maxRetries)  
         {
             queueEntryRow["NextAttemptTime"] = DateTime.MaxValue;
             return;
@@ -57,24 +69,24 @@ public class RetryManager
         if (Equals(retryType, WorkQueueRetryType.ExponentialRetry))
         {
             int minInterval = 0;
-            if (attemptCount != 0)
+            if (retryNumber != 1)
             {
                 if (queue["MinRetryIntervalSeconds"] == DBNull.Value)
                 {
-                    minInterval = (int)Math.Pow(2, attemptCount - 1);
+                    minInterval = (int)Math.Pow(2, retryNumber - 2) * retryIntervalSeconds;
                 }
                 else
                 {
                     minInterval = (int)Math.Max(
-                        Math.Pow(2, attemptCount - 1),
+                        Math.Pow(2, retryNumber - 2) * retryIntervalSeconds,
                         (int)queue["MinRetryIntervalSeconds"]
                     );
                 }
 
             }
             int maxInterval = queue["MaxRetryIntervalSeconds"] == DBNull.Value
-                ? (int)Math.Pow(2, attemptCount)
-                : (int)Math.Min(Math.Pow(2, attemptCount), (int)queue["MaxRetryIntervalSeconds"]);
+                ? (int)Math.Pow(2, retryNumber - 1) * retryIntervalSeconds
+                : (int)Math.Min(Math.Pow(2, retryNumber - 1) * retryIntervalSeconds, (int)queue["MaxRetryIntervalSeconds"]);
             int waitTimeSeconds = RandomGenerator.Next(minInterval, maxInterval);
             queueEntryRow["NextAttemptTime"] =
                 failureTime.AddSeconds(waitTimeSeconds);
@@ -112,13 +124,13 @@ public class RetryManager
                 $"NextAttemptTime is not set on WorkQueueEntry {queueEntryRow["Id"]} while WorkQueueRetryType is not NoRetry and the AttemptCount is not null or 0");
         }
 
-        return (DateTime)queueEntryRow["NextAttemptTime"] <= DateTime.Now;
+        return (DateTime)queueEntryRow["NextAttemptTime"] <= getTimeNow();
     }
     
     private int GetAttemptCount(DataRow queueEntryRow)
     {
         return queueEntryRow["AttemptCount"] == DBNull.Value
-            ? 0
+            ? 1
             : (int)queueEntryRow["AttemptCount"];
     }
 }

@@ -1867,8 +1867,12 @@ namespace Origam.Workflow.WorkQueue
     
     public static class WorkQueueRetryType
     {
-        public static readonly Guid NoRetry = Guid.Parse("69460BCF-81D4-4A97-94F7-5A391D16F771");
-        public static readonly Guid LinearRetry = Guid.Parse("8A5C793F-73B8-41EF-A459-618A8E6FE4FA");
-        public static readonly Guid ExponentialRetry = Guid.Parse("57AD4C10-1F43-4CCF-A48A-132E7E418D53");
+        public const string NoRetryString = "69460BCF-81D4-4A97-94F7-5A391D16F771";
+        public const string LinearRetryString = "8A5C793F-73B8-41EF-A459-618A8E6FE4FA";
+        public const string ExponentialRetryString = "57AD4C10-1F43-4CCF-A48A-132E7E418D53";
+        
+        public static readonly Guid NoRetry = new(NoRetryString);
+        public static readonly Guid LinearRetry = new(LinearRetryString);
+        public static readonly Guid ExponentialRetry = new(ExponentialRetryString);
     }
 }
