@@ -45,6 +45,7 @@ public class RetryManager
         Guid retryType = (Guid)queue["refWorkQueueRetryTypeId"];
         int maxRetries = (int)queue["MaxRetries"];
         int retryIntervalSeconds = (int)queue["RetryIntervalSeconds"];
+        double exponentialRetryBase = (double)queueEntryRow["ExponentialRetryBase"];
         
         var failureTime = getTimeNow();
         queueEntryRow["ErrorText"] = failureTime + ": " + errorMessage;
@@ -68,26 +69,12 @@ public class RetryManager
         }
         if (Equals(retryType, WorkQueueRetryType.ExponentialRetry))
         {
-            int minInterval = 0;
-            if (retryNumber != 1)
-            {
-                if (queue["MinRetryIntervalSeconds"] == DBNull.Value)
-                {
-                    minInterval = (int)Math.Pow(2, retryNumber - 2) * retryIntervalSeconds;
-                }
-                else
-                {
-                    minInterval = (int)Math.Max(
-                        Math.Pow(2, retryNumber - 2) * retryIntervalSeconds,
-                        (int)queue["MinRetryIntervalSeconds"]
-                    );
-                }
-
-            }
-            int maxInterval = queue["MaxRetryIntervalSeconds"] == DBNull.Value
-                ? (int)Math.Pow(2, retryNumber - 1) * retryIntervalSeconds
-                : (int)Math.Min(Math.Pow(2, retryNumber - 1) * retryIntervalSeconds, (int)queue["MaxRetryIntervalSeconds"]);
+            int minInterval = (int)Math.Pow(exponentialRetryBase, retryNumber - 1)
+                              * retryIntervalSeconds;
+            int maxInterval = (int)Math.Pow(exponentialRetryBase, retryNumber) 
+                              * retryIntervalSeconds;
             int waitTimeSeconds = RandomGenerator.Next(minInterval, maxInterval);
+            
             queueEntryRow["NextAttemptTime"] =
                 failureTime.AddSeconds(waitTimeSeconds);
             return;
