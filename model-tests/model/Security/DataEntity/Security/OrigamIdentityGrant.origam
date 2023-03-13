@@ -63,19 +63,6 @@
         asi:name="0_SubjectId"
         deif:sortOrder="Ascending" />
     </dei:DataEntityIndex>
-    <dei:DataEntityIndex
-      asi:abstract="false"
-      dei:generateDeploymentScript="true"
-      x:id="93e1aa7a-7d70-47c9-be59-590cc34d22b9"
-      asi:name="KeyIndex"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/Partner Management/OrigamIdentityGrant.origam#OrigamIdentityGrant/Key/1494e750-5174-4b7f-84e8-031d111ee9f5"
-        x:id="c9d34240-bdf3-4c39-adcc-915a7efd141e"
-        asi:name="0_Key"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
     <dp:Parameter
       asi:abstract="false"
       sip:allowNulls="false"
@@ -438,14 +425,14 @@
     </ef:EntityFilter>
     <fmi:DataEntityColumn
       asi:abstract="false"
-      adec:allowNulls="true"
+      adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataLength="100"
       adec:dataType="String"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
       x:id="1494e750-5174-4b7f-84e8-031d111ee9f5"
-      adec:isPrimaryKey="false"
+      adec:isPrimaryKey="true"
       fmi:mappedColumnName="Key"
       asi:name="Key"
       adec:onCopyAction="Copy"
