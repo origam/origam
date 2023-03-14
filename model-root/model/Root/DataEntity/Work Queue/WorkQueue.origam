@@ -477,6 +477,21 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Float"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="2f880296-cb4b-41ec-b65c-b240630eb679"
+      adec:isPrimaryKey="false"
+      adec:label="Exponential Retry Base"
+      fmi:mappedColumnName="ExponentialRetryBase"
+      asi:name="ExponentialRetryBase"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataLength="200"
@@ -630,21 +645,6 @@
       asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_3.origam#_Number_3/1e4627b1-c5ec-4517-a4b2-b8c76a494bef"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="8abb14dc-82ba-4524-a10b-50f4615ed759"
-      adec:isPrimaryKey="false"
-      adec:label="Min Retry Time Interval in Seconds"
-      fmi:mappedColumnName="MinRetryIntervalSeconds"
-      asi:name="MinRetryIntervalSeconds"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
       adec:dataType="Boolean"
       adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
       adec:excludeFromAllFields="false"
@@ -714,21 +714,6 @@
       adec:label="Role"
       fmi:mappedColumnName="Roles"
       asi:name="Roles"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Integer"
-      adec:defaultValue="Root/DataConstant/_numbers/_Number_10.origam#_Number_10/33088ae6-940e-4060-afc7-21551afbc8cb"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="b50eef66-459f-4fe0-bc25-8b994a488de2"
-      adec:isPrimaryKey="false"
-      adec:label="Max Retry Time Interval in Seconds"
-      fmi:mappedColumnName="MaxRetryIntervalSeconds"
-      asi:name="MaxRetryIntervalSeconds"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
