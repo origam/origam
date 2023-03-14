@@ -44,7 +44,7 @@
       euia:refreshAfterReturn="None"
       euia:roles="*"
       euia:valueType="SavedValue"
-      wqwc:workflow="Widgets/Workflow/Widgets/WorkQueueTest.origam#WorkQueueTest/952937ee-a923-41e4-bae9-472bcd89169b">
+      wqwc:workflow="Widgets/Workflow/Widgets/WorkQueueTest3.origam#WorkQueueTest3/7066744c-ad0e-4104-830b-094a4cda31f5">
       <wqwcpm:WorkQueueWorkflowCommandParameterMapping
         asi:abstract="false"
         x:id="e0691bdf-a3e1-48c1-8bef-2d3fac2e7f73"
