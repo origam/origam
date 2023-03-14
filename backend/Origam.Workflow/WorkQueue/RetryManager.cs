@@ -90,7 +90,8 @@ public class RetryManager
         Guid retryType = (Guid)queue["refWorkQueueRetryTypeId"];
         int maxRetries = (int)queue["MaxRetries"];
         int attemptCount = GetAttemptCount(queueEntryRow);
-        if (attemptCount == 0)
+
+        if (attemptCount <= 1)
         {
             return true;
         }
@@ -99,8 +100,8 @@ public class RetryManager
         {
             return false;
         }
-
-        if (attemptCount >= maxRetries)
+        int retryNumber = attemptCount - 1;
+        if (retryNumber > maxRetries)
         {
             return false;
         }
