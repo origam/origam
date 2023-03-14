@@ -44,14 +44,6 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="90"
-      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___8bdc922d-1aea-4a87-81de-9e1941c5a908.txt"
-      x:id="8bdc922d-1aea-4a87-81de-9e1941c5a908"
-      asi:name="00090_Database_Field_WorkQueue.ExponentialRetryBase"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="30"
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___c7d5843f-8325-4c80-9f84-5bcc4edc831b.txt"
       x:id="c7d5843f-8325-4c80-9f84-5bcc4edc831b"
