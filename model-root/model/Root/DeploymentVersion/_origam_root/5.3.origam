@@ -28,14 +28,6 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="120"
-      scusa:commandText="-***-ExternalFile:5.3.origam___commandText___0bc0c14b-f62f-43aa-8785-8e8abcab28f7.txt"
-      x:id="0bc0c14b-f62f-43aa-8785-8e8abcab28f7"
-      asi:name="00120_Database_Field_WorkQueue.MinRetryIntervalSeconds"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
       ausa:activityOrder="20"
       scusa:commandText="-***-ExternalFile:5.3.origam___commandText___540d6b08-8972-4674-b255-4a53f0a4f2b0.txt"
       x:id="540d6b08-8972-4674-b255-4a53f0a4f2b0"
@@ -88,14 +80,6 @@
       scusa:commandText="-***-ExternalFile:5.3.origam___commandText___9d43bd11-ad53-420a-a811-75ad78187083.txt"
       x:id="9d43bd11-ad53-420a-a811-75ad78187083"
       asi:name="00080_Database_Field_WorkQueue.MaxRetries"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="130"
-      scusa:commandText="-***-ExternalFile:5.3.origam___commandText___a141e546-2c22-4e05-b0ba-28f1b76e34f2.txt"
-      x:id="a141e546-2c22-4e05-b0ba-28f1b76e34f2"
-      asi:name="00130_Database_Field_WorkQueue.MaxRetryIntervalSeconds"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
