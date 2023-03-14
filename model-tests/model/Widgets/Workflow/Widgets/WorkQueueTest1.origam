@@ -13,7 +13,7 @@
   <w:Workflow
     asi:abstract="false"
     x:id="952937ee-a923-41e4-bae9-472bcd89169b"
-    asi:name="WorkQueueTest"
+    asi:name="WorkQueueTest1"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -27,7 +27,7 @@
       asi:abstract="false"
       x:id="0f23be5d-078c-4304-ae94-a75e1f6219a7"
       asi:name="0100_LoadData_WQ_TestQueue"
-      wt:outputContextStore="Widgets/Workflow/Widgets/WorkQueueTest.origam#WorkQueueTest/WQ_TestQueue1/e85de802-ac20-4dd1-9fed-37a87183decb"
+      wt:outputContextStore="Widgets/Workflow/Widgets/WorkQueueTest1.origam#WorkQueueTest1/WQ_TestQueue1/e85de802-ac20-4dd1-9fed-37a87183decb"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
@@ -40,7 +40,7 @@
         <cr:WorkflowContextReference
           asi:abstract="false"
           cr:castToDataType="String"
-          cr:contextStore="Widgets/Workflow/Widgets/WorkQueueTest.origam#WorkQueueTest/WQ_TestQueue1/e85de802-ac20-4dd1-9fed-37a87183decb"
+          cr:contextStore="Widgets/Workflow/Widgets/WorkQueueTest1.origam#WorkQueueTest1/WQ_TestQueue1/e85de802-ac20-4dd1-9fed-37a87183decb"
           x:id="8df01499-4e9b-4203-af7e-0f1a9a682557"
           asi:name="WorkQueueEntry_parId"
           cr:xPath="/ROOT/WorkQueueEntry/@Id" />
