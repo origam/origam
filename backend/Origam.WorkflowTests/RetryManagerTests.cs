@@ -63,14 +63,46 @@ public class RetryManagerTests
         DateTime nextAttempt = (DateTime)queueEntryRow["NextAttemptTime"];
         Assert.That(nextAttempt, Is.EqualTo(expectedNextAttempt));
     }
+    
+    [Test]
+    public void ShouldAssignCorrectExponentialRetryTime()
+    {
+        var queueRow = CreateEmptyQueueRow();
+        queueRow["refWorkQueueRetryTypeId"] = WorkQueueRetryType.ExponentialRetry;
+        queueRow["MaxRetries"] = 5;
+        queueRow["RetryIntervalSeconds"] = 35;
+        queueRow["ExponentialRetryBase"] = 2.0m;
+        
+        var queueEntryRow = CreateEmptyEntryRow();
+        
+        var sut = new RetryManager(GetTimeNow);
 
+        var expectedDelayLimits = new []
+        {
+            (35, 70),
+            (70, 140),
+            (140, 280),
+            (280, 560),
+            (560, 1120)
+        };
+
+        for (int i = 0; i < 5; i++)
+        {
+            var (minDelay, maxDelay) = expectedDelayLimits[i];
+            var expectedMax = GetTimeNow().AddSeconds(maxDelay);
+            var expectedMin = GetTimeNow().AddSeconds(minDelay);
+            sut.SetEntryRetryData(queueEntryRow, queueRow, "Test");
+            DateTime nextAttempt = (DateTime)queueEntryRow["NextAttemptTime"];
+            Assert.That(nextAttempt, Is.LessThanOrEqualTo(expectedMax));
+            Assert.That(nextAttempt, Is.GreaterThanOrEqualTo(expectedMin));
+        }
+    }
+    
     private static WorkQueueData.WorkQueueRow CreateEmptyQueueRow()
     {
         var workQueueTable = new WorkQueueData.WorkQueueDataTable();
         workQueueTable.Columns.Add(
-            new DataColumn("MaxRetryIntervalSeconds", typeof(int)));   
-        workQueueTable.Columns.Add(
-            new DataColumn("MinRetryIntervalSeconds", typeof(int)));
+            new DataColumn("ExponentialRetryBase", typeof(decimal)));
         var queueRow = workQueueTable.NewWorkQueueRow();
         queueRow["MaxRetries"] = 0;
         queueRow["RetryIntervalSeconds"] = 0;

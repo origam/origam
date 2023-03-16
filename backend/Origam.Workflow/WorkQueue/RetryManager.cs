@@ -45,14 +45,14 @@ public class RetryManager
         Guid retryType = (Guid)queue["refWorkQueueRetryTypeId"];
         int maxRetries = (int)queue["MaxRetries"];
         int retryIntervalSeconds = (int)queue["RetryIntervalSeconds"];
-        double exponentialRetryBase = (double)queueEntryRow["ExponentialRetryBase"];
+        double exponentialRetryBase = decimal.ToDouble((decimal)queue["ExponentialRetryBase"]);
         
         var failureTime = getTimeNow();
         queueEntryRow["ErrorText"] = failureTime + ": " + errorMessage;
         queueEntryRow["LastAttemptTime"] = failureTime;
         int attemptCount = GetAttemptCount(queueEntryRow);
-        int newAttemptCount = attemptCount + 1; // = 2 after the first failure
-        int retryNumber = newAttemptCount - 1;
+        int newAttemptCount = attemptCount + 1; // = 1 after the first failure
+        int retryNumber = newAttemptCount;
         queueEntryRow["AttemptCount"] = newAttemptCount;
 
         if (Equals(retryType, WorkQueueRetryType.NoRetry) ||
@@ -91,7 +91,7 @@ public class RetryManager
         int maxRetries = (int)queue["MaxRetries"];
         int attemptCount = GetAttemptCount(queueEntryRow);
 
-        if (attemptCount <= 1)
+        if (attemptCount == 0)
         {
             return true;
         }
@@ -118,7 +118,7 @@ public class RetryManager
     private int GetAttemptCount(DataRow queueEntryRow)
     {
         return queueEntryRow["AttemptCount"] == DBNull.Value
-            ? 1
+            ? 0
             : (int)queueEntryRow["AttemptCount"];
     }
 }
