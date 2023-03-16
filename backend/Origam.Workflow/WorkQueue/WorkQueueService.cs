@@ -1473,7 +1473,10 @@ namespace Origam.Workflow.WorkQueue
             WorkQueueData.WorkQueueRow q, DataRow queueRow, string transactionId)
         {
             if(! cmd.IsAutoProcessed) return false;
-            if (! cmd.IsAutoProcessedWithErrors && ! queueRow.IsNull("ErrorText") && (string)queueRow["ErrorText"] != "")
+            if (!(bool)queueRow["InRetry"] &&
+                !cmd.IsAutoProcessedWithErrors && 
+                !queueRow.IsNull("ErrorText") && 
+                (string)queueRow["ErrorText"] != "")
             {
                 return false;
             }

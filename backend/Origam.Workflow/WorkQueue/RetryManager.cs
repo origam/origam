@@ -58,11 +58,13 @@ public class RetryManager
         if (Equals(retryType, WorkQueueRetryType.NoRetry) ||
             retryNumber > maxRetries)  
         {
+            queueEntryRow["InRetry"] = false;
             queueEntryRow["NextAttemptTime"] = DateTime.MaxValue;
             return;
         }
         if (Equals(retryType, WorkQueueRetryType.LinearRetry))
         {
+            queueEntryRow["InRetry"] = true;
             queueEntryRow["NextAttemptTime"] =
                 failureTime.AddSeconds(retryIntervalSeconds);
             return;
@@ -75,6 +77,7 @@ public class RetryManager
                               * retryIntervalSeconds;
             int waitTimeSeconds = RandomGenerator.Next(minInterval, maxInterval);
             
+            queueEntryRow["InRetry"] = true;
             queueEntryRow["NextAttemptTime"] =
                 failureTime.AddSeconds(waitTimeSeconds);
             return;
@@ -85,11 +88,20 @@ public class RetryManager
     }
 
     public bool CanRunNow(DataRow queueEntryRow,
-        WorkQueueData.WorkQueueRow queue)
+        WorkQueueData.WorkQueueRow queue, bool processErrors)
     {
         Guid retryType = (Guid)queue["refWorkQueueRetryTypeId"];
         int maxRetries = (int)queue["MaxRetries"];
         int attemptCount = GetAttemptCount(queueEntryRow);
+        bool inRetry = (bool)queueEntryRow["InRetry"];
+
+        if (!inRetry && 
+            !processErrors && 
+            !queueEntryRow.IsNull("ErrorText") &&
+            (string)queueEntryRow["ErrorText"] != "")
+        {
+            return false;
+        }
 
         if (attemptCount == 0)
         {

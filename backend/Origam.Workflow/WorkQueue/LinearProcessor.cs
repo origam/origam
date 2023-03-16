@@ -142,7 +142,7 @@ public class LinearProcessor : IWorkQueueProcessor
                 foreach (DataRow queueRow in queueTable.Rows)
                 {
                     if ((bool)queueRow["IsLocked"] == false 
-                        && retryManager.CanRunNow(queueRow, queue)
+                        && retryManager.CanRunNow(queueRow, queue, processErrors)
                         && workQueueThrottle.CanRunNow(queue))
                     {
                         result = DatasetTools.CloneRow(queueRow);
