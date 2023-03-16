@@ -115,6 +115,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/InRetry/95a60cea-1977-45dc-b663-3d601e8c4364"
+        dsc:hideInOutput="false"
+        x:id="89a44a2c-5278-4f74-9bbb-2448e54ca8b9"
+        asi:name="InRetry"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/AttemptCount/8515c4dc-c84a-4680-80a1-432f46a617fe"
         dsc:hideInOutput="false"
         x:id="8d9b164c-26b9-48e1-a5c0-86cc28523f6f"

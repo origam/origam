@@ -163,6 +163,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/InRetry/95a60cea-1977-45dc-b663-3d601e8c4364"
+        dsc:hideInOutput="false"
+        x:id="b7affaba-b69a-4854-b108-d262ae295042"
+        asi:name="InRetry"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/refLockedByBusinessPartnerId/1883087e-d17b-43e0-81ae-4019a9ce3021"
         dsc:hideInOutput="false"
         x:id="dee4491f-1f0f-457b-884f-948924f38a8f"

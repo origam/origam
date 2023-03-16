@@ -20,6 +20,14 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
+      ausa:activityOrder="100"
+      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___09f634ed-df88-465d-9bbb-ba48e934d674.txt"
+      x:id="09f634ed-df88-465d-9bbb-ba48e934d674"
+      asi:name="00100_Database_Field_WorkQueueEntry.InRetry"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
       ausa:activityOrder="50"
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___6714f7f1-4d87-4a5f-967b-f6b5f25665da.txt"
       x:id="6714f7f1-4d87-4a5f-967b-f6b5f25665da"

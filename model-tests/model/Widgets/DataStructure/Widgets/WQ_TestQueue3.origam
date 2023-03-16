@@ -164,6 +164,18 @@
       <dsc:DataStructureColumn
         asi:abstract="false"
         dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Work Queue/WorkQueueEntry.origam#WorkQueueEntry/InRetry/95a60cea-1977-45dc-b663-3d601e8c4364"
+        dsc:hideInOutput="false"
+        x:id="b08217bc-906c-46c9-a4df-00a78ec55220"
+        asi:name="InRetry"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
         dsc:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
         dsc:hideInOutput="false"
         x:id="cffd858b-6cd1-4f05-a352-26ad6735c31b"
