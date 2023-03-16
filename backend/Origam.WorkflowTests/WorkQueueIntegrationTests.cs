@@ -190,6 +190,65 @@ public class WorkQueueIntegrationTests
             OrigamEngine.OrigamEngine.DisconnectRuntime();
         }
     }
+    
+    [Test]
+    public void ShouldRetryProcessingOfFailingQueue()
+    {
+        // ConnectRuntime should start a timer which will cause the work queues
+        // to be processed automatically
+        OrigamEngine.OrigamEngine.ConnectRuntime(
+            configName: "LinearWorkQueueProcessor",
+            customServiceFactory: new TestRuntimeServiceFactory());
+        try
+        {
+            int maxRetries = 3;
+            sqlManager.SetupFailingQueue(
+                retryType: WorkQueueRetryType.LinearRetry,
+                maxRetries: maxRetries,
+                retryIntervalSeconds: 1);
+            sqlManager.InsertEntriesIntoFailingQueue();
+            int attempts = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(500);
+                attempts = sqlManager.GetFailingQueueEntryAttempts();
+                if (attempts + 1 == maxRetries)
+                {
+                    return;
+                }
+            }
+            Assert.Fail($"The failing queue entry was not retried expected number of times ({maxRetries}). Number of attempts is {attempts}");
+        }
+        finally
+        {
+            sqlManager.ClearFailingQueue();
+        }
+    }
+    
+    [Test]
+    public void ShouldNotRetryProcessingOfFailingQueueIfNoRetry()
+    {
+        // ConnectRuntime should start a timer which will cause the work queues
+        // to be processed automatically
+        OrigamEngine.OrigamEngine.ConnectRuntime(
+            configName: "LinearWorkQueueProcessor",
+            customServiceFactory: new TestRuntimeServiceFactory());
+        try
+        {
+            sqlManager.SetupFailingQueue(
+                retryType: WorkQueueRetryType.NoRetry,
+                maxRetries: 3,
+                retryIntervalSeconds: 1);
+            sqlManager.InsertEntriesIntoFailingQueue();
+            Thread.Sleep(3000);
+            int attempts = sqlManager.GetFailingQueueEntryAttempts();
+            Assert.That(attempts, Is.EqualTo(1));
+        }
+        finally
+        {
+            sqlManager.ClearFailingQueue();
+        }
+    }
 }
 
 class TestRuntimeServiceFactory: RuntimeServiceFactory {
