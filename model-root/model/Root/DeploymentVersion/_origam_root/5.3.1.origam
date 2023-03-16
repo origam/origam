@@ -20,10 +20,10 @@
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
       asi:abstract="false"
-      ausa:activityOrder="100"
+      ausa:activityOrder="90"
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___09f634ed-df88-465d-9bbb-ba48e934d674.txt"
       x:id="09f634ed-df88-465d-9bbb-ba48e934d674"
-      asi:name="00100_Database_Field_WorkQueueEntry.InRetry"
+      asi:name="00090_Database_Field_WorkQueueEntry.InRetry"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
@@ -48,14 +48,6 @@
       scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___82720a7d-f975-4b57-a85e-7a3cfd498bfd.txt"
       x:id="82720a7d-f975-4b57-a85e-7a3cfd498bfd"
       asi:name="00040_Database_Entity_WorkQueueState"
-      scusa:platform="MsSql"
-      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
-    <scusa:DeploymentUpdateScriptActivity
-      asi:abstract="false"
-      ausa:activityOrder="90"
-      scusa:commandText="-***-ExternalFile:5.3.1.origam___commandText___8bdc922d-1aea-4a87-81de-9e1941c5a908.txt"
-      x:id="8bdc922d-1aea-4a87-81de-9e1941c5a908"
-      asi:name="00090_Database_Field_WorkQueue.ExponentialRetryBase"
       scusa:platform="MsSql"
       scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
     <scusa:DeploymentUpdateScriptActivity
