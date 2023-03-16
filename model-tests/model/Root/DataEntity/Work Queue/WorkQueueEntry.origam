@@ -209,6 +209,14 @@
       asi:name="100_Red_SR_IsWorkQueueError_*"
       ecf:roles="*"
       ecf:rule="Root/Rule/Work Queue/SR_IsWorkQueueError.origam#SR_IsWorkQueueError/3b27ca78-9b8f-460c-a3d8-da8b43b817db" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      ecf:backgroundColor="-10185235"
+      x:id="78c3086e-e1b0-4dd2-8df4-4661930629ed"
+      ecf:level="90"
+      asi:name="90_Blue_SR_WorkQueueEntry_InRetryIsTrue_*"
+      ecf:roles="*"
+      ecf:rule="Root/Rule/Work Queue/SR_WorkQueueEntry_InRetryIsTrue.origam#SR_WorkQueueEntry_InRetryIsTrue/f260bf57-ef9f-4660-bce7-6e18b06020d6" />
     <ef:EntityFilter
       asi:abstract="false"
       x:id="09b292b0-8a9e-4516-95e1-a3aad8b1d7cf"
