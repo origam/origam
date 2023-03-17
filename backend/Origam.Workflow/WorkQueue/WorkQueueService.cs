@@ -787,7 +787,9 @@ namespace Origam.Workflow.WorkQueue
         {
             try
             {
-                HandleAction(queueId, queueClass, selectedRows, commandType, command, param1, param2, true, errorQueueId, null);
+                WorkQueueData workQueueData = GetQueue(queueId);
+                WorkQueueData.WorkQueueRow queue = workQueueData.WorkQueue[0];
+                HandleAction(queue, queueClass, selectedRows, commandType, command, param1, param2, true, errorQueueId, null);
             }
             catch
             {
@@ -807,7 +809,7 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private void HandleAction(Guid queueId, string queueClass, DataTable selectedRows, Guid commandType,
+        private void HandleAction(WorkQueueData.WorkQueueRow queue, string queueClass, DataTable selectedRows, Guid commandType,
             string command, string param1, string param2, bool lockItems, object errorQueueId, string transactionId)
         {
             if (log.IsInfoEnabled)
@@ -843,7 +845,7 @@ namespace Origam.Workflow.WorkQueue
                 }
                 else if (commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_LoadFromExternalSource"))
                 {
-                    LoadFromExternalSource(queueId);
+                    LoadFromExternalSource(queue.Id);
                 }
                 else if (commandType == (Guid)ps.GetParameterValue("WorkQueueCommandType_RunNotifications"))
                 {
@@ -870,15 +872,19 @@ namespace Origam.Workflow.WorkQueue
                     ResourceMonitor.Rollback(transactionId);
                 }
                 // rollback deletion of the row when it fails - we have to work with previous state
+                bool anyRowInRetry = false;
                 foreach (DataRow row in selectedRows.Rows)
                 {
                     if (row.RowState == DataRowState.Deleted)
                     {
                         row.RejectChanges();
                     }
+                    retryManager.SetEntryRetryData(row, queue, ex.Message);
+                    anyRowInRetry = anyRowInRetry || (bool)row["InRetry"];
                 }
+                StoreFailedEntries(wqc, selectedRows);
                 // other failure => move to the error queue, if available
-                if (errorQueueId != null)
+                if (!anyRowInRetry && errorQueueId != null)
                 {
                     HandleMoveQueue(wqc, selectedRows, (Guid)errorQueueId, ex.Message, null, false);
                 }
@@ -934,7 +940,7 @@ namespace Origam.Workflow.WorkQueue
             DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, transactionId);
 
             // call handle action
-            HandleAction(queueId, queueRow.WorkQueueClass, queueEntryDS.Tables[0],
+            HandleAction(queueRow, queueRow.WorkQueueClass, queueEntryDS.Tables[0],
                 commandRow.refWorkQueueCommandTypeId,
                 commandRow.IsCommandNull() ? null : commandRow.Command,
                 commandRow.IsParam1Null() ? null : commandRow.Param1,
@@ -1380,7 +1386,7 @@ namespace Origam.Workflow.WorkQueue
             try
             {
                 foreach (WorkQueueData.WorkQueueCommandRow cmd in queue
-                    .GetWorkQueueCommandRows())
+                             .GetWorkQueueCommandRows())
                 {
                     try
                     {
@@ -1405,7 +1411,7 @@ namespace Origam.Workflow.WorkQueue
                             if (!cmd.IsrefErrorWorkQueueIdNull())
                                 errorQueueId = cmd.refErrorWorkQueueId;
                             // actual processing
-                            HandleAction(queue.Id, queue.WorkQueueClass,
+                            HandleAction(queue, queue.WorkQueueClass,
                                 queueEntryRow.Table,
                                 cmd.refWorkQueueCommandTypeId,
                                 command, param1, param2, false, errorQueueId,
@@ -1417,7 +1423,7 @@ namespace Origam.Workflow.WorkQueue
                                     itemId + ", Queue: "
                                     + queue.Name + ", Command: " + cmd.Text);
                             }
-                            workQueueThrottle.ReportProcessed(queue);
+
                             if (cmd.refWorkQueueCommandTypeId ==
                                 (Guid)ps.GetParameterValue(
                                     "WorkQueueCommandType_Remove"))
@@ -1439,13 +1445,6 @@ namespace Origam.Workflow.WorkQueue
                             queueEntryRow.RejectChanges();
                         }
 
-                        // if not moved to the error queue, record the message
-                        if (cmd.IsrefErrorWorkQueueIdNull())
-                        {
-                            retryManager.SetEntryRetryData(queueEntryRow, queue, ex.Message);
-                            StoreFailedEntry(wqc, queueEntryRow);
-                        }
-
                         // unlock the queue item
                         UnlockQueueItems(wqc, queueEntryRow.Table, true);
                         // do not process any other commands on this queue entry
@@ -1463,9 +1462,14 @@ namespace Origam.Workflow.WorkQueue
                 if (log.IsFatalEnabled)
                 {
                     log.Fatal(
-                        "Queue item processing failed. Id: " + itemId + ", Queue: " +
+                        "Queue item processing failed. Id: " + itemId +
+                        ", Queue: " +
                         queue?.Name, ex);
                 }
+            }
+            finally
+            {
+                workQueueThrottle.ReportProcessed(queue);
             }
         }
         
@@ -1537,11 +1541,11 @@ namespace Origam.Workflow.WorkQueue
             return false;
         }
         
-        private void StoreFailedEntry(WorkQueueClass wqc, DataRow queueEntryRow)
+        private void StoreFailedEntries(WorkQueueClass wqc, DataTable queueEntryTable)
         {
             try
             {
-                StoreQueueItems(wqc, queueEntryRow.Table, null);
+                StoreQueueItems(wqc, queueEntryTable, null);
             } catch (DBConcurrencyException)
             {
                 var dataStructureQuery = new DataStructureQuery {
@@ -1549,7 +1553,7 @@ namespace Origam.Workflow.WorkQueue
                     MethodId = new Guid("ea139b9a-3048-4cd5-bf9a-04a91590624a"),
                     LoadActualValuesAfterUpdate = false };
                 dataService.StoreData(dataStructureQuery,
-                   queueEntryRow.Table.DataSet, null);
+                    queueEntryTable.DataSet, null);
             }
         }
 

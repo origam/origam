@@ -106,12 +106,15 @@ public class RetryManagerTests
         var queueRow = workQueueTable.NewWorkQueueRow();
         queueRow["MaxRetries"] = 0;
         queueRow["RetryIntervalSeconds"] = 0;
+        queueRow["ExponentialRetryBase"] = 2;
         return queueRow;
     }
 
     private static DataRow CreateEmptyEntryRow()
     {
         var queueEntryTable = new DataTable();
+        queueEntryTable.Columns.Add(
+            new DataColumn("InRetry", typeof(bool)));
         queueEntryTable.Columns.Add(
             new DataColumn("ErrorText", typeof(string)));
         queueEntryTable.Columns.Add(

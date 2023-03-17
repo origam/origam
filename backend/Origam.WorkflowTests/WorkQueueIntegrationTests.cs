@@ -205,7 +205,8 @@ public class WorkQueueIntegrationTests
             sqlManager.SetupFailingQueue(
                 retryType: WorkQueueRetryType.LinearRetry,
                 maxRetries: maxRetries,
-                retryIntervalSeconds: 1);
+                retryIntervalSeconds: 1,
+                moveToErrorQueue: false);
             sqlManager.InsertEntriesIntoFailingQueue();
             int attempts = 0;
             for (int i = 0; i < 10; i++)
@@ -238,7 +239,8 @@ public class WorkQueueIntegrationTests
             sqlManager.SetupFailingQueue(
                 retryType: WorkQueueRetryType.NoRetry,
                 maxRetries: 3,
-                retryIntervalSeconds: 1);
+                retryIntervalSeconds: 1,
+                moveToErrorQueue: false);
             sqlManager.InsertEntriesIntoFailingQueue();
             Thread.Sleep(3000);
             int attempts = sqlManager.GetFailingQueueEntryAttempts();

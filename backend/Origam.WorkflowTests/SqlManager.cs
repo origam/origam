@@ -74,12 +74,17 @@ public class SqlManager
         throw new Exception("WorkQueueEntry table is not empty after timeout");
     }
 
-    public void SetupFailingQueue(Guid retryType,int maxRetries, int retryIntervalSeconds)
+    public void SetupFailingQueue(Guid retryType, int maxRetries,
+        int retryIntervalSeconds, bool moveToErrorQueue)
     {
+        string refErrorWorkQueueId = moveToErrorQueue
+            ? "'8527e8c1-d480-4b12-81a6-f3858b37dc73'"
+            : "NULL";
         dataService.ExecuteSql($@"
             UPDATE [WorkQueue]
             SET [refWorkQueueRetryTypeId] = '{retryType}', [RetryIntervalSeconds] = {retryIntervalSeconds}, [MaxRetries] = {maxRetries}
-            WHERE Id = '0AB10C2F-386E-4DD1-992E-5E3765A28447';"
+            WHERE Id = '0AB10C2F-386E-4DD1-992E-5E3765A28447';
+            UPDATE WorkQueueCommand SET refErrorWorkQueueId = {refErrorWorkQueueId} WHERE Id='f407510e-ce7f-44b0-a74a-875c50c1d62c'"
         );
     } 
     
@@ -132,8 +137,8 @@ public class SqlManager
     }
 
     private List<Guid> GetWorkQueueEntryIds(string insertSql)
-    {
-        var regex = new Regex(@"N'([a-z0-9\-]+)', CAST\(N'.*' AS DateTime\), NULL, 0\)");
+    { 
+        var regex = new Regex(@"N'([a-z0-9\-]+)', CAST\(N'.*' AS DateTime\), NULL, 0, 0\)");
         var matches= regex.Matches(insertSql);
         if (matches.Count == 0)
         {
