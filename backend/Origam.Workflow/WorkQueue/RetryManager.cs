@@ -126,6 +126,14 @@ public class RetryManager
 
         return (DateTime)queueEntryRow["NextAttemptTime"] <= getTimeNow();
     }
+
+    public void ResetEntry(DataRow queueEntryRow)
+    {
+        queueEntryRow["AttemptCount"] = 0;
+        queueEntryRow["LastAttemptTime"] = DBNull.Value;
+        queueEntryRow["NextAttemptTime"] = DBNull.Value;
+        queueEntryRow["InRetry"] = false;
+    }
     
     private int GetAttemptCount(DataRow queueEntryRow)
     {

@@ -1037,6 +1037,7 @@ namespace Origam.Workflow.WorkQueue
                     });
                 }
                 row["refWorkQueueId"] = newQueueId;
+                retryManager.ResetEntry(row);
                 if (resetErrors || errorMessage == null)
                 {
                     row["ErrorText"] = DBNull.Value;

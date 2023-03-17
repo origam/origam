@@ -223,6 +223,7 @@ public class WorkQueueIntegrationTests
         finally
         {
             sqlManager.ClearFailingQueue();
+            OrigamEngine.OrigamEngine.DisconnectRuntime();
         }
     }
     
@@ -249,6 +250,40 @@ public class WorkQueueIntegrationTests
         finally
         {
             sqlManager.ClearFailingQueue();
+            OrigamEngine.OrigamEngine.DisconnectRuntime();
+        }
+    }
+    
+    [Test]
+    public void ShouldMoveWorkQueueEntryToErrorQueueAfterError()
+    {
+        // ConnectRuntime should start a timer which will cause the work queues
+        // to be processed automatically
+        OrigamEngine.OrigamEngine.ConnectRuntime(
+            configName: "LinearWorkQueueProcessor",
+            customServiceFactory: new TestRuntimeServiceFactory());
+        try
+        {
+            int maxRetries = 3;
+            sqlManager.SetupFailingQueue(
+                retryType: WorkQueueRetryType.NoRetry,
+                maxRetries: maxRetries,
+                retryIntervalSeconds: 1,
+                moveToErrorQueue: true);
+            sqlManager.InsertEntriesIntoFailingQueue();
+            Thread.Sleep(10_000);
+
+            int entriesInFailingQueue = sqlManager.GetEntryCount(SqlManager.FailingQueue);
+            int entriesInRetryQueue = sqlManager.GetEntryCount(SqlManager.RetryQueue);
+            int entriesInErrorQueue = sqlManager.GetEntryCount(SqlManager.ErrorQueue);
+            Assert.That(entriesInFailingQueue, Is.EqualTo(0));
+            Assert.That(entriesInRetryQueue, Is.EqualTo(0));
+            Assert.That(entriesInErrorQueue, Is.EqualTo(1));
+        }
+        finally
+        {
+            sqlManager.ClearFailingQueue();
+            OrigamEngine.OrigamEngine.DisconnectRuntime();
         }
     }
 }
