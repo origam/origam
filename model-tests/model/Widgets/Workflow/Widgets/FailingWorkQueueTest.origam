@@ -3,9 +3,16 @@
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1">
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="ddb1cedf-c05a-472f-bb5d-f5d070e627ed"
@@ -14,10 +21,17 @@
     <crs:WorkflowTask
       asi:abstract="false"
       x:id="efdadd32-d170-4b1e-8295-efcf98bdcdf0"
-      asi:name="ReturnErrorMessage"
+      asi:name="04_ReturnErrorMessage"
       aws:roles="*"
       aws:validationRule="Widgets/Rule/Widgets/ER_IntentionalTestError.origam#ER_IntentionalTestError/de8fe24a-ce63-4db6-96c1-7e7841fbc447"
-      aws:validationRuleContextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487" />
+      aws:validationRuleContextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487">
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="03376321-06bb-405e-a19d-50a6252dbcdc"
+        asi:name="After_03_StoreData_WQ_FailingTestQueue1"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/03_StoreData_WQ_FailingTestQueue1/705a778a-8448-44d8-95bd-c0a205391502" />
+    </crs:WorkflowTask>
     <cs:ContextStore
       asi:abstract="false"
       cs:dataType="Xml"
@@ -26,5 +40,130 @@
       cs:isReturnValue="false"
       asi:name="WQ_FailingTestQueue1"
       cs:structure="Widgets/DataStructure/Widgets/WQ_FailingTestQueue1.origam#WQ_FailingTestQueue1/7f2ce718-926d-490f-b4a4-89df1d8ddeb2" />
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="1e41af99-9123-41f0-8652-8e3c032accde"
+      asi:name="02_Transform_WQ_FailingTestQueue1"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataTransformationService.origam#DataTransformationService/600930a5-102b-43e8-8af1-677c6d7e79f3"
+      smct:serviceMethod="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/a215c2d6-e7aa-4b2f-97d9-03a8d019d4c6">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="3ca3b8d1-1293-4a40-9626-a67b7b9d66ba"
+        asi:name="XslScript"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/XslScript/7eecc204-f38e-49fc-8875-fd6b4ba019fd">
+        <tr:TransformationReference
+          asi:abstract="false"
+          x:id="03533ea3-5bbc-4df6-ad2f-7bfa32d3024f"
+          asi:name="FailingWorkQueue_UpdateRetryCount"
+          tr:transformation="Widgets/Transformation/Widgets/FailingWorkQueue_UpdateRetryCount.origam#FailingWorkQueue_UpdateRetryCount/26e0ffc2-70a9-49a0-9555-d9e014ed41bf" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="68517dde-c69d-4ed4-b6d6-510ba1dcb179"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Parameters/ce3ebb59-6528-4157-b51a-500f84a635f0" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="7f2f549b-edb0-4d2b-b158-418d696355c8"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataTransformationService.origam#DataTransformationService/Transform/Data/3e94d691-e045-426a-bc79-febc3562fa15">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487"
+          x:id="25e8ff5c-9d0f-4a25-b9b5-e1e3da6e234b"
+          asi:name="WQ_FailingTestQueue1"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="20219b87-63b3-45ec-9e12-6ec3faae3e21"
+        asi:name="After_01_LoadData_WQ_FailingTestQueue1"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/01_LoadData_WQ_FailingTestQueue1/ca304e2d-6a37-4ff6-b55e-c800786c0a88" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="705a778a-8448-44d8-95bd-c0a205391502"
+      asi:name="03_StoreData_WQ_FailingTestQueue1"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="21cfe21f-fa56-4eaa-8371-89c2215cd2d1"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/WQ_FailingTestQueue1.origam#WQ_FailingTestQueue1/7f2ce718-926d-490f-b4a4-89df1d8ddeb2"
+          x:id="d9d14e56-37d8-4c3d-a7d3-468472886eb2"
+          asi:name="WQ_FailingTestQueue1" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="b766b9a6-ab69-499e-958f-cc24d29727e0"
+        asi:name="ForceBulkInsert"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/ForceBulkInsert/010bc65c-5867-41d6-a3f0-8daa9b2377cd" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="cb54cefb-6641-4aa2-aa6f-79235c84028c"
+        asi:name="Data"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/Data/d4d7ec83-a1e8-458e-9900-36562b201ffc">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487"
+          x:id="42a2a81e-e18f-499c-bf0c-80e069a58978"
+          asi:name="WQ_FailingTestQueue1"
+          cr:xPath="/" />
+      </smcp:ServiceMethodCallParameter>
+      <wtd:WorkflowTaskDependency
+        asi:abstract="false"
+        x:id="31125a51-79fc-4282-ac47-5b2d85fbbf3f"
+        asi:name="After_02_Transform_WQ_FailingTestQueue1"
+        wtd:startEvent="Success"
+        wtd:task="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/02_Transform_WQ_FailingTestQueue1/1e41af99-9123-41f0-8652-8e3c032accde" />
+    </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="ca304e2d-6a37-4ff6-b55e-c800786c0a88"
+      asi:name="01_LoadData_WQ_FailingTestQueue1"
+      wt:outputContextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="5ae03bbe-29cc-468c-94ed-614fa119048f"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03">
+        <cr:WorkflowContextReference
+          asi:abstract="false"
+          cr:castToDataType="String"
+          cr:contextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487"
+          x:id="ff5b544f-5de6-46fa-9b62-972c8deb4f00"
+          asi:name="WorkQueueEntry_parId"
+          cr:xPath="/ROOT/WorkQueueEntry/@Id" />
+      </smcp:ServiceMethodCallParameter>
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="ac8902c4-98b5-4674-b49f-ddc49fdab633"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Widgets/DataStructure/Widgets/WQ_FailingTestQueue1.origam#WQ_FailingTestQueue1/7f2ce718-926d-490f-b4a4-89df1d8ddeb2"
+          x:id="ec28e802-8c1e-45a8-aa25-4f60f96d2418"
+          dsr:method="Widgets/DataStructure/Widgets/WQ_FailingTestQueue1.origam#WQ_FailingTestQueue1/GetById/253e17fb-569e-48dd-b1ef-ec779fd5c088"
+          asi:name="WQ_FailingTestQueue1" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
   </w:Workflow>
 </x:file>
