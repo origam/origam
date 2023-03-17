@@ -28,6 +28,12 @@ public class SqlManager
 {
     private readonly ICoreDataService dataService;
 
+    public static readonly Guid TestQueue1 = new ("751BD582-2604-4259-B560-6AFB8A772FCA");
+    public static readonly Guid TestQueue2 = new ("5AB2B7E6-1181-4CA2-8EB3-39DF505D8EB3");
+    public static readonly Guid TestQueue3 = new ("E776D7F7-482D-4AFF-B32A-444A9A9959E5");
+    public static readonly Guid FailingQueue = new ("0AB10C2F-386E-4DD1-992E-5E3765A28447");
+    public static readonly Guid RetryQueue = new ("8527E8C1-D480-4B12-81A6-F3858B37DC73");
+    public static readonly Guid ErrorQueue = new ("6584869B-8FD6-44E6-A6C9-5C03D2555A2C");
     public SqlManager(ICoreDataService dataService)
     {
         this.dataService = dataService;
@@ -110,6 +116,21 @@ public class SqlManager
         }
 
         throw new Exception("Could not find AttemptCount in sql result");
+    }
+
+    public int GetEntryCount(Guid workQueueId)
+    {
+        string countResult = dataService.ExecuteSql($@"
+            SELECT COUNT(Id) AS EntryCount FROM [WorkQueueEntry]
+            WHERE [refWorkQueueId] = '{workQueueId.ToString()}'"
+        );
+        var regEx = new Regex(@"EntryCount\s*\n-+\s*\n(\d+)");
+        Match match = regEx.Match(countResult);
+        if (match.Success)
+        {
+            return int.Parse(match.Groups[1].Value);
+        }
+        throw new Exception("Could count work queue entries");
     }
 
     public void ClearFailingQueue()
