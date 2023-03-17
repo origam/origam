@@ -23,13 +23,20 @@
     <wqcem:WorkQueueClassEntityMapping
       asi:abstract="false"
       x:id="1262380e-84f3-40ad-9afe-80ad3458e654"
-      asi:name="Number"
-      wqcem:xPath="/row/@Number" />
+      asi:name="Number1"
+      wqcem:sortOrder="1"
+      wqcem:xPath="/row/@Number1" />
     <wqcem:WorkQueueClassEntityMapping
       asi:abstract="false"
       x:id="a0c72281-77ff-49ce-8fdf-3290bdce3882"
       asi:name="refId"
       wqcem:xPath="/row/@Id" />
+    <wqcem:WorkQueueClassEntityMapping
+      asi:abstract="false"
+      x:id="df74e6ba-5ae8-4501-8d7b-d43bf9dedd3d"
+      asi:name="Number2"
+      wqcem:sortOrder="2"
+      wqcem:xPath="/row/@Number2" />
     <wqwc:EntityUIAction
       asi:abstract="false"
       euia:actionType="Workflow"
