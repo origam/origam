@@ -223,6 +223,7 @@ public class WorkQueueIntegrationTests
         finally
         {
             sqlManager.ClearFailingQueue();
+            OrigamEngine.OrigamEngine.DisconnectRuntime();
         }
     }
     
@@ -249,6 +250,7 @@ public class WorkQueueIntegrationTests
         finally
         {
             sqlManager.ClearFailingQueue();
+            OrigamEngine.OrigamEngine.DisconnectRuntime();
         }
     }
     
@@ -281,6 +283,7 @@ public class WorkQueueIntegrationTests
         finally
         {
             sqlManager.ClearFailingQueue();
+            OrigamEngine.OrigamEngine.DisconnectRuntime();
         }
     }
 }
