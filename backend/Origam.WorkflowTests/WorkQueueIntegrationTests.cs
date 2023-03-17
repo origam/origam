@@ -38,10 +38,20 @@ public class WorkQueueIntegrationTests
         XmlConfigurator.Configure(new FileInfo("log4net.config")); 
     }
     
-    [SetUp]
-    public void Setup()
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
         BasicConfigurator.Configure();
+    } 
+    
+    [TearDown]
+    public void TearDown()
+    {
+        sqlManager.DeleteWorkQueueEntries();
+        Console.WriteLine(
+            "\nRunning DisconnectRuntime. There might be some errors logged here. " +
+            "These are probably not a problem.\n");
+        OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
 
     [TestCase("LinearWorkQueueProcessor")]
@@ -70,10 +80,6 @@ public class WorkQueueIntegrationTests
         CollectionAssert.AreEquivalent(
             createdWorkQueueEntryIds,
             deletedWorkQueueEntryIds);
-        
-        Console.WriteLine("\nRunning DisconnectRuntime. There might be some errors logged here. These are probably not a problem.\n");
-        OrigamEngine.OrigamEngine.DisconnectRuntime();
-        Thread.Sleep(1000);
     }
     
     [Test]
@@ -84,15 +90,18 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "RoundRobinWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
-        
-        List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
-        
+
+        List<Guid> createdWorkQueueEntryIds =
+            sqlManager.InsertWorkQueueEntries();
+
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
-        
+
         // MonitoredMsSqlDataService must be set in "DataDataService" element
         // in OrigamSettings.config
-        var dataService = DataServiceFactory.GetDataService() as MonitoredMsSqlDataService;
+        var dataService =
+            DataServiceFactory
+                .GetDataService() as MonitoredMsSqlDataService;
         var deleteOperations = dataService.Operations
             .OfType<DeleteWorkQueueEntryOperation>()
             .ToList();
@@ -100,19 +109,21 @@ public class WorkQueueIntegrationTests
             .Select(x => x.RowId)
             .Reverse()
             .ToList();
-        
+
         CollectionAssert.AreEquivalent(
             createdWorkQueueEntryIds,
             deletedWorkQueueEntryIds);
-        
+
         int batchSize = ConfigurationManager
             .GetActiveConfiguration()
             .RoundRobinBatchSize;
 
         int numberOfGroups = deleteOperations.Count / batchSize;
         int numberOfGroupsWhereWeExpectEntriesFromASingleQueue =
-            numberOfGroups - 3; 
-        for (int i = 0; i < numberOfGroupsWhereWeExpectEntriesFromASingleQueue; i++)
+            numberOfGroups - 3;
+        for (int i = 0;
+             i < numberOfGroupsWhereWeExpectEntriesFromASingleQueue;
+             i++)
         {
             var numberOfWorkQueuesInTheBatchCall = deleteOperations
                 .Skip(batchSize * i)
@@ -122,8 +133,6 @@ public class WorkQueueIntegrationTests
                 .Count();
             Assert.That(numberOfWorkQueuesInTheBatchCall, Is.EqualTo(1));
         }
-
-        OrigamEngine.OrigamEngine.DisconnectRuntime();
     }
     
     [Test]
@@ -139,10 +148,10 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory());
         try
         {
-            sqlManager.EnableThrottling(
+            sqlManager.EnableThrottlingOnTestQueue3(
                 throttlingIntervalSeconds: throttlingIntervalSeconds, 
                 throttlingItemsPerInterval: throttlingItemsPerInterval);
-            List<Guid> createdWorkQueueEntryIds = sqlManager.InsertThrottlingTestWorkQueueEntries();
+            List<Guid> createdWorkQueueEntryIds = sqlManager.InsertFourEntriesToTestQueue3();
             
             Thread.Sleep(1000);
             sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
@@ -186,8 +195,7 @@ public class WorkQueueIntegrationTests
         }
         finally
         {
-            sqlManager.DisableThrottling();
-            OrigamEngine.OrigamEngine.DisconnectRuntime();
+            sqlManager.DisableThrottlingOnTestQueue3();
         }
     }
     
@@ -199,32 +207,26 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
-        try
+
+        int maxRetries = 3;
+        sqlManager.SetupFailingQueue(
+            retryType: WorkQueueRetryType.LinearRetry,
+            maxRetries: maxRetries,
+            retryIntervalSeconds: 1,
+            moveToErrorQueue: false);
+        sqlManager.InsertOneEntryIntoFailingQueue();
+        int attempts = 0;
+        for (int i = 0; i < 10; i++)
         {
-            int maxRetries = 3;
-            sqlManager.SetupFailingQueue(
-                retryType: WorkQueueRetryType.LinearRetry,
-                maxRetries: maxRetries,
-                retryIntervalSeconds: 1,
-                moveToErrorQueue: false);
-            sqlManager.InsertEntriesIntoFailingQueue();
-            int attempts = 0;
-            for (int i = 0; i < 10; i++)
+            Thread.Sleep(500);
+            attempts = sqlManager.GetFailingQueueEntryAttempts();
+            if (attempts + 1 == maxRetries)
             {
-                Thread.Sleep(500);
-                attempts = sqlManager.GetFailingQueueEntryAttempts();
-                if (attempts + 1 == maxRetries)
-                {
-                    return;
-                }
+                return;
             }
-            Assert.Fail($"The failing queue entry was not retried expected number of times ({maxRetries}). Number of attempts is {attempts}");
         }
-        finally
-        {
-            sqlManager.ClearFailingQueue();
-            OrigamEngine.OrigamEngine.DisconnectRuntime();
-        }
+        Assert.Fail($"The failing queue entry was not retried expected" +
+                    $" number of times ({maxRetries}). Number of attempts is {attempts}");
     }
     
     [Test]
@@ -235,23 +237,16 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
-        try
-        {
-            sqlManager.SetupFailingQueue(
-                retryType: WorkQueueRetryType.NoRetry,
-                maxRetries: 3,
-                retryIntervalSeconds: 1,
-                moveToErrorQueue: false);
-            sqlManager.InsertEntriesIntoFailingQueue();
-            Thread.Sleep(3000);
-            int attempts = sqlManager.GetFailingQueueEntryAttempts();
-            Assert.That(attempts, Is.EqualTo(1));
-        }
-        finally
-        {
-            sqlManager.ClearFailingQueue();
-            OrigamEngine.OrigamEngine.DisconnectRuntime();
-        }
+
+        sqlManager.SetupFailingQueue(
+            retryType: WorkQueueRetryType.NoRetry,
+            maxRetries: 3,
+            retryIntervalSeconds: 1,
+            moveToErrorQueue: false);
+        sqlManager.InsertOneEntryIntoFailingQueue();
+        Thread.Sleep(3000);
+        int attempts = sqlManager.GetFailingQueueEntryAttempts();
+        Assert.That(attempts, Is.EqualTo(1));
     }
     
     [Test]
@@ -262,29 +257,21 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
-        try
-        {
-            int maxRetries = 3;
-            sqlManager.SetupFailingQueue(
-                retryType: WorkQueueRetryType.NoRetry,
-                maxRetries: maxRetries,
-                retryIntervalSeconds: 1,
-                moveToErrorQueue: true);
-            sqlManager.InsertEntriesIntoFailingQueue();
-            Thread.Sleep(10_000);
 
-            int entriesInFailingQueue = sqlManager.GetEntryCount(SqlManager.FailingQueue);
-            int entriesInRetryQueue = sqlManager.GetEntryCount(SqlManager.RetryQueue);
-            int entriesInErrorQueue = sqlManager.GetEntryCount(SqlManager.ErrorQueue);
-            Assert.That(entriesInFailingQueue, Is.EqualTo(0));
-            Assert.That(entriesInRetryQueue, Is.EqualTo(0));
-            Assert.That(entriesInErrorQueue, Is.EqualTo(1));
-        }
-        finally
-        {
-            sqlManager.ClearFailingQueue();
-            OrigamEngine.OrigamEngine.DisconnectRuntime();
-        }
+        sqlManager.SetupFailingQueue(
+            retryType: WorkQueueRetryType.NoRetry,
+            maxRetries: 3,
+            retryIntervalSeconds: 1,
+            moveToErrorQueue: true);
+        sqlManager.InsertOneEntryIntoFailingQueue();
+        Thread.Sleep(10_000);
+
+        int entriesInFailingQueue = sqlManager.GetEntryCount(SqlManager.FailingQueue);
+        int entriesInRetryQueue = sqlManager.GetEntryCount(SqlManager.RetryQueue);
+        int entriesInErrorQueue = sqlManager.GetEntryCount(SqlManager.ErrorQueue);
+        Assert.That(entriesInFailingQueue, Is.EqualTo(0));
+        Assert.That(entriesInRetryQueue, Is.EqualTo(0));
+        Assert.That(entriesInErrorQueue, Is.EqualTo(1));
     }
 }
 
