@@ -120,7 +120,7 @@ namespace Origam.Server
                 options.Password.RequireNonAlphanumeric = passwordConfiguration.RequireNonAlphanumeric;
                 options.Password.RequireUppercase = passwordConfiguration.RequireUppercase;
                 options.Password.RequireLowercase = passwordConfiguration.RequireLowercase;
-                UserConfig userConfig = new UserConfig();
+                var userConfig = new UserConfig();
                 Configuration.GetSection("UserConfig").Bind(userConfig);
                 if (!string.IsNullOrEmpty(userConfig.AllowedUserNameCharacters))
                 {
