@@ -91,8 +91,8 @@ public class WorkQueueIntegrationTests
             configName: "RoundRobinWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
 
-        List<Guid> createdWorkQueueEntryIds =
-            sqlManager.InsertWorkQueueEntries();
+        // Insert 19 entries into TestWorkQueue1, TestWorkQueue2 and TestWorkQueue3 
+        List<Guid> createdWorkQueueEntryIds = sqlManager.InsertWorkQueueEntries();
 
         Thread.Sleep(1000);
         sqlManager.WaitTillWorkQueueEntryTableIsEmptyOrThrow();
@@ -138,8 +138,8 @@ public class WorkQueueIntegrationTests
     [Test]
     public void ShouldTestThrottling()
     {
-        int throttlingIntervalSeconds = 20;
-        int throttlingItemsPerInterval = 3;
+        const int throttlingIntervalSeconds = 20;
+        const int throttlingItemsPerInterval = 3;
         
         // ConnectRuntime should start a timer which will cause the work queues
         // to be processed automatically

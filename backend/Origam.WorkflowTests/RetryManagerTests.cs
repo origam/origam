@@ -67,13 +67,13 @@ public class RetryManagerTests
     [Test]
     public void ShouldAssignCorrectExponentialRetryTime()
     {
-        var queueRow = CreateEmptyQueueRow();
+        WorkQueueData.WorkQueueRow queueRow = CreateEmptyQueueRow();
         queueRow["refWorkQueueRetryTypeId"] = WorkQueueRetryType.ExponentialRetry;
         queueRow["MaxRetries"] = 5;
         queueRow["RetryIntervalSeconds"] = 35;
         queueRow["ExponentialRetryBase"] = 2.0m;
         
-        var queueEntryRow = CreateEmptyEntryRow();
+        DataRow queueEntryRow = CreateEmptyEntryRow();
         
         var sut = new RetryManager(GetTimeNow);
 
