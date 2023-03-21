@@ -223,6 +223,13 @@ public class WorkQueueIntegrationTests
             attempts = sqlManager.GetFailingQueueEntryAttempts();
             if (attempts + 1 == maxRetries)
             {
+                Thread.Sleep(1000);
+                if (attempts + 1 != maxRetries)
+                {
+                    Assert.Fail($"The failing queue entry was not retried " +
+                                $"expected number of times ({maxRetries}). " +
+                                $"Number of attempts is {attempts}");
+                }
                 return;
             }
         }
