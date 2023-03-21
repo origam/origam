@@ -32,25 +32,25 @@ namespace Origam.Gui.Win.Commands
 	{
 		public override void Run()
 		{
-			WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-			DeploymentVersion version = this.Owner as DeploymentVersion;
+			var schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+			DeploymentVersion version = (Owner as DeploymentVersion)!;
 
-			var originalVersion = _schemaService.ActiveExtension.VersionString;
+			var originalVersion = schemaService.ActiveExtension.VersionString;
 			try
 			{
-				_schemaService.ActiveExtension.VersionString = version.VersionString;
+				schemaService.ActiveExtension.VersionString = version.VersionString;
 				Origam.Workbench.Commands.DeployVersion cmd3 =
 					new Origam.Workbench.Commands.DeployVersion();
 				cmd3.Run();
 			}
 			catch
 			{
-				_schemaService.ActiveExtension.VersionString = originalVersion;
+				schemaService.ActiveExtension.VersionString = originalVersion;
 				throw;
 			}
-			_schemaService.ActiveExtension.Persist();
-			_schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
-			_schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
+			schemaService.ActiveExtension.Persist();
+			schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
+			schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
 		}
 	}
 }
