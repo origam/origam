@@ -419,7 +419,7 @@ namespace Origam.Workbench.Services
             VersionData.Clear();
 			_versionsLoaded = false;
 		}
-        private DataSet LoadversionDataFrom(Guid queryId, string tableName,string localTransaction)
+        private DataSet LoadVersionDataFrom(Guid queryId, string tableName,string localTransaction)
 		{
 			IServiceAgent dataServiceAgent = 
 				ServiceManager.Services.
@@ -460,11 +460,11 @@ namespace Origam.Workbench.Services
             DataSet data = null;
 
             DataSet versionDataFromOrigamModelVersion =
-                LoadversionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
+                LoadVersionDataFrom(origamModelVersionQueryId, "OrigamModelVersion", localTransaction);
             if (versionDataFromOrigamModelVersion == null)
             {
                 DataSet versionDataFromAsapModelVersion =
-                    LoadversionDataFrom(asapModelVersionQueryId, "AsapModelVersion", localTransaction);
+                    LoadVersionDataFrom(asapModelVersionQueryId, "AsapModelVersion", localTransaction);
 
                 if (versionDataFromAsapModelVersion != null &&
                     versionDataFromAsapModelVersion.Tables.Count != 0)
