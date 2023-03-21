@@ -2,18 +2,19 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wr="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowReference/6.0.0"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="b882bf76-fea8-4b38-82bd-f41e851527fe"
     asi:name="SendEmailFromQueue"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -27,6 +28,7 @@
       asi:abstract="false"
       x:id="c70170ac-95d0-49d3-9bd7-b1572a2139f9"
       asi:name="Send"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/Work Queues/SendEmailFromQueue.origam#SendEmailFromQueue/WQ_Mail/0ca52fa8-5ce7-4790-9bf2-103d41036381"
       wt:outputMethod="Ignore"
       aws:roles="*"
