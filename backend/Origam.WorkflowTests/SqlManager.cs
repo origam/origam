@@ -34,6 +34,8 @@ public class SqlManager
     public static readonly Guid FailingQueue = new ("0AB10C2F-386E-4DD1-992E-5E3765A28447");
     public static readonly Guid RetryQueue = new ("8527E8C1-D480-4B12-81A6-F3858B37DC73");
     public static readonly Guid ErrorQueue = new ("6584869B-8FD6-44E6-A6C9-5C03D2555A2C");
+    public static readonly Guid FailingEntryId = new ("0A4B2890-D0D6-4599-A92A-A5E79BA5DCC7");
+    
     public SqlManager(ICoreDataService dataService)
     {
         this.dataService = dataService;
@@ -87,26 +89,104 @@ public class SqlManager
 
         throw new Exception("WorkQueueEntry table is not empty after timeout");
     }
-
-    public void SetupFailingQueue(Guid retryType, int maxRetries,
-        int retryIntervalSeconds, bool moveToErrorQueue)
+    
+    public void SetupQueue(Guid queueId, Guid retryType, int maxRetries,
+        int retryIntervalSeconds, Guid? errorQueueId)
     {
-        string refErrorWorkQueueId = moveToErrorQueue
-            ? "'8527e8c1-d480-4b12-81a6-f3858b37dc73'"
+        string refErrorWorkQueueId = errorQueueId.HasValue
+            ? $"'{errorQueueId.Value}'"
             : "NULL";
         dataService.ExecuteSql($@"
             UPDATE [WorkQueue]
             SET [refWorkQueueRetryTypeId] = '{retryType}', [RetryIntervalSeconds] = {retryIntervalSeconds}, [MaxRetries] = {maxRetries}
-            WHERE Id = '{FailingQueue}';
-            UPDATE WorkQueueCommand SET refErrorWorkQueueId = {refErrorWorkQueueId} WHERE Id='f407510e-ce7f-44b0-a74a-875c50c1d62c'"
+            WHERE Id = '{queueId}';
+            UPDATE WorkQueueCommand SET refErrorWorkQueueId = {refErrorWorkQueueId} 
+            WHERE Command = 'Execute_FailingWorkQueueTest' AND refWorkQueueId = '{queueId}'"
         );
+    }
+    
+    public void CreateWorkQueueModificationTrigger()
+    {
+        string batchSql = $@"
+            IF OBJECT_ID(N'dbo.TestWorkQueueEntryModifications', N'U') IS NOT NULL
+            BEGIN
+	            DROP TABLE [TestWorkQueueEntryModifications];
+            END;
+            GO;
+
+            CREATE TABLE TestWorkQueueEntryModifications
+            (
+	            refEntryId uniqueidentifier FOREIGN KEY REFERENCES WorkQueueEntry(Id) NOT NULL,
+	            refQueueId uniqueidentifier FOREIGN KEY REFERENCES WorkQueue(Id) NOT NULL,
+	            NumberOfExecutionsInWorkQueue INT NOT NULL
+            )
+
+	            
+            IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[TR_Test_WorkQueueEntry_Updated]'))
+            BEGIN
+	            DROP TRIGGER [dbo].[TR_Test_WorkQueueEntry_Updated]
+            END;
+            GO;
+
+            CREATE TRIGGER TR_Test_WorkQueueEntry_Updated ON [WorkQueueEntry]
+            FOR UPDATE
+            AS
+            BEGIN  
+	            DECLARE @entryId UNIQUEIDENTIFIER
+	            DECLARE @queueId UNIQUEIDENTIFIER
+	            DECLARE @attemptCount INT
+	            SELECT @entryId = (SELECT Id FROM INSERTED)
+	            SELECT @queueId = (SELECT refWorkQueueId FROM INSERTED)
+	            SELECT @attemptCount = (SELECT AttemptCount FROM INSERTED)
+
+	            if exists (select * from [TestWorkQueueEntryModifications] with (updlock,serializable) where refEntryId = @entryId AND refQueueId = @queueId)
+	            begin
+		            UPDATE [TestWorkQueueEntryModifications]
+		            SET NumberOfExecutionsInWorkQueue = @attemptCount
+		            WHERE refEntryId = @entryId AND refQueueId = @queueId; 
+	            end
+	            else
+	            begin
+		            INSERT INTO [TestWorkQueueEntryModifications]
+		            (refEntryId, refQueueId, NumberOfExecutionsInWorkQueue)    
+		            VALUES (@entryId, @queueId, @attemptCount)
+	            end
+            END;
+         ";
+        foreach (string sql in batchSql.Split("GO;"))
+        {
+            dataService.ExecuteSql(sql);
+        }
+    } 
+    
+    public Dictionary<Guid, int> GetAttemptCountsInQueues(Guid entryId)
+    {
+        string sqlResult = dataService.ExecuteSql($@"
+            SELECT [refQueueId],[NumberOfExecutionsInWorkQueue]
+            FROM [dbo].[TestWorkQueueEntryModifications]
+            WHERE refEntryId = '{entryId}'
+        ");
+
+        var queueRegex = new Regex("([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})\\s+(\\d+)");
+        var matches = queueRegex.Matches(sqlResult);
+        return matches.ToDictionary(
+            match => new Guid(match.Groups[1].Value),
+            match => int.Parse(match.Groups[2].Value));
+    }    
+    
+    public void DeleteWorkQueueModificationTrigger()
+    {
+        dataService.ExecuteSql($@"
+            DROP TABLE [TestWorkQueueEntryModifications];
+            DROP TRIGGER [dbo].[TR_Test_WorkQueueEntry_Updated];
+        ");
     } 
     
     public void InsertOneEntryIntoFailingQueue()
     {
-        dataService.ExecuteSql(@"
+        dataService.ExecuteSql($@"
             DELETE FROM [dbo].[WorkQueueEntry]
-            INSERT [dbo].[WorkQueueEntry] ([b5], [d8], [b1], [g6], [i5], [c2], [s9], [b8], [g5], [g14], [g15], [d2], [c3], [g20], [blob1], [d9], [g11], [g17], [g8], [g18], [s3], [refRel1Id], [b10], [d6], [d1], [c6], [refLockedByBusinessPartnerId], [refRel2Id], [refRel4Id], [f8], [f5], [d5], [f9], [refRel7Id], [refRel5Id], [i2], [refRel3Id], [ErrorText], [m4], [g10], [s2], [b3], [b2], [c5], [m3], [i4], [b6], [g3], [d10], [g7], [f3], [i6], [g2], [m5], [m2], [refId], [s5], [d3], [f7], [b4], [g12], [i8], [c7], [g9], [f10], [b9], [f6], [s4], [d7], [c4], [s8], [i7], [c1], [f2], [i3], [c10], [s7], [s1], [i9], [i1], [g4], [f4], [refWorkQueueId], [m1], [g19], [g13], [c9], [refRel6Id], [f1], [s6], [c8], [g1], [s10], [b7], [i10], [IsLocked], [g16], [d4], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [AttemptCount], [InRetry]) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CAST(N'2023-02-06T17:59:51.000' AS DateTime), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'a21b1ba7-3824-4f86-958a-9bb60db45d5b', NULL, NULL, NULL, NULL, N'e3f28e28-75f4-43eb-9f0a-6e00dc57d948', NULL, NULL, N'6b985125-2c42-423d-801f-b0b94f913cc8', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'0AB10C2F-386E-4DD1-992E-5E3765A28447', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, 0, NULL, NULL, N'51043176-e365-48a1-bb9c-3db724b918c6', NULL, N'0a4b2890-d0d6-4599-a92a-a5e79ba5dcc7', CAST(N'2023-02-06T17:59:51.397' AS DateTime), NULL, 0, 0)"
+            INSERT [dbo].[WorkQueueEntry] ([b5], [d8], [b1], [g6], [i5], [c2], [s9], [b8], [g5], [g14], [g15], [d2], [c3], [g20], [blob1], [d9], [g11], [g17], [g8], [g18], [s3], [refRel1Id], [b10], [d6], [d1], [c6], [refLockedByBusinessPartnerId], [refRel2Id], [refRel4Id], [f8], [f5], [d5], [f9], [refRel7Id], [refRel5Id], [i2], [refRel3Id], [ErrorText], [m4], [g10], [s2], [b3], [b2], [c5], [m3], [i4], [b6], [g3], [d10], [g7], [f3], [i6], [g2], [m5], [m2], [refId], [s5], [d3], [f7], [b4], [g12], [i8], [c7], [g9], [f10], [b9], [f6], [s4], [d7], [c4], [s8], [i7], [c1], [f2], [i3], [c10], [s7], [s1], [i9], [i1], [g4], [f4], [refWorkQueueId], [m1], [g19], [g13], [c9], [refRel6Id], [f1], [s6], [c8], [g1], [s10], [b7], [i10], [IsLocked], [g16], [d4], [RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [AttemptCount], [InRetry]) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, CAST(N'2023-02-06T17:59:51.000' AS DateTime), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'a21b1ba7-3824-4f86-958a-9bb60db45d5b', NULL, NULL, NULL, NULL, N'e3f28e28-75f4-43eb-9f0a-6e00dc57d948', NULL, NULL, N'6b985125-2c42-423d-801f-b0b94f913cc8', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'0AB10C2F-386E-4DD1-992E-5E3765A28447', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'94b326be-319c-484f-94f2-9723df091379', NULL, NULL, NULL, 0, NULL, NULL, N'51043176-e365-48a1-bb9c-3db724b918c6', NULL, N'{FailingEntryId}', CAST(N'2023-02-06T17:59:51.397' AS DateTime), NULL, 0, 0)"
         );
     }
 

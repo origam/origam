@@ -209,11 +209,12 @@ public class WorkQueueIntegrationTests
             customServiceFactory: new TestRuntimeServiceFactory());
 
         int maxRetries = 3;
-        sqlManager.SetupFailingQueue(
+        sqlManager.SetupQueue(
+            queueId: SqlManager.FailingQueue,
             retryType: WorkQueueRetryType.LinearRetry,
             maxRetries: maxRetries,
             retryIntervalSeconds: 1,
-            moveToErrorQueue: false);
+            errorQueueId: null);
         sqlManager.InsertOneEntryIntoFailingQueue();
         int attempts = 0;
         for (int i = 0; i < 10; i++)
@@ -238,11 +239,12 @@ public class WorkQueueIntegrationTests
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
 
-        sqlManager.SetupFailingQueue(
+        sqlManager.SetupQueue(
+            queueId: SqlManager.FailingQueue,
             retryType: WorkQueueRetryType.NoRetry,
             maxRetries: 3,
             retryIntervalSeconds: 1,
-            moveToErrorQueue: false);
+            errorQueueId: null);
         sqlManager.InsertOneEntryIntoFailingQueue();
         Thread.Sleep(3000);
         int attempts = sqlManager.GetFailingQueueEntryAttempts();
@@ -257,21 +259,42 @@ public class WorkQueueIntegrationTests
         OrigamEngine.OrigamEngine.ConnectRuntime(
             configName: "LinearWorkQueueProcessor",
             customServiceFactory: new TestRuntimeServiceFactory());
+        try
+        {
+            sqlManager.CreateWorkQueueModificationTrigger();
+            int maxRetries = 3;
+            int expectedAttempts = maxRetries + 1;
+            sqlManager.SetupQueue(
+                queueId: SqlManager.FailingQueue,
+                retryType: WorkQueueRetryType.LinearRetry,
+                maxRetries: maxRetries,
+                retryIntervalSeconds: 1,
+                errorQueueId: SqlManager.RetryQueue);
+            sqlManager.SetupQueue(
+                queueId: SqlManager.RetryQueue,
+                retryType: WorkQueueRetryType.LinearRetry,
+                maxRetries: maxRetries,
+                retryIntervalSeconds: 1,
+                errorQueueId: SqlManager.ErrorQueue);
+            sqlManager.InsertOneEntryIntoFailingQueue();
+            Thread.Sleep(15_000);
 
-        sqlManager.SetupFailingQueue(
-            retryType: WorkQueueRetryType.NoRetry,
-            maxRetries: 3,
-            retryIntervalSeconds: 1,
-            moveToErrorQueue: true);
-        sqlManager.InsertOneEntryIntoFailingQueue();
-        Thread.Sleep(10_000);
-
-        int entriesInFailingQueue = sqlManager.GetEntryCount(SqlManager.FailingQueue);
-        int entriesInRetryQueue = sqlManager.GetEntryCount(SqlManager.RetryQueue);
-        int entriesInErrorQueue = sqlManager.GetEntryCount(SqlManager.ErrorQueue);
-        Assert.That(entriesInFailingQueue, Is.EqualTo(0));
-        Assert.That(entriesInRetryQueue, Is.EqualTo(0));
-        Assert.That(entriesInErrorQueue, Is.EqualTo(1));
+            int entriesInFailingQueue = sqlManager.GetEntryCount(SqlManager.FailingQueue);
+            int entriesInRetryQueue = sqlManager.GetEntryCount(SqlManager.RetryQueue);
+            int entriesInErrorQueue = sqlManager.GetEntryCount(SqlManager.ErrorQueue);
+            Assert.That(entriesInFailingQueue, Is.EqualTo(0));
+            Assert.That(entriesInRetryQueue, Is.EqualTo(0));
+            Assert.That(entriesInErrorQueue, Is.EqualTo(1));
+            
+            Dictionary<Guid,int> attempts = sqlManager.GetAttemptCountsInQueues(SqlManager.FailingEntryId);
+            Assert.That(attempts[SqlManager.FailingQueue], Is.EqualTo(expectedAttempts));
+            Assert.That(attempts[SqlManager.RetryQueue], Is.EqualTo(expectedAttempts));
+            Assert.That(attempts[SqlManager.ErrorQueue], Is.EqualTo(0));
+        }
+        finally
+        {
+            sqlManager.DeleteWorkQueueModificationTrigger();
+        }
     }
 }
 
