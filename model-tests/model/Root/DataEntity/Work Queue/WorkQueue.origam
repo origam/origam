@@ -341,13 +341,13 @@
         asi:abstract="false"
         x:id="b06cfddb-ebf7-429d-aa8d-70f7e31a2733"
         aesr:level="100"
-        asi:name="100_Permit_Update_SR_WorkQueue_ThrottlingIsEnabled_*"
-        efsr:readCredential="false"
+        asi:name="100_Permit_ReadUpdate_A_SR_WorkQueue_ThrottlingIsEnabled_*"
+        efsr:readCredential="true"
         aesr:roles="*"
         aesr:rule="Root/Rule/Work Queue/SR_WorkQueue_ThrottlingIsEnabled.origam#SR_WorkQueue_ThrottlingIsEnabled/f73da2db-19d9-4029-a6d8-6188b526c2cc"
         aesr:type="Permit"
         efsr:updateCredential="true"
-        aesr:valueType="SavedValue" />
+        aesr:valueType="ActualValue" />
     </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
@@ -437,13 +437,13 @@
         asi:abstract="false"
         x:id="e1fb78bc-e2c7-4e5d-b333-325d88c01bf6"
         aesr:level="100"
-        asi:name="100_Permit_Update_SR_WorkQueue_ThrottlingIsEnabled_*"
-        efsr:readCredential="false"
+        asi:name="100_Permit_ReadUpdate_A_SR_WorkQueue_ThrottlingIsEnabled_*"
+        efsr:readCredential="true"
         aesr:roles="*"
         aesr:rule="Root/Rule/Work Queue/SR_WorkQueue_ThrottlingIsEnabled.origam#SR_WorkQueue_ThrottlingIsEnabled/f73da2db-19d9-4029-a6d8-6188b526c2cc"
         aesr:type="Permit"
         efsr:updateCredential="true"
-        aesr:valueType="SavedValue" />
+        aesr:valueType="ActualValue" />
     </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
@@ -459,7 +459,34 @@
       fmi:mappedColumnName="RetryIntervalSeconds"
       asi:name="RetryIntervalSeconds"
       adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="05a440dd-7b11-4527-86a8-8b2d0af3cb0b"
+        asi:name="refWorkQueueRetryTypeId" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="2bfb9408-48a4-4086-bf0a-636742156d4b"
+        aesr:level="100"
+        asi:name="100_Deny__A_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:type="Deny"
+        efsr:updateCredential="false"
+        aesr:valueType="ActualValue" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="51998384-b673-4cd6-bc94-e69c637e188f"
+        aesr:level="80"
+        asi:name="80_Permit_ReadUpdate_A_SR_RetryType_IsNot_NoRetry_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_RetryType_IsNot_NoRetry.origam#SR_RetryType_IsNot_NoRetry/1e598fe3-96b0-4f33-ad60-3b6e9e3a4939"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -489,7 +516,34 @@
       fmi:mappedColumnName="ExponentialRetryBase"
       asi:name="ExponentialRetryBase"
       adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="1f1ef3fe-9ddb-4128-805e-25fe67195a42"
+        asi:name="refWorkQueueRetryTypeId" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="cc9a4ef7-7e47-4b89-87cf-dc13dd0ea1a8"
+        aesr:level="80"
+        asi:name="80_Permit_ReadUpdate_A_SR_RetryType_ExponentialRetry_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_RetryType_ExponentialRetry.origam#SR_RetryType_ExponentialRetry/a86154d4-b06b-44d5-a2c3-62d75eb96742"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="f3b9224c-5329-4d07-b84f-3da729445cfc"
+        aesr:level="100"
+        asi:name="100_Deny__A_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:type="Deny"
+        efsr:updateCredential="false"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -759,7 +813,34 @@
       fmi:mappedColumnName="MaxRetries"
       asi:name="MaxRetries"
       adec:onCopyAction="Copy"
-      adec:xmlMappingType="Attribute" />
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="0dcfa03d-5d9d-491b-943c-29d63a3cb99b"
+        asi:name="refWorkQueueRetryTypeId" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="85a3b727-89f8-43d2-ade2-1c9a58be4728"
+        aesr:level="100"
+        asi:name="100_Deny__A_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:type="Deny"
+        efsr:updateCredential="false"
+        aesr:valueType="ActualValue" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="fefeeec8-ed7e-4308-afa5-c26725e80bcf"
+        aesr:level="80"
+        asi:name="80_Permit_ReadUpdate_A_SR_RetryType_IsNot_NoRetry_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_RetryType_IsNot_NoRetry.origam#SR_RetryType_IsNot_NoRetry/1e598fe3-96b0-4f33-ad60-3b6e9e3a4939"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
