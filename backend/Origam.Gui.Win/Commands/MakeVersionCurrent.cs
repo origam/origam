@@ -32,21 +32,25 @@ namespace Origam.Gui.Win.Commands
 	{
 		public override void Run()
 		{
-			WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-			IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			
-			DeploymentVersion version = this.Owner as DeploymentVersion;
+			var schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+			DeploymentVersion version = (Owner as DeploymentVersion)!;
 
-			Package ext = _persistence.SchemaProvider.RetrieveInstance(typeof(Package), _schemaService.ActiveExtension.PrimaryKey) as Package;
-
-			Origam.Workbench.Commands.DeployVersion cmd3 = new Origam.Workbench.Commands.DeployVersion();
-			cmd3.Run();
-
-			ext.VersionString = version.VersionString;
-			ext.Persist();
-			_schemaService.ActiveExtension.Refresh();
-			_schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
-			_schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
+			var originalVersion = schemaService.ActiveExtension.VersionString;
+			try
+			{
+				schemaService.ActiveExtension.VersionString = version.VersionString;
+				Origam.Workbench.Commands.DeployVersion cmd3 =
+					new Origam.Workbench.Commands.DeployVersion();
+				cmd3.Run();
+			}
+			catch
+			{
+				schemaService.ActiveExtension.VersionString = originalVersion;
+				throw;
+			}
+			schemaService.ActiveExtension.Persist();
+			schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
+			schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
 		}
 	}
 }
