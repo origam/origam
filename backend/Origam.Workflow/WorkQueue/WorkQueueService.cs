@@ -1477,7 +1477,10 @@ namespace Origam.Workflow.WorkQueue
         private bool IsAutoProcessed(WorkQueueData.WorkQueueCommandRow cmd,
             WorkQueueData.WorkQueueRow q, DataRow queueRow, string transactionId)
         {
-            if(! cmd.IsAutoProcessed) return false;
+            if (!cmd.IsAutoProcessed)
+            {
+                return false;
+            }
             if (!(bool)queueRow["InRetry"] &&
                 !cmd.IsAutoProcessedWithErrors && 
                 !queueRow.IsNull("ErrorText") && 
