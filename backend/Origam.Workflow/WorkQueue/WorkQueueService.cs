@@ -1515,7 +1515,13 @@ namespace Origam.Workflow.WorkQueue
                 nav.MoveToFirstChild();	// /ROOT/
                 nav.MoveToFirstChild();	// WorkQueueEntry/
 
-                string evaluationResult = XpathEvaluator.Instance.Evaluate(nav, condition);
+                var evaluationResult = (string)XpathEvaluator.Instance.Evaluate(
+                    xpath: condition,
+                    isPathRelative: false,
+                    returnDataType: OrigamDataType.String,
+                    nav: nav,
+                    contextPosition: null,
+                    transactionId: transactionId);
 
                 if (log.IsDebugEnabled)
                 {
