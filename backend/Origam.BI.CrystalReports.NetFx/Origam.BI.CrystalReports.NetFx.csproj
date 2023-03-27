@@ -193,7 +193,7 @@
       <Version>13.0.4002</Version>
     </PackageReference>
     <PackageReference Include="CrystalReports.ReportAppServer.ClientDoc">
-      <Version>13.0.4002</Version>
+      <Version>13.0.4003</Version>
     </PackageReference>
     <PackageReference Include="CrystalReports.ReportAppServer.Controllers">
       <Version>13.0.4002</Version>
