@@ -199,7 +199,7 @@
       <Version>13.0.4000</Version>
     </PackageReference>
     <PackageReference Include="CrystalReports.Shared">
-      <Version>13.0.4000</Version>
+      <Version>13.0.4002</Version>
     </PackageReference>
     <PackageReference Include="CrystalReports.Windows.Forms">
       <Version>13.0.4000</Version>
