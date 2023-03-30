@@ -41,8 +41,8 @@ namespace Origam.DA.EntityModel
             }
 
             if (aggregatedColumn.AggregationType != referencedColumn.AggregationType &&
-                aggregatedColumn.AggregationType != AggregationType.Count && 
-                referencedColumn.AggregationType != AggregationType.Sum ||
+                aggregatedColumn.AggregationType != AggregationType.Sum && 
+                referencedColumn.AggregationType != AggregationType.Count ||
                 aggregatedColumn.AggregationType == AggregationType.Count && 
                 referencedColumn.AggregationType == AggregationType.Count)
             {
