@@ -173,5 +173,21 @@ namespace Origam.Extensions
             }
             return tag;
         }
+        public static string Truncate(this string input, int maxLength)
+        {
+            if (maxLength < 0)
+            {
+                return input.Truncate(0);
+            }
+            if (maxLength == 0)
+            {
+                return string.Empty;
+            }
+            if (maxLength > input.Length)
+            {
+                return input;
+            }
+            return input.Substring(0, maxLength);
+        }
     }
 }
