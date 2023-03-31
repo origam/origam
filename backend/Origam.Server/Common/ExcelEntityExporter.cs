@@ -39,8 +39,8 @@ namespace Origam.Server
 {
     public class ExcelEntityExporter
     {
+        private static readonly int characterCellLimit = 32767;
         private ICellStyle dateCellStyle;
-        private readonly int characterCellLimit = 32767;
         readonly IDataLookupService lookupService = ServiceManager.Services.GetService(
             typeof(IDataLookupService)) as IDataLookupService;
 
