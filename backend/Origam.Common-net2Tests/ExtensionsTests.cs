@@ -116,4 +116,20 @@ namespace Origam.Common_net2Tests
         }
     }
 
+    [TestFixture]
+    public class StringExtensionTests
+    {
+        [Test]
+        public void ShouldTruncateString()
+        {
+            string stringTestValue = "The quick brown fox jumps over the lazy dog.";
+            string nullString = null;
+            Assert.That(stringTestValue.Truncate(0).Equals(string.Empty));
+            Assert.That(stringTestValue.Truncate(9).Equals("The quick"));
+            Assert.That(stringTestValue.Truncate(100).Equals(stringTestValue));
+            Assert.That(stringTestValue.Truncate(-10).Equals(string.Empty));
+            Assert.That(nullString.Truncate(0) is null);
+            Assert.That(nullString.Truncate(10) is null);
+        }
+    }
 }

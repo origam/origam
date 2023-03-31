@@ -179,6 +179,10 @@ namespace Origam.Extensions
             {
                 return input.Truncate(0);
             }
+            if (input is null)
+            {
+                return input;
+            }
             if (maxLength == 0)
             {
                 return string.Empty;
