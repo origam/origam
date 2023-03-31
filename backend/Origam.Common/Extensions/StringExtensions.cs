@@ -175,13 +175,13 @@ namespace Origam.Extensions
         }
         public static string Truncate(this string input, int maxLength)
         {
-            if (maxLength < 0)
-            {
-                return input.Truncate(0);
-            }
             if (input is null)
             {
                 return input;
+            }
+            if (maxLength < 0)
+            {
+                return input.Truncate(0);
             }
             if (maxLength == 0)
             {
