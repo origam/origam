@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-16"?><Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-16"?><Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
         <LangVersion>latest</LangVersion>
@@ -55,7 +55,7 @@
 
     <ItemGroup>
       <PackageReference Include="CSharpFunctionalExtensions" Version="2.20.4" />
-      <PackageReference Include="morelinq" Version="3.4.1" />
+      <PackageReference Include="morelinq" Version="3.4.2" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Origam.Common\Origam.Common.csproj" />
