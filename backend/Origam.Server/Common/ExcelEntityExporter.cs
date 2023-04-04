@@ -32,15 +32,15 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Origam.DA;
 using Origam.Excel;
-using Origam.Server;
 using Origam.Workbench.Services;
+using Origam.Extensions;
 
 namespace Origam.Server
 {
     public class ExcelEntityExporter
     {
+        private static readonly int characterCellLimit = 32767;
         private ICellStyle dateCellStyle;
-
         readonly IDataLookupService lookupService = ServiceManager.Services.GetService(
             typeof(IDataLookupService)) as IDataLookupService;
 
@@ -374,11 +374,11 @@ namespace Origam.Server
                     fieldValue = fieldValue.Replace("\n", "");
                     fieldValue = fieldValue.Replace("\r", Environment.NewLine);
                     fieldValue = fieldValue.Replace("\t", " ");
-                    cell.SetCellValue(fieldValue);
+                    cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
                 }
                 else
                 {
-                    cell.SetCellValue(fieldValue);
+                    cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
                 }
             }
         }
