@@ -581,6 +581,8 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     });
     this.leafletMap = this.lmap;
     this.lmap.setZoom(this.props.initialZoom || 0);
+    this.lmap.setMinZoom(0);
+    this.lmap.setMaxZoom(18);
     this.panToCenter();
     L.control
       .layers({}, this.leafletlayersDescriptor, {position: "topleft", collapsed: true})
