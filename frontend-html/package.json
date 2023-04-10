@@ -77,7 +77,7 @@
     "react-inlinesvg": "^3.0.2",
     "react-measure": "^2.5.2",
     "react-socks": "^2.2.0",
-    "react-virtualized": "^9.22.3",
+    "react-virtualized": "^9.22.4",
     "sass": "^1.60.0",
     "stream-browserify": "^3.0.0",
     "string-strip-html": "^13.2.1",
