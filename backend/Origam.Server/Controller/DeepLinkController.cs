@@ -116,7 +116,7 @@ namespace Origam.Server.Controller
                 ReferenceId: input.ReferenceId))
             );
         }
-        private string GetMenuId(string deepLinkCategory, Guid ReferenceId)
+        private string GetMenuId(string deepLinkCategory, object ReferenceId)
         {
             DeepLinkCategory linkCategory = GetCategory(deepLinkCategory);
             if (linkCategory == null)
