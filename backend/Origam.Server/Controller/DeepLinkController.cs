@@ -113,10 +113,10 @@ namespace Origam.Server.Controller
         {
             return RunWithErrorHandler(() => Ok(GetMenuId(
                 deepLinkCategory: input.Category,
-                ReferenceId: input.ReferenceId))
+                referenceId: input.ReferenceId))
             );
         }
-        private string GetMenuId(string deepLinkCategory, Guid ReferenceId)
+        private string GetMenuId(string deepLinkCategory, object referenceId)
         {
             DeepLinkCategory linkCategory = GetCategory(deepLinkCategory);
             if (linkCategory == null)
@@ -126,8 +126,8 @@ namespace Origam.Server.Controller
 
             return (ServiceManager.Services
                 .GetService<IDataLookupService>()
-                .GetMenuBinding(linkCategory.LookupId, ReferenceId)
-                ?? throw new Exception($"deepLinkCategory: \"{deepLinkCategory}\" or ReferenceId: \"{ReferenceId}\" was not found"))
+                .GetMenuBinding(linkCategory.LookupId, referenceId)
+                ?? throw new Exception($"deepLinkCategory: \"{deepLinkCategory}\" or ReferenceId: \"{referenceId}\" was not found"))
                 .MenuId;
         }
         private IActionResult GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
