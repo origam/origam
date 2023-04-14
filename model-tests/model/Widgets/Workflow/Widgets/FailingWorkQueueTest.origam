@@ -2,20 +2,21 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:crs="http://schemas.origam.com/Origam.Schema.WorkflowModel.CheckRuleStep/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
-  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2">
   <w:Workflow
     asi:abstract="false"
     x:id="ddb1cedf-c05a-472f-bb5d-f5d070e627ed"
     asi:name="FailingWorkQueueTest"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <crs:WorkflowTask
       asi:abstract="false"
       x:id="efdadd32-d170-4b1e-8295-efcf98bdcdf0"
       asi:name="01_ReturnErrorMessage"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       aws:validationRule="Widgets/Rule/Widgets/ER_IntentionalTestError.origam#ER_IntentionalTestError/de8fe24a-ce63-4db6-96c1-7e7841fbc447"
       aws:validationRuleContextStore="Widgets/Workflow/Widgets/FailingWorkQueueTest.origam#FailingWorkQueueTest/WQ_FailingTestQueue1/964d748e-77bc-45db-b098-2c8ed6b1c487" />
