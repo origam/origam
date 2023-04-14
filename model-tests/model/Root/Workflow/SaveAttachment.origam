@@ -2,19 +2,20 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="bcc376af-fe1e-4689-9a96-67cd1f2a1437"
     asi:name="SaveAttachment"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -63,6 +64,7 @@
       asi:abstract="false"
       x:id="3704ca35-801a-447e-a155-616ea780f72f"
       asi:name="01_Generate"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/Attachment/724925a5-d729-4ce0-bd1c-b2c9621516b4"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -138,6 +140,7 @@
       asi:abstract="false"
       x:id="b0df9adf-c748-4357-8001-80293d3fc66a"
       asi:name="02_Save"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/SaveAttachment.origam#SaveAttachment/Attachment/724925a5-d729-4ce0-bd1c-b2c9621516b4"
       wt:outputMethod="Ignore"
       aws:roles="*"

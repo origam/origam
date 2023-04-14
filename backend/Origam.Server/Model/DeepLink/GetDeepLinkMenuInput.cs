@@ -24,6 +24,6 @@ namespace Origam.Server.Model.DeepLink
     public class GetDeepLinkMenuInput
     {
         public string Category { get; set; }
-        public Guid ReferenceId { get; set; }
+        public object ReferenceId { get; set; }
     }
 }

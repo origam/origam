@@ -27,6 +27,7 @@ using Origam.DA;
 using Origam.Gui.Win;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -437,14 +438,15 @@ namespace Origam.Workflow
 			{
 				if(e.Engine.CallingWorkflow == null)
 				{
-					this.WorkflowEngine = e.Engine;
+					WorkflowEngine = e.Engine;
 
-					if(e.Exception != null)
+					if(e.Exception != null &&
+					   e.Exception.Data["onFailure"] is not StepFailureMode.Suppress)
 					{
-                        this.ShowMessage(e.Exception.Message, e.Exception);
+                        ShowMessage(e.Exception.Message, e.Exception);
 					}
 
-					this.Invoke(new MethodInvoker(this.ShowFinishScreen));
+					Invoke(new MethodInvoker(ShowFinishScreen));
 				}
 			}
 		}

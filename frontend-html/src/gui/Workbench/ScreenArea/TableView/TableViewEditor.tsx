@@ -43,9 +43,9 @@ import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/ce
 import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
-import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 import { getGridFocusManager } from "model/entities/GridFocusManager";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 
 @inject(({tablePanelView}) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -105,6 +105,7 @@ export class TableViewEditor extends React.Component<{
           <NumberEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
+            property={this.props.property}
             isPassword={this.props.property!.isPassword}
             maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}

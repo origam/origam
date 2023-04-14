@@ -34,5 +34,6 @@ namespace Origam.Server.Configuration
         public string PortalBaseUrl { get; set; }
         public string MultiFactorMailSubject { get; set; }
         public string MultiFactorMailBodyFileName { get; set; }
+        public string AllowedUserNameCharacters { get; set; }
     }
 }

@@ -54,5 +54,11 @@ namespace Origam.Schema.WorkflowModel
 		string Roles{get;set;}
 		string Features{get;set;}
 		ArrayList Dependencies{get;}
+		StepFailureMode OnFailure { set; get; }
+	}
+
+	public enum StepFailureMode
+	{
+		WorkflowFails, Suppress
 	}
 }

@@ -7,7 +7,7 @@
 -->
 <?define OrigamProductName = "ORIGAM Architect (@branch@)" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="8a28968a-8685-4824-9044-930c7211c811">
+  <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="@product_version@" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="e2a56de0-26fa-47f2-b349-d6eebe636cba">
     <Package Id="*" Keywords="Installer" Description="ORIGAM Architect" InstallerVersion="200" Compressed="yes" InstallScope="perMachine">
     </Package>
     <Media Id="1" Cabinet="install.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" CompressionLevel="high">
@@ -63,6 +63,10 @@
             </Component>
             <Component Id="MICROSOFT.BCL.HASHCODE.DLL" DiskId="1" Guid="10A69F47-6A2F-4840-AC5E-DB24F734834F">
               <File Id="MICROSOFT.BCL.HASHCODE.DLL" Name="Microsoft.Bcl.HashCode.dll" Source="source\Microsoft.Bcl.HashCode.dll">
+              </File>
+            </Component>
+			 <Component Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL" DiskId="1" Guid="03EFFB26-4461-4384-91AD-A73532D68233">
+              <File Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.Logging.Abstractions.dll" Source="source\Microsoft.Extensions.Logging.Abstractions.dll">
               </File>
             </Component>
             <Component Id="SYSTEM.TEXT.JSON.DLL" DiskId="1" Guid="E3F2FBF8-8D0A-4FEB-9FC3-76707B86AB4E">
@@ -667,6 +671,7 @@
       <ComponentRef Id="SYSTEM.THREADING.CHANNELS.DLL"></ComponentRef>
       <ComponentRef Id="MICROSOFT.BCL.ASYNCINTERFACES.DLL"></ComponentRef>
       <ComponentRef Id="MICROSOFT.BCL.HASHCODE.DLL"></ComponentRef>
+	  <ComponentRef Id="MICROSOFT.EXTENSIONS.LOGGING.ABSTRACTIONS.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.TEXT.JSON.DLL"></ComponentRef>
       <ComponentRef Id="SYSTEM.DIAGNOSTICS.DIAGNOSTICSOURCE.DLL"></ComponentRef>
       <ComponentRef Id="ORIGAM.EXCEL.DLL"></ComponentRef>
