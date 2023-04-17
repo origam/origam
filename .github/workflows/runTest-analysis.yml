@@ -75,12 +75,19 @@ jobs:
        cd backend
        msbuild Origam.sln -t:restore /p:Configuration="Release Server"
        msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Server\Origam_Server:Publish -v:m
+       msbuild Origam.sln -t:build /p:Configuration="Release Server" /t:Workflow\Origam_WorkflowTests:Publish -v:m
        
     - name: Upload server artefact
       uses: actions/upload-artifact@v2
       with:
         name: htmlserverbuild
         path: "backend/Origam.Server/bin/Release/net6.0/publish"
+    
+    - name: Upload workflow artefact
+      uses: actions/upload-artifact@v2
+      with:
+        name: workflowbuild
+        path: "backend/Origam.WorkflowTests/bin/Release/net6.0/publish"
         
   compose:
     needs: analyze
@@ -111,7 +118,13 @@ jobs:
       with:
         name: htmlfrontendbuild
         path: test/HTML5/clients/origam
-        
+
+    - name: Download Workflow artefact
+      uses: actions/download-artifact@v2
+      with:
+        name: workflowbuild
+        path: test/HTML5_TESTS
+
     - name: Copy model to test directory
       run: |
         mkdir test/model
