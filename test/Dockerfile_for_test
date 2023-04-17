@@ -63,9 +63,6 @@ RUN mkdir HTML5  \
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
-TestDBConnection.dll \
-TestDBConnection.deps.json \
-TestDBConnection.runtimeconfig.json \
 startTests.sh \
 startServer.sh \
 startServerTest.sh \
