@@ -99,7 +99,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: workflowbuild
-        path: "backend\Origam.WorkflowTests\bin\Release Server\net6.0\publish"
+        path: "backend/Origam.WorkflowTests/bin/Release Server/net6.0/publish"
         
   compose:
     needs: analyze
