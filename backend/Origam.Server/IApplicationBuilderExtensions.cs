@@ -72,7 +72,9 @@ namespace Origam.Server
             }
         }  
         
-        public static void UseUserApi(this IApplicationBuilder app, StartUpConfiguration startUpConfiguration)
+        public static void UseUserApi(this IApplicationBuilder app,
+            StartUpConfiguration startUpConfiguration,
+            IdentityServerConfig identityServerConfig)
         {
             app.MapWhen(
                 context => IsPublicUserApiRoute(startUpConfiguration, context),
@@ -83,7 +85,25 @@ namespace Origam.Server
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
                 apiBranch =>
             {
-                apiBranch.UseMiddleware<UserApiAuthenticationMiddleware>();
+                if (identityServerConfig.UseTokensForAuthenticationEverywhere)
+                {
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
+                }
+                else
+                {
+                    apiBranch.UseAuthentication();
+                    apiBranch.Use(async (context, next) =>
+                    {
+                        // Authentication middleware doesn't short-circuit the request itself
+                        // we must do that here.
+                        if (!context.User.Identity.IsAuthenticated)
+                        {
+                            context.Response.StatusCode = 401;
+                            return;
+                        }
+                        await next.Invoke();
+                    }); 
+                }
                 apiBranch.UseMiddleware<UserApiMiddleware>();
             });
         } 

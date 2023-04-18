@@ -164,7 +164,17 @@ namespace Origam.Server
                     identityServerConfig.PathToJwtCertificate,
                     identityServerConfig.PasswordForJwtCertificate))
                 .AddInMemoryApiScopes(Settings.GetApiScopes());
-           
+            
+            if (!identityServerConfig.UseTokensForAuthenticationEverywhere)
+            {
+                services.ConfigureApplicationCookie(options =>
+                {
+                    options.ExpireTimeSpan = 
+                        TimeSpan.FromMinutes(identityServerConfig.CookieExpirationMinutes);
+                    options.SlidingExpiration = 
+                        identityServerConfig.CookieSlidingExpiration;
+                });
+            }
             services.AddSoapCore();
             services.AddSingleton<DataServiceSoap>();
             services.AddSingleton<WorkflowServiceSoap>();
@@ -308,7 +318,7 @@ namespace Origam.Server
             app.UseRequestLocalization(localizationOptions);
             app.UseIdentityServer();
             app.UseMiddleware<FatalErrorMiddleware>();
-            app.UseUserApi(startUpConfiguration);
+            app.UseUserApi(startUpConfiguration, identityServerConfig);
             app.UseAuthentication();
             app.UseHttpsRedirection();
             if (startUpConfiguration.EnableSoapInterface)

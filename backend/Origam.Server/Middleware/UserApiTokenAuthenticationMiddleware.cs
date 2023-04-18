@@ -35,11 +35,11 @@ namespace Origam.Server.Middleware;
 /// Based on AuthenticationMiddleware
 /// https://github.com/dotnet/dotnet/blob/0fa4e2051eede834ddc4da42848a835aafc2f3da/src/aspnetcore/src/Security/Authentication/Core/src/AuthenticationMiddleware.cs
 /// </summary>
-public class UserApiAuthenticationMiddleware
+public class UserApiTokenAuthenticationMiddleware
 {
     private readonly RequestDelegate _next;
 
-    public UserApiAuthenticationMiddleware(RequestDelegate next,
+    public UserApiTokenAuthenticationMiddleware(RequestDelegate next,
         IAuthenticationSchemeProvider schemes)
     {
         _next = next ?? throw new ArgumentNullException(nameof(next));
