@@ -44,8 +44,8 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
-import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 
 
 @inject(({property, formPanelView}) => {

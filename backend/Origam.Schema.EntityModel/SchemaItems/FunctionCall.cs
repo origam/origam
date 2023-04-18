@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
@@ -147,10 +148,18 @@ namespace Origam.Schema.EntityModel
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes 
-			=> ParentItem is IDataEntity 
-				? base.NewItemTypes 
-				: new[] {typeof(FunctionCallParameter)};
+		public override Type[] NewItemTypes
+		{
+			get
+			{
+				var functionCallParameterType 
+					= new[] {typeof(FunctionCallParameter)};
+				return ParentItem is IDataEntity 
+					? functionCallParameterType.Concat(base.NewItemTypes)
+						.ToArray() 
+					: functionCallParameterType;
+			}
+		}
 
 		public override T NewItem<T>(
 			Guid schemaExtensionId, SchemaItemGroup group)

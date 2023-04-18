@@ -47,12 +47,9 @@ namespace Origam.Server
                 var mobileClient = new Client
                 {
                     ClientId = "origamMobileClient",
-                    AllowedGrantTypes = GrantTypes.Hybrid,
-                    ClientSecrets =
-                    {
-                        new Secret(identityServerConfig.MobileClient.ClientSecret.Sha256())
-                    },
-                    RedirectUris = identityServerConfig.MobileClient.RedirectUris,
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+                    RedirectUris =  identityServerConfig.MobileClient.RedirectUris,
                     RequireConsent = false,
                     RequirePkce = true,
                     PostLogoutRedirectUris = identityServerConfig.MobileClient.PostLogoutRedirectUris,
@@ -72,7 +69,7 @@ namespace Origam.Server
 
             if (identityServerConfig.WebClient != null)
             {
-                Client webClient = new Client
+                var webClient = new Client
                 {
                     ClientId = "origamWebClient",
                     AllowedGrantTypes = GrantTypes.Code,

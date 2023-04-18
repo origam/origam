@@ -18,7 +18,7 @@ namespace Origam.ProjectAutomation.Builders
 
             _databaseType = project.DatabaseType;
             DataService(_databaseType).DbUser = project.Name;
-            DataService(_databaseType).ConnectionString = BuildConnectionString(project);
+            DataService(_databaseType).ConnectionString = project.BuilderDataConnectionString;
             QueryParameterCollection parameters = new QueryParameterCollection();
             parameters.Add(new QueryParameter("Id", Guid.NewGuid().ToString()));
             parameters.Add(new QueryParameter("UserName", project.WebUserName));

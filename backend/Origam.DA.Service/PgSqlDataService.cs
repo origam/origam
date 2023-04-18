@@ -62,6 +62,7 @@ namespace Origam.DA.Service
 
 		private void Init()
 		{
+			AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
 			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
         }
 
@@ -181,22 +182,20 @@ namespace Origam.DA.Service
             }
         }
 
-        public override void DeleteUser(string user,bool DatabaseIntegratedAuthentication)
+        public override void DeleteUser(string user, bool DatabaseIntegratedAuthentication)
         {
-            // Changing the ownership to user configured for connecting the database to allow delete new role.
-            ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}\" TO CURRENT_USER", user), null);
-            ExecuteUpdate(string.Format("DROP OWNED BY \"{0}\" ", user), null);
-            ExecuteUpdate(string.Format("DROP ROLE \"{0}\" ", user), null);
+            //The user can be dropped only after the database is dropped,
+            //so the operation is done in DeleteDatabase method
         }
         public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
         {
-            ExecuteUpdate("ALTER  PROCEDURE OrigamDatabaseSchemaVersion AS SELECT '" + version + "'", transactionId);
+            ExecuteUpdate("ALTER PROCEDURE OrigamDatabaseSchemaVersion AS SELECT '" + version + "'", transactionId);
         }
         public override void DeleteDatabase(string name)
         {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("DROP DATABASE \"{0}\"", name), null);
-
+            ExecuteUpdate(string.Format("DROP ROLE IF EXISTS \"{0}\" ", name), null);
         }
 
         public override void CreateDatabase(string name)

@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1" xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0" xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0" xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0" xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0" xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0" xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0" xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0" xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1" xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0" xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
+  xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
+  xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
+  xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
+  xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
+  xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
+  xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
+  xmlns:uift="http://schemas.origam.com/Origam.Schema.WorkflowModel.UIFormTask/6.0.0"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
+  xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
+  xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="2501ab69-718c-460b-94a2-88af4146a370"
     asi:name="Test1"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -15,39 +29,25 @@
       cs:structure="Workflow/DataStructure/Workflow/Test1.origam#Test1/1cdd2de5-5589-4e59-bab4-033c3efaae6b" />
     <smct:WorkflowTask
       asi:abstract="false"
-      x:id="d69f10cd-8f02-445c-8677-c06e635b6ac3"
-      asi:name="01_LoadData_Test1"
-      wt:outputContextStore="Workflow/Workflow/Workflow/Test1.origam#Test1/Test1/f4be2137-f3ad-433f-aae7-50087e1f8d23"
-      wt:outputMethod="AppendMergeExisting"
-      aws:roles="*"
-      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="f076446e-e778-4a73-b63f-0bdc18ab6b6e"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
-        <dsr:DataStructureReference
-          asi:abstract="false"
-          dsr:dataStructure="Workflow/DataStructure/Workflow/Test1.origam#Test1/1cdd2de5-5589-4e59-bab4-033c3efaae6b"
-          x:id="258609e5-7d0d-4e56-afc2-e4cd9dd25bc6"
-          asi:name="Test1" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
-        x:id="353336ad-6ca3-4697-b309-f00b59279155"
-        asi:name="Parameters"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
-    </smct:WorkflowTask>
-    <smct:WorkflowTask
-      asi:abstract="false"
       x:id="5a17fc4c-2f44-44a6-a1e6-b8c5e33fa8ad"
       asi:name="03_StoreData_Test1"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Workflow/Workflow/Workflow/Test1.origam#Test1/Test1/f4be2137-f3ad-433f-aae7-50087e1f8d23"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
       smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       smct:serviceMethod="Root/Service/DataService.origam#DataService/StoreData/3c1c855d-3c06-49e1-bfbf-cf234134d083">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="215d8528-45c9-4206-b141-bcff8af40644"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Workflow/DataStructure/Workflow/Test1.origam#Test1/1cdd2de5-5589-4e59-bab4-033c3efaae6b"
+          x:id="20ed433c-3b27-4e46-9108-89598712492a"
+          asi:name="Test1" />
+      </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
         x:id="57a1f754-40e0-4d9c-bb36-f5207b852c3f"
@@ -63,17 +63,6 @@
       </smcp:ServiceMethodCallParameter>
       <smcp:ServiceMethodCallParameter
         asi:abstract="false"
-        x:id="215d8528-45c9-4206-b141-bcff8af40644"
-        asi:name="DataStructure"
-        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/DataStructure/c229b1e0-cb1e-4c79-ad99-488775df3b19">
-        <dsr:DataStructureReference
-          asi:abstract="false"
-          dsr:dataStructure="Workflow/DataStructure/Workflow/Test1.origam#Test1/1cdd2de5-5589-4e59-bab4-033c3efaae6b"
-          x:id="20ed433c-3b27-4e46-9108-89598712492a"
-          asi:name="Test1" />
-      </smcp:ServiceMethodCallParameter>
-      <smcp:ServiceMethodCallParameter
-        asi:abstract="false"
         x:id="a56ec663-9ccf-4a5a-aafc-8c8a8d376ca2"
         asi:name="ForceBulkInsert"
         smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/StoreData/ForceBulkInsert/010bc65c-5867-41d6-a3f0-8daa9b2377cd" />
@@ -84,10 +73,38 @@
         wtd:startEvent="Success"
         wtd:task="Workflow/Workflow/Workflow/Test1.origam#Test1/UIBlock/de061ea7-39ca-47ae-9e85-adc49d35e170" />
     </smct:WorkflowTask>
+    <smct:WorkflowTask
+      asi:abstract="false"
+      x:id="d69f10cd-8f02-445c-8677-c06e635b6ac3"
+      asi:name="01_LoadData_Test1"
+      aws:onFailure="WorkflowFails"
+      wt:outputContextStore="Workflow/Workflow/Workflow/Test1.origam#Test1/Test1/f4be2137-f3ad-433f-aae7-50087e1f8d23"
+      wt:outputMethod="AppendMergeExisting"
+      aws:roles="*"
+      smct:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      smct:serviceMethod="Root/Service/DataService.origam#DataService/LoadData/93a3ced9-fafd-4f38-9467-3af1f72b5d62">
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="353336ad-6ca3-4697-b309-f00b59279155"
+        asi:name="Parameters"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/Parameters/ff27a2ff-5965-4eed-b6dd-9cd040583d03" />
+      <smcp:ServiceMethodCallParameter
+        asi:abstract="false"
+        x:id="f076446e-e778-4a73-b63f-0bdc18ab6b6e"
+        asi:name="DataStructure"
+        smcp:serviceMethodParameter="Root/Service/DataService.origam#DataService/LoadData/DataStructure/12495b9d-f2b9-4b70-b14c-7cb67784c9f3">
+        <dsr:DataStructureReference
+          asi:abstract="false"
+          dsr:dataStructure="Workflow/DataStructure/Workflow/Test1.origam#Test1/1cdd2de5-5589-4e59-bab4-033c3efaae6b"
+          x:id="258609e5-7d0d-4e56-afc2-e4cd9dd25bc6"
+          asi:name="Test1" />
+      </smcp:ServiceMethodCallParameter>
+    </smct:WorkflowTask>
     <twb:WorkflowTask
       asi:abstract="false"
       x:id="de061ea7-39ca-47ae-9e85-adc49d35e170"
       asi:name="UIBlock"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       twb:transactionType="None">
       <uift:WorkflowTask
@@ -98,6 +115,7 @@
         uift:isFinalForm="false"
         uift:isRefreshSuppressedBeforeFirstSave="true"
         asi:name="UI"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Workflow/Workflow/Workflow/Test1.origam#Test1/Test1/f4be2137-f3ad-433f-aae7-50087e1f8d23"
         wt:outputMethod="FullMerge"
         uift:refreshPortalAfterSave="False"
