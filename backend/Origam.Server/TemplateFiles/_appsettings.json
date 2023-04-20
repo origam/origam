@@ -28,7 +28,7 @@
     "Html5ClientLogoUrl": "/customAssets/someFile2.png"
   },
   "IdentityServerConfig": {
-    "UseTokensForAuthenticationEverywhere":  false,
+    "PrivateApiAuthentication":  "Cookie",
     "CookieExpirationMinutes": 60,
     "CookieSlidingExpiration": true,
     "PathToJwtCertificate": "serverCore.pfx",

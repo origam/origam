@@ -85,7 +85,7 @@ namespace Origam.Server
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
                 apiBranch =>
             {
-                if (identityServerConfig.UseTokensForAuthenticationEverywhere)
+                if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
                 {
                     apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
                 }

@@ -165,7 +165,7 @@ namespace Origam.Server
                     identityServerConfig.PasswordForJwtCertificate))
                 .AddInMemoryApiScopes(Settings.GetApiScopes());
             
-            if (!identityServerConfig.UseTokensForAuthenticationEverywhere)
+            if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Cookie)
             {
                 services.ConfigureApplicationCookie(options =>
                 {
