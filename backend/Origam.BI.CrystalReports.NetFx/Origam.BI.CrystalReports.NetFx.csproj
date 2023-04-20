@@ -202,7 +202,7 @@
       <Version>13.0.4003</Version>
     </PackageReference>
     <PackageReference Include="CrystalReports.Windows.Forms">
-      <Version>13.0.4000</Version>
+      <Version>13.0.4003</Version>
     </PackageReference>
     <PackageReference Include="DockPanelSuite">
       <Version>3.1.0</Version>
