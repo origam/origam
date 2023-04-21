@@ -35,6 +35,12 @@ namespace Origam.Server.Configuration
     {
         Email,
         Username
+    }   
+    
+    public enum AuthenticationMethod
+    {
+        Cookie,
+        Token
     }
     
     public static class IdentityServerDefaults
@@ -56,6 +62,7 @@ namespace Origam.Server.Configuration
         public bool CookieSlidingExpiration { get; } 
         public int CookieExpirationMinutes { get; }
         public string AuthenticationPostProcessor { get; }
+        public AuthenticationMethod PrivateApiAuthentication { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
@@ -67,6 +74,8 @@ namespace Origam.Server.Configuration
                     "PasswordForJwtCertificate");
             CookieSlidingExpiration = identityServerSection
                 .GetValue("CookieSlidingExpiration", true);
+            PrivateApiAuthentication = identityServerSection
+                .GetValue("PrivateApiAuthentication", AuthenticationMethod.Cookie);
             CookieExpirationMinutes = identityServerSection
                 .GetValue("CookieExpirationMinutes", 60);
             GoogleLogin = ConfigureGoogleLogin(identityServerSection);
