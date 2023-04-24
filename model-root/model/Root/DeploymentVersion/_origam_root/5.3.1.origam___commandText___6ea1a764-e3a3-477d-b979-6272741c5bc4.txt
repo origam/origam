@@ -1,0 +1,1 @@
+﻿ALTER TABLE "WorkQueueEntry" ADD "NextAttemptTime" Timestamp(3) NULL

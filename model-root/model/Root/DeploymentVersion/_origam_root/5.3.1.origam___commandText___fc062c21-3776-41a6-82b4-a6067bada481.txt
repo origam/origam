@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueue" ADD "MaxRetries" Integer NOT NULL CONSTRAINT "DF_WorkQueue_MaxRetries" DEFAULT 3;
+ALTER TABLE "WorkQueue" ALTER COLUMN "MaxRetries" DROP DEFAULT;
