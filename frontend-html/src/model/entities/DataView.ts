@@ -80,7 +80,7 @@ import { getPropertyOrdering } from "model/selectors/DataView/getPropertyOrderin
 import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 
 import selectors from "model/selectors-tree";
-import produce from "immer";
+import { produce } from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { onSelectedRowChange } from "model/actions-ui/onSelectedRowChange";
