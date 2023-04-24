@@ -2,20 +2,21 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="4b2f32ac-c39f-4a41-85a9-921f844f0b0a"
     asi:name="RemoveWorkQueueEntry"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -36,6 +37,7 @@
       asi:abstract="false"
       x:id="7705e05c-a95b-4288-9773-7e8235528685"
       asi:name="02_Transform_WorkQueueEntry_Delete"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/WorkQueueEntry_Delete/4c2bdf28-e4f8-4b45-aad2-41e930ca0b3e"
       wt:outputMethod="FullMerge"
       aws:roles="*"
@@ -81,6 +83,7 @@
       asi:abstract="false"
       x:id="a0b9773b-374a-4b88-b486-4fd993b8c263"
       asi:name="01_LoadData_WorkQueueEntry_Delete"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/WorkQueueEntry_Delete/4c2bdf28-e4f8-4b45-aad2-41e930ca0b3e"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -116,6 +119,7 @@
       asi:abstract="false"
       x:id="f671c0c8-a9b1-4def-a6dc-cc2f4d1b191e"
       asi:name="03_StoreData_WorkQueueEntry_Delete"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/Work Queues/RemoveWorkQueueEntry.origam#RemoveWorkQueueEntry/WorkQueueEntry_Delete/4c2bdf28-e4f8-4b45-aad2-41e930ca0b3e"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"

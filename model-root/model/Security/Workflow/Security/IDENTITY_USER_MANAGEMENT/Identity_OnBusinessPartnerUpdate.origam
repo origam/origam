@@ -2,20 +2,21 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="afac6813-b010-4204-80c0-d602eede4387"
     asi:name="Identity_OnBusinessPartnerUpdate"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -51,6 +52,7 @@
       aws:features="IDENTITY_USER_MANAGEMENT"
       x:id="4cc80a1e-a314-4383-9f59-c0b199fae8ea"
       asi:name="01_Transform_AreEmailsTheSame"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/AreEmailsTheSame/9b28d2f3-3aea-4a43-8ba4-1bdc6e6bf96d"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -105,6 +107,7 @@
       asi:abstract="false"
       x:id="1a4c875f-cdd3-47a1-bbe5-4f544b1df122"
       asi:name="02_WhenUsernameNotEmpty"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       aws:startConditionRule="Root/Rule/_common/SR_SimpleContextValue_IsNotEmpty.origam#SR_SimpleContextValue_IsNotEmpty/9fcb4f49-e9d6-4d44-9e4f-11bfcc4743cd"
       aws:startConditionRuleContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
@@ -113,6 +116,7 @@
         asi:abstract="false"
         x:id="e905928b-b0c3-4635-8bad-eb01f47c0879"
         asi:name="03_Call_MembershipService_UpdateEmail"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_OnBusinessPartnerUpdate.origam#Identity_OnBusinessPartnerUpdate/Username/47be9868-2d69-4b47-98fa-5631a711b313"
         wt:outputMethod="Ignore"
         aws:roles="*"

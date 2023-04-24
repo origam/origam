@@ -2,7 +2,7 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
@@ -10,13 +10,14 @@
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="11fea1be-b62c-4c6c-81bc-afd6bb0b102d"
     asi:name="Identity_DeleteUser"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -45,6 +46,7 @@
       aws:features="IDENTITY_USER_MANAGEMENT"
       x:id="4ea4e27d-9528-4b36-9476-3bf4f669303f"
       asi:name="01_LoadData_UserProfile_New"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -82,6 +84,7 @@
       asi:abstract="false"
       x:id="8c8759f4-967d-4d7b-a064-e8be634ab07c"
       asi:name="02_Transform_UserProfile_New"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -127,12 +130,14 @@
       asi:abstract="false"
       x:id="df646573-2174-42c1-8e37-784a9eed129d"
       asi:name="03_StoreToDBAndCallMembership"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       twb:transactionType="Atomic">
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="076f7547-170c-421a-ac97-439f941743d7"
         asi:name="10_Call_MembershipService_DeleteUser"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/BusinessPartnerId/fbc56e89-1910-4bbb-9018-2ab144703f8b"
         wt:outputMethod="Ignore"
         aws:roles="*"
@@ -156,6 +161,7 @@
         asi:abstract="false"
         x:id="fcad2ddf-a6f4-4bb8-9bd2-4dfecf4a70c3"
         asi:name="11_StoreData_UserProfile_New"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_DeleteUser.origam#Identity_DeleteUser/UserProfile_New/041fc70a-9bd1-4e79-b3e0-f7019c9267d8"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"

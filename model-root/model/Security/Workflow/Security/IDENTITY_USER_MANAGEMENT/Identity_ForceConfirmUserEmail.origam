@@ -2,17 +2,18 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:smcp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallParameter/6.0.0"
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="b3d7c4f4-e6d2-45f4-8e1e-cca6743d570f"
     asi:name="Identity_ForceConfirmUserEmail"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -25,6 +26,7 @@
       asi:abstract="false"
       x:id="7b294699-7889-4775-a109-f83f600c5495"
       asi:name="01_CallMembershipService_ForceConfirmEmail"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ForceConfirmUserEmail.origam#Identity_ForceConfirmUserEmail/UserId/b0cc0921-206e-40af-ac87-1d1facdfe227"
       wt:outputMethod="Ignore"
       aws:roles="*"
