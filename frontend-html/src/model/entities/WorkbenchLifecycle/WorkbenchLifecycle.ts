@@ -52,7 +52,7 @@ import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
-import produce from "immer";
+import { produce } from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
 import { EventHandler } from "@origam/utils";
