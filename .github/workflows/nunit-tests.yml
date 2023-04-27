@@ -2,9 +2,9 @@ name: "Architect NUnit Tests"
 
 on:
   push:
-    branches: [ 20* ]
+    branches: [ master ]
   pull_request:
-    branches: [ 20* ]
+    branches: [ master, 20* ]
 
 jobs:
   analyze:
