@@ -32,7 +32,7 @@ public interface IWorkQueueProcessor
 
     int ProcessAutoQueueCommands(WorkQueueData.WorkQueueRow queue,
         CancellationToken cancellationToken, int? maxItemsToProcess = null,
-        int forceWait_ms = 0);
+        int forceWaitMillis = 0);
 
     public DataRow GetNextItem(WorkQueueData.WorkQueueRow queue, string transactionId,
         bool processErrors, CancellationToken cancellationToken);

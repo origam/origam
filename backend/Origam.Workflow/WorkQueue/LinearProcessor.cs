@@ -60,7 +60,7 @@ public class LinearProcessor : IWorkQueueProcessor
     
     public int ProcessAutoQueueCommands(WorkQueueRow queue,
         CancellationToken cancellationToken, int? maxItemsToProcess=null, 
-        int forceWait_ms=0)
+        int forceWaitMillis=0)
     {
         var processErrors = IsAnyCmdSetToAutoProcessedWithErrors(queue);
         int itemsProcessed = 0;
@@ -94,13 +94,13 @@ public class LinearProcessor : IWorkQueueProcessor
                 return itemsProcessed;
             }
             
-            if (forceWait_ms != 0)
+            if (forceWaitMillis != 0)
             {
                 log.Info(
                     $"forceWait parameter causes worker on thread " +
                     $"{Thread.CurrentThread.ManagedThreadId} to sleep for: " +
-                    $"{forceWait_ms} ms");
-                Thread.Sleep(forceWait_ms);
+                    $"{forceWaitMillis} ms");
+                Thread.Sleep(forceWaitMillis);
             }
         }
     }

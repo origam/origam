@@ -62,10 +62,10 @@ public class RoundRobinProcessor : IWorkQueueProcessor
 
     public int ProcessAutoQueueCommands(WorkQueueRow queue,
         CancellationToken cancellationToken, int? maxItemsToProcess = null,
-        int forceWait_ms = 0)
+        int forceWaitMillis = 0)
     {
         return linearProcessor.ProcessAutoQueueCommands(
-            queue, cancellationToken, maxItemsToProcess, forceWait_ms);
+            queue, cancellationToken, maxItemsToProcess, forceWaitMillis);
     }
 
     public DataRow GetNextItem(WorkQueueRow queue, string transactionId, bool processErrors,
