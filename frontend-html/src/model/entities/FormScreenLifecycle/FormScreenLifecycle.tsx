@@ -1014,11 +1014,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      if(isLazyLoading(this)){
-        for (let dataView of getAllBindingChildren(targetDataView)) {
-          dataView.clear();
-        }
-      }
       yield*processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
       getTablePanelView(targetDataView).scrollToCurrentRow();
     } finally {
