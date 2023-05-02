@@ -281,7 +281,8 @@ namespace Origam.Utils
                 typeof(RunUpdateScriptsOptions),
                 typeof(RestartServerOptions),
                 typeof(CreateHashIndexOptions),
-                typeof(CompareSchemaOptions)
+                typeof(CompareSchemaOptions),
+                typeof(NormalizeFileFormatOptions)
             #endif
             };
         }
