@@ -100,8 +100,10 @@ namespace Origam.Common_net2Tests
         [Test]
         public void ShouldRecognizeDirectoryAsParent()
         {
-            var parent = new DirectoryInfo(@"C:\Bordel\Serialization\Root Menu");
-            var child = new DirectoryInfo(@"C:\Bordel\Serialization\Root Menu\DeploymentVersion\Root Menu");
+            var parent = new DirectoryInfo(@"Serialization\Root Menu".
+                Replace('\\',Path.DirectorySeparatorChar));
+            var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
+                Replace('\\', Path.DirectorySeparatorChar));
 
             Assert.That(parent.IsOnPathOf(child));
         }
@@ -109,8 +111,10 @@ namespace Origam.Common_net2Tests
         [Test]
         public void ShouldRecognizeDirectoryIsNotParent()
         {
-            var notApatent = new DirectoryInfo(@"C:\Bordel\Serialization\Root");
-            var child = new DirectoryInfo(@"C:\Bordel\Serialization\Root Menu\DeploymentVersion\Root Menu");
+            var notApatent = new DirectoryInfo(@"Serialization\Root".
+                Replace('\\', Path.DirectorySeparatorChar));
+            var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
+                Replace('\\', Path.DirectorySeparatorChar));
 
             Assert.That(!notApatent.IsOnPathOf(child));
         }
