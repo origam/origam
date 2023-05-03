@@ -33,6 +33,7 @@ jobs:
       run: |
        msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
+       msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
     - name: Upload testing artefact
       uses: actions/upload-artifact@v2
