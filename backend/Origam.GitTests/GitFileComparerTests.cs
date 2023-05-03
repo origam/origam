@@ -59,8 +59,8 @@ namespace Origam.GitTests
         public void ShouldReturnEmptyDiffIfNoDifferenecesExist()
         {
           
-            FileInfo pathToOld = new FileInfo(Path.Combine(TestFilesDir.FullName, "Old.xml"));
-            FileInfo pathToNew = new FileInfo(Path.Combine(TestFilesDir.FullName, "Old.xml"));
+            FileInfo pathToOld = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
+            FileInfo pathToNew = new FileInfo(Path.Combine(TestFilesDir.FullName, "old.xml"));
 
             var gitFileComparer = new GitFileComparer();
             GitDiff gitDiff = gitFileComparer.GetGitDiff(pathToOld, pathToNew);
