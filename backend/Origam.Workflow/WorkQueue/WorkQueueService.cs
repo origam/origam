@@ -1566,53 +1566,7 @@ namespace Origam.Workflow.WorkQueue
                     queueEntryTable.DataSet, null);
             }
         }
-
-        // private static void SetRetryData(DataRow queueEntryRow,
-        //     WorkQueueData.WorkQueueRow queue, string message)
-        // {
-        //     var failureTime = DateTime.Now;
-        //     queueEntryRow["ErrorText"] = failureTime + ": " + message;
-        //     queueEntryRow["LastAttemptTime"] = failureTime;
-        //     int attemptCountAfterFailure = queueEntryRow["AttemptCount"] == DBNull.Value
-        //         ? 1
-        //         : (int)queueEntryRow["AttemptCount"] + 1;
-        //     queueEntryRow["AttemptCount"] = attemptCountAfterFailure;
-        //     
-        //     object retryType = queue["refWorkQueueRetryTypeId"];
-        //     int maxRetries = queue["MaxRetries"] == DBNull.Value 
-        //         ? 0 
-        //         : (int)queue["MaxRetries"];
-        //     
-        //     if(Equals(retryType, WorkQueueRetryType.NoRetry) ||
-        //        attemptCountAfterFailure >= maxRetries )
-        //     {
-        //         queueEntryRow["NextAttemptTime"] = DateTime.MinValue;
-        //         return;
-        //     }
-        //     
-        //     if (queue["RetryIntervalSeconds"] == DBNull.Value)
-        //     {
-        //         throw new ArgumentException($"RetryIntervalSeconds in queue {queue["Name"]} is null while the retry type is not NoRetry");
-        //     }
-        //     int retryIntervalSeconds = (int)queue["RetryIntervalSeconds"];
-        //     
-        //     if(Equals(retryType, WorkQueueRetryType.LinearRetry))
-        //     {
-        //         queueEntryRow["NextAttemptTime"] =
-        //             failureTime.AddSeconds(retryIntervalSeconds);
-        //         return;
-        //     }
-        //     if(Equals(retryType, WorkQueueRetryType.ExponentialRetry))
-        //     {
-        //         // queueEntryRow["NextAttemptTime"] =
-        //         //     failureTime.AddSeconds(retryIntervalSeconds);
-        //         return;
-        //     }
-        //
-        //     throw NotImplementedException(
-        //         $"retryType: {retryType} not implemented");
-        // }
-
+        
         private void ProcessExternalQueue(WorkQueueData.WorkQueueRow q)
         {
             string transactionId = Guid.NewGuid().ToString();
