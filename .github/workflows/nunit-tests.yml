@@ -64,7 +64,8 @@ jobs:
 
     - name: Run NUnit Tests
       run:  |
-       find . -name 'mvp.xml' -exec sh -c 'mv "$0" "Mvp.Xml"' {} \
+       find . -name 'mvp.xml.dll' -exec sh -c 'mv "$0" "Mvp.Xml.dll.rename"' {} \;
+       find . -name 'Mvp.Xml.dll.rename' -exec sh -c 'mv "$0" "Mvp.Xml.dll"' {} \;
        dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
       
     - name: Produce NUnit Test Report
