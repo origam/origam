@@ -84,18 +84,20 @@ namespace Origam.Workflow.WorkQueue
             
             OrigamSettings settings 
                 = ConfigurationManager.GetActiveConfiguration();
-            LinearProcessor linearProcessor = new LinearProcessor(
-                ProcessQueueItem,
-                workQueueUtils,
-                retryManager,
-                workQueueThrottle);
             queueProcessor = settings.WorkQueueProcessingMode switch
             {
                 WorkQueueProcessingMode.Linear => 
-                    linearProcessor,
+                    new LinearProcessor(
+                        ProcessQueueItem,
+                        workQueueUtils,
+                        retryManager,
+                        workQueueThrottle),
                 WorkQueueProcessingMode.RoundRobin => 
-                    new RoundRobinProcessor(
-                        linearProcessor, 
+                    new RoundRobinLinearProcessor(
+                        ProcessQueueItem,
+                        workQueueUtils,
+                        retryManager,
+                        workQueueThrottle, 
                         settings.RoundRobinBatchSize),
                 _ => 
                     throw new NotImplementedException(

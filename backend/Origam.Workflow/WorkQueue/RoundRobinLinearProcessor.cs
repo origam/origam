@@ -29,14 +29,15 @@ using WorkQueueRow = Origam.Workflow.WorkQueue.WorkQueueData.WorkQueueRow;
 
 namespace Origam.Workflow.WorkQueue;
 
-public class RoundRobinProcessor : IWorkQueueProcessor
+public class RoundRobinLinearProcessor : LinearProcessor
 {
     private readonly int batchSize;
-    private readonly IWorkQueueProcessor linearProcessor;
-    public RoundRobinProcessor(IWorkQueueProcessor linearProcessor, int batchSize)
+    public RoundRobinLinearProcessor(Action<WorkQueueRow, DataRow> itemProcessAction,
+        WorkQueueUtils workQueueUtils, RetryManager retryManager,
+        WorkQueueThrottle workQueueThrottle, int batchSize) 
+        : base(itemProcessAction, workQueueUtils, retryManager, workQueueThrottle)
     {
         this.batchSize = batchSize;
-        this.linearProcessor = linearProcessor;
     }
 
     public void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
@@ -48,7 +49,7 @@ public class RoundRobinProcessor : IWorkQueueProcessor
             numberOfEmptyQueues = 0;
             foreach (WorkQueueRow queue in queueList)
             {
-                int itemsProcessed = linearProcessor.ProcessAutoQueueCommands(
+                int itemsProcessed = ProcessAutoQueueCommands(
                     queue: queue, 
                     cancellationToken: cancellationToken, 
                     maxItemsToProcess: batchSize);
@@ -58,20 +59,5 @@ public class RoundRobinProcessor : IWorkQueueProcessor
                 }
             }
         }
-    }
-
-    public int ProcessAutoQueueCommands(WorkQueueRow queue,
-        CancellationToken cancellationToken, int? maxItemsToProcess = null,
-        int forceWaitMillis = 0)
-    {
-        return linearProcessor.ProcessAutoQueueCommands(
-            queue, cancellationToken, maxItemsToProcess, forceWaitMillis);
-    }
-
-    public DataRow GetNextItem(WorkQueueRow queue, string transactionId, bool processErrors,
-        CancellationToken cancellationToken)
-    {
-        return linearProcessor.GetNextItem(
-            queue, transactionId, processErrors, cancellationToken);
     }
 }

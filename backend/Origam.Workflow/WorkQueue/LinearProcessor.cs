@@ -96,10 +96,13 @@ public class LinearProcessor : IWorkQueueProcessor
             
             if (forceWaitMillis != 0)
             {
-                log.Info(
-                    $"forceWait parameter causes worker on thread " +
-                    $"{Thread.CurrentThread.ManagedThreadId} to sleep for: " +
-                    $"{forceWaitMillis} ms");
+                if (log.IsInfoEnabled)
+                {
+                    log.Info(
+                        $"forceWait parameter causes worker on thread " +
+                        $"{Thread.CurrentThread.ManagedThreadId} to sleep for: " +
+                        $"{forceWaitMillis} ms");
+                }
                 Thread.Sleep(forceWaitMillis);
             }
         }
