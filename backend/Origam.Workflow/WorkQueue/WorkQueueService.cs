@@ -56,7 +56,7 @@ namespace Origam.Workflow.WorkQueue
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private const string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";
         private readonly core.ICoreDataService dataService = core.DataService.Instance;
-        private  CancellationTokenSource cancellationTokenSource = new ();
+        private CancellationTokenSource cancellationTokenSource = new ();
         private readonly WorkQueueUtils workQueueUtils;
         private readonly IWorkQueueProcessor queueProcessor;
         private readonly WorkQueueThrottle workQueueThrottle;
