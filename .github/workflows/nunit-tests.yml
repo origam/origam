@@ -64,8 +64,8 @@ jobs:
 
     - name: Run NUnit Tests
       run:  |
-       find . -name 'mvp.xml.dll' -exec rename 's/mvp\.xml/Mvp\.Xml\.X/' {} \;
-       find . -name 'Mvp.Xml.X.dll' -exec rename 's/Mvp\.Xml\.X/Mvp\.Xml/' {} \;
+       find . -name 'mvp.xml.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/mvp.xml.x.dll"' \;
+       find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
        find . -name 'Mvp.Xml.dll'
        dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
       
