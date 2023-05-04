@@ -62,7 +62,7 @@ public class LinearProcessor : IWorkQueueProcessor
         CancellationToken cancellationToken, int? maxItemsToProcess=null, 
         int forceWaitMillis=0)
     {
-        var processErrors = IsAnyCmdSetToAutoProcessedWithErrors(queue);
+        var processErrors = IsAnyCommandSetToAutoProcessedWithErrors(queue);
         int itemsProcessed = 0;
         while(true)
         {
@@ -105,7 +105,7 @@ public class LinearProcessor : IWorkQueueProcessor
         }
     }
     
-    private bool IsAnyCmdSetToAutoProcessedWithErrors(WorkQueueRow queue)
+    private bool IsAnyCommandSetToAutoProcessedWithErrors(WorkQueueRow queue)
     {
         bool processErrors = false;
         foreach (WorkQueueData.WorkQueueCommandRow cmd in
