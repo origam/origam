@@ -109,7 +109,7 @@ public class WorkQueueThrottle
     private void StoreThrottlingState(DataRow row)
     {
         core.DataService.Instance.StoreData(WorkQueueStateDataStructureId,
-            row.Table.DataSet,false,null);
+            row.Table.DataSet, false, null);
     }
 
     private DataRow? GetThrottlingState(Guid queueId)
