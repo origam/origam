@@ -80,10 +80,10 @@ public class LinearProcessor : IWorkQueueProcessor
             }
             if (log.IsDebugEnabled)
             {
-                log.Debug("Checking whether processing failed - IsLocked: "
-                          + queueItemRow["IsLocked"]
-                          + ", ErrorText: "
-                          + (queueItemRow.IsNull("ErrorText") ? "NULL" : queueItemRow["ErrorText"].ToString()));
+                string errorText = queueItemRow.IsNull("ErrorText") 
+                    ? "NULL"
+                    : queueItemRow["ErrorText"].ToString();
+                log.Debug($"Checking whether processing failed - IsLocked: {queueItemRow["IsLocked"]}, ErrorText: {errorText}");
             }
             // we have to store the item id now because later the queue entry can be removed by HandleRemove() command
             itemProcessAction(queue, queueItemRow);
