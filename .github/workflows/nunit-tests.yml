@@ -63,7 +63,9 @@ jobs:
         path: backend
 
     - name: Run NUnit Tests
-      run: dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
+      run:  |
+       find . -name 'mvp.xml' -exec sh -c 'mv "$0" "Mvp.Xml"' {} \
+       dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
       
     - name: Produce NUnit Test Report
       uses: dorny/test-reporter@v1
