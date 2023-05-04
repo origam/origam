@@ -27,7 +27,7 @@ else
   echo "Scripts failed" >&2
   exit 1
 fi
-echo "Start integration tests.";
+echo "Start workflow integration tests";
 cd /home/origam/HTML5_TESTS
 cp _OrigamSettings.wf.mssql.template OrigamSettings.config
 sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
