@@ -51,9 +51,9 @@ public class RetryManagerTests
             expectedNextAttempt) = testData;
         
         var queueRow = CreateEmptyQueueRow();
-        queueRow["refWorkQueueRetryTypeId"] = retryType;
-        queueRow["MaxRetries"] = maxRetries;
-        queueRow["RetryIntervalSeconds"] = retryIntervalSeconds;
+        queueRow.refWorkQueueRetryTypeId = retryType;
+        queueRow.MaxRetries = maxRetries;
+        queueRow.RetryIntervalSeconds = retryIntervalSeconds;
         
         var queueEntryRow = CreateEmptyEntryRow();
         
@@ -68,10 +68,10 @@ public class RetryManagerTests
     public void ShouldAssignCorrectExponentialRetryTime()
     {
         WorkQueueData.WorkQueueRow queueRow = CreateEmptyQueueRow();
-        queueRow["refWorkQueueRetryTypeId"] = WorkQueueRetryType.ExponentialRetry;
-        queueRow["MaxRetries"] = 5;
-        queueRow["RetryIntervalSeconds"] = 35;
-        queueRow["ExponentialRetryBase"] = 2.0m;
+        queueRow.refWorkQueueRetryTypeId = WorkQueueRetryType.ExponentialRetry;
+        queueRow.MaxRetries = 5;
+        queueRow.RetryIntervalSeconds = 35;
+        queueRow.ExponentialRetryBase = 2.0m;
         
         DataRow queueEntryRow = CreateEmptyEntryRow();
         
@@ -104,9 +104,9 @@ public class RetryManagerTests
         workQueueTable.Columns.Add(
             new DataColumn("ExponentialRetryBase", typeof(decimal)));
         var queueRow = workQueueTable.NewWorkQueueRow();
-        queueRow["MaxRetries"] = 0;
-        queueRow["RetryIntervalSeconds"] = 0;
-        queueRow["ExponentialRetryBase"] = 2;
+        queueRow.MaxRetries = 0;
+        queueRow.RetryIntervalSeconds= 0;
+        queueRow.ExponentialRetryBase = 2;
         return queueRow;
     }
 

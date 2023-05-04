@@ -46,7 +46,7 @@ public class WorkQueueThrottle
 
     public bool CanRunNow(WorkQueueData.WorkQueueRow queue)
     {
-        if (Equals(queue["EnableThrottling"], false))
+        if (!queue.EnableThrottling)
         {
             return true;
         }
@@ -54,25 +54,25 @@ public class WorkQueueThrottle
         if (stateRow == null)
         {
             StoreThrottlingState(queue.Id, DateTime.Now, 0);
-            return (int)queue["ThrottlingItemsPerInterval"] > 0;
+            return queue.ThrottlingItemsPerInterval > 0;
         }
 
         DateTime endOfInterval = ((DateTime)stateRow["ThrottlingIntervalStart"]).AddSeconds(
-            (int)queue["ThrottlingIntervalSeconds"]);
+            queue.ThrottlingIntervalSeconds);
         if (endOfInterval < DateTime.Now)
         {
             stateRow["ThrottlingItemsProcessed"] = 0;
             stateRow["ThrottlingIntervalStart"] = DateTime.Now;
             StoreThrottlingState(stateRow);
-            return (int)queue["ThrottlingItemsPerInterval"] > 0;
+            return queue.ThrottlingItemsPerInterval > 0;
         }
 
-        return (int)stateRow["ThrottlingItemsProcessed"] < (int)queue["ThrottlingItemsPerInterval"];
+        return (int)stateRow["ThrottlingItemsProcessed"] < queue.ThrottlingItemsPerInterval;
     }
 
     public void ReportProcessed(WorkQueueData.WorkQueueRow queue)
     {
-        if (Equals(queue["EnableThrottling"], false))
+        if (!queue.EnableThrottling)
         {
             return;
         }

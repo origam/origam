@@ -482,6 +482,10 @@ namespace Origam.Workflow.WorkQueue {
             
             private global::System.Data.DataColumn columnCntTotal;
             
+            private global::System.Data.DataColumn columnIsMessageCountDisplayed;
+            
+            private global::System.Data.DataColumn columnRemovalNewValue;
+            
             private global::System.Data.DataColumn columnCreationOldValue;
             
             private global::System.Data.DataColumn columnRoles;
@@ -494,11 +498,11 @@ namespace Origam.Workflow.WorkQueue {
             
             private global::System.Data.DataColumn columnRemovalOldValue;
             
+            private global::System.Data.DataColumn columnEnableThrottling;
+            
             private global::System.Data.DataColumn columnIsErrorQueue;
             
-            private global::System.Data.DataColumn columnRemovalNewValue;
-            
-            private global::System.Data.DataColumn columnReverseLookupFieldValues;
+            private global::System.Data.DataColumn columnName;
             
             private global::System.Data.DataColumn columnCreationCondition;
             
@@ -514,19 +518,21 @@ namespace Origam.Workflow.WorkQueue {
             
             private global::System.Data.DataColumn columnId;
             
-            private global::System.Data.DataColumn columnName;
-            
-            private global::System.Data.DataColumn columnIsMessageCountDisplayed;
+            private global::System.Data.DataColumn columnReverseLookupFieldValues;
             
             private global::System.Data.DataColumn columnCreationFieldName;
             
             private global::System.Data.DataColumn columnrefCreationOrigamStateMachineEventTypeId;
+            
+            private global::System.Data.DataColumn columnQueueProcessor;
             
             private global::System.Data.DataColumn columnCntFromMe;
             
             private global::System.Data.DataColumn columnCntToMe;
             
             private global::System.Data.DataColumn columnCntExpired;
+            
+            private global::System.Data.DataColumn columnThrottlingIntervalSeconds;
             
             private global::System.Data.DataColumn columnRemovalFieldName;
             
@@ -536,9 +542,13 @@ namespace Origam.Workflow.WorkQueue {
             
             private global::System.Data.DataColumn columnrefWorkQueueRetryTypeId;
             
+            private global::System.Data.DataColumn columnThrottlingItemsPerInterval;
+            
             private global::System.Data.DataColumn columnRetryIntervalSeconds;
             
             private global::System.Data.DataColumn columnReferenceCode;
+            
+            private global::System.Data.DataColumn columnExponentialRetryBase;
             
             private global::System.Data.DataColumn columnCreationNewValue;
             
@@ -553,8 +563,6 @@ namespace Origam.Workflow.WorkQueue {
             private global::System.Data.DataColumn columnApiAccessRoles;
             
             private global::System.Data.DataColumn columnrefWorkQueueExternalSourceTypeId;
-            
-            private global::System.Data.DataColumn columnQueueProcessor;
             
             private global::System.Data.DataColumn columnRecordCreatedBy;
             
@@ -598,6 +606,22 @@ namespace Origam.Workflow.WorkQueue {
             public global::System.Data.DataColumn CntTotalColumn {
                 get {
                     return this.columnCntTotal;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsMessageCountDisplayedColumn {
+                get {
+                    return this.columnIsMessageCountDisplayed;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RemovalNewValueColumn {
+                get {
+                    return this.columnRemovalNewValue;
                 }
             }
             
@@ -651,6 +675,14 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn EnableThrottlingColumn {
+                get {
+                    return this.columnEnableThrottling;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn IsErrorQueueColumn {
                 get {
                     return this.columnIsErrorQueue;
@@ -659,17 +691,9 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn RemovalNewValueColumn {
+            public global::System.Data.DataColumn NameColumn {
                 get {
-                    return this.columnRemovalNewValue;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ReverseLookupFieldValuesColumn {
-                get {
-                    return this.columnReverseLookupFieldValues;
+                    return this.columnName;
                 }
             }
             
@@ -731,17 +755,9 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn NameColumn {
+            public global::System.Data.DataColumn ReverseLookupFieldValuesColumn {
                 get {
-                    return this.columnName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn IsMessageCountDisplayedColumn {
-                get {
-                    return this.columnIsMessageCountDisplayed;
+                    return this.columnReverseLookupFieldValues;
                 }
             }
             
@@ -758,6 +774,14 @@ namespace Origam.Workflow.WorkQueue {
             public global::System.Data.DataColumn refCreationOrigamStateMachineEventTypeIdColumn {
                 get {
                     return this.columnrefCreationOrigamStateMachineEventTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn QueueProcessorColumn {
+                get {
+                    return this.columnQueueProcessor;
                 }
             }
             
@@ -782,6 +806,14 @@ namespace Origam.Workflow.WorkQueue {
             public global::System.Data.DataColumn CntExpiredColumn {
                 get {
                     return this.columnCntExpired;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ThrottlingIntervalSecondsColumn {
+                get {
+                    return this.columnThrottlingIntervalSeconds;
                 }
             }
             
@@ -819,6 +851,14 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ThrottlingItemsPerIntervalColumn {
+                get {
+                    return this.columnThrottlingItemsPerInterval;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn RetryIntervalSecondsColumn {
                 get {
                     return this.columnRetryIntervalSeconds;
@@ -830,6 +870,14 @@ namespace Origam.Workflow.WorkQueue {
             public global::System.Data.DataColumn ReferenceCodeColumn {
                 get {
                     return this.columnReferenceCode;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ExponentialRetryBaseColumn {
+                get {
+                    return this.columnExponentialRetryBase;
                 }
             }
             
@@ -891,14 +939,6 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn QueueProcessorColumn {
-                get {
-                    return this.columnQueueProcessor;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn RecordCreatedByColumn {
                 get {
                     return this.columnRecordCreatedBy;
@@ -952,15 +992,17 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow AddWorkQueueRow(
                         int CntTotal, 
+                        bool IsMessageCountDisplayed, 
+                        string RemovalNewValue, 
                         string CreationOldValue, 
                         string Roles, 
                         string WorkQueueClass, 
                         string ExternalSourceState, 
                         int MaxRetries, 
                         string RemovalOldValue, 
+                        bool EnableThrottling, 
                         bool IsErrorQueue, 
-                        string RemovalNewValue, 
-                        bool ReverseLookupFieldValues, 
+                        string Name, 
                         string CreationCondition, 
                         string ExternalSourcePassword, 
                         bool IsActive, 
@@ -968,19 +1010,22 @@ namespace Origam.Workflow.WorkQueue {
                         System.DateTime RecordCreated, 
                         System.Guid RecordUpdatedBy, 
                         System.Guid Id, 
-                        string Name, 
-                        bool IsMessageCountDisplayed, 
+                        bool ReverseLookupFieldValues, 
                         string CreationFieldName, 
                         System.Guid refCreationOrigamStateMachineEventTypeId, 
+                        string QueueProcessor, 
                         int CntFromMe, 
                         int CntToMe, 
                         int CntExpired, 
+                        int ThrottlingIntervalSeconds, 
                         string RemovalFieldName, 
                         System.Guid refRemovalOrigamStateMachineEventTypeId, 
                         System.DateTime ExternalSourceLastTime, 
                         System.Guid refWorkQueueRetryTypeId, 
+                        int ThrottlingItemsPerInterval, 
                         int RetryIntervalSeconds, 
                         string ReferenceCode, 
+                        decimal ExponentialRetryBase, 
                         string CreationNewValue, 
                         string ExternalSourceConnection, 
                         string RemovalCondition, 
@@ -988,21 +1033,22 @@ namespace Origam.Workflow.WorkQueue {
                         string ExternalSourceLastMessage, 
                         string ApiAccessRoles, 
                         System.Guid refWorkQueueExternalSourceTypeId, 
-                        string QueueProcessor, 
                         System.Guid RecordCreatedBy, 
                         System.DateTime RecordUpdated) {
                 WorkQueueRow rowWorkQueueRow = ((WorkQueueRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         CntTotal,
+                        IsMessageCountDisplayed,
+                        RemovalNewValue,
                         CreationOldValue,
                         Roles,
                         WorkQueueClass,
                         ExternalSourceState,
                         MaxRetries,
                         RemovalOldValue,
+                        EnableThrottling,
                         IsErrorQueue,
-                        RemovalNewValue,
-                        ReverseLookupFieldValues,
+                        Name,
                         CreationCondition,
                         ExternalSourcePassword,
                         IsActive,
@@ -1010,19 +1056,22 @@ namespace Origam.Workflow.WorkQueue {
                         RecordCreated,
                         RecordUpdatedBy,
                         Id,
-                        Name,
-                        IsMessageCountDisplayed,
+                        ReverseLookupFieldValues,
                         CreationFieldName,
                         refCreationOrigamStateMachineEventTypeId,
+                        QueueProcessor,
                         CntFromMe,
                         CntToMe,
                         CntExpired,
+                        ThrottlingIntervalSeconds,
                         RemovalFieldName,
                         refRemovalOrigamStateMachineEventTypeId,
                         ExternalSourceLastTime,
                         refWorkQueueRetryTypeId,
+                        ThrottlingItemsPerInterval,
                         RetryIntervalSeconds,
                         ReferenceCode,
+                        ExponentialRetryBase,
                         CreationNewValue,
                         ExternalSourceConnection,
                         RemovalCondition,
@@ -1030,7 +1079,6 @@ namespace Origam.Workflow.WorkQueue {
                         ExternalSourceLastMessage,
                         ApiAccessRoles,
                         refWorkQueueExternalSourceTypeId,
-                        QueueProcessor,
                         RecordCreatedBy,
                         RecordUpdated};
                 rowWorkQueueRow.ItemArray = columnValuesArray;
@@ -1063,15 +1111,17 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
                 this.columnCntTotal = base.Columns["CntTotal"];
+                this.columnIsMessageCountDisplayed = base.Columns["IsMessageCountDisplayed"];
+                this.columnRemovalNewValue = base.Columns["RemovalNewValue"];
                 this.columnCreationOldValue = base.Columns["CreationOldValue"];
                 this.columnRoles = base.Columns["Roles"];
                 this.columnWorkQueueClass = base.Columns["WorkQueueClass"];
                 this.columnExternalSourceState = base.Columns["ExternalSourceState"];
                 this.columnMaxRetries = base.Columns["MaxRetries"];
                 this.columnRemovalOldValue = base.Columns["RemovalOldValue"];
+                this.columnEnableThrottling = base.Columns["EnableThrottling"];
                 this.columnIsErrorQueue = base.Columns["IsErrorQueue"];
-                this.columnRemovalNewValue = base.Columns["RemovalNewValue"];
-                this.columnReverseLookupFieldValues = base.Columns["ReverseLookupFieldValues"];
+                this.columnName = base.Columns["Name"];
                 this.columnCreationCondition = base.Columns["CreationCondition"];
                 this.columnExternalSourcePassword = base.Columns["ExternalSourcePassword"];
                 this.columnIsActive = base.Columns["IsActive"];
@@ -1079,19 +1129,22 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnRecordCreated = base.Columns["RecordCreated"];
                 this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
                 this.columnId = base.Columns["Id"];
-                this.columnName = base.Columns["Name"];
-                this.columnIsMessageCountDisplayed = base.Columns["IsMessageCountDisplayed"];
+                this.columnReverseLookupFieldValues = base.Columns["ReverseLookupFieldValues"];
                 this.columnCreationFieldName = base.Columns["CreationFieldName"];
                 this.columnrefCreationOrigamStateMachineEventTypeId = base.Columns["refCreationOrigamStateMachineEventTypeId"];
+                this.columnQueueProcessor = base.Columns["QueueProcessor"];
                 this.columnCntFromMe = base.Columns["CntFromMe"];
                 this.columnCntToMe = base.Columns["CntToMe"];
                 this.columnCntExpired = base.Columns["CntExpired"];
+                this.columnThrottlingIntervalSeconds = base.Columns["ThrottlingIntervalSeconds"];
                 this.columnRemovalFieldName = base.Columns["RemovalFieldName"];
                 this.columnrefRemovalOrigamStateMachineEventTypeId = base.Columns["refRemovalOrigamStateMachineEventTypeId"];
                 this.columnExternalSourceLastTime = base.Columns["ExternalSourceLastTime"];
                 this.columnrefWorkQueueRetryTypeId = base.Columns["refWorkQueueRetryTypeId"];
+                this.columnThrottlingItemsPerInterval = base.Columns["ThrottlingItemsPerInterval"];
                 this.columnRetryIntervalSeconds = base.Columns["RetryIntervalSeconds"];
                 this.columnReferenceCode = base.Columns["ReferenceCode"];
+                this.columnExponentialRetryBase = base.Columns["ExponentialRetryBase"];
                 this.columnCreationNewValue = base.Columns["CreationNewValue"];
                 this.columnExternalSourceConnection = base.Columns["ExternalSourceConnection"];
                 this.columnRemovalCondition = base.Columns["RemovalCondition"];
@@ -1099,7 +1152,6 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnExternalSourceLastMessage = base.Columns["ExternalSourceLastMessage"];
                 this.columnApiAccessRoles = base.Columns["ApiAccessRoles"];
                 this.columnrefWorkQueueExternalSourceTypeId = base.Columns["refWorkQueueExternalSourceTypeId"];
-                this.columnQueueProcessor = base.Columns["QueueProcessor"];
                 this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
                 this.columnRecordUpdated = base.Columns["RecordUpdated"];
             }
@@ -1109,6 +1161,10 @@ namespace Origam.Workflow.WorkQueue {
             private void InitClass() {
                 this.columnCntTotal = new global::System.Data.DataColumn("CntTotal", typeof(int), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCntTotal);
+                this.columnIsMessageCountDisplayed = new global::System.Data.DataColumn("IsMessageCountDisplayed", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnIsMessageCountDisplayed);
+                this.columnRemovalNewValue = new global::System.Data.DataColumn("RemovalNewValue", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRemovalNewValue);
                 this.columnCreationOldValue = new global::System.Data.DataColumn("CreationOldValue", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCreationOldValue);
                 this.columnRoles = new global::System.Data.DataColumn("Roles", typeof(string), null, global::System.Data.MappingType.Attribute);
@@ -1121,12 +1177,12 @@ namespace Origam.Workflow.WorkQueue {
                 base.Columns.Add(this.columnMaxRetries);
                 this.columnRemovalOldValue = new global::System.Data.DataColumn("RemovalOldValue", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnRemovalOldValue);
+                this.columnEnableThrottling = new global::System.Data.DataColumn("EnableThrottling", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnEnableThrottling);
                 this.columnIsErrorQueue = new global::System.Data.DataColumn("IsErrorQueue", typeof(bool), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnIsErrorQueue);
-                this.columnRemovalNewValue = new global::System.Data.DataColumn("RemovalNewValue", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRemovalNewValue);
-                this.columnReverseLookupFieldValues = new global::System.Data.DataColumn("ReverseLookupFieldValues", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnReverseLookupFieldValues);
+                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnName);
                 this.columnCreationCondition = new global::System.Data.DataColumn("CreationCondition", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCreationCondition);
                 this.columnExternalSourcePassword = new global::System.Data.DataColumn("ExternalSourcePassword", typeof(string), null, global::System.Data.MappingType.Attribute);
@@ -1141,20 +1197,22 @@ namespace Origam.Workflow.WorkQueue {
                 base.Columns.Add(this.columnRecordUpdatedBy);
                 this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnId);
-                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnName);
-                this.columnIsMessageCountDisplayed = new global::System.Data.DataColumn("IsMessageCountDisplayed", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnIsMessageCountDisplayed);
+                this.columnReverseLookupFieldValues = new global::System.Data.DataColumn("ReverseLookupFieldValues", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnReverseLookupFieldValues);
                 this.columnCreationFieldName = new global::System.Data.DataColumn("CreationFieldName", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCreationFieldName);
                 this.columnrefCreationOrigamStateMachineEventTypeId = new global::System.Data.DataColumn("refCreationOrigamStateMachineEventTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefCreationOrigamStateMachineEventTypeId);
+                this.columnQueueProcessor = new global::System.Data.DataColumn("QueueProcessor", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnQueueProcessor);
                 this.columnCntFromMe = new global::System.Data.DataColumn("CntFromMe", typeof(int), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCntFromMe);
                 this.columnCntToMe = new global::System.Data.DataColumn("CntToMe", typeof(int), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCntToMe);
                 this.columnCntExpired = new global::System.Data.DataColumn("CntExpired", typeof(int), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCntExpired);
+                this.columnThrottlingIntervalSeconds = new global::System.Data.DataColumn("ThrottlingIntervalSeconds", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnThrottlingIntervalSeconds);
                 this.columnRemovalFieldName = new global::System.Data.DataColumn("RemovalFieldName", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnRemovalFieldName);
                 this.columnrefRemovalOrigamStateMachineEventTypeId = new global::System.Data.DataColumn("refRemovalOrigamStateMachineEventTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
@@ -1163,10 +1221,14 @@ namespace Origam.Workflow.WorkQueue {
                 base.Columns.Add(this.columnExternalSourceLastTime);
                 this.columnrefWorkQueueRetryTypeId = new global::System.Data.DataColumn("refWorkQueueRetryTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefWorkQueueRetryTypeId);
+                this.columnThrottlingItemsPerInterval = new global::System.Data.DataColumn("ThrottlingItemsPerInterval", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnThrottlingItemsPerInterval);
                 this.columnRetryIntervalSeconds = new global::System.Data.DataColumn("RetryIntervalSeconds", typeof(int), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnRetryIntervalSeconds);
                 this.columnReferenceCode = new global::System.Data.DataColumn("ReferenceCode", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnReferenceCode);
+                this.columnExponentialRetryBase = new global::System.Data.DataColumn("ExponentialRetryBase", typeof(decimal), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnExponentialRetryBase);
                 this.columnCreationNewValue = new global::System.Data.DataColumn("CreationNewValue", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnCreationNewValue);
                 this.columnExternalSourceConnection = new global::System.Data.DataColumn("ExternalSourceConnection", typeof(string), null, global::System.Data.MappingType.Attribute);
@@ -1181,8 +1243,6 @@ namespace Origam.Workflow.WorkQueue {
                 base.Columns.Add(this.columnApiAccessRoles);
                 this.columnrefWorkQueueExternalSourceTypeId = new global::System.Data.DataColumn("refWorkQueueExternalSourceTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefWorkQueueExternalSourceTypeId);
-                this.columnQueueProcessor = new global::System.Data.DataColumn("QueueProcessor", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnQueueProcessor);
                 this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnRecordCreatedBy);
                 this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
@@ -1190,6 +1250,13 @@ namespace Origam.Workflow.WorkQueue {
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
                 this.columnCntTotal.Namespace = "";
+                this.columnIsMessageCountDisplayed.AllowDBNull = false;
+                this.columnIsMessageCountDisplayed.Namespace = "";
+                this.columnIsMessageCountDisplayed.Caption = "Display Number of Messages";
+                this.columnIsMessageCountDisplayed.DefaultValue = ((bool)(true));
+                this.columnRemovalNewValue.Namespace = "";
+                this.columnRemovalNewValue.Caption = "Removal New Value";
+                this.columnRemovalNewValue.MaxLength = 200;
                 this.columnCreationOldValue.Namespace = "";
                 this.columnCreationOldValue.Caption = "Creation Old Value";
                 this.columnCreationOldValue.MaxLength = 200;
@@ -1201,22 +1268,24 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnWorkQueueClass.Caption = "Class";
                 this.columnWorkQueueClass.MaxLength = 200;
                 this.columnExternalSourceState.Caption = "State Data";
+                this.columnMaxRetries.AllowDBNull = false;
                 this.columnMaxRetries.Namespace = "";
                 this.columnMaxRetries.Caption = "Maximum Retries";
+                this.columnMaxRetries.DefaultValue = ((int)(3));
                 this.columnRemovalOldValue.Namespace = "";
                 this.columnRemovalOldValue.Caption = "Removal Old Value";
                 this.columnRemovalOldValue.MaxLength = 200;
+                this.columnEnableThrottling.AllowDBNull = false;
+                this.columnEnableThrottling.Namespace = "";
+                this.columnEnableThrottling.Caption = "Enable Throttling";
+                this.columnEnableThrottling.DefaultValue = ((bool)(false));
                 this.columnIsErrorQueue.AllowDBNull = false;
                 this.columnIsErrorQueue.Namespace = "";
                 this.columnIsErrorQueue.Caption = "Error Queue";
                 this.columnIsErrorQueue.DefaultValue = ((bool)(false));
-                this.columnRemovalNewValue.Namespace = "";
-                this.columnRemovalNewValue.Caption = "Removal New Value";
-                this.columnRemovalNewValue.MaxLength = 200;
-                this.columnReverseLookupFieldValues.AllowDBNull = false;
-                this.columnReverseLookupFieldValues.Namespace = "";
-                this.columnReverseLookupFieldValues.Caption = "Lookup Field Values";
-                this.columnReverseLookupFieldValues.DefaultValue = ((bool)(false));
+                this.columnName.AllowDBNull = false;
+                this.columnName.Namespace = "";
+                this.columnName.MaxLength = 200;
                 this.columnCreationCondition.Namespace = "";
                 this.columnCreationCondition.Caption = "Condition (XPath)";
                 this.columnExternalSourcePassword.Namespace = "";
@@ -1236,21 +1305,25 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnId.AllowDBNull = false;
                 this.columnId.Unique = true;
                 this.columnId.Namespace = "";
-                this.columnName.AllowDBNull = false;
-                this.columnName.Namespace = "";
-                this.columnName.MaxLength = 200;
-                this.columnIsMessageCountDisplayed.AllowDBNull = false;
-                this.columnIsMessageCountDisplayed.Namespace = "";
-                this.columnIsMessageCountDisplayed.Caption = "Display Number of Messages";
-                this.columnIsMessageCountDisplayed.DefaultValue = ((bool)(true));
+                this.columnReverseLookupFieldValues.AllowDBNull = false;
+                this.columnReverseLookupFieldValues.Namespace = "";
+                this.columnReverseLookupFieldValues.Caption = "Lookup Field Values";
+                this.columnReverseLookupFieldValues.DefaultValue = ((bool)(false));
                 this.columnCreationFieldName.Namespace = "";
                 this.columnCreationFieldName.Caption = "Creation Field Name";
                 this.columnCreationFieldName.MaxLength = 200;
                 this.columnrefCreationOrigamStateMachineEventTypeId.Namespace = "";
                 this.columnrefCreationOrigamStateMachineEventTypeId.Caption = "Create Event";
+                this.columnQueueProcessor.Namespace = "";
+                this.columnQueueProcessor.Caption = "Queue Processor";
+                this.columnQueueProcessor.MaxLength = 50;
                 this.columnCntFromMe.Namespace = "";
                 this.columnCntToMe.Namespace = "";
                 this.columnCntExpired.Namespace = "";
+                this.columnThrottlingIntervalSeconds.AllowDBNull = false;
+                this.columnThrottlingIntervalSeconds.Namespace = "";
+                this.columnThrottlingIntervalSeconds.Caption = "Throttling Time Interval in Seconds";
+                this.columnThrottlingIntervalSeconds.DefaultValue = ((int)(60));
                 this.columnRemovalFieldName.Namespace = "";
                 this.columnRemovalFieldName.Caption = "Removal Field Name";
                 this.columnRemovalFieldName.MaxLength = 200;
@@ -1258,14 +1331,25 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnrefRemovalOrigamStateMachineEventTypeId.Caption = "Removal Event";
                 this.columnExternalSourceLastTime.Namespace = "";
                 this.columnExternalSourceLastTime.Caption = "Last Action";
+                this.columnrefWorkQueueRetryTypeId.AllowDBNull = false;
                 this.columnrefWorkQueueRetryTypeId.Namespace = "";
                 this.columnrefWorkQueueRetryTypeId.Caption = "Retry Type";
+                this.columnThrottlingItemsPerInterval.AllowDBNull = false;
+                this.columnThrottlingItemsPerInterval.Namespace = "";
+                this.columnThrottlingItemsPerInterval.Caption = "Throttling Items Per Interval";
+                this.columnThrottlingItemsPerInterval.DefaultValue = ((int)(10));
+                this.columnRetryIntervalSeconds.AllowDBNull = false;
                 this.columnRetryIntervalSeconds.Namespace = "";
                 this.columnRetryIntervalSeconds.Caption = "Retry Time Interval in Seconds";
+                this.columnRetryIntervalSeconds.DefaultValue = ((int)(30));
                 this.columnReferenceCode.AllowDBNull = false;
                 this.columnReferenceCode.Namespace = "";
                 this.columnReferenceCode.Caption = "Code";
                 this.columnReferenceCode.MaxLength = 40;
+                this.columnExponentialRetryBase.AllowDBNull = false;
+                this.columnExponentialRetryBase.Namespace = "";
+                this.columnExponentialRetryBase.Caption = "Exponential Retry Base";
+                this.columnExponentialRetryBase.DefaultValue = ((decimal)(2m));
                 this.columnCreationNewValue.Namespace = "";
                 this.columnCreationNewValue.Caption = "Creation New Value";
                 this.columnCreationNewValue.MaxLength = 200;
@@ -1282,9 +1366,6 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnApiAccessRoles.MaxLength = 500;
                 this.columnrefWorkQueueExternalSourceTypeId.Namespace = "";
                 this.columnrefWorkQueueExternalSourceTypeId.Caption = "External Source";
-                this.columnQueueProcessor.Namespace = "";
-                this.columnQueueProcessor.Caption = "Queue Processor";
-                this.columnQueueProcessor.MaxLength = 50;
                 this.columnRecordCreatedBy.Namespace = "";
                 this.columnRecordCreatedBy.Caption = "Created By";
                 this.columnRecordUpdated.Namespace = "";
@@ -1724,7 +1805,7 @@ namespace Origam.Workflow.WorkQueue {
                         Roles,
                         RecordUpdated};
                 if ((parentWorkQueueRowByWorkQueueCommand != null)) {
-                    columnValuesArray[9] = parentWorkQueueRowByWorkQueueCommand[16];
+                    columnValuesArray[9] = parentWorkQueueRowByWorkQueueCommand[18];
                 }
                 rowWorkQueueCommandRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowWorkQueueCommandRow);
@@ -2211,7 +2292,7 @@ namespace Origam.Workflow.WorkQueue {
                         RecordUpdated,
                         IsActive};
                 if ((parentWorkQueueRowByWorkQueueNotification != null)) {
-                    columnValuesArray[3] = parentWorkQueueRowByWorkQueueNotification[16];
+                    columnValuesArray[3] = parentWorkQueueRowByWorkQueueNotification[18];
                 }
                 rowWorkQueueNotificationRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowWorkQueueNotificationRow);
@@ -3330,6 +3411,33 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsMessageCountDisplayed {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.IsMessageCountDisplayedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.IsMessageCountDisplayedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string RemovalNewValue {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.RemovalNewValueColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalNewValue\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RemovalNewValueColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string CreationOldValue {
                 get {
                     try {
@@ -3391,12 +3499,7 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public int MaxRetries {
                 get {
-                    try {
-                        return ((int)(this[this.tableWorkQueue.MaxRetriesColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'MaxRetries\' in table \'WorkQueue\' is DBNull.", e);
-                    }
+                    return ((int)(this[this.tableWorkQueue.MaxRetriesColumn]));
                 }
                 set {
                     this[this.tableWorkQueue.MaxRetriesColumn] = value;
@@ -3421,6 +3524,17 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool EnableThrottling {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.EnableThrottlingColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.EnableThrottlingColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsErrorQueue {
                 get {
                     return ((bool)(this[this.tableWorkQueue.IsErrorQueueColumn]));
@@ -3432,28 +3546,12 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string RemovalNewValue {
+            public string Name {
                 get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.RemovalNewValueColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalNewValue\' in table \'WorkQueue\' is DBNull.", e);
-                    }
+                    return ((string)(this[this.tableWorkQueue.NameColumn]));
                 }
                 set {
-                    this[this.tableWorkQueue.RemovalNewValueColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool ReverseLookupFieldValues {
-                get {
-                    return ((bool)(this[this.tableWorkQueue.ReverseLookupFieldValuesColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.ReverseLookupFieldValuesColumn] = value;
+                    this[this.tableWorkQueue.NameColumn] = value;
                 }
             }
             
@@ -3556,23 +3654,12 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string Name {
+            public bool ReverseLookupFieldValues {
                 get {
-                    return ((string)(this[this.tableWorkQueue.NameColumn]));
+                    return ((bool)(this[this.tableWorkQueue.ReverseLookupFieldValuesColumn]));
                 }
                 set {
-                    this[this.tableWorkQueue.NameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsMessageCountDisplayed {
-                get {
-                    return ((bool)(this[this.tableWorkQueue.IsMessageCountDisplayedColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.IsMessageCountDisplayedColumn] = value;
+                    this[this.tableWorkQueue.ReverseLookupFieldValuesColumn] = value;
                 }
             }
             
@@ -3606,6 +3693,22 @@ namespace Origam.Workflow.WorkQueue {
                 }
                 set {
                     this[this.tableWorkQueue.refCreationOrigamStateMachineEventTypeIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string QueueProcessor {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.QueueProcessorColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'QueueProcessor\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.QueueProcessorColumn] = value;
                 }
             }
             
@@ -3654,6 +3757,17 @@ namespace Origam.Workflow.WorkQueue {
                 }
                 set {
                     this[this.tableWorkQueue.CntExpiredColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int ThrottlingIntervalSeconds {
+                get {
+                    return ((int)(this[this.tableWorkQueue.ThrottlingIntervalSecondsColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.ThrottlingIntervalSecondsColumn] = value;
                 }
             }
             
@@ -3710,12 +3824,7 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid refWorkQueueRetryTypeId {
                 get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueue.refWorkQueueRetryTypeIdColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'refWorkQueueRetryTypeId\' in table \'WorkQueue\' is DBNull.", e);
-                    }
+                    return ((global::System.Guid)(this[this.tableWorkQueue.refWorkQueueRetryTypeIdColumn]));
                 }
                 set {
                     this[this.tableWorkQueue.refWorkQueueRetryTypeIdColumn] = value;
@@ -3724,14 +3833,20 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int ThrottlingItemsPerInterval {
+                get {
+                    return ((int)(this[this.tableWorkQueue.ThrottlingItemsPerIntervalColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.ThrottlingItemsPerIntervalColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public int RetryIntervalSeconds {
                 get {
-                    try {
-                        return ((int)(this[this.tableWorkQueue.RetryIntervalSecondsColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RetryIntervalSeconds\' in table \'WorkQueue\' is DBNull.", e);
-                    }
+                    return ((int)(this[this.tableWorkQueue.RetryIntervalSecondsColumn]));
                 }
                 set {
                     this[this.tableWorkQueue.RetryIntervalSecondsColumn] = value;
@@ -3746,6 +3861,17 @@ namespace Origam.Workflow.WorkQueue {
                 }
                 set {
                     this[this.tableWorkQueue.ReferenceCodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public decimal ExponentialRetryBase {
+                get {
+                    return ((decimal)(this[this.tableWorkQueue.ExponentialRetryBaseColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.ExponentialRetryBaseColumn] = value;
                 }
             }
             
@@ -3864,22 +3990,6 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string QueueProcessor {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.QueueProcessorColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'QueueProcessor\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.QueueProcessorColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid RecordCreatedBy {
                 get {
                     try {
@@ -3924,6 +4034,18 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRemovalNewValueNull() {
+                return this.IsNull(this.tableWorkQueue.RemovalNewValueColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRemovalNewValueNull() {
+                this[this.tableWorkQueue.RemovalNewValueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsCreationOldValueNull() {
                 return this.IsNull(this.tableWorkQueue.CreationOldValueColumn);
             }
@@ -3960,18 +4082,6 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsMaxRetriesNull() {
-                return this.IsNull(this.tableWorkQueue.MaxRetriesColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetMaxRetriesNull() {
-                this[this.tableWorkQueue.MaxRetriesColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsRemovalOldValueNull() {
                 return this.IsNull(this.tableWorkQueue.RemovalOldValueColumn);
             }
@@ -3980,18 +4090,6 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetRemovalOldValueNull() {
                 this[this.tableWorkQueue.RemovalOldValueColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsRemovalNewValueNull() {
-                return this.IsNull(this.tableWorkQueue.RemovalNewValueColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetRemovalNewValueNull() {
-                this[this.tableWorkQueue.RemovalNewValueColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4068,6 +4166,18 @@ namespace Origam.Workflow.WorkQueue {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsQueueProcessorNull() {
+                return this.IsNull(this.tableWorkQueue.QueueProcessorColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetQueueProcessorNull() {
+                this[this.tableWorkQueue.QueueProcessorColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsCntFromMeNull() {
                 return this.IsNull(this.tableWorkQueue.CntFromMeColumn);
             }
@@ -4136,30 +4246,6 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetExternalSourceLastTimeNull() {
                 this[this.tableWorkQueue.ExternalSourceLastTimeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsrefWorkQueueRetryTypeIdNull() {
-                return this.IsNull(this.tableWorkQueue.refWorkQueueRetryTypeIdColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetrefWorkQueueRetryTypeIdNull() {
-                this[this.tableWorkQueue.refWorkQueueRetryTypeIdColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsRetryIntervalSecondsNull() {
-                return this.IsNull(this.tableWorkQueue.RetryIntervalSecondsColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetRetryIntervalSecondsNull() {
-                this[this.tableWorkQueue.RetryIntervalSecondsColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4244,18 +4330,6 @@ namespace Origam.Workflow.WorkQueue {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetrefWorkQueueExternalSourceTypeIdNull() {
                 this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsQueueProcessorNull() {
-                return this.IsNull(this.tableWorkQueue.QueueProcessorColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetQueueProcessorNull() {
-                this[this.tableWorkQueue.QueueProcessorColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
