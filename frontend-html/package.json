@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node ./custom-scripts/updateVersions.cjs && tsc && vite build && (echo const supportedBrowserRegEx = && browserslist-useragent-regexp --allowHigherVersions) > dist/assets/supportedBrowserRegEx.js",
+    "build": "node ./custom-scripts/updateVersions.cjs && vite build && (echo const supportedBrowserRegEx = && browserslist-useragent-regexp --allowHigherVersions) > dist/assets/supportedBrowserRegEx.js",
     "preview": "vite preview",
     "postinstall": "patch-package",
     "test": "jest"
@@ -66,8 +66,6 @@
     "moment": "^2.29.4",
     "numeral": "^2.0.6",
     "oidc-client-ts": "^2.2.3",
-    "patch-package": "^7.0.0",
-    "postinstall-postinstall": "^2.1.0",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-color": "^2.19.3",
