@@ -1283,8 +1283,8 @@ namespace Origam.Workflow.WorkQueue
         bool _externalQueueAdapterBusy = false;
 
         private void LoadExternalWorkQueuesElapsed(object sender, ElapsedEventArgs e)
-        {
-            // LoadFromExternalSource();
+        { 
+            LoadFromExternalSource();
         }
 
         private void LoadFromExternalSource()
