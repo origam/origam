@@ -42,10 +42,10 @@ public class RetryManager
     public void SetEntryRetryData(DataRow queueEntryRow,
         WorkQueueData.WorkQueueRow queue, string errorMessage)
     {
-        Guid retryType = (Guid)queue["refWorkQueueRetryTypeId"];
-        int maxRetries = (int)queue["MaxRetries"];
-        int retryIntervalSeconds = (int)queue["RetryIntervalSeconds"];
-        double exponentialRetryBase = decimal.ToDouble((decimal)queue["ExponentialRetryBase"]);
+        Guid retryType = queue.refWorkQueueRetryTypeId;
+        int maxRetries = queue.MaxRetries;
+        int retryIntervalSeconds = queue.RetryIntervalSeconds;
+        double exponentialRetryBase = decimal.ToDouble(queue.ExponentialRetryBase);
         
         var failureTime = getTimeNow();
         queueEntryRow["ErrorText"] = failureTime + ": " + errorMessage;
@@ -90,8 +90,8 @@ public class RetryManager
     public bool CanRunNow(DataRow queueEntryRow,
         WorkQueueData.WorkQueueRow queue, bool processErrors)
     {
-        Guid retryType = (Guid)queue["refWorkQueueRetryTypeId"];
-        int maxRetries = (int)queue["MaxRetries"];
+        Guid retryType = queue.refWorkQueueRetryTypeId;
+        int maxRetries = queue.MaxRetries;
         int attemptCount = GetAttemptCount(queueEntryRow);
         bool inRetry = (bool)queueEntryRow["InRetry"];
 
