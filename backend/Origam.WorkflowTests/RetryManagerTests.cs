@@ -105,7 +105,7 @@ public class RetryManagerTests
             new DataColumn("ExponentialRetryBase", typeof(decimal)));
         var queueRow = workQueueTable.NewWorkQueueRow();
         queueRow.MaxRetries = 0;
-        queueRow.RetryIntervalSeconds= 0;
+        queueRow.RetryIntervalSeconds = 0;
         queueRow.ExponentialRetryBase = 2;
         return queueRow;
     }
