@@ -7,7 +7,6 @@
     "dev": "vite",
     "build": "node ./custom-scripts/updateVersions.cjs && vite build && (echo const supportedBrowserRegEx = && browserslist-useragent-regexp --allowHigherVersions) > dist/assets/supportedBrowserRegEx.js",
     "preview": "vite preview",
-    "postinstall": "patch-package",
     "test": "jest"
   },
   "dependencies": {
