@@ -50,7 +50,8 @@ namespace Origam.GitTests
 
             var gitFileComparer = new GitFileComparer();
             GitDiff gitDiff = gitFileComparer.GetGitDiff(pathToOld, pathToNew);
-            string actualDiffBody = string.Join(Environment.NewLine, gitDiff.Text.Split('\n').Skip(5));
+            string actualDiffBody = string.Join(Environment.NewLine, gitDiff.Text.Split('\n').Skip(5).
+                Select(line => { return line.Replace("\r", ""); }).ToList());
             
             
             StringAssert.AreEqualIgnoringCase(actualDiffBody, expectedDiffBody);
