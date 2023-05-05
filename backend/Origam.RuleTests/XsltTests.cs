@@ -1167,10 +1167,10 @@ public class XsltTests
         var dateTime = DateTime.Parse("2022-01-01");
         TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
         string xsltCall = "AS:ListDays('2022-01-01', '2022-01-03')";
-        string expectedResultXpath = "<list>\r\n" +
-                                     $"  <item>2022-01-01T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
-                                     $"  <item>2022-01-02T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
-                                     $"  <item>2022-01-03T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
+        string expectedResultXpath = "<list>" + Environment.NewLine +
+                                     $"  <item>2022-01-01T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
+                                     $"  <item>2022-01-02T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
+                                     $"  <item>2022-01-03T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
                                      "</list>";
         string expectedResultXslt =
             $"2022-01-01T00:00:00.0000000+{offset:hh}:002022-01-02T00:00:00.0000000+{offset:hh}:002022-01-03T00:00:00.0000000+{offset:hh}:00";
@@ -1422,13 +1422,13 @@ public class XsltTests
     public void ShouldTestNodeToString()
     {
         string xsltCall = "AS:NodeToString(/ROOT)";
-        string expectedResultXpath = "<ROOT>\r\n" +
-                                     "  <N1 count=\"1\">\r\n" +
-                                     "  </N1>\r\n" +
-                                     "  <N1 count=\"2\">\r\n" +
-                                     "  </N1>\r\n" +
-                                     "  <N1 count=\"3\">\r\n" +
-                                     "  </N1>\r\n" +
+        string expectedResultXpath = "<ROOT>" + Environment.NewLine +
+                                     "  <N1 count=\"1\">" + Environment.NewLine +
+                                     "  </N1>" + Environment.NewLine +
+                                     "  <N1 count=\"2\">" + Environment.NewLine + 
+                                     "  </N1>" + Environment.NewLine +
+                                     "  <N1 count=\"3\">" + Environment.NewLine +
+                                     "  </N1>" + Environment.NewLine +
                                      "</ROOT>";
 
         string expectedResultXslt =
@@ -1534,9 +1534,9 @@ public class XsltTests
     public void ShouldTestDiff()
     {
         string xsltCall = $"AS:Diff('old text', 'new text')";
-        string expectedXpathResult = "<lines>\r\n" +
-                                     "  <line changeType=\"Deleted\">old text</line>\r\n" +
-                                     "  <line changeType=\"Inserted\" position=\"1\">new text</line>\r\n" +
+        string expectedXpathResult = "<lines>" + Environment.NewLine +
+                                     "  <line changeType=\"Deleted\">old text</line>" + Environment.NewLine +
+                                     "  <line changeType=\"Inserted\" position=\"1\">new text</line>" + Environment.NewLine +
                                      "</lines>";
         string expectedXsltResult = "old textnew text";
 
