@@ -101,8 +101,6 @@ public class RetryManagerTests
     private static WorkQueueData.WorkQueueRow CreateEmptyQueueRow()
     {
         var workQueueTable = new WorkQueueData.WorkQueueDataTable();
-        workQueueTable.Columns.Add(
-            new DataColumn("ExponentialRetryBase", typeof(decimal)));
         var queueRow = workQueueTable.NewWorkQueueRow();
         queueRow.MaxRetries = 0;
         queueRow.RetryIntervalSeconds= 0;
