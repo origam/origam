@@ -218,11 +218,14 @@ namespace Origam.DA.Service
 		private Hashtable GetCache()
 		{
 			Hashtable context = OrigamUserContext.Context;
-			if(! context.Contains("DataAdapterCache"))
+			lock (context)
 			{
-				context.Add("DataAdapterCache", new Hashtable());
+				if(! context.Contains("DataAdapterCache"))
+				{
+					context.Add("DataAdapterCache", new Hashtable());
+				}
 			}
-            return (Hashtable)OrigamUserContext.Context["DataAdapterCache"];
+			return (Hashtable)OrigamUserContext.Context["DataAdapterCache"];
 		}
 		
 		private DbDataAdapter GetAdapterCached(SelectParameters adParameters, string identityId)

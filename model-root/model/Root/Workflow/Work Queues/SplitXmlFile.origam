@@ -2,7 +2,7 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
@@ -10,13 +10,14 @@
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="502221ba-e12f-4fe0-b1a2-b46db48fbf70"
     asi:name="SplitXmlFile"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -52,6 +53,7 @@
       asi:abstract="false"
       x:id="1a5c56be-9e7a-4e5e-8ee9-95369dd829ef"
       asi:name="02_DeleteSource"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Source/dd8bbc26-fe08-490f-890b-7610883f5cab"
       wt:outputMethod="FullMerge"
       aws:roles="*"
@@ -97,6 +99,7 @@
       asi:abstract="false"
       x:id="bd6f8d28-5c8b-4fb2-b433-98a1e228f5fe"
       asi:name="01_Split"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Target/8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -151,12 +154,14 @@
       asi:abstract="false"
       x:id="21a83b81-b3ce-4927-ab37-cbde104cefe4"
       asi:name="03_Save"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       twb:transactionType="Atomic">
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="18aa07ca-eb40-43be-8729-91ccb5dd9255"
         asi:name="StoreSource"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Source/dd8bbc26-fe08-490f-890b-7610883f5cab"
         wt:outputMethod="Ignore"
         aws:roles="*"
@@ -191,6 +196,7 @@
         asi:abstract="false"
         x:id="8c63ab35-b3e8-4524-842d-0ebdaa02ca88"
         asi:name="StoreTarget"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Root/Workflow/Work Queues/SplitXmlFile.origam#SplitXmlFile/WQ_TextFile_Target/8265320b-07c3-4bc0-8a66-fb46c76b9a6c"
         wt:outputMethod="Ignore"
         aws:roles="*"

@@ -49,6 +49,17 @@
         asi:abstract="false"
         dse:allFields="true"
         dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueState/dcbe1795-2d35-4b7a-b874-a1aecdc9fd18"
+        x:id="02113607-e4a7-444b-8ab4-fe23d4d1890d"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="WorkQueueState"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
         dse:entity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/WorkQueueNotification/b04b2dd9-0d2c-4ab8-940a-85e1d07afdcb"
         x:id="4ae32981-ba9d-40fa-9b2a-d82332a36b63"
         dse:ignoreCondition="None"
@@ -111,9 +122,9 @@
       <dsssi:DataStructureSortSetItem
         asi:abstract="false"
         dsssi:entity="Root/DataStructure/Work Queue/WorkQueue_Complete.origam#WorkQueue_Complete/WorkQueue/142da199-f5db-4690-a8c5-17e24b380733"
-        dsssi:fieldName="Name"
+        dsssi:fieldName="ReferenceCode"
         x:id="c95f9c96-39c7-4298-aae9-02bd59b955a4"
-        asi:name="WorkQueue_0_Name"
+        asi:name="WorkQueue_0_ReferenceCode"
         dsssi:sortDirection="Ascending" />
       <dsssi:DataStructureSortSetItem
         asi:abstract="false"

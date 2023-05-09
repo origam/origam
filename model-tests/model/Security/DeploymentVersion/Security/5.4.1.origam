@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0"
+  xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0"
+  xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.2"
+    x:id="a4624702-30d0-43a2-a63d-04358e470cd1"
+    asi:name="5.4.1"
+    dv:version="5.4.1">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.4.1.origam___commandText___0a71752e-334f-4d3e-b818-84ec18607f00.txt"
+      x:id="0a71752e-334f-4d3e-b818-84ec18607f00"
+      asi:name="00020_Database_Entity_OrigamIdentityGrant"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.4.1.origam___commandText___1e31ca2c-2d18-4507-bc71-edcd04f71efb.txt"
+      x:id="1e31ca2c-2d18-4507-bc71-edcd04f71efb"
+      asi:name="00010_Drop_Table_OrigamIdentityGrant"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:5.4.1.origam___commandText___324368b6-7768-4af1-a9e0-6b3b8ed42234.txt"
+      x:id="324368b6-7768-4af1-a9e0-6b3b8ed42234"
+      asi:name="00030_PG_Drop_Table_OrigamIdentityGrant"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:5.4.1.origam___commandText___651414c9-af75-473a-82be-4cf3e009fa4e.txt"
+      x:id="651414c9-af75-473a-82be-4cf3e009fa4e"
+      asi:name="00030_PG_Database_Entity_OrigamIdentityGrant"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

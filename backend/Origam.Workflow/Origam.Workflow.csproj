@@ -95,6 +95,7 @@
     <Compile Update="WorkQueue\WorkQueueData.Designer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Remove="WorkQueue\WorkQueueData.cs" />
   </ItemGroup>
 
  
@@ -104,5 +105,4 @@
       <Version>1.0.2</Version>
     </PackageReference>
   </ItemGroup>
-
 </Project>

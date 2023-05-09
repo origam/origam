@@ -14,8 +14,8 @@
     <dse:DataStructureEntity
       asi:abstract="false"
       dse:allFields="true"
-      dse:concurrencyHandling="Standard"
-      dse:entity="Root/DataEntity/Partner Management/OrigamIdentityGrant.origam#OrigamIdentityGrant/c46ae0d3-f408-48c5-8248-ddfd9572344c"
+      dse:concurrencyHandling="LastWins"
+      dse:entity="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/c46ae0d3-f408-48c5-8248-ddfd9572344c"
       x:id="4a7db406-ba64-4cb7-a4d2-c9f82bb7594b"
       dse:ignoreCondition="None"
       dse:ignoreImplicitFilters="false"
