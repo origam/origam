@@ -47,7 +47,7 @@ public class LinearProcessor : IWorkQueueProcessor
         this.workQueueThrottle = workQueueThrottle;
     }
 
-    public void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
+    public virtual void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
     {
         foreach (WorkQueueRow queue in queues)
         {

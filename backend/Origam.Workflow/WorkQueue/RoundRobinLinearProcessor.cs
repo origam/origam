@@ -40,7 +40,7 @@ public class RoundRobinLinearProcessor : LinearProcessor
         this.batchSize = batchSize;
     }
 
-    public void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
+    public override void Run(IEnumerable<WorkQueueRow> queues, CancellationToken cancellationToken)
     {
         List<WorkQueueRow> queueList = queues.ToList();
         int numberOfEmptyQueues = 0;
