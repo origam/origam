@@ -34,6 +34,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Origam.DA;
 using Origam.Rule;
 using Origam.Rule.Xslt;
@@ -524,14 +525,31 @@ public class XsltTests
 
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
     [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
+    [Platform (Include = "Win")]
     public void ShouldConvertImage(string xsltCallTemplate,
         string expectedResult)
+    {
+        string xsltCall =
+            string.Format(xsltCallTemplate, Convert.ToBase64String(image));
+        Console.WriteLine(xsltCall);
+        object xPathResult = RunInXpath(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }
+
+    [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
+    [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
+    [Platform(Include = "Linux")]
+    public void ShouldConvertImageLinux(string xsltCallTemplate,
+     string expectedResult)
     {
         string xsltCall =
             string.Format(xsltCallTemplate, Convert.ToBase64String(image));
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
+        Console.WriteLine(xsltResult);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
