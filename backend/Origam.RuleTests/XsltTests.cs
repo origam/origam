@@ -535,7 +535,6 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        TestContext.Out.WriteLine("OUT ->" + xsltResult);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
@@ -550,7 +549,11 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
-        TestContext.Out.WriteLine("OUT ->" + xsltResult);
+        Console.WriteLine("This is Console.Writeline" + xsltResult);
+        TestContext.WriteLine("This is TestContext.WriteLine" + xsltResult);
+        TestContext.Out.WriteLine("This is TestContext.Out.WriteLine" + xsltResult);
+        TestContext.Progress.WriteLine("This is TestContext.Progress.WriteLine" + xsltResult);
+        TestContext.Error.WriteLine("This is TestContext.Error.WriteLine" + xsltResult);
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
