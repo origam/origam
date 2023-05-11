@@ -510,6 +510,21 @@ public class XsltTests
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
         "AAAAAAAAAAAAAAAA==";
 
+    private const string resizedImage1Linux =
+        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABGdBTUEAALGPC/xhBQ" +
+        "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA" +
+        "BdwnLpRPAAAACFJREFUCJlj/P///38GKPj///9/JgY0gCHAgqyFgYGBAQAVfgv+xs48" +
+        "NQAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAA==";
+    private const string resizedImage2Linux =
+        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAABGdBTUEAALGPC/xhBQ" +
+        "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA" +
+        "BdwnLpRPAAAACFJREFUCJlj/P//PwMDAwMDw////5kYkAAKhwWujIGBAQAx+wkBrIw4" +
+        "XAAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAA==";
+
     // white square 6x6, png format.
     private byte[] image =
     {
@@ -537,8 +552,8 @@ public class XsltTests
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
-    [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
-    [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
+    [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1Linux)]
+    [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2Linux)]
     [Platform(Include = "Linux")]
     public void ShouldConvertImageLinux(string xsltCallTemplate,
      string expectedResult)
