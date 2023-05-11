@@ -76,3 +76,4 @@ jobs:
         name: NUnit Results
         path: TestResults/test-results.trx
         reporter: dotnet-trx
+        max-annotations: '0'
