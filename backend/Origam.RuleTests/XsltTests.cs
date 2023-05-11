@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -562,13 +563,6 @@ public class XsltTests
            string.Format(xsltCallTemplate, Convert.ToBase64String(image));
         object xPathResult = RunInXpath(xsltCall);
         string xsltResult = RunInXslt(xsltCall);
-
-        Console.WriteLine("This is Console.Writeline" + xsltResult);
-        TestContext.WriteLine("This is TestContext.WriteLine" + xsltResult);
-        TestContext.Out.WriteLine("This is TestContext.Out.WriteLine" + xsltResult);
-        TestContext.Progress.WriteLine("This is TestContext.Progress.WriteLine" + xsltResult);
-        TestContext.Error.WriteLine("This is TestContext.Error.WriteLine" + xsltResult);
-
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
@@ -1468,12 +1462,19 @@ public class XsltTests
                                      "  <N1 count=\"3\">" + Environment.NewLine +
                                      "  </N1>" + Environment.NewLine +
                                      "</ROOT>";
+        string newLineCR = "&#xD;";
+        string newLineLF = "&#xA;";
+        string newLinePlatform = newLineCR + newLineLF;
+        if (RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+        {
+            newLinePlatform = newLineLF;
+        }
 
         string expectedResultXslt =
-            "&lt;ROOT&gt;&#xD;&#xA;  &lt;N1 count=&quot;1&quot;&gt;&#xD;&#xA;  " +
-            "&lt;/N1&gt;&#xD;&#xA;  &lt;N1 count=&quot;2&quot;&gt;&#xD;&#xA;  " +
-            "&lt;/N1&gt;&#xD;&#xA;  &lt;N1 count=&quot;3&quot;&gt;&#xD;&#xA;  " +
-            "&lt;/N1&gt;&#xD;&#xA;&lt;/ROOT&gt;";
+            "&lt;ROOT&gt;"+ newLinePlatform + "  &lt;N1 count=&quot;1&quot;&gt;"+ newLinePlatform + "  " +
+            "&lt;/N1&gt;"+ newLinePlatform + "  &lt;N1 count=&quot;2&quot;&gt;"+ newLinePlatform + "  " +
+            "&lt;/N1&gt;"+ newLinePlatform + "  &lt;N1 count=&quot;3&quot;&gt;"+ newLinePlatform + "  " +
+            "&lt;/N1&gt;"+ newLinePlatform + "&lt;/ROOT&gt;";
         var document = new XmlDocument();
         document.LoadXml(
             "<ROOT><N1 count=\"1\"></N1><N1 count=\"2\"></N1><N1  count=\"3\"></N1></ROOT>");
