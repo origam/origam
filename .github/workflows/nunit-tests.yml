@@ -35,10 +35,10 @@ jobs:
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
        msbuild backend/Origam.sln -t:build /p:Configuration="Release Architect" /t:Common\Origam_CommonTests:Publish -v:m
 
-    - name: Upload testing artefact
+    - name: Upload testing artifact
       uses: actions/upload-artifact@v2
       with:
-        name: testingbuild
+        name: test-dlls
         path: "backend/**Tests/bin/Release" 
      
   tests:
@@ -54,20 +54,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp']
+        language: ['csharp']
 
     steps:
     - name: Download testing artefact
       uses: actions/download-artifact@v2
       with:
-        name: testingbuild
+        name: test-dlls
         path: backend
 
     - name: Run NUnit Tests
       run:  |
+       // we need renamed mvp.xml.dll to Mvp.Xml.dll
        find . -name 'mvp.xml.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/mvp.xml.x.dll"' \;
        find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
-       find . -name 'Mvp.Xml.dll'
        dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
       
     - name: Produce NUnit Test Report
@@ -83,4 +83,4 @@ jobs:
     - name: Delete artifact
       uses: geekyeggo/delete-artifact@v2
       with:
-          name: testingbuild
+          name: test-dlls
