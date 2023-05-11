@@ -101,7 +101,7 @@ namespace Origam.Common_net2Tests
         public void ShouldRecognizeDirectoryAsParent()
         {
             var parent = new DirectoryInfo(@"Serialization\Root Menu".
-                Replace('\\',Path.DirectorySeparatorChar));
+                Replace('\\', Path.DirectorySeparatorChar));
             var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
                 Replace('\\', Path.DirectorySeparatorChar));
 
