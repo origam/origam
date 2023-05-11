@@ -110,12 +110,12 @@ export class Header extends React.Component<{
       <div
         {...provided?.dragHandleProps}
         className={S.header}
-        onClick={(event) => this.props.onClick && this.props.onClick(event, this.props.id)}
         style={this.makeHeaderStyle()}
         title={this.props.label}
       >
         <div className={S.inHeaderRow}>
           <div
+            onClick={(event) => this.props.onClick && this.props.onClick(event, this.props.id)}
             className={S.label}
               >
             {this.props.label}
