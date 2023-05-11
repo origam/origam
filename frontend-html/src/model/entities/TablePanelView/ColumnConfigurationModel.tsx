@@ -33,6 +33,7 @@ import { GroupingUnit, groupingUnitToLabel } from "model/entities/types/Grouping
 import { AggregationType, tryParseAggregationType } from "model/entities/types/AggregationType";
 import { T } from "utils/translation";
 import { IOption } from "@origam/components";
+import _ from "lodash";
 
 export interface IColumnOptions {
   canGroup: boolean;
@@ -143,11 +144,14 @@ export class ColumnConfigurationModel{
 
   @action.bound
   onColumnConfSubmit(configuration: ITableConfiguration): void {
+    const aggregationsBefore = this.tablePanelView?.aggregations.aggregationList;
     const groupingWasOnBefore = this.tablePanelView?.groupingConfiguration.isGrouping;
     configuration.apply(this.tablePanelView);
-    const groupingIsOffNow = !this.tablePanelView?.groupingConfiguration.isGrouping;
-
-    if (groupingWasOnBefore && groupingIsOffNow) {
+    const groupingIsOnNow = this.tablePanelView?.groupingConfiguration.isGrouping;
+    const aggregationsNow = this.tablePanelView?.aggregations.aggregationList;
+    if (groupingWasOnBefore && !groupingIsOnNow ||
+        groupingIsOnNow && !_.isEqual(aggregationsBefore, aggregationsNow))
+    {
       getFormScreenLifecycle(this).loadInitialData();
     }
     getDialogStack(this).closeDialog(dialogKey);
