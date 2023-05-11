@@ -531,7 +531,6 @@ public class XsltTests
     {
         string xsltCall =
             string.Format(xsltCallTemplate, Convert.ToBase64String(image));
-        Console.WriteLine(xsltCall);
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
@@ -545,15 +544,17 @@ public class XsltTests
      string expectedResult)
     {
         string xsltCall =
-            string.Format(xsltCallTemplate, Convert.ToBase64String(image));
+           string.Format(xsltCallTemplate, Convert.ToBase64String(image));
         object xPathResult = RunInXpath(xsltCall);
-        Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
+
         Console.WriteLine("This is Console.Writeline" + xsltResult);
         TestContext.WriteLine("This is TestContext.WriteLine" + xsltResult);
         TestContext.Out.WriteLine("This is TestContext.Out.WriteLine" + xsltResult);
         TestContext.Progress.WriteLine("This is TestContext.Progress.WriteLine" + xsltResult);
         TestContext.Error.WriteLine("This is TestContext.Error.WriteLine" + xsltResult);
+
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
