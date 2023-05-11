@@ -49,6 +49,7 @@ jobs:
       actions: read
       contents: read
       security-events: write
+      checks: write
 
     strategy:
       fail-fast: false
