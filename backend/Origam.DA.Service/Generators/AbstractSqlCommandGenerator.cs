@@ -1004,15 +1004,6 @@ namespace Origam.DA.Service
                 .OfType<LookupField>()
                 .Any(field =>
                     selectParameters.ColumnsInfo.ColumnNames.Contains(field.Name));
-            bool wrapInGroupingSelect = hasLookupField &&
-                                        customGrouping != null;
-            if (wrapInGroupingSelect)
-            {
-                ColumnData groupColumn = selectParameters.ColumnsInfo.Columns
-                    .FirstOrDefault(column => column.Name == ColumnData.GroupByCountColumn.Name);
-                selectParameters.ColumnsInfo.Columns.Remove(groupColumn);
-                selectParameters.CustomGrouping = null;
-            }
 
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -1263,15 +1254,21 @@ namespace Origam.DA.Service
                 finalString += $" OFFSET {rowOffset} ROWS FETCH NEXT {rowLimit} ROWS ONLY;";
             }
 
-            if (wrapInGroupingSelect)
+            if (hasLookupField && customGrouping != null)
             {
-                string columnNames = string.Join(", ", 
-                    selectParameters.ColumnsInfo.ColumnNames.Select(
+                var columnNames = selectParameters.ColumnsInfo.ColumnNames;
+                if (selectParameters.AggregatedColumns.Count > 0)
+                {
+                    columnNames.AddRange(
+                        selectParameters.AggregatedColumns.Select(x => x.SqlQueryColumnName));
+                }
+                string sqlColumnNames = string.Join(", ", 
+                    columnNames.Select(
                         col => sqlRenderer.NameLeftBracket + col + sqlRenderer.NameRightBracket));
-                finalString = $"SELECT {columnNames}, {sqlRenderer.CountAggregate()}(*) AS {ColumnData.GroupByCountColumn} FROM (\n"+
+                finalString = $"SELECT {sqlColumnNames}, {sqlRenderer.CountAggregate()}(*) AS {ColumnData.GroupByCountColumn} FROM (\n"+
                               finalString + "\n" +
                               ") as Query\n"+
-                              $"GROUP BY {columnNames}";
+                              $"GROUP BY {sqlColumnNames}";
             }
 
             return finalString;
