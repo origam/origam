@@ -65,7 +65,7 @@ jobs:
 
     - name: Run NUnit Tests
       run:  |
-       // we need renamed mvp.xml.dll to Mvp.Xml.dll
+       echo Linux platform is case sensitive filenames. For this reason it has to be renamed mvp.xml.dll to Mvp.Xml.dll.
        find . -name 'mvp.xml.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/mvp.xml.x.dll"' \;
        find . -name 'mvp.xml.x.dll' -exec sh -c 'f="{}"; mv -- "$f" "$(dirname {})/Mvp.Xml.dll"' \;
        dotnet test --logger "trx;logfilename=test-results.trx" backend/**Tests/bin/Release/*Tests.dll
