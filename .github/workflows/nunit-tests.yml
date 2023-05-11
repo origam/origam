@@ -78,3 +78,9 @@ jobs:
         path: TestResults/test-results.trx
         reporter: dotnet-trx
         max-annotations: '0'
+    
+    # delete-artifact
+    - name: Delete artifact
+      uses: geekyeggo/delete-artifact@v2
+      with:
+          name: testingbuild
