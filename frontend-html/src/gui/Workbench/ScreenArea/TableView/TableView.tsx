@@ -57,6 +57,7 @@ import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfig
 import { CtxDataView, DataViewContext } from "gui/Components/ScreenElements/DataView";
 import S from "./TableView.module.scss";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
+import cx from "classnames";
 
 interface ITableViewProps {
   dataView?: IDataView;
@@ -397,7 +398,7 @@ class HeaderRenderer implements IHeaderRendererData {
       const aggregation = this.dataView.aggregationData.find((agg) => agg.columnId === columnId);
       if (aggregation) {
         headerContent.push(
-          <div className={S.aggregationRow} key={`aggregation-field-${columnId}`}>
+          <div className={cx(S.aggregationRow, "headerClickable")} key={`aggregation-field-${columnId}`}>
             {aggregationToString(aggregation, property)}
           </div>
         );
