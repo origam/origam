@@ -61,6 +61,7 @@ namespace Origam.Workflow
 		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 		private Exception _exception;
 		private Exception _caughtException;
+		private readonly WorkFlowStackTrace workflowStackTrace = new();
         public Boolean Trace { get; set; } = false;
         private readonly OperationTimer localOperationTimer = new OperationTimer();
 
@@ -625,7 +626,7 @@ namespace Origam.Workflow
 							log.Debug("---------------------------------------------------------------------------------------");
 							log.Debug("Starting " + engineTask.GetType().Name + ": " + currentModelStep?.Name);
 						}
-
+						workflowStackTrace.RecordStepStart(WorkflowBlock.Name, currentModelStep?.Name);
 						SetStepStatus(currentModelStep, WorkflowStepResult.Running);
 						engineTask.Finished += new WorkflowEngineTaskFinished(engineTask_Finished);
 						engineTask.Execute();
@@ -733,7 +734,7 @@ namespace Origam.Workflow
 
             if (log.IsErrorEnabled)
             {
-	            log.LogOrigamError(ex.Message, ex);
+	            log.LogOrigamError($"{ex.Message}\n{workflowStackTrace}", ex);
             }
 
 			FinishWorkflow(ex);
