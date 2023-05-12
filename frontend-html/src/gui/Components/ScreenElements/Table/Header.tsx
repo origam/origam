@@ -145,7 +145,6 @@ export class Header extends React.Component<{
     </div>;
   }
   onHeaderClick(event: any){
-    // debugger;
     if(!this.props.onClick || !event.target.classList.contains("headerClickable")){
       return;
     }
