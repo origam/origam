@@ -23,6 +23,7 @@ import S from "./Header.module.scss";
 import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 import { action, observable } from "mobx";
+import cx from "classnames";
 
 const MIN_COLUMN_WIDTH = 30;
 
@@ -109,19 +110,20 @@ export class Header extends React.Component<{
       />
       <div
         {...provided?.dragHandleProps}
-        className={S.header}
-        onClick={(event) => this.props.onClick && this.props.onClick(event, this.props.id)}
+        onClick={(event) => this.onHeaderClick(event)}
+        className={cx(S.header, "headerClickable")}
         style={this.makeHeaderStyle()}
         title={this.props.label}
       >
-        <div className={S.inHeaderRow}>
+        <div
+          className={cx(S.inHeaderRow, "headerClickable")}>
           <div
-            className={S.label}
+            className={cx(S.label, "headerClickable")}
               >
             {this.props.label}
           </div>
           {this.props.orderingDirection !== IOrderByDirection.NONE && (
-            <div className={S.order}>
+            <div className={cx(S.order, "headerClickable")}>
               {this.props.orderingOrder > 0 && <span>{this.props.orderingOrder}</span>}
               {this.props.orderingDirection === IOrderByDirection.ASC && (
                 <i className="fas fa-caret-up"/>
@@ -141,5 +143,11 @@ export class Header extends React.Component<{
         className={S.columnWidthHandle + " " + S.rightSeparator}
       />
     </div>;
+  }
+  onHeaderClick(event: any){
+    if(!this.props.onClick || !event.target.classList.contains("headerClickable")){
+      return;
+    }
+    this.props.onClick(event, this.props.id)
   }
 }
