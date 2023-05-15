@@ -94,7 +94,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
         {
             fk = EntityHelper.CreateForeignKey(
                     keyForm.ForeignKeyName, keyForm.Caption, keyForm.AllowNulls, keyForm.MasterEntity,
-                    keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, false);
+                    keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, true);
             GeneratedModelElements.Add(fk);
         }
 
