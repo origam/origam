@@ -107,7 +107,7 @@ namespace Origam.UI.WizardForm
             this.txtfkCaptionName = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.cboLookup = new System.Windows.Forms.ComboBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxAllowNulls = new System.Windows.Forms.CheckBox();
             this.lblField = new System.Windows.Forms.Label();
             this.cboField = new System.Windows.Forms.ComboBox();
             this.lblEntity = new System.Windows.Forms.Label();
@@ -827,7 +827,7 @@ namespace Origam.UI.WizardForm
             this.foreignKeyPage.Controls.Add(this.txtfkCaptionName);
             this.foreignKeyPage.Controls.Add(this.label14);
             this.foreignKeyPage.Controls.Add(this.cboLookup);
-            this.foreignKeyPage.Controls.Add(this.checkBox1);
+            this.foreignKeyPage.Controls.Add(this.checkBoxAllowNulls);
             this.foreignKeyPage.Controls.Add(this.lblField);
             this.foreignKeyPage.Controls.Add(this.cboField);
             this.foreignKeyPage.Controls.Add(this.lblEntity);
@@ -877,13 +877,13 @@ namespace Origam.UI.WizardForm
             this.cboLookup.Sorted = true;
             this.cboLookup.TabIndex = 2;
             // 
-            // checkBox1
+            // checkBoxAllowNulls
             // 
-            this.checkBox1.Location = new System.Drawing.Point(0, 93);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(106, 28);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "Allow Nulls";
+            this.checkBoxAllowNulls.Location = new System.Drawing.Point(0, 93);
+            this.checkBoxAllowNulls.Name = "checkBoxAllowNulls";
+            this.checkBoxAllowNulls.Size = new System.Drawing.Size(106, 28);
+            this.checkBoxAllowNulls.TabIndex = 3;
+            this.checkBoxAllowNulls.Text = "Allow Nulls";
             // 
             // lblField
             // 
@@ -1161,7 +1161,7 @@ namespace Origam.UI.WizardForm
         private TextBox txtfkCaptionName;
         private Label label14;
         private ComboBox cboLookup;
-        private CheckBox checkBox1;
+        private CheckBox checkBoxAllowNulls;
         private Label lblField;
         private ComboBox cboField;
         private Label lblEntity;

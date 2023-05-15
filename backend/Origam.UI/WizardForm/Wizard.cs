@@ -276,7 +276,7 @@ namespace Origam.UI.WizardForm
             foreignKey.ForeignEntity = cboEntity.SelectedItem as IDataEntity;
             foreignKey.ForeignField = cboField.SelectedItem as IDataEntityColumn;
             foreignKey.Lookup = cboLookup.SelectedItem as IDataLookup;
-            foreignKey.AllowNulls = chkAllowNulls.Checked;
+            foreignKey.AllowNulls = checkBoxAllowNulls.Checked;
 
             if (foreignKey.ForeignEntity == null)
             {
