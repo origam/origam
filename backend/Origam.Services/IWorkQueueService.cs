@@ -54,7 +54,7 @@ namespace Origam.Workbench.Services
 		void HandleAction(Guid queueId, string queueClass, DataTable selectedRows,
             Guid commandType, string command, string param1, string param2, 
             object errorQueueId);
-		void HandleAction(string workQueueName, string commandName, Guid queueEntryId); 
+		void HandleAction(string workQueueCode, string commandText, Guid queueEntryId); 
         IDataDocument GenerateNotificationMessage(
                 Guid notificationTemplateId
                 , IXmlContainer notificationSource
