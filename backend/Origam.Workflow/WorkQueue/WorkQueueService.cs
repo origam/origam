@@ -903,7 +903,8 @@ namespace Origam.Workflow.WorkQueue
 
         public void HandleAction(string workQueueName, string commandName, Guid queueEntryId)
         {
-            Guid queueId = GetQueueId(workQueueName);
+            // get info about queue (from command)
+            Guid queueId = workQueueUtils.GetQueueId(workQueueName);
             // get all queue data from database (no entries)
             WorkQueueData queue = GetQueue(queueId);
             // extract WorkQueueClass name and construct WorkQueueClass from name
