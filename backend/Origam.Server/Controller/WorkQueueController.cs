@@ -39,9 +39,9 @@ public class WorkQueueController : ControllerBase
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     
     [HttpPost]
-    [Route("workQueue/{workQueueName}/{commandName}")]
-    public IActionResult CreateSessionAsync(string workQueueName,
-        string commandName, [FromQuery] [Required] Guid workQueueEntryId)
+    [Route("workQueue/{workQueueCode}/{commandText}")]
+    public IActionResult CreateSessionAsync(string workQueueCode,
+        string commandText, [FromQuery] [Required] Guid workQueueEntryId)
     {
         if (log.IsDebugEnabled)
         {
@@ -52,7 +52,7 @@ public class WorkQueueController : ControllerBase
         {
             IWorkQueueService workQueueService =
                 ServiceManager.Services.GetService<IWorkQueueService>();
-            workQueueService.HandleAction(workQueueName, commandName,
+            workQueueService.HandleAction(workQueueCode, commandText,
                 workQueueEntryId);
             return Ok();
         }

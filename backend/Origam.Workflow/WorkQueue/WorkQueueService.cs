@@ -901,9 +901,9 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        public void HandleAction(string workQueueName, string commandName, Guid queueEntryId)
+        public void HandleAction(string workQueueCode, string commandText, Guid queueEntryId)
         {
-            Guid queueId = workQueueUtils.GetQueueId(workQueueName);
+            Guid queueId = workQueueUtils.GetQueueId(workQueueCode);
             // get all queue data from database (no entries)
             WorkQueueData queue = GetQueue(queueId);
             // extract WorkQueueClass name and construct WorkQueueClass from name
@@ -924,7 +924,7 @@ namespace Origam.Workflow.WorkQueue
             WorkQueueData.WorkQueueCommandRow commandRow = null;
             foreach (WorkQueueData.WorkQueueCommandRow cmd in queue.WorkQueueCommand.Rows)
             {
-                if (cmd.Text == commandName)
+                if (cmd.Text == commandText)
                 {
                     commandRow = cmd;
                 }
@@ -934,7 +934,7 @@ namespace Origam.Workflow.WorkQueue
             {
                 throw new RuleException(
                     String.Format(ResourceUtils.GetString("ErrorWorkQueueCommandNotAuthorized"),
-                        commandName, queueId),
+                        commandText, queueId),
                     RuleExceptionSeverity.High, "commandId", "");
             }
             // fetch a single queue entry
