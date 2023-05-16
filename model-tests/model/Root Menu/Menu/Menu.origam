@@ -66,6 +66,7 @@
         ami:order="100">
         <frmi:MenuItem
           asi:abstract="false"
+          ami:alwaysOpenNew="false"
           frmi:autoSaveOnListRecordChange="false"
           ami:displayName="User Permissions Overview"
           x:id="088df9d3-4658-488e-9ba4-9c42d5b48162"
@@ -77,10 +78,11 @@
           frmi:refreshOnFocus="false"
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
-          ami:roles="FRM_UserPermissionsOverview"
+          ami:roles="*"
           frmi:screen="Security/FormControlSet/Security/UserPermissionsOverview.origam#UserPermissionsOverview/b3a0f35d-6e30-4087-b205-3c72d2f16a88" />
         <frmi:MenuItem
           asi:abstract="false"
+          ami:alwaysOpenNew="false"
           frmi:autoSaveOnListRecordChange="false"
           ami:displayName="Application Roles"
           x:id="1462e299-22ab-4a7f-b2e1-4866ad3a8950"
@@ -92,10 +94,11 @@
           frmi:refreshOnFocus="false"
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
-          ami:roles="FRM_ApplicationRole"
+          ami:roles="*"
           frmi:screen="Security/FormControlSet/Security/OrigamApplicationRole.origam#OrigamApplicationRole/bf0e99bd-b5bd-4a1e-8495-196292151f47" />
         <frmi:MenuItem
           asi:abstract="false"
+          ami:alwaysOpenNew="false"
           frmi:autoSaveOnListRecordChange="false"
           ami:displayName="My User Profile"
           x:id="359bc218-d8c3-49d8-bd1d-5bf293f7db63"
@@ -108,10 +111,11 @@
           frmi:refreshOnFocus="false"
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
-          ami:roles="FRM_UserProfile"
+          ami:roles="*"
           frmi:screen="Security/FormControlSet/Security/UserProfile.origam#UserProfile/e5cfa7bb-1eb4-429a-a0c0-8840359de4a1" />
         <frmi:MenuItem
           asi:abstract="false"
+          ami:alwaysOpenNew="false"
           frmi:autoSaveOnListRecordChange="false"
           frmi:defaultSet="Root Menu/DataStructure/__system/Users.origam#Users/Users/71ca6430-691f-4e7d-8f49-7432e575763e"
           ami:displayName="Users"
@@ -130,12 +134,13 @@
           frmi:refreshOnFocus="false"
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
-          ami:roles="FRM_Users"
+          ami:roles="*"
           frmi:ruleSet="Root Menu/DataStructure/__system/Users.origam#Users/Users/31d9285b-a4f1-4c1f-88b7-0568da5ed9bf"
           frmi:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75"
           frmi:sortSet="Root Menu/DataStructure/__system/Users.origam#Users/ByName/2e795e58-9abd-43a7-bec4-efd4e65b158c" />
         <frmi:MenuItem
           asi:abstract="false"
+          ami:alwaysOpenNew="false"
           frmi:autoSaveOnListRecordChange="false"
           ami:displayName="Active Sessions"
           x:id="8515298b-6bda-4e3c-afd3-6b101df1dc3d"
@@ -147,10 +152,11 @@
           frmi:refreshOnFocus="false"
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
-          ami:roles="FRM_OrigamOnlineUser"
+          ami:roles="*"
           frmi:screen="Root/FormControlSet/__system/OrigamOnlineUser.origam#OrigamOnlineUser/3575d55b-abfc-4665-b7cb-a4f46dda02db" />
         <frmi:MenuItem
           asi:abstract="false"
+          ami:alwaysOpenNew="false"
           frmi:autoSaveOnListRecordChange="false"
           ami:displayName="User Roles"
           x:id="d1260ffd-9c2d-4869-b666-9fbffed7dcc9"
@@ -162,7 +168,7 @@
           frmi:refreshOnFocus="false"
           frmi:refreshPortalAfterSave="false"
           frmi:requestSaveAfterUpdate="false"
-          ami:roles="FRM_Roles"
+          ami:roles="*"
           frmi:screen="Security/FormControlSet/Security/OrigamRole.origam#OrigamRole/e14b9201-0490-434b-b44b-b47332a60493" />
         <wrmi:MenuItem
           asi:abstract="false"
