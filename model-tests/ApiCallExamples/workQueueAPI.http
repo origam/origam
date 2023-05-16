@@ -21,17 +21,14 @@
 
 
 # Should delete the work queue entry,
-# Get the token from your browser after you login
 # Change "API Access Roles" in Settings -> General -> Work Queues to "*" if you get authorization error
 POST https://localhost:{{port}}/workQueue/TestQueue1/Delete/?workQueueEntryId=e0092d42-bc61-40f0-a270-239f5716286d
-Authorization: Bearer CCF034CE5393A8F7D8308431DAF0708B83BF368750571CCDEB787CB3FAC62937
 
 ###
 POST https://localhost:{{port}}/workQueue/TestQueue1/Delete/?workQueueEntryId=2568523f-5c02-4e4c-8261-c8913a72eb1f
-Authorization: Bearer 81D6D08664B8A5037DDCC92AC75DEDD829BBB4EDBD61AAAF3F961A7C686C1077
+
 ###
 POST https://localhost:{{port}}/workQueue/TestQueue1/Delete/?workQueueEntryId=341493be-7a44-4d38-9c9b-77db1e9be283
-Authorization: Bearer 81D6D08664B8A5037DDCC92AC75DEDD829BBB4EDBD61AAAF3F961A7C686C1077
 
 ###
 POST https://localhost:{{port}}/workQueue/TestQueue1/Delete/?workQueueEntryId=31be390c-b9ec-4a43-8b9d-15ecb0c248c0
