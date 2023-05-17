@@ -314,7 +314,7 @@ namespace Origam.Server
             app.UseRequestLocalization(localizationOptions);
             app.UseIdentityServer();
             app.UseMiddleware<FatalErrorMiddleware>();
-            app.UseUserApi(startUpConfiguration, identityServerConfig);
+            app.UseUserApi(startUpConfiguration);
             app.UseWorkQueueApi();
             app.UseAuthentication();
             app.UseHttpsRedirection();
