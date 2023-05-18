@@ -97,8 +97,9 @@ namespace Origam.Server
                 });
                 apiBranch.UseMiddleware<UserApiMiddleware>();
             });
-        } 
-          public static void UseWorkQueueApi(this IApplicationBuilder app)
+        }
+        
+        public static void UseWorkQueueApi(this IApplicationBuilder app)
         {
             app.MapWhen(
                 context => context.Request.Path.ToString().StartsWith("/workQueue"),
