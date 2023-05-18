@@ -53,7 +53,7 @@
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.10.2" />
-    <PackageReference Include="System.ServiceModel.Http" Version="4.10.2" />
+    <PackageReference Include="System.ServiceModel.Http" Version="6.0.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.10.2" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.10.2" />
   </ItemGroup>
