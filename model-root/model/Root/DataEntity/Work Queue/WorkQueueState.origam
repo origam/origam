@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
+  xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
+  xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:pr1="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="e3c6d184-8d16-4a28-ab45-3c41e754a656"
+    tmi:mappedObjectName="WorkQueueState"
+    asi:name="WorkQueueState"
+    ade:readOnly="false">
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="UniqueIdentifier"
+      x:id="227368ee-c7ce-4b7a-87d9-bb17d286e4ab"
+      asi:name="parWorkQueueId" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="7aea0450-ad4a-4df4-a7fc-c3222f1413bf"
+      asi:name="GetByWorkQueueId">
+      <fc1:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="7ba670bc-9752-406a-bd16-fa159d2bf063"
+        adec:isPrimaryKey="false"
+        asi:name="Equal"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="0e49fe6d-212c-4a82-adee-b60d9f6e68af"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/Work Queue/WorkQueueState.origam#WorkQueueState/refWorkQueueId/5b864691-d70b-435c-895b-ebc226bcc61b"
+            x:id="78204a81-77da-4d16-976b-e811908875dc"
+            asi:name="refWorkQueueId" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="5fa6a344-c0f3-4acc-b23b-bcf7597cecfa"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr1:ParameterReference
+            asi:abstract="false"
+            x:id="c6a8d812-78be-4b1f-93fe-67eec26d37fc"
+            asi:name="parWorkQueueId"
+            pr1:parameter="Root/DataEntity/Work Queue/WorkQueueState.origam#WorkQueueState/parWorkQueueId/227368ee-c7ce-4b7a-87d9-bb17d286e4ab" />
+        </fcp:FunctionCallParameter>
+      </fc1:DataEntityColumn>
+    </ef:EntityFilter>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/ef0e8e1a-1917-4027-a70a-2bca2c7bb245"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="5b864691-d70b-435c-895b-ebc226bcc61b"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="refWorkQueueId"
+      asi:name="refWorkQueueId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:defaultValue="Root/DataConstant/_dates/_minDate.origam#_minDate/66f34839-6a92-4284-a25c-5d7c38de0d4b"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="a40d57f1-df84-42a8-8a93-6314e1b2dfdb"
+      adec:isPrimaryKey="false"
+      adec:label="Throttling Interval Start"
+      fmi:mappedColumnName="ThrottlingIntervalStart"
+      asi:name="ThrottlingIntervalStart"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="dbd287a0-cb9f-4b9b-8dfa-56b70a1c0460"
+      adec:isPrimaryKey="false"
+      adec:label="Throttling Items Processed"
+      fmi:mappedColumnName="ThrottlingItemsProcessed"
+      asi:name="ThrottlingItemsProcessed"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="32db50a6-1f42-4c28-b9b1-dd9540886819" />
+  </tmi:DataEntity>
+</x:file>

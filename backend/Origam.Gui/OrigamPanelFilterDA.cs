@@ -107,7 +107,7 @@ namespace Origam.Gui
 			{
 				return StoredFilterValue(row, "CurrencyValue", valueNumber);
 			}
-			else if(type == typeof(Guid))
+			else if(type == typeof(Guid) || type == typeof(string))
 			{
 				object result = StoredFilterValue(row, "GuidValue", valueNumber);
 				// try string value if there is no guid

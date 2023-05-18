@@ -100,16 +100,16 @@ namespace Origam.Workflow.WorkQueue
             {
                 HttpWebResponse httpResponse = response as HttpWebResponse;
                 Stream responseStream = response.GetResponseStream();
-                string mode;
+                WorkQueueFileLoader.FileType mode;
                 if(response.ContentType.ToLower().StartsWith("text/")
                 || response.ContentType.ToLower() == "application/json"
                 || response.ContentType.ToLower() == "application/xml")
                 {
-                    mode = WorkQueueFileLoader.MODE_TEXT;
+                    mode = WorkQueueFileLoader.FileType.TEXT;
                 }
                 else
                 {
-                    mode = WorkQueueFileLoader.MODE_BINARY;
+                    mode = WorkQueueFileLoader.FileType.BINARY;
                 }
                 DataSet dataset = WorkQueueFileLoader.GetFileFromStream(
                     responseStream, mode, response.ResponseUri.AbsoluteUri,

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:erf="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationFilter/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="8e7e0ad5-169e-41af-879d-dfb963cf17b6"
+    tmi:localizationRelation="Root/DataEntity/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/WorkQueueRetryType_l10n/b9ef8d80-4ccb-48dc-bae2-177f40d5dcd7"
+    tmi:mappedObjectName="WorkQueueRetryType"
+    asi:name="WorkQueueRetryType"
+    ade:readOnly="false">
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="b9ef8d80-4ccb-48dc-bae2-177f40d5dcd7"
+      asi:name="WorkQueueRetryType_l10n"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueRetryType_l10n.origam#WorkQueueRetryType_l10n/97786083-64da-4990-9a28-abcb8818beb9"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="28559545-05bc-4802-ac13-829205054d65"
+        asi:name="WorkQueueRetryType_l10nKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueRetryType_l10n.origam#WorkQueueRetryType_l10n/refWorkQueueRetryTypeId/8c157f54-2827-4d17-b9b0-82fae86b4658" />
+      <erf:EntityRelationFilter
+        asi:abstract="false"
+        erf:filter="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/GetByLanguageId/afb5b84b-f4a3-4e3a-a382-c110624f71c9"
+        x:id="3c748b53-2c56-4a25-9f03-24e6bda7f152"
+        asi:name="GetByLanguageId" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="f5133b57-6cb5-43de-baee-156b96ea423d"
+      asi:name="WorkQueueRetryType_l10n_all"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueRetryType_l10n.origam#WorkQueueRetryType_l10n/97786083-64da-4990-9a28-abcb8818beb9"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="d8136abb-81e7-4718-ba99-13ab37de402a"
+        asi:name="WorkQueueRetryType_l10n_allKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueRetryType_l10n.origam#WorkQueueRetryType_l10n/refWorkQueueRetryTypeId/8c157f54-2827-4d17-b9b0-82fae86b4658" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="a8f771d8-fb04-44f7-88dc-bb445b07329f"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="775cc19e-1b04-4393-99fc-1570381e9c1a" />
+  </tmi:DataEntity>
+</x:file>

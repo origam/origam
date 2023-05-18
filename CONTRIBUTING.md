@@ -4,8 +4,18 @@ First join [community.origam.com](https://community.origam.com). It is as place 
 ## Submitting changes
 If you wish to contribute to the code, the pull requests should be made for the `master` branch. The pull requests for other branches (previous versions) are not desired except of critical bugs related to security or data integrity. The severity of the bug and its acceptability can be discussed on [community.origam.com](https://community.origam.com).
 
+The pull request title needs to contain a prefix describing the general intent of the pull request. The accepted prefixes are following:
+
+- FIX - a change that fixed a bug
+- SECURITY - a change that fixes a security problem
+- FEATURE - a change that adds a new feature to Origam
+- BUILD - a change related to CI/CD
+- DEV - a change that modifies Origam internals, without falling into one of the above categories
+
 The pull request should be linked to the topic on the [community.origam.com](https://community.origam.com). It is done by posting the link to the pull request in a reply to the topic on the [community.origam.com](https://community.origam.com). `origambot` will do the rest.
 If the contribution is a new feature, there should be an article on [community.origam.com](https://community.origam.com) documenting this new feature.
+
+The individual commits from the branch don't need to have a prefix describing the intent of the commit. They're being squashed when the pull request is approved.
 
 Commit message template:
 

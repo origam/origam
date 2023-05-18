@@ -67,6 +67,13 @@
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
+      x:id="ae903e30-a29d-4e48-a39e-f1617daa15ca"
+      cs:isReturnValue="false"
+      asi:name="SecurityStamp" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
       x:id="b6b11a0e-12e8-415a-9ef2-0e0e0674b92f"
       cs:isReturnValue="false"
       asi:name="FirstName" />

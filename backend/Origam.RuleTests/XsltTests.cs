@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -34,6 +35,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Origam.DA;
 using Origam.Rule;
 using Origam.Rule.Xslt;
@@ -509,6 +511,21 @@ public class XsltTests
         "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
         "AAAAAAAAAAAAAAAA==";
 
+    private const string resizedImage1Linux =
+        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABGdBTUEAALGPC/xhBQ" +
+        "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA" +
+        "BdwnLpRPAAAACFJREFUCJlj/P///38GKPj///9/JgY0gCHAgqyFgYGBAQAVfgv+xs48" +
+        "NQAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAA==";
+    private const string resizedImage2Linux =
+        "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAABGdBTUEAALGPC/xhBQ" +
+        "AAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAA" +
+        "BdwnLpRPAAAACFJREFUCJlj/P//PwMDAwMDw////5kYkAAKhwWujIGBAQAx+wkBrIw4" +
+        "XAAAAABJRU5ErkJgggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+        "AAAAAAAA==";
+
     // white square 6x6, png format.
     private byte[] image =
     {
@@ -524,6 +541,7 @@ public class XsltTests
 
     [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1)]
     [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2)]
+    [Platform (Include = "Win")]
     public void ShouldConvertImage(string xsltCallTemplate,
         string expectedResult)
     {
@@ -532,6 +550,20 @@ public class XsltTests
         object xPathResult = RunInXpath(xsltCall);
         Assert.That(xPathResult, Is.EqualTo(expectedResult));
         string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xsltResult, Is.EqualTo(expectedResult));
+    }
+
+    [TestCase("AS:ResizeImage('{0}', '4', '4')", resizedImage1Linux)]
+    [TestCase("AS:ResizeImage('{0}', '4', '4', 'true', 'png')", resizedImage2Linux)]
+    [Platform(Include = "Linux")]
+    public void ShouldConvertImageLinux(string xsltCallTemplate,
+     string expectedResult)
+    {
+        string xsltCall =
+           string.Format(xsltCallTemplate, Convert.ToBase64String(image));
+        object xPathResult = RunInXpath(xsltCall);
+        string xsltResult = RunInXslt(xsltCall);
+        Assert.That(xPathResult, Is.EqualTo(expectedResult));
         Assert.That(xsltResult, Is.EqualTo(expectedResult));
     }
 
@@ -1167,10 +1199,10 @@ public class XsltTests
         var dateTime = DateTime.Parse("2022-01-01");
         TimeSpan offset = TimeZone.CurrentTimeZone.GetUtcOffset(dateTime);
         string xsltCall = "AS:ListDays('2022-01-01', '2022-01-03')";
-        string expectedResultXpath = "<list>\r\n" +
-                                     $"  <item>2022-01-01T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
-                                     $"  <item>2022-01-02T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
-                                     $"  <item>2022-01-03T00:00:00.0000000+{offset:hh}:00</item>\r\n" +
+        string expectedResultXpath = "<list>" + Environment.NewLine +
+                                     $"  <item>2022-01-01T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
+                                     $"  <item>2022-01-02T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
+                                     $"  <item>2022-01-03T00:00:00.0000000+{offset:hh}:00</item>" + Environment.NewLine +
                                      "</list>";
         string expectedResultXslt =
             $"2022-01-01T00:00:00.0000000+{offset:hh}:002022-01-02T00:00:00.0000000+{offset:hh}:002022-01-03T00:00:00.0000000+{offset:hh}:00";
@@ -1422,20 +1454,27 @@ public class XsltTests
     public void ShouldTestNodeToString()
     {
         string xsltCall = "AS:NodeToString(/ROOT)";
-        string expectedResultXpath = "<ROOT>\r\n" +
-                                     "  <N1 count=\"1\">\r\n" +
-                                     "  </N1>\r\n" +
-                                     "  <N1 count=\"2\">\r\n" +
-                                     "  </N1>\r\n" +
-                                     "  <N1 count=\"3\">\r\n" +
-                                     "  </N1>\r\n" +
+        string expectedResultXpath = "<ROOT>" + Environment.NewLine +
+                                     "  <N1 count=\"1\">" + Environment.NewLine +
+                                     "  </N1>" + Environment.NewLine +
+                                     "  <N1 count=\"2\">" + Environment.NewLine + 
+                                     "  </N1>" + Environment.NewLine +
+                                     "  <N1 count=\"3\">" + Environment.NewLine +
+                                     "  </N1>" + Environment.NewLine +
                                      "</ROOT>";
+        string newLineCR = "&#xD;";
+        string newLineLF = "&#xA;";
+        string newLinePlatform = newLineCR + newLineLF;
+        if (RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
+        {
+            newLinePlatform = newLineLF;
+        }
 
         string expectedResultXslt =
-            "&lt;ROOT&gt;&#xD;&#xA;  &lt;N1 count=&quot;1&quot;&gt;&#xD;&#xA;  " +
-            "&lt;/N1&gt;&#xD;&#xA;  &lt;N1 count=&quot;2&quot;&gt;&#xD;&#xA;  " +
-            "&lt;/N1&gt;&#xD;&#xA;  &lt;N1 count=&quot;3&quot;&gt;&#xD;&#xA;  " +
-            "&lt;/N1&gt;&#xD;&#xA;&lt;/ROOT&gt;";
+            "&lt;ROOT&gt;"+ newLinePlatform + "  &lt;N1 count=&quot;1&quot;&gt;"+ newLinePlatform + "  " +
+            "&lt;/N1&gt;"+ newLinePlatform + "  &lt;N1 count=&quot;2&quot;&gt;"+ newLinePlatform + "  " +
+            "&lt;/N1&gt;"+ newLinePlatform + "  &lt;N1 count=&quot;3&quot;&gt;"+ newLinePlatform + "  " +
+            "&lt;/N1&gt;"+ newLinePlatform + "&lt;/ROOT&gt;";
         var document = new XmlDocument();
         document.LoadXml(
             "<ROOT><N1 count=\"1\"></N1><N1 count=\"2\"></N1><N1  count=\"3\"></N1></ROOT>");
@@ -1534,9 +1573,9 @@ public class XsltTests
     public void ShouldTestDiff()
     {
         string xsltCall = $"AS:Diff('old text', 'new text')";
-        string expectedXpathResult = "<lines>\r\n" +
-                                     "  <line changeType=\"Deleted\">old text</line>\r\n" +
-                                     "  <line changeType=\"Inserted\" position=\"1\">new text</line>\r\n" +
+        string expectedXpathResult = "<lines>" + Environment.NewLine +
+                                     "  <line changeType=\"Deleted\">old text</line>" + Environment.NewLine +
+                                     "  <line changeType=\"Inserted\" position=\"1\">new text</line>" + Environment.NewLine +
                                      "</lines>";
         string expectedXsltResult = "old textnew text";
 

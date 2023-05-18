@@ -136,13 +136,27 @@
     <Content Include="FilePersistenceServiceTests\TestFiles\TestWorkflow.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongCategoryName\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongGuid\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongNodeName\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_1UpdatedItem.xml" />
-    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_2Items.xml" />
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongCategoryName\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongGuid\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongNodeName\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_1UpdatedItem.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_2Items.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

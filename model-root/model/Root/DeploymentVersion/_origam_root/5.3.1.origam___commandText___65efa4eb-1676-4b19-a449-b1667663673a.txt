@@ -1,0 +1,2 @@
+﻿ALTER TABLE "WorkQueue" ADD "EnableThrottling" Boolean NOT NULL CONSTRAINT "DF_WorkQueue_EnableThrottling" DEFAULT false;
+ALTER TABLE "WorkQueue" ALTER COLUMN "EnableThrottling" DROP DEFAULT;

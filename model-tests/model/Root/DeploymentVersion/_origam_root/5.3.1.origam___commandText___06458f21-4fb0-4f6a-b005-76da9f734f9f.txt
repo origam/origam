@@ -1,0 +1,2 @@
+﻿ALTER TABLE [WorkQueueState] ADD [ThrottlingItemsProcessed] Int NOT NULL CONSTRAINT [DF_WorkQueueState_ThrottlingItemsProcessed] DEFAULT 0;
+ALTER TABLE [WorkQueueState] DROP CONSTRAINT [DF_WorkQueueState_ThrottlingItemsProcessed];

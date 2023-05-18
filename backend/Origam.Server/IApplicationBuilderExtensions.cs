@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Linq;
 using System.Reflection;
-using System.ServiceModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +56,8 @@ namespace Origam.Server
                 FileProvider = new PhysicalFileProvider(pathToClientApp)
             });
         }  
-         public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
+        
+        public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
              IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
         {
             foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
@@ -72,7 +72,9 @@ namespace Origam.Server
             }
         }  
         
-        public static void UseUserApi(this IApplicationBuilder app, StartUpConfiguration startUpConfiguration)
+        public static void UseUserApi(this IApplicationBuilder app,
+            StartUpConfiguration startUpConfiguration,
+            IdentityServerConfig identityServerConfig)
         {
             app.MapWhen(
                 context => IsPublicUserApiRoute(startUpConfiguration, context),
@@ -83,20 +85,42 @@ namespace Origam.Server
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
                 apiBranch =>
             {
-                apiBranch.UseAuthentication();
-                apiBranch.Use(async (context, next) =>
+                if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
                 {
-                    // Authentication middleware doesn't short-circuit the request itself
-                    // we must do that here.
-                    if (!context.User.Identity.IsAuthenticated)
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
+                }
+                else
+                {
+                    apiBranch.UseAuthentication();
+                    apiBranch.Use(async (context, next) =>
                     {
-                        context.Response.StatusCode = 401;
-                        return;
-                    }
-                    await next.Invoke();
-                });
+                        // Authentication middleware doesn't short-circuit the request itself
+                        // we must do that here.
+                        if (!context.User.Identity.IsAuthenticated)
+                        {
+                            context.Response.StatusCode = 401;
+                            return;
+                        }
+                        await next.Invoke();
+                    }); 
+                }
                 apiBranch.UseMiddleware<UserApiMiddleware>();
             });
+        } 
+        
+        public static void UseWorkQueueApi(this IApplicationBuilder app)
+        {
+            app.MapWhen(
+                context => context.Request.Path.ToString().StartsWith("/workQueue"),
+                apiBranch =>
+                {
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
+                    apiBranch.UseMvc(routes =>
+                    {
+                        routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+                    });
+                }
+            );
         } 
         
         private static bool IsRestrictedUserApiRoute(
@@ -106,6 +130,7 @@ namespace Origam.Server
                 .UserApiRestrictedRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
+        
         private static bool IsPublicUserApiRoute(
             StartUpConfiguration startUpConfiguration, HttpContext context)
         {

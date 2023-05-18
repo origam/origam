@@ -20,3 +20,34 @@ fi
 cd tests_e2e
 yarn install --ignore-engines
 yarn test:e2e
+if [ $? -eq 0 ]
+then
+  echo "Success."
+else
+  echo "Scripts failed" >&2
+  exit 1
+fi
+echo "Start workflow integration tests";
+cd /home/origam/HTML5_TESTS
+cp _OrigamSettings.wf.mssql.template OrigamSettings.config
+sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
+sed -i "s|OrigamSettings_ModelName|\/home\/origam\/HTML5\/data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
+sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbHost/${OrigamSettings_DbHost}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbPort/${OrigamSettings_DbPort}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbPort/${OrigamSettings_DbPort}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
+sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
+#cat OrigamSettings.config
+dotnet test Origam.WorkflowTests.dll
+if [ $? -eq 0 ]
+then
+  echo "Success."
+else
+  echo "Scripts failed" >&2
+  exit 1
+fi
