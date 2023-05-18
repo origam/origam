@@ -739,6 +739,6 @@
     <value>Passwords are not equal!</value>
   </data>
   <data name="RuleTrace_MenuItem" xml:space="preserve">
-    <value>RuleTrace</value>
+    <value>Rule Trace</value>
   </data>
 </root>
