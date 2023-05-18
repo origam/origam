@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Linq;
 using System.Reflection;
-using System.ServiceModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +56,8 @@ namespace Origam.Server
                 FileProvider = new PhysicalFileProvider(pathToClientApp)
             });
         }  
-         public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
+        
+        public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
              IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
         {
             foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
@@ -107,7 +107,8 @@ namespace Origam.Server
                 apiBranch.UseMiddleware<UserApiMiddleware>();
             });
         } 
-          public static void UseWorkQueueApi(this IApplicationBuilder app)
+        
+        public static void UseWorkQueueApi(this IApplicationBuilder app)
         {
             app.MapWhen(
                 context => context.Request.Path.ToString().StartsWith("/workQueue"),
@@ -129,6 +130,7 @@ namespace Origam.Server
                 .UserApiRestrictedRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
+        
         private static bool IsPublicUserApiRoute(
             StartUpConfiguration startUpConfiguration, HttpContext context)
         {
