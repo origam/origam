@@ -279,6 +279,15 @@
   <data name="ToResetPassword3" xml:space="preserve">
     <value> pour réinitialiser votre mot de passe.</value>
   </data>
+  <data name="ToInitialUser1" xml:space="preserve">
+    <value>Cliquez </value>
+  </data>
+	<data name="ToInitialUser2" xml:space="preserve">
+    <value>ici</value>
+  </data>
+	<data name="ToInitialUser3" xml:space="preserve">
+    <value> pour créer un nouvel utilisateur.</value>
+  </data>
   <data name="UserName" xml:space="preserve">
     <value>Nom d’utilisateur</value>
   </data>
@@ -347,5 +356,11 @@
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Réinitialiser</value>
+  </data>
+  <data name="BrowserNotCompatible" xml:space="preserve">
+    <value>Votre navigateur n'est pas compatible avec notre application. Veuillez installer la dernière version de l'un des navigateurs ci-dessous :</value>
+  </data>
+  <data name="ContinueAnyway" xml:space="preserve">
+    <value>Continuer quoi qu'il en soit</value>
   </data>
 </root>

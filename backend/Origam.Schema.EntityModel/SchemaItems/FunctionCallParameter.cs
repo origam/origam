@@ -23,22 +23,18 @@ using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
-using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for FunctionCallParameter.
-	/// </summary>
 	[SchemaItemDescription("Parameter", 15)]
     [HelpTopic("Function+Call+Field")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
-	public class FunctionCallParameter : AbstractSchemaItem, ISchemaItemFactory
+	public class FunctionCallParameter : AbstractSchemaItem
 	{
 		public const string CategoryConst = "FunctionCallParameter";
 
-		public FunctionCallParameter() : base() {}
+		public FunctionCallParameter() {}
 
 		public FunctionCallParameter(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -46,42 +42,23 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractDataEntityColumn Members
 		
-		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override string Icon
-		{
-			get
-			{
-				return "15";
-			}
-		}
+		public override string Icon => "15";
 
 		[Browsable(false)]
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.FunctionParameter);
+			dependencies.Add(FunctionParameter);
 
 			base.GetExtraDependencies (dependencies);
 		}
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid FunctionParameterId;
 
 		[NotNullModelElementRule()]
@@ -90,73 +67,29 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.FunctionParameterId;
-
-				return (FunctionParameter)this.PersistenceProvider.RetrieveInstance(typeof(FunctionParameter), key);
+				var key = new ModelElementKey
+				{
+					Id = FunctionParameterId
+				};
+				return (FunctionParameter)PersistenceProvider.RetrieveInstance(
+					typeof(FunctionParameter), key);
 			}
-			set
-			{
-				this.FunctionParameterId = (Guid)value.PrimaryKey["Id"];
-			}
+			set => FunctionParameterId = (Guid)value.PrimaryKey["Id"];
 		}
 		#endregion
 
 		#region ISchemaItemFactory Members
 
 		[Browsable(false)]
-		public override Type[] NewItemTypes
-		{
-			get
-			{
-				return new Type[] {typeof(EntityColumnReference),
-									typeof(FunctionCall),
-									typeof(ParameterReference),
-									typeof(DataConstantReference),
-									typeof(EntityFilterReference),
-									typeof(EntityFilterLookupReference)
-								   };
-			}
-		}
-
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
-		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(EntityColumnReference))
-			{
-				item = new EntityColumnReference(schemaExtensionId);
-			}
-			else if(type == typeof(FunctionCall))
-			{
-				item = new FunctionCall(schemaExtensionId);
-			}
-			else if(type == typeof(ParameterReference))
-			{
-				item = new ParameterReference(schemaExtensionId);
-			}
-			else if(type == typeof(DataConstantReference))
-			{
-				item = new DataConstantReference(schemaExtensionId);
-			}
-			else if(type == typeof(EntityFilterReference))
-			{
-				item = new EntityFilterReference(schemaExtensionId);
-			}
-			else if(type == typeof(EntityFilterLookupReference))
-			{
-				item = new EntityFilterLookupReference(schemaExtensionId);
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTableMappingItemUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			item.IsAbstract = this.IsAbstract;
-			this.ChildItems.Add(item);
-
-			return item;
-		}
+		public override Type[] NewItemTypes =>
+			new[] {
+				typeof(EntityColumnReference),
+				typeof(FunctionCall),
+				typeof(ParameterReference),
+				typeof(DataConstantReference),
+				typeof(EntityFilterReference),
+				typeof(EntityFilterLookupReference)
+			};
 
 		#endregion
 
@@ -164,16 +97,12 @@ namespace Origam.Schema.EntityModel
 
 		public override int CompareTo(object obj)
 		{
-			if(obj is FunctionCallParameter)
+			if(obj is FunctionCallParameter functionCallParameter)
 			{
-				FunctionCallParameter par = obj as FunctionCallParameter;
-				
-				return this.FunctionParameter.OrdinalPosition.CompareTo(par.FunctionParameter.OrdinalPosition);
+				return FunctionParameter.OrdinalPosition.CompareTo(
+					functionCallParameter.FunctionParameter.OrdinalPosition);
 			}
-			else
-			{
-				return base.CompareTo(obj);
-			}
+			return base.CompareTo(obj);
 		}
 
 		#endregion

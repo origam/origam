@@ -99,28 +99,30 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             if (field.Name == null) throw new ArgumentException("Filed Name is not set.");
 			IDataEntity entity = field.ParentItem as IDataEntity;
             // first paramater
-			DatabaseParameter param1 = entity.NewItem(typeof(DatabaseParameter), 
-                _schema.ActiveSchemaExtensionId, null) as DatabaseParameter;
+			DatabaseParameter param1 = entity.NewItem<DatabaseParameter>( 
+                _schema.ActiveSchemaExtensionId, null);
 			param1.DataType = field.DataType;
 			param1.DataLength = field.DataLength;
 			param1.Name = "par" + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name) + "From";
 			param1.Persist();
             GeneratedModelElements.Add(param1);
             // second parameter
-            DatabaseParameter param2 = entity.NewItem(typeof(DatabaseParameter), 
-                _schema.ActiveSchemaExtensionId, null) as DatabaseParameter;
+            DatabaseParameter param2 = entity.NewItem<DatabaseParameter>( 
+                _schema.ActiveSchemaExtensionId, null);
 			param2.DataType = field.DataType;
 			param2.DataLength = field.DataLength;
 			param2.Name = "par" + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name) + "To";
 			param2.Persist();
             GeneratedModelElements.Add(param2);
             // filter
-            EntityFilter filter = entity.NewItem(typeof(EntityFilter), _schema.ActiveSchemaExtensionId, null) as EntityFilter;
+            EntityFilter filter = entity.NewItem<EntityFilter>(
+	            _schema.ActiveSchemaExtensionId, null);
 			filter.Name = "GetBetween" + (field.Name.StartsWith("ref") ? field.Name.Substring(3) : field.Name);
 			filter.Persist();
             GeneratedModelElements.Add(filter);
             // function call
-			FunctionCall call = filter.NewItem(typeof(FunctionCall), _schema.ActiveSchemaExtensionId, null) as FunctionCall;
+			FunctionCall call = filter.NewItem<FunctionCall>(
+				_schema.ActiveSchemaExtensionId, null);
 			FunctionSchemaItemProvider functionProvider = _schema.GetProvider(typeof(FunctionSchemaItemProvider)) as FunctionSchemaItemProvider;
 			Function equalFunction = (Function)functionProvider.GetChildByName("Between", Function.CategoryConst);
 			if(equalFunction == null) throw new Exception(ResourceUtils.GetString("ErrorBetweenFunctionNotFound"));
@@ -128,13 +130,19 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 			call.Name = "Between";
 			call.Persist();
             // function parameters
-            EntityColumnReference reference1 = call.GetChildByName("Expression").NewItem(typeof(EntityColumnReference), _schema.ActiveSchemaExtensionId, null) as EntityColumnReference;
+            EntityColumnReference reference1 = call.GetChildByName("Expression")
+	            .NewItem<EntityColumnReference>(
+		            _schema.ActiveSchemaExtensionId, null);
 			reference1.Field = field;
 			reference1.Persist();
-			ParameterReference reference2 = call.GetChildByName("Left").NewItem(typeof(ParameterReference), _schema.ActiveSchemaExtensionId, null) as ParameterReference;
+			ParameterReference reference2 = call.GetChildByName("Left")
+				.NewItem<ParameterReference>(
+					_schema.ActiveSchemaExtensionId, null);
 			reference2.Parameter = param1;
 			reference2.Persist();
-			ParameterReference reference3 = call.GetChildByName("Right").NewItem(typeof(ParameterReference), _schema.ActiveSchemaExtensionId, null) as ParameterReference;
+			ParameterReference reference3 = call.GetChildByName("Right")
+				.NewItem<ParameterReference>(
+					_schema.ActiveSchemaExtensionId, null);
 			reference3.Parameter = param2;
 			reference3.Persist();
 		}

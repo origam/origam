@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-using Origam.Rule;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
@@ -95,17 +94,19 @@ namespace Origam.Server
                 as WorkQueueSessionStore;
             IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) 
                 as IWorkQueueService;
-            DataSet copy = processData.DataTable.DataSet.Clone();
-            foreach (object id in processData.SelectedItems)
+            if (processData.SelectedRows.Count == 0 &&
+                processData.SelectedIds.Count > 0)
             {
-                DataRow row = processData.DataTable.Rows.Find(id);
-                if (row != null)
-                {
-                    copy.Tables[processData.DataTable.TableName].LoadDataRow(row.ItemArray, true);
-                }
+                throw new Exception("Rows for the selected Ids were not loaded");
+            }
+            DataSet copy = processData.DataTable.DataSet.Clone();
+            foreach (DataRow selectedRow in processData.SelectedRows)
+            {
+                copy.Tables[processData.DataTable.TableName].LoadDataRow(
+                    selectedRow.ItemArray, true);
             }
             DataTable selectedRows = copy.Tables[processData.DataTable.TableName];
-            DataSet command = DataService.LoadData(
+            DataSet command = DataService.Instance.LoadData(
                 new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), 
                 new Guid("6eefc3cf-6b6e-4d40-81f7-5c37a81e8a01"), 
                 Guid.Empty, Guid.Empty, null, "WorkQueueCommand_parId", 
@@ -122,7 +123,7 @@ namespace Origam.Server
                 if (processData.Action == null
                     || processData.Action.Mode != PanelActionMode.Always)
                 {
-                    CheckSelectedRowsCountPositive(processData.SelectedItems.Count);
+                    CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
                 }
                 WorkQueueWorkflowCommand cmd = wqss.WQClass.GetCommand((string)cmdRow["Command"]);
                 // We handle the UI actions, work queue service will handle all the other background actions
@@ -151,7 +152,7 @@ namespace Origam.Server
                     ExecuteAction(processData.SessionFormIdentifier, 
                         processData.RequestingGrid, processData.Entity, cmd.ActionType.ToString(), 
                         cmd.Id.ToString(), new Hashtable(), 
-                        processData.SelectedItems, processData.Parameters);
+                        processData.SelectedIds, processData.Parameters);
                     return;
                 }
             }
@@ -171,8 +172,8 @@ namespace Origam.Server
             if (processData.Action == null
             || processData.Action.Mode != PanelActionMode.Always)
             {
-                CheckSelectedRowsCountPositive(processData.SelectedItems.Count);
-                if (processData.SelectedItems.Count > 1)
+                CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+                if (processData.SelectedIds.Count > 1)
                 {
                     throw new Exception(Resources.ErrorChangeUIMultipleRecords);
                 }
@@ -213,15 +214,15 @@ namespace Origam.Server
             if (processData.Action == null
                 || processData.Action.Mode != PanelActionMode.Always)
             {
-                CheckSelectedRowsCountPositive(processData.SelectedItems.Count);
-                if (processData.SelectedItems.Count > 1)
+                CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
+                if (processData.SelectedIds.Count > 1)
                 {
                     throw new Exception(Resources.ErrorChangeUIMultipleRecords);
                 }
             }
             PanelActionResult result = new PanelActionResult(ActionResultType.ChangeUI);
             UIRequest uir = RequestTools.GetActionRequest(processData.Parameters, 
-                processData.SelectedItems, processData.Action);
+                processData.SelectedIds, processData.Action);
             uir.FormSessionId = processData.SessionFormIdentifier;
             uir.RegisterSession = false;
             result.UIResult = uiManager.InitUI(
@@ -239,12 +240,12 @@ namespace Origam.Server
             if (processData.Action == null
                 || processData.Action.Mode != PanelActionMode.Always)
             {
-                CheckSelectedRowsCountPositive(processData.SelectedItems.Count);
+                CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
             }
             PanelActionResult result = new PanelActionResult(
                 ActionResultType.OpenForm);
             UIRequest uir = RequestTools.GetActionRequest(processData.Parameters, 
-                processData.SelectedItems, processData.Action);
+                processData.SelectedIds, processData.Action);
             // Stack can't handle resending DataDocumentFx, 
             // it needs to be converted to XmlDocument
             // and then converted back to DataDocumentFx
@@ -283,7 +284,7 @@ namespace Origam.Server
             if (processData.Action == null || 
                 processData.Action.Mode != PanelActionMode.Always)
             {
-                CheckSelectedRowsCountPositive(processData.SelectedItems.Count);
+                CheckSelectedRowsCountPositive(processData.SelectedIds.Count);
             }
             resultList.Add(sessionManager.GetSession(processData).ExecuteAction(
                 processData.ActionId));

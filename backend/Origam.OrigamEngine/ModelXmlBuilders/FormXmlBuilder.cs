@@ -106,8 +106,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			FormControlSet form = new FormControlSet();
 
 			form.PersistenceProvider = persistence.SchemaProvider;
-			ControlSetItem control = form.NewItem(typeof(ControlSetItem), 
-                form.SchemaExtensionId, form.Group) as ControlSetItem;
+			ControlSetItem control = form.NewItem<ControlSetItem>( 
+                form.SchemaExtensionId, form.Group);
 			control.PrimaryKey = new ModelElementKey(instanceId);
 
 			control.ControlItem = panel.PanelControl;
@@ -127,9 +127,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				control.ChildItems.Add(copy);
 			}
 
-			PropertyValueItem dataMemberProperty = control.NewItem(
-                typeof(PropertyValueItem), control.SchemaExtensionId, 
-                null) as PropertyValueItem;
+			PropertyValueItem dataMemberProperty = control
+				.NewItem<PropertyValueItem>(control.SchemaExtensionId, null);
 			dataMemberProperty.Name = "DataMember";
 			dataMemberProperty.Value = panel.DataEntity.Name;
 			dataMemberProperty.ControlPropertyItem = 
@@ -311,7 +310,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			QueryParameterCollection pms = new QueryParameterCollection();
 			pms.Add(new QueryParameter("WorkQueueCommand_parWorkQueueId", queueId));
-			DataSet commands = core.DataService.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, pms);
+			DataSet commands = core.DataService.Instance.LoadData(new Guid("1d33b667-ca76-4aaa-a47d-0e404ed6f8a6"), new Guid("421aec03-1eec-43f9-b0bb-17cfc24510a0"), Guid.Empty, Guid.Empty, null, pms);
 
 			ArrayList commandRows = new ArrayList();
             IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
@@ -605,7 +604,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 								formatPattern = "dd. MM. yyyy HH:mm:ss";
 							}
 
-							DateBoxBuilder.Build(propertyElement, null, formatPattern);
+							DateBoxBuilder.Build(propertyElement, "Custom", formatPattern);
 							break;
 
 						case OrigamDataType.Boolean:
@@ -1116,6 +1115,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			if (control.ControlItem.Name == "AsForm") {
 				// for the Form we find its root control and we continue
+				if(control.ChildItemsByType(ControlSetItem.CategoryConst).Count==0) 
+				{ 
+					return false; 
+				}
 				item = (AbstractSchemaItem)control.ChildItemsByType (ControlSetItem.CategoryConst) [0];
 				control = item as ControlSetItem;
 			}
@@ -1783,13 +1786,16 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 									.ExtendedProperties["OrigamDataType"]));
 								break;
 						}
-
-						// copy all attributes to the displayed primary key column
+						// The Id column was created earlier in AsPanelBuilder.cs
+						// and is meant to be invisible.
+						// If the Id column was added to the model in the Architect
+						// and thus should be the invisible, the original invisible
+						// Id column is removed. Duplicated Id column would create
+						// problems in the client
 						XmlElement zeroColumn = propertiesElement.FirstChild as XmlElement;
 						if(propertyElement.GetAttribute("Id") == zeroColumn.GetAttribute("Id"))
 						{
-							XmlNode clone = propertyElement.CloneNode(true);
-							propertiesElement.ReplaceChild(clone, zeroColumn);
+							propertiesElement.RemoveChild(zeroColumn);
 						}
 						if(csi.MultiColumnAdapterFieldCondition != Guid.Empty)
 						{

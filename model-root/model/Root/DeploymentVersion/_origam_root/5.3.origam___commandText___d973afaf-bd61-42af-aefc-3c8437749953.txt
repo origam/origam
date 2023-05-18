@@ -1,0 +1,2 @@
+﻿ALTER TABLE [WorkQueueEntry] ADD [AttemptCount] Int NOT NULL CONSTRAINT [DF_WorkQueue_AttemptCount] DEFAULT 0;
+ALTER TABLE [WorkQueueEntry] DROP CONSTRAINT [DF_WorkQueue_AttemptCount];

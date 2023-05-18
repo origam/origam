@@ -23,6 +23,7 @@ import S from "./Header.module.scss";
 import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 import { action, observable } from "mobx";
+import cx from "classnames";
 
 const MIN_COLUMN_WIDTH = 30;
 
@@ -105,20 +106,24 @@ export class Header extends React.Component<{
   private renderHeader(provided?: DraggableProvided) {
     return <div className={S.root} ref={provided?.innerRef} {...provided?.draggableProps}>
       <div
+        className={S.leftSeparator}
+      />
+      <div
         {...provided?.dragHandleProps}
-        className={S.header}
+        onClick={(event) => this.onHeaderClick(event)}
+        className={cx(S.header, "headerClickable")}
         style={this.makeHeaderStyle()}
         title={this.props.label}
       >
-        <div className={S.inHeaderRow}>
+        <div
+          className={cx(S.inHeaderRow, "headerClickable")}>
           <div
-            className={S.label}
-            onClick={(event) => this.props.onClick && this.props.onClick(event, this.props.id)}
-          >
+            className={cx(S.label, "headerClickable")}
+              >
             {this.props.label}
           </div>
           {this.props.orderingDirection !== IOrderByDirection.NONE && (
-            <div className={S.order}>
+            <div className={cx(S.order, "headerClickable")}>
               {this.props.orderingOrder > 0 && <span>{this.props.orderingOrder}</span>}
               {this.props.orderingDirection === IOrderByDirection.ASC && (
                 <i className="fas fa-caret-up"/>
@@ -135,8 +140,14 @@ export class Header extends React.Component<{
       </div>
       <div
         onMouseDown={this.handleHeaderWidthHandleMouseDown}
-        className={S.columnWidthHandle + " " + (this.props.isLast ? S.rightSeparator : S.middleSeparator)}
+        className={S.columnWidthHandle + " " + S.rightSeparator}
       />
     </div>;
+  }
+  onHeaderClick(event: any){
+    if(!this.props.onClick || !event.target.classList.contains("headerClickable")){
+      return;
+    }
+    this.props.onClick(event, this.props.id)
   }
 }

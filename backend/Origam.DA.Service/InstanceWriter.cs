@@ -26,8 +26,6 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
-using Origam.DA.Service.MetaModelUpgrade;
 using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
@@ -51,7 +49,8 @@ namespace Origam.DA.Service
                 .Get(instance.GetType())
                 .DeepCopy();
             namespaceMapping.AddNamespacesToDocumentAndAdjustMappings(xmlDocument);
-
+            xmlDocument.UseTopNamespacePrefixesEverywhere();
+            
             XmlElement elementToWriteTo = GetElementToWriteTo(instance, namespaceMapping);
             bool isLocalChild = elementToWriteTo.ParentNode.GetDepth() != 1;
             WriteToNode(elementToWriteTo, instance, namespaceMapping, isLocalChild);

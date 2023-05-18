@@ -51,7 +51,7 @@
   "metric_middle_tool_tip": "Kompaktní",
   "metric_small_tool_tip": "Extra kompaktní",
   "about_application": "O aplikaci",
-  "origam_image_version": "Verze Origam image: {0}",
+  "origam_image_version": "Verze Origamu: {0}",
   "custom_client_version": "Verze zákaznického buildu: {0}",
   "used_origam_plugins": "Použité Origam pluginy:",
   "copyright_attributions": "Copyright, licence třetích stran",
@@ -419,6 +419,7 @@
   "preview": "Náhled",
   "format": "Formát",
   "row_count": "Řádky",
+  "row_not_found": "Tento řádek nebyl nalezen na serveru. Obnovte prosím data.",
   "column_width": "Šířka",
   "order_columns_button": "Seřadit",
   "order_columns_title": "Pořadí sloupců"

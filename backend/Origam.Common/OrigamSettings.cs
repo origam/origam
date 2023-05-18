@@ -59,6 +59,8 @@ namespace Origam
 			int workQueueListRefreshPeriod,
 			bool loadExternalWorkQueues,
 			int externalWorkQueueCheckPeriod,
+			WorkQueueProcessingMode workQueueProcessingMode,
+			int roundRobinBatchSize,
 			string slogan,
 			string localizationFolder,
 			bool executeUpgradeScriptsOnStart,
@@ -91,6 +93,8 @@ namespace Origam
 			this.WorkQueueListRefreshPeriod = workQueueListRefreshPeriod;
 			this.LoadExternalWorkQueues = loadExternalWorkQueues;
 			this.ExternalWorkQueueCheckPeriod = externalWorkQueueCheckPeriod;
+			this.RoundRobinBatchSize = roundRobinBatchSize;
+			this.WorkQueueProcessingMode = workQueueProcessingMode;
 			this.Slogan = slogan;
 			this.LocalizationFolder = localizationFolder;
 			this.ExecuteUpgradeScriptsOnStart = executeUpgradeScriptsOnStart;
@@ -120,10 +124,7 @@ namespace Origam
 		[Category("Server Connection")]
         public string ServerUrl { get; set; }
 
-		[Category("Server Connection")]
-        public string ServerLocalPath { get; set; }
-
-		[Category("Model Connection")]
+        [Category("Model Connection")]
 		public string SchemaConnectionString { get; set; } = "Server=?;database=?;Integrated Security=SSPI;";
 
 		[Category("Model Connection")]
@@ -245,6 +246,15 @@ namespace Origam
 
 		[Category("Work Queue"), DefaultValue(60)]
 		public int ExternalWorkQueueCheckPeriod { get; set; } = 60;
+		
+		[Category("Work Queue"), DefaultValue(false)]
+		public bool AutoProcessWorkQueues { get; set; } = false;
+		
+		[Category("Work Queue"), DefaultValue(WorkQueueProcessingMode.Linear)]
+		public WorkQueueProcessingMode WorkQueueProcessingMode { get; set; }
+		
+		[Category("Work Queue"), DefaultValue(3)]
+		public int RoundRobinBatchSize { get; set; } = 3;
 
 		[Category("Services"), DefaultValue(-1)]
 		public int ExportRecordsLimit { get; set; } = -1;
@@ -317,6 +327,8 @@ namespace Origam
 				this.WorkQueueListRefreshPeriod,
 				this.LoadExternalWorkQueues,
 				this.ExternalWorkQueueCheckPeriod,
+				this.WorkQueueProcessingMode,
+				this.RoundRobinBatchSize,
 				this.Slogan,
 				this.LocalizationFolder,
 				this.ExecuteUpgradeScriptsOnStart,
@@ -409,5 +421,10 @@ namespace Origam
             return  dataDataService
                     .Split(",".ToCharArray())[0].Trim().Split("\\.".ToCharArray())[3].Trim().Replace("DataService","");
         }
+    }
+
+    public enum WorkQueueProcessingMode
+    {
+	    Linear, RoundRobin
     }
 }

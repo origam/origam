@@ -26,7 +26,7 @@ import {
   IPluginDataView,
   IPluginProperty,
   IPluginTableRow, ISectionPluginData,
-} from "@origam/plugin-interfaces";
+} from "@origam/plugins";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";

@@ -37,7 +37,7 @@ export function saveColumnConfigurations(ctx: any) {
     }
 
     const activeTableConfiguration = configurationManager.activeTableConfiguration;
-    for (const property of getProperties(ctx)) {
+    for (const property of getProperties(ctx).slice(1)) {
       activeTableConfiguration.updateColumnWidth(property.id, property.columnWidth);
     }
     activeTableConfiguration.sortColumnConfigurations(tablePanelView.tablePropertyIds);

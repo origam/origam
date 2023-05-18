@@ -23,97 +23,50 @@ using System;
 
 namespace Origam.Schema.GuiModel
 {
-	/// <summary>
-	/// Summary description for PanelSchemaItemProvider.
-	/// </summary>
-	public class PanelSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class PanelSchemaItemProvider : AbstractSchemaItemProvider
 	{
 		public PanelSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return PanelControlSet.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "UI";
-			}
-		}
+		public override string RootItemType => PanelControlSet.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "UI";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_21_screen-sections-2.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_21_screen-sections-2.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Screen Sections";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Screen Sections";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(PanelControlSet)};
-			}
-		}
+			typeof(PanelControlSet)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(PanelControlSet))
-			{
-				PanelControlSet item =  new PanelControlSet(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewPanel";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorEntityModelUnknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(PanelControlSet) ?
+					"NewPanel" : null);
 		}
 
 		#endregion

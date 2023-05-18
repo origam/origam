@@ -345,8 +345,8 @@
   <data name="WebAppFolderNotExists_Message" xml:space="preserve">
     <value>Web application folder does not exist.</value>
   </data>
-  <data name="TemplateFolderNotExists_Message" xml:space="preserve">
-    <value>Template folder does not exist.</value>
+  <data name="DefaultModelFileNotExists_Message" xml:space="preserve">
+    <value>Default model file does not exist.</value>
   </data>
   <data name="EnterSourceFolder_Message" xml:space="preserve">
     <value>Please enter the sources folder.</value>

@@ -44,15 +44,14 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
-import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
-import { onTextFieldAutoUpdate } from "model/actions-ui/DataView/OnTextFieldAutoUpdate";
 import { CellAlignment } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellAlignment";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
 
 
 @inject(({property, formPanelView}) => {
   return {
     property,
-    onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
+    onEditorBlur: () => onFieldBlur(formPanelView)(),
     onChange: async (event: any, value: any) => {
       const row = getSelectedRow(property);
       if(row === undefined){
@@ -75,7 +74,7 @@ export class FormViewEditor extends React.Component<{
   property?: IProperty;
   isRichText: boolean;
   onChange?: (event: any, value: any) => Promise<void>;
-  onEditorBlur?: (event: any) => Promise<any>;
+  onEditorBlur?: () => Promise<any>;
   backgroundColor?: string;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   dock?: IDockType;
@@ -91,7 +90,11 @@ export class FormViewEditor extends React.Component<{
     const rowId = getSelectedRowId(this.props.property);
     const row = getSelectedRow(this.props.property);
     const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
-    const readOnly = !row || isReadOnly(this.props.property!, rowId);
+    const  dataView = getDataView(this.props.property);
+    const readOnly =
+      !row ||
+      isReadOnly(this.props.property!, rowId) ||
+      (dataView.orderProperty !== undefined && this.props.property?.name === dataView.orderProperty.name);
     const backgroundColor = readOnly
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
@@ -114,12 +117,13 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={this.makeOnKeyDownCallBack()}
             onEditorBlur={this.props.onEditorBlur}
             onTextOverflowChanged={this.props.onTextOverflowChanged}
-            subscribeToFocusManager={(textEditor) =>
+            subscribeToFocusManager={(textEditor, onBlur) =>{
               this.focusManager.subscribe(
                 textEditor,
                 this.props.property?.id,
-                this.props.property?.tabIndex
-              )
+                this.props.property?.tabIndex,
+                onBlur);
+              }
             }
           />
         );
@@ -139,14 +143,14 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={this.makeOnKeyDownCallBack()}
             wrapText={true}
             onEditorBlur={this.props.onEditorBlur}
-            onAutoUpdate={value => onTextFieldAutoUpdate(this.props.property!, value)}
             isRichText={this.props.isRichText}
             onTextOverflowChanged={this.props.onTextOverflowChanged}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
                 this.props.property?.id,
-                this.props.property?.tabIndex
+                this.props.property?.tabIndex,
+                this.props.onEditorBlur
               )
             }
             dock={this.props.dock}
@@ -163,12 +167,13 @@ export class FormViewEditor extends React.Component<{
             foregroundColor={foregroundColor}
             onChange={this.props.onChange}
             onEditorBlur={this.props.onEditorBlur}
-            subscribeToFocusManager={(textEditor) =>
+            subscribeToFocusManager={(textEditor, onBlur) =>{
               this.focusManager.subscribe(
                 textEditor,
                 this.props.property?.id,
-                this.props.property?.tabIndex
-              )
+                this.props.property?.tabIndex,
+                onBlur);
+            }
             }
             onKeyDown={this.makeOnKeyDownCallBack()}
           />
@@ -265,7 +270,7 @@ export class FormViewEditor extends React.Component<{
           <ColorEditor
             value={flashColor2htmlColor(this.props.value) || null}
             onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
-            onBlur={() => this.props.onEditorBlur?.(undefined)}
+            onBlur={() => this.props.onEditorBlur?.()}
             onKeyDown={this.makeOnKeyDownCallBack()}
             isReadOnly={readOnly}
             subscribeToFocusManager={(textEditor) =>
@@ -329,7 +334,7 @@ export class FormViewEditor extends React.Component<{
             return;
           }
           if (event.key === "Enter") {
-            await this.props.onEditorBlur?.(null);
+            await this.props.onEditorBlur?.();
             if (dataView.firstEnabledDefaultAction) {
               uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
                 event,

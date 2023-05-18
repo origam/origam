@@ -175,9 +175,9 @@ input[type="checkbox"], input[type="radio"] {
   margin-top: -8px;
 }
 
-#languageSelectForm, .reset-password-statement {
-  font-size: 0.9em;
-  padding: 0 1.5em;
+#languageSelectForm, .reset-password-statement, .initial-user-statement {
+    font-size: 0.9em;
+    padding: 0 1.5em;
 }
 
 .detailview-module.with-title .form-group.login-remember label {
@@ -269,4 +269,32 @@ div.input-row a.btn{
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
+}
+
+#browserLinks{
+  display: flex;
+  flex-direction: column;
+}
+
+#overlay{
+  display: none;
+}
+
+#page-container{
+  display: flex;
+}
+
+#browserLinks a{
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+#continueAnywayLink{
+  display: block;
+  margin-top: 12px;
 }

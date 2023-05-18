@@ -19,14 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.Extensions;
@@ -48,7 +42,8 @@ namespace Origam.DA.Service_net2Tests
             XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
             {
                 Indent = true,
-                NewLineOnAttributes = true
+                NewLineOnAttributes = true,
+                NewLineChars = "\r\n",
             };
 
             string sortedXml = OrigamDocumentSorter

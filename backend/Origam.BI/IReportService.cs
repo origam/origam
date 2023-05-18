@@ -29,7 +29,7 @@ namespace Origam.BI
 	/// <summary>
 	/// Summary description for IReportService.
 	/// </summary>
-	public interface IReportService : ITracable
+	public interface IReportService : ITraceInfoContainer
     {
 		void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters);
 		object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction);

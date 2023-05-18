@@ -171,4 +171,9 @@ public class MsSqlRenderer: SqlRenderer {
     {
         return string.Format("SET {0} = NULL{1}", name, Environment.NewLine);
     }
+
+    internal override string Char(int number)
+    {
+        return "CHAR(" + number + ")";
+    }
 }

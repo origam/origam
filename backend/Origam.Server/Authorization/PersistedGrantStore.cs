@@ -82,14 +82,14 @@ namespace Origam.Server.Authorization
             newRow.SetField("SessionId", grant.SessionId);
             
             dataSet.Tables[GrantTableName].Rows.Add(newRow);
-            DataService.StoreData(dataStructureQuery, dataSet, null);
+            DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
             
             return Task.CompletedTask;
         }
 
         public Task<PersistedGrant> GetAsync(string key)
         {
-            DataSet dataSet = DataService.LoadData(
+            DataSet dataSet = DataService.Instance.LoadData(
                 OrigamIdentityGrantDataStructureId, 
                 GetGrandByKeyFilterId,
                 Guid.Empty,
@@ -103,7 +103,7 @@ namespace Origam.Server.Authorization
         public Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
         {
             QueryParameterCollection parameters = FilterToParameterCollection(filter);
-            DataSet dataSet = DataService.LoadData(
+            DataSet dataSet = DataService.Instance.LoadData(
                 OrigamIdentityGrantDataStructureId,
                 GetGrandBySubjectIdFilterId,
                 Guid.Empty,
@@ -141,7 +141,7 @@ namespace Origam.Server.Authorization
 
         public Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
-            DataSet dataSet = DataService.LoadData(
+            DataSet dataSet = DataService.Instance.LoadData(
                 OrigamIdentityGrantDataStructureId, 
                 GetGrandBySubjectIdFilterId,
                 Guid.Empty,
@@ -154,7 +154,7 @@ namespace Origam.Server.Authorization
 
         public Task RemoveAsync(string key)
         {
-            DataSet dataSet = DataService.LoadData(
+            DataSet dataSet = DataService.Instance.LoadData(
                 OrigamIdentityGrantDataStructureId, 
                 GetGrandByKeyFilterId,
                 Guid.Empty,
@@ -168,14 +168,14 @@ namespace Origam.Server.Authorization
                 throw new ArgumentException($"Grant {key} not found.");
             }
             dataSet.Tables[GrantTableName].Rows[0].Delete();
-            DataService.StoreData(dataStructureQuery, dataSet, null);
+            DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
             return Task.CompletedTask;
         }
 
         public Task RemoveAllAsync(PersistedGrantFilter filter)
         {
             QueryParameterCollection parameters = FilterToParameterCollection(filter);
-            DataSet dataSet = DataService.LoadData(
+            DataSet dataSet = DataService.Instance.LoadData(
                 OrigamIdentityGrantDataStructureId,
                 GetBySubjectIdClientIdFilterId,
                 Guid.Empty,
@@ -188,7 +188,7 @@ namespace Origam.Server.Authorization
                 row.Delete();
             }
 
-            DataService.StoreData(dataStructureQuery, dataSet, null);
+            DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
 
             return Task.CompletedTask;
         }
@@ -198,7 +198,7 @@ namespace Origam.Server.Authorization
             var parameters = new QueryParameterCollection();
             parameters.Add(new QueryParameter(SubjectIdParameterName, subjectId));
             parameters.Add(new QueryParameter(ClientIdParameterName, clientId));
-            DataSet dataSet = DataService.LoadData(
+            DataSet dataSet = DataService.Instance.LoadData(
                 OrigamIdentityGrantDataStructureId, 
                 GetBySubjectIdClientIdFilterId,
                 Guid.Empty,
@@ -211,7 +211,7 @@ namespace Origam.Server.Authorization
                 row.Delete();
             }
             
-            DataService.StoreData(dataStructureQuery, dataSet, null);
+            DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
             
             return Task.CompletedTask;
         }
@@ -223,7 +223,7 @@ namespace Origam.Server.Authorization
             parameters.Add(new QueryParameter(SubjectIdParameterName, subjectId));
             parameters.Add(new QueryParameter(ClientIdParameterName, clientId));
             parameters.Add(new QueryParameter(TypeParameterName, type));
-            DataSet dataSet = DataService.LoadData(
+            DataSet dataSet = DataService.Instance.LoadData(
                 OrigamIdentityGrantDataStructureId, 
                 GetBySubjectIdClientIdTypeFilterId,
                 Guid.Empty,
@@ -236,7 +236,7 @@ namespace Origam.Server.Authorization
                 row.Delete();
             }
             
-            DataService.StoreData(dataStructureQuery, dataSet, null);
+            DataService.Instance.StoreData(dataStructureQuery, dataSet, null);
             
             return Task.CompletedTask;
         }

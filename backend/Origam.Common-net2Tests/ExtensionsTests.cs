@@ -100,8 +100,10 @@ namespace Origam.Common_net2Tests
         [Test]
         public void ShouldRecognizeDirectoryAsParent()
         {
-            var parent = new DirectoryInfo(@"C:\Bordel\Serialization\Root Menu");
-            var child = new DirectoryInfo(@"C:\Bordel\Serialization\Root Menu\DeploymentVersion\Root Menu");
+            var parent = new DirectoryInfo(@"Serialization\Root Menu".
+                Replace('\\', Path.DirectorySeparatorChar));
+            var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
+                Replace('\\', Path.DirectorySeparatorChar));
 
             Assert.That(parent.IsOnPathOf(child));
         }
@@ -109,11 +111,28 @@ namespace Origam.Common_net2Tests
         [Test]
         public void ShouldRecognizeDirectoryIsNotParent()
         {
-            var notApatent = new DirectoryInfo(@"C:\Bordel\Serialization\Root");
-            var child = new DirectoryInfo(@"C:\Bordel\Serialization\Root Menu\DeploymentVersion\Root Menu");
+            var notApatent = new DirectoryInfo(@"Serialization\Root".
+                Replace('\\', Path.DirectorySeparatorChar));
+            var child = new DirectoryInfo(@"Serialization\Root Menu\DeploymentVersion\Root Menu".
+                Replace('\\', Path.DirectorySeparatorChar));
 
             Assert.That(!notApatent.IsOnPathOf(child));
         }
     }
-
+    [TestFixture]
+    public class StringExtensionTests
+    {
+        [Test]
+        public void ShouldTruncateString()
+        {
+            string stringTestValue = "The quick brown fox jumps over the lazy dog.";
+            string nullString = null;
+            Assert.That(stringTestValue.Truncate(0).Equals(string.Empty));
+            Assert.That(stringTestValue.Truncate(9).Equals("The quick"));
+            Assert.That(stringTestValue.Truncate(100).Equals(stringTestValue));
+            Assert.That(stringTestValue.Truncate(-10).Equals(string.Empty));
+            Assert.That(nullString.Truncate(0) is null);
+            Assert.That(nullString.Truncate(10) is null);
+        }
+    }
 }

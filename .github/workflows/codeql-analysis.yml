@@ -1,13 +1,11 @@
-name: "Build Backend and Architect Master"
+name: "Architect CodeQL Analysis"
 
 on:
   push:
     branches: [ master ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master ]
-  schedule:
-    - cron: '40 23 * * 2'
+    branches: [ master, 20* ]
 
 jobs:
   analyze:
@@ -21,24 +19,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'csharp']
+        language: ['csharp']
 
     steps:
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v2
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
-    
+
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
-    
+
     - name: Build Architect
       run: |
        msbuild backend/Origam.sln -t:restore /p:Configuration="Release Architect"
        msbuild backend/Origam.sln /p:Configuration="Release Architect"
-   
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2

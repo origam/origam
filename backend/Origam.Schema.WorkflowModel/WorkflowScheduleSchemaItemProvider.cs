@@ -23,92 +23,48 @@ using System;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for WorkflowSchemaItemProvide.
-	/// </summary>
-	public class WorkflowScheduleSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class WorkflowScheduleSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public WorkflowScheduleSchemaItemProvider()
-		{
-		}
+		public WorkflowScheduleSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
-		public override string RootItemType
-		{
-			get
-			{
-				return WorkflowSchedule.CategoryConst;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "BL";
-			}
-		}
+		public override string RootItemType => WorkflowSchedule.CategoryConst;
+
+		public override string Group => "BL";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_29_schedules.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_29_schedules.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Schedules";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Schedules";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[1] {typeof(WorkflowSchedule)};
-			}
-		}
+			typeof(WorkflowSchedule)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(WorkflowSchedule))
-			{
-				WorkflowSchedule item = new WorkflowSchedule(schemaExtensionId);
-				item.RootProvider = this;
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewSchedule";
-
-				item.Group = group;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorWorkflowSchedulerModelUknownType"));
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(WorkflowSchedule) ?
+					"NewSchedule" : null);
 		}
 
 		#endregion

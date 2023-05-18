@@ -45,8 +45,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private LineSeriesForm _form = LineSeriesForm.Segment;
 		[Category("Series"), DefaultValue(LineSeriesForm.Segment)]
-		[EntityColumn("I05")]
-        [XmlAttribute("form")]
+		[XmlAttribute("form")]
 		public LineSeriesForm Form
 		{
 			get

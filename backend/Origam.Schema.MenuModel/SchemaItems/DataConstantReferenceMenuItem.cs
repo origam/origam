@@ -58,7 +58,6 @@ namespace Origam.Schema.MenuModel
 		}
 
 		#region Properties
-		[EntityColumn("G02")] 
 		public Guid DataConstantId;
 
 		[Category("Data Constant Reference")]
@@ -87,7 +86,6 @@ namespace Origam.Schema.MenuModel
 			}
 		}
 
-        [EntityColumn("G03")]
         public Guid DataLookupId;
 
         [Category("User Interface")]
@@ -127,7 +125,6 @@ namespace Origam.Schema.MenuModel
 
         private bool _refreshPortalAfterSave = false;
         [DefaultValue(false)]
-        [EntityColumn("B01")]
         [XmlAttribute("refreshPortalAfterSave")]
         [Description("If true, the client will refresh its menu after saving data.")]
         public bool RefreshPortalAfterSave

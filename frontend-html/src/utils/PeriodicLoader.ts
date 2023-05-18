@@ -31,6 +31,7 @@ export class PeriodicLoader {
   interpreter = interpret(
     createMachine(
       {
+        predictableActionArguments: true,
         id: "periodicLoader",
         initial: "INITIALIZED",
         states: {

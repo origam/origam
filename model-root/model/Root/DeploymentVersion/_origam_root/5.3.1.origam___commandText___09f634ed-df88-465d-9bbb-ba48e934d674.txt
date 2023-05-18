@@ -1,0 +1,2 @@
+﻿ALTER TABLE [WorkQueueEntry] ADD [InRetry] Bit NOT NULL CONSTRAINT [DF_WorkQueueEntry_InRetry] DEFAULT 0;
+ALTER TABLE [WorkQueueEntry] DROP CONSTRAINT [DF_WorkQueueEntry_InRetry];

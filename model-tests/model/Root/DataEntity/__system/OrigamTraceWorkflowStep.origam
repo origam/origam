@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
+  xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,35 +19,32 @@
     tmi:mappedObjectName="OrigamTraceWorkflowStep"
     asi:name="OrigamTraceWorkflowStep"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
-      x:id="97c6ee03-bf00-4b62-8bf5-f389a03c0a6f" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="db471e3c-173f-4984-b588-1c4e609a120b"
+      asi:name="ix_refOrigamTraceWorkflowId"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/refOrigamTraceWorkflowId/29cd8e49-24a4-4132-969b-dfd2b5cc8a00"
+        x:id="86b04342-f96e-489f-a582-7cfb7c95a226"
+        asi:name="0_refOrigamTraceWorkflowId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
-      adec:dataLength="255"
-      adec:dataType="String"
+      adec:dataType="UniqueIdentifier"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="f4199170-3d7b-4819-bcdc-051694c68dc1"
+      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/2d969eff-c922-46cd-8a6b-7b6dc27e735a"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="29cd8e49-24a4-4132-969b-dfd2b5cc8a00"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="Category"
-      asi:name="Category"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataLength="255"
-      adec:dataType="String"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="d5237654-5350-454c-87df-18d7c2b7a9e1"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="Subcategory"
-      asi:name="Subcategory"
+      fmi:mappedColumnName="refOrigamTraceWorkflowId"
+      asi:name="refOrigamTraceWorkflowId"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -59,19 +65,6 @@
       asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="82bf411d-c14d-466b-970c-2178b2484234"
-      adec:isPrimaryKey="false"
-      fmi:mappedColumnName="WorkflowStepId"
-      asi:name="WorkflowStepId"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
       adec:dataType="Memo"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
@@ -83,15 +76,28 @@
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="82bf411d-c14d-466b-970c-2178b2484234"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="WorkflowStepId"
+      asi:name="WorkflowStepId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="Memo"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="f34e3d08-9394-46d9-9cef-bad0ec898430"
+      x:id="9993d341-b247-4a93-8e30-f5e4d61ea08b"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="Data1"
-      asi:name="Data1"
+      fmi:mappedColumnName="Message"
+      asi:name="Message"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -111,15 +117,14 @@
       asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
-      adec:dataType="UniqueIdentifier"
+      adec:dataLength="255"
+      adec:dataType="String"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      adec:foreignKeyEntity="Root/DataEntity/__system/OrigamTraceWorkflow.origam#OrigamTraceWorkflow/2d969eff-c922-46cd-8a6b-7b6dc27e735a"
-      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-      x:id="29cd8e49-24a4-4132-969b-dfd2b5cc8a00"
+      x:id="d5237654-5350-454c-87df-18d7c2b7a9e1"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="refOrigamTraceWorkflowId"
-      asi:name="refOrigamTraceWorkflowId"
+      fmi:mappedColumnName="Subcategory"
+      asi:name="Subcategory"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -129,24 +134,28 @@
       adec:dataType="Memo"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="9993d341-b247-4a93-8e30-f5e4d61ea08b"
+      x:id="f34e3d08-9394-46d9-9cef-bad0ec898430"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="Message"
-      asi:name="Message"
+      fmi:mappedColumnName="Data1"
+      asi:name="Data1"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
-    <dei:DataEntityIndex
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      dei:generateDeploymentScript="false"
-      x:id="db471e3c-173f-4984-b588-1c4e609a120b"
-      asi:name="ix_refOrigamTraceWorkflowId"
-      dei:unique="false">
-      <deif:DataEntityIndexField
-        asi:abstract="false"
-        deif:field="Root/DataEntity/__system/OrigamTraceWorkflowStep.origam#OrigamTraceWorkflowStep/refOrigamTraceWorkflowId/29cd8e49-24a4-4132-969b-dfd2b5cc8a00"
-        x:id="86b04342-f96e-489f-a582-7cfb7c95a226"
-        asi:name="0_refOrigamTraceWorkflowId"
-        deif:sortOrder="Ascending" />
-    </dei:DataEntityIndex>
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="255"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="f4199170-3d7b-4819-bcdc-051694c68dc1"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="Category"
+      asi:name="Category"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="97c6ee03-bf00-4b62-8bf5-f389a03c0a6f" />
   </tmi:DataEntity>
 </x:file>

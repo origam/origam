@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { action } from "mobx";
-import { observer } from "mobx-react";
+import { action, observable } from "mobx";
+import { Observer, observer } from "mobx-react";
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import S from "./TextEditor.module.scss";
@@ -31,8 +31,8 @@ import htmlToDraft from "html-to-draftjs";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IDockType } from "model/entities/types/IProperty";
-
-const autoUpdateUntervalMs = 60_000;
+import { AutoSizer, List, MultiGrid } from "react-virtualized";
+import { bind } from "bind-decorator";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -53,7 +53,6 @@ export class TextEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  onAutoUpdate?(value: string): void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   dock?: IDockType;
 }> {
@@ -61,16 +60,36 @@ export class TextEditor extends React.Component<{
   currentValue = this.props.value;
   lastAutoUpdatedValue = this.props.value;
   updateInterval: NodeJS.Timeout | undefined;
+  refGrid = React.createRef<MultiGrid>();
+  @observable.ref
+  longTextRowList: string[] = [];
 
   componentDidMount() {
-    if (this.props.isMultiline) {
-      this.disposers.push(this.startAutoUpdate());
-    }
     this.updateTextOverflowState();
+    this.updateBigTextRowList();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: any) {
     this.updateTextOverflowState();
+    if (this.props.value !== prevProps.value) {
+      this.updateBigTextRowList();
+    }
+  }
+
+  private updateBigTextRowList() {
+    if (!this.props.isMultiline ||
+        !this.props.isReadOnly ||
+        !this.props.value ||
+        this.props.value.length < 5000
+    ) {
+      this.longTextRowList = [this.props.value ?? ""]
+      return;
+    }
+    if (this.props.value.includes("\\n")) {
+      this.longTextRowList = this.props.value.split("\\n");
+    } else {
+      this.longTextRowList = [this.props.value.substring(0, 5000) + "\n...(TRUNCATED)"]
+    }
   }
 
   private updateTextOverflowState() {
@@ -79,16 +98,6 @@ export class TextEditor extends React.Component<{
     }
     const textOverflow = this.elmInput.offsetWidth < this.elmInput.scrollWidth
     this.props.onTextOverflowChanged?.(textOverflow ? this.props.value : undefined);
-  }
-
-  private startAutoUpdate() {
-    this.updateInterval = setInterval(() => {
-      if (this.lastAutoUpdatedValue !== this.currentValue) {
-        this.props.onAutoUpdate?.(this.currentValue ?? "");
-        this.lastAutoUpdatedValue = this.currentValue;
-      }
-    }, autoUpdateUntervalMs);
-    return () => this.updateInterval && clearTimeout(this.updateInterval);
   }
 
   componentWillUnmount() {
@@ -123,6 +132,20 @@ export class TextEditor extends React.Component<{
         backgroundColor: this.props.backgroundColor,
       };
     }
+  }
+
+  @bind rowRenderer({
+     key,
+     index,
+     isScrolling,
+     isVisible,
+     style,
+   }: any) {
+    return (
+      <div key={key} style={style}>
+        {this.longTextRowList[index]}
+      </div>
+    );
   }
 
   render() {
@@ -202,20 +225,42 @@ export class TextEditor extends React.Component<{
       );
     }
     if (this.props.isReadOnly) {
-      return (
-        <div
-          id={this.props.id}
-          className={this.getMultilineDivClass()}
-          onClick={this.props.onClick}
-          onDoubleClick={this.props.onDoubleClick}
-          onBlur={this.props.onEditorBlur}
-          onFocus={this.handleFocus}
-        >
-          <span style={this.getStyle()} className={S.multiLine}>
-            {this.props.value || ""}
-          </span>
-        </div>
-      );
+      if(this.longTextRowList.length > 1){
+        return (
+          <AutoSizer>
+            {({width, height}) => (
+              <Observer>
+                {() => (
+                <List
+                  className={S.input}
+                  width={width}
+                  height={height}
+                  rowCount={this.longTextRowList.length}
+                  rowHeight={20}
+                  rowRenderer={this.rowRenderer}
+                />
+                )}
+              </Observer>
+            )}
+          </AutoSizer>
+        );
+      }
+      else{
+        return (
+          <div
+            id={this.props.id}
+            className={this.getMultilineDivClass()}
+            onClick={this.props.onClick}
+            onDoubleClick={this.props.onDoubleClick}
+            onBlur={this.props.onEditorBlur}
+            onFocus={this.handleFocus}
+          >
+            <span style={this.getStyle()} className={S.multiLine}>
+              {this.longTextRowList[0]}
+            </span>
+          </div>
+        );
+      }
     } else {
       return (
         <textarea

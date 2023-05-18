@@ -117,7 +117,7 @@ namespace Origam.Server
             this.Request = request;
             this.IsModalDialog = request.IsModalDialog;
             _ruleHandler = new DatasetRuleHandler();
-            _ruleEngine = new RuleEngine(null, null);
+            _ruleEngine = RuleEngine.Create(null, null);
             this.CacheExpiration = DateTime.Now.AddMinutes(5);
             dataRequested = request.DataRequested || request.IsSingleRecordEdit;
         }
@@ -1107,7 +1107,7 @@ namespace Origam.Server
         }
         internal static string ConvertTextToUnixStyle(string text)
         {
-            return text.Replace("\r\n", "\r");
+            return text.Replace("\r\n", "\n");
         }
 
         public static ArrayList GetRowData(DataRow row, string[] columns)
@@ -1224,11 +1224,6 @@ namespace Origam.Server
                     value = ConvertTextToUnixStyle(text);
                 }
             }
-            //else if (o is Guid)
-            //{
-            //    value = ShortGuid(guid.Value);
-            //    value = new FlashGuid((Guid)o);
-            //}
             else
             {
                 value = o;
@@ -1304,7 +1299,7 @@ namespace Origam.Server
                             pms.Add(new QueryParameter(col.ColumnName, rowId));
                         }
                         DataSet loadedRow = DatasetTools.CloneDataSet(row.Table.DataSet);
-                        core.DataService.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
+                        core.DataService.Instance.LoadRow(DataListDataStructureEntityId, DataListFilterSetId, pms, loadedRow, null);
                         if (loadedRow.Tables[row.Table.TableName].Rows.Count == 0)
                         {
                             throw new ArgumentOutOfRangeException(string.Format(
@@ -1468,7 +1463,7 @@ namespace Origam.Server
 
         private DataRowCollection LoadMissingRows(string entity, Dictionary<string, object> idsNotFoundInStore)
         {
-            var dataService = core.DataService.GetDataService();
+            var dataService = core.DataServiceFactory.GetDataService();
             var dataStructureEntityId =
                 (Guid) Data.Tables[entity].ExtendedProperties["Id"];
             var dataStructureEntity = Workbench.Services.ServiceManager.Services

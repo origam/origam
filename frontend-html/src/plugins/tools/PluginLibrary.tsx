@@ -22,7 +22,7 @@ import { createScreenPluginData, createSectionPluginData } from "./PluginData";
 import React, { Fragment } from "react";
 import { registerPlugins } from "plugins/tools/PluginRegistration";
 import { Localizer } from "plugins/tools/Localizer";
-import { ILocalization, IPlugin, isIScreenPlugin, isISectionPlugin } from "@origam/plugin-interfaces";
+import { ILocalization, IPlugin, isIScreenPlugin, isISectionPlugin } from "@origam/plugins";
 import { Observer } from "mobx-react";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
@@ -95,6 +95,12 @@ export class PluginLibrary {
       throw new Error(`Cannot find plugin class named: ${name}`)
     }
     return pluginFactoryFunctions.get(name)!();
+  }
+
+  notifyRefresh() {
+    for (const plugin of this.pluginInstances.values()) {
+      plugin.onSessionRefreshed();
+    }
   }
 }
 

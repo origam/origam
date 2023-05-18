@@ -22,14 +22,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 
 namespace Origam
 {
 	public class ConfigurationManager
 	{
-		private static OrigamSettings _activeConfiguration;
-		
-		public static void SetActiveConfiguration(OrigamSettings configuration)
+        private static string UserProfileFolder =>
+                      Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                      "ORIGAM", GetVersion(), "OrigamSettings.config");
+        private static OrigamSettings _activeConfiguration;
+
+		private static string _pathToOrigamSettings;
+
+		public static string GetPathOrigamSettings()
+		{
+			return _pathToOrigamSettings;
+		}
+
+		public static void SetPathOrigamSettings(string pathToOrigamSettings)
+		{
+			_pathToOrigamSettings = pathToOrigamSettings;
+        }
+
+        public static void SetActiveConfiguration(OrigamSettings configuration)
 		{
 			_activeConfiguration = configuration;
 		}
@@ -39,9 +55,14 @@ namespace Origam
 			return _activeConfiguration;
 		}
 
-		public static OrigamSettingsCollection GetAllConfigurations()
+        public static OrigamSettingsCollection GetAllUserHomeConfigurations()
+        {
+            CreateUserProfileConfigFile();
+            return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
+        }
+        public static OrigamSettingsCollection GetAllConfigurations()
 		{
-			return new OrigamSettingsReader().GetAll();
+			return new OrigamSettingsReader(_pathToOrigamSettings).GetAll();
 		}
 
 		public static void WriteConfiguration(OrigamSettingsCollection configuration)
@@ -60,9 +81,33 @@ namespace Origam
 				}
 			}
 
-            new OrigamSettingsReader().Write(configuration);
+            new OrigamSettingsReader(_pathToOrigamSettings).Write(configuration);
 		}
-	}
+        private static void CreateUserProfileConfigFile()
+        {
+            if (!File.Exists(UserProfileFolder))
+            {
+                FileInfo file = new(UserProfileFolder);
+                file.Directory.Create();
+                OrigamSettingsReader origamSetting = new(UserProfileFolder);
+                if (File.Exists(origamSetting.GetDefaultPathToOrigamSettings()))
+                {
+                    File.Copy(origamSetting.GetDefaultPathToOrigamSettings(), UserProfileFolder);
+                }
+                else
+                {
+                    new OrigamSettingsReader(UserProfileFolder).Write(new OrigamSettingsCollection());
+                }
+            }
+            SetPathOrigamSettings(UserProfileFolder);
+        }
+
+        private static string GetVersion()
+        {
+            Assembly assembly = Assembly.GetEntryAssembly();
+            return assembly.GetName().Version.Major + "." + assembly.GetName().Version.Minor;
+        }
+    }
 
     public class OrigamSettingsException: Exception
 	{

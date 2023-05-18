@@ -41,8 +41,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 
 		private string _columnName;
-
-		[EntityColumn("SS01")] 
+		
         [XmlAttribute("field")]
 		public string ColumnName
 		{
@@ -74,7 +73,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

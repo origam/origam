@@ -23,8 +23,6 @@ using System;
 using Origam.Workbench.Services;
 using System.Collections.Generic;
 using Origam.DA;
-using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;

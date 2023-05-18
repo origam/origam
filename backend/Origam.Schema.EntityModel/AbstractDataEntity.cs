@@ -92,7 +92,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G01")]  
 		public Guid DescribingFieldId;
 
 		[TypeConverter(typeof(EntityColumnReferenceConverter))]
@@ -107,7 +106,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		bool _entityIsReadOnly = false;
-		[EntityColumn("B01")]
 		[Category("Entity"), DefaultValue(false)]
 		[Browsable(false)]
         [XmlAttribute("readOnly")]
@@ -124,7 +122,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		EntityAuditingType _auditingType = EntityAuditingType.None;
-		[EntityColumn("I01")]
 		[Category("Entity"), DefaultValue(EntityAuditingType.None)]
 		[Description("Indicates if audit trail will be recorded for changes in this entity. If set to All, every change (create/update/delete) will be recorded in the audit log that users can browse in the UI. If set UpdatesAndDeletes only update and delete changes will be recorded.")]
         [XmlAttribute("audit")]
@@ -140,7 +137,6 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
-		[EntityColumn("G03")]  
 		public Guid AuditingSecondReferenceKeyColumnId;
 
 		[TypeConverter(typeof(EntityColumnReferenceConverter))]
@@ -159,7 +155,6 @@ namespace Origam.Schema.EntityModel
 		}
 
 		private string _caption = "";
-		[EntityColumn("SS01")]
 		[Category("Entity")]
 		[Localizable(true)]
 		[Description("User interface label for this entity. It is used e.g. for generic error messages about the entity ('Error occured in Invoice' instead of 'Error occured in InvDocRec').")]
@@ -325,8 +320,7 @@ namespace Origam.Schema.EntityModel
 			if(this.DescribingField != null) dependencies.Add(this.DescribingField);
 			base.GetExtraDependencies (dependencies);
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get

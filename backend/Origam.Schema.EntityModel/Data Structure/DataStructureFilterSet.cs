@@ -33,9 +33,9 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Filter Set", "Filter Sets", "icon_filter-set.png")]
     [HelpTopic("Filter+Sets")]
     [ClassMetaVersion("6.0.0")]
-    public class DataStructureFilterSet : DataStructureMethod, ISchemaItemFactory
+    public class DataStructureFilterSet : DataStructureMethod
 	{
-		public DataStructureFilterSet() : base() {}
+		public DataStructureFilterSet() {}
 
 		public DataStructureFilterSet(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -43,58 +43,35 @@ namespace Origam.Schema.EntityModel
 	
 		#region Properties
 		private bool _isDynamic = false;
-		[EntityColumn("B01"), DefaultValue(false)]
+		[DefaultValue(false)]
         [XmlAttribute("dynamic")]
         public bool IsDynamic
 		{
-			get
-			{
-				return _isDynamic;
-			}
-			set
-			{
-				_isDynamic = value;
-			}
+			get => _isDynamic;
+			set => _isDynamic = value;
 		}
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(DataStructureFilterSetFilter)
-								//	, typeof(DataStructureFilterSetOrExpression)
-								  };
-			}
-		}
+			typeof(DataStructureFilterSetFilter)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(DataStructureFilterSetFilter))
+			string itemName = null;
+			if(typeof(T) == typeof(DataStructureFilterSetFilter))
 			{
-				item = new DataStructureFilterSetFilter(schemaExtensionId);
-				item.Name = "NewDataStructureFilterSetFilter";
-
+				itemName = "NewDataStructureFilterSetFilter";
 			}
-			else if(type == typeof(DataStructureFilterSetOrExpression))
+			else if(typeof(T) == typeof(DataStructureFilterSetOrExpression))
 			{
-				item = new DataStructureFilterSetOrExpression(schemaExtensionId);
-				item.Name = "OR";
-
+				itemName = "OR";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataStructureFilterSetUnknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion

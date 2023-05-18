@@ -19,7 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { getLocaleFromCookie } from "utils/cookies";
 import MessageFormat from '@messageformat/core';
-import { DataType, ILocalization, ILocalizer, } from "@origam/plugin-interfaces";
+import { DataType, ILocalization, ILocalizer, } from "@origam/plugins";
 import { formatNumber } from "model/entities/NumberFormating";
 
 export class Localizer implements ILocalizer {

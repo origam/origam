@@ -36,6 +36,10 @@ export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
         <div>
           {T("Origam image version: {0}","origam_image_version", this.props.aboutInfo.serverVersion)}
         </div>
+        <div>
+          {"Commit: "}
+          <a target="_blank" rel="noopener noreferrer" href={this.props.aboutInfo.linkToCommit}>{this.props.aboutInfo.commitId}</a>
+        </div>
         <br/>
         {customClientBuildVersion &&
           <>
@@ -48,7 +52,7 @@ export class AboutView extends React.Component<{ aboutInfo: IAboutInfo }> {
         {pluginVersionList.length > 0 &&
           <>
             <div>{T("Used Origam plugins:","used_origam_plugins")}</div>
-            {pluginVersionList.map(x => <div className={S.version}>{x}</div>)}
+            {pluginVersionList.map(x => <div key={x} className={S.version}>{x}</div>)}
             <br/>
           </>
         }

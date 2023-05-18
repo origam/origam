@@ -2,7 +2,7 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cr="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextReference/6.0.0"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:dsr="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureReference/6.0.0"
@@ -10,13 +10,14 @@
   xmlns:smct="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodCallTask/6.0.0"
   xmlns:tr="http://schemas.origam.com/Origam.Schema.EntityModel.TransformationReference/6.0.0"
   xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0"
   xmlns:wtd="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTaskDependency/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54"
     asi:name="Identity_CreateUser"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -66,6 +67,13 @@
       asi:abstract="false"
       cs:dataType="String"
       cs:disableConstraints="false"
+      x:id="ae903e30-a29d-4e48-a39e-f1617daa15ca"
+      cs:isReturnValue="false"
+      asi:name="SecurityStamp" />
+    <cs:ContextStore
+      asi:abstract="false"
+      cs:dataType="String"
+      cs:disableConstraints="false"
       x:id="b6b11a0e-12e8-415a-9ef2-0e0e0674b92f"
       cs:isReturnValue="false"
       asi:name="FirstName" />
@@ -94,6 +102,7 @@
       asi:abstract="false"
       x:id="b3ef57a6-d32a-4200-8424-c456854912f4"
       asi:name="01_CreateBusinessPartner"
+      aws:onFailure="WorkflowFails"
       wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
       wt:outputMethod="AppendMergeExisting"
       aws:roles="*"
@@ -183,12 +192,14 @@
       asi:abstract="false"
       x:id="117fb77f-62eb-4b82-96e9-9dd10c3eb56b"
       asi:name="02_SaveUserAndCallMembership"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       twb:transactionType="Atomic">
       <smct:WorkflowTask
         asi:abstract="false"
         x:id="82767f5c-8353-4951-9315-799a213db7bf"
         asi:name="02_CreateUser_Identity"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/OutputFromMembership/d972154a-50ab-47a3-9ca0-4d8318052399"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"
@@ -280,6 +291,7 @@
         asi:abstract="false"
         x:id="9046d95d-e3f5-4ebd-8eb0-3c38da3a9164"
         asi:name="01_StoreNewUser"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUser.origam#Identity_CreateUser/UserProfile_New/9574304f-78a0-4a10-a27c-93e4940c7197"
         wt:outputMethod="AppendMergeExisting"
         aws:roles="*"

@@ -47,8 +47,7 @@ namespace Origam.Schema.EntityModel
 		private bool _create = true;
 		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
 		[Description("If set to true, the rule is applied to create operation.")]
-		[EntityColumn("B01")]
-        [XmlAttribute("createCredential")]
+		[XmlAttribute("createCredential")]
         public bool CreateCredential
 		{
 			get
@@ -66,8 +65,7 @@ namespace Origam.Schema.EntityModel
 		private bool _update = true;
 		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
 		[Description("If set to true, the rule is applied to update operation.")]
-		[EntityColumn("B02")]
-        [XmlAttribute("updateCredential")]
+		[XmlAttribute("updateCredential")]
         public bool UpdateCredential
 		{
 			get
@@ -85,8 +83,7 @@ namespace Origam.Schema.EntityModel
 		private bool _delete = true;
 		[Category("Credentials"), DefaultValue(false), RefreshProperties(RefreshProperties.Repaint)]
 		[Description("If set to true, the rule is applied to delete operation.")]
-		[EntityColumn("B03")]
-        [XmlAttribute("deleteCredential")]
+		[XmlAttribute("deleteCredential")]
         public bool DeleteCredential
 		{
 			get

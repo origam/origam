@@ -98,7 +98,8 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             newEntity.Persist();
             GeneratedModelElements.Add(newEntity);
             // Create index by parent entity
-            DataEntityIndex index = newEntity.NewItem(typeof(DataEntityIndex), _schema.ActiveSchemaExtensionId, null) as DataEntityIndex;
+            DataEntityIndex index = newEntity.NewItem<DataEntityIndex>(
+                _schema.ActiveSchemaExtensionId, null);
             index.Name = "ix_" + entity1.Name;
             index.Persist();
             GeneratedModelElements.Add(index);
@@ -130,7 +131,9 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             int i = 0;
             foreach (IDataEntityColumn col in entity1keys)
             {
-                DataEntityIndexField field = index.NewItem(typeof(DataEntityIndexField), _schema.ActiveSchemaExtensionId, null) as DataEntityIndexField;
+                DataEntityIndexField field 
+                    = index.NewItem<DataEntityIndexField>(
+                        _schema.ActiveSchemaExtensionId, null);
                 field.Field = col;
                 field.OrdinalPosition = i;
                 field.Persist();

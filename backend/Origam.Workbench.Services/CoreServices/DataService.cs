@@ -21,108 +21,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using Origam.DA;
-using Origam.DA.Service;
 
 namespace Origam.Workbench.Services.CoreServices
 {
 	/// <summary>
 	/// Summary description for DataService.
 	/// </summary>
-	public class DataService
+	public class DataService : ICoreDataService
 	{
-        //private static IDataService _dataService = null;
-        private static IDictionary<string, IDataService> _dataServiceDictionary = new Dictionary<string, IDataService>();
+		public static DataService Instance { get; } = new ();
 
-        public static IDataService GetDataService()
-        {
-            return GetDataService(null);
-        }
-        public static IDataService GetDataService(Platform deployPlatform)
-        {
-            string dictionarykey = "primary";
-            if (deployPlatform != null && ! deployPlatform.IsPrimary)
-            {
-                dictionarykey = deployPlatform.Name;
-            }
-            KeyValuePair<string, IDataService> keyValue = 
-                _dataServiceDictionary.Where(dict => dict.Key == dictionarykey)
-                .FirstOrDefault();
-            if (string.IsNullOrEmpty(keyValue.Key))
-            {
-                _dataServiceDictionary.Add(dictionarykey, CreateDataService(deployPlatform));
-            }
-            return _dataServiceDictionary.Where(dict => dict.Key == dictionarykey).First().Value;
-        }
-
-        private static IDataService CreateDataService(Platform deployPlatform)
-        {
-            IDataService dataService = null;
-            IPersistenceService persistence = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-            OrigamSettings settings
-                = ConfigurationManager.GetActiveConfiguration();
-            if (settings == null)
-            {
-                throw new NullReferenceException(
-                    ResourceUtils.GetString("ErrorSettingsNotFound"));
-            }
-            string assembly = settings.DataDataService
-                .Split(",".ToCharArray())[0].Trim();
-            string classname = settings.DataDataService
-                .Split(",".ToCharArray())[1].Trim();
-
-            if (deployPlatform != null)
-            {
-                assembly = deployPlatform.DataService
-                .Split(",".ToCharArray())[0].Trim();
-                classname = deployPlatform.DataService
-                    .Split(",".ToCharArray())[1].Trim();
-            }
-            dataService
-            = Reflector.InvokeObject(assembly, classname) as IDataService;
-            dataService.ConnectionString = settings.DataConnectionString;
-            dataService.BulkInsertThreshold = settings.DataBulkInsertThreshold;
-            dataService.UpdateBatchSize = settings.DataUpdateBatchSize;
-            dataService.StateMachine = ServiceManager.Services.GetService(
-                typeof(IStateMachineService)) as IStateMachineService;
-            dataService.AttachmentService = ServiceManager.Services.GetService(
-                typeof(IAttachmentService)) as IAttachmentService;
-            dataService.UserDefinedParameters = true;
-            (dataService as AbstractDataService).PersistenceProvider
-                = persistence.SchemaProvider;
-            if (deployPlatform != null)
-            {
-                dataService.ConnectionString = deployPlatform.DataConnectionString;
-            }
-            return dataService;
-        }
-
-        
-        public static void ClearDataService()
-        {
-            foreach (var keyValue in _dataServiceDictionary)
-            {
-                IDataService dataService = keyValue.Value;
-                dataService?.Dispose();
-                dataService = null;
-            }
-            _dataServiceDictionary.Clear();
-        }
-
-        internal DataService()
-		{
-		}
-
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId)
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId)
 		{
             return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, null);
 		}
 
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1)
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1)
 		{
 			if (paramName1 == null)
 			{
@@ -134,7 +50,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
 		}
 
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1, string paramName2, object paramValue2)
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId, string transactionId, string paramName1, object paramValue1, string paramName2, object paramValue2)
 		{
 			QueryParameterCollection p = new QueryParameterCollection();
 			p.Add(new QueryParameter(paramName1, paramValue1));
@@ -143,20 +59,20 @@ namespace Origam.Workbench.Services.CoreServices
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, p);
 		}
 
-		public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId,
+		public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId,
             Guid sortSetId, string transactionId, QueryParameterCollection parameters)
 		{
 			return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId, parameters, null);
 		}
 
-        public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
+        public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
             Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData)
         {
             return LoadData(dataStructureId, methodId, defaultSetId, sortSetId, transactionId,
                 parameters, currentData, null, null);
         }
 
-        public static DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
+        public DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, 
             Guid sortSetId, string transactionId, QueryParameterCollection parameters, DataSet currentData,
             string entity, string columnName)
 		{
@@ -186,7 +102,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static DataSet LoadRow(Guid dataStructureEntityId, 
+		public DataSet LoadRow(Guid dataStructureEntityId, 
             Guid filterSetId, QueryParameterCollection parameters, 
             DataSet currentData, string transactionId)
 		{
@@ -212,7 +128,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static DataSet StoreData(Guid dataStructureId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
+		public DataSet StoreData(Guid dataStructureId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
 		{
 			var dataStructureQuery = new DataStructureQuery
 			{
@@ -223,7 +139,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return StoreData(dataStructureQuery, data,transactionId);
 		}
 
-		public static DataSet StoreData(DataStructureQuery dataStructureQuery, DataSet data, string transactionId)
+		public DataSet StoreData(DataStructureQuery dataStructureQuery, DataSet data, string transactionId)
 		{
 			IServiceAgent dataServiceAgent = ServiceManager.Services
 				.GetService<IBusinessServicesService>()
@@ -242,7 +158,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static DataSet ExecuteProcedure(string procedureName, QueryParameterCollection parameters, string transactionId)
+		public DataSet ExecuteProcedure(string procedureName, QueryParameterCollection parameters, string transactionId)
 		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
@@ -265,7 +181,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return ds;
 		}
 
-		public static long ReferenceCount(Guid entityId, object value, string transactionId)
+		public long ReferenceCount(Guid entityId, object value, string transactionId)
 		{
 			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
 
@@ -282,7 +198,7 @@ namespace Origam.Workbench.Services.CoreServices
 			return result;
 		}
 
-        public static string EntityDdl(Guid entityId)
+        public string EntityDdl(Guid entityId)
         {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
             dataServiceAgent.MethodName = "EntityDdl";
@@ -293,7 +209,7 @@ namespace Origam.Workbench.Services.CoreServices
             return result;
         }
 
-        public static string[] FieldDdl(Guid fieldId)
+        public string[] FieldDdl(Guid fieldId)
         {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
             dataServiceAgent.MethodName = "FieldDdl";
@@ -304,7 +220,7 @@ namespace Origam.Workbench.Services.CoreServices
             return result;
         }
 
-        public static string ExecuteSql(string command)
+        public string ExecuteSql(string command)
         {
             IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(
                 typeof(IBusinessServicesService)) 

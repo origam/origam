@@ -150,7 +150,7 @@ namespace Origam.Server
             this.UnregisterEvents();
             try
             {
-                core.DataService.StoreData(
+                core.DataService.Instance.StoreData(
                     DataStructureId, Data, 
                     RefreshAfterSaveType 
                     == SaveRefreshType.RefreshChangedRecords, 

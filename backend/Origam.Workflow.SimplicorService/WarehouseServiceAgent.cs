@@ -25,6 +25,7 @@ using System.Data;
 
 using Origam.DA;
 using Origam.Rule;
+using Origam.Schema;
 using Origam.Service.Core;
 using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
@@ -37,14 +38,20 @@ namespace Origam.Workflow.SimplicorService
 	public class WarehouseServiceAgent : AbstractServiceAgent
 	{
 		private static Guid _weightedAveragePricingMethodId;
+		readonly IParameterService parameterService = ServiceManager.Services.GetService<IParameterService>();
 
 		public WarehouseServiceAgent()
 		{
-			IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 			_weightedAveragePricingMethodId = (Guid)parameterService.GetParameterValue("WarehousePricingMethod_WeightedAverage");
 		}
 
 		#region Private Methods
+
+		private string GetConstant(string name)
+		{
+			return (string)parameterService.GetParameterValue(name,
+				OrigamDataType.String);
+		}
 		private IXmlContainer RecalculateWeightedAverage(PriceRecalculationData data)
 		{
 			Hashtable inventory = new Hashtable();
@@ -125,11 +132,11 @@ namespace Origam.Workflow.SimplicorService
 					operation.PriceAverageQuantity = 0;
 				}
 				else if(operation.InventoryOperationRow.refInventoryOperationTypeId == 
-						new Guid((RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseReceipt"))
+						new Guid(GetConstant("InventoryOperationType_WarehouseReceipt"))
 					|| operation.InventoryOperationRow.refInventoryOperationTypeId == 
-						new Guid((RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseStocktakingExtra"))
+						new Guid(GetConstant("InventoryOperationType_WarehouseStocktakingExtra"))
 					|| operation.InventoryOperationRow.refInventoryOperationTypeId 
-						== new Guid((RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseReturnInbound"))
+						== new Guid(GetConstant("InventoryOperationType_WarehouseReturnInbound"))
 					)
 				{
 					// RECEIPTS
@@ -139,7 +146,7 @@ namespace Origam.Workflow.SimplicorService
                         PriceRecalculationData.InventoryOperationDetailRow[] mrpRequisitions =
                             (PriceRecalculationData.InventoryOperationDetailRow[])data.InventoryOperationDetail.Select(
                             "refManufacturingReportId='" + operation.refManufacturingReportId.ToString()
-                            + "' and OperationType = '" + (RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseRequisition") + "'"
+                            + "' and OperationType = '" + GetConstant("InventoryOperationType_WarehouseRequisition") + "'"
                             );
 
                         decimal totalMrpPrice = 0;
@@ -172,7 +179,7 @@ namespace Origam.Workflow.SimplicorService
 					}
 				}
 				else if(operation.InventoryOperationRow.refInventoryOperationTypeId == 
-					new Guid((RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseTransfer")))
+					new Guid(GetConstant("InventoryOperationType_WarehouseTransfer")))
 				{
 					// TRANSFERS
 					object[] old = (object[])inventory[oldInventoryId];
@@ -232,11 +239,11 @@ namespace Origam.Workflow.SimplicorService
 						oldTotalPrice - operation.PriceLocalTotal + operation.PriceLocalCorrection);
 				}
 				else if(operation.InventoryOperationRow.refInventoryOperationTypeId ==
-						new Guid((RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseRequisition"))
+						new Guid(GetConstant("InventoryOperationType_WarehouseRequisition"))
 					|| operation.InventoryOperationRow.refInventoryOperationTypeId == 
-						new Guid((RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseStocktakingMissing"))
+						new Guid(GetConstant("InventoryOperationType_WarehouseStocktakingMissing"))
 					|| operation.InventoryOperationRow.refInventoryOperationTypeId 
-						== new Guid((RuleEngine as RuleEngine).GetConstant("InventoryOperationType_WarehouseReturnOutbound"))
+						== new Guid(GetConstant("InventoryOperationType_WarehouseReturnOutbound"))
 					)
 				{
 					decimal newQuantity = lastQuantity - (operation.Quantity * factor);
@@ -309,7 +316,7 @@ namespace Origam.Workflow.SimplicorService
 			}
 			else
 			{
-				DataSet balance = core.DataService.LoadData(new Guid("d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
+				DataSet balance = core.DataService.Instance.LoadData(new Guid("d8df51c1-5596-446e-b3e7-68b3f2f54a1f"),
 					new Guid("a36bef1a-1a8f-45cd-9085-df9e7ac0b6b6"), Guid.Empty, Guid.Empty,
 					null, "InventoryBalance_parId", balanceId);
 

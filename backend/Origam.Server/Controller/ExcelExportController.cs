@@ -29,7 +29,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
+using Origam.DA;
 using Origam.Excel;
 using Origam.Server;
 using Origam.Server.Model.Excel;
@@ -47,7 +49,7 @@ namespace Origam.Server.Controller
             SessionObjects sessionObjects) : base(log, sessionObjects)
         {
         }
-        
+
         [HttpPost("[action]")]
         public IActionResult GetFile(
             [FromBody][Required]ExcelExportInput input)
@@ -113,15 +115,47 @@ namespace Origam.Server.Controller
                 return new FileCallbackResult(new MediaTypeHeaderValue(Response.ContentType),
                     async (outputStream, _) =>
                     {
-                        workbookResult.Value.Write(outputStream);
+                        workbookResult.Value.Write(outputStream, false);
                     });
 #pragma warning restore 1998
             });
         }
 
+        class ReadeResult {
+            public DataStructureQuery DataStructureQuery { get; set; }
+            public IEnumerable<IEnumerable<object>> Rows { get; set; }
+        }
+
+        private Result<ReadeResult, IActionResult> ReadRows(EntityExportInfo entityExportInfo, DataStructureQuery dataStructureQuery) {
+            var result = ExecuteDataReader(
+                               dataStructureQuery: dataStructureQuery,
+                               methodId: entityExportInfo.LazyLoadedEntityInput.MenuId);
+            var readerResult = new ReadeResult 
+            {
+                DataStructureQuery = dataStructureQuery,
+                Rows = result.Value as IEnumerable<IEnumerable<object>>
+            };
+            return result.IsSuccess
+                ? Result.Ok<ReadeResult, IActionResult>(readerResult)
+                : Result.Failure<ReadeResult, IActionResult>(result.Error);
+        }
+
         private Result<IWorkbook, IActionResult> FillWorkbook(EntityExportInfo entityExportInfo,
             ExcelEntityExporter excelEntityExporter)
         {
+            if (entityExportInfo.Store is WorkQueueSessionStore workQueueSessionStore)
+            {
+
+               return WorkQueueGetRowsGetRowsQuery(entityExportInfo.LazyLoadedEntityInput, workQueueSessionStore)
+                    .Bind(dataStructureQuery => ReadRows(entityExportInfo, dataStructureQuery))
+                    .Map(readeResult => excelEntityExporter.FillWorkBook(
+                       entityExportInfo, 
+                       readeResult.DataStructureQuery
+                        .GetAllQueryColumns()
+                        .Select(x =>x.Name)
+                        .ToList(),
+                       readeResult.Rows));               
+            }
             bool isLazyLoaded =
                 entityExportInfo.Store.IsLazyLoadedEntity(entityExportInfo.Entity);
 
@@ -131,9 +165,14 @@ namespace Origam.Server.Controller
 
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetQuery(input, entityData))
-                    .Bind(ExecuteDataReaderGetPairs)
-                    .Map(rows => excelEntityExporter
-                        .FillWorkBook(entityExportInfo, rows));
+                    .Bind(dataStructureQuery => ReadRows(entityExportInfo, dataStructureQuery))
+                    .Map(readeResult => excelEntityExporter.FillWorkBook(
+                        entityExportInfo,
+                        readeResult.DataStructureQuery
+                            .GetAllQueryColumns()
+                            .Select(x => x.Name)
+                            .ToList(),
+                        readeResult.Rows));
             }
             IWorkbook workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
             return Result.Ok<IWorkbook, IActionResult>(workBook) ;

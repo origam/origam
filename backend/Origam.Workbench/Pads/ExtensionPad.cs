@@ -195,12 +195,6 @@ namespace Origam.Workbench.Pads
 				lvwPackages.Items.Clear();
 
         		IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService )) as IPersistenceService;
-                IDatabasePersistenceProvider dbProvider = persistenceService.SchemaListProvider as IDatabasePersistenceProvider;
-                if(dbProvider != null)
-                {
-                    dbProvider.Refresh(false, null);
-                }
-
 				List<Package> packageList = persistenceService.SchemaListProvider.RetrieveList<Package>(null);
 				foreach(Package extension in packageList)
 				{
@@ -227,7 +221,20 @@ namespace Origam.Workbench.Pads
             tbrRemove.Enabled = true;
         }
 
-        public void UnloadPackages()
+		public void UpdateExtensionInfo(Package updatedPackage)
+		{
+			foreach (ListViewItem item in lvwPackages.Items)
+			{
+				if (item.Tag is Package package && package.Id == updatedPackage.Id)
+				{
+					item.Tag = updatedPackage;
+					item.SubItems[1].Text = updatedPackage.VersionString;
+					return;
+				}
+			}
+		}
+
+		public void UnloadPackages()
         {
             lvwPackages.Items.Clear();
             tbrNew.Enabled = false;

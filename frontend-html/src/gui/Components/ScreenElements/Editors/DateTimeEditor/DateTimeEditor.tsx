@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, flow, observable, runInAction } from "mobx";
 import { observer, Observer } from "mobx-react";
 import moment from "moment";
 import * as React from "react";
@@ -30,7 +30,7 @@ import {
   DateEditorModel,
   IEditorState
 } from "gui/Components/ScreenElements/Editors/DateTimeEditor/DateEditorModel";
-import cx from "classnames";
+import { requestFocus } from "utils/focus";
 
 
 class DesktopEditorState implements IEditorState{
@@ -52,14 +52,14 @@ export class DateTimeEditor extends React.Component<{
   autoFocus?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
-  onChange?: (event: any, isoDay: string | undefined | null) => void;
+  onChange?: (event: any, isoDay: string | undefined | null) => Promise<void>;
   onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
   onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
-  onEditorBlur?: (event: any) => void;
+  onEditorBlur?: (event: any) => Promise<void>;
   refocuser?: (cb: () => void) => () => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   className?: string;
 }> {
   @observable isDroppedDown = false;
@@ -110,7 +110,13 @@ export class DateTimeEditor extends React.Component<{
   componentDidMount() {
     this.makeFocusedIfNeeded();
     if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(
+        this.elmInput,
+        async ()=> {
+          const event = {} as any;
+          event.type = "click";
+          await this.handleInputBlur(event)();
+        });
     }
   }
 
@@ -132,7 +138,7 @@ export class DateTimeEditor extends React.Component<{
     setTimeout(() => {
       if ((this.props.autoFocus) && this.elmInput) {
         this.elmInput.select();
-        this.elmInput.focus();
+        requestFocus(this.elmInput);
         this.elmInput.scrollLeft = 0;
       }
     });
@@ -158,9 +164,13 @@ export class DateTimeEditor extends React.Component<{
     this.isShowFormatHintTooltip = state;
   }
 
-  @action.bound handleInputBlur(event: any) {
-    this.setShowFormatHint(false);
-    this.editorModel.handleInputBlur(event);
+  @action.bound
+  handleInputBlur(event: any) {
+    const self = this;
+    return flow(function*() {
+      self.setShowFormatHint(false);
+      yield self.editorModel.handleInputBlur(event);
+    });
   }
 
   @action.bound handleKeyDown(event: any) {
@@ -172,7 +182,7 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleContainerMouseDown(event: any) {
     setTimeout(() => {
-      this.elmInput?.focus();
+      requestFocus(this.elmInput);
     }, 30);
   }
 
@@ -257,9 +267,9 @@ export class DateTimeEditor extends React.Component<{
                       color: this.props.foregroundColor,
                       backgroundColor: this.props.backgroundColor,
                     }}
-                    className={cx(S.input, this.props.className)}
+                    className={S.input +" "+ this.props.className + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
                     type="text"
-                    onBlur={this.handleInputBlur}
+                    onBlur={event => this.handleInputBlur(event)()}
                     onFocus={this.handleFocus}
                     ref={(elm) => {
                       this.refInput(elm);
@@ -315,9 +325,9 @@ export class DateTimeEditor extends React.Component<{
             backgroundColor: this.props.backgroundColor,
           }}
           title={this.editorModel.autocompletedText + '\n' + this.props.outputFormat}
-          className={S.input}
+          className={S.input + " " + (this.props.isReadOnly ? S.readOnlyInput : "")}
           type="text"
-          onBlur={this.handleInputBlur}
+          onBlur={event => this.handleInputBlur(event)()}
           onFocus={this.handleFocus}
           ref={this.refInput}
           value={this.editorModel.textFieldValue}

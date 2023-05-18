@@ -83,6 +83,7 @@ export class Property implements IProperty {
   linkDependsOnValue: boolean = false;
   fieldType: string = null as any;
   isFormField: boolean = false;
+  alwaysHidden: boolean = false;
 
   get isLookup() {
     return !!this.lookup;

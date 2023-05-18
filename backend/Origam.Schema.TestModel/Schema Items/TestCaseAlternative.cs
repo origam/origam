@@ -25,76 +25,41 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.TestModel
 {
-	/// <summary>
-	/// Summary description for TestCaseAlternative.
-	/// </summary>
 	[SchemaItemDescription("Alternative", "Alternatives", 27)]
     [ClassMetaVersion("6.0.0")]
-	public class TestCaseAlternative : AbstractSchemaItem, ISchemaItemFactory
+	public class TestCaseAlternative : AbstractSchemaItem
 	{
 		public const string CategoryConst = "TestCaseAlternative";
 
-		public TestCaseAlternative() : base() {}
+		public TestCaseAlternative() {}
 
 		public TestCaseAlternative(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public TestCaseAlternative(Key primaryKey) : base(primaryKey)	{}
+		public TestCaseAlternative(Key primaryKey) : base(primaryKey) {}
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override string Icon
-		{
-			get
-			{
-				return "27";
-			}
-		}
+		public override string Icon => "27";
 
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(TestCaseStep)};
-			}
-		}
+			typeof(TestCaseStep)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(TestCaseStep))
-			{
-				item = new TestCaseStep(schemaExtensionId);
-				item.Name = "NewTestCaseStep";
-			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTestCaseAlternativeUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group,
+				typeof(T) == typeof(TestCaseStep)
+					? "NewTestCaseStep" : null);
 		}
 
 		#endregion

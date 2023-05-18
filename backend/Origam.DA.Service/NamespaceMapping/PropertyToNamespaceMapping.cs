@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using MoreLinq.Extensions;
@@ -31,10 +33,10 @@ namespace Origam.DA.Service.NamespaceMapping
             var allTypes = AppDomain.CurrentDomain
                 .GetAssemblies()
                 .SelectMany(x=>x.GetReferencedAssemblies())
-                .Where(x=>x.Name.Contains("Origam"))
+                .Where(x=>x.Name.Contains("Origam.Schema"))
                 .DistinctBy(x=>x.FullName)
                 .Select(Assembly.Load)
-                .SelectMany(assembly => assembly.GetTypes());
+                .SelectMany(GetTypes);
 
             AddMapping(typeof(Package));
             
@@ -43,6 +45,33 @@ namespace Origam.DA.Service.NamespaceMapping
                     typeof(IFilePersistent).IsAssignableFrom(type) && 
                     type != typeof(IFilePersistent))
                 .ForEach(AddMapping);
+        }
+
+        private static IEnumerable<Type> GetTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (Exception exSub in ex.LoaderExceptions)
+                {
+                    stringBuilder.AppendLine(exSub.Message);
+                    if (exSub is FileNotFoundException exFileNotFound)
+                    {
+                        if (!string.IsNullOrEmpty(exFileNotFound.FusionLog))
+                        {
+                            stringBuilder.AppendLine("Fusion Log:");
+                            stringBuilder.AppendLine(exFileNotFound.FusionLog);
+                        }
+                    }
+                    stringBuilder.AppendLine();
+                }
+                string errorMessage = stringBuilder.ToString();
+                throw new Exception(errorMessage, ex);
+            }
         }
 
         public static void AddMapping(Type type)

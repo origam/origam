@@ -44,7 +44,6 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
@@ -60,7 +59,6 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
 		#region Properties
-//		[EntityColumn("G01")]  
 //		public Guid FieldId;
 //
 //		[TypeConverter(typeof(WorkQueueClassEntityMappingFieldConverter))]
@@ -77,16 +75,13 @@ namespace Origam.Schema.WorkflowModel
 //			}
 //		}
 
-		[EntityColumn("LS01")] 
 		[XmlAttribute ("xPath")]
 		public string XPath { get; set; }
-
-		[EntityColumn("SS01")] 
+		
 		[XmlAttribute ("formatPattern")]
 		public string FormatPattern { get; set; }
 
 		[Category("GUI")]
-		[EntityColumn("I01")]
 		[XmlAttribute ("sortOrder")]
 		public int SortOrder { get; set; }
 		#endregion

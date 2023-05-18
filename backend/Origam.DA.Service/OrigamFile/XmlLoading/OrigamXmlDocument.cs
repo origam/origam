@@ -68,5 +68,19 @@ namespace Origam.DA.Service
                 FileElement.Attributes.Remove(namespaceToRemove);
             }
         }
+
+        public void UseTopNamespacePrefixesEverywhere()
+        {
+            foreach (XmlNode node in FileElement.GetAllNodes())
+            {
+                XmlAttribute namespaceDefinition = FileElement.Attributes
+                    .Cast<XmlAttribute>()
+                    .First(attr => attr.Value == node.NamespaceURI);
+                if (node.Prefix != namespaceDefinition.LocalName)
+                {
+                    node.Prefix = namespaceDefinition.LocalName;
+                }
+            }
+        }
     }
 }

@@ -43,15 +43,16 @@ namespace Origam.DA.Service
 	#region Data Loader
 	internal class DataLoader
 	{
-		private static readonly ILog log = 
-            LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log 
+			= LogManager.GetLogger(
+				System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public string ConnectionString = null;
-		public DataStructureFilterSet Filter = null;
+		public DataStructureFilterSet FilterSet = null;
 		public DataStructureSortSet SortSet = null;
 		public DataStructureEntity Entity = null;
 		public DataStructureQuery Query = null;
-		public DataStructure Ds = null;
+		public DataStructure DataStructure = null;
 		public DataSet Dataset = null;
 		public AbstractSqlDataService DataService = null;
 		public IDbTransaction Transaction = null;
@@ -61,123 +62,128 @@ namespace Origam.DA.Service
 
 		public void Fill()
 		{
-			IDbConnection connection;
-			if(this.Transaction == null)
-			{
-				connection = DataService.GetConnection(this.ConnectionString);
-			}
-			else
-			{
-				connection = this.Transaction.Connection;
-			}
+			IDbConnection connection = (Transaction == null) 
+				? DataService.GetConnection(ConnectionString) 
+				: Transaction.Connection;
 			try
 			{
 				DbDataAdapter adapter;
 				switch(Query.DataSourceType)
 				{
 					case QueryDataSourceType.DataStructure:
+					{
 					    var selectParameters = new SelectParameters
 					    {
-					        DataStructure = Ds,
+					        DataStructure = DataStructure,
 					        Entity = Entity,
-					        Filter = Filter,
+					        Filter = FilterSet,
 					        SortSet = SortSet,
 					        Parameters = Query.Parameters.ToHashtable(),
 					        Paging = Query.Paging,
 					        ColumnsInfo = Query.ColumnsInfo,
 					        AggregatedColumns = Query.AggregatedColumns
 					    };
-                        adapter = DataService.GetAdapter(selectParameters, CurrentProfile);
+                        adapter = DataService.GetAdapter(
+	                        selectParameters, CurrentProfile);
 						break;
+					}
 					case QueryDataSourceType.DataStructureEntity:
-						adapter = DataService.GetSelectRowAdapter(Entity, Filter, Query.ColumnsInfo);
+					{
+						adapter = DataService.GetSelectRowAdapter(
+							Entity, FilterSet, Query.ColumnsInfo);
 						break;
-
+					}
 					default:
-						throw new ArgumentOutOfRangeException("DataSourceType", 
-                            Query.DataSourceType, ResourceUtils.GetString("UnknownDataSource"));
+						throw new ArgumentOutOfRangeException(
+							"DataSourceType", 
+                            Query.DataSourceType, 
+                            ResourceUtils.GetString("UnknownDataSource"));
 				}
-				
 				IDbDataAdapter dbDataAdapter = adapter;
 				dbDataAdapter.SelectCommand.Connection = connection;
-				dbDataAdapter.SelectCommand.Transaction = this.Transaction;
-				dbDataAdapter.SelectCommand.CommandTimeout = this.Timeout;
-				// ignore any extra fields returned by the select statement - e.g. RowNum returned when paging is turned on
+				dbDataAdapter.SelectCommand.Transaction = Transaction;
+				dbDataAdapter.SelectCommand.CommandTimeout = Timeout;
+				// ignore any extra fields returned by the select statement
+				// e.g. RowNum returned when paging is turned on
 				adapter.MissingMappingAction = MissingMappingAction.Ignore;
-				DataService.BuildParameters(Query.Parameters, dbDataAdapter.SelectCommand.Parameters, CurrentProfile);
+				DataService.BuildParameters(
+					Query.Parameters, 
+					dbDataAdapter.SelectCommand.Parameters, 
+					CurrentProfile);
 				try
 				{
-					if (this.Transaction == null)
+					if(Transaction == null)
 					{
 						connection.Open();
 					}
-
 					Dataset.Tables[Entity.Name].BeginLoadData();
-					this.DataService.TraceCommand(dbDataAdapter.SelectCommand,
-						this.TransactionId);
+					DataService.TraceCommand(
+						dbDataAdapter.SelectCommand, TransactionId);
 					adapter.Fill(Dataset);
 					Dataset.Tables[Entity.Name].EndLoadData();
 				}
-				catch (Exception ex)
+				catch(Exception ex)
 				{
 					HandleException(
-						ex: ex,
+						exception: ex,
 						commandText: dbDataAdapter.SelectCommand.CommandText,
-						logAsDebug: Entity.Name == "AsapModelVersion" && 
-						            ex is SqlException && 
-						            ex.HResult == -2146232060 );
+						logAsDebug: (Entity.Name == "AsapModelVersion") 
+						            && (ex is SqlException) 
+						            && (ex.HResult == -2146232060));
 				}
 				finally
 				{
-					((IDbDataAdapter) adapter).SelectCommand.Transaction = null;
-					((IDbDataAdapter) adapter).SelectCommand.Connection = null;
+					((IDbDataAdapter)adapter).SelectCommand.Transaction = null;
+					((IDbDataAdapter)adapter).SelectCommand.Connection = null;
 				}
 			}
 			finally
 			{
 				try
 				{
-					if(this.Transaction == null)
+					if(Transaction == null)
 					{
 						connection.Close();
 					}
-				} 
-				catch{}
-				if(this.Transaction == null)
+				}
+				catch
+				{
+				}
+				if(Transaction == null)
 				{
 					connection.Dispose();
 				}
 			}
 		}
 
-		private void HandleException(Exception ex, string commandText, bool logAsDebug)
+		private void HandleException(
+			Exception exception, string commandText, bool logAsDebug)
 		{
-			if (log.IsErrorEnabled && !logAsDebug)
+			if(log.IsErrorEnabled && !logAsDebug)
 			{
 				log.LogOrigamError(
-					$"{ex.Message}, SQL: {commandText}",
-					ex);
+					$"{exception.Message}, SQL: {commandText}",
+					exception);
 			}
 			else if(log.IsDebugEnabled && logAsDebug)
 			{
 				log.Debug(
-					$"{ex.Message}, SQL: {commandText}",
-					ex);
+					$"{exception.Message}, SQL: {commandText}",
+					exception);
 			}
-
-			string standardMessage = ResourceUtils.GetString(
+			var standardMessage = ResourceUtils.GetString(
 				"ErrorLoadingData",
-				(Entity.EntityDefinition as TableMappingItem)
-				.MappedObjectName,
+				(Entity.EntityDefinition as TableMappingItem)?.MappedObjectName,
 				Entity.Name,
-				Environment.NewLine, ex.Message);
-			this.DataService.HandleException(ex, standardMessage, null);
+				Environment.NewLine, exception.Message);
+			DataService.HandleException(exception, standardMessage, null);
 		}
 	}
     #endregion
 
     // version of log4net for NetStandard 1.3 does not have the method
-    // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
+    // LogManager.GetLogger(string)... have to use the overload with Type
+    // as parameter 
     public class ConcurrencyExceptionLogger
     {
     }
@@ -186,101 +192,86 @@ namespace Origam.DA.Service
 	{				
 		private readonly Profiler profiler = new Profiler(); 
 		
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(
+			System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         // Special logger for concurrency exception detail logging
-        private static readonly ILog concurrencyLog = LogManager.GetLogger(typeof(ConcurrencyExceptionLogger));
-		private IDbDataAdapterFactory _adapterFactory;
-		private string _connectionString = "";
+        private static readonly ILog concurrencyLog = LogManager.GetLogger(
+	        typeof(ConcurrencyExceptionLogger));
+		private IDbDataAdapterFactory adapterFactory;
+		private string connectionString = "";
         private const int DATA_VISUALIZATION_MAX_LENGTH = 100;
-        private readonly IDetachedFieldPacker detachedFieldPacker;
-        internal abstract string GetAllTablesSQL();
         
-
         #region Constructors
-        public AbstractSqlDataService(IDetachedFieldPacker detachedFieldPacker) : base()
+        public AbstractSqlDataService()
         {
-	        this.detachedFieldPacker = detachedFieldPacker;
         }
 
-		public AbstractSqlDataService(string connection, int bulkInsertThreshold,
-            int updateBatchSize, IDetachedFieldPacker detachedFieldPacker) : this(detachedFieldPacker)
+		public AbstractSqlDataService(
+			string connection, int bulkInsertThreshold, int updateBatchSize)
 		{
-			_connectionString = connection;
+			connectionString = connection;
             UpdateBatchSize = updateBatchSize;
             BulkInsertThreshold = bulkInsertThreshold;
 		}
         #endregion
 
-        #region Public Methods
-
-        public abstract string CreateSystemRole(string roleName);
-        public abstract string CreateInsert(int fieldcount);
-
         public override string ConnectionString
 		{
-			get
-			{
-				return _connectionString;
-			}
-			set
-			{
-				_connectionString = value;
-			}
+			get => connectionString;
+			set => connectionString = value;
 		}
-
 
 		public override IDbDataAdapterFactory DbDataAdapterFactory
 		{
-			get
-			{
-				return _adapterFactory;
-			}
-			internal set
-			{
-				_adapterFactory = value;
-			}
+			get => adapterFactory;
+			internal set => adapterFactory = value;
 		}
+        
+        #region Public Methods
 
-        internal override IDbTransaction GetTransaction(string transactionId, IsolationLevel isolationLevel)
+        public abstract string CreateSystemRole(string roleName);
+        
+        public abstract string CreateInsert(int fieldCount);
+
+
+        internal override IDbTransaction GetTransaction(
+	        string transactionId, IsolationLevel isolationLevel)
 		{
-			IDbConnection connection;
 			IDbTransaction transaction;
-
 			if(transactionId == null)
 			{
-				connection = GetConnection(this.ConnectionString);
+				var connection = GetConnection(ConnectionString);
 				connection.Open();
 				transaction = connection.BeginTransaction(isolationLevel);
 			}
 			else
 			{
-				OrigamDbTransaction origamDbTransaction = ResourceMonitor.GetTransaction(
-                    transactionId, this.ConnectionString) as OrigamDbTransaction;
-				if(origamDbTransaction == null)
+				if(!(ResourceMonitor.GetTransaction(
+					   transactionId, ConnectionString) 
+				   is OrigamDbTransaction origamDbTransaction))
 				{
-					transaction = this.GetTransaction(null, isolationLevel);
+					transaction = GetTransaction(null, isolationLevel);
 					ResourceMonitor.RegisterTransaction(transactionId, 
-                        this.ConnectionString, new OrigamDbTransaction(transaction));
+                        ConnectionString, new OrigamDbTransaction(transaction));
 				}
 				else
 				{
 					transaction = origamDbTransaction.Transaction;
-					connection = transaction.Connection;
-
 					if(transaction.IsolationLevel != isolationLevel)
 					{
 						throw new Exception("Existing transaction has a different isolation level then the current query. When using a different isolation level the query has to be executed under a different or no transaction.");
 					}
 				}
 			}
-
 			return transaction;
 		}
 
-		public override DataSet LoadDataSet(DataStructureQuery dataStructureQuery, 
+		public override DataSet LoadDataSet(
+			DataStructureQuery dataStructureQuery, 
             IPrincipal principal, string transactionId)
 		{
-			DataSet loadedDataSet = LoadDataSet(dataStructureQuery, principal, null, transactionId);
+			var loadedDataSet = LoadDataSet(
+				dataStructureQuery, principal, null, transactionId);
 			profiler.LogRememberedExecutionTimes();
 			return loadedDataSet;
 		}
@@ -288,112 +279,118 @@ namespace Origam.DA.Service
 		public override DataSet LoadDataSet(DataStructureQuery query,
             IPrincipal principal, DataSet dataset, string transactionId)
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
+			var settings = ConfigurationManager.GetActiveConfiguration();
 			int timeout = settings.DataServiceSelectTimeout;
-
 			UserProfile currentProfile = null;
 			if(query.LoadByIdentity)
 			{
-				currentProfile = SecurityManager.GetProfileProvider().GetProfile(principal.Identity) as UserProfile;
+				currentProfile = SecurityManager.GetProfileProvider()
+					.GetProfile(principal.Identity) as UserProfile;
 			}
-
-			if(this.PersistenceProvider == null)
+			if(PersistenceProvider == null)
 			{
-				throw new NullReferenceException(ResourceUtils.GetString("NoProviderForMS"));
+				throw new NullReferenceException(
+					ResourceUtils.GetString("NoProviderForMS"));
 			}
-
 			ArrayList entities;
-			DataStructure ds = null;
-			DataStructureFilterSet filter = null;
+			DataStructure dataStructure = null;
+			DataStructureFilterSet filterSet = null;
 			DataStructureSortSet sortSet = null;
-
 			switch(query.DataSourceType)
 			{
 				case QueryDataSourceType.DataStructure:
-					ds = this.GetDataStructure(query);
-					filter = this.GetFilterSet(query.MethodId);
-					sortSet = this.GetSortSet(query.SortSetId);
-                    if (string.IsNullOrEmpty(query.Entity))
+				{
+					dataStructure = GetDataStructure(query);
+					filterSet = GetFilterSet(query.MethodId);
+					sortSet = GetSortSet(query.SortSetId);
+                    if(string.IsNullOrEmpty(query.Entity))
                     {
-                        entities = ds.Entities;
+                        entities = dataStructure.Entities;
                     }
                     else
                     {
                         entities = new ArrayList();
-                        foreach (DataStructureEntity e in ds.Entities)
+                        foreach(DataStructureEntity dataStructureEntity 
+                                in dataStructure.Entities)
                         {
-                            if (e.Name == query.Entity)
+                            if(dataStructureEntity.Name == query.Entity)
                             {
-                                entities.Add(e);
+                                entities.Add(dataStructureEntity);
                                 break;
                             }
                         }
-                        if (entities.Count == 0)
+                        if(entities.Count == 0)
                         {
                             throw new ArgumentOutOfRangeException(
-                                string.Format("Entity {0} not found in data structure {1}.",
-                                    query.Entity, ds.Path));
+	                            $"Entity {query.Entity} not found in data structure {dataStructure.Path}.");
                         }
                     }
-
 					if(dataset == null)
 					{
-						dataset = this.GetDataset(ds, query.DefaultSetId);
+						dataset = GetDataset(dataStructure, query.DefaultSetId);
 					}
 					break;
-
+				}
 				case QueryDataSourceType.DataStructureEntity:
+				{
 					entities = new ArrayList();
-                    filter = this.GetFilterSet(query.MethodId);
-                    entities.Add(this.GetDataStructureEntity(query));
-
+                    filterSet = GetFilterSet(query.MethodId);
+                    entities.Add(GetDataStructureEntity(query));
 					if(dataset == null)
 					{
-						throw new NullReferenceException(ResourceUtils.GetString("DataSetMustBeProvided"));
+						throw new NullReferenceException(
+							ResourceUtils.GetString("DataSetMustBeProvided"));
 					}
 					break;
-
+				}
 				default:
-					throw new ArgumentOutOfRangeException("DataSourceType", query.DataSourceType, ResourceUtils.GetString("UnknownDataSource"));
+				{
+					throw new ArgumentOutOfRangeException(
+					"DataSourceType", query.DataSourceType, 
+					ResourceUtils.GetString("UnknownDataSource"));
+				}
 			}
-
-			IDictionary<DataColumn, string> expressions = DatasetTools.RemoveExpressions(dataset, true);
-
-			if (dataset.Tables.Count > 1 && query.Paging)
+			IDictionary<DataColumn, string> expressions 
+				= DatasetTools.RemoveExpressions(dataset, true);
+			if((dataset.Tables.Count > 1) && query.Paging)
 			{
-				throw new Exception("Paging is allowed only on data sturctures with a single entity.");
+				throw new Exception(
+					"Paging is allowed only on data structures with a single entity.");
 			}
-
 			bool enforceConstraints = dataset.EnforceConstraints;
-
 			dataset.EnforceConstraints = false;
-
-			ArrayList threads = new ArrayList(entities.Count);
-
 			foreach(DataStructureEntity entity in entities)
 			{
-				if (LoadWillReturnZeroResults(dataset, entity, query.DataSourceType)) continue;
+				if(LoadWillReturnZeroResults(
+					   dataset, entity, query.DataSourceType))
+				{
+					continue;
+				}
 				// Skip self joins, they are just relations, not really entities
-				if(entity.Columns.Count > 0 & !(entity.Entity is IAssociation && (entity.Entity as IAssociation).IsSelfJoin))
+				if((entity.Columns.Count > 0) 
+				   && !(entity.Entity is IAssociation association 
+				        && association.IsSelfJoin))
 				{
 					profiler.ExecuteAndRememberLoadDuration(
 						entity: entity,
 						actionToExecute: () =>
 						{
-							DataLoader loader = new DataLoader();
-							loader.ConnectionString = _connectionString;
-							loader.DataService = this;
-							loader.Dataset = dataset;
-							loader.TransactionId = transactionId;
-							if (transactionId != null)
+							var loader = new DataLoader
 							{
-								loader.Transaction =
-									this.GetTransaction(transactionId,
+								ConnectionString = connectionString,
+								DataService = this,
+								Dataset = dataset,
+								TransactionId = transactionId
+							};
+							if(transactionId != null)
+							{
+								loader.Transaction 
+									= GetTransaction(transactionId,
 										query.IsolationLevel);
 							}
-							loader.Ds = ds;
+							loader.DataStructure = dataStructure;
 							loader.Entity = entity;
-							loader.Filter = filter;
+							loader.FilterSet = filterSet;
 							loader.SortSet = sortSet;
 							loader.Query = query;
 							loader.Timeout = timeout;
@@ -402,7 +399,6 @@ namespace Origam.DA.Service
 						});
 				}
 			}
-
 			if(query.EnforceConstraints)
 			{
 				try
@@ -413,14 +409,22 @@ namespace Origam.DA.Service
 				{
 					try
 					{
-						log.LogOrigamError(DebugClass.ListRowErrors(dataset), ex);
-						using(System.IO.StreamWriter w = System.IO.File.CreateText(AppDomain.CurrentDomain.BaseDirectory + @"\debug\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-") + DateTime.Now.Ticks.ToString() + "___" + "MsSqlDataService_error.txt"))
+						log.LogOrigamError(
+							DebugClass.ListRowErrors(dataset), ex);
+						using(var writer = System.IO.File.CreateText(
+							      AppDomain.CurrentDomain.BaseDirectory 
+							      + @"\debug\" 
+							      + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss-") 
+							      + DateTime.Now.Ticks 
+							      + "___MsSqlDataService_error.txt"))
 						{
-							w.WriteLine(DebugClass.ListRowErrors(dataset));
-							w.Close();
+							writer.WriteLine(DebugClass.ListRowErrors(dataset));
+							writer.Close();
 						}
 					}
-					catch{}
+					catch
+					{
+					}
 					throw;
 				}
 			}
@@ -432,17 +436,28 @@ namespace Origam.DA.Service
 			DataStructureEntity entity, QueryDataSourceType dataSourceType)
 		{
 			DataStructureEntity rootEntity = entity.RootEntity;
-		    if (dataSourceType == QueryDataSourceType.DataStructureEntity) return false;
-			if (rootEntity == entity) return false;
-			if (entity.RelationType != RelationType.Normal) return false;
-			if (!(rootEntity.Entity is TableMappingItem mappingItem)) return false;
-
-            string rootEntityTableName = mappingItem.MappedObjectName;
+			if(dataSourceType == QueryDataSourceType.DataStructureEntity)
+			{
+				return false;
+			}
+			if(rootEntity == entity)
+			{
+				return false;
+			}
+			if(entity.RelationType != RelationType.Normal)
+			{
+				return false;
+			}
+			if(!(rootEntity.Entity is TableMappingItem mappingItem))
+			{
+				return false;
+			} 
+			string rootEntityTableName = mappingItem.MappedObjectName;
 			DataTable rootTable = dataset.Tables
 				.Cast<DataTable>()
-				.FirstOrDefault(table => table.TableName == rootEntityTableName);
-				
-			return rootTable != null && rootTable.Rows.Count == 0;
+				.FirstOrDefault(
+					table => table.TableName == rootEntityTableName);
+			return (rootTable != null) && (rootTable.Rows.Count == 0);
 		}
 
 		public override int UpdateData(
@@ -457,19 +472,24 @@ namespace Origam.DA.Service
             DataStructureQuery query, IPrincipal userProfile, DataSet dataset, 
             string transactionId, bool forceBulkInsert)
 		{
-			if (log.IsDebugEnabled)
+			if(log.IsDebugEnabled)
 			{
 				log.RunHandled(() =>
 				{
-					log.Debug("UpdateData; Data Structure Id: " + query.DataSourceId.ToString());
-					StringBuilder sb = new StringBuilder();
-					System.IO.StringWriter sw = new System.IO.StringWriter(sb);
-					dataset.WriteXml(sw, XmlWriteMode.DiffGram);
-					log.Debug("UpdateData; " + sb.ToString());
+					log.DebugFormat("UpdateData; Data Structure Id: {0}", 
+						query.DataSourceId);
+					var stringBuilder = new StringBuilder();
+					var stringWriter 
+						= new System.IO.StringWriter(stringBuilder);
+					dataset.WriteXml(stringWriter, XmlWriteMode.DiffGram);
+					log.DebugFormat("UpdateData; {0}", stringBuilder);
 				});
 			}
-			bool newTransaction = (transactionId == null);
-			if(transactionId == null) transactionId = Guid.NewGuid().ToString();
+			var newTransaction = (transactionId == null);
+			if(transactionId == null)
+			{
+				transactionId = Guid.NewGuid().ToString();
+			}
 			// If there is nothing to update, we quit immediately
 			if(!dataset.HasChanges())
             {
@@ -478,34 +498,40 @@ namespace Origam.DA.Service
             UserProfile profile = null;
 			if(query.LoadByIdentity)
 			{
-				profile = SecurityManager.GetProfileProvider().GetProfile(userProfile.Identity) as UserProfile;
+				profile = SecurityManager.GetProfileProvider().GetProfile(
+					userProfile.Identity) as UserProfile;
 			}
-            IStateMachineService stateMachine = this.StateMachine;
-			DataSet changedDataset = dataset;//.GetChanges();
-			DataStructure ds = this.GetDataStructure(query);
-			if (ds.IsLocalized)
+            var stateMachine = StateMachine;
+			DataSet changedDataset = dataset;
+			DataStructure dataStructure = GetDataStructure(query);
+			if(dataStructure.IsLocalized)
 			{
-				throw new OrigamException(String.Format("Couldn't update localized datastructure `{0}' ({1})", ds.Name, ds.Id));
+				throw new OrigamException(
+					$"Couldn't update localized data structure `{dataStructure.Name}' ({dataStructure.Id})");
 			}
-			IDbTransaction transaction = GetTransaction(transactionId, query.IsolationLevel);
+			IDbTransaction transaction = GetTransaction(
+				transactionId, query.IsolationLevel);
 			IDbConnection connection = transaction.Connection;
-			string currentEntityName = "";
-			string lastTableName = "";
-			ArrayList entities = ds.Entities;
-			ArrayList changedTables = new ArrayList();
-            ArrayList deletedRowIds = new ArrayList();
-			DataRowState[] rowStates = new DataRowState[]{DataRowState.Deleted, DataRowState.Added, DataRowState.Modified};
+			var currentEntityName = "";
+			var lastTableName = "";
+			ArrayList entities = dataStructure.Entities;
+			var changedTables = new ArrayList();
+            var deletedRowIds = new ArrayList();
+			var rowStates = new[]
+			{
+				DataRowState.Deleted, DataRowState.Added, DataRowState.Modified
+			};
 			DataTable changedTable = null;
 			try
 			{
-				foreach(DataRowState rowState in rowStates)
+				foreach(var rowState in rowStates)
 				{
-					ArrayList actualEntities = entities;
-					// for delete reverse entity order
+					var actualEntities = entities;
+					// for delete use reverse entity order
 					if(rowState == DataRowState.Deleted)
 					{
 						actualEntities = new ArrayList(entities.Count);
-						for(int i = entities.Count - 1; i >= 0; i--)
+						for(var i = entities.Count - 1; i >= 0; i--)
 						{
 							actualEntities.Add(entities[i]);
 						}
@@ -513,86 +539,96 @@ namespace Origam.DA.Service
 					foreach(DataStructureEntity entity in actualEntities)
 					{
 						currentEntityName = entity.Name;
-						TableMappingItem tableMapping = entity.EntityDefinition as TableMappingItem;
-						if (tableMapping != null)
+						// We check if the dataset actually contains the entity.
+						// E.g. for self-joins the entity name is not contained
+						// in the dataset but that does not matter
+						// because we save such an entity once anyway.
+						if(!(entity.EntityDefinition 
+							   is TableMappingItem tableMapping) 
+						   || !changedDataset.Tables.Contains(currentEntityName))
 						{
-							// We check if the dataset actually contains the entity.
-							// E.g. for self-joins the entity name is not contained in the dataset
-							// but that does not matter because we save such an entity once anyway.
-							if (changedDataset.Tables.Contains(entity.Name))
+							continue;
+						}
+						lastTableName = dataset.Tables[currentEntityName]
+							.DisplayExpression.Replace("'", "");
+						if(lastTableName == "")
+						{
+							lastTableName = currentEntityName;
+						}
+						// we clone the table because if without complete dataset,
+						// some expressions might not work if they reference
+						// other entities
+						changedTable = DatasetTools.CloneTable(
+							changedDataset.Tables[entity.Name], false);
+						foreach(DataRow row 
+						        in changedDataset.Tables[entity.Name].Rows)
+						{
+							if(row.RowState == rowState)
 							{
-								lastTableName = dataset.Tables[currentEntityName].DisplayExpression
-									.Replace("'", "");
-								if (lastTableName == "") lastTableName = currentEntityName;
-								// we clone the table because if without complete dataset, some expresssions
-								// might not work if they reference other entities
-								changedTable =
-									DatasetTools.CloneTable(changedDataset.Tables[entity.Name],
-										false);
-								foreach (DataRow row in changedDataset.Tables[entity.Name].Rows)
+								// Constraints might fail right here if the
+								// source dataset has constraints turned off,
+								// e.g. through a flag in a sequential workflow.
+								// That is OK. Otherwise they would fail
+								// in the database.
+								changedTable.ImportRow(row);
+							}
+						}
+						if(tableMapping.DatabaseObjectType 
+						   == DatabaseMappingObjectType.Table)
+						{
+							if(changedTable != null)
+							{
+								if((stateMachine != null) 
+								   && query.FireStateMachineEvents)
 								{
-									if (row.RowState == rowState)
-									{
-										// Constraints might fail right here if the source dataset
-										// has constraints turned off, e.g. through a flag in a 
-										// sequential workflow. That is OK. Otherwise they would
-										// fail in the database.
-										changedTable.ImportRow(row);
-									}
-								}
-
-								if (tableMapping.DatabaseObjectType ==
-								    DatabaseMappingObjectType.Table)
-								{
-									if (changedTable != null)
-									{
-										if (stateMachine != null && query.FireStateMachineEvents)
-										{
-											stateMachine.OnDataChanging(changedTable, transactionId);
-										}
-									}
-									int rowCount = changedTable.Rows.Count;
-									if (rowCount > 0)
-									{
-										profiler.ExecuteAndLogStoreActionDuration(
-											entity: entity,
-											actionToExecute: () =>
-										{
-											ExecuteUpdate(query, transactionId, profile,
-												ds, transaction, connection,
-												deletedRowIds, 
-	                                            changedTable,
-												rowState, entity, rowCount, 
-	                                            forceBulkInsert);
-										});
-									}
-								}
-
-								// finally add the table to a list of changed tables so 
-								// changes can be accepted later
-								if (!changedTables.Contains(changedTable.TableName))
-								{
-									changedTables.Add(changedTable.TableName);
+									stateMachine.OnDataChanging(
+										changedTable, transactionId);
 								}
 							}
-						}						
+							var rowCount = changedTable.Rows.Count;
+							if(rowCount > 0)
+							{
+								profiler.ExecuteAndLogStoreActionDuration(
+									entity: entity,
+									actionToExecute: () =>
+									{
+										ExecuteUpdate(query, transactionId, 
+											profile, dataStructure, 
+											transaction, connection,
+											deletedRowIds, changedTable,
+											rowState, entity, rowCount, 
+											forceBulkInsert);
+									});
+							}
+						}
+						// finally add the table to a list of changed tables so 
+						// changes can be accepted later
+						if(!changedTables.Contains(changedTable.TableName))
+						{
+							changedTables.Add(changedTable.TableName);
+						}
 					}
 				}
 				// execute the state machine events
-				if(stateMachine != null && query.FireStateMachineEvents)
+				if((stateMachine != null) && query.FireStateMachineEvents)
 				{
-					stateMachine.OnDataChanged(dataset, changedTables, transactionId);
+					stateMachine.OnDataChanged(
+						dataset, changedTables, transactionId);
 				}
 				// accept changes
-				this.AcceptChanges(dataset, changedTables, query, transactionId, userProfile);
+				AcceptChanges(dataset, changedTables, query, transactionId, 
+					userProfile);
 				profiler.LogRememberedExecutionTimes();
                 // delete attachments if any
-                if (deletedRowIds.Count > 0 && query.SynchronizeAttachmentsOnDelete)
+                if((deletedRowIds.Count > 0) 
+                   && query.SynchronizeAttachmentsOnDelete)
                 {
-                    IAttachmentService attachmentService = ServiceManager.Services.GetService(typeof(IAttachmentService)) as IAttachmentService;
-                    foreach (Guid recordId in deletedRowIds)
+                    var attachmentService = ServiceManager.Services
+	                    .GetService<IAttachmentService>();
+                    foreach(Guid recordId in deletedRowIds)
                     {
-                        attachmentService.RemoveAttachment(recordId, transactionId);
+                        attachmentService.RemoveAttachment(
+	                        recordId, transactionId);
                     }
                 }
 				if(newTransaction)
@@ -600,52 +636,49 @@ namespace Origam.DA.Service
 					ResourceMonitor.Commit(transactionId);
 				}
 			}
-			catch(DBConcurrencyException e)
+			catch(DBConcurrencyException ex)
             {
-                if (log.IsErrorEnabled)
+                if(log.IsErrorEnabled)
                 {
-                    // Once has happened that a concurrency exception
-                    // has been logged only from this place and not from higher place in
-                    // in the place (from callers). So there is obviously some place,
-                    // where this exception isn't caught. To identify such a place,
-                    // full stack trace is printed here.
                     log.Error("DBConcurrencyException occurred! See \"Origam.DA.Service.ConcurrencyExceptionLogger\" logger (Debug mode) for more details");
                 }
-                if (concurrencyLog.IsDebugEnabled)
+                if(concurrencyLog.IsDebugEnabled)
                 {
                     concurrencyLog.DebugFormat(
-                        "Concurrency exception data structure query details: ds: `{0}', method: `{1}', sortSet: `{2}', default set: `{3}' ",
+                        "Concurrency exception data structure query details: ds: `{0}', method: `{1}', sortSet: `{2}', default set: `{3}'",
                         query.DataSourceId,
                         query.MethodId,
                         query.SortSetId,
                         query.DefaultSetId);
                 }
-                if (newTransaction)
+                if(newTransaction)
                 {
                     ResourceMonitor.Rollback(transactionId);
                     transactionId = null;
                 }
-                string errorString = ComposeConcurrencyErrorMessage(userProfile, dataset,
-                    transactionId, currentEntityName, lastTableName, e);
-                // log before throw (because there are some place(s) where the exception isn't caught
-                if (concurrencyLog.IsDebugEnabled)
+                var errorString = ComposeConcurrencyErrorMessage(userProfile, 
+	                dataset, transactionId, currentEntityName, lastTableName, 
+	                ex);
+                // log before throw (because there are some place(s)
+                // where the exception isn't caught
+                if(concurrencyLog.IsDebugEnabled)
                 {
                     concurrencyLog.DebugFormat(
                         "Concurrency exception details: {0}", errorString);
                 }
-                throw new DBConcurrencyException(errorString, e);
+                throw new DBConcurrencyException(errorString, ex);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                if (log.IsErrorEnabled)
+                if(log.IsErrorEnabled)
                 {
-	                log.LogOrigamError("Update failed", e);
+	                log.LogOrigamError("Update failed", ex);
                 }
-                if (newTransaction)
+                if(newTransaction)
                 {
                     ResourceMonitor.Rollback(transactionId);
                 }
-                ComposeGeneralErrorMessage(lastTableName, changedTable, e);
+                ComposeGeneralErrorMessage(lastTableName, changedTable, ex);
                 throw;
             }
             finally
@@ -659,152 +692,203 @@ namespace Origam.DA.Service
 			return 0;
 		}
 
-		private void ComposeGeneralErrorMessage(string lastTableName, DataTable changedTable, Exception e)
+		private void ComposeGeneralErrorMessage(
+			string lastTableName, DataTable changedTable, Exception exception)
         {
-            string rowErrorMessage = null;
             DataRow errorRow = DatasetTools.GetErrorRow(changedTable);
-            if (errorRow != null)
+            if(errorRow == null)
             {
-                string operation = "";
-                switch (errorRow.RowState)
-                {
-                    case DataRowState.Added:
-                        operation = ResourceUtils.GetString("ErrorCouldNotAddRow");
-                        break;
-                    case DataRowState.Deleted:
-                        operation = ResourceUtils.GetString("ErrorCouldNotDeleteRow");
-                        break;
-                    case DataRowState.Modified:
-                        operation = ResourceUtils.GetString("ErrorCouldNotModifyRow");
-                        break;
-                }
-
-                string recordDescription = DatasetTools.GetRowDescription(errorRow);
-                if (recordDescription != null) recordDescription = " " + recordDescription;
-
-                rowErrorMessage = string.Format(operation, lastTableName, recordDescription);
-
-                this.HandleException(e, rowErrorMessage, errorRow);
+	            return;
             }
+            string rowErrorMessage = null;
+            var operation = "";
+            switch(errorRow.RowState)
+            {
+	            case DataRowState.Added:
+	            {
+		            operation = ResourceUtils.GetString(
+			            "ErrorCouldNotAddRow");
+		            break;
+	            }
+	            case DataRowState.Deleted:
+	            {
+		            operation = ResourceUtils.GetString(
+			            "ErrorCouldNotDeleteRow");
+		            break;
+	            }
+	            case DataRowState.Modified:
+	            {
+		            operation = ResourceUtils.GetString(
+			            "ErrorCouldNotModifyRow");
+		            break;
+	            }
+            }
+            var recordDescription = DatasetTools.GetRowDescription(
+	            errorRow);
+            if(recordDescription != null)
+            {
+	            recordDescription = " " + recordDescription;
+            }
+            rowErrorMessage = string.Format(
+	            operation, lastTableName, recordDescription);
+            HandleException(exception, rowErrorMessage, errorRow);
         }
 
         private string ComposeConcurrencyErrorMessage(IPrincipal userProfile, 
             DataSet dataset, string transactionId, string currentEntityName, 
-            string lastTableName, DBConcurrencyException e)
+            string lastTableName, DBConcurrencyException exception)
         {
-            string concurrentUserName = "";
-            string errorString = "";
+            var concurrentUserName = "";
+            var errorString = "";
             try
             {
                 DataTable table = dataset.Tables[currentEntityName];
-                DataRow row = table.Rows.Find(DatasetTools.PrimaryKey(e.Row));
-                // if the row in the queue is being deleted we will not find it in the original data
-                // in that case we will use the row provided by the event which contains the data
-                if (row == null) row = e.Row;
-                // row.RowError = ResourceUtils.GetString("DataChangedByOtherUser");
-
-                // load the existing row from the database to see what changes have been made by the other user
+				// if the row in the queue is being deleted we will not find it
+				// in the original data
+				// in that case we will use the row provided by the event
+				// which contains the data
+                DataRow row = table.Rows.Find(
+	                              DatasetTools.PrimaryKey(exception.Row)) 
+                              ?? exception.Row;
+                // load the existing row from the database to see what changes
+                // have been made by the other user
                 DataSet storedData = CloneDatasetForActualRow(table);
-                Guid entityId = (Guid)table.ExtendedProperties["Id"];
-                DataStructureEntity entity = GetEntity(entityId);
-                string rowName = DatasetTools.PrimaryKey(row)[0].ToString();
-                IDataEntityColumn describingField = entity.EntityDefinition.DescribingField;
-                if (describingField != null && table.Columns.Contains(describingField.Name))
+                var entityId = (Guid)table.ExtendedProperties["Id"];
+                var entity = GetEntity(entityId);
+                var rowName = DatasetTools.PrimaryKey(row)[0].ToString();
+                IDataEntityColumn describingField 
+                = entity.EntityDefinition.DescribingField;
+                if((describingField != null) 
+                   && table.Columns.Contains(describingField.Name))
                 {
-                    if (!row.IsNull(describingField.Name))
+                    if(!row.IsNull(describingField.Name))
                     {
-                        rowName = row[describingField.Name].ToString();
+						rowName = row[describingField.Name].ToString();
                     }
                 }
-                LoadActualRow(storedData, entityId, Guid.Empty, row, userProfile, transactionId);
+                LoadActualRow(storedData, entityId, Guid.Empty, row, 
+	                userProfile, transactionId);
                 DataTable storedTable = storedData.Tables[currentEntityName];
-                if (storedTable.Rows.Count == 0)
+                if(storedTable.Rows.Count == 0)
                 {
-                    errorString = ResourceUtils.GetString("DataDeletedByOtherUserException", rowName, lastTableName);
+                    errorString = ResourceUtils.GetString(
+	                    "DataDeletedByOtherUserException", rowName, 
+	                    lastTableName);
                 }
                 else
                 {
                     DataRow storedRow = storedTable.Rows[0];
-
-                    if (storedTable.Columns.Contains("RecordUpdatedBy") && !storedRow.IsNull("RecordUpdatedBy"))
+                    if(storedTable.Columns.Contains("RecordUpdatedBy") 
+                       && !storedRow.IsNull("RecordUpdatedBy"))
                     {
-                        UserProfile concurrentProfile = SecurityManager.GetProfileProvider().GetProfile((Guid)storedRow["RecordUpdatedBy"]) as UserProfile;
+                        var concurrentProfile = SecurityManager
+	                        .GetProfileProvider().GetProfile(
+		                        (Guid)storedRow["RecordUpdatedBy"]) 
+	                        as UserProfile;
                         concurrentUserName = concurrentProfile.FullName;
                     }
-                    errorString = ResourceUtils.GetString("DataChangedByOtherUserException", rowName, lastTableName, concurrentUserName);
-                    foreach (DataColumn col in row.Table.Columns)
+                    errorString = ResourceUtils.GetString(
+	                    "DataChangedByOtherUserException", rowName, 
+	                    lastTableName, concurrentUserName);
+                    foreach(DataColumn column in row.Table.Columns)
                     {
-                        IDataEntityColumn field = GetField((Guid)col.ExtendedProperties["Id"]);
-                        if (col.ColumnName != "RecordUpdatedBy" && field is FieldMappingItem)
+                        IDataEntityColumn field = GetField(
+	                        (Guid)column.ExtendedProperties["Id"]);
+                        if((column.ColumnName == "RecordUpdatedBy") 
+                           || !(field is FieldMappingItem))
                         {
-                            string storedValue = "";
-                            string myValue = "";
-                            if (!storedRow.IsNull(col.ColumnName)) storedValue = storedRow[col.ColumnName].ToString();
-                            if (!row.IsNull(col, DataRowVersion.Original)) myValue = row[col, DataRowVersion.Original].ToString();
-
-                            if (!storedValue.Equals(myValue))
-                            {
-                                if (col.ExtendedProperties.Contains(Const.DefaultLookupIdAttribute))
-                                {
-                                    IDataLookupService lookupService = ServiceManager.Services.GetService(typeof(IDataLookupService)) as IDataLookupService;
-                                    // this is a lookup column, we pass the looked-up value
-                                    Guid lookupId = (Guid)col.ExtendedProperties[Const.DefaultLookupIdAttribute];
-                                    if (myValue != null && myValue != "")
-                                    {
-                                        myValue = lookupService.GetDisplayText(lookupId, myValue, transactionId).ToString();
-                                    }
-                                    if (storedValue != null && storedValue != "")
-                                    {
-                                        storedValue = lookupService.GetDisplayText(lookupId, storedValue, transactionId).ToString();
-                                    }
-                                }
-
-                                errorString += Environment.NewLine
-                                    + "- "
-                                    + col.Caption
-                                    + ": "
-                                    + myValue
-                                    + " > "
-                                    + storedValue;
-                            }
+	                        continue;
                         }
+                        var storedValue = "";
+                        var myValue = "";
+                        if(!storedRow.IsNull(column.ColumnName))
+                        {
+	                        storedValue = storedRow[column.ColumnName]
+		                        .ToString();
+                        }
+                        if(!row.IsNull(column, DataRowVersion.Original))
+                        {
+	                        myValue = row[column, DataRowVersion.Original]
+		                        .ToString();
+                        }
+                        if(storedValue.Equals(myValue))
+                        {
+	                        continue;
+                        }
+                        if(column.ExtendedProperties.Contains(
+	                           Const.DefaultLookupIdAttribute))
+                        {
+	                        var lookupService = ServiceManager.Services
+		                        .GetService<IDataLookupService>();
+	                        // this is a lookup column,
+	                        // we pass the looked-up value
+	                        var lookupId 
+		                        = (Guid)column.ExtendedProperties[
+			                        Const.DefaultLookupIdAttribute];
+	                        if(myValue != "")
+	                        {
+		                        myValue = lookupService.GetDisplayText(
+				                        lookupId, myValue, transactionId)
+			                        .ToString();
+	                        }
+	                        if(storedValue != "")
+	                        {
+		                        storedValue = lookupService
+			                        .GetDisplayText(lookupId, 
+				                        storedValue, transactionId)
+			                        .ToString();
+	                        }
+                        }
+                        errorString += Environment.NewLine
+                                       + "- "
+                                       + column.Caption
+                                       + ": "
+                                       + myValue
+                                       + " > "
+                                       + storedValue;
                     }
                 }
-
-                while (row.Table.ParentRelations.Count > 0)
+                while(row.Table.ParentRelations.Count > 0)
                 {
                     row = row.GetParentRow(row.Table.ParentRelations[0]);
                     row.RowError = ResourceUtils.GetString("ChildErrors");
                 }
             }
-            catch { }
-
+            catch
+            {
+            }
             return errorString;
         }
 
         private void ExecuteUpdate(
-            DataStructureQuery query, string transactionId, 
-            UserProfile profile, DataStructure ds, 
-            IDbTransaction transaction, IDbConnection connection, 
+            DataStructureQuery query, 
+            string transactionId, 
+            UserProfile profile, 
+            DataStructure dataStructure, 
+            IDbTransaction transaction, 
+            IDbConnection connection, 
 			ArrayList deletedRowIds, 
-            DataTable changedTable, DataRowState rowState, 
-            DataStructureEntity entity, int rowCount,
+            DataTable changedTable, 
+            DataRowState rowState, 
+            DataStructureEntity entity, 
+            int rowCount,
             bool forceBulkInsert)
         {
             // LOGGING
-            LogData(changedTable, profile, transactionId, connection, transaction);
-            if ((forceBulkInsert || ((BulkInsertThreshold != 0)
-            && (rowCount > BulkInsertThreshold)))
-            && (rowState == DataRowState.Added))
+            LogData(changedTable, profile, transactionId, connection, 
+	            transaction);
+            if((forceBulkInsert || ((BulkInsertThreshold != 0) 
+                                     && (rowCount > BulkInsertThreshold))) 
+                && (rowState == DataRowState.Added))
             {
                 BulkInsert(entity, connection,
                     transaction, changedTable);
-                if (log.IsInfoEnabled)
+                if(log.IsInfoEnabled)
                 {
                     log.Info("BulkCopy; Entity: "
                         + changedTable?.TableName
-                        + ", " + rowState.ToString()
-                        + " " + rowCount.ToString()
+                        + ", " + rowState
+                        + " " + rowCount
                         + " row(s). Transaction id: "
                         + transactionId);
                 }
@@ -816,54 +900,85 @@ namespace Origam.DA.Service
                 // CONFIGURE DATA ADAPTER
                 var adapterParameters = new SelectParameters
                 {
-                    DataStructure = ds,
+                    DataStructure = dataStructure,
                     Entity = entity,
                     Filter = filter,
                     SortSet = sortSet,
                     Parameters = query.Parameters.ToHashtable(),
                     Paging = false
                 };
-                DbDataAdapter adapter = this.GetAdapter(adapterParameters, profile);
+                DbDataAdapter adapter = GetAdapter(adapterParameters, profile);
                 SetConnection(adapter, connection);
                 SetTransaction(adapter, transaction);
-                if (UpdateBatchSize != 0)
+                if(UpdateBatchSize != 0)
                 {
-                    adapter.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
-                    adapter.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
-                    adapter.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
+                    adapter.InsertCommand.UpdatedRowSource 
+	                    = UpdateRowSource.None;
+                    adapter.UpdateCommand.UpdatedRowSource 
+	                    = UpdateRowSource.None;
+                    adapter.DeleteCommand.UpdatedRowSource 
+	                    = UpdateRowSource.None;
                     adapter.UpdateBatchSize = UpdateBatchSize;
                 }
-                // EXECUTE THE UPDATE
-                if (rowState == DataRowState.Modified) this.TraceCommand(((IDbDataAdapter)adapter).UpdateCommand, transactionId);
-                if (rowState == DataRowState.Deleted)
+                switch(rowState)
                 {
-                    this.TraceCommand(((IDbDataAdapter)adapter).DeleteCommand, transactionId);
-                    // remember row in order to delete an attachment later at the end of updateData
-                    /* Key pk = entity.PrimaryKey;
-                        if (pk.Count == 1)
-                        */
-                    if (changedTable.PrimaryKey.Length == 1 && changedTable.PrimaryKey[0].DataType == typeof(Guid))
-                    {
-                        // entity has a primary key Id taken from IOrigamEntity2
-                        foreach (DataRow r in changedTable.Rows)
-                        {
-                            deletedRowIds.Add(r[changedTable.PrimaryKey[0].ColumnName, DataRowVersion.Original]);
-                        }
-                    }
+	                // EXECUTE THE UPDATE
+	                case DataRowState.Modified:
+	                {
+		                TraceCommand(((IDbDataAdapter)adapter).UpdateCommand, 
+			                transactionId);
+		                break;
+	                }
+	                case DataRowState.Deleted:
+	                {
+		                TraceCommand(((IDbDataAdapter)adapter).DeleteCommand, 
+			                transactionId);
+		                // remember row in order to delete an attachment later
+		                // at the end of updateData
+		                if((changedTable.PrimaryKey.Length == 1) 
+		                   && (changedTable.PrimaryKey[0].DataType 
+		                       == typeof(Guid)))
+		                {
+			                // entity has a primary key Id taken from IOrigamEntity2
+			                foreach (DataRow row in changedTable.Rows)
+			                {
+				                deletedRowIds.Add(
+					                row[changedTable.PrimaryKey[0].ColumnName, 
+						                DataRowVersion.Original]);
+			                }
+		                }
+		                break;
+	                }
+	                case DataRowState.Added:
+	                {
+		                TraceCommand(((IDbDataAdapter)adapter).InsertCommand, 
+			                transactionId);
+		                break;
+	                }
                 }
-                if (rowState == DataRowState.Added) this.TraceCommand(((IDbDataAdapter)adapter).InsertCommand, transactionId);
                 int result = adapter.Update(changedTable);
-                if (log.IsInfoEnabled)
+                if(log.IsInfoEnabled)
                 {
-                    log.Info("UpdateData; Entity: " + changedTable.TableName + ", " + rowState.ToString() + " " + result.ToString() + " row(s). Transaction id: " + transactionId);
+                    log.Info(
+	                    "UpdateData; Entity: " 
+	                    + changedTable.TableName 
+	                    + ", " 
+	                    + rowState 
+	                    + " " 
+	                    + result 
+	                    + " row(s). Transaction id: " 
+	                    + transactionId);
                 }
                 // FREE THE ADAPTER
                 SetTransaction(adapter, null);
                 SetConnection(adapter, null);
                 // CHECK CONCURRENCY VIOLATION
-                if (result != rowCount)
+                if(result != rowCount)
                 {
-                    throw new DBConcurrencyException(ResourceUtils.GetString("ConcurrencyViolation", changedTable.TableName));
+                    throw new DBConcurrencyException(
+	                    ResourceUtils.GetString(
+		                    "ConcurrencyViolation", 
+		                    changedTable.TableName));
                 }
             }
         }
@@ -882,7 +997,7 @@ namespace Origam.DA.Service
 			Hashtable context = OrigamUserContext.Context;
             lock (context)
             {
-                if (!context.Contains("ScalarCommandCache"))
+                if(!context.Contains("ScalarCommandCache"))
                 {
                     context.Add("ScalarCommandCache", new Hashtable());
                 }
@@ -890,129 +1005,123 @@ namespace Origam.DA.Service
 			return (Hashtable)OrigamUserContext.Context["ScalarCommandCache"];
 		}
 
-
-		public override object GetScalarValue(DataStructureQuery query, ColumnsInfo columnsInfo, IPrincipal principal, string transactionId)
+		public override object GetScalarValue(
+			DataStructureQuery query, ColumnsInfo columnsInfo, 
+			IPrincipal principal, string transactionId)
 		{
 			IDbCommand command;
 			object result = null;
-
 			UserProfile currentProfile = null;
 			if(query.LoadByIdentity)
 			{
-				currentProfile = SecurityManager.GetProfileProvider().GetProfile(principal.Identity) as UserProfile;
+				currentProfile = SecurityManager.GetProfileProvider()
+					.GetProfile(principal.Identity) as UserProfile;
 			}
-
-			DataStructure ds = this.GetDataStructure(query);
-
-			string cacheId = query.DataSourceId.ToString() + query.MethodId.ToString() + query.SortSetId.ToString() + columnsInfo;
+			DataStructure dataStructure = GetDataStructure(query);
+			var cacheId 
+				= query.DataSourceId.ToString() 
+				  + query.MethodId.ToString() 
+				  + query.SortSetId.ToString() 
+				  + columnsInfo;
 			Hashtable cache = GetScalarCommandCache();
-
 			if(cache.Contains(cacheId))
 			{
 				command = (IDbCommand)cache[cacheId];
-				command = this.DbDataAdapterFactory.CloneCommand(command);
+				command = DbDataAdapterFactory.CloneCommand(command);
 			}
 			else
 			{
 				lock(cache)
 				{
-					command = this.DbDataAdapterFactory.ScalarValueCommand(
-						ds,
-						this.GetFilterSet(query.MethodId),
-						this.GetSortSet(query.SortSetId),
+					command = DbDataAdapterFactory.ScalarValueCommand(
+						dataStructure,
+						GetFilterSet(query.MethodId),
+						GetSortSet(query.SortSetId),
 						columnsInfo,
 						query.Parameters.ToHashtable()
 						);
 					cache[cacheId] = command;
 				}
 			}
-
 			IDbTransaction transaction = null;
 			IDbConnection connection;
-			
 			if(transactionId == null)
 			{
-				connection = GetConnection(this.ConnectionString);
+				connection = GetConnection(ConnectionString);
 				connection.Open();
 			}
 			else
 			{
-				transaction = this.GetTransaction(transactionId, query.IsolationLevel);
+				transaction = GetTransaction(transactionId, 
+					query.IsolationLevel);
 				connection = transaction.Connection;
 			}
-
 			try
 			{
-				this.BuildParameters(query.Parameters, command.Parameters, currentProfile);
+				BuildParameters(
+					query.Parameters, command.Parameters, currentProfile);
 				command.Connection = connection;
-				//					SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 				command.Transaction = transaction;
-
-				this.TraceCommand(command, transactionId);
-
+				TraceCommand(command, transactionId);
 				result = command.ExecuteScalar();
-
-				OrigamDataType dataType = OrigamDataType.Xml;
-				foreach(DataStructureColumn col in (ds.Entities[0] as DataStructureEntity).Columns)
+				var dataType = OrigamDataType.Xml;
+				foreach(DataStructureColumn column 
+				        in (dataStructure.Entities[0] as DataStructureEntity)
+				        .Columns)
 				{
-					if(col.Name == columnsInfo?.ToString())
+					if(column.Name == columnsInfo?.ToString())
 					{
-						DataStructureColumn finalColumn = col.FinalColumn;
-
-						if(col.Aggregation == AggregationType.Count)
-						{
-							dataType = OrigamDataType.Long;
-						}
-						else
-						{
-							dataType = finalColumn.DataType;
-						}
+						DataStructureColumn finalColumn = column.FinalColumn;
+						dataType = (column.Aggregation == AggregationType.Count) 
+							? OrigamDataType.Long 
+							: finalColumn.DataType;
 						break;
 					}
 				}
-
 				switch(dataType)
 				{
 					case OrigamDataType.UniqueIdentifier:
-						if(result is string)
+					{
+						if(result is string stringResult)
 						{
-							result = new Guid((string)result);
+							result = new Guid(stringResult);
 						}
 						break;
+					}
 					case OrigamDataType.Boolean:
+					{
 						if(result is int) 
 						{
 							result = (result.Equals(1));
 						}
 						break;
-                    case OrigamDataType.Long:
-                        if(result is int)
+					}
+					case OrigamDataType.Long:
+					{
+                        if(result is int intResult)
                         {
-                            result = (long)(int)result;
+                            result = (long)intResult;
                         }
                         break;
+					}
 				}
-
-				//					// Reset the transaction isolation level to its default. See the following from MSDN:
-				//					// =====================================================================================
-				//					// Note   After a transaction is committed or rolled back, the isolation level 
-				//					// of the transaction persists for all subsequent commands that are in autocommit mode 
-				//					// (the Microsoft SQL Server default). This can produce unexpected results, 
-				//					// such as an isolation level of Repeatable read persisting and locking other users out 
-				//					// of a row. To reset the isolation level to the default (Read committed), execute 
-				//					// the Transact-SQL SET TRANSACTION ISOLATION LEVEL READ COMMITTED statement, 
-				//					// or call SqlConnection.BeginTransaction followed immediately by SqlTransaction.Commit. 
-				//					// For more information about isolation levels, see SQL Server Books Online.
-				//					
-				//					transaction = connection.BeginTransaction();
-				//					transaction.Commit();
-				//					transaction.Dispose();
-				
+				// Reset the transaction isolation level to its default. See the following from MSDN:
+				// =====================================================================================
+				// Note   After a transaction is committed or rolled back, the isolation level 
+				// of the transaction persists for all subsequent commands that are in autocommit mode 
+				// (the Microsoft SQL Server default). This can produce unexpected results, 
+				// such as an isolation level of Repeatable read persisting and locking other users out 
+				// of a row. To reset the isolation level to the default (Read committed), execute 
+				// the Transact-SQL SET TRANSACTION ISOLATION LEVEL READ COMMITTED statement, 
+				// or call SqlConnection.BeginTransaction followed immediately by SqlTransaction.Commit. 
+				// For more information about isolation levels, see SQL Server Books Online.
 				ResetTransactionIsolationLevel(command);
 			}
-			catch(Exception e)
+			catch(Exception ex)
 			{
-				throw new DataException(ResourceUtils.GetString("ErrorWhenScalar", Environment.NewLine + e.Message), e);
+				throw new DataException(
+					ResourceUtils.GetString("ErrorWhenScalar", 
+						Environment.NewLine + ex.Message), ex);
 			}
 			finally
 			{
@@ -1028,110 +1137,112 @@ namespace Origam.DA.Service
 					}
 				}
 			}
-
 			return result;
 		}
 
-        protected abstract void ResetTransactionIsolationLevel(IDbCommand command);
+        protected abstract void ResetTransactionIsolationLevel(
+	        IDbCommand command);
 
-        public override DataSet ExecuteProcedure(string name, string entityOrder, DataStructureQuery query, string transactionId)
+        public override DataSet ExecuteProcedure(
+	        string name, string entityOrder, DataStructureQuery query, 
+	        string transactionId)
 		{
-			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-
-			DataStructure ds = GetDataStructure(query);
+			var settings = ConfigurationManager.GetActiveConfiguration();
+			DataStructure dataStructure = GetDataStructure(query);
 			DataSet result = null;
-			
-			if(ds != null)
+			if(dataStructure != null)
 			{
-				result = GetDataset(ds, Guid.Empty);
+				result = GetDataset(dataStructure, Guid.Empty);
 			}
-
 			IDbTransaction transaction = null;
 			IDbConnection connection;
-			
 			if(transactionId == null)
 			{
-				connection = GetConnection(this.ConnectionString);
+				connection = GetConnection(ConnectionString);
 				connection.Open();
 			}
 			else
 			{
-				transaction = this.GetTransaction(transactionId, query.IsolationLevel);
+				transaction = GetTransaction(transactionId, 
+					query.IsolationLevel);
 				connection = transaction.Connection;
 			}
-
 			try
 			{
 				DbDataAdapter adapter = null;
-				IDbCommand cmd = null;
+				IDbCommand command = null;
 				UserProfile profile = null;
 				if(query.LoadByIdentity)
 				{
                     profile = SecurityManager.CurrentUserProfile();
                 }
-
 				try
 				{
 					// no output data structure - no results - execute non-query
 					if(result == null)
 					{
-						cmd = this.DbDataAdapterFactory.GetCommand(name, connection);
-						cmd.Transaction = transaction;
-						cmd.CommandTimeout = settings.DataServiceExecuteProcedureTimeout;
-						foreach(QueryParameter param in query.Parameters)
+						command = DbDataAdapterFactory.GetCommand(
+							name, connection);
+						command.Transaction = transaction;
+						command.CommandTimeout 
+							= settings.DataServiceExecuteProcedureTimeout;
+						foreach(QueryParameter parameter in query.Parameters)
 						{
-							if(param.Value != null)
+							if(parameter.Value != null)
 							{
-								IDbDataParameter dbParam = this.DbDataAdapterFactory.GetParameter(param.Name, param.Value.GetType());
-								dbParam.Value = param.Value;
-								cmd.Parameters.Add(dbParam);
+								IDbDataParameter dataParameter 
+									= DbDataAdapterFactory
+										.GetParameter(parameter.Name, 
+											parameter.Value.GetType());
+								dataParameter.Value = parameter.Value;
+								command.Parameters.Add(dataParameter);
 							}
 						}
-						cmd.CommandType = CommandType.StoredProcedure;
-						cmd.Prepare();
-						cmd.ExecuteNonQuery();
+						command.CommandType = CommandType.StoredProcedure;
+						command.Prepare();
+						command.ExecuteNonQuery();
 					}
-					// results present - we take the first entity of the output data structure and fill the results into it
+					// results present - we take the first entity of the output
+					// data structure and fill the results into it
 					else
 					{
-						// make a sorted list of entities that corresponds to an output
-						// from SP
+						// make a sorted list of entities that corresponds to
+						// an output from SP
 						ArrayList entitiesOrdered;
-						if (entityOrder == null)
+						if(entityOrder == null)
 						{
-							entitiesOrdered = ds.Entities;
+							entitiesOrdered = dataStructure.Entities;
 						}
 						else
 						{
 							entitiesOrdered = new ArrayList();
-							foreach (string entityName in entityOrder.Split(';'))
+							foreach(string entityName in entityOrder.Split(';'))
 							{
-								bool found = false;
-								foreach (DataStructureEntity dse in ds.Entities)
+								var found = false;
+								foreach(DataStructureEntity dataStructureEntity 
+								        in dataStructure.Entities)
 								{
-									if (dse.Name == entityName)
+									if(dataStructureEntity.Name == entityName)
 									{
-										entitiesOrdered.Add(dse);
+										entitiesOrdered.Add(
+											dataStructureEntity);
 										found = true;
 										break;
 									}
 								}
-								if (!found)
+								if(!found)
 								{
-									throw new ArgumentException(String.Format(
-										"Entity `{0}' defined in EntityOrder `{1}'"
-									    + "not found in a datastructure {2}",
-									   entityName, entityOrder, ds.Id.ToString()));
+									throw new ArgumentException(
+										$"Entity `{entityName}' defined in EntityOrder `{entityOrder}'" +
+										$"not found in a datastructure {dataStructure.Id.ToString()}");
 								}
 							}
 						}
-
-						adapter = this.DbDataAdapterFactory.CreateDataAdapter(
+						adapter = DbDataAdapterFactory.CreateDataAdapter(
 							name, entitiesOrdered, connection, transaction);
-						cmd = ((IDbDataAdapter)adapter).SelectCommand;
-						cmd.CommandTimeout = settings.DataServiceExecuteProcedureTimeout;
-						BuildParameters(query.Parameters, cmd.Parameters, profile);
-
+						command = ((IDbDataAdapter)adapter).SelectCommand;
+						command.CommandTimeout = settings.DataServiceExecuteProcedureTimeout;
+						BuildParameters(query.Parameters, command.Parameters, profile);
 						try {
 							adapter.Fill(result);
 						}
@@ -1144,19 +1255,18 @@ namespace Origam.DA.Service
 				}
 				finally
 				{
-					IDisposable dispCmd = cmd as IDisposable;
-					if(dispCmd != null) dispCmd.Dispose();
-					IDisposable disp = adapter as IDisposable;
-					if(disp != null) disp.Dispose();
+					var disposableCommand = command as IDisposable;
+					disposableCommand?.Dispose();
+					var disposableAdapter = adapter as IDisposable;
+					disposableAdapter?.Dispose();
 				}
 			}
-			 catch(Exception e)
+			catch(Exception ex)
 			{
 				if(log.IsErrorEnabled)
 				{
-					log.LogOrigamError("Stored Procedure Call failed", e);
+					log.LogOrigamError("Stored Procedure Call failed", ex);
 				}
-
 				throw;
 			}
 			finally
@@ -1173,72 +1283,82 @@ namespace Origam.DA.Service
 					}
 				}
 			}
-
 			return result;
 		}
 
-		public override int UpdateField(Guid entityId, Guid fieldId, object oldValue, object newValue, IPrincipal userProfile, string transactionId)
+		public override int UpdateField(
+			Guid entityId, 
+			Guid fieldId, 
+			object oldValue, 
+			object newValue, 
+			IPrincipal userProfile, 
+			string transactionId)
 		{
-			int result = 0;
-			UserProfile profile = SecurityManager.GetProfileProvider().GetProfile(userProfile.Identity) as UserProfile;
-			IDbTransaction transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+			var result = 0;
+			var profile = SecurityManager.GetProfileProvider().GetProfile(
+				userProfile.Identity) as UserProfile;
+			IDbTransaction transaction = GetTransaction(transactionId, 
+				IsolationLevel.ReadCommitted);
 			IDbConnection connection = transaction.Connection;
-
 			try
 			{
-				TableMappingItem table = this.GetTable(entityId);
-				
+				TableMappingItem table = GetTable(entityId);
 				if(table.DatabaseObjectType != DatabaseMappingObjectType.Table)
 				{
-					throw new ArgumentOutOfRangeException("DatabaseObjectType", table.DatabaseObjectType, ResourceUtils.GetString("UpdateFieldUpdate"));
+					throw new ArgumentOutOfRangeException(
+						"DatabaseObjectType", table.DatabaseObjectType, 
+						ResourceUtils.GetString("UpdateFieldUpdate"));
 				}
-
-				FieldMappingItem field = this.GetTableColumn(fieldId);
-
+				FieldMappingItem field = GetTableColumn(fieldId);
 				// get data for audit log
-				DatasetGenerator dg = new DatasetGenerator(true);
-				DataSet ds = dg.CreateUpdateFieldDataSet(table, field);
-				DataTable dt = ds.Tables[table.Name];
-
-				DbDataAdapter adapter = this.DbDataAdapterFactory.CreateUpdateFieldDataAdapter(table, field);
+				var datasetGenerator = new DatasetGenerator(true);
+				DataSet dataSet = datasetGenerator.CreateUpdateFieldDataSet(
+					table, field);
+				DataTable dataTable = dataSet.Tables[table.Name];
+				DbDataAdapter adapter = DbDataAdapterFactory
+					.CreateUpdateFieldDataAdapter(table, field);
 				((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
-				((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
+				((IDbDataAdapter)adapter).SelectCommand.Transaction 
+					= transaction;
 				((IDbDataAdapter)adapter).SelectCommand.CommandTimeout = 0;
-
-				QueryParameterCollection logParameters = new QueryParameterCollection();
-				logParameters.Add(new QueryParameter(field.Name, oldValue));
-
-				this.BuildParameters(logParameters, ((IDbDataAdapter)adapter).SelectCommand.Parameters, profile);
-				dt.BeginLoadData();
-				this.TraceCommand(((IDbDataAdapter)adapter).SelectCommand, transactionId);
-				adapter.Fill(ds);
-				dt.EndLoadData();
-
-				if(dt.Rows.Count > 0)
+				var logParameters = new QueryParameterCollection
 				{
-					foreach(DataRow row in dt.Rows)
-					{
-						row[field.Name] = newValue;
-					}
-
-					LogData(dt, profile, transactionId, connection, transaction, 32);
-
-					using(IDbCommand cmd = this.DbDataAdapterFactory.UpdateFieldCommand(table, field))
-					{
-						cmd.Connection = connection;
-						cmd.Transaction = transaction;
-					
-						QueryParameterCollection parameters = new QueryParameterCollection();
-						parameters.Add(new QueryParameter("oldValue", oldValue));
-						parameters.Add(new QueryParameter("newValue", newValue));
-
-						this.BuildParameters(parameters, cmd.Parameters, profile);
-
-						cmd.CommandTimeout = 0;
-						result = cmd.ExecuteNonQuery();
-					}
+					new QueryParameter(field.Name, oldValue)
+				};
+				BuildParameters(
+					logParameters, 
+					((IDbDataAdapter)adapter).SelectCommand.Parameters, 
+					profile);
+				dataTable.BeginLoadData();
+				TraceCommand(((IDbDataAdapter)adapter).SelectCommand, 
+					transactionId);
+				adapter.Fill(dataSet);
+				dataTable.EndLoadData();
+				if(dataTable.Rows.Count <= 0)
+				{
+					return result;
 				}
-
+				foreach(DataRow row in dataTable.Rows)
+				{
+					row[field.Name] = newValue;
+				}
+				LogData(dataTable, profile, transactionId, connection, 
+					transaction, 32);
+				using(IDbCommand command = DbDataAdapterFactory
+					      .UpdateFieldCommand(table, field))
+				{
+					command.Connection = connection;
+					command.Transaction = transaction;
+					var parameters = new QueryParameterCollection
+					{
+						new QueryParameter("oldValue", oldValue),
+						new QueryParameter("newValue", newValue)
+					};
+					BuildParameters(
+						parameters, command.Parameters, profile);
+					command.CommandTimeout = 0;
+					result = command.ExecuteNonQuery();
+				}
 				return result;
 			}
 			catch
@@ -1260,35 +1380,37 @@ namespace Origam.DA.Service
 			}
 		}
 
-		public override int ReferenceCount(Guid entityId, Guid fieldId, object value, IPrincipal userProfile, string transactionId)
+		public override int ReferenceCount(
+			Guid entityId, Guid fieldId, object value, IPrincipal userProfile, 
+			string transactionId)
 		{
-			UserProfile profile = SecurityManager.GetProfileProvider().GetProfile(userProfile.Identity) as UserProfile;
-			IDbTransaction transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+			var profile = SecurityManager.GetProfileProvider().GetProfile(
+				userProfile.Identity) as UserProfile;
+			IDbTransaction transaction = GetTransaction(transactionId, 
+				IsolationLevel.ReadCommitted);
 			IDbConnection connection = transaction.Connection;
-
 			try
 			{
-				TableMappingItem table = this.GetTable(entityId);
-				
+				TableMappingItem table = GetTable(entityId);
 				if(table.DatabaseObjectType != DatabaseMappingObjectType.Table)
 				{
-					throw new ArgumentOutOfRangeException("DatabaseObjectType", table.DatabaseObjectType, ResourceUtils.GetString("UpdateFieldUpdate"));
+					throw new ArgumentOutOfRangeException(
+						"DatabaseObjectType", table.DatabaseObjectType, 
+						ResourceUtils.GetString("UpdateFieldUpdate"));
 				}
-
-				FieldMappingItem field = this.GetTableColumn(fieldId);
-
-				IDbCommand cmd = this.DbDataAdapterFactory.SelectReferenceCountCommand(table, field);
-				cmd.Connection = connection;
-				cmd.Transaction = transaction;
-				cmd.CommandTimeout = 0;
-
-				QueryParameterCollection parameters = new QueryParameterCollection();
-				parameters.Add(new QueryParameter(field.Name, value));
-
-				this.BuildParameters(parameters, cmd.Parameters, profile);
-				this.TraceCommand(cmd, transactionId);
-				int result = (int)cmd.ExecuteScalar();
-
+				FieldMappingItem field = GetTableColumn(fieldId);
+				IDbCommand command = DbDataAdapterFactory
+					.SelectReferenceCountCommand(table, field);
+				command.Connection = connection;
+				command.Transaction = transaction;
+				command.CommandTimeout = 0;
+				var parameters = new QueryParameterCollection
+				{
+					new QueryParameter(field.Name, value)
+				};
+				BuildParameters(parameters, command.Parameters, profile);
+				TraceCommand(command, transactionId);
+				var result = (int)command.ExecuteScalar();
 				return result;
 			}
 			finally
@@ -1306,44 +1428,45 @@ namespace Origam.DA.Service
         /// Executes an arbitrary SQL command on the database.
         /// </summary>
         /// <param name="command"></param>
-        /// <param name="transactionId">Existing transaction id. IMPORTANT: if transactionId is NULL the command runs without a transaction!</param>
+        /// <param name="transactionId">Existing transaction id. IMPORTANT:
+        /// if transactionId is NULL the command runs without
+        /// a transaction!</param>
         /// <returns></returns>
-        public override string ExecuteUpdate(string command, string transactionId)
+        public override string ExecuteUpdate(
+	        string command, string transactionId)
 		{
 			IDbTransaction transaction = null;
 			IDbConnection connection;
             if(transactionId == null)
             {
-                connection = GetConnection(this.ConnectionString);
+                connection = GetConnection(ConnectionString);
                 connection.Open();
             }
             else
             {
-                transaction = GetTransaction(transactionId, IsolationLevel.ReadCommitted);
+                transaction = GetTransaction(transactionId, 
+	                IsolationLevel.ReadCommitted);
                 connection = transaction.Connection;
             }
             try
             {
-                DataSet dataset = new DataSet();
-                int records = 0;
-                using (IDbCommand cmd = this.DbDataAdapterFactory.GetCommand(command, connection, transaction))
+                var dataset = new DataSet();
+                var records = 0;
+                using (IDbCommand databaseCommand = DbDataAdapterFactory
+	                       .GetCommand(command, connection, transaction))
                 {
-                    DbDataAdapter adapter = DbDataAdapterFactory.GetAdapter(cmd);
-                    cmd.CommandTimeout = 0;
+                    DbDataAdapter adapter = DbDataAdapterFactory.GetAdapter(
+	                    databaseCommand);
+                    databaseCommand.CommandTimeout = 0;
                     records = adapter.Fill(dataset);
                 }
-                StringBuilder builder = FormatResults(dataset);
-                string recordsText;
-                if (records == 1 )
-                {
-                    recordsText = "record";
-                }
-                else
-                {
-                    recordsText = "records";
-                }
-                builder.AppendLine(records.ToString() + " " + recordsText + " affected.");
-                return builder.ToString();
+                var stringBuilder = FormatResults(dataset);
+                var recordsText = (records == 1) ? "record" : "records";
+                stringBuilder.Append(records);
+                stringBuilder.Append(" ");
+                stringBuilder.Append(recordsText);
+                stringBuilder.AppendLine(" affected.");
+                return stringBuilder.ToString();
             }
             finally
 			{
@@ -1357,65 +1480,66 @@ namespace Origam.DA.Service
 
         private static StringBuilder FormatResults(DataSet dataset)
         {
-            StringBuilder builder = new StringBuilder();
-            foreach (DataTable table in dataset.Tables)
+            var stringBuilder = new StringBuilder();
+            foreach(DataTable table in dataset.Tables)
             {
-                foreach (DataColumn column in table.Columns)
+                foreach(DataColumn column in table.Columns)
                 {
-                    builder.Append(column.ColumnName.PadRight(
+                    stringBuilder.Append(column.ColumnName.PadRight(
                          GetLength(column), ' ') + " ");
                 }
-                builder.AppendLine();
-                foreach (DataColumn column in table.Columns)
+                stringBuilder.AppendLine();
+                foreach(DataColumn column in table.Columns)
                 {
-                    builder.Append(new string('-',
+                    stringBuilder.Append(new string('-',
                          GetLength(column)) + " ");
                 }
-                builder.AppendLine();
-                foreach (DataRow row in table.Rows)
+                stringBuilder.AppendLine();
+                foreach(DataRow row in table.Rows)
                 {
-                    foreach (DataColumn col in table.Columns)
+                    foreach(DataColumn col in table.Columns)
                     {
                         string value;
-                        if (row.IsNull(col))
+                        if(row.IsNull(col))
                         {
                             value = "NULL";
                         }
                         else
                         {
                             value = row[col].ToString();
-                            if (value.Length > DATA_VISUALIZATION_MAX_LENGTH)
+                            if(value.Length > DATA_VISUALIZATION_MAX_LENGTH)
                             {
-                                value = value.Substring(0, DATA_VISUALIZATION_MAX_LENGTH);
+                                value = value.Substring(
+	                                0, DATA_VISUALIZATION_MAX_LENGTH);
                             }
                         }
-                        builder.Append(value.PadRight(
+                        stringBuilder.Append(value.PadRight(
                              GetLength(col)) + " ");
                     }
-                    builder.AppendLine();
+                    stringBuilder.AppendLine();
                 }
-                builder.AppendLine();
+                stringBuilder.AppendLine();
             }
-            return builder;
+            return stringBuilder;
         }
 
         private static int GetLength(DataColumn column)
         {
             int nameLength = column.ColumnName.Length + 1;
             int dataLength;
-            if (column.DataType == typeof(string))
+            if(column.DataType == typeof(string))
             {
                 dataLength = column.MaxLength;
-                if (dataLength > DATA_VISUALIZATION_MAX_LENGTH)
+                if(dataLength > DATA_VISUALIZATION_MAX_LENGTH)
                 {
                     dataLength = DATA_VISUALIZATION_MAX_LENGTH;
                 }
             }
-            else if (column.DataType == typeof(Guid))
+            else if(column.DataType == typeof(Guid))
             {
                 dataLength = 36;
             }
-            else if (column.DataType == typeof(DateTime))
+            else if(column.DataType == typeof(DateTime))
             {
                 dataLength = DateTime.MaxValue.ToString().Length;
             }
@@ -1423,66 +1547,56 @@ namespace Origam.DA.Service
             {
                 dataLength = 10;
             }
-            if (nameLength > dataLength)
-            {
-                return nameLength;
-            }
-            else
-            {
-                return dataLength;
-            }
+            return nameLength > dataLength ? nameLength : dataLength;
         }
 
-        private void LogData(DataTable changedTable, UserProfile profile, string transactionId, 
-            IDbConnection connection, IDbTransaction transaction)
+        private void LogData(DataTable changedTable, UserProfile profile, 
+	        string transactionId, IDbConnection connection, 
+	        IDbTransaction transaction)
 		{
-			LogData(changedTable, profile, transactionId, connection, transaction, -1);
+			LogData(changedTable, profile, transactionId, connection, 
+				transaction, -1);
 		}
 
-		private void LogData(DataTable changedTable, UserProfile profile, string transactionId, 
-            IDbConnection connection, IDbTransaction transaction, int overrideActionType)
+		private void LogData(DataTable changedTable, UserProfile profile, 
+			string transactionId, IDbConnection connection, 
+			IDbTransaction transaction, int overrideActionType)
 		{
-			DataAuditLog log = GetLog(changedTable, profile, transactionId, overrideActionType);
-			if(log != null && log.AuditRecord.Count > 0)
+			DataAuditLog dataAuditLog = GetLog(
+				changedTable, profile, transactionId, overrideActionType);
+			if((dataAuditLog == null) || (dataAuditLog.AuditRecord.Count <= 0))
 			{
-				ISchemaService schemaService = ServiceManager.Services.
-                    GetService(typeof(ISchemaService)) as ISchemaService;
-
-				DataStructure logDataStructure = this.GetDataStructure(
-                    new Guid("530eba45-40db-470d-8e53-8b98ace758ad"));
-
-			    var adapterParameters = new SelectParameters
-			    {
-			        DataStructure = logDataStructure,
-			        Entity = (DataStructureEntity)logDataStructure.Entities[0],
-			        Parameters = new Hashtable(),
-			        Paging = false,
-			    };
-                DbDataAdapter logAdapter = this.GetAdapter(adapterParameters, profile);
-				SetConnection(logAdapter, connection);
-				SetTransaction(logAdapter, transaction);
-
-				logAdapter.Update(log);
-
-				SetTransaction(logAdapter, null);
-				SetConnection(logAdapter, null);
+				return;
 			}
+			DataStructure logDataStructure = GetDataStructure(
+				new Guid("530eba45-40db-470d-8e53-8b98ace758ad"));
+			var adapterParameters = new SelectParameters
+			{
+				DataStructure = logDataStructure,
+				Entity = (DataStructureEntity)logDataStructure.Entities[0],
+				Parameters = new Hashtable(),
+				Paging = false,
+			};
+			DbDataAdapter logAdapter = GetAdapter(adapterParameters, profile);
+			SetConnection(logAdapter, connection);
+			SetTransaction(logAdapter, transaction);
+			logAdapter.Update(dataAuditLog);
+			SetTransaction(logAdapter, null);
+			SetConnection(logAdapter, null);
 		}
 
 		public override string DatabaseSchemaVersion()
 		{
 			try
 			{
-			    OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-
+			    var settings = ConfigurationManager.GetActiveConfiguration();
 			    string result;
-
-			    using(IDbConnection connection = GetConnection(_connectionString))
+			    using(IDbConnection connection 
+			          = GetConnection(connectionString))
 			    {
 				    connection.Open();
 				    result = RunSchemaVersionQuery(connection, settings);
 			    }
-
 			    return result;
 			}
 			catch(Exception ex)
@@ -1504,87 +1618,87 @@ namespace Origam.DA.Service
 			} 
 			catch 
 			{
+				// pre 5 version would have the command named like this
 				return TryGetSchemaVersion(
 					connection: connection,
 					settings: settings, 
-					versionCommandName: "AsapDatabaseSchemaVersion"); // pre 5 version would have the command named like this
+					versionCommandName: "AsapDatabaseSchemaVersion"); 
 			}
 		}
 
 		private string TryGetSchemaVersion(IDbConnection connection,
 			OrigamSettings settings, string versionCommandName)
 		{
-			using (IDbCommand cmd =
-				this.DbDataAdapterFactory.GetCommand(versionCommandName,
-					connection))
+			using(IDbCommand command = DbDataAdapterFactory.GetCommand(
+				      versionCommandName, connection))
 			{
-				cmd.CommandTimeout = settings.DataServiceExecuteProcedureTimeout;
-				cmd.CommandType = CommandType.StoredProcedure;
-
-				return (string) cmd.ExecuteScalar();
+				command.CommandTimeout 
+					= settings.DataServiceExecuteProcedureTimeout;
+				command.CommandType = CommandType.StoredProcedure;
+				return (string)command.ExecuteScalar();
 			}
 		}
+		
         public override string EntityDdl(Guid entityId)
         {
-            TableMappingItem table = PersistenceProvider.RetrieveInstance(
-                typeof(TableMappingItem), new ModelElementKey(entityId)) as TableMappingItem;
-            if (table == null)
+	        if(!(PersistenceProvider.RetrieveInstance(typeof(TableMappingItem), 
+		            new ModelElementKey(entityId)) is TableMappingItem table))
             {
-                throw new ArgumentOutOfRangeException("entityId", entityId, "Element is not a table mapping.");
+                throw new ArgumentOutOfRangeException("entityId", entityId, 
+	                "Element is not a table mapping.");
             }
             return DbDataAdapterFactory.TableDefinitionDdl(table);
         }
 
         public override string[] FieldDdl(Guid fieldId)
         {
-            string[] result = new string[2];
-            FieldMappingItem column = PersistenceProvider.RetrieveInstance(
-                typeof(FieldMappingItem), new ModelElementKey(fieldId)) as FieldMappingItem;
-            if (column == null)
+            var result = new string[2];
+            if(!(PersistenceProvider.RetrieveInstance(typeof(FieldMappingItem), 
+	                new ModelElementKey(fieldId)) is FieldMappingItem column))
             {
-                throw new ArgumentOutOfRangeException("fieldId", fieldId, "Element is not a column mapping.");
+                throw new ArgumentOutOfRangeException("fieldId", fieldId, 
+	                "Element is not a column mapping.");
             }
             result[0] = DbDataAdapterFactory.AddColumnDdl(column);
-            result[1] = DbDataAdapterFactory.AddForeignKeyConstraintDdl(column.ParentItem as TableMappingItem, column.ForeignKeyConstraint);
+            result[1] = DbDataAdapterFactory.AddForeignKeyConstraintDdl(
+	            column.ParentItem as TableMappingItem, 
+	            column.ForeignKeyConstraint);
             return result;
         }
         public override IDataReader ExecuteDataReader(DataStructureQuery query,
             IPrincipal principal, string transactionId)
         {
             DataSet dataSet = null;
-            OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() ;
+            var settings = ConfigurationManager.GetActiveConfiguration();
             int timeout = settings.DataServiceSelectTimeout;
             UserProfile currentProfile = null;
             if(query.LoadByIdentity)
             {
-                currentProfile = SecurityManager.GetProfileProvider().GetProfile(
-                    principal.Identity) as UserProfile;
+                currentProfile = SecurityManager.GetProfileProvider()
+	                .GetProfile(principal.Identity) as UserProfile;
             }
             if(PersistenceProvider == null)
             {
                 throw new NullReferenceException(
                     ResourceUtils.GetString("NoProviderForMS"));
             }
-
             DataStructure dataStructure = GetDataStructure(query);
             DataStructureFilterSet filterSet = GetFilterSet(query.MethodId);
             DataStructureSortSet sortSet = GetSortSet(query.SortSetId);
             DataStructureEntity entity = GetEntity(query, dataStructure);
             dataSet = GetDataset(dataStructure, query.DefaultSetId);
             DatasetTools.RemoveExpressions(dataSet, true);
-
 			IDbConnection connection = null;
             IDbTransaction transaction = null;
-            CommandBehavior commandBehavior = CommandBehavior.Default;
-            if (transactionId != null)
+            var commandBehavior = CommandBehavior.Default;
+            if(transactionId != null)
             {
                 transaction = GetTransaction(
                     transactionId, query.IsolationLevel);
             }
             if(transaction == null)
 			{
-				connection = GetConnection(_connectionString);
+				connection = GetConnection(connectionString);
 			    commandBehavior = CommandBehavior.CloseConnection;
             }
 			else
@@ -1609,26 +1723,29 @@ namespace Origam.DA.Service
                 AggregatedColumns = query.AggregatedColumns
             };
             DbDataAdapter adapter = GetAdapter(
-                adapterParameters, currentProfile);
+	            adapterParameters, currentProfile);
             ((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
             ((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
             ((IDbDataAdapter)adapter).SelectCommand.CommandTimeout = timeout;
-            BuildParameters(query.Parameters, adapter.SelectCommand.Parameters, currentProfile);
-            if (connection.State == ConnectionState.Closed)
+            BuildParameters(query.Parameters, adapter.SelectCommand.Parameters, 
+	            currentProfile);
+            if(connection.State == ConnectionState.Closed)
             {
                 connection.Open();
             }
             return adapter.SelectCommand.ExecuteReader(commandBehavior);
         }
         
-        public override IEnumerable<IEnumerable<object>> ExecuteDataReader(DataStructureQuery query)
+        public override IEnumerable<IEnumerable<object>> ExecuteDataReader(
+	        DataStructureQuery query)
         {
 	        return ExecuteDataReaderInternal(query)
 		        .Select(line
 			        => line.Select(pair => pair.Value));
         }
 
-        public override IEnumerable<Dictionary<string, object>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
+        public override IEnumerable<Dictionary<string, object>> 
+	        ExecuteDataReaderReturnPairs(DataStructureQuery query)
         {
 	        return ExecuteDataReaderInternal(query)
 		        .Select(line => ExpandAggregationData(line, query))
@@ -1644,11 +1761,12 @@ namespace Origam.DA.Service
         {
 	        var processedItems = new List<KeyValuePair<string, object>>();
 	        var aggregationData = new List<object>();
-	        foreach (var pair in line)
+	        foreach (KeyValuePair<string, object> pair in line)
 	        {
-		        var aggregatedColumn = query.AggregatedColumns
-			        ?.FirstOrDefault(column => column.SqlQueryColumnName == pair.Key);
-		        if (aggregatedColumn != null)
+		        Aggregation aggregatedColumn = query.AggregatedColumns
+			        ?.FirstOrDefault(column 
+				        => column.SqlQueryColumnName == pair.Key);
+		        if(aggregatedColumn != null)
 		        {
 			        aggregationData.Add(
 				        new
@@ -1664,7 +1782,8 @@ namespace Origam.DA.Service
 			        processedItems.Add(pair);
 		        }
 	        }
-	        processedItems.Add(new KeyValuePair<string, object>("aggregations", aggregationData));
+	        processedItems.Add(new KeyValuePair<string, object>(
+		        "aggregations", aggregationData));
 	        return processedItems;
         }
 
@@ -1678,433 +1797,585 @@ namespace Origam.DA.Service
 	        return query.GetAllQueryColumns()
 		        .SelectMany(column =>
 		        {
-			        if (!string.IsNullOrWhiteSpace(query.CustomGrouping?.GroupingUnit) &&
-			            query.CustomGrouping?.GroupBy == column.Name)
+			        if(!string.IsNullOrWhiteSpace(query.CustomGrouping?
+				           .GroupingUnit) 
+			           && (query.CustomGrouping?.GroupBy == column.Name))
 			        {
 				        return TimeGroupingRenderer
-					        .GetColumnNames(column.Name, query.CustomGrouping.GroupingUnit)
+					        .GetColumnNames(column.Name, 
+						        query.CustomGrouping.GroupingUnit)
 					        .Select(columnName =>
 						        new ColumnData(columnName, column.IsVirtual,
 							        column.DefaultValue, column.HasRelation)
 					        );
 			        }
-			        else
-			        {
-				        return ToEnumerable(column);
-			        }
+			        return ToEnumerable(column);
 
 		        })
 		        .ToList();
         }
 
-        private IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderInternal(DataStructureQuery query)
+        private IEnumerable<IEnumerable<KeyValuePair<string, object>>> 
+	        ExecuteDataReaderInternal(DataStructureQuery query)
         {
 	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
-		        var queryColumns = GetAllQueryColumns(query);
+		        List<ColumnData> queryColumns = GetAllQueryColumns(query);
 		        while(reader.Read())
 		        {
-			        var values = new KeyValuePair<string, object>[queryColumns.Count];
-			        for (int i = 0; i < queryColumns.Count; i++)
+			        var values = new KeyValuePair<string, object>[
+				        queryColumns.Count];
+			        for(var i = 0; i < queryColumns.Count; i++)
 			        {
 				        ColumnData queryColumn = queryColumns[i];
-				        if (queryColumn.IsVirtual && !queryColumn.HasRelation)
+				        if(queryColumn.IsVirtual && !queryColumn.HasRelation)
 				        {
 					        continue;
 				        }
-				        object value = reader.GetValue(reader.GetOrdinal(queryColumn.Name));
+				        object value = reader.GetValue(reader.GetOrdinal(
+					        queryColumn.Name));
 				        values[i] = new KeyValuePair<string, object>(
 					        queryColumn.Name , value);
 			        }
-			        yield return detachedFieldPacker.ProcessReaderOutput(
+			        yield return ProcessReaderOutput(
 				        values, queryColumns);
 		        }
 	        }
         }
+        
+        private static List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values, List<ColumnData> columnData)
+        {
+	        if (columnData == null)
+		        throw new ArgumentNullException(nameof(columnData));
+	        var updatedValues = new List<KeyValuePair<string, object>>();
 
-        private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
+	        for (int i = 0; i < columnData.Count; i++)
+	        {
+		        if (columnData[i].IsVirtual)
+		        {
+			        if (columnData[i].HasRelation && values[i].Value != null && values[i].Value != DBNull.Value)
+			        {
+				        updatedValues.Add(new KeyValuePair<string, object>(
+					        values[i].Key, ((string)values[i].Value).Split((char)1)));
+				        continue;
+			        }
+			        else
+			        {
+				        updatedValues.Add(new KeyValuePair<string, object>
+					        (values[i].Key, columnData[i].DefaultValue));
+				        continue;
+			        }
+		        }
+		        updatedValues.Add(new KeyValuePair<string, object>(
+			        values[i].Key, values[i].Value));
+	        }
+
+	        return updatedValues;
+        }
+        
+
+        private static DataStructureEntity GetEntity(
+	        DataStructureQuery query, DataStructure dataStructure)
 	    {
 	        DataStructureEntity entity;
-	        switch (query.DataSourceType)
+	        switch(query.DataSourceType)
 	        {
-	            case QueryDataSourceType.DataStructure:
+		        case QueryDataSourceType.DataStructure:
+		        {
 	                ArrayList entities;
-	                if (string.IsNullOrEmpty(query.Entity))
+	                if(string.IsNullOrEmpty(query.Entity))
 	                {
 	                    entities = dataStructure.Entities;
 	                }
 	                else
 	                {
 	                    entities = new ArrayList();
-	                    foreach (DataStructureEntity e in dataStructure.Entities)
+	                    foreach(DataStructureEntity dataStructureEntity 
+	                            in dataStructure.Entities)
 	                    {
-	                        if (e.Name == query.Entity)
+	                        if(dataStructureEntity.Name == query.Entity)
 	                        {
-	                            entities.Add(e);
+	                            entities.Add(dataStructureEntity);
 	                            break;
 	                        }
 	                    }
-
-	                    if (entities.Count == 0)
+	                    if(entities.Count == 0)
 	                    {
 	                        throw new ArgumentOutOfRangeException(
-	                            string.Format(
-	                                "Entity {0} not found in data structure {1}.",
-	                                query.Entity, dataStructure.Path));
+		                        $"Entity {query.Entity} not found in data structure {dataStructure.Path}.");
 	                    }
 	                }
-
 	                entity = entities[0] as DataStructureEntity;
 	                break;
-	            default:
+		        }
+		        default:
+		        {
 	                throw new ArgumentOutOfRangeException("DataSourceType",
 	                    query.DataSourceType, ResourceUtils.GetString(
 	                        "UnknownDataSource"));
+		        }
 	        }
-
 	        return entity;
 	    }
 
+        public virtual void CreateSchema(string databaseName)
+        {
+        }
+
+        public void CreateFirstNewWebUser(QueryParameterCollection parameters)
+        {
+			var transactionId = Guid.NewGuid().ToString();
+			try
+			{
+				ExecuteUpdate(CreateBusinessPartnerInsert(parameters), 
+					transactionId);
+				ExecuteUpdate(CreateOrigamUserInsert(parameters), 
+					transactionId);
+				ExecuteUpdate(CreateBusinessPartnerRoleIdInsert(parameters),
+					transactionId);
+				ExecuteUpdate(AlreadyCreatedUser(parameters), 
+					transactionId);
+				ResourceMonitor.Commit(transactionId);
+			}
+			catch (Exception)
+			{
+				ResourceMonitor.Rollback(transactionId);
+				throw;
+			}
+		}
+		public abstract string CreateBusinessPartnerInsert(
+			QueryParameterCollection parameters);
+		public abstract string CreateOrigamUserInsert(
+			QueryParameterCollection parameters);
+		public abstract string CreateBusinessPartnerRoleIdInsert(
+			QueryParameterCollection parameters);
+		public abstract string AlreadyCreatedUser(
+			QueryParameterCollection parameters);
 	    #endregion
 
         #region Is Schema Item in Database
         public override bool IsSchemaItemInDatabase(ISchemaItem schemaItem)
         {
-            if (schemaItem is DataEntityIndex)
-            {
-                return IsDataEntityIndexInDatabase(schemaItem as DataEntityIndex);
-            }
-            return false;
+	        return (schemaItem is DataEntityIndex dataEntityIndex) 
+	               && IsDataEntityIndexInDatabase(dataEntityIndex);
         }
 
-        internal abstract bool IsDataEntityIndexInDatabase(DataEntityIndex dataEntityIndex);
-        
+        internal abstract bool IsDataEntityIndexInDatabase(
+	        DataEntityIndex dataEntityIndex);
 
         #endregion
 
 		#region Compare Schema
+		
+        internal abstract string GetAllTablesSql();
 		public override ArrayList CompareSchema(IPersistenceProvider provider)
 		{
-			ArrayList results = new ArrayList();
+			var results = new ArrayList();
             ArrayList schemaTables = GetSchemaTables(provider);
-
             // tables
             Hashtable schemaTableList = GetSchemaTableList(schemaTables);
-			Hashtable schemaColumnList = new Hashtable();
-			Hashtable schemaIndexListAll = new Hashtable();
-            Hashtable dbTableList = getDbTableList();
-			            
+			var schemaColumnList = new Hashtable();
+			var schemaIndexListAll = new Hashtable();
+            Hashtable dbTableList = GetDbTableList();
 			DataSet columns = GetData(GetAllColumnsSQL());
 			columns.CaseSensitive = true;
-
-			DoCompare(results, dbTableList, schemaTableList, columns, DbCompareResultType.MissingInDatabase, typeof(TableMappingItem), provider);
-			DoCompare(results, dbTableList, schemaTableList, columns, DbCompareResultType.MissingInSchema, typeof(TableMappingItem), provider);
-
+			DoCompare(results, dbTableList, schemaTableList, columns, 
+				DbCompareResultType.MissingInDatabase, 
+				typeof(TableMappingItem), provider);
+			DoCompare(results, dbTableList, schemaTableList, columns, 
+				DbCompareResultType.MissingInSchema, 
+				typeof(TableMappingItem), provider);
             // fields
             // model exists in database
-            DoCompareModelInDatabase(results,schemaTables, dbTableList,schemaColumnList, columns);
-            DoCompareDatabaseInModel(results,schemaTableList,schemaColumnList,columns);
+            DoCompareModelInDatabase(results, schemaTables, 
+	            dbTableList, schemaColumnList, columns);
+            DoCompareDatabaseInModel(results, schemaTableList, 
+	            schemaColumnList,columns);
             //End fields
-
             //indexes
 			DataSet indexes = GetData(GetSqlIndexes());
 			DataSet indexFields = GetData(GetSqlIndexFields());
 			indexFields.CaseSensitive = true;
-
-            Hashtable schemaIndexListGenerate = GetSchemaIndexListGenerate(schemaTables, dbTableList, schemaIndexListAll);
+            Hashtable schemaIndexListGenerate = GetSchemaIndexListGenerate(
+	            schemaTables, dbTableList, schemaIndexListAll);
             Hashtable dbIndexList = GetDbIndexList(indexes, schemaTableList);
-
-			DoCompare(results, dbIndexList, schemaIndexListGenerate, columns, 
-                DbCompareResultType.MissingInDatabase, typeof(DataEntityIndex), provider);
+			DoCompare(results, dbIndexList, schemaIndexListGenerate, 
+				columns, DbCompareResultType.MissingInDatabase, 
+				typeof(DataEntityIndex), provider);
 			DoCompare(results, dbIndexList, schemaIndexListAll, columns, 
-                DbCompareResultType.MissingInSchema, typeof(DataEntityIndex), provider);
-
-            // For index fields we only compare if the whole index is equal, we do not return
-            // result for each different field. In case of a different index, we have to re-create
+                DbCompareResultType.MissingInSchema, 
+                typeof(DataEntityIndex), provider);
+            // For index fields we only compare if the whole index is equal,
+            // we do not return result for each different field.
+            // In case of a different index, we have to re-create
             // the whole index anyway.
             DoCompareIndex(results, schemaTables, indexFields);
 			// foreign keys
 			DataSet foreignKeys = GetData(GetSqlFk());
-            // for each existing table - we skip foreign keys where table does not exist in the database or schema,
+            // for each existing table - we skip foreign keys
+            // where table does not exist in the database or schema,
             // they will be re-created completely anyway
-            DoCompareIndexExistingTables(results, schemaTables, foreignKeys, columns);
+            DoCompareIndexExistingTables(results, schemaTables, 
+	            foreignKeys, columns);
 			return results;
 		}
 
-        private void DoCompareIndexExistingTables(ArrayList results, ArrayList schemaTables, DataSet foreignKeys, DataSet columns)
+        private void DoCompareIndexExistingTables(
+	        ArrayList results, ArrayList schemaTables, DataSet foreignKeys, 
+	        DataSet columns)
         {
-            foreach (TableMappingItem t in schemaTables)
+            foreach(TableMappingItem table in schemaTables)
             {
-                // not for views and not for tables where generating script is turned off
-                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
+	            // not for views and not for tables where generating script
+                // is turned off
+                if(!table.GenerateDeploymentScript 
+                   || (table.DatabaseObjectType 
+                       != DatabaseMappingObjectType.Table))
                 {
-                    DataRow[] dbRows = foreignKeys.Tables[0].Select("FK_Table = '" + t.MappedObjectName + "'");
-
-                    // there are some constraints for this table in the database
-                    if (dbRows.Length > 0)
-                    {
-                        // we try to see which of these we don't find in the model
-                        foreach (DataRow row in dbRows)
-                        {
-                            bool found = false;
-                            foreach (DataEntityConstraint constraint in t.Constraints)
-                            {
-                                if (constraint.Type == ConstraintType.ForeignKey && constraint.ForeignEntity is TableMappingItem)
-                                {
-                                    if ((string)row["PK_Table"] == (constraint.ForeignEntity as TableMappingItem).MappedObjectName
-                                        & (string)row["FK_Table"] == t.MappedObjectName)
-                                    {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!found)
-                            {
-                                // constraint found in database but not in the model
-                                SchemaDbCompareResult result = new SchemaDbCompareResult();
-                                result.ResultType = DbCompareResultType.MissingInSchema;
-                                result.ItemName = (string)row["Constraint"];
-                                // TODO: result.SchemaItem = ?
-                                result.ParentSchemaItem = t;
-                                result.SchemaItemType = typeof(DataEntityConstraint);
-
-                                results.Add(result);
-                            }
-                        }
-                    }
-
-                    // we compare what is missing in the database
-                    foreach (DataEntityConstraint constraint in t.Constraints)
-                    {
-                        if (constraint.Type == ConstraintType.ForeignKey && constraint.ForeignEntity is TableMappingItem && constraint.Fields[0] is FieldMappingItem)
-                        {
-                            DataRow[] rows = foreignKeys.Tables[0].Select("PK_Table = '" + (constraint.ForeignEntity as TableMappingItem).MappedObjectName + "'"
-                                + " AND FK_Table = '" + t.MappedObjectName + "' AND cKeyCol1 = '" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "'");
-
-                            if (columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "'").Length > 0)
-                            {
-                                if (rows.Length == 0)
-                                {
-                                    // constraint was not found in the database at all
-                                    SchemaDbCompareResult result = new SchemaDbCompareResult();
-                                    result.ResultType = DbCompareResultType.MissingInDatabase;
-                                    result.ItemName = ConstraintName(t, constraint);
-                                    result.SchemaItem = t;
-                                    result.SchemaItemType = typeof(DataEntityConstraint);
-                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddForeignKeyConstraintDdl(t, constraint);
-
-                                    results.Add(result);
-                                }
-                                else
-                                {
-                                    bool constraintEqual = true;
-
-                                    // constraint found in database, we check if it has the same fields
-                                    foreach (IDataEntityColumn col in constraint.Fields)
-                                    {
-                                        if (col is FieldMappingItem)
-                                        {
-                                            if (col.ForeignKeyField is FieldMappingItem)
-                                            {
-                                                string pk = (col.ForeignKeyField as FieldMappingItem).MappedColumnName;
-                                                string fk = (col as FieldMappingItem).MappedColumnName;
-
-                                                bool foundPair = false;
-                                                for (int i = 1; i < 17; i++)
-                                                {
-                                                    if (rows[0]["cKeyCol" + i.ToString()] != DBNull.Value)
-                                                    {
-                                                        if ((string)rows[0]["cKeyCol" + i.ToString()] == fk &
-                                                            (string)rows[0]["cRefCol" + i.ToString()] == pk)
-                                                        {
-                                                            foundPair = true;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-
-                                                // if pair was found, we set constraint to equal
-                                                if (!foundPair)
-                                                {
-                                                    constraintEqual = false;
-                                                    break;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                // one of the columns is not a physical column
-                                                constraintEqual = false;
-                                                break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // one of the columns is not a physical column
-                                            constraintEqual = false;
-                                            break;
-                                        }
-                                    }
-
-                                    if (!constraintEqual)
-                                    {
-                                        // constraint found but different
-                                        SchemaDbCompareResult result = new SchemaDbCompareResult();
-                                        result.ResultType = DbCompareResultType.ExistingButDifferent;
-                                        result.ItemName = "FK_" + t.MappedObjectName + "_" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "_" + (constraint.ForeignEntity as TableMappingItem).MappedObjectName;
-                                        result.SchemaItem = t;
-                                        result.SchemaItemType = typeof(DataEntityConstraint);
-
-                                        results.Add(result);
-                                    }
-                                }
-                            }
-                        }
-                    }
+	                continue;
+                }
+                DataRow[] dbRows = foreignKeys.Tables[0].Select(
+	                "FK_Table = '" + table.MappedObjectName + "'");
+                // there are some constraints for this table in the database
+                if(dbRows.Length > 0)
+                {
+	                // we try to see which of these we don't find in the model
+	                foreach(DataRow row in dbRows)
+	                {
+		                bool found = table.Constraints
+			                .Cast<DataEntityConstraint>()
+			                .Where(constraint => 
+				                (constraint.Type == ConstraintType.ForeignKey) 
+				                && (constraint.ForeignEntity is TableMappingItem))
+			                .Any(constraint => 
+				                ((string)row["PK_Table"] 
+				                == ((TableMappingItem)constraint.ForeignEntity)
+									.MappedObjectName) 
+				                && ((string)row["FK_Table"] 
+				                    == table.MappedObjectName));
+		                if(found)
+		                {
+			                continue;
+		                }
+		                // constraint found in database but not in the model
+		                var result = new SchemaDbCompareResult
+		                {
+			                ResultType = DbCompareResultType.MissingInSchema,
+			                ItemName = (string)row["Constraint"],
+			                // TODO: result.SchemaItem = ?
+			                ParentSchemaItem = table,
+			                SchemaItemType = typeof(DataEntityConstraint)
+		                };
+		                results.Add(result);
+	                }
+                }
+                // we compare what is missing in the database
+                foreach (DataEntityConstraint constraint 
+                         in table.Constraints)
+                {
+	                CompareConstraintMissingInDatabase(constraint, table,
+		                foreignKeys, columns, results);
                 }
             }
+        }
+
+        private void CompareConstraintMissingInDatabase(
+	        DataEntityConstraint constraint, TableMappingItem table,
+	        DataSet foreignKeys, DataSet columns, ArrayList results)
+        {
+			if((constraint.Type != ConstraintType.ForeignKey) 
+			   || !(constraint.ForeignEntity is TableMappingItem) 
+			   || !(constraint.Fields[0] is FieldMappingItem))
+			{
+				return;
+			}
+			DataRow[] rows = foreignKeys.Tables[0].Select(
+				"PK_Table = '" 
+				+ (constraint.ForeignEntity as TableMappingItem)
+				.MappedObjectName 
+				+ "' AND FK_Table = '" 
+				+ table.MappedObjectName 
+				+ "' AND cKeyCol1 = '" 
+				+ (constraint.Fields[0] as FieldMappingItem)
+				.MappedColumnName 
+				+ "'");
+			if(columns.Tables[0].Select(
+				   "TABLE_NAME = '"
+				   + table.MappedObjectName
+				   + "' AND COLUMN_NAME = '"
+				   + (constraint.Fields[0] as FieldMappingItem)
+				   .MappedColumnName
+				   + "'").Length <= 0)
+			{
+				return;
+			}
+			if(rows.Length == 0)
+			{
+				// constraint was not found in the database at all
+				var result = new SchemaDbCompareResult
+				{
+					ResultType = DbCompareResultType
+						.MissingInDatabase,
+					ItemName = ConstraintName(
+						table, constraint),
+					SchemaItem = table,
+					SchemaItemType = typeof(DataEntityConstraint),
+					Script = ((AbstractSqlCommandGenerator)DbDataAdapterFactory)
+						.AddForeignKeyConstraintDdl(table, constraint)
+				};
+				results.Add(result);
+			}
+			else
+			{
+				var constraintEqual = true;
+				// constraint found in database,
+				// we check if it has the same fields
+				foreach(IDataEntityColumn column in constraint.Fields)
+				{
+					if(!(column is FieldMappingItem fieldMappingItem))
+					{
+						// one of the columns is not a physical column
+						constraintEqual = false;
+						break;
+					}
+					if(!(column.ForeignKeyField 
+						   is FieldMappingItem foreignKeyField))
+					{
+						continue;
+					}
+					string primaryKey = foreignKeyField.MappedColumnName;
+					string foreignKey = fieldMappingItem.MappedColumnName;
+					var foundPair = false;
+					for(var i = 1; i < 17; i++)
+					{
+						if((rows[0]["cKeyCol" + i] != DBNull.Value) 
+						   && ((string)rows[0]["cKeyCol" + i] == foreignKey) 
+						   && ((string)rows[0]["cRefCol" + i] == primaryKey))
+						{
+							foundPair = true;
+							break;
+						}
+					}
+					// if pair was found,
+					// we set constraint to equal
+					if(!foundPair)
+					{
+						constraintEqual = false;
+						break;
+					}
+				}
+				if(!constraintEqual)
+				{
+					// constraint found but different
+					var result = new SchemaDbCompareResult
+					{
+						ResultType = DbCompareResultType
+							.ExistingButDifferent,
+						ItemName = "FK_" 
+								   + table.MappedObjectName 
+								   + "_" 
+								   + (constraint.Fields[0] as FieldMappingItem)
+									   .MappedColumnName 
+								   + "_" 
+								   + (constraint.ForeignEntity 
+									   as TableMappingItem).MappedObjectName,
+						SchemaItem = table,
+						SchemaItemType = typeof(
+							DataEntityConstraint)
+					};
+					results.Add(result);
+				}
+			}
         }
 
         internal abstract string GetSqlFk();
 
-        private void DoCompareIndex(ArrayList results, ArrayList schemaTables, DataSet indexFields)
+        private void DoCompareIndex(
+	        ArrayList results, ArrayList schemaTables, DataSet indexFields)
         {
-            foreach (TableMappingItem t in schemaTables)
+            foreach(TableMappingItem table in schemaTables)
             {
-                if (t.GenerateDeploymentScript & t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-                {
-                    foreach (DataEntityIndex index in t.EntityIndexes)
-                    {
-                        if (index.GenerateDeploymentScript == false)
-                        {
-                            continue;
-                        }
-                        bool different = false;
-
-                        DataRow[] rows = indexFields.Tables[0].Select("TableName = '" + t.MappedObjectName + "' AND IndexName = '" + index.Name + "'");
-
-                        // for indexes that exist in both schema and database we compare if they are equal
-                        if (rows.Length > 0)
-                        {
-                            // if there is a different number of fields, we consider them non-equal without even checking the details
-                            if (rows.Length != index.ChildItemsByType(DataEntityIndexField.CategoryConst).Count)
-                            {
-                                different = true;
-                            }
-
-                            if (!different)
-                            {
-                                foreach (DataEntityIndexField fld in index.ChildItemsByType(DataEntityIndexField.CategoryConst))
-                                {
-                                    rows = indexFields.Tables[0].Select("TableName = '" + t.MappedObjectName
-                                        + "' AND IndexName = '" + index.Name
-                                        + "' AND ColumnName = '" + (fld.Field as FieldMappingItem).MappedColumnName
-                                        + "' AND OrdinalPosition = " + (fld.OrdinalPosition + 1).ToString()
-                                        + " AND IsDescending = " + (fld.SortOrder == DataEntityIndexSortOrder.Descending ? "1" : "0"));
-
-                                    if (rows.Length == 0)
-                                    {
-                                        different = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (different)
-                            {
-                                // exists in both schema and database, but they are different
-                                SchemaDbCompareResult result = new SchemaDbCompareResult();
-                                result.ResultType = DbCompareResultType.ExistingButDifferent;
-                                result.ItemName = t.MappedObjectName + "." + index.Name;
-                                result.SchemaItem = index;
-                                result.SchemaItemType = typeof(DataEntityIndex);
-                                result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).IndexDefinitionDdl(t, result.SchemaItem as DataEntityIndex, true);
-
-                                results.Add(result);
-                            }
-                        }
-                    }
-                }
+	            if(!table.GenerateDeploymentScript 
+	               || (table.DatabaseObjectType 
+	                   != DatabaseMappingObjectType.Table))
+	            {
+		            continue;
+	            }
+	            foreach(DataEntityIndex index in table.EntityIndexes)
+	            {
+		            if(index.GenerateDeploymentScript == false)
+		            {
+			            continue;
+		            }
+		            var different = false;
+		            DataRow[] rows = indexFields.Tables[0].Select(
+			            "TableName = '" 
+			            + table.MappedObjectName 
+			            + "' AND IndexName = '" 
+			            + index.Name 
+			            + "'");
+		            // for indexes that exist in both schema and database
+		            // we compare if they are equal
+		            if(rows.Length <= 0)
+		            {
+			            continue;
+		            }
+		            // if there is a different number of fields,
+		            // we consider them non-equal without even checking
+		            // the details
+		            if(rows.Length != index.ChildItemsByType(
+			               DataEntityIndexField.CategoryConst).Count)
+		            {
+			            different = true;
+		            }
+		            if(!different)
+		            {
+			            foreach(DataEntityIndexField indexField 
+			                    in index.ChildItemsByType(
+				                    DataEntityIndexField.CategoryConst))
+			            {
+				            rows = indexFields.Tables[0].Select(
+					            "TableName = '" 
+					            + table.MappedObjectName
+					            + "' AND IndexName = '" 
+					            + index.Name
+					            + "' AND ColumnName = '" 
+					            + (indexField.Field as FieldMappingItem)
+					            .MappedColumnName
+					            + "' AND OrdinalPosition = " 
+					            + (indexField.OrdinalPosition + 1)
+					            + " AND IsDescending = " 
+					            + (indexField.SortOrder 
+					               == DataEntityIndexSortOrder.Descending 
+						            ? "1" : "0"));
+				            if(rows.Length == 0)
+				            {
+					            different = true;
+					            break;
+				            }
+			            }
+		            }
+		            if(different)
+		            {
+			            // exists in both schema and database,
+			            // but they are different
+			            var result = new SchemaDbCompareResult
+			            {
+				            ResultType = DbCompareResultType
+					            .ExistingButDifferent,
+				            ItemName = table.MappedObjectName + "." 
+					            + index.Name,
+				            SchemaItem = index,
+				            SchemaItemType = typeof(DataEntityIndex)
+			            };
+			            result.Script = ((AbstractSqlCommandGenerator)
+				            DbDataAdapterFactory).IndexDefinitionDdl(table, 
+				            result.SchemaItem as DataEntityIndex, true);
+			            results.Add(result);
+		            }
+	            }
             }
         }
 
-        internal abstract Hashtable GetDbIndexList(DataSet indexes, Hashtable schemaTableList);
-        internal abstract Hashtable GetSchemaIndexListGenerate(ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaIndexListAll);
+        internal abstract Hashtable GetDbIndexList(
+	        DataSet indexes, Hashtable schemaTableList);
+        internal abstract Hashtable GetSchemaIndexListGenerate(
+	        ArrayList schemaTables, Hashtable dbTableList, 
+	        Hashtable schemaIndexListAll);
         
         internal abstract string GetSqlIndexFields();
         internal abstract string GetSqlIndexes();
 
-        private void DoCompareDatabaseInModel(ArrayList results, Hashtable schemaTableList, Hashtable schemaColumnList, DataSet columns)
+        private void DoCompareDatabaseInModel(
+	        ArrayList results, Hashtable schemaTableList, 
+	        Hashtable schemaColumnList, DataSet columns)
         {
-            AbstractSqlCommandGenerator gen = (AbstractSqlCommandGenerator)this.DbDataAdapterFactory;
-            foreach (DataRow row in columns.Tables[0].Rows)
+            var abstractSqlCommandGenerator 
+	            = (AbstractSqlCommandGenerator)DbDataAdapterFactory;
+            foreach(DataRow row in columns.Tables[0].Rows)
             {
-                string key = row["TABLE_NAME"] + "." + row["COLUMN_NAME"];
-
-                // only if the table exists in the model - otherwise we will be creating the whole table later on
+                var key = row["TABLE_NAME"] + "." + row["COLUMN_NAME"];
+                // only if the table exists in the model,
+                // otherwise we will be creating the whole table later on
                 // so it makes no sense to list all the columns with it
-                if (schemaTableList.ContainsKey(row["TABLE_NAME"]))
+                if(!schemaTableList.ContainsKey(row["TABLE_NAME"]))
                 {
-                    if (schemaColumnList.ContainsKey(key))
-                    {
-                        FieldMappingItem fld = schemaColumnList[key] as FieldMappingItem;
-                        string differenceDescription = "";
-                        if ((string)row["IS_NULLABLE"] == "YES" && fld.AllowNulls == false)
-                        {
-                            differenceDescription =
-                                (differenceDescription == "" ? "" : "; ")
-                                + "AllowNulls: Schema-NO, Database-YES";
-                        }
-                        if ((string)row["IS_NULLABLE"] == "NO" && fld.AllowNulls == true)
-                        {
-                            differenceDescription =
-                                (differenceDescription == "" ? "" : "; ")
-                                + "AllowNulls: Schema-YES, Database-NO";
-                        }
-                        if (CompareType(row, gen.DdlDataType(fld.DataType, fld.MappedDataType).ToUpper()))
-                        {
-								differenceDescription = (differenceDescription == "" ? "" : "; ")
-									+ "DataType: Schema-"
-									+ gen.DdlDataType(fld.DataType, fld.MappedDataType)
-									+ ", Database-" + (string)row["DATA_TYPE"];
-                        }
-                        if (fld.DataType == OrigamDataType.String
-                            && !row.IsNull("CHARACTER_MAXIMUM_LENGTH")
-                            && (int)row["CHARACTER_MAXIMUM_LENGTH"] != fld.DataLength)
-                        {
-                            differenceDescription =
-                                (differenceDescription == "" ? "" : "; ")
-                                + "DataLength: Schema-" + fld.DataLength.ToString()
-                                + ", Database-" + row["CHARACTER_MAXIMUM_LENGTH"].ToString();
-                        }
-                        if (differenceDescription != "")
-                        {
-                            // exists in both schema and database, but they are different
-                            SchemaDbCompareResult result = new SchemaDbCompareResult
-                            {
-                                ResultType = DbCompareResultType.ExistingButDifferent,
-                                ItemName = key,
-                                SchemaItem = fld,
-                                Remark = differenceDescription,
-                                SchemaItemType = typeof(FieldMappingItem),
-                                Script = gen.AlterColumnDdl(fld)
-                            };
-                            results.Add(result);
-                        }
-                    }
-                    else
-                    {
-                        // does not exist in schema
-                        SchemaDbCompareResult result = new SchemaDbCompareResult();
-                        result.ResultType = DbCompareResultType.MissingInSchema;
-                        result.ItemName = key;
-                        result.SchemaItem = null;
-                        result.ParentSchemaItem = schemaTableList[row["TABLE_NAME"]];
-                        result.SchemaItemType = typeof(FieldMappingItem);
-                        results.Add(result);
-                    }
+	                continue;
+                }
+                if(schemaColumnList.ContainsKey(key))
+                {
+	                var fieldMappingItem = schemaColumnList[key] 
+		                as FieldMappingItem;
+	                var differenceDescription = "";
+	                if(((string)row["IS_NULLABLE"] == "YES") 
+	                   && !fieldMappingItem.AllowNulls)
+	                {
+		                differenceDescription 
+			                = (differenceDescription == "" ? "" : "; ") 
+			                  + "AllowNulls: Schema-NO, Database-YES";
+	                }
+	                if(((string)row["IS_NULLABLE"] == "NO") 
+	                   && fieldMappingItem.AllowNulls)
+	                {
+		                differenceDescription 
+			                = (differenceDescription == "" ? "" : "; ") 
+			                  + "AllowNulls: Schema-YES, Database-NO";
+	                }
+	                if(CompareType(row, abstractSqlCommandGenerator
+		                   .DdlDataType(fieldMappingItem.DataType, 
+			                   fieldMappingItem.MappedDataType).ToUpper()))
+	                {
+		                differenceDescription 
+			                = (differenceDescription == "" ? "" : "; ")
+			                  + "DataType: Schema-"
+			                  + abstractSqlCommandGenerator.DdlDataType(
+				                  fieldMappingItem.DataType, 
+				                  fieldMappingItem.MappedDataType)
+			                  + ", Database-" + (string)row["DATA_TYPE"];
+	                }
+	                if((fieldMappingItem.DataType == OrigamDataType.String)
+	                   && !row.IsNull("CHARACTER_MAXIMUM_LENGTH")
+	                   && ((int)row["CHARACTER_MAXIMUM_LENGTH"] 
+	                       != fieldMappingItem.DataLength))
+	                {
+		                differenceDescription 
+			                = (differenceDescription == "" ? "" : "; ") 
+			                  + "DataLength: Schema-" 
+			                  + fieldMappingItem.DataLength 
+			                  + ", Database-" 
+			                  + row["CHARACTER_MAXIMUM_LENGTH"];
+	                }
+	                if(differenceDescription != "")
+	                {
+		                // exists in both schema and database, but they are different
+		                var result = new SchemaDbCompareResult
+		                {
+			                ResultType = DbCompareResultType
+				                .ExistingButDifferent,
+			                ItemName = key,
+			                SchemaItem = fieldMappingItem,
+			                Remark = differenceDescription,
+			                SchemaItemType = typeof(FieldMappingItem),
+			                Script = abstractSqlCommandGenerator.AlterColumnDdl(
+				                fieldMappingItem)
+		                };
+		                results.Add(result);
+	                }
+                }
+                else
+                {
+	                // does not exist in schema
+	                var result = new SchemaDbCompareResult
+	                {
+		                ResultType = DbCompareResultType.MissingInSchema,
+		                ItemName = key,
+		                SchemaItem = null,
+		                ParentSchemaItem = schemaTableList[row[
+			                "TABLE_NAME"]],
+		                SchemaItemType = typeof(FieldMappingItem)
+	                };
+	                results.Add(result);
                 }
             }
         }
@@ -2112,11 +2383,13 @@ namespace Origam.DA.Service
         private bool CompareType(DataRow row, string modelType)
         {
 			string columnType = GetColumnType(row);
-			if (columnType.Contains("TIMESTAMP") && modelType.Contains("TIMESTAMP"))
+			if(columnType.Contains("TIMESTAMP") 
+			   && modelType.Contains("TIMESTAMP"))
 			{
 				return false;
 			}
-			if(columnType.Contains("CHARACTER VARYING") && modelType.Contains("VARCHAR"))
+			if(columnType.Contains("CHARACTER VARYING") 
+			   && modelType.Contains("VARCHAR"))
             {
 				return false;
             }
@@ -2125,96 +2398,119 @@ namespace Origam.DA.Service
 
         private string GetColumnType(DataRow row)
         {
-			StringBuilder finalDataType = new StringBuilder();
-			finalDataType.Append((string)row["DATA_TYPE"]);
-            int length = Convert.IsDBNull(row["CHARACTER_MAXIMUM_LENGTH"]) ? 0 : (int)row["CHARACTER_MAXIMUM_LENGTH"];
-			if (length ==-1)
+			var stringBuilder = new StringBuilder();
+			stringBuilder.Append((string)row["DATA_TYPE"]);
+            int length = Convert.IsDBNull(row["CHARACTER_MAXIMUM_LENGTH"]) 
+	            ? 0 : (int)row["CHARACTER_MAXIMUM_LENGTH"];
+			if(length ==-1)
 			{
-				finalDataType.Append("(MAX)");
+				stringBuilder.Append("(MAX)");
             }
-			return finalDataType.ToString().ToUpper();
+			return stringBuilder.ToString().ToUpper();
 		}
 
-        private void DoCompareModelInDatabase(ArrayList results, ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaColumnList, DataSet columns)
+        private void DoCompareModelInDatabase(
+	        ArrayList results, ArrayList schemaTables, Hashtable dbTableList, 
+	        Hashtable schemaColumnList, DataSet columns)
         {
-            foreach (TableMappingItem t in schemaTables)
+            foreach(TableMappingItem table in schemaTables)
             {
-                // only if the table exists in the database - otherwise we will be creating the whole table later on
+	            // only if the table exists in the database,
+	            // otherwise we will be creating the whole table later on
                 // so it makes no sense to list all the columns with it
-                if (dbTableList.ContainsKey(t.MappedObjectName))
+                if(!dbTableList.ContainsKey(table.MappedObjectName))
                 {
-                    foreach (IDataEntityColumn col in t.EntityColumns)
-                    {
-                        if (col is FieldMappingItem)
-                        {
-                            string key = t.MappedObjectName + "." + (col as FieldMappingItem).MappedColumnName;
-                            if (!schemaColumnList.ContainsKey(key))
-                            {
-                                schemaColumnList.Add(key, col);
-                            }
-
-                            if (columns.Tables[0].Select("TABLE_NAME = '" + t.MappedObjectName + "' AND COLUMN_NAME = '" + (col as FieldMappingItem).MappedColumnName + "'").Length == 0)
-                            {
-                                // column does not exist in the database
-                                SchemaDbCompareResult result = new SchemaDbCompareResult
-                                {
-                                    ResultType = DbCompareResultType.MissingInDatabase,
-                                    ItemName = key,
-                                    SchemaItem = col,
-                                    SchemaItemType = typeof(FieldMappingItem)
-                                };
-                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table)
-                                {
-                                    result.Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator).AddColumnDdl(col as FieldMappingItem);
-                                }
-                                else
-                                {
-                                    result.Remark = ResourceUtils.GetString("ViewCantBeScripted");
-                                }
-                                results.Add(result);
-                                // foreign key
-                                DataEntityConstraint fk = col.ForeignKeyConstraint;
-                                if (t.DatabaseObjectType == DatabaseMappingObjectType.Table
-                                    && fk != null)
-                                {
-                                    result = new SchemaDbCompareResult
-                                    {
-                                        ResultType = DbCompareResultType.MissingInDatabase,
-                                        ItemName = ConstraintName(t, fk),
-                                        SchemaItem = col,
-                                        SchemaItemType = typeof(DataEntityConstraint),
-                                        Script = (this.DbDataAdapterFactory as AbstractSqlCommandGenerator)
-                                        .AddForeignKeyConstraintDdl(t, fk)
-                                    };
-                                    results.Add(result);
-                                }
-                            }
-                        }
-                    }
+	                continue;
+                }
+                foreach(IDataEntityColumn column in table.EntityColumns)
+                {
+	                if(!(column is FieldMappingItem fieldMappingItem))
+	                {
+		                continue;
+	                }
+	                var key = table.MappedObjectName + "." 
+		                + fieldMappingItem.MappedColumnName;
+	                if(!schemaColumnList.ContainsKey(key))
+	                {
+		                schemaColumnList.Add(key, column);
+	                }
+	                if(columns.Tables[0].Select(
+			                   "TABLE_NAME = '" 
+			                   + table.MappedObjectName 
+			                   + "' AND COLUMN_NAME = '" 
+			                   + fieldMappingItem.MappedColumnName 
+			                   + "'")
+		                   .Length != 0)
+	                {
+		                continue;
+	                }
+	                // column does not exist in the database
+	                var result = new SchemaDbCompareResult
+	                {
+		                ResultType = DbCompareResultType.MissingInDatabase,
+		                ItemName = key,
+		                SchemaItem = column,
+		                SchemaItemType = typeof(FieldMappingItem)
+	                };
+	                if(table.DatabaseObjectType 
+	                   == DatabaseMappingObjectType.Table)
+	                {
+		                result.Script = ((AbstractSqlCommandGenerator)
+			                DbDataAdapterFactory).AddColumnDdl(
+			                fieldMappingItem);
+	                }
+	                else
+	                {
+		                result.Remark = ResourceUtils.GetString(
+			                "ViewCantBeScripted");
+	                }
+	                results.Add(result);
+	                // foreign key
+	                DataEntityConstraint foreignKeyConstraint 
+		                = column.ForeignKeyConstraint;
+	                if((table.DatabaseObjectType 
+	                    == DatabaseMappingObjectType.Table) 
+	                   && (foreignKeyConstraint != null))
+	                {
+		                result = new SchemaDbCompareResult
+		                {
+			                ResultType = DbCompareResultType.MissingInDatabase,
+			                ItemName = ConstraintName(table, 
+				                foreignKeyConstraint),
+			                SchemaItem = column,
+			                SchemaItemType = typeof(DataEntityConstraint),
+			                Script = ((AbstractSqlCommandGenerator)
+					                DbDataAdapterFactory)
+				                .AddForeignKeyConstraintDdl(
+					                table, foreignKeyConstraint)
+		                };
+		                results.Add(result);
+	                }
                 }
             }
         }
 
         internal abstract string GetAllColumnsSQL();
 
-        private Hashtable getDbTableList()
+        private Hashtable GetDbTableList()
         {
-            DataSet tables = GetData(GetAllTablesSQL());
-            Hashtable dbTableList = new Hashtable();
-            foreach (DataRow row in tables.Tables[0].Rows)
+            DataSet tables = GetData(GetAllTablesSql());
+            var dbTableList = new Hashtable();
+            foreach(DataRow row in tables.Tables[0].Rows)
             {
                 dbTableList.Add(row["TABLE_NAME"], null);
             }
             return dbTableList;
         }
+        
         private Hashtable GetSchemaTableList(ArrayList schemaTables)
         {
-            Hashtable schemaTableList = new Hashtable();
-            foreach (TableMappingItem t in schemaTables)
+            var schemaTableList = new Hashtable();
+            foreach(TableMappingItem table in schemaTables)
             {
-                if (!schemaTableList.Contains(t.MappedObjectName))
+                if(!schemaTableList.Contains(table.MappedObjectName))
                 {
-                    schemaTableList.Add(t.MappedObjectName, t);
+                    schemaTableList.Add(table.MappedObjectName, table);
                 }
             }
             return schemaTableList;
@@ -2222,25 +2518,28 @@ namespace Origam.DA.Service
 
         private ArrayList GetSchemaTables(IPersistenceProvider provider)
         {
-            List<AbstractSchemaItem> entityList = provider.RetrieveListByCategory<AbstractSchemaItem>(AbstractDataEntity.CategoryConst);
-            ArrayList schemaTables = new ArrayList();
-
-            foreach (IDataEntity e in entityList)
+            List<AbstractSchemaItem> entityList = provider
+	            .RetrieveListByCategory<AbstractSchemaItem>(
+		            AbstractDataEntity.CategoryConst);
+            var schemaTables = new ArrayList();
+            foreach(var tableMappingItem 
+                    in entityList.OfType<TableMappingItem>())
             {
-                if (e is TableMappingItem)
-                {
-                    schemaTables.Add(e);
-                }
+	            schemaTables.Add(tableMappingItem);
             }
             return schemaTables;
         }
 
-        private static string ConstraintName(TableMappingItem t, 
+        private static string ConstraintName(TableMappingItem table, 
             DataEntityConstraint constraint)
         {
-            return "FK_" + t.MappedObjectName + "_" 
-                + (constraint.Fields[0] as FieldMappingItem).MappedColumnName 
-                + "_" + (constraint.ForeignEntity as TableMappingItem).MappedObjectName;
+            return 
+	            "FK_" 
+	            + table.MappedObjectName 
+	            + "_" 
+                + ((FieldMappingItem)constraint.Fields[0]).MappedColumnName 
+                + "_" 
+	            + ((TableMappingItem)constraint.ForeignEntity).MappedObjectName;
         }
 
 		private void DoCompare(ArrayList results, Hashtable dbList, 
@@ -2248,17 +2547,20 @@ namespace Origam.DA.Service
             DbCompareResultType direction, Type schemaItemType,
             IPersistenceProvider provider)
 		{
-            switch (direction)
+            switch(direction)
 			{
-                case DbCompareResultType.MissingInDatabase:
+				case DbCompareResultType.MissingInDatabase:
+				{
                     CompareMissingInDatabase(results, dbList, schemaList, 
                         schemaItemType);
                     break;
-
-                case DbCompareResultType.MissingInSchema:
+				}
+				case DbCompareResultType.MissingInSchema:
+				{
                     CompareMissingInModel(results, dbList, schemaList, 
                         columns, schemaItemType, provider);
                     break;
+				}
             }
 		}
 
@@ -2266,132 +2568,141 @@ namespace Origam.DA.Service
             Hashtable schemaList, DataSet columns, Type schemaItemType, 
             IPersistenceProvider provider)
         {
-            AbstractSqlCommandGenerator sqlGenerator =
-                DbDataAdapterFactory as AbstractSqlCommandGenerator;
-            foreach (DictionaryEntry entry in dbList)
+            var sqlGenerator 
+	            = DbDataAdapterFactory as AbstractSqlCommandGenerator;
+            foreach(DictionaryEntry entry in dbList)
             {
-                if (!schemaList.ContainsKey(entry.Key))
-                {
-                    SchemaDbCompareResult result = new SchemaDbCompareResult();
-                    result.ResultType = DbCompareResultType.MissingInSchema;
-                    result.ItemName = (string)entry.Key;
-                    result.ParentSchemaItem = entry.Value;
-                    result.SchemaItemType = schemaItemType;
-                    // generate a model element
-                    if (schemaItemType == typeof(TableMappingItem))
-                    {
-                        ISchemaService schema = ServiceManager.Services.GetService(
-                            typeof(ISchemaService)) as ISchemaService;
-                        TableMappingItem entity = new TableMappingItem();
-                        entity.PersistenceProvider = provider;
-                        entity.SchemaExtensionId = schema.ActiveSchemaExtensionId;
-                        entity.RootProvider = schema.GetProvider(
-                            typeof(EntityModelSchemaItemProvider));
-                        entity.Name = result.ItemName;
-                        foreach (DataRow columnRow in columns.Tables[0].Select(
-                            "TABLE_NAME = '" + entity.Name + "'"))
-                        {
-                            FieldMappingItem field = entity.NewItem(typeof(FieldMappingItem), 
-                                schema.ActiveSchemaExtensionId, null) as FieldMappingItem;
-                            field.Name = (string)columnRow["COLUMN_NAME"];
-                            field.AllowNulls = (string)columnRow["IS_NULLABLE"] == "YES";
-                            // find a specific data type
-                            DatabaseDataTypeSchemaItemProvider dataTypes = schema.GetProvider(
-                                typeof(DatabaseDataTypeSchemaItemProvider)) 
-                                as DatabaseDataTypeSchemaItemProvider;
-                            string dataTypeName = (string)columnRow["DATA_TYPE"];
-                            DatabaseDataType type = dataTypes.FindDataType(dataTypeName);
-                            if (type == null)
-                            {
-                                // if not found, get a generic data type
-                                field.DataType = sqlGenerator.ToOrigamDataType(
-                                        dataTypeName);
-                            }
-                            else
-                            {
-                                field.DataType = type.DataType;
-                                field.MappedDataType = type;
-                            }
-                            if (!columnRow.IsNull("CHARACTER_MAXIMUM_LENGTH"))
-                            {
-                                field.DataLength = (int)columnRow["CHARACTER_MAXIMUM_LENGTH"];
-                            }
-                        }
-                        result.SchemaItem = entity;
-                    }
-                    results.Add(result);
-                }
+	            if(schemaList.ContainsKey(entry.Key))
+	            {
+		            continue;
+	            }
+	            var result = new SchemaDbCompareResult
+	            {
+		            ResultType = DbCompareResultType.MissingInSchema,
+		            ItemName = (string)entry.Key,
+		            ParentSchemaItem = entry.Value,
+		            SchemaItemType = schemaItemType
+	            };
+	            // generate a model element
+	            if(schemaItemType == typeof(TableMappingItem))
+	            {
+		            var schemaService = ServiceManager.Services
+			            .GetService<ISchemaService>();
+		            var entity = new TableMappingItem();
+		            entity.PersistenceProvider = provider;
+		            entity.SchemaExtensionId 
+			            = schemaService.ActiveSchemaExtensionId;
+		            entity.RootProvider = schemaService
+			            .GetProvider<EntityModelSchemaItemProvider>();
+		            entity.Name = result.ItemName;
+		            foreach(DataRow columnRow in columns.Tables[0].Select(
+			                    "TABLE_NAME = '" + entity.Name + "'"))
+		            {
+			            var fieldMappingItem = entity.NewItem<FieldMappingItem>(
+					            schemaService.ActiveSchemaExtensionId, null);
+			            fieldMappingItem.Name 
+				            = (string)columnRow["COLUMN_NAME"];
+			            fieldMappingItem.AllowNulls 
+				            = (string)columnRow["IS_NULLABLE"] == "YES";
+			            // find a specific data type
+			            var dataTypeSchemaItemProvider = schemaService
+				            .GetProvider<DatabaseDataTypeSchemaItemProvider>();
+			            var dataTypeName = (string)columnRow["DATA_TYPE"];
+			            DatabaseDataType databaseDataType 
+				            = dataTypeSchemaItemProvider.FindDataType(
+					            dataTypeName);
+			            if(databaseDataType == null)
+			            {
+				            // if not found, get a generic data type
+				            fieldMappingItem.DataType = sqlGenerator
+					            .ToOrigamDataType(dataTypeName);
+			            }
+			            else
+			            {
+				            fieldMappingItem.DataType 
+					            = databaseDataType.DataType;
+				            fieldMappingItem.MappedDataType 
+					            = databaseDataType;
+			            }
+			            if(!columnRow.IsNull("CHARACTER_MAXIMUM_LENGTH"))
+			            {
+				            fieldMappingItem.DataLength 
+					            = (int)columnRow["CHARACTER_MAXIMUM_LENGTH"];
+			            }
+		            }
+		            result.SchemaItem = entity;
+	            }
+	            results.Add(result);
             }
         }
 
         private void CompareMissingInDatabase(ArrayList results,
             Hashtable dbList, Hashtable schemaList, Type schemaItemType)
         {
-            AbstractSqlCommandGenerator sqlGenerator =
-                DbDataAdapterFactory as AbstractSqlCommandGenerator;
-            foreach (DictionaryEntry entry in schemaList)
+            var sqlGenerator 
+	            = DbDataAdapterFactory as AbstractSqlCommandGenerator;
+            foreach(DictionaryEntry entry in schemaList)
             {
-                bool process = true;
-                if ((entry.Value is TableMappingItem)
-                && (entry.Value as TableMappingItem).GenerateDeploymentScript == false)
-                {
-                    process = false;
-                }
-                if ((entry.Value is DataEntityIndex)
-                && ((((entry.Value as DataEntityIndex).ParentItem
-                    as TableMappingItem).GenerateDeploymentScript
-                == false)
-                || ((entry.Value as DataEntityIndex).GenerateDeploymentScript == false)))
-                {
-                    process = false;
-                }
-                if (!dbList.ContainsKey(entry.Key) & process)
-                {
-                    SchemaDbCompareResult result = new SchemaDbCompareResult();
-                    result.ResultType = DbCompareResultType.MissingInDatabase;
-                    result.ItemName = (string)entry.Key;
-                    result.SchemaItem = (ISchemaItem)entry.Value;
-                    result.ParentSchemaItem = ((ISchemaItem)entry.Value).ParentItem;
-                    result.SchemaItemType = schemaItemType;
-                    if (schemaItemType == typeof(TableMappingItem))
-                    {
-                        if ((result.SchemaItem as TableMappingItem).DatabaseObjectType
-                            == DatabaseMappingObjectType.Table)
-                        {
-                            result.Script = sqlGenerator.TableDefinitionDdl(
-                                result.SchemaItem as TableMappingItem);
-                            result.Script2 = sqlGenerator.ForeignKeyConstraintsDdl(
-                                result.SchemaItem as TableMappingItem);
-                        }
-                        else
-                        {
-                            result.Remark = "View cannot be scripted to the database.";
-                        }
-                    }
-                    if (schemaItemType == typeof(DataEntityIndex))
-                    {
-                        result.Script = sqlGenerator.IndexDefinitionDdl(
-                            result.ParentSchemaItem as IDataEntity,
-                            result.SchemaItem as DataEntityIndex, true);
-                    }
-                    results.Add(result);
-                }
+	            var process 
+		            = !((entry.Value is TableMappingItem tableMappingItem) 
+		                && !tableMappingItem.GenerateDeploymentScript);
+	            if((entry.Value is DataEntityIndex dataEntityIndex) 
+	               && (!((TableMappingItem)dataEntityIndex.ParentItem)
+		                   .GenerateDeploymentScript 
+	                   || !dataEntityIndex.GenerateDeploymentScript))
+	            {
+		            process = false;
+	            }
+	            if(dbList.ContainsKey(entry.Key) || !process)
+	            {
+		            continue;
+	            }
+	            var result = new SchemaDbCompareResult
+	            {
+		            ResultType = DbCompareResultType.MissingInDatabase,
+		            ItemName = (string)entry.Key,
+		            SchemaItem = (ISchemaItem)entry.Value,
+		            ParentSchemaItem = ((ISchemaItem)entry.Value).ParentItem,
+		            SchemaItemType = schemaItemType
+	            };
+	            if(schemaItemType == typeof(TableMappingItem))
+	            {
+		            if(((TableMappingItem)result.SchemaItem).DatabaseObjectType 
+		               == DatabaseMappingObjectType.Table)
+		            {
+			            result.Script = sqlGenerator.TableDefinitionDdl(
+				            result.SchemaItem as TableMappingItem);
+			            result.Script2 = sqlGenerator.ForeignKeyConstraintsDdl(
+				            result.SchemaItem as TableMappingItem);
+		            }
+		            else
+		            {
+			            result.Remark 
+				            = "View cannot be scripted to the database.";
+		            }
+	            }
+	            if(schemaItemType == typeof(DataEntityIndex))
+	            {
+		            result.Script = sqlGenerator.IndexDefinitionDdl(
+			            result.ParentSchemaItem as IDataEntity,
+			            result.SchemaItem as DataEntityIndex, true);
+	            }
+	            results.Add(result);
             }
         }
 
         internal DataSet GetData(string sql)
 		{
-			using(IDbConnection connection = GetConnection(_connectionString))
+			using(IDbConnection connection = GetConnection(connectionString))
 			{
 				connection.Open();
-
 				try
 				{
-					DbDataAdapter adapter = this.DbDataAdapterFactory.GetAdapter(this.DbDataAdapterFactory.GetCommand(sql, connection));
-					DataSet data = new DataSet("SchemaCompare");
-					adapter.Fill(data);
-
-					return data;
+					DbDataAdapter adapter = DbDataAdapterFactory.GetAdapter(
+						DbDataAdapterFactory.GetCommand(sql, connection));
+					var schemaCompareDataset = new DataSet("SchemaCompare");
+					adapter.Fill(schemaCompareDataset);
+					return schemaCompareDataset;
 				}
 				finally
 				{
@@ -2401,84 +2712,86 @@ namespace Origam.DA.Service
 		}
 		#endregion
 
+        
 		#region Private Methods
-		private void AcceptChanges(DataSet dataset, ArrayList changedTables, DataStructureQuery query, string transactionId, IPrincipal userProfile)
+		private void AcceptChanges(DataSet dataset, ArrayList changedTables, 
+			DataStructureQuery query, string transactionId, 
+			IPrincipal userProfile)
 		{
-			// Retrieve actual values and accept changes. Much faster than DataSet.AcceptChanges()
+			// Retrieve actual values and accept changes.
+			// Much faster than DataSet.AcceptChanges()
 			foreach(string tableName in changedTables)
 			{
 				DataTable table = dataset.Tables[tableName];
-
 				int rowCount = table.Rows.Count;
-				DataRow[] rowArray = new DataRow[rowCount];
+				var rowArray = new DataRow[rowCount];
 				table.Rows.CopyTo(rowArray, 0);
-
-				// create dataset of this particular data table for loading new data
+				// create dataset of this particular data table
+				// for loading new data
 				DataSet newData = CloneDatasetForActualRow(table);
-
-				for (int i = 0; i < rowCount; i++)
+				for(var i = 0; i < rowCount; i++)
 				{
 					if(rowArray[i].RowState == DataRowState.Deleted)
 					{
 						rowArray[i].AcceptChanges();
 					}
-					else if(rowArray[i].RowState != DataRowState.Unchanged
-						& rowArray[i].RowState != DataRowState.Detached
-						& rowArray[i].RowState != DataRowState.Deleted)
+					else if(rowArray[i].RowState != DataRowState.Unchanged 
+					        && rowArray[i].RowState != DataRowState.Detached 
+					        && rowArray[i].RowState != DataRowState.Deleted)
 					{
 						if(query.LoadActualValuesAfterUpdate)
 						{
-							Guid entityId = (Guid)table.ExtendedProperties["Id"];
-							DataStructureEntity entity = GetEntity(entityId);
-
-							if(entity.EntityDefinition.GetType() == typeof(TableMappingItem))
+							var entityId = (Guid)table.ExtendedProperties["Id"];
+							var entity = GetEntity(entityId);
+							if(entity.EntityDefinition.GetType() 
+							   == typeof(TableMappingItem))
 							{
 								newData.Clear();
 								LoadActualRow(newData, entityId, query.MethodId,
                                     rowArray[i], userProfile, transactionId);								
 								if(newData.Tables[0].Rows.Count == 0)
 								{
-									throw new Exception(ResourceUtils.GetString("NoDataRowAfterUpdate"));
+									throw new Exception(ResourceUtils
+										.GetString("NoDataRowAfterUpdate"));
 								}
-
-								//								rowArray[i].AcceptChanges();
-
-								ArrayList detachedColumns = new ArrayList();
-								foreach(DataStructureColumn col in entity.Columns)
+								var detachedColumns = new ArrayList();
+								foreach(var column in entity.Columns.Where(
+									        column => !(column.Field 
+										        is FieldMappingItem)))
 								{
-									if(! (col.Field is FieldMappingItem))
-									{
-										detachedColumns.Add(col.Name);
-									}
+									detachedColumns.Add(column.Name);
 								}
-	
 								try
 								{
 									rowArray[i].AcceptChanges();
-
 									rowArray[i].BeginEdit();
-
-									foreach(DataColumn col in table.Columns)
+									foreach(DataColumn column in table.Columns)
 									{
-										if(! detachedColumns.Contains(col.ColumnName) && col.ReadOnly == false)
+										if(detachedColumns.Contains(
+											   column.ColumnName) 
+										   || column.ReadOnly)
 										{
-                                            object newValue = newData.Tables[0].Rows[0][col.ColumnName];
-                                            if (!rowArray[i][col].Equals(newValue))
-                                            {
-                                                rowArray[i][col] = newData.Tables[0].Rows[0][col.ColumnName];
-                                            }
+											continue;
+										}
+										object newValue = newData.Tables[0]
+											.Rows[0][column.ColumnName];
+										if(!rowArray[i][column].Equals(
+											   newValue))
+										{
+											rowArray[i][column] = newData
+												.Tables[0].Rows[0][column
+													.ColumnName];
 										}
 									}
-
 									rowArray[i].EndEdit();
-
 									rowArray[i].AcceptChanges();
 								}
 								catch(Exception ex)
 								{
-									throw new Exception(ResourceUtils.GetString("FailedUpdateRow", rowArray[i].RowState.ToString()), ex);
+									throw new Exception(ResourceUtils.GetString(
+										"FailedUpdateRow", rowArray[i].RowState
+											.ToString()), ex);
 								}
-								//rowArray[i].Table.LoadDataRow(newData.Tables[0].Rows[0].ItemArray, true);
 							}
 							else
 							{
@@ -2494,9 +2807,9 @@ namespace Origam.DA.Service
 			}
 		}
 
-		private DataStructureEntity GetEntity (Guid entityId)
+		private DataStructureEntity GetEntity(Guid entityId)
 		{
-			return this.PersistenceProvider.RetrieveInstance(
+			return PersistenceProvider.RetrieveInstance(
 				typeof(DataStructureEntity), 
 				new ModelElementKey(entityId)
 				) as DataStructureEntity;		
@@ -2504,7 +2817,7 @@ namespace Origam.DA.Service
 
         private IDataEntityColumn GetField(Guid fieldId)
         {
-            return this.PersistenceProvider.RetrieveInstance(
+            return PersistenceProvider.RetrieveInstance(
                 typeof(AbstractSchemaItem),
                 new ModelElementKey(fieldId)
                 ) as IDataEntityColumn;
@@ -2512,17 +2825,17 @@ namespace Origam.DA.Service
         
         private DataSet CloneDatasetForActualRow(DataTable table)
 		{
-			DataSet newData = new DataSet(table.DataSet.DataSetName);
+			var newData = new DataSet(table.DataSet.DataSetName);
 			newData.Tables.Add(new OrigamDataTable(table.TableName));
-			foreach(DataColumn col in table.Columns)
+			foreach(DataColumn column in table.Columns)
 			{
-				DataColumn newCol = new DataColumn(col.ColumnName, col.DataType, "", col.ColumnMapping);
-				newCol.MaxLength = col.MaxLength;
-				newCol.AllowDBNull = col.AllowDBNull;
-				newCol.DefaultValue = col.DefaultValue;
-				newData.Tables[0].Columns.Add(newCol);
+				var newColumn = new DataColumn(column.ColumnName, 
+					column.DataType, "", column.ColumnMapping);
+				newColumn.MaxLength = column.MaxLength;
+				newColumn.AllowDBNull = column.AllowDBNull;
+				newColumn.DefaultValue = column.DefaultValue;
+				newData.Tables[0].Columns.Add(newColumn);
 			}
-			
 			return newData;
 		}
 
@@ -2530,45 +2843,51 @@ namespace Origam.DA.Service
             Guid filterSetId, DataRow row, IPrincipal userProfile,
             string transactionId)
 		{
-			DataStructureQuery newDataQuery = 
-                new DataStructureQuery(entityId, filterSetId);
-			newDataQuery.DataSourceType = QueryDataSourceType.DataStructureEntity;
-			foreach(DataColumn col in row.Table.PrimaryKey)
+			var newDataQuery = new DataStructureQuery(
+				entityId, filterSetId)
 			{
-				if (row.RowState == DataRowState.Deleted)
-				{
-					newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col, DataRowVersion.Original]));
-				}
-				else
-				{
-					newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col]));
-				}
+				DataSourceType = QueryDataSourceType.DataStructureEntity
+			};
+			foreach(DataColumn column in row.Table.PrimaryKey)
+			{
+				newDataQuery.Parameters.Add(
+					row.RowState == DataRowState.Deleted
+					? new QueryParameter(column.ColumnName,
+						row[column, DataRowVersion.Original])
+					: new QueryParameter(column.ColumnName, row[column]));
 			}
-
-			this.LoadDataSet(newDataQuery, userProfile, newData, transactionId);
+			LoadDataSet(newDataQuery, userProfile, newData, transactionId);
 		}
 
 		internal void TraceCommand(IDbCommand command, string transactionId)
 		{
-			if(log.IsDebugEnabled)
+			if(!log.IsDebugEnabled)
 			{
-				IDbCommand processIdCommand = command.Connection.CreateCommand();
-                processIdCommand.CommandText = GetPid(); 
-				processIdCommand.Transaction = command.Transaction;
-				object spid = processIdCommand.ExecuteScalar();
-				log.Debug("SQL Command; Connection ID: " + spid.ToString() + ", Transaction ID: " + transactionId + ", " + command.CommandText); 
-				foreach(IDbDataParameter param in command.Parameters)
+				return;
+			}
+			IDbCommand processIdCommand = command.Connection.CreateCommand();
+			processIdCommand.CommandText = GetPid(); 
+			processIdCommand.Transaction = command.Transaction;
+			object spid = processIdCommand.ExecuteScalar();
+			log.DebugFormat(
+				"SQL Command; Connection ID: {0}, Transaction ID: {1}, {2}", 
+				spid, transactionId, command.CommandText); 
+			foreach(IDbDataParameter parameter in command.Parameters)
+			{
+				var paramValue = "NULL";
+				if(parameter.Value != null)
 				{
-					string paramValue = "NULL";
-					if(param.Value != null) paramValue = param.Value.ToString();
-					log.Debug("Parameter: " + param.ParameterName + " Value: " + paramValue);
+					paramValue = parameter.Value.ToString();
 				}
+				log.DebugFormat("Parameter: {0} Value: {1}", 
+					parameter.ParameterName, paramValue);
 			}
 		}
 
         internal abstract string GetPid();
 
-        private void SetTransaction(DbDataAdapter adapter, IDbTransaction transaction)
+        private void SetTransaction(
+	        DbDataAdapter adapter, IDbTransaction transaction)
 		{
 			((IDbDataAdapter)adapter).SelectCommand.Transaction = transaction;
 			((IDbDataAdapter)adapter).UpdateCommand.Transaction = transaction;
@@ -2576,7 +2895,8 @@ namespace Origam.DA.Service
 			((IDbDataAdapter)adapter).InsertCommand.Transaction = transaction;
 		}
 
-		private void SetConnection(DbDataAdapter adapter, IDbConnection connection)
+		private void SetConnection(
+			DbDataAdapter adapter, IDbConnection connection)
 		{
 			((IDbDataAdapter)adapter).SelectCommand.Connection = connection;
 			((IDbDataAdapter)adapter).UpdateCommand.Connection = connection;
@@ -2584,171 +2904,135 @@ namespace Origam.DA.Service
 			((IDbDataAdapter)adapter).InsertCommand.Connection = connection;
 		}
 
-        private static void CheckDatabaseName(string name)
-        {
-            if (name.Contains("]"))
-            {
-                throw new Exception(string.Format("Invalid database name: {0}", name));
-            }
-        }
         #endregion
 
 		#region IDisposable
 		public override void Dispose()
 		{
-			_connectionString = null;
-			
+			connectionString = null;
 			base.Dispose ();
 		}
 
-        public virtual void CreateSchema(string databaseName)
-        {
-        }
-
-        public void CreateFirstNewWebUser(QueryParameterCollection parameters)
-        {
-			string transaction1 = Guid.NewGuid().ToString();
-			try
-			{
-				ExecuteUpdate(CreateBusinessPartnerInsert(parameters), transaction1);
-				ExecuteUpdate(CreateOrigamUserInsert(parameters), transaction1);
-				ExecuteUpdate(CreateBusinessPartnerRoleIdInsert(parameters),transaction1);
-				ExecuteUpdate(AlreadyCreatedUser(parameters), transaction1);
-				ResourceMonitor.Commit(transaction1);
-			}
-			catch (Exception)
-			{
-				ResourceMonitor.Rollback(transaction1);
-				throw;
-			}
-		}
-		public abstract string CreateBusinessPartnerInsert(QueryParameterCollection parameters);
-		public abstract string CreateOrigamUserInsert(QueryParameterCollection parameters);
-		public abstract string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters);
-		public abstract string AlreadyCreatedUser(QueryParameterCollection parameters);
 		#endregion
 	}
     // version of log4net for NetStandard 1.3 does not have the method
-    // LogManager.GetLogger(string)... have to use the overload with Type as parameter 
+    // LogManager.GetLogger(string)... have to use the overload with Type
+    // as parameter 
     public class WorkflowProfiling
     {
     }
 
     internal class Profiler
+	{
+		private static readonly ILog workflowProfilingLog 
+			= LogManager.GetLogger(typeof(Profiler));
+		private readonly Dictionary<DataStructureEntity,List<double>> 
+			durationsMs = new Dictionary<DataStructureEntity, List<double>>();
+		private readonly List<DataStructureEntity> entityOrder 
+			= new List<DataStructureEntity>();
+		private static string currentTaskId;
+
+		public void LogRememberedExecutionTimes()
 		{
-			private static readonly ILog workflowProfilingLog = 
-				LogManager.GetLogger(typeof(Profiler));
-			
-			private readonly Dictionary<DataStructureEntity,List<double>> durations_ms = 
-				new Dictionary<DataStructureEntity, List<double>>();
-			
-			private readonly List<DataStructureEntity> entityOrder =
-				new List<DataStructureEntity>();
-			
-			private static string currentTaskId;
-
-			public void LogRememberedExecutionTimes()
+			var taskPath = (string)ThreadContext.Properties["currentTaskPath"];
+			var taskId = (string)ThreadContext.Properties["currentTaskId"];
+			var serviceMethodName = (string)ThreadContext
+				.Properties["ServiceMethodName"];
+			if(taskId == null)
 			{
-				string taskPath = (string) ThreadContext.Properties["currentTaskpath"];
-				string taskId = (string) ThreadContext.Properties["currentTaskId"];
-				string serviceMethodName = (string)ThreadContext.Properties["ServiceMethodName"];
-				if (taskId == null) return;
-
-				foreach (var entity in entityOrder)
-				{
-					LogDuration(
-						logEntryType: serviceMethodName,
-						path: $"{taskPath}/Load/{entity.Name}",
-						id: taskId,
-						duration: durations_ms[entity].Sum(),
-						rows: durations_ms[entity].Count);
-				}
-				durations_ms.Clear();
-				entityOrder.Clear();
+				return;
 			}
-
-			public void ExecuteAndRememberLoadDuration(DataStructureEntity entity,
-				 Action actionToExecute)
+			foreach(DataStructureEntity entity in entityOrder)
 			{
-				ExecuteAndTakeLoggingAction(entity, RememberLoadDuration, actionToExecute);
-			}
-
-			public void ExecuteAndLogStoreActionDuration(DataStructureEntity entity,
-			Action actionToExecute)
-			{
-				ExecuteAndTakeLoggingAction(entity, LogStoreDuration, actionToExecute);
-			}
-
-			private static void ExecuteAndTakeLoggingAction(DataStructureEntity entity,
-				Action<DataStructureEntity,Stopwatch> loggingAction, Action actionToExecute)	
-			{
-
-			   if (workflowProfilingLog.IsDebugEnabled)
-				{
-					string taskId = (string) ThreadContext.Properties["currentTaskId"];
-					if (taskId != null)
-					{
-						Stopwatch stopwatch = new Stopwatch();
-						stopwatch.Start();
-
-						actionToExecute.Invoke();
-
-						stopwatch.Stop();
-						
-						loggingAction.Invoke(entity,stopwatch);
-						return;
-					} 
-				} 
-				actionToExecute.Invoke();
-			}
-		
-			private void RememberLoadDuration(DataStructureEntity entity, 
-				Stopwatch stoppedWatch)
-			{
-				string taskId = (string) ThreadContext.Properties["currentTaskId"];
-				if (currentTaskId != taskId)
-				{
-					entityOrder.Clear();
-					durations_ms.Clear();
-					currentTaskId = taskId;
-				}
-				if (!entityOrder.Contains(entity))
-				{
-					entityOrder.Add(entity);
-					durations_ms[entity] = new List<double>();
-				}
-				durations_ms[entity].Add(stoppedWatch.Elapsed.TotalMilliseconds);
-			}
-
-			private static void LogStoreDuration(DataStructureEntity entity, 
-				Stopwatch stoppedWatch)
-			{
-				string taskPath = (string) ThreadContext.Properties["currentTaskpath"];
-				string taskId = (string) ThreadContext.Properties["currentTaskId"];
-				string serviceMethodName = (string)ThreadContext.Properties["ServiceMethodName"];
 				LogDuration(
 					logEntryType: serviceMethodName,
-					path: $"{taskPath}/Store/{entity.Name}", 
-					id: taskId, 
-					duration: stoppedWatch.Elapsed.TotalMilliseconds);
+					path: $"{taskPath}/Load/{entity.Name}",
+					id: taskId,
+					duration: durationsMs[entity].Sum(),
+					rows: durationsMs[entity].Count);
 			}
-
-			private static void LogDuration(string logEntryType, string path, 
-				string id, double duration, int rows=0)
-			{
-				string typeWithDoubleColon = $"{logEntryType}:";
-
-				string message = string.Format(
-					"{0,-18}{1,-80} Id: {2}  Duration: {3,7:0.0} ms",
-					typeWithDoubleColon,
-					path,
-					id,
-					duration);
-				if (rows != 0)
-				{
-					message += " rows: " + rows;
-				}
-				workflowProfilingLog.Debug(message);
-			}
+			durationsMs.Clear();
+			entityOrder.Clear();
 		}
+
+		public void ExecuteAndRememberLoadDuration(DataStructureEntity entity,
+			 Action actionToExecute)
+		{
+			ExecuteAndTakeLoggingAction(entity, RememberLoadDuration, 
+				actionToExecute);
+		}
+
+		public void ExecuteAndLogStoreActionDuration(DataStructureEntity entity,
+		Action actionToExecute)
+		{
+			ExecuteAndTakeLoggingAction(entity, LogStoreDuration, 
+				actionToExecute);
+		}
+
+		private static void ExecuteAndTakeLoggingAction(
+			DataStructureEntity entity, 
+			Action<DataStructureEntity, Stopwatch> loggingAction, 
+			Action actionToExecute)	
+		{
+			if(workflowProfilingLog.IsDebugEnabled)
+			{
+				var taskId = (string)ThreadContext.Properties["currentTaskId"];
+				if(taskId != null)
+				{
+					var stopwatch = new Stopwatch();
+					stopwatch.Start();
+					actionToExecute.Invoke();
+					stopwatch.Stop();
+					loggingAction.Invoke(entity, stopwatch);
+					return;
+				} 
+			} 
+			actionToExecute.Invoke();
+		}
+	
+		private void RememberLoadDuration(DataStructureEntity entity, 
+			Stopwatch stoppedWatch)
+		{
+			var taskId = (string)ThreadContext.Properties["currentTaskId"];
+			if(currentTaskId != taskId)
+			{
+				entityOrder.Clear();
+				durationsMs.Clear();
+				currentTaskId = taskId;
+			}
+			if(!entityOrder.Contains(entity))
+			{
+				entityOrder.Add(entity);
+				durationsMs[entity] = new List<double>();
+			}
+			durationsMs[entity].Add(stoppedWatch.Elapsed.TotalMilliseconds);
+		}
+
+		private static void LogStoreDuration(DataStructureEntity entity, 
+			Stopwatch stoppedWatch)
+		{
+			var taskPath = (string)ThreadContext.Properties["currentTaskPath"];
+			var taskId = (string)ThreadContext.Properties["currentTaskId"];
+			var serviceMethodName =(string)ThreadContext
+				.Properties["ServiceMethodName"];
+			LogDuration(
+				logEntryType: serviceMethodName,
+				path: $"{taskPath}/Store/{entity.Name}", 
+				id: taskId, 
+				duration: stoppedWatch.Elapsed.TotalMilliseconds);
+		}
+
+		private static void LogDuration(string logEntryType, string path, 
+			string id, double duration, int rows=0)
+		{
+			var typeWithDoubleColon = $"{logEntryType}:";
+			var message 
+				= $"{typeWithDoubleColon,-18}{path,-80} Id: {id}  Duration: {duration,7:0.0} ms";
+			if(rows != 0)
+			{
+				message += " rows: " + rows;
+			}
+			workflowProfilingLog.Debug(message);
+		}
+	}
 }

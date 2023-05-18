@@ -1,10 +1,36 @@
-﻿using System.Linq;
+﻿#region license
+/*
+Copyright 2005 - 2021 Advantage Solutions, s. r. o.
+
+This file is part of ORIGAM (http://www.origam.org).
+
+ORIGAM is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ORIGAM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
+using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
+using MoreLinq.Extensions;
 using Origam.Server.Configuration;
 using Origam.Server.Middleware;
+using Origam.Service.Core;
 using SoapCore;
 
 namespace Origam.Server
@@ -31,8 +57,24 @@ namespace Origam.Server
                 FileProvider = new PhysicalFileProvider(pathToClientApp)
             });
         }  
+         public static void UseCustomWebAppExtenders(this IApplicationBuilder app, 
+             IConfiguration configuration,  StartUpConfiguration startUpConfiguration)
+        {
+            foreach (var controllerDllName in startUpConfiguration.ExtensionDlls)
+            {
+                var customControllerAssembly = Assembly.LoadFrom(
+                    controllerDllName);
+                customControllerAssembly
+                    .GetTypes()
+                    .Where(type => typeof(IWebApplicationExtender).IsAssignableFrom(type))
+                    .Select(type => (IWebApplicationExtender)Activator.CreateInstance(type))
+                    .ForEach(extender => extender.Extend(app, configuration));
+            }
+        }  
         
-        public static void UseUserApi(this IApplicationBuilder app, StartUpConfiguration startUpConfiguration)
+        public static void UseUserApi(this IApplicationBuilder app,
+            StartUpConfiguration startUpConfiguration,
+            IdentityServerConfig identityServerConfig)
         {
             app.MapWhen(
                 context => IsPublicUserApiRoute(startUpConfiguration, context),
@@ -43,18 +85,25 @@ namespace Origam.Server
                 context => IsRestrictedUserApiRoute(startUpConfiguration, context), 
                 apiBranch =>
             {
-                apiBranch.UseAuthentication();
-                apiBranch.Use(async (context, next) =>
+                if (identityServerConfig.PrivateApiAuthentication == AuthenticationMethod.Token)
                 {
-                    // Authentication middleware doesn't short-circuit the request itself
-                    // we must do that here.
-                    if (!context.User.Identity.IsAuthenticated)
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
+                }
+                else
+                {
+                    apiBranch.UseAuthentication();
+                    apiBranch.Use(async (context, next) =>
                     {
-                        context.Response.StatusCode = 401;
-                        return;
-                    }
-                    await next.Invoke();
-                });
+                        // Authentication middleware doesn't short-circuit the request itself
+                        // we must do that here.
+                        if (!context.User.Identity.IsAuthenticated)
+                        {
+                            context.Response.StatusCode = 401;
+                            return;
+                        }
+                        await next.Invoke();
+                    }); 
+                }
                 apiBranch.UseMiddleware<UserApiMiddleware>();
             });
         } 
@@ -95,8 +144,8 @@ namespace Origam.Server
                 {
                     apiBranch.UseMiddleware<ReturnOldDotNetAssemblyReferencesInSoapMiddleware>();
                 }
-                apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new BasicHttpBinding());
-                apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new BasicHttpBinding());
+                apiBranch.UseSoapEndpoint<DataServiceSoap>("/soap/DataService", new SoapEncoderOptions());
+                apiBranch.UseSoapEndpoint<WorkflowServiceSoap>("/soap/WorkflowService", new SoapEncoderOptions());
             });
         }
         

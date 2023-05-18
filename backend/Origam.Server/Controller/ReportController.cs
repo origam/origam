@@ -29,6 +29,7 @@ using Microsoft.Net.Http.Headers;
 using Origam.BI;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
+using Origam.Server.Model.Report;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -54,25 +55,11 @@ namespace Origam.Server.Controller
         {
             try
             {
-                var reportRequest = sessionObjects.SessionManager
-                    .GetReportRequest(reportRequestId);
-                if(reportRequest == null)
+                var (reportRequest, report) = GetReport(reportRequestId);
+                if (report == null)
                 {
-                    return NotFound(localizer["ErrorReportNotAvailable"]
-                        .ToString());
+                    return NotFound(localizer["ErrorReportNotAvailable"].ToString());
                 }
-                // log in as the user originally requesting the report
-                // so row level security can be applied 
-                SecurityManager.SetCustomIdentity(
-                    reportRequest.UserName, HttpContext);
-                reportRequest.TimesRequested++;
-                // get report model data
-                var persistenceService = ServiceManager
-                    .Services.GetService<IPersistenceService>();
-                var report = persistenceService.SchemaProvider.RetrieveInstance(
-                    typeof(AbstractReport), 
-                    new ModelElementKey(new Guid(reportRequest.ReportId))) 
-                    as AbstractReport;
                 switch(report)
                 {
                     case WebReport webReport:
@@ -104,6 +91,39 @@ namespace Origam.Server.Controller
                 RemoveRequest(reportRequestId);
             }
         }
+        [HttpGet("[action]")]
+        public IActionResult GetReportInfo(Guid reportRequestId)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                var (_, report) = GetReport(reportRequestId);
+                return report == null
+                    ? (IActionResult)NotFound(localizer["ErrorReportNotAvailable"].ToString())
+                    : Ok(new ReportInfo { IsWebReport = report is WebReport });
+            });
+        }
+        private (ReportRequest, AbstractReport) GetReport(Guid reportRequestId)
+        {
+            ReportRequest reportRequest = sessionObjects.SessionManager
+                .GetReportRequest(reportRequestId);
+            if(reportRequest == null)
+            {
+                return (null, null);
+            }
+            // log in as the user originally requesting the report
+            // so row level security can be applied 
+            SecurityManager.SetCustomIdentity(
+                reportRequest.UserName, HttpContext);
+            reportRequest.TimesRequested++;
+            // get report model data
+            var persistenceService = ServiceManager
+                .Services.GetService<IPersistenceService>();
+            var report = persistenceService.SchemaProvider.RetrieveInstance(
+                    typeof(AbstractReport), 
+                    new ModelElementKey(new Guid(reportRequest.ReportId))) 
+                as AbstractReport;
+            return (reportRequest, report);
+        }
         private IActionResult HandleReport(
             ReportRequest reportRequest, string reportName)
         {
@@ -127,7 +147,7 @@ namespace Origam.Server.Controller
         {
             ReportHelper.PopulateDefaultValues(
                 webReport, reportRequest.Parameters);
-            var url = HttpTools.BuildUrl(
+            var url = HttpTools.Instance.BuildUrl(
                 webReport.Url, reportRequest.Parameters, 
                 webReport.ForceExternalUrl,
                 webReport.ExternalUrlScheme, webReport.IsUrlEscaped);
@@ -145,7 +165,7 @@ namespace Origam.Server.Controller
             {
                 return NotFound();
             }
-            var mimeType = HttpTools.GetMimeType(filePath);
+            var mimeType = HttpTools.Instance.GetMimeType(filePath);
             var fileName = Path.GetFileName(filePath);
             Response.Headers.Add(
                 HeaderNames.ContentDisposition,

@@ -44,7 +44,6 @@ namespace Origam.Schema.EntityModel
 
 		#region Properties
 		OrigamDataType _dataType = OrigamDataType.String;
-		[EntityColumn("I01")] 
 		[RefreshProperties(RefreshProperties.Repaint)]
 		[NotNullModelElementRule()]
 		[Category("Mapping")]
@@ -64,7 +63,6 @@ namespace Origam.Schema.EntityModel
 		}
 
         string _mappedDatabaseTypeName = "";
-		[EntityColumn("SS01")]
         [Category("Mapping")]
         [Description("Name of the data type as used by the current database engine.")]
         [DisplayName("Database Specific Data Type")]
@@ -90,7 +88,6 @@ namespace Origam.Schema.EntityModel
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

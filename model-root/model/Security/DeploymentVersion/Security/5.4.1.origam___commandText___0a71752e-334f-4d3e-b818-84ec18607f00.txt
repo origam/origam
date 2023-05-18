@@ -1,0 +1,12 @@
+﻿CREATE TABLE [OrigamIdentityGrant] (
+	[Key] NVarChar(100) PRIMARY KEY NONCLUSTERED,
+	[ClientId] NVarChar(100) NULL,
+	[SessionId] NVarChar(100) NULL,
+	[Expiration] DateTime NULL,
+	[Type] NVarChar(100) NULL,
+	[Data] NVarChar(2000) NULL,
+	[SubjectId] NVarChar(100) NULL,
+	[CreationTime] DateTime NOT NULL);
+CREATE  INDEX  [ClientId] ON [OrigamIdentityGrant] ([ClientId] ASC);
+CREATE  INDEX  [TypeIndex] ON [OrigamIdentityGrant] ([Type] ASC);
+CREATE  INDEX  [SubjectIdIndex] ON [OrigamIdentityGrant] ([SubjectId] ASC);

@@ -32,39 +32,25 @@ namespace Origam.Gui.Win.Commands
 	{
 		public override void Run()
 		{
-			WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-			IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+			var schemaService = ServiceManager.Services.GetService<WorkbenchSchemaService>();
+			DeploymentVersion version = (Owner as DeploymentVersion)!;
 
-			if (_schemaService.IsSchemaChanged &&
-			    _persistence is PersistenceService)
+			var originalVersion = schemaService.ActiveExtension.VersionString;
+			try
 			{
-				throw new Exception(
-					"Model not saved. Please, save the model before setting the version.");
+				schemaService.ActiveExtension.VersionString = version.VersionString;
+				Origam.Workbench.Commands.DeployVersion cmd3 =
+					new Origam.Workbench.Commands.DeployVersion();
+				cmd3.Run();
 			}
-
-			DeploymentVersion version = this.Owner as DeploymentVersion;
-
-			Package ext = _persistence.SchemaProvider.RetrieveInstance(typeof(Package), _schemaService.ActiveExtension.PrimaryKey) as Package;
-
-			ext.VersionString = version.VersionString;
-			ext.Persist();
-			_schemaService.ActiveExtension.Refresh();
-
-			IDatabasePersistenceProvider dbProvider = _persistence.SchemaProvider as IDatabasePersistenceProvider;
-			IDatabasePersistenceProvider dbListProvider = _persistence.SchemaListProvider as IDatabasePersistenceProvider;
-			if(dbProvider != null)
+			catch
 			{
-				dbProvider.Update(null);
+				schemaService.ActiveExtension.VersionString = originalVersion;
+				throw;
 			}
-			if(dbListProvider != null)
-			{
-				dbListProvider.Refresh(false, null);
-			}
-
-			_schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
-			_schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
-			Origam.Workbench.Commands.DeployVersion cmd3 = new Origam.Workbench.Commands.DeployVersion();
-			cmd3.Run();
+			schemaService.ActiveExtension.Persist();
+			schemaService.SchemaBrowser.EbrSchemaBrowser.RefreshItem(version.RootProvider);
+			schemaService.SchemaBrowser.EbrSchemaBrowser.SelectItem(version);
 		}
 	}
 }

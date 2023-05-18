@@ -45,6 +45,8 @@ namespace Origam.Workbench.PropertyGrid
         private static readonly Image UIItemEditImage =
             Properties.Resources.Editor_8x;
 
+        public event EventHandler LinkClicked;
+
         public PropertyGridEx()
         {
             Site = new SimpleSiteImpl();
@@ -53,7 +55,7 @@ namespace Origam.Workbench.PropertyGrid
             ((SimpleSiteImpl)Site).AddService<IPropertyValueUIService>(svc);
         }
 
-        static void VerifyDataErrorInfo(ITypeDescriptorContext context,
+        void VerifyDataErrorInfo(ITypeDescriptorContext context,
             PropertyDescriptor propDesc, ArrayList valueUIItemList)
         {
             foreach (var item in propDesc.Attributes)
@@ -73,32 +75,43 @@ namespace Origam.Workbench.PropertyGrid
             var element = propDesc.GetValue(context.Instance) as AbstractSchemaItem;
             if (element != null)
             {
+                var editHandler = new ModelElementEditHandler();
+                editHandler.LinkClicked += (sender, args) =>
+                    LinkClicked?.Invoke(this, EventArgs.Empty);
                 valueUIItemList.Add(new
                     PropertyValueUIItem(UIItemEditImage,
-                    new PropertyValueUIItemInvokeHandler(ModelElementEditHandler), "Double click to open " + element.Path));
+                    editHandler.Run, "Double click to open " + element.Path));
             }
         }
 
-        private static void ModelElementEditHandler(ITypeDescriptorContext context,
-            PropertyDescriptor descriptor, PropertyValueUIItem invokedItem)
+        class ModelElementEditHandler
         {
-            try
+            public event EventHandler LinkClicked;
+
+            public void Run(ITypeDescriptorContext context,
+                PropertyDescriptor descriptor, PropertyValueUIItem invokedItem)
             {
-                // navigate in model browser
-                var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-                schemaBrowser.EbrSchemaBrowser.SelectItem(descriptor.GetValue(context.Instance) as AbstractSchemaItem);
-                ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
-                cmd.Run();
-                // edit
-                EditSchemaItem cmdEdit = new Commands.EditSchemaItem();
-                cmdEdit.Owner = descriptor.GetValue(context.Instance);
-                cmdEdit.Run();
+                try
+                {
+                    // navigate in model browser
+                    var schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+                    schemaBrowser.EbrSchemaBrowser.SelectItem(descriptor.GetValue(context.Instance) as AbstractSchemaItem);
+                    ViewSchemaBrowserPad cmd = new ViewSchemaBrowserPad();
+                    cmd.Run();
+                    // edit
+                    EditSchemaItem cmdEdit = new Commands.EditSchemaItem();
+                    cmdEdit.Owner = descriptor.GetValue(context.Instance);
+                    cmdEdit.Run();
+                    LinkClicked?.Invoke(this, EventArgs.Empty);
+                }
+                catch (Exception ex)
+                {
+                    Origam.UI.AsMessageBox.ShowError(null, ex.Message, "Error", ex);
+                }
             }
-            catch (Exception ex)
-            {
-                Origam.UI.AsMessageBox.ShowError(null, ex.Message, "Error", ex);
-            }
+            
         }
+
 
         internal void SetSplitter()
         {

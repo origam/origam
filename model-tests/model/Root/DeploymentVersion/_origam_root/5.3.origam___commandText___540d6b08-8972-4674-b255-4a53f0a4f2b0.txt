@@ -1,0 +1,10 @@
+﻿CREATE TABLE [WorkQueueRetryType_l10n] (
+	[refWorkQueueRetryTypeId] UniqueIdentifier NOT NULL,
+	[Name] NVarChar(200) NOT NULL,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdated] DateTime NULL,
+	[refLanguageId] UniqueIdentifier NOT NULL);
+CREATE UNIQUE  INDEX  [ix_unq_WorkQueueRetryType] ON [WorkQueueRetryType_l10n] ([refWorkQueueRetryTypeId] ASC, [refLanguageId] ASC);

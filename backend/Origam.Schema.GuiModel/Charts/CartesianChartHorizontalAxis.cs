@@ -48,7 +48,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private string _field = "";
 		[Category("Field")]
-		[EntityColumn("SS01"), StringNotEmptyModelElementRule()]
+		[StringNotEmptyModelElementRule()]
         [XmlAttribute("field")]
 		public string Field
 		{
@@ -64,7 +64,7 @@ namespace Origam.Schema.GuiModel
 
 		private string _caption = "";
 		[Category("Axis")]
-		[EntityColumn("SS02"), Localizable(true)]
+		[Localizable(true)]
         [XmlAttribute("label")]
 		public string Caption
 		{
@@ -80,8 +80,7 @@ namespace Origam.Schema.GuiModel
 
 		private ChartAggregationType _aggregationType = ChartAggregationType.Distinct;
 		[Category("Limits"), DefaultValue(ChartAggregationType.Distinct)]
-		[EntityColumn("I01")]
-        [XmlAttribute("aggregationType")]
+		[XmlAttribute("aggregationType")]
         public ChartAggregationType AggregationType
 		{
 			get
@@ -94,7 +93,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get

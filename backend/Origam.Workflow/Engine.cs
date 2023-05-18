@@ -61,6 +61,7 @@ namespace Origam.Workflow
 		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 		private Exception _exception;
 		private Exception _caughtException;
+		private readonly WorkFlowStackTrace workflowStackTrace = new();
         public Boolean Trace { get; set; } = false;
         private readonly OperationTimer localOperationTimer = new OperationTimer();
 
@@ -473,7 +474,7 @@ namespace Origam.Workflow
 				Hashtable stores = new Hashtable();
 
 				// Initialize RuleEngine for this session
-				_ruleEngine = new RuleEngine(stores, this.TransactionId, WorkflowInstanceId);
+				_ruleEngine = RuleEngine.Create(stores, this.TransactionId, WorkflowInstanceId);
 
 				foreach (IContextStore store in this.WorkflowBlock.ChildItemsByType(
 					ContextStore.CategoryConst))
@@ -625,7 +626,7 @@ namespace Origam.Workflow
 							log.Debug("---------------------------------------------------------------------------------------");
 							log.Debug("Starting " + engineTask.GetType().Name + ": " + currentModelStep?.Name);
 						}
-
+						workflowStackTrace.RecordStepStart(WorkflowBlock.Name, currentModelStep?.Name);
 						SetStepStatus(currentModelStep, WorkflowStepResult.Running);
 						engineTask.Finished += new WorkflowEngineTaskFinished(engineTask_Finished);
 						engineTask.Execute();
@@ -733,7 +734,7 @@ namespace Origam.Workflow
 
             if (log.IsErrorEnabled)
             {
-	            log.LogOrigamError(ex.Message, ex);
+	            log.LogOrigamError($"{ex.Message}\n{workflowStackTrace}", ex);
             }
 
 			FinishWorkflow(ex);
@@ -1242,7 +1243,7 @@ namespace Origam.Workflow
 								throw new Exception(DebugClass.ListRowErrors(xmlDataDoc.DataSet), ex);
 							}
 
-							object profileId = this.RuleEngine.ActiveProfileGuId();
+							object profileId = SecurityManager.CurrentUserProfile().Id;
 
 							foreach(DataTable t in xmlDataDoc.DataSet.Tables)
 							{

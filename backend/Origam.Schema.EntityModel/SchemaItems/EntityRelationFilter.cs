@@ -46,7 +46,7 @@ namespace Origam.Schema.EntityModel
 		public EntityRelationFilter(Key primaryKey) : base(primaryKey)	{}
 
 		#region Properties
-		[EntityColumn("G01")]  
+
 		public Guid FilterId;
 
 		[TypeConverter(typeof(RelationFilterConverter))]
@@ -89,8 +89,7 @@ namespace Origam.Schema.EntityModel
 				return "5";
 			}
 		}
-
-		[EntityColumn("ItemType")]
+		
 		public override string ItemType
 		{
 			get

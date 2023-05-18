@@ -45,7 +45,7 @@ namespace Origam.Workflow.WorkQueue {
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public WorkQueueData() {
             this.BeginInit();
             this.InitClass();
@@ -56,7 +56,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         protected WorkQueueData(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
@@ -104,7 +104,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public WorkQueueDataTable WorkQueue {
@@ -114,7 +114,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public WorkQueueCommandDataTable WorkQueueCommand {
@@ -124,7 +124,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public WorkQueueNotificationDataTable WorkQueueNotification {
@@ -134,7 +134,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public WorkQueueNotificationContact_SendersDataTable WorkQueueNotificationContact_Senders {
@@ -144,7 +144,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
         public WorkQueueNotificationContact_RecipientsDataTable WorkQueueNotificationContact_Recipients {
@@ -154,7 +154,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.BrowsableAttribute(true)]
         [global::System.ComponentModel.DesignerSerializationVisibilityAttribute(global::System.ComponentModel.DesignerSerializationVisibility.Visible)]
         public override global::System.Data.SchemaSerializationMode SchemaSerializationMode {
@@ -167,7 +167,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.DesignerSerializationVisibilityAttribute(global::System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public new global::System.Data.DataTableCollection Tables {
             get {
@@ -176,7 +176,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.DesignerSerializationVisibilityAttribute(global::System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public new global::System.Data.DataRelationCollection Relations {
             get {
@@ -185,7 +185,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         protected override void InitializeDerivedDataSet() {
             this.BeginInit();
             this.InitClass();
@@ -193,7 +193,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public override global::System.Data.DataSet Clone() {
             WorkQueueData cln = ((WorkQueueData)(base.Clone()));
             cln.InitVars();
@@ -202,19 +202,19 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         protected override bool ShouldSerializeTables() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         protected override bool ShouldSerializeRelations() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         protected override void ReadXmlSerializable(global::System.Xml.XmlReader reader) {
             if ((this.DetermineSchemaSerializationMode(reader) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 this.Reset();
@@ -251,7 +251,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         protected override global::System.Xml.Schema.XmlSchema GetSchemaSerializable() {
             global::System.IO.MemoryStream stream = new global::System.IO.MemoryStream();
             this.WriteXmlSchema(new global::System.Xml.XmlTextWriter(stream, null));
@@ -260,13 +260,13 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         internal void InitVars() {
             this.InitVars(true);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         internal void InitVars(bool initTable) {
             this.tableWorkQueue = ((WorkQueueDataTable)(base.Tables["WorkQueue"]));
             if ((initTable == true)) {
@@ -305,11 +305,11 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void InitClass() {
             this.DataSetName = "WorkQueueData";
             this.Prefix = "";
-            this.Locale = new global::System.Globalization.CultureInfo("cs-CZ");
+            this.Locale = new global::System.Globalization.CultureInfo("en-US");
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
             this.tableWorkQueue = new WorkQueueDataTable();
@@ -330,7 +330,7 @@ namespace Origam.Workflow.WorkQueue {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
-            fkc = new global::System.Data.ForeignKeyConstraint("FK_WorkQueue1", new global::System.Data.DataColumn[] {
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_WorkQueue", new global::System.Data.DataColumn[] {
                         this.tableWorkQueue.IdColumn}, new global::System.Data.DataColumn[] {
                         this.tableWorkQueueNotification.refWorkQueueIdColumn});
             this.tableWorkQueueNotification.Constraints.Add(fkc);
@@ -344,7 +344,7 @@ namespace Origam.Workflow.WorkQueue {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
-            fkc = new global::System.Data.ForeignKeyConstraint("FK_WorkQueueNotification1", new global::System.Data.DataColumn[] {
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_WorkQueueNotification", new global::System.Data.DataColumn[] {
                         this.tableWorkQueueNotification.IdColumn}, new global::System.Data.DataColumn[] {
                         this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationIdColumn});
             this.tableWorkQueueNotificationContact_Recipients.Constraints.Add(fkc);
@@ -374,37 +374,37 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private bool ShouldSerializeWorkQueue() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private bool ShouldSerializeWorkQueueCommand() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private bool ShouldSerializeWorkQueueNotification() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private bool ShouldSerializeWorkQueueNotificationContact_Senders() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private bool ShouldSerializeWorkQueueNotificationContact_Recipients() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void SchemaChanged(object sender, global::System.ComponentModel.CollectionChangeEventArgs e) {
             if ((e.Action == global::System.ComponentModel.CollectionChangeAction.Remove)) {
                 this.InitVars();
@@ -412,7 +412,7 @@ namespace Origam.Workflow.WorkQueue {
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
             WorkQueueData ds = new WorkQueueData();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
@@ -458,19 +458,19 @@ namespace Origam.Workflow.WorkQueue {
             return type;
         }
         
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void WorkQueueRowChangeEventHandler(object sender, WorkQueueRowChangeEvent e);
         
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void WorkQueueCommandRowChangeEventHandler(object sender, WorkQueueCommandRowChangeEvent e);
         
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void WorkQueueNotificationRowChangeEventHandler(object sender, WorkQueueNotificationRowChangeEvent e);
         
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void WorkQueueNotificationContact_SendersRowChangeEventHandler(object sender, WorkQueueNotificationContact_SendersRowChangeEvent e);
         
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void WorkQueueNotificationContact_RecipientsRowChangeEventHandler(object sender, WorkQueueNotificationContact_RecipientsRowChangeEvent e);
         
         /// <summary>
@@ -480,80 +480,96 @@ namespace Origam.Workflow.WorkQueue {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class WorkQueueDataTable : global::System.Data.TypedTableBase<WorkQueueRow> {
             
-            private global::System.Data.DataColumn columnCntExpired;
+            private global::System.Data.DataColumn columnCntTotal;
             
-            private global::System.Data.DataColumn columnrefCreationOrigamStateMachineEventTypeId;
+            private global::System.Data.DataColumn columnIsMessageCountDisplayed;
             
-            private global::System.Data.DataColumn columnIsErrorQueue;
+            private global::System.Data.DataColumn columnRemovalNewValue;
             
-            private global::System.Data.DataColumn columnCreationCondition;
+            private global::System.Data.DataColumn columnCreationOldValue;
             
-            private global::System.Data.DataColumn columnrefWorkQueueExternalSourceTypeId;
+            private global::System.Data.DataColumn columnRoles;
             
             private global::System.Data.DataColumn columnWorkQueueClass;
             
             private global::System.Data.DataColumn columnExternalSourceState;
             
-            private global::System.Data.DataColumn columnRoles;
+            private global::System.Data.DataColumn columnMaxRetries;
             
-            private global::System.Data.DataColumn columnApiAccessRoles;
+            private global::System.Data.DataColumn columnRemovalOldValue;
             
-            private global::System.Data.DataColumn columnRemovalFieldName;
+            private global::System.Data.DataColumn columnEnableThrottling;
             
-            private global::System.Data.DataColumn columnRecordUpdated;
+            private global::System.Data.DataColumn columnIsErrorQueue;
             
-            private global::System.Data.DataColumn columnRecordCreated;
+            private global::System.Data.DataColumn columnName;
+            
+            private global::System.Data.DataColumn columnCreationCondition;
+            
+            private global::System.Data.DataColumn columnExternalSourcePassword;
             
             private global::System.Data.DataColumn columnIsActive;
             
             private global::System.Data.DataColumn columnSelected;
             
-            private global::System.Data.DataColumn columnRecordCreatedBy;
-            
-            private global::System.Data.DataColumn columnName;
-            
-            private global::System.Data.DataColumn columnId;
+            private global::System.Data.DataColumn columnRecordCreated;
             
             private global::System.Data.DataColumn columnRecordUpdatedBy;
             
-            private global::System.Data.DataColumn columnCreationOldValue;
-            
-            private global::System.Data.DataColumn columnExternalSourceLastTime;
-            
-            private global::System.Data.DataColumn columnExternalSourceLastMessage;
-            
-            private global::System.Data.DataColumn columnRemovalCondition;
-            
-            private global::System.Data.DataColumn columnCntToMe;
-            
-            private global::System.Data.DataColumn columnRemovalNewValue;
-            
-            private global::System.Data.DataColumn columnrefRemovalOrigamStateMachineEventTypeId;
-            
-            private global::System.Data.DataColumn columnCntTotal;
-            
-            private global::System.Data.DataColumn columnExternalSourceUserName;
-            
-            private global::System.Data.DataColumn columnRemovalOldValue;
-            
-            private global::System.Data.DataColumn columnIsMessageCountDisplayed;
-            
-            private global::System.Data.DataColumn columnCreationNewValue;
-            
-            private global::System.Data.DataColumn columnCreationFieldName;
-            
-            private global::System.Data.DataColumn columnCntFromMe;
-            
-            private global::System.Data.DataColumn columnExternalSourceConnection;
-            
-            private global::System.Data.DataColumn columnExternalSourcePassword;
+            private global::System.Data.DataColumn columnId;
             
             private global::System.Data.DataColumn columnReverseLookupFieldValues;
             
+            private global::System.Data.DataColumn columnCreationFieldName;
+            
+            private global::System.Data.DataColumn columnrefCreationOrigamStateMachineEventTypeId;
+            
+            private global::System.Data.DataColumn columnQueueProcessor;
+            
+            private global::System.Data.DataColumn columnCntFromMe;
+            
+            private global::System.Data.DataColumn columnCntToMe;
+            
+            private global::System.Data.DataColumn columnCntExpired;
+            
+            private global::System.Data.DataColumn columnThrottlingIntervalSeconds;
+            
+            private global::System.Data.DataColumn columnRemovalFieldName;
+            
+            private global::System.Data.DataColumn columnrefRemovalOrigamStateMachineEventTypeId;
+            
+            private global::System.Data.DataColumn columnExternalSourceLastTime;
+            
+            private global::System.Data.DataColumn columnrefWorkQueueRetryTypeId;
+            
+            private global::System.Data.DataColumn columnThrottlingItemsPerInterval;
+            
+            private global::System.Data.DataColumn columnRetryIntervalSeconds;
+            
             private global::System.Data.DataColumn columnReferenceCode;
             
+            private global::System.Data.DataColumn columnExponentialRetryBase;
+            
+            private global::System.Data.DataColumn columnCreationNewValue;
+            
+            private global::System.Data.DataColumn columnExternalSourceConnection;
+            
+            private global::System.Data.DataColumn columnRemovalCondition;
+            
+            private global::System.Data.DataColumn columnExternalSourceUserName;
+            
+            private global::System.Data.DataColumn columnExternalSourceLastMessage;
+            
+            private global::System.Data.DataColumn columnApiAccessRoles;
+            
+            private global::System.Data.DataColumn columnrefWorkQueueExternalSourceTypeId;
+            
+            private global::System.Data.DataColumn columnRecordCreatedBy;
+            
+            private global::System.Data.DataColumn columnRecordUpdated;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueDataTable() {
                 this.TableName = "WorkQueue";
                 this.BeginInit();
@@ -562,7 +578,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
@@ -579,214 +595,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected WorkQueueDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CntExpiredColumn {
-                get {
-                    return this.columnCntExpired;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refCreationOrigamStateMachineEventTypeIdColumn {
-                get {
-                    return this.columnrefCreationOrigamStateMachineEventTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsErrorQueueColumn {
-                get {
-                    return this.columnIsErrorQueue;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CreationConditionColumn {
-                get {
-                    return this.columnCreationCondition;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refWorkQueueExternalSourceTypeIdColumn {
-                get {
-                    return this.columnrefWorkQueueExternalSourceTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn WorkQueueClassColumn {
-                get {
-                    return this.columnWorkQueueClass;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn ExternalSourceStateColumn {
-                get {
-                    return this.columnExternalSourceState;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RolesColumn {
-                get {
-                    return this.columnRoles;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn ApiAccessRolesColumn {
-                get {
-                    return this.columnApiAccessRoles;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RemovalFieldNameColumn {
-                get {
-                    return this.columnRemovalFieldName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedColumn {
-                get {
-                    return this.columnRecordUpdated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedColumn {
-                get {
-                    return this.columnRecordCreated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsActiveColumn {
-                get {
-                    return this.columnIsActive;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn SelectedColumn {
-                get {
-                    return this.columnSelected;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedByColumn {
-                get {
-                    return this.columnRecordCreatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn NameColumn {
-                get {
-                    return this.columnName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IdColumn {
-                get {
-                    return this.columnId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedByColumn {
-                get {
-                    return this.columnRecordUpdatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CreationOldValueColumn {
-                get {
-                    return this.columnCreationOldValue;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn ExternalSourceLastTimeColumn {
-                get {
-                    return this.columnExternalSourceLastTime;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn ExternalSourceLastMessageColumn {
-                get {
-                    return this.columnExternalSourceLastMessage;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RemovalConditionColumn {
-                get {
-                    return this.columnRemovalCondition;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CntToMeColumn {
-                get {
-                    return this.columnCntToMe;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RemovalNewValueColumn {
-                get {
-                    return this.columnRemovalNewValue;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refRemovalOrigamStateMachineEventTypeIdColumn {
-                get {
-                    return this.columnrefRemovalOrigamStateMachineEventTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn CntTotalColumn {
                 get {
                     return this.columnCntTotal;
@@ -794,23 +610,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn ExternalSourceUserNameColumn {
-                get {
-                    return this.columnExternalSourceUserName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RemovalOldValueColumn {
-                get {
-                    return this.columnRemovalOldValue;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn IsMessageCountDisplayedColumn {
                 get {
                     return this.columnIsMessageCountDisplayed;
@@ -818,39 +618,95 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CreationNewValueColumn {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RemovalNewValueColumn {
                 get {
-                    return this.columnCreationNewValue;
+                    return this.columnRemovalNewValue;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CreationFieldNameColumn {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CreationOldValueColumn {
                 get {
-                    return this.columnCreationFieldName;
+                    return this.columnCreationOldValue;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CntFromMeColumn {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RolesColumn {
                 get {
-                    return this.columnCntFromMe;
+                    return this.columnRoles;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn ExternalSourceConnectionColumn {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn WorkQueueClassColumn {
                 get {
-                    return this.columnExternalSourceConnection;
+                    return this.columnWorkQueueClass;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ExternalSourceStateColumn {
+                get {
+                    return this.columnExternalSourceState;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn MaxRetriesColumn {
+                get {
+                    return this.columnMaxRetries;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RemovalOldValueColumn {
+                get {
+                    return this.columnRemovalOldValue;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn EnableThrottlingColumn {
+                get {
+                    return this.columnEnableThrottling;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsErrorQueueColumn {
+                get {
+                    return this.columnIsErrorQueue;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn NameColumn {
+                get {
+                    return this.columnName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CreationConditionColumn {
+                get {
+                    return this.columnCreationCondition;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn ExternalSourcePasswordColumn {
                 get {
                     return this.columnExternalSourcePassword;
@@ -858,7 +714,47 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsActiveColumn {
+                get {
+                    return this.columnIsActive;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SelectedColumn {
+                get {
+                    return this.columnSelected;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedColumn {
+                get {
+                    return this.columnRecordCreated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedByColumn {
+                get {
+                    return this.columnRecordUpdatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IdColumn {
+                get {
+                    return this.columnId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn ReverseLookupFieldValuesColumn {
                 get {
                     return this.columnReverseLookupFieldValues;
@@ -866,7 +762,111 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CreationFieldNameColumn {
+                get {
+                    return this.columnCreationFieldName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refCreationOrigamStateMachineEventTypeIdColumn {
+                get {
+                    return this.columnrefCreationOrigamStateMachineEventTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn QueueProcessorColumn {
+                get {
+                    return this.columnQueueProcessor;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CntFromMeColumn {
+                get {
+                    return this.columnCntFromMe;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CntToMeColumn {
+                get {
+                    return this.columnCntToMe;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CntExpiredColumn {
+                get {
+                    return this.columnCntExpired;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ThrottlingIntervalSecondsColumn {
+                get {
+                    return this.columnThrottlingIntervalSeconds;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RemovalFieldNameColumn {
+                get {
+                    return this.columnRemovalFieldName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refRemovalOrigamStateMachineEventTypeIdColumn {
+                get {
+                    return this.columnrefRemovalOrigamStateMachineEventTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ExternalSourceLastTimeColumn {
+                get {
+                    return this.columnExternalSourceLastTime;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueRetryTypeIdColumn {
+                get {
+                    return this.columnrefWorkQueueRetryTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ThrottlingItemsPerIntervalColumn {
+                get {
+                    return this.columnThrottlingItemsPerInterval;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RetryIntervalSecondsColumn {
+                get {
+                    return this.columnRetryIntervalSeconds;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn ReferenceCodeColumn {
                 get {
                     return this.columnReferenceCode;
@@ -874,7 +874,87 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ExponentialRetryBaseColumn {
+                get {
+                    return this.columnExponentialRetryBase;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CreationNewValueColumn {
+                get {
+                    return this.columnCreationNewValue;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ExternalSourceConnectionColumn {
+                get {
+                    return this.columnExternalSourceConnection;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RemovalConditionColumn {
+                get {
+                    return this.columnRemovalCondition;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ExternalSourceUserNameColumn {
+                get {
+                    return this.columnExternalSourceUserName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ExternalSourceLastMessageColumn {
+                get {
+                    return this.columnExternalSourceLastMessage;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ApiAccessRolesColumn {
+                get {
+                    return this.columnApiAccessRoles;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueExternalSourceTypeIdColumn {
+                get {
+                    return this.columnrefWorkQueueExternalSourceTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedByColumn {
+                get {
+                    return this.columnRecordCreatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedColumn {
+                get {
+                    return this.columnRecordUpdated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -883,122 +963,138 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow this[int index] {
                 get {
                     return ((WorkQueueRow)(this.Rows[index]));
                 }
             }
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueRowChangeEventHandler WorkQueueRowChanging;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueRowChangeEventHandler WorkQueueRowChanged;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueRowChangeEventHandler WorkQueueRowDeleting;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueRowChangeEventHandler WorkQueueRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void AddWorkQueueRow(WorkQueueRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow AddWorkQueueRow(
-                        int CntExpired, 
-                        System.Guid refCreationOrigamStateMachineEventTypeId, 
-                        bool IsErrorQueue, 
-                        string CreationCondition, 
-                        System.Guid refWorkQueueExternalSourceTypeId, 
+                        int CntTotal, 
+                        bool IsMessageCountDisplayed, 
+                        string RemovalNewValue, 
+                        string CreationOldValue, 
+                        string Roles, 
                         string WorkQueueClass, 
                         string ExternalSourceState, 
-                        string Roles, 
-                        string ApiAccessRoles, 
-                        string RemovalFieldName, 
-                        System.DateTime RecordUpdated, 
-                        System.DateTime RecordCreated, 
+                        int MaxRetries, 
+                        string RemovalOldValue, 
+                        bool EnableThrottling, 
+                        bool IsErrorQueue, 
+                        string Name, 
+                        string CreationCondition, 
+                        string ExternalSourcePassword, 
                         bool IsActive, 
                         bool Selected, 
-                        System.Guid RecordCreatedBy, 
-                        string Name, 
-                        System.Guid Id, 
+                        System.DateTime RecordCreated, 
                         System.Guid RecordUpdatedBy, 
-                        string CreationOldValue, 
-                        System.DateTime ExternalSourceLastTime, 
-                        string ExternalSourceLastMessage, 
-                        string RemovalCondition, 
-                        int CntToMe, 
-                        string RemovalNewValue, 
-                        System.Guid refRemovalOrigamStateMachineEventTypeId, 
-                        int CntTotal, 
-                        string ExternalSourceUserName, 
-                        string RemovalOldValue, 
-                        bool IsMessageCountDisplayed, 
-                        string CreationNewValue, 
-                        string CreationFieldName, 
-                        int CntFromMe, 
-                        string ExternalSourceConnection, 
-                        string ExternalSourcePassword, 
+                        System.Guid Id, 
                         bool ReverseLookupFieldValues, 
-                        string ReferenceCode) {
+                        string CreationFieldName, 
+                        System.Guid refCreationOrigamStateMachineEventTypeId, 
+                        string QueueProcessor, 
+                        int CntFromMe, 
+                        int CntToMe, 
+                        int CntExpired, 
+                        int ThrottlingIntervalSeconds, 
+                        string RemovalFieldName, 
+                        System.Guid refRemovalOrigamStateMachineEventTypeId, 
+                        System.DateTime ExternalSourceLastTime, 
+                        System.Guid refWorkQueueRetryTypeId, 
+                        int ThrottlingItemsPerInterval, 
+                        int RetryIntervalSeconds, 
+                        string ReferenceCode, 
+                        decimal ExponentialRetryBase, 
+                        string CreationNewValue, 
+                        string ExternalSourceConnection, 
+                        string RemovalCondition, 
+                        string ExternalSourceUserName, 
+                        string ExternalSourceLastMessage, 
+                        string ApiAccessRoles, 
+                        System.Guid refWorkQueueExternalSourceTypeId, 
+                        System.Guid RecordCreatedBy, 
+                        System.DateTime RecordUpdated) {
                 WorkQueueRow rowWorkQueueRow = ((WorkQueueRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        CntExpired,
-                        refCreationOrigamStateMachineEventTypeId,
-                        IsErrorQueue,
-                        CreationCondition,
-                        refWorkQueueExternalSourceTypeId,
+                        CntTotal,
+                        IsMessageCountDisplayed,
+                        RemovalNewValue,
+                        CreationOldValue,
+                        Roles,
                         WorkQueueClass,
                         ExternalSourceState,
-                        Roles,
-                        ApiAccessRoles,
-                        RemovalFieldName,
-                        RecordUpdated,
-                        RecordCreated,
+                        MaxRetries,
+                        RemovalOldValue,
+                        EnableThrottling,
+                        IsErrorQueue,
+                        Name,
+                        CreationCondition,
+                        ExternalSourcePassword,
                         IsActive,
                         Selected,
-                        RecordCreatedBy,
-                        Name,
-                        Id,
+                        RecordCreated,
                         RecordUpdatedBy,
-                        CreationOldValue,
-                        ExternalSourceLastTime,
-                        ExternalSourceLastMessage,
-                        RemovalCondition,
-                        CntToMe,
-                        RemovalNewValue,
-                        refRemovalOrigamStateMachineEventTypeId,
-                        CntTotal,
-                        ExternalSourceUserName,
-                        RemovalOldValue,
-                        IsMessageCountDisplayed,
-                        CreationNewValue,
-                        CreationFieldName,
-                        CntFromMe,
-                        ExternalSourceConnection,
-                        ExternalSourcePassword,
+                        Id,
                         ReverseLookupFieldValues,
-                        ReferenceCode};
+                        CreationFieldName,
+                        refCreationOrigamStateMachineEventTypeId,
+                        QueueProcessor,
+                        CntFromMe,
+                        CntToMe,
+                        CntExpired,
+                        ThrottlingIntervalSeconds,
+                        RemovalFieldName,
+                        refRemovalOrigamStateMachineEventTypeId,
+                        ExternalSourceLastTime,
+                        refWorkQueueRetryTypeId,
+                        ThrottlingItemsPerInterval,
+                        RetryIntervalSeconds,
+                        ReferenceCode,
+                        ExponentialRetryBase,
+                        CreationNewValue,
+                        ExternalSourceConnection,
+                        RemovalCondition,
+                        ExternalSourceUserName,
+                        ExternalSourceLastMessage,
+                        ApiAccessRoles,
+                        refWorkQueueExternalSourceTypeId,
+                        RecordCreatedBy,
+                        RecordUpdated};
                 rowWorkQueueRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowWorkQueueRow);
                 return rowWorkQueueRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow FindById(System.Guid Id) {
                 return ((WorkQueueRow)(this.Rows.Find(new object[] {
                             Id})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public override global::System.Data.DataTable Clone() {
                 WorkQueueDataTable cln = ((WorkQueueDataTable)(base.Clone()));
                 cln.InitVars();
@@ -1006,158 +1102,195 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
                 return new WorkQueueDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
-                this.columnCntExpired = base.Columns["CntExpired"];
-                this.columnrefCreationOrigamStateMachineEventTypeId = base.Columns["refCreationOrigamStateMachineEventTypeId"];
-                this.columnIsErrorQueue = base.Columns["IsErrorQueue"];
-                this.columnCreationCondition = base.Columns["CreationCondition"];
-                this.columnrefWorkQueueExternalSourceTypeId = base.Columns["refWorkQueueExternalSourceTypeId"];
+                this.columnCntTotal = base.Columns["CntTotal"];
+                this.columnIsMessageCountDisplayed = base.Columns["IsMessageCountDisplayed"];
+                this.columnRemovalNewValue = base.Columns["RemovalNewValue"];
+                this.columnCreationOldValue = base.Columns["CreationOldValue"];
+                this.columnRoles = base.Columns["Roles"];
                 this.columnWorkQueueClass = base.Columns["WorkQueueClass"];
                 this.columnExternalSourceState = base.Columns["ExternalSourceState"];
-                this.columnRoles = base.Columns["Roles"];
-                this.columnApiAccessRoles = base.Columns["ApiAccessRoles"];
-                this.columnRemovalFieldName = base.Columns["RemovalFieldName"];
-                this.columnRecordUpdated = base.Columns["RecordUpdated"];
-                this.columnRecordCreated = base.Columns["RecordCreated"];
+                this.columnMaxRetries = base.Columns["MaxRetries"];
+                this.columnRemovalOldValue = base.Columns["RemovalOldValue"];
+                this.columnEnableThrottling = base.Columns["EnableThrottling"];
+                this.columnIsErrorQueue = base.Columns["IsErrorQueue"];
+                this.columnName = base.Columns["Name"];
+                this.columnCreationCondition = base.Columns["CreationCondition"];
+                this.columnExternalSourcePassword = base.Columns["ExternalSourcePassword"];
                 this.columnIsActive = base.Columns["IsActive"];
                 this.columnSelected = base.Columns["Selected"];
-                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
-                this.columnName = base.Columns["Name"];
-                this.columnId = base.Columns["Id"];
+                this.columnRecordCreated = base.Columns["RecordCreated"];
                 this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
-                this.columnCreationOldValue = base.Columns["CreationOldValue"];
-                this.columnExternalSourceLastTime = base.Columns["ExternalSourceLastTime"];
-                this.columnExternalSourceLastMessage = base.Columns["ExternalSourceLastMessage"];
-                this.columnRemovalCondition = base.Columns["RemovalCondition"];
-                this.columnCntToMe = base.Columns["CntToMe"];
-                this.columnRemovalNewValue = base.Columns["RemovalNewValue"];
-                this.columnrefRemovalOrigamStateMachineEventTypeId = base.Columns["refRemovalOrigamStateMachineEventTypeId"];
-                this.columnCntTotal = base.Columns["CntTotal"];
-                this.columnExternalSourceUserName = base.Columns["ExternalSourceUserName"];
-                this.columnRemovalOldValue = base.Columns["RemovalOldValue"];
-                this.columnIsMessageCountDisplayed = base.Columns["IsMessageCountDisplayed"];
-                this.columnCreationNewValue = base.Columns["CreationNewValue"];
-                this.columnCreationFieldName = base.Columns["CreationFieldName"];
-                this.columnCntFromMe = base.Columns["CntFromMe"];
-                this.columnExternalSourceConnection = base.Columns["ExternalSourceConnection"];
-                this.columnExternalSourcePassword = base.Columns["ExternalSourcePassword"];
+                this.columnId = base.Columns["Id"];
                 this.columnReverseLookupFieldValues = base.Columns["ReverseLookupFieldValues"];
+                this.columnCreationFieldName = base.Columns["CreationFieldName"];
+                this.columnrefCreationOrigamStateMachineEventTypeId = base.Columns["refCreationOrigamStateMachineEventTypeId"];
+                this.columnQueueProcessor = base.Columns["QueueProcessor"];
+                this.columnCntFromMe = base.Columns["CntFromMe"];
+                this.columnCntToMe = base.Columns["CntToMe"];
+                this.columnCntExpired = base.Columns["CntExpired"];
+                this.columnThrottlingIntervalSeconds = base.Columns["ThrottlingIntervalSeconds"];
+                this.columnRemovalFieldName = base.Columns["RemovalFieldName"];
+                this.columnrefRemovalOrigamStateMachineEventTypeId = base.Columns["refRemovalOrigamStateMachineEventTypeId"];
+                this.columnExternalSourceLastTime = base.Columns["ExternalSourceLastTime"];
+                this.columnrefWorkQueueRetryTypeId = base.Columns["refWorkQueueRetryTypeId"];
+                this.columnThrottlingItemsPerInterval = base.Columns["ThrottlingItemsPerInterval"];
+                this.columnRetryIntervalSeconds = base.Columns["RetryIntervalSeconds"];
                 this.columnReferenceCode = base.Columns["ReferenceCode"];
+                this.columnExponentialRetryBase = base.Columns["ExponentialRetryBase"];
+                this.columnCreationNewValue = base.Columns["CreationNewValue"];
+                this.columnExternalSourceConnection = base.Columns["ExternalSourceConnection"];
+                this.columnRemovalCondition = base.Columns["RemovalCondition"];
+                this.columnExternalSourceUserName = base.Columns["ExternalSourceUserName"];
+                this.columnExternalSourceLastMessage = base.Columns["ExternalSourceLastMessage"];
+                this.columnApiAccessRoles = base.Columns["ApiAccessRoles"];
+                this.columnrefWorkQueueExternalSourceTypeId = base.Columns["refWorkQueueExternalSourceTypeId"];
+                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
+                this.columnRecordUpdated = base.Columns["RecordUpdated"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnCntExpired = new global::System.Data.DataColumn("CntExpired", typeof(int), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCntExpired);
-                this.columnrefCreationOrigamStateMachineEventTypeId = new global::System.Data.DataColumn("refCreationOrigamStateMachineEventTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefCreationOrigamStateMachineEventTypeId);
-                this.columnIsErrorQueue = new global::System.Data.DataColumn("IsErrorQueue", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnIsErrorQueue);
-                this.columnCreationCondition = new global::System.Data.DataColumn("CreationCondition", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCreationCondition);
-                this.columnrefWorkQueueExternalSourceTypeId = new global::System.Data.DataColumn("refWorkQueueExternalSourceTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefWorkQueueExternalSourceTypeId);
+                this.columnCntTotal = new global::System.Data.DataColumn("CntTotal", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCntTotal);
+                this.columnIsMessageCountDisplayed = new global::System.Data.DataColumn("IsMessageCountDisplayed", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnIsMessageCountDisplayed);
+                this.columnRemovalNewValue = new global::System.Data.DataColumn("RemovalNewValue", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRemovalNewValue);
+                this.columnCreationOldValue = new global::System.Data.DataColumn("CreationOldValue", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCreationOldValue);
+                this.columnRoles = new global::System.Data.DataColumn("Roles", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRoles);
                 this.columnWorkQueueClass = new global::System.Data.DataColumn("WorkQueueClass", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnWorkQueueClass);
                 this.columnExternalSourceState = new global::System.Data.DataColumn("ExternalSourceState", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnExternalSourceState);
-                this.columnRoles = new global::System.Data.DataColumn("Roles", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRoles);
-                this.columnApiAccessRoles = new global::System.Data.DataColumn("ApiAccessRoles", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnApiAccessRoles);
-                this.columnRemovalFieldName = new global::System.Data.DataColumn("RemovalFieldName", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRemovalFieldName);
-                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdated);
-                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreated);
+                this.columnMaxRetries = new global::System.Data.DataColumn("MaxRetries", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnMaxRetries);
+                this.columnRemovalOldValue = new global::System.Data.DataColumn("RemovalOldValue", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRemovalOldValue);
+                this.columnEnableThrottling = new global::System.Data.DataColumn("EnableThrottling", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnEnableThrottling);
+                this.columnIsErrorQueue = new global::System.Data.DataColumn("IsErrorQueue", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnIsErrorQueue);
+                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnName);
+                this.columnCreationCondition = new global::System.Data.DataColumn("CreationCondition", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCreationCondition);
+                this.columnExternalSourcePassword = new global::System.Data.DataColumn("ExternalSourcePassword", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnExternalSourcePassword);
                 this.columnIsActive = new global::System.Data.DataColumn("IsActive", typeof(bool), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnIsActive);
                 this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnSelected);
-                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreatedBy);
-                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnName);
-                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnId);
+                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreated);
                 this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnRecordUpdatedBy);
-                this.columnCreationOldValue = new global::System.Data.DataColumn("CreationOldValue", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCreationOldValue);
-                this.columnExternalSourceLastTime = new global::System.Data.DataColumn("ExternalSourceLastTime", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnExternalSourceLastTime);
-                this.columnExternalSourceLastMessage = new global::System.Data.DataColumn("ExternalSourceLastMessage", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnExternalSourceLastMessage);
-                this.columnRemovalCondition = new global::System.Data.DataColumn("RemovalCondition", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRemovalCondition);
-                this.columnCntToMe = new global::System.Data.DataColumn("CntToMe", typeof(int), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCntToMe);
-                this.columnRemovalNewValue = new global::System.Data.DataColumn("RemovalNewValue", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRemovalNewValue);
-                this.columnrefRemovalOrigamStateMachineEventTypeId = new global::System.Data.DataColumn("refRemovalOrigamStateMachineEventTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefRemovalOrigamStateMachineEventTypeId);
-                this.columnCntTotal = new global::System.Data.DataColumn("CntTotal", typeof(int), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCntTotal);
-                this.columnExternalSourceUserName = new global::System.Data.DataColumn("ExternalSourceUserName", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnExternalSourceUserName);
-                this.columnRemovalOldValue = new global::System.Data.DataColumn("RemovalOldValue", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRemovalOldValue);
-                this.columnIsMessageCountDisplayed = new global::System.Data.DataColumn("IsMessageCountDisplayed", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnIsMessageCountDisplayed);
-                this.columnCreationNewValue = new global::System.Data.DataColumn("CreationNewValue", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCreationNewValue);
-                this.columnCreationFieldName = new global::System.Data.DataColumn("CreationFieldName", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCreationFieldName);
-                this.columnCntFromMe = new global::System.Data.DataColumn("CntFromMe", typeof(int), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCntFromMe);
-                this.columnExternalSourceConnection = new global::System.Data.DataColumn("ExternalSourceConnection", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnExternalSourceConnection);
-                this.columnExternalSourcePassword = new global::System.Data.DataColumn("ExternalSourcePassword", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnExternalSourcePassword);
+                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnId);
                 this.columnReverseLookupFieldValues = new global::System.Data.DataColumn("ReverseLookupFieldValues", typeof(bool), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnReverseLookupFieldValues);
+                this.columnCreationFieldName = new global::System.Data.DataColumn("CreationFieldName", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCreationFieldName);
+                this.columnrefCreationOrigamStateMachineEventTypeId = new global::System.Data.DataColumn("refCreationOrigamStateMachineEventTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefCreationOrigamStateMachineEventTypeId);
+                this.columnQueueProcessor = new global::System.Data.DataColumn("QueueProcessor", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnQueueProcessor);
+                this.columnCntFromMe = new global::System.Data.DataColumn("CntFromMe", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCntFromMe);
+                this.columnCntToMe = new global::System.Data.DataColumn("CntToMe", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCntToMe);
+                this.columnCntExpired = new global::System.Data.DataColumn("CntExpired", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCntExpired);
+                this.columnThrottlingIntervalSeconds = new global::System.Data.DataColumn("ThrottlingIntervalSeconds", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnThrottlingIntervalSeconds);
+                this.columnRemovalFieldName = new global::System.Data.DataColumn("RemovalFieldName", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRemovalFieldName);
+                this.columnrefRemovalOrigamStateMachineEventTypeId = new global::System.Data.DataColumn("refRemovalOrigamStateMachineEventTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefRemovalOrigamStateMachineEventTypeId);
+                this.columnExternalSourceLastTime = new global::System.Data.DataColumn("ExternalSourceLastTime", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnExternalSourceLastTime);
+                this.columnrefWorkQueueRetryTypeId = new global::System.Data.DataColumn("refWorkQueueRetryTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefWorkQueueRetryTypeId);
+                this.columnThrottlingItemsPerInterval = new global::System.Data.DataColumn("ThrottlingItemsPerInterval", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnThrottlingItemsPerInterval);
+                this.columnRetryIntervalSeconds = new global::System.Data.DataColumn("RetryIntervalSeconds", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRetryIntervalSeconds);
                 this.columnReferenceCode = new global::System.Data.DataColumn("ReferenceCode", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnReferenceCode);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("PK_Id", new global::System.Data.DataColumn[] {
+                this.columnExponentialRetryBase = new global::System.Data.DataColumn("ExponentialRetryBase", typeof(decimal), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnExponentialRetryBase);
+                this.columnCreationNewValue = new global::System.Data.DataColumn("CreationNewValue", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCreationNewValue);
+                this.columnExternalSourceConnection = new global::System.Data.DataColumn("ExternalSourceConnection", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnExternalSourceConnection);
+                this.columnRemovalCondition = new global::System.Data.DataColumn("RemovalCondition", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRemovalCondition);
+                this.columnExternalSourceUserName = new global::System.Data.DataColumn("ExternalSourceUserName", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnExternalSourceUserName);
+                this.columnExternalSourceLastMessage = new global::System.Data.DataColumn("ExternalSourceLastMessage", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnExternalSourceLastMessage);
+                this.columnApiAccessRoles = new global::System.Data.DataColumn("ApiAccessRoles", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnApiAccessRoles);
+                this.columnrefWorkQueueExternalSourceTypeId = new global::System.Data.DataColumn("refWorkQueueExternalSourceTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefWorkQueueExternalSourceTypeId);
+                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreatedBy);
+                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdated);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
-                this.columnCntExpired.Namespace = "";
-                this.columnrefCreationOrigamStateMachineEventTypeId.Namespace = "";
-                this.columnrefCreationOrigamStateMachineEventTypeId.Caption = "Create Event";
-                this.columnIsErrorQueue.AllowDBNull = false;
-                this.columnIsErrorQueue.Namespace = "";
-                this.columnIsErrorQueue.Caption = "Error Queue";
-                this.columnIsErrorQueue.DefaultValue = ((bool)(false));
-                this.columnCreationCondition.Namespace = "";
-                this.columnCreationCondition.Caption = "Condition (XPath)";
-                this.columnrefWorkQueueExternalSourceTypeId.Namespace = "";
-                this.columnrefWorkQueueExternalSourceTypeId.Caption = "External Source";
+                this.columnCntTotal.Namespace = "";
+                this.columnIsMessageCountDisplayed.AllowDBNull = false;
+                this.columnIsMessageCountDisplayed.Namespace = "";
+                this.columnIsMessageCountDisplayed.Caption = "Display Number of Messages";
+                this.columnIsMessageCountDisplayed.DefaultValue = ((bool)(true));
+                this.columnRemovalNewValue.Namespace = "";
+                this.columnRemovalNewValue.Caption = "Removal New Value";
+                this.columnRemovalNewValue.MaxLength = 200;
+                this.columnCreationOldValue.Namespace = "";
+                this.columnCreationOldValue.Caption = "Creation Old Value";
+                this.columnCreationOldValue.MaxLength = 200;
+                this.columnRoles.Namespace = "";
+                this.columnRoles.Caption = "Role";
+                this.columnRoles.MaxLength = 500;
                 this.columnWorkQueueClass.AllowDBNull = false;
                 this.columnWorkQueueClass.Namespace = "";
                 this.columnWorkQueueClass.Caption = "Class";
                 this.columnWorkQueueClass.MaxLength = 200;
                 this.columnExternalSourceState.Caption = "State Data";
-                this.columnRoles.Namespace = "";
-                this.columnRoles.Caption = "Role";
-                this.columnRoles.MaxLength = 500;
-                this.columnApiAccessRoles.Namespace = "";
-                this.columnApiAccessRoles.Caption = "API Access Roles";
-                this.columnApiAccessRoles.MaxLength = 500;
-                this.columnRemovalFieldName.Namespace = "";
-                this.columnRemovalFieldName.Caption = "Removal Field Name";
-                this.columnRemovalFieldName.MaxLength = 200;
-                this.columnRecordUpdated.Namespace = "";
-                this.columnRecordUpdated.Caption = "Time Updated";
-                this.columnRecordCreated.Namespace = "";
-                this.columnRecordCreated.Caption = "Time Created";
+                this.columnMaxRetries.AllowDBNull = false;
+                this.columnMaxRetries.Namespace = "";
+                this.columnMaxRetries.Caption = "Maximum Retries";
+                this.columnMaxRetries.DefaultValue = ((int)(3));
+                this.columnRemovalOldValue.Namespace = "";
+                this.columnRemovalOldValue.Caption = "Removal Old Value";
+                this.columnRemovalOldValue.MaxLength = 200;
+                this.columnEnableThrottling.AllowDBNull = false;
+                this.columnEnableThrottling.Namespace = "";
+                this.columnEnableThrottling.Caption = "Enable Throttling";
+                this.columnEnableThrottling.DefaultValue = ((bool)(false));
+                this.columnIsErrorQueue.AllowDBNull = false;
+                this.columnIsErrorQueue.Namespace = "";
+                this.columnIsErrorQueue.Caption = "Error Queue";
+                this.columnIsErrorQueue.DefaultValue = ((bool)(false));
+                this.columnName.AllowDBNull = false;
+                this.columnName.Namespace = "";
+                this.columnName.MaxLength = 200;
+                this.columnCreationCondition.Namespace = "";
+                this.columnCreationCondition.Caption = "Condition (XPath)";
+                this.columnExternalSourcePassword.Namespace = "";
+                this.columnExternalSourcePassword.Caption = "Password";
+                this.columnExternalSourcePassword.MaxLength = 50;
                 this.columnIsActive.AllowDBNull = false;
                 this.columnIsActive.Namespace = "";
                 this.columnIsActive.Caption = "Active";
@@ -1165,84 +1298,100 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnSelected.AllowDBNull = false;
                 this.columnSelected.Namespace = "";
                 this.columnSelected.DefaultValue = ((bool)(false));
-                this.columnRecordCreatedBy.Namespace = "";
-                this.columnRecordCreatedBy.Caption = "Created By";
-                this.columnName.AllowDBNull = false;
-                this.columnName.Namespace = "";
-                this.columnName.MaxLength = 200;
+                this.columnRecordCreated.Namespace = "";
+                this.columnRecordCreated.Caption = "Time Created";
+                this.columnRecordUpdatedBy.Namespace = "";
+                this.columnRecordUpdatedBy.Caption = "Updated By";
                 this.columnId.AllowDBNull = false;
                 this.columnId.Unique = true;
                 this.columnId.Namespace = "";
-                this.columnRecordUpdatedBy.Namespace = "";
-                this.columnRecordUpdatedBy.Caption = "Updated By";
-                this.columnCreationOldValue.Namespace = "";
-                this.columnCreationOldValue.Caption = "Creation Old Value";
-                this.columnCreationOldValue.MaxLength = 200;
-                this.columnExternalSourceLastTime.Namespace = "";
-                this.columnExternalSourceLastTime.Caption = "Last Action";
-                this.columnExternalSourceLastMessage.Caption = "Last Message";
-                this.columnRemovalCondition.Namespace = "";
-                this.columnRemovalCondition.Caption = "Condition (XPath)";
-                this.columnCntToMe.Namespace = "";
-                this.columnRemovalNewValue.Namespace = "";
-                this.columnRemovalNewValue.Caption = "Removal New Value";
-                this.columnRemovalNewValue.MaxLength = 200;
-                this.columnrefRemovalOrigamStateMachineEventTypeId.Namespace = "";
-                this.columnrefRemovalOrigamStateMachineEventTypeId.Caption = "Removal Event";
-                this.columnCntTotal.Namespace = "";
-                this.columnExternalSourceUserName.Namespace = "";
-                this.columnExternalSourceUserName.Caption = "User Name";
-                this.columnExternalSourceUserName.MaxLength = 50;
-                this.columnRemovalOldValue.Namespace = "";
-                this.columnRemovalOldValue.Caption = "Removal Old Value";
-                this.columnRemovalOldValue.MaxLength = 200;
-                this.columnIsMessageCountDisplayed.AllowDBNull = false;
-                this.columnIsMessageCountDisplayed.Namespace = "";
-                this.columnIsMessageCountDisplayed.Caption = "Display Number of Messages";
-                this.columnIsMessageCountDisplayed.DefaultValue = ((bool)(true));
-                this.columnCreationNewValue.Namespace = "";
-                this.columnCreationNewValue.Caption = "Creation New Value";
-                this.columnCreationNewValue.MaxLength = 200;
-                this.columnCreationFieldName.Namespace = "";
-                this.columnCreationFieldName.Caption = "Creation Field Name";
-                this.columnCreationFieldName.MaxLength = 200;
-                this.columnCntFromMe.Namespace = "";
-                this.columnExternalSourceConnection.Namespace = "";
-                this.columnExternalSourceConnection.Caption = "Connection String";
-                this.columnExternalSourcePassword.Namespace = "";
-                this.columnExternalSourcePassword.Caption = "Password";
-                this.columnExternalSourcePassword.MaxLength = 50;
                 this.columnReverseLookupFieldValues.AllowDBNull = false;
                 this.columnReverseLookupFieldValues.Namespace = "";
                 this.columnReverseLookupFieldValues.Caption = "Lookup Field Values";
                 this.columnReverseLookupFieldValues.DefaultValue = ((bool)(false));
+                this.columnCreationFieldName.Namespace = "";
+                this.columnCreationFieldName.Caption = "Creation Field Name";
+                this.columnCreationFieldName.MaxLength = 200;
+                this.columnrefCreationOrigamStateMachineEventTypeId.Namespace = "";
+                this.columnrefCreationOrigamStateMachineEventTypeId.Caption = "Create Event";
+                this.columnQueueProcessor.Namespace = "";
+                this.columnQueueProcessor.Caption = "Queue Processor";
+                this.columnQueueProcessor.MaxLength = 50;
+                this.columnCntFromMe.Namespace = "";
+                this.columnCntToMe.Namespace = "";
+                this.columnCntExpired.Namespace = "";
+                this.columnThrottlingIntervalSeconds.AllowDBNull = false;
+                this.columnThrottlingIntervalSeconds.Namespace = "";
+                this.columnThrottlingIntervalSeconds.Caption = "Throttling Time Interval in Seconds";
+                this.columnThrottlingIntervalSeconds.DefaultValue = ((int)(60));
+                this.columnRemovalFieldName.Namespace = "";
+                this.columnRemovalFieldName.Caption = "Removal Field Name";
+                this.columnRemovalFieldName.MaxLength = 200;
+                this.columnrefRemovalOrigamStateMachineEventTypeId.Namespace = "";
+                this.columnrefRemovalOrigamStateMachineEventTypeId.Caption = "Removal Event";
+                this.columnExternalSourceLastTime.Namespace = "";
+                this.columnExternalSourceLastTime.Caption = "Last Action";
+                this.columnrefWorkQueueRetryTypeId.AllowDBNull = false;
+                this.columnrefWorkQueueRetryTypeId.Namespace = "";
+                this.columnrefWorkQueueRetryTypeId.Caption = "Retry Type";
+                this.columnThrottlingItemsPerInterval.AllowDBNull = false;
+                this.columnThrottlingItemsPerInterval.Namespace = "";
+                this.columnThrottlingItemsPerInterval.Caption = "Throttling Items Per Interval";
+                this.columnThrottlingItemsPerInterval.DefaultValue = ((int)(10));
+                this.columnRetryIntervalSeconds.AllowDBNull = false;
+                this.columnRetryIntervalSeconds.Namespace = "";
+                this.columnRetryIntervalSeconds.Caption = "Retry Time Interval in Seconds";
+                this.columnRetryIntervalSeconds.DefaultValue = ((int)(30));
                 this.columnReferenceCode.AllowDBNull = false;
                 this.columnReferenceCode.Namespace = "";
                 this.columnReferenceCode.Caption = "Code";
                 this.columnReferenceCode.MaxLength = 40;
-                this.Locale = new global::System.Globalization.CultureInfo("cs-CZ");
+                this.columnExponentialRetryBase.AllowDBNull = false;
+                this.columnExponentialRetryBase.Namespace = "";
+                this.columnExponentialRetryBase.Caption = "Exponential Retry Base";
+                this.columnExponentialRetryBase.DefaultValue = ((decimal)(2m));
+                this.columnCreationNewValue.Namespace = "";
+                this.columnCreationNewValue.Caption = "Creation New Value";
+                this.columnCreationNewValue.MaxLength = 200;
+                this.columnExternalSourceConnection.Namespace = "";
+                this.columnExternalSourceConnection.Caption = "Connection String";
+                this.columnRemovalCondition.Namespace = "";
+                this.columnRemovalCondition.Caption = "Condition (XPath)";
+                this.columnExternalSourceUserName.Namespace = "";
+                this.columnExternalSourceUserName.Caption = "User Name";
+                this.columnExternalSourceUserName.MaxLength = 50;
+                this.columnExternalSourceLastMessage.Caption = "Last Message";
+                this.columnApiAccessRoles.Namespace = "";
+                this.columnApiAccessRoles.Caption = "API Access Roles";
+                this.columnApiAccessRoles.MaxLength = 500;
+                this.columnrefWorkQueueExternalSourceTypeId.Namespace = "";
+                this.columnrefWorkQueueExternalSourceTypeId.Caption = "External Source";
+                this.columnRecordCreatedBy.Namespace = "";
+                this.columnRecordCreatedBy.Caption = "Created By";
+                this.columnRecordUpdated.Namespace = "";
+                this.columnRecordUpdated.Caption = "Time Updated";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow NewWorkQueueRow() {
                 return ((WorkQueueRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
                 return new WorkQueueRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Type GetRowType() {
                 return typeof(WorkQueueRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
                 if ((this.WorkQueueRowChanged != null)) {
@@ -1251,7 +1400,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
                 if ((this.WorkQueueRowChanging != null)) {
@@ -1260,7 +1409,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
                 if ((this.WorkQueueRowDeleted != null)) {
@@ -1269,7 +1418,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
                 if ((this.WorkQueueRowDeleting != null)) {
@@ -1278,13 +1427,13 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void RemoveWorkQueueRow(WorkQueueRow row) {
                 this.Rows.Remove(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
@@ -1354,46 +1503,46 @@ namespace Origam.Workflow.WorkQueue {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class WorkQueueCommandDataTable : global::System.Data.TypedTableBase<WorkQueueCommandRow> {
             
-            private global::System.Data.DataColumn columnIsAutoProcessedWithErrors;
-            
-            private global::System.Data.DataColumn columnRecordCreatedBy;
-            
-            private global::System.Data.DataColumn columnSortOrder;
-            
-            private global::System.Data.DataColumn columnIsAutoProcessed;
-            
-            private global::System.Data.DataColumn columnRecordUpdatedBy;
-            
-            private global::System.Data.DataColumn columnRecordUpdated;
-            
-            private global::System.Data.DataColumn columnSelected;
+            private global::System.Data.DataColumn columnAutoProcessingConditionXPath;
             
             private global::System.Data.DataColumn columnId;
             
+            private global::System.Data.DataColumn columnRecordUpdatedBy;
+            
             private global::System.Data.DataColumn columnRecordCreated;
             
-            private global::System.Data.DataColumn columnIsDefault;
+            private global::System.Data.DataColumn columnSelected;
             
-            private global::System.Data.DataColumn columnrefWorkQueueId;
-            
-            private global::System.Data.DataColumn columnRoles;
-            
-            private global::System.Data.DataColumn columnCommand;
-            
-            private global::System.Data.DataColumn columnParam1;
-            
-            private global::System.Data.DataColumn columnAutoProcessingConditionXPath;
+            private global::System.Data.DataColumn columnrefWorkQueueCommandTypeId;
             
             private global::System.Data.DataColumn columnrefErrorWorkQueueId;
             
             private global::System.Data.DataColumn columnParam2;
             
-            private global::System.Data.DataColumn columnrefWorkQueueCommandTypeId;
+            private global::System.Data.DataColumn columnRecordCreatedBy;
+            
+            private global::System.Data.DataColumn columnrefWorkQueueId;
             
             private global::System.Data.DataColumn columnText;
             
+            private global::System.Data.DataColumn columnParam1;
+            
+            private global::System.Data.DataColumn columnIsDefault;
+            
+            private global::System.Data.DataColumn columnSortOrder;
+            
+            private global::System.Data.DataColumn columnIsAutoProcessed;
+            
+            private global::System.Data.DataColumn columnCommand;
+            
+            private global::System.Data.DataColumn columnIsAutoProcessedWithErrors;
+            
+            private global::System.Data.DataColumn columnRoles;
+            
+            private global::System.Data.DataColumn columnRecordUpdated;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandDataTable() {
                 this.TableName = "WorkQueueCommand";
                 this.BeginInit();
@@ -1402,7 +1551,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueCommandDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
@@ -1419,126 +1568,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected WorkQueueCommandDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsAutoProcessedWithErrorsColumn {
-                get {
-                    return this.columnIsAutoProcessedWithErrors;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedByColumn {
-                get {
-                    return this.columnRecordCreatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn SortOrderColumn {
-                get {
-                    return this.columnSortOrder;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsAutoProcessedColumn {
-                get {
-                    return this.columnIsAutoProcessed;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedByColumn {
-                get {
-                    return this.columnRecordUpdatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedColumn {
-                get {
-                    return this.columnRecordUpdated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn SelectedColumn {
-                get {
-                    return this.columnSelected;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IdColumn {
-                get {
-                    return this.columnId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedColumn {
-                get {
-                    return this.columnRecordCreated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsDefaultColumn {
-                get {
-                    return this.columnIsDefault;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refWorkQueueIdColumn {
-                get {
-                    return this.columnrefWorkQueueId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RolesColumn {
-                get {
-                    return this.columnRoles;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn CommandColumn {
-                get {
-                    return this.columnCommand;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn Param1Column {
-                get {
-                    return this.columnParam1;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn AutoProcessingConditionXPathColumn {
                 get {
                     return this.columnAutoProcessingConditionXPath;
@@ -1546,23 +1583,39 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refErrorWorkQueueIdColumn {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IdColumn {
                 get {
-                    return this.columnrefErrorWorkQueueId;
+                    return this.columnId;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn Param2Column {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedByColumn {
                 get {
-                    return this.columnParam2;
+                    return this.columnRecordUpdatedBy;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedColumn {
+                get {
+                    return this.columnRecordCreated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SelectedColumn {
+                get {
+                    return this.columnSelected;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn refWorkQueueCommandTypeIdColumn {
                 get {
                     return this.columnrefWorkQueueCommandTypeId;
@@ -1570,7 +1623,39 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refErrorWorkQueueIdColumn {
+                get {
+                    return this.columnrefErrorWorkQueueId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn Param2Column {
+                get {
+                    return this.columnParam2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedByColumn {
+                get {
+                    return this.columnRecordCreatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueIdColumn {
+                get {
+                    return this.columnrefWorkQueueId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn TextColumn {
                 get {
                     return this.columnText;
@@ -1578,7 +1663,71 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn Param1Column {
+                get {
+                    return this.columnParam1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsDefaultColumn {
+                get {
+                    return this.columnIsDefault;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SortOrderColumn {
+                get {
+                    return this.columnSortOrder;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsAutoProcessedColumn {
+                get {
+                    return this.columnIsAutoProcessed;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn CommandColumn {
+                get {
+                    return this.columnCommand;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsAutoProcessedWithErrorsColumn {
+                get {
+                    return this.columnIsAutoProcessedWithErrors;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RolesColumn {
+                get {
+                    return this.columnRoles;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedColumn {
+                get {
+                    return this.columnRecordUpdated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1587,76 +1736,76 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandRow this[int index] {
                 get {
                     return ((WorkQueueCommandRow)(this.Rows[index]));
                 }
             }
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueCommandRowChangeEventHandler WorkQueueCommandRowChanging;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueCommandRowChangeEventHandler WorkQueueCommandRowChanged;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueCommandRowChangeEventHandler WorkQueueCommandRowDeleting;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueCommandRowChangeEventHandler WorkQueueCommandRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void AddWorkQueueCommandRow(WorkQueueCommandRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandRow AddWorkQueueCommandRow(
-                        bool IsAutoProcessedWithErrors, 
-                        System.Guid RecordCreatedBy, 
-                        int SortOrder, 
-                        bool IsAutoProcessed, 
-                        System.Guid RecordUpdatedBy, 
-                        System.DateTime RecordUpdated, 
-                        bool Selected, 
-                        System.Guid Id, 
-                        System.DateTime RecordCreated, 
-                        bool IsDefault, 
-                        WorkQueueRow parentWorkQueueRowByWorkQueueCommand, 
-                        string Roles, 
-                        string Command, 
-                        string Param1, 
                         string AutoProcessingConditionXPath, 
+                        System.Guid Id, 
+                        System.Guid RecordUpdatedBy, 
+                        System.DateTime RecordCreated, 
+                        bool Selected, 
+                        System.Guid refWorkQueueCommandTypeId, 
                         System.Guid refErrorWorkQueueId, 
                         string Param2, 
-                        System.Guid refWorkQueueCommandTypeId, 
-                        string Text) {
+                        System.Guid RecordCreatedBy, 
+                        WorkQueueRow parentWorkQueueRowByWorkQueueCommand, 
+                        string Text, 
+                        string Param1, 
+                        bool IsDefault, 
+                        int SortOrder, 
+                        bool IsAutoProcessed, 
+                        string Command, 
+                        bool IsAutoProcessedWithErrors, 
+                        string Roles, 
+                        System.DateTime RecordUpdated) {
                 WorkQueueCommandRow rowWorkQueueCommandRow = ((WorkQueueCommandRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        IsAutoProcessedWithErrors,
-                        RecordCreatedBy,
-                        SortOrder,
-                        IsAutoProcessed,
-                        RecordUpdatedBy,
-                        RecordUpdated,
-                        Selected,
-                        Id,
-                        RecordCreated,
-                        IsDefault,
-                        null,
-                        Roles,
-                        Command,
-                        Param1,
                         AutoProcessingConditionXPath,
+                        Id,
+                        RecordUpdatedBy,
+                        RecordCreated,
+                        Selected,
+                        refWorkQueueCommandTypeId,
                         refErrorWorkQueueId,
                         Param2,
-                        refWorkQueueCommandTypeId,
-                        Text};
+                        RecordCreatedBy,
+                        null,
+                        Text,
+                        Param1,
+                        IsDefault,
+                        SortOrder,
+                        IsAutoProcessed,
+                        Command,
+                        IsAutoProcessedWithErrors,
+                        Roles,
+                        RecordUpdated};
                 if ((parentWorkQueueRowByWorkQueueCommand != null)) {
-                    columnValuesArray[10] = parentWorkQueueRowByWorkQueueCommand[16];
+                    columnValuesArray[9] = parentWorkQueueRowByWorkQueueCommand[18];
                 }
                 rowWorkQueueCommandRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowWorkQueueCommandRow);
@@ -1664,14 +1813,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandRow FindById(System.Guid Id) {
                 return ((WorkQueueCommandRow)(this.Rows.Find(new object[] {
                             Id})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public override global::System.Data.DataTable Clone() {
                 WorkQueueCommandDataTable cln = ((WorkQueueCommandDataTable)(base.Clone()));
                 cln.InitVars();
@@ -1679,84 +1828,112 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
                 return new WorkQueueCommandDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
-                this.columnIsAutoProcessedWithErrors = base.Columns["IsAutoProcessedWithErrors"];
-                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
-                this.columnSortOrder = base.Columns["SortOrder"];
-                this.columnIsAutoProcessed = base.Columns["IsAutoProcessed"];
-                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
-                this.columnRecordUpdated = base.Columns["RecordUpdated"];
-                this.columnSelected = base.Columns["Selected"];
-                this.columnId = base.Columns["Id"];
-                this.columnRecordCreated = base.Columns["RecordCreated"];
-                this.columnIsDefault = base.Columns["IsDefault"];
-                this.columnrefWorkQueueId = base.Columns["refWorkQueueId"];
-                this.columnRoles = base.Columns["Roles"];
-                this.columnCommand = base.Columns["Command"];
-                this.columnParam1 = base.Columns["Param1"];
                 this.columnAutoProcessingConditionXPath = base.Columns["AutoProcessingConditionXPath"];
+                this.columnId = base.Columns["Id"];
+                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
+                this.columnRecordCreated = base.Columns["RecordCreated"];
+                this.columnSelected = base.Columns["Selected"];
+                this.columnrefWorkQueueCommandTypeId = base.Columns["refWorkQueueCommandTypeId"];
                 this.columnrefErrorWorkQueueId = base.Columns["refErrorWorkQueueId"];
                 this.columnParam2 = base.Columns["Param2"];
-                this.columnrefWorkQueueCommandTypeId = base.Columns["refWorkQueueCommandTypeId"];
+                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
+                this.columnrefWorkQueueId = base.Columns["refWorkQueueId"];
                 this.columnText = base.Columns["Text"];
+                this.columnParam1 = base.Columns["Param1"];
+                this.columnIsDefault = base.Columns["IsDefault"];
+                this.columnSortOrder = base.Columns["SortOrder"];
+                this.columnIsAutoProcessed = base.Columns["IsAutoProcessed"];
+                this.columnCommand = base.Columns["Command"];
+                this.columnIsAutoProcessedWithErrors = base.Columns["IsAutoProcessedWithErrors"];
+                this.columnRoles = base.Columns["Roles"];
+                this.columnRecordUpdated = base.Columns["RecordUpdated"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnIsAutoProcessedWithErrors = new global::System.Data.DataColumn("IsAutoProcessedWithErrors", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnIsAutoProcessedWithErrors);
-                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreatedBy);
-                this.columnSortOrder = new global::System.Data.DataColumn("SortOrder", typeof(int), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnSortOrder);
-                this.columnIsAutoProcessed = new global::System.Data.DataColumn("IsAutoProcessed", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnIsAutoProcessed);
-                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdatedBy);
-                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdated);
-                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnSelected);
-                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnId);
-                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreated);
-                this.columnIsDefault = new global::System.Data.DataColumn("IsDefault", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnIsDefault);
-                this.columnrefWorkQueueId = new global::System.Data.DataColumn("refWorkQueueId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefWorkQueueId);
-                this.columnRoles = new global::System.Data.DataColumn("Roles", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRoles);
-                this.columnCommand = new global::System.Data.DataColumn("Command", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnCommand);
-                this.columnParam1 = new global::System.Data.DataColumn("Param1", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnParam1);
                 this.columnAutoProcessingConditionXPath = new global::System.Data.DataColumn("AutoProcessingConditionXPath", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnAutoProcessingConditionXPath);
+                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnId);
+                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdatedBy);
+                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreated);
+                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnSelected);
+                this.columnrefWorkQueueCommandTypeId = new global::System.Data.DataColumn("refWorkQueueCommandTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefWorkQueueCommandTypeId);
                 this.columnrefErrorWorkQueueId = new global::System.Data.DataColumn("refErrorWorkQueueId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefErrorWorkQueueId);
                 this.columnParam2 = new global::System.Data.DataColumn("Param2", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnParam2);
-                this.columnrefWorkQueueCommandTypeId = new global::System.Data.DataColumn("refWorkQueueCommandTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefWorkQueueCommandTypeId);
+                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreatedBy);
+                this.columnrefWorkQueueId = new global::System.Data.DataColumn("refWorkQueueId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefWorkQueueId);
                 this.columnText = new global::System.Data.DataColumn("Text", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnText);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("PK_Id", new global::System.Data.DataColumn[] {
+                this.columnParam1 = new global::System.Data.DataColumn("Param1", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnParam1);
+                this.columnIsDefault = new global::System.Data.DataColumn("IsDefault", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnIsDefault);
+                this.columnSortOrder = new global::System.Data.DataColumn("SortOrder", typeof(int), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnSortOrder);
+                this.columnIsAutoProcessed = new global::System.Data.DataColumn("IsAutoProcessed", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnIsAutoProcessed);
+                this.columnCommand = new global::System.Data.DataColumn("Command", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnCommand);
+                this.columnIsAutoProcessedWithErrors = new global::System.Data.DataColumn("IsAutoProcessedWithErrors", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnIsAutoProcessedWithErrors);
+                this.columnRoles = new global::System.Data.DataColumn("Roles", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRoles);
+                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdated);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
-                this.columnIsAutoProcessedWithErrors.AllowDBNull = false;
-                this.columnIsAutoProcessedWithErrors.Namespace = "";
-                this.columnIsAutoProcessedWithErrors.Caption = "Autoprocess With Errors";
-                this.columnIsAutoProcessedWithErrors.DefaultValue = ((bool)(false));
+                this.columnAutoProcessingConditionXPath.Namespace = "";
+                this.columnAutoProcessingConditionXPath.Caption = "Autoprocessing Condition";
+                this.columnId.AllowDBNull = false;
+                this.columnId.Unique = true;
+                this.columnId.Namespace = "";
+                this.columnRecordUpdatedBy.Namespace = "";
+                this.columnRecordUpdatedBy.Caption = "Updated By";
+                this.columnRecordCreated.Namespace = "";
+                this.columnRecordCreated.Caption = "Time Created";
+                this.columnSelected.AllowDBNull = false;
+                this.columnSelected.Namespace = "";
+                this.columnSelected.DefaultValue = ((bool)(false));
+                this.columnrefWorkQueueCommandTypeId.AllowDBNull = false;
+                this.columnrefWorkQueueCommandTypeId.Namespace = "";
+                this.columnrefWorkQueueCommandTypeId.Caption = "Type";
+                this.columnrefErrorWorkQueueId.Namespace = "";
+                this.columnrefErrorWorkQueueId.Caption = "Error Queue";
+                this.columnParam2.Namespace = "";
+                this.columnParam2.Caption = "Parameter 2";
+                this.columnParam2.MaxLength = 200;
                 this.columnRecordCreatedBy.Namespace = "";
                 this.columnRecordCreatedBy.Caption = "Created By";
+                this.columnrefWorkQueueId.AllowDBNull = false;
+                this.columnrefWorkQueueId.Namespace = "";
+                this.columnText.AllowDBNull = false;
+                this.columnText.Namespace = "";
+                this.columnText.MaxLength = 100;
+                this.columnParam1.Namespace = "";
+                this.columnParam1.Caption = "Parameter 1";
+                this.columnParam1.MaxLength = 200;
+                this.columnIsDefault.AllowDBNull = false;
+                this.columnIsDefault.Namespace = "";
+                this.columnIsDefault.Caption = "Default";
+                this.columnIsDefault.DefaultValue = ((bool)(false));
                 this.columnSortOrder.AllowDBNull = false;
                 this.columnSortOrder.Namespace = "";
                 this.columnSortOrder.Caption = "Order";
@@ -1765,68 +1942,39 @@ namespace Origam.Workflow.WorkQueue {
                 this.columnIsAutoProcessed.Namespace = "";
                 this.columnIsAutoProcessed.Caption = "Autoprocess";
                 this.columnIsAutoProcessed.DefaultValue = ((bool)(false));
-                this.columnRecordUpdatedBy.Namespace = "";
-                this.columnRecordUpdatedBy.Caption = "Updated By";
-                this.columnRecordUpdated.Namespace = "";
-                this.columnRecordUpdated.Caption = "Time Updated";
-                this.columnSelected.AllowDBNull = false;
-                this.columnSelected.Namespace = "";
-                this.columnSelected.DefaultValue = ((bool)(false));
-                this.columnId.AllowDBNull = false;
-                this.columnId.Unique = true;
-                this.columnId.Namespace = "";
-                this.columnRecordCreated.Namespace = "";
-                this.columnRecordCreated.Caption = "Time Created";
-                this.columnIsDefault.AllowDBNull = false;
-                this.columnIsDefault.Namespace = "";
-                this.columnIsDefault.Caption = "Default";
-                this.columnIsDefault.DefaultValue = ((bool)(false));
-                this.columnrefWorkQueueId.AllowDBNull = false;
-                this.columnrefWorkQueueId.Namespace = "";
+                this.columnCommand.Namespace = "";
+                this.columnCommand.MaxLength = 40;
+                this.columnIsAutoProcessedWithErrors.AllowDBNull = false;
+                this.columnIsAutoProcessedWithErrors.Namespace = "";
+                this.columnIsAutoProcessedWithErrors.Caption = "Autoprocess With Errors";
+                this.columnIsAutoProcessedWithErrors.DefaultValue = ((bool)(false));
                 this.columnRoles.Namespace = "";
                 this.columnRoles.DefaultValue = ((string)("*"));
                 this.columnRoles.MaxLength = 500;
-                this.columnCommand.Namespace = "";
-                this.columnCommand.MaxLength = 40;
-                this.columnParam1.Namespace = "";
-                this.columnParam1.Caption = "Parameter 1";
-                this.columnParam1.MaxLength = 200;
-                this.columnAutoProcessingConditionXPath.Namespace = "";
-                this.columnAutoProcessingConditionXPath.Caption = "Autoprocessing Condition";
-                this.columnrefErrorWorkQueueId.Namespace = "";
-                this.columnrefErrorWorkQueueId.Caption = "Error Queue";
-                this.columnParam2.Namespace = "";
-                this.columnParam2.Caption = "Parameter 2";
-                this.columnParam2.MaxLength = 200;
-                this.columnrefWorkQueueCommandTypeId.AllowDBNull = false;
-                this.columnrefWorkQueueCommandTypeId.Namespace = "";
-                this.columnrefWorkQueueCommandTypeId.Caption = "Type";
-                this.columnText.AllowDBNull = false;
-                this.columnText.Namespace = "";
-                this.columnText.MaxLength = 100;
-                this.Locale = new global::System.Globalization.CultureInfo("cs-CZ");
+                this.columnRecordUpdated.Namespace = "";
+                this.columnRecordUpdated.Caption = "Time Updated";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandRow NewWorkQueueCommandRow() {
                 return ((WorkQueueCommandRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
                 return new WorkQueueCommandRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Type GetRowType() {
                 return typeof(WorkQueueCommandRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
                 if ((this.WorkQueueCommandRowChanged != null)) {
@@ -1835,7 +1983,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
                 if ((this.WorkQueueCommandRowChanging != null)) {
@@ -1844,7 +1992,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
                 if ((this.WorkQueueCommandRowDeleted != null)) {
@@ -1853,7 +2001,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
                 if ((this.WorkQueueCommandRowDeleting != null)) {
@@ -1862,13 +2010,13 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void RemoveWorkQueueCommandRow(WorkQueueCommandRow row) {
                 this.Rows.Remove(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
@@ -1938,32 +2086,32 @@ namespace Origam.Workflow.WorkQueue {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class WorkQueueNotificationDataTable : global::System.Data.TypedTableBase<WorkQueueNotificationRow> {
             
-            private global::System.Data.DataColumn columnId;
-            
-            private global::System.Data.DataColumn columnRecordUpdatedBy;
-            
-            private global::System.Data.DataColumn columnRecordCreated;
-            
-            private global::System.Data.DataColumn columnSelected;
-            
-            private global::System.Data.DataColumn columnRecordUpdated;
-            
-            private global::System.Data.DataColumn columnRecordCreatedBy;
+            private global::System.Data.DataColumn columnrefWorkQueueNotificationEventId;
             
             private global::System.Data.DataColumn columnrefOrigamNotificationTemplateId;
             
+            private global::System.Data.DataColumn columnDescription;
+            
             private global::System.Data.DataColumn columnrefWorkQueueId;
-            
-            private global::System.Data.DataColumn columnrefWorkQueueNotificationEventId;
-            
-            private global::System.Data.DataColumn columnIsActive;
             
             private global::System.Data.DataColumn columnSendAttachments;
             
-            private global::System.Data.DataColumn columnDescription;
+            private global::System.Data.DataColumn columnSelected;
+            
+            private global::System.Data.DataColumn columnRecordCreated;
+            
+            private global::System.Data.DataColumn columnRecordUpdatedBy;
+            
+            private global::System.Data.DataColumn columnId;
+            
+            private global::System.Data.DataColumn columnRecordCreatedBy;
+            
+            private global::System.Data.DataColumn columnRecordUpdated;
+            
+            private global::System.Data.DataColumn columnIsActive;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationDataTable() {
                 this.TableName = "WorkQueueNotification";
                 this.BeginInit();
@@ -1972,7 +2120,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueNotificationDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
@@ -1989,78 +2137,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected WorkQueueNotificationDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IdColumn {
-                get {
-                    return this.columnId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedByColumn {
-                get {
-                    return this.columnRecordUpdatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedColumn {
-                get {
-                    return this.columnRecordCreated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn SelectedColumn {
-                get {
-                    return this.columnSelected;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedColumn {
-                get {
-                    return this.columnRecordUpdated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedByColumn {
-                get {
-                    return this.columnRecordCreatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refOrigamNotificationTemplateIdColumn {
-                get {
-                    return this.columnrefOrigamNotificationTemplateId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refWorkQueueIdColumn {
-                get {
-                    return this.columnrefWorkQueueId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn refWorkQueueNotificationEventIdColumn {
                 get {
                     return this.columnrefWorkQueueNotificationEventId;
@@ -2068,23 +2152,15 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsActiveColumn {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refOrigamNotificationTemplateIdColumn {
                 get {
-                    return this.columnIsActive;
+                    return this.columnrefOrigamNotificationTemplateId;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn SendAttachmentsColumn {
-                get {
-                    return this.columnSendAttachments;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn DescriptionColumn {
                 get {
                     return this.columnDescription;
@@ -2092,7 +2168,79 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueIdColumn {
+                get {
+                    return this.columnrefWorkQueueId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SendAttachmentsColumn {
+                get {
+                    return this.columnSendAttachments;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SelectedColumn {
+                get {
+                    return this.columnSelected;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedColumn {
+                get {
+                    return this.columnRecordCreated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedByColumn {
+                get {
+                    return this.columnRecordUpdatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IdColumn {
+                get {
+                    return this.columnId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedByColumn {
+                get {
+                    return this.columnRecordCreatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedColumn {
+                get {
+                    return this.columnRecordUpdated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsActiveColumn {
+                get {
+                    return this.columnIsActive;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -2101,50 +2249,50 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRow this[int index] {
                 get {
                     return ((WorkQueueNotificationRow)(this.Rows[index]));
                 }
             }
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationRowChangeEventHandler WorkQueueNotificationRowChanging;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationRowChangeEventHandler WorkQueueNotificationRowChanged;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationRowChangeEventHandler WorkQueueNotificationRowDeleting;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationRowChangeEventHandler WorkQueueNotificationRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void AddWorkQueueNotificationRow(WorkQueueNotificationRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public WorkQueueNotificationRow AddWorkQueueNotificationRow(System.Guid Id, System.Guid RecordUpdatedBy, System.DateTime RecordCreated, bool Selected, System.DateTime RecordUpdated, System.Guid RecordCreatedBy, System.Guid refOrigamNotificationTemplateId, WorkQueueRow parentWorkQueueRowByWorkQueueNotification, System.Guid refWorkQueueNotificationEventId, bool IsActive, bool SendAttachments, string Description) {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public WorkQueueNotificationRow AddWorkQueueNotificationRow(System.Guid refWorkQueueNotificationEventId, System.Guid refOrigamNotificationTemplateId, string Description, WorkQueueRow parentWorkQueueRowByWorkQueueNotification, bool SendAttachments, bool Selected, System.DateTime RecordCreated, System.Guid RecordUpdatedBy, System.Guid Id, System.Guid RecordCreatedBy, System.DateTime RecordUpdated, bool IsActive) {
                 WorkQueueNotificationRow rowWorkQueueNotificationRow = ((WorkQueueNotificationRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        Id,
-                        RecordUpdatedBy,
-                        RecordCreated,
-                        Selected,
-                        RecordUpdated,
-                        RecordCreatedBy,
-                        refOrigamNotificationTemplateId,
-                        null,
                         refWorkQueueNotificationEventId,
-                        IsActive,
+                        refOrigamNotificationTemplateId,
+                        Description,
+                        null,
                         SendAttachments,
-                        Description};
+                        Selected,
+                        RecordCreated,
+                        RecordUpdatedBy,
+                        Id,
+                        RecordCreatedBy,
+                        RecordUpdated,
+                        IsActive};
                 if ((parentWorkQueueRowByWorkQueueNotification != null)) {
-                    columnValuesArray[7] = parentWorkQueueRowByWorkQueueNotification[16];
+                    columnValuesArray[3] = parentWorkQueueRowByWorkQueueNotification[18];
                 }
                 rowWorkQueueNotificationRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowWorkQueueNotificationRow);
@@ -2152,14 +2300,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRow FindById(System.Guid Id) {
                 return ((WorkQueueNotificationRow)(this.Rows.Find(new object[] {
                             Id})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public override global::System.Data.DataTable Clone() {
                 WorkQueueNotificationDataTable cln = ((WorkQueueNotificationDataTable)(base.Clone()));
                 cln.InitVars();
@@ -2167,113 +2315,112 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
                 return new WorkQueueNotificationDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
-                this.columnId = base.Columns["Id"];
-                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
-                this.columnRecordCreated = base.Columns["RecordCreated"];
-                this.columnSelected = base.Columns["Selected"];
-                this.columnRecordUpdated = base.Columns["RecordUpdated"];
-                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
-                this.columnrefOrigamNotificationTemplateId = base.Columns["refOrigamNotificationTemplateId"];
-                this.columnrefWorkQueueId = base.Columns["refWorkQueueId"];
                 this.columnrefWorkQueueNotificationEventId = base.Columns["refWorkQueueNotificationEventId"];
-                this.columnIsActive = base.Columns["IsActive"];
-                this.columnSendAttachments = base.Columns["SendAttachments"];
+                this.columnrefOrigamNotificationTemplateId = base.Columns["refOrigamNotificationTemplateId"];
                 this.columnDescription = base.Columns["Description"];
+                this.columnrefWorkQueueId = base.Columns["refWorkQueueId"];
+                this.columnSendAttachments = base.Columns["SendAttachments"];
+                this.columnSelected = base.Columns["Selected"];
+                this.columnRecordCreated = base.Columns["RecordCreated"];
+                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
+                this.columnId = base.Columns["Id"];
+                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
+                this.columnRecordUpdated = base.Columns["RecordUpdated"];
+                this.columnIsActive = base.Columns["IsActive"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnId);
-                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdatedBy);
-                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreated);
-                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnSelected);
-                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdated);
-                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreatedBy);
-                this.columnrefOrigamNotificationTemplateId = new global::System.Data.DataColumn("refOrigamNotificationTemplateId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefOrigamNotificationTemplateId);
-                this.columnrefWorkQueueId = new global::System.Data.DataColumn("refWorkQueueId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefWorkQueueId);
                 this.columnrefWorkQueueNotificationEventId = new global::System.Data.DataColumn("refWorkQueueNotificationEventId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefWorkQueueNotificationEventId);
-                this.columnIsActive = new global::System.Data.DataColumn("IsActive", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnIsActive);
-                this.columnSendAttachments = new global::System.Data.DataColumn("SendAttachments", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnSendAttachments);
+                this.columnrefOrigamNotificationTemplateId = new global::System.Data.DataColumn("refOrigamNotificationTemplateId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefOrigamNotificationTemplateId);
                 this.columnDescription = new global::System.Data.DataColumn("Description", typeof(string), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnDescription);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("PK_Id", new global::System.Data.DataColumn[] {
+                this.columnrefWorkQueueId = new global::System.Data.DataColumn("refWorkQueueId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefWorkQueueId);
+                this.columnSendAttachments = new global::System.Data.DataColumn("SendAttachments", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnSendAttachments);
+                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnSelected);
+                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreated);
+                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdatedBy);
+                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnId);
+                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreatedBy);
+                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdated);
+                this.columnIsActive = new global::System.Data.DataColumn("IsActive", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnIsActive);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
-                this.columnId.AllowDBNull = false;
-                this.columnId.Unique = true;
-                this.columnId.Namespace = "";
-                this.columnRecordUpdatedBy.Namespace = "";
-                this.columnRecordUpdatedBy.Caption = "Updated By";
-                this.columnRecordCreated.Namespace = "";
-                this.columnRecordCreated.Caption = "Time Created";
-                this.columnSelected.AllowDBNull = false;
-                this.columnSelected.Namespace = "";
-                this.columnSelected.DefaultValue = ((bool)(false));
-                this.columnRecordUpdated.Namespace = "";
-                this.columnRecordUpdated.Caption = "Time Updated";
-                this.columnRecordCreatedBy.Namespace = "";
-                this.columnRecordCreatedBy.Caption = "Created By";
-                this.columnrefOrigamNotificationTemplateId.AllowDBNull = false;
-                this.columnrefOrigamNotificationTemplateId.Namespace = "";
-                this.columnrefOrigamNotificationTemplateId.Caption = "Template";
-                this.columnrefWorkQueueId.AllowDBNull = false;
-                this.columnrefWorkQueueId.Namespace = "";
-                this.columnrefWorkQueueId.Caption = "Work Queue";
                 this.columnrefWorkQueueNotificationEventId.AllowDBNull = false;
                 this.columnrefWorkQueueNotificationEventId.Namespace = "";
                 this.columnrefWorkQueueNotificationEventId.Caption = "Event";
+                this.columnrefOrigamNotificationTemplateId.AllowDBNull = false;
+                this.columnrefOrigamNotificationTemplateId.Namespace = "";
+                this.columnrefOrigamNotificationTemplateId.Caption = "Template";
+                this.columnDescription.AllowDBNull = false;
+                this.columnDescription.Namespace = "";
+                this.columnDescription.MaxLength = 200;
+                this.columnrefWorkQueueId.AllowDBNull = false;
+                this.columnrefWorkQueueId.Namespace = "";
+                this.columnrefWorkQueueId.Caption = "Work Queue";
+                this.columnSendAttachments.AllowDBNull = false;
+                this.columnSendAttachments.Namespace = "";
+                this.columnSendAttachments.DefaultValue = ((bool)(false));
+                this.columnSelected.AllowDBNull = false;
+                this.columnSelected.Namespace = "";
+                this.columnSelected.DefaultValue = ((bool)(false));
+                this.columnRecordCreated.Namespace = "";
+                this.columnRecordCreated.Caption = "Time Created";
+                this.columnRecordUpdatedBy.Namespace = "";
+                this.columnRecordUpdatedBy.Caption = "Updated By";
+                this.columnId.AllowDBNull = false;
+                this.columnId.Unique = true;
+                this.columnId.Namespace = "";
+                this.columnRecordCreatedBy.Namespace = "";
+                this.columnRecordCreatedBy.Caption = "Created By";
+                this.columnRecordUpdated.Namespace = "";
+                this.columnRecordUpdated.Caption = "Time Updated";
                 this.columnIsActive.AllowDBNull = false;
                 this.columnIsActive.Namespace = "";
                 this.columnIsActive.Caption = "Active";
                 this.columnIsActive.DefaultValue = ((bool)(true));
-                this.columnSendAttachments.AllowDBNull = false;
-                this.columnSendAttachments.Namespace = "";
-                this.columnSendAttachments.DefaultValue = ((bool)(false));
-                this.columnDescription.AllowDBNull = false;
-                this.columnDescription.Namespace = "";
-                this.columnDescription.MaxLength = 200;
-                this.Locale = new global::System.Globalization.CultureInfo("cs-CZ");
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRow NewWorkQueueNotificationRow() {
                 return ((WorkQueueNotificationRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
                 return new WorkQueueNotificationRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Type GetRowType() {
                 return typeof(WorkQueueNotificationRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
                 if ((this.WorkQueueNotificationRowChanged != null)) {
@@ -2282,7 +2429,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
                 if ((this.WorkQueueNotificationRowChanging != null)) {
@@ -2291,7 +2438,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
                 if ((this.WorkQueueNotificationRowDeleted != null)) {
@@ -2300,7 +2447,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
                 if ((this.WorkQueueNotificationRowDeleting != null)) {
@@ -2309,13 +2456,13 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void RemoveWorkQueueNotificationRow(WorkQueueNotificationRow row) {
                 this.Rows.Remove(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
@@ -2385,30 +2532,30 @@ namespace Origam.Workflow.WorkQueue {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class WorkQueueNotificationContact_SendersDataTable : global::System.Data.TypedTableBase<WorkQueueNotificationContact_SendersRow> {
             
-            private global::System.Data.DataColumn columnId;
+            private global::System.Data.DataColumn columnValue;
             
-            private global::System.Data.DataColumn columnRecordUpdatedBy;
+            private global::System.Data.DataColumn columnrefWorkQueueNotificationContactTypeId;
             
-            private global::System.Data.DataColumn columnRecordCreated;
-            
-            private global::System.Data.DataColumn columnSelected;
-            
-            private global::System.Data.DataColumn columnRecordUpdated;
-            
-            private global::System.Data.DataColumn columnRecordCreatedBy;
+            private global::System.Data.DataColumn columnrefOrigamNotificationChannelTypeId;
             
             private global::System.Data.DataColumn columnrefWorkQueueNotificationId;
             
             private global::System.Data.DataColumn columnIsRecipient;
             
-            private global::System.Data.DataColumn columnrefOrigamNotificationChannelTypeId;
+            private global::System.Data.DataColumn columnSelected;
             
-            private global::System.Data.DataColumn columnrefWorkQueueNotificationContactTypeId;
+            private global::System.Data.DataColumn columnRecordCreated;
             
-            private global::System.Data.DataColumn columnValue;
+            private global::System.Data.DataColumn columnRecordUpdatedBy;
+            
+            private global::System.Data.DataColumn columnId;
+            
+            private global::System.Data.DataColumn columnRecordCreatedBy;
+            
+            private global::System.Data.DataColumn columnRecordUpdated;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_SendersDataTable() {
                 this.TableName = "WorkQueueNotificationContact_Senders";
                 this.BeginInit();
@@ -2417,7 +2564,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueNotificationContact_SendersDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
@@ -2434,94 +2581,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected WorkQueueNotificationContact_SendersDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IdColumn {
-                get {
-                    return this.columnId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedByColumn {
-                get {
-                    return this.columnRecordUpdatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedColumn {
-                get {
-                    return this.columnRecordCreated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn SelectedColumn {
-                get {
-                    return this.columnSelected;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedColumn {
-                get {
-                    return this.columnRecordUpdated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedByColumn {
-                get {
-                    return this.columnRecordCreatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refWorkQueueNotificationIdColumn {
-                get {
-                    return this.columnrefWorkQueueNotificationId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsRecipientColumn {
-                get {
-                    return this.columnIsRecipient;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refOrigamNotificationChannelTypeIdColumn {
-                get {
-                    return this.columnrefOrigamNotificationChannelTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refWorkQueueNotificationContactTypeIdColumn {
-                get {
-                    return this.columnrefWorkQueueNotificationContactTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn ValueColumn {
                 get {
                     return this.columnValue;
@@ -2529,7 +2596,87 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueNotificationContactTypeIdColumn {
+                get {
+                    return this.columnrefWorkQueueNotificationContactTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refOrigamNotificationChannelTypeIdColumn {
+                get {
+                    return this.columnrefOrigamNotificationChannelTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueNotificationIdColumn {
+                get {
+                    return this.columnrefWorkQueueNotificationId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsRecipientColumn {
+                get {
+                    return this.columnIsRecipient;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SelectedColumn {
+                get {
+                    return this.columnSelected;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedColumn {
+                get {
+                    return this.columnRecordCreated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedByColumn {
+                get {
+                    return this.columnRecordUpdatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IdColumn {
+                get {
+                    return this.columnId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedByColumn {
+                get {
+                    return this.columnRecordCreatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedColumn {
+                get {
+                    return this.columnRecordUpdated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -2538,49 +2685,49 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_SendersRow this[int index] {
                 get {
                     return ((WorkQueueNotificationContact_SendersRow)(this.Rows[index]));
                 }
             }
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_SendersRowChangeEventHandler WorkQueueNotificationContact_SendersRowChanging;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_SendersRowChangeEventHandler WorkQueueNotificationContact_SendersRowChanged;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_SendersRowChangeEventHandler WorkQueueNotificationContact_SendersRowDeleting;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_SendersRowChangeEventHandler WorkQueueNotificationContact_SendersRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void AddWorkQueueNotificationContact_SendersRow(WorkQueueNotificationContact_SendersRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public WorkQueueNotificationContact_SendersRow AddWorkQueueNotificationContact_SendersRow(System.Guid Id, System.Guid RecordUpdatedBy, System.DateTime RecordCreated, bool Selected, System.DateTime RecordUpdated, System.Guid RecordCreatedBy, WorkQueueNotificationRow parentWorkQueueNotificationRowByWorkQueueNotificationContact_Senders, bool IsRecipient, System.Guid refOrigamNotificationChannelTypeId, System.Guid refWorkQueueNotificationContactTypeId, string Value) {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public WorkQueueNotificationContact_SendersRow AddWorkQueueNotificationContact_SendersRow(string Value, System.Guid refWorkQueueNotificationContactTypeId, System.Guid refOrigamNotificationChannelTypeId, WorkQueueNotificationRow parentWorkQueueNotificationRowByWorkQueueNotificationContact_Senders, bool IsRecipient, bool Selected, System.DateTime RecordCreated, System.Guid RecordUpdatedBy, System.Guid Id, System.Guid RecordCreatedBy, System.DateTime RecordUpdated) {
                 WorkQueueNotificationContact_SendersRow rowWorkQueueNotificationContact_SendersRow = ((WorkQueueNotificationContact_SendersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        Id,
-                        RecordUpdatedBy,
-                        RecordCreated,
-                        Selected,
-                        RecordUpdated,
-                        RecordCreatedBy,
+                        Value,
+                        refWorkQueueNotificationContactTypeId,
+                        refOrigamNotificationChannelTypeId,
                         null,
                         IsRecipient,
-                        refOrigamNotificationChannelTypeId,
-                        refWorkQueueNotificationContactTypeId,
-                        Value};
+                        Selected,
+                        RecordCreated,
+                        RecordUpdatedBy,
+                        Id,
+                        RecordCreatedBy,
+                        RecordUpdated};
                 if ((parentWorkQueueNotificationRowByWorkQueueNotificationContact_Senders != null)) {
-                    columnValuesArray[6] = parentWorkQueueNotificationRowByWorkQueueNotificationContact_Senders[0];
+                    columnValuesArray[3] = parentWorkQueueNotificationRowByWorkQueueNotificationContact_Senders[8];
                 }
                 rowWorkQueueNotificationContact_SendersRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowWorkQueueNotificationContact_SendersRow);
@@ -2588,14 +2735,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_SendersRow FindById(System.Guid Id) {
                 return ((WorkQueueNotificationContact_SendersRow)(this.Rows.Find(new object[] {
                             Id})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public override global::System.Data.DataTable Clone() {
                 WorkQueueNotificationContact_SendersDataTable cln = ((WorkQueueNotificationContact_SendersDataTable)(base.Clone()));
                 cln.InitVars();
@@ -2603,105 +2750,104 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
                 return new WorkQueueNotificationContact_SendersDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
-                this.columnId = base.Columns["Id"];
-                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
-                this.columnRecordCreated = base.Columns["RecordCreated"];
-                this.columnSelected = base.Columns["Selected"];
-                this.columnRecordUpdated = base.Columns["RecordUpdated"];
-                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
+                this.columnValue = base.Columns["Value"];
+                this.columnrefWorkQueueNotificationContactTypeId = base.Columns["refWorkQueueNotificationContactTypeId"];
+                this.columnrefOrigamNotificationChannelTypeId = base.Columns["refOrigamNotificationChannelTypeId"];
                 this.columnrefWorkQueueNotificationId = base.Columns["refWorkQueueNotificationId"];
                 this.columnIsRecipient = base.Columns["IsRecipient"];
-                this.columnrefOrigamNotificationChannelTypeId = base.Columns["refOrigamNotificationChannelTypeId"];
-                this.columnrefWorkQueueNotificationContactTypeId = base.Columns["refWorkQueueNotificationContactTypeId"];
-                this.columnValue = base.Columns["Value"];
+                this.columnSelected = base.Columns["Selected"];
+                this.columnRecordCreated = base.Columns["RecordCreated"];
+                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
+                this.columnId = base.Columns["Id"];
+                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
+                this.columnRecordUpdated = base.Columns["RecordUpdated"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnId);
-                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdatedBy);
-                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreated);
-                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnSelected);
-                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdated);
-                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreatedBy);
+                this.columnValue = new global::System.Data.DataColumn("Value", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnValue);
+                this.columnrefWorkQueueNotificationContactTypeId = new global::System.Data.DataColumn("refWorkQueueNotificationContactTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefWorkQueueNotificationContactTypeId);
+                this.columnrefOrigamNotificationChannelTypeId = new global::System.Data.DataColumn("refOrigamNotificationChannelTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefOrigamNotificationChannelTypeId);
                 this.columnrefWorkQueueNotificationId = new global::System.Data.DataColumn("refWorkQueueNotificationId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefWorkQueueNotificationId);
                 this.columnIsRecipient = new global::System.Data.DataColumn("IsRecipient", typeof(bool), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnIsRecipient);
-                this.columnrefOrigamNotificationChannelTypeId = new global::System.Data.DataColumn("refOrigamNotificationChannelTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefOrigamNotificationChannelTypeId);
-                this.columnrefWorkQueueNotificationContactTypeId = new global::System.Data.DataColumn("refWorkQueueNotificationContactTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefWorkQueueNotificationContactTypeId);
-                this.columnValue = new global::System.Data.DataColumn("Value", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnValue);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("PK_Id", new global::System.Data.DataColumn[] {
+                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnSelected);
+                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreated);
+                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdatedBy);
+                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnId);
+                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreatedBy);
+                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdated);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
-                this.columnId.AllowDBNull = false;
-                this.columnId.Unique = true;
-                this.columnId.Namespace = "";
-                this.columnRecordUpdatedBy.Namespace = "";
-                this.columnRecordUpdatedBy.Caption = "Updated By";
-                this.columnRecordCreated.Namespace = "";
-                this.columnRecordCreated.Caption = "Time Created";
-                this.columnSelected.AllowDBNull = false;
-                this.columnSelected.Namespace = "";
-                this.columnSelected.DefaultValue = ((bool)(false));
-                this.columnRecordUpdated.Namespace = "";
-                this.columnRecordUpdated.Caption = "Time Updated";
-                this.columnRecordCreatedBy.Namespace = "";
-                this.columnRecordCreatedBy.Caption = "Created By";
+                this.columnValue.Namespace = "";
+                this.columnValue.MaxLength = 200;
+                this.columnrefWorkQueueNotificationContactTypeId.AllowDBNull = false;
+                this.columnrefWorkQueueNotificationContactTypeId.Namespace = "";
+                this.columnrefWorkQueueNotificationContactTypeId.Caption = "Type";
+                this.columnrefOrigamNotificationChannelTypeId.AllowDBNull = false;
+                this.columnrefOrigamNotificationChannelTypeId.Namespace = "";
+                this.columnrefOrigamNotificationChannelTypeId.Caption = "Channel";
                 this.columnrefWorkQueueNotificationId.AllowDBNull = false;
                 this.columnrefWorkQueueNotificationId.Namespace = "";
                 this.columnIsRecipient.AllowDBNull = false;
                 this.columnIsRecipient.Namespace = "";
                 this.columnIsRecipient.DefaultValue = ((bool)(false));
-                this.columnrefOrigamNotificationChannelTypeId.AllowDBNull = false;
-                this.columnrefOrigamNotificationChannelTypeId.Namespace = "";
-                this.columnrefOrigamNotificationChannelTypeId.Caption = "Channel";
-                this.columnrefWorkQueueNotificationContactTypeId.AllowDBNull = false;
-                this.columnrefWorkQueueNotificationContactTypeId.Namespace = "";
-                this.columnrefWorkQueueNotificationContactTypeId.Caption = "Type";
-                this.columnValue.Namespace = "";
-                this.columnValue.MaxLength = 200;
-                this.Locale = new global::System.Globalization.CultureInfo("cs-CZ");
+                this.columnSelected.AllowDBNull = false;
+                this.columnSelected.Namespace = "";
+                this.columnSelected.DefaultValue = ((bool)(false));
+                this.columnRecordCreated.Namespace = "";
+                this.columnRecordCreated.Caption = "Time Created";
+                this.columnRecordUpdatedBy.Namespace = "";
+                this.columnRecordUpdatedBy.Caption = "Updated By";
+                this.columnId.AllowDBNull = false;
+                this.columnId.Unique = true;
+                this.columnId.Namespace = "";
+                this.columnRecordCreatedBy.Namespace = "";
+                this.columnRecordCreatedBy.Caption = "Created By";
+                this.columnRecordUpdated.Namespace = "";
+                this.columnRecordUpdated.Caption = "Time Updated";
                 this.Namespace = "";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_SendersRow NewWorkQueueNotificationContact_SendersRow() {
                 return ((WorkQueueNotificationContact_SendersRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
                 return new WorkQueueNotificationContact_SendersRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Type GetRowType() {
                 return typeof(WorkQueueNotificationContact_SendersRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
                 if ((this.WorkQueueNotificationContact_SendersRowChanged != null)) {
@@ -2710,7 +2856,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
                 if ((this.WorkQueueNotificationContact_SendersRowChanging != null)) {
@@ -2719,7 +2865,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
                 if ((this.WorkQueueNotificationContact_SendersRowDeleted != null)) {
@@ -2728,7 +2874,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
                 if ((this.WorkQueueNotificationContact_SendersRowDeleting != null)) {
@@ -2737,13 +2883,13 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void RemoveWorkQueueNotificationContact_SendersRow(WorkQueueNotificationContact_SendersRow row) {
                 this.Rows.Remove(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
@@ -2813,30 +2959,30 @@ namespace Origam.Workflow.WorkQueue {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class WorkQueueNotificationContact_RecipientsDataTable : global::System.Data.TypedTableBase<WorkQueueNotificationContact_RecipientsRow> {
             
-            private global::System.Data.DataColumn columnId;
+            private global::System.Data.DataColumn columnValue;
             
-            private global::System.Data.DataColumn columnRecordUpdatedBy;
+            private global::System.Data.DataColumn columnrefWorkQueueNotificationContactTypeId;
             
-            private global::System.Data.DataColumn columnRecordCreated;
-            
-            private global::System.Data.DataColumn columnSelected;
-            
-            private global::System.Data.DataColumn columnRecordUpdated;
-            
-            private global::System.Data.DataColumn columnRecordCreatedBy;
+            private global::System.Data.DataColumn columnrefOrigamNotificationChannelTypeId;
             
             private global::System.Data.DataColumn columnrefWorkQueueNotificationId;
             
             private global::System.Data.DataColumn columnIsRecipient;
             
-            private global::System.Data.DataColumn columnrefOrigamNotificationChannelTypeId;
+            private global::System.Data.DataColumn columnSelected;
             
-            private global::System.Data.DataColumn columnrefWorkQueueNotificationContactTypeId;
+            private global::System.Data.DataColumn columnRecordCreated;
             
-            private global::System.Data.DataColumn columnValue;
+            private global::System.Data.DataColumn columnRecordUpdatedBy;
+            
+            private global::System.Data.DataColumn columnId;
+            
+            private global::System.Data.DataColumn columnRecordCreatedBy;
+            
+            private global::System.Data.DataColumn columnRecordUpdated;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_RecipientsDataTable() {
                 this.TableName = "WorkQueueNotificationContact_Recipients";
                 this.BeginInit();
@@ -2845,7 +2991,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueNotificationContact_RecipientsDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
@@ -2862,94 +3008,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected WorkQueueNotificationContact_RecipientsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IdColumn {
-                get {
-                    return this.columnId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedByColumn {
-                get {
-                    return this.columnRecordUpdatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedColumn {
-                get {
-                    return this.columnRecordCreated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn SelectedColumn {
-                get {
-                    return this.columnSelected;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordUpdatedColumn {
-                get {
-                    return this.columnRecordUpdated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn RecordCreatedByColumn {
-                get {
-                    return this.columnRecordCreatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refWorkQueueNotificationIdColumn {
-                get {
-                    return this.columnrefWorkQueueNotificationId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn IsRecipientColumn {
-                get {
-                    return this.columnIsRecipient;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refOrigamNotificationChannelTypeIdColumn {
-                get {
-                    return this.columnrefOrigamNotificationChannelTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public global::System.Data.DataColumn refWorkQueueNotificationContactTypeIdColumn {
-                get {
-                    return this.columnrefWorkQueueNotificationContactTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn ValueColumn {
                 get {
                     return this.columnValue;
@@ -2957,7 +3023,87 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueNotificationContactTypeIdColumn {
+                get {
+                    return this.columnrefWorkQueueNotificationContactTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refOrigamNotificationChannelTypeIdColumn {
+                get {
+                    return this.columnrefOrigamNotificationChannelTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn refWorkQueueNotificationIdColumn {
+                get {
+                    return this.columnrefWorkQueueNotificationId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IsRecipientColumn {
+                get {
+                    return this.columnIsRecipient;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SelectedColumn {
+                get {
+                    return this.columnSelected;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedColumn {
+                get {
+                    return this.columnRecordCreated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedByColumn {
+                get {
+                    return this.columnRecordUpdatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn IdColumn {
+                get {
+                    return this.columnId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordCreatedByColumn {
+                get {
+                    return this.columnRecordCreatedBy;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn RecordUpdatedColumn {
+                get {
+                    return this.columnRecordUpdated;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -2966,49 +3112,49 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_RecipientsRow this[int index] {
                 get {
                     return ((WorkQueueNotificationContact_RecipientsRow)(this.Rows[index]));
                 }
             }
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_RecipientsRowChangeEventHandler WorkQueueNotificationContact_RecipientsRowChanging;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_RecipientsRowChangeEventHandler WorkQueueNotificationContact_RecipientsRowChanged;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_RecipientsRowChangeEventHandler WorkQueueNotificationContact_RecipientsRowDeleting;
             
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public event WorkQueueNotificationContact_RecipientsRowChangeEventHandler WorkQueueNotificationContact_RecipientsRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void AddWorkQueueNotificationContact_RecipientsRow(WorkQueueNotificationContact_RecipientsRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public WorkQueueNotificationContact_RecipientsRow AddWorkQueueNotificationContact_RecipientsRow(System.Guid Id, System.Guid RecordUpdatedBy, System.DateTime RecordCreated, bool Selected, System.DateTime RecordUpdated, System.Guid RecordCreatedBy, WorkQueueNotificationRow parentWorkQueueNotificationRowByWorkQueueNotificationContact_Recipients, bool IsRecipient, System.Guid refOrigamNotificationChannelTypeId, System.Guid refWorkQueueNotificationContactTypeId, string Value) {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public WorkQueueNotificationContact_RecipientsRow AddWorkQueueNotificationContact_RecipientsRow(string Value, System.Guid refWorkQueueNotificationContactTypeId, System.Guid refOrigamNotificationChannelTypeId, WorkQueueNotificationRow parentWorkQueueNotificationRowByWorkQueueNotificationContact_Recipients, bool IsRecipient, bool Selected, System.DateTime RecordCreated, System.Guid RecordUpdatedBy, System.Guid Id, System.Guid RecordCreatedBy, System.DateTime RecordUpdated) {
                 WorkQueueNotificationContact_RecipientsRow rowWorkQueueNotificationContact_RecipientsRow = ((WorkQueueNotificationContact_RecipientsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        Id,
-                        RecordUpdatedBy,
-                        RecordCreated,
-                        Selected,
-                        RecordUpdated,
-                        RecordCreatedBy,
+                        Value,
+                        refWorkQueueNotificationContactTypeId,
+                        refOrigamNotificationChannelTypeId,
                         null,
                         IsRecipient,
-                        refOrigamNotificationChannelTypeId,
-                        refWorkQueueNotificationContactTypeId,
-                        Value};
+                        Selected,
+                        RecordCreated,
+                        RecordUpdatedBy,
+                        Id,
+                        RecordCreatedBy,
+                        RecordUpdated};
                 if ((parentWorkQueueNotificationRowByWorkQueueNotificationContact_Recipients != null)) {
-                    columnValuesArray[6] = parentWorkQueueNotificationRowByWorkQueueNotificationContact_Recipients[0];
+                    columnValuesArray[3] = parentWorkQueueNotificationRowByWorkQueueNotificationContact_Recipients[8];
                 }
                 rowWorkQueueNotificationContact_RecipientsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowWorkQueueNotificationContact_RecipientsRow);
@@ -3016,14 +3162,14 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_RecipientsRow FindById(System.Guid Id) {
                 return ((WorkQueueNotificationContact_RecipientsRow)(this.Rows.Find(new object[] {
                             Id})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public override global::System.Data.DataTable Clone() {
                 WorkQueueNotificationContact_RecipientsDataTable cln = ((WorkQueueNotificationContact_RecipientsDataTable)(base.Clone()));
                 cln.InitVars();
@@ -3031,105 +3177,104 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
                 return new WorkQueueNotificationContact_RecipientsDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
-                this.columnId = base.Columns["Id"];
-                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
-                this.columnRecordCreated = base.Columns["RecordCreated"];
-                this.columnSelected = base.Columns["Selected"];
-                this.columnRecordUpdated = base.Columns["RecordUpdated"];
-                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
+                this.columnValue = base.Columns["Value"];
+                this.columnrefWorkQueueNotificationContactTypeId = base.Columns["refWorkQueueNotificationContactTypeId"];
+                this.columnrefOrigamNotificationChannelTypeId = base.Columns["refOrigamNotificationChannelTypeId"];
                 this.columnrefWorkQueueNotificationId = base.Columns["refWorkQueueNotificationId"];
                 this.columnIsRecipient = base.Columns["IsRecipient"];
-                this.columnrefOrigamNotificationChannelTypeId = base.Columns["refOrigamNotificationChannelTypeId"];
-                this.columnrefWorkQueueNotificationContactTypeId = base.Columns["refWorkQueueNotificationContactTypeId"];
-                this.columnValue = base.Columns["Value"];
+                this.columnSelected = base.Columns["Selected"];
+                this.columnRecordCreated = base.Columns["RecordCreated"];
+                this.columnRecordUpdatedBy = base.Columns["RecordUpdatedBy"];
+                this.columnId = base.Columns["Id"];
+                this.columnRecordCreatedBy = base.Columns["RecordCreatedBy"];
+                this.columnRecordUpdated = base.Columns["RecordUpdated"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             private void InitClass() {
-                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnId);
-                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdatedBy);
-                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreated);
-                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnSelected);
-                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordUpdated);
-                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnRecordCreatedBy);
+                this.columnValue = new global::System.Data.DataColumn("Value", typeof(string), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnValue);
+                this.columnrefWorkQueueNotificationContactTypeId = new global::System.Data.DataColumn("refWorkQueueNotificationContactTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefWorkQueueNotificationContactTypeId);
+                this.columnrefOrigamNotificationChannelTypeId = new global::System.Data.DataColumn("refOrigamNotificationChannelTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnrefOrigamNotificationChannelTypeId);
                 this.columnrefWorkQueueNotificationId = new global::System.Data.DataColumn("refWorkQueueNotificationId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnrefWorkQueueNotificationId);
                 this.columnIsRecipient = new global::System.Data.DataColumn("IsRecipient", typeof(bool), null, global::System.Data.MappingType.Attribute);
                 base.Columns.Add(this.columnIsRecipient);
-                this.columnrefOrigamNotificationChannelTypeId = new global::System.Data.DataColumn("refOrigamNotificationChannelTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefOrigamNotificationChannelTypeId);
-                this.columnrefWorkQueueNotificationContactTypeId = new global::System.Data.DataColumn("refWorkQueueNotificationContactTypeId", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnrefWorkQueueNotificationContactTypeId);
-                this.columnValue = new global::System.Data.DataColumn("Value", typeof(string), null, global::System.Data.MappingType.Attribute);
-                base.Columns.Add(this.columnValue);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("PK_Id", new global::System.Data.DataColumn[] {
+                this.columnSelected = new global::System.Data.DataColumn("Selected", typeof(bool), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnSelected);
+                this.columnRecordCreated = new global::System.Data.DataColumn("RecordCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreated);
+                this.columnRecordUpdatedBy = new global::System.Data.DataColumn("RecordUpdatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdatedBy);
+                this.columnId = new global::System.Data.DataColumn("Id", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnId);
+                this.columnRecordCreatedBy = new global::System.Data.DataColumn("RecordCreatedBy", typeof(global::System.Guid), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordCreatedBy);
+                this.columnRecordUpdated = new global::System.Data.DataColumn("RecordUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Attribute);
+                base.Columns.Add(this.columnRecordUpdated);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnId}, true));
-                this.columnId.AllowDBNull = false;
-                this.columnId.Unique = true;
-                this.columnId.Namespace = "";
-                this.columnRecordUpdatedBy.Namespace = "";
-                this.columnRecordUpdatedBy.Caption = "Updated By";
-                this.columnRecordCreated.Namespace = "";
-                this.columnRecordCreated.Caption = "Time Created";
-                this.columnSelected.AllowDBNull = false;
-                this.columnSelected.Namespace = "";
-                this.columnSelected.DefaultValue = ((bool)(false));
-                this.columnRecordUpdated.Namespace = "";
-                this.columnRecordUpdated.Caption = "Time Updated";
-                this.columnRecordCreatedBy.Namespace = "";
-                this.columnRecordCreatedBy.Caption = "Created By";
+                this.columnValue.Namespace = "";
+                this.columnValue.MaxLength = 200;
+                this.columnrefWorkQueueNotificationContactTypeId.AllowDBNull = false;
+                this.columnrefWorkQueueNotificationContactTypeId.Namespace = "";
+                this.columnrefWorkQueueNotificationContactTypeId.Caption = "Type";
+                this.columnrefOrigamNotificationChannelTypeId.AllowDBNull = false;
+                this.columnrefOrigamNotificationChannelTypeId.Namespace = "";
+                this.columnrefOrigamNotificationChannelTypeId.Caption = "Channel";
                 this.columnrefWorkQueueNotificationId.AllowDBNull = false;
                 this.columnrefWorkQueueNotificationId.Namespace = "";
                 this.columnIsRecipient.AllowDBNull = false;
                 this.columnIsRecipient.Namespace = "";
                 this.columnIsRecipient.DefaultValue = ((bool)(false));
-                this.columnrefOrigamNotificationChannelTypeId.AllowDBNull = false;
-                this.columnrefOrigamNotificationChannelTypeId.Namespace = "";
-                this.columnrefOrigamNotificationChannelTypeId.Caption = "Channel";
-                this.columnrefWorkQueueNotificationContactTypeId.AllowDBNull = false;
-                this.columnrefWorkQueueNotificationContactTypeId.Namespace = "";
-                this.columnrefWorkQueueNotificationContactTypeId.Caption = "Type";
-                this.columnValue.Namespace = "";
-                this.columnValue.MaxLength = 200;
-                this.Locale = new global::System.Globalization.CultureInfo("cs-CZ");
+                this.columnSelected.AllowDBNull = false;
+                this.columnSelected.Namespace = "";
+                this.columnSelected.DefaultValue = ((bool)(false));
+                this.columnRecordCreated.Namespace = "";
+                this.columnRecordCreated.Caption = "Time Created";
+                this.columnRecordUpdatedBy.Namespace = "";
+                this.columnRecordUpdatedBy.Caption = "Updated By";
+                this.columnId.AllowDBNull = false;
+                this.columnId.Unique = true;
+                this.columnId.Namespace = "";
+                this.columnRecordCreatedBy.Namespace = "";
+                this.columnRecordCreatedBy.Caption = "Created By";
+                this.columnRecordUpdated.Namespace = "";
+                this.columnRecordUpdated.Caption = "Time Updated";
                 this.Namespace = "";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_RecipientsRow NewWorkQueueNotificationContact_RecipientsRow() {
                 return ((WorkQueueNotificationContact_RecipientsRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
                 return new WorkQueueNotificationContact_RecipientsRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override global::System.Type GetRowType() {
                 return typeof(WorkQueueNotificationContact_RecipientsRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
                 if ((this.WorkQueueNotificationContact_RecipientsRowChanged != null)) {
@@ -3138,7 +3283,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
                 if ((this.WorkQueueNotificationContact_RecipientsRowChanging != null)) {
@@ -3147,7 +3292,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
                 if ((this.WorkQueueNotificationContact_RecipientsRowDeleted != null)) {
@@ -3156,7 +3301,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
                 if ((this.WorkQueueNotificationContact_RecipientsRowDeleting != null)) {
@@ -3165,13 +3310,13 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void RemoveWorkQueueNotificationContact_RecipientsRow(WorkQueueNotificationContact_RecipientsRow row) {
                 this.Rows.Remove(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
@@ -3242,30 +3387,300 @@ namespace Origam.Workflow.WorkQueue {
             private WorkQueueDataTable tableWorkQueue;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
                 this.tableWorkQueue = ((WorkQueueDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int CntExpired {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int CntTotal {
                 get {
                     try {
-                        return ((int)(this[this.tableWorkQueue.CntExpiredColumn]));
+                        return ((int)(this[this.tableWorkQueue.CntTotalColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CntExpired\' in table \'WorkQueue\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'CntTotal\' in table \'WorkQueue\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableWorkQueue.CntExpiredColumn] = value;
+                    this[this.tableWorkQueue.CntTotalColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsMessageCountDisplayed {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.IsMessageCountDisplayedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.IsMessageCountDisplayedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string RemovalNewValue {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.RemovalNewValueColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalNewValue\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RemovalNewValueColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string CreationOldValue {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.CreationOldValueColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CreationOldValue\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.CreationOldValueColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Roles {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.RolesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Roles\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RolesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string WorkQueueClass {
+                get {
+                    return ((string)(this[this.tableWorkQueue.WorkQueueClassColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.WorkQueueClassColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ExternalSourceState {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.ExternalSourceStateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceState\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.ExternalSourceStateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int MaxRetries {
+                get {
+                    return ((int)(this[this.tableWorkQueue.MaxRetriesColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.MaxRetriesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string RemovalOldValue {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.RemovalOldValueColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalOldValue\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RemovalOldValueColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool EnableThrottling {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.EnableThrottlingColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.EnableThrottlingColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsErrorQueue {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.IsErrorQueueColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.IsErrorQueueColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Name {
+                get {
+                    return ((string)(this[this.tableWorkQueue.NameColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.NameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string CreationCondition {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.CreationConditionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CreationCondition\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.CreationConditionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ExternalSourcePassword {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.ExternalSourcePasswordColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourcePassword\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.ExternalSourcePasswordColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsActive {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.IsActiveColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.IsActiveColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Selected {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.SelectedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.SelectedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordCreated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueue.RecordCreatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RecordCreatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordUpdatedBy {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueue.RecordUpdatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RecordUpdatedByColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid Id {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueue.IdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.IdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool ReverseLookupFieldValues {
+                get {
+                    return ((bool)(this[this.tableWorkQueue.ReverseLookupFieldValuesColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.ReverseLookupFieldValuesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string CreationFieldName {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.CreationFieldNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CreationFieldName\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.CreationFieldNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid refCreationOrigamStateMachineEventTypeId {
                 get {
                     try {
@@ -3282,298 +3697,39 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsErrorQueue {
-                get {
-                    return ((bool)(this[this.tableWorkQueue.IsErrorQueueColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.IsErrorQueueColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string CreationCondition {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string QueueProcessor {
                 get {
                     try {
-                        return ((string)(this[this.tableWorkQueue.CreationConditionColumn]));
+                        return ((string)(this[this.tableWorkQueue.QueueProcessorColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CreationCondition\' in table \'WorkQueue\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'QueueProcessor\' in table \'WorkQueue\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableWorkQueue.CreationConditionColumn] = value;
+                    this[this.tableWorkQueue.QueueProcessorColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueExternalSourceTypeId {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int CntFromMe {
                 get {
                     try {
-                        return ((global::System.Guid)(this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn]));
+                        return ((int)(this[this.tableWorkQueue.CntFromMeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'refWorkQueueExternalSourceTypeId\' in table \'WorkQueue\' is D" +
-                                "BNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'CntFromMe\' in table \'WorkQueue\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn] = value;
+                    this[this.tableWorkQueue.CntFromMeColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string WorkQueueClass {
-                get {
-                    return ((string)(this[this.tableWorkQueue.WorkQueueClassColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.WorkQueueClassColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string ExternalSourceState {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.ExternalSourceStateColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceState\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.ExternalSourceStateColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string Roles {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.RolesColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Roles\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.RolesColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string ApiAccessRoles {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.ApiAccessRolesColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ApiAccessRoles\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.ApiAccessRolesColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string RemovalFieldName {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.RemovalFieldNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalFieldName\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.RemovalFieldNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordUpdated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueue.RecordUpdatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.RecordUpdatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordCreated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueue.RecordCreatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.RecordCreatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsActive {
-                get {
-                    return ((bool)(this[this.tableWorkQueue.IsActiveColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.IsActiveColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool Selected {
-                get {
-                    return ((bool)(this[this.tableWorkQueue.SelectedColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.SelectedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordCreatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueue.RecordCreatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.RecordCreatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string Name {
-                get {
-                    return ((string)(this[this.tableWorkQueue.NameColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.NameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid Id {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueue.IdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueue.IdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordUpdatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueue.RecordUpdatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.RecordUpdatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string CreationOldValue {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.CreationOldValueColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CreationOldValue\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.CreationOldValueColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime ExternalSourceLastTime {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueue.ExternalSourceLastTimeColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceLastTime\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.ExternalSourceLastTimeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string ExternalSourceLastMessage {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.ExternalSourceLastMessageColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceLastMessage\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.ExternalSourceLastMessageColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string RemovalCondition {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.RemovalConditionColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalCondition\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.RemovalConditionColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public int CntToMe {
                 get {
                     try {
@@ -3589,23 +3745,50 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string RemovalNewValue {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int CntExpired {
                 get {
                     try {
-                        return ((string)(this[this.tableWorkQueue.RemovalNewValueColumn]));
+                        return ((int)(this[this.tableWorkQueue.CntExpiredColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalNewValue\' in table \'WorkQueue\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'CntExpired\' in table \'WorkQueue\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableWorkQueue.RemovalNewValueColumn] = value;
+                    this[this.tableWorkQueue.CntExpiredColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int ThrottlingIntervalSeconds {
+                get {
+                    return ((int)(this[this.tableWorkQueue.ThrottlingIntervalSecondsColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.ThrottlingIntervalSecondsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string RemovalFieldName {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.RemovalFieldNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalFieldName\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RemovalFieldNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid refRemovalOrigamStateMachineEventTypeId {
                 get {
                     try {
@@ -3622,66 +3805,78 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int CntTotal {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime ExternalSourceLastTime {
                 get {
                     try {
-                        return ((int)(this[this.tableWorkQueue.CntTotalColumn]));
+                        return ((global::System.DateTime)(this[this.tableWorkQueue.ExternalSourceLastTimeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CntTotal\' in table \'WorkQueue\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceLastTime\' in table \'WorkQueue\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableWorkQueue.CntTotalColumn] = value;
+                    this[this.tableWorkQueue.ExternalSourceLastTimeColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string ExternalSourceUserName {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueRetryTypeId {
                 get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.ExternalSourceUserNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceUserName\' in table \'WorkQueue\' is DBNull.", e);
-                    }
+                    return ((global::System.Guid)(this[this.tableWorkQueue.refWorkQueueRetryTypeIdColumn]));
                 }
                 set {
-                    this[this.tableWorkQueue.ExternalSourceUserNameColumn] = value;
+                    this[this.tableWorkQueue.refWorkQueueRetryTypeIdColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string RemovalOldValue {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int ThrottlingItemsPerInterval {
                 get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.RemovalOldValueColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalOldValue\' in table \'WorkQueue\' is DBNull.", e);
-                    }
+                    return ((int)(this[this.tableWorkQueue.ThrottlingItemsPerIntervalColumn]));
                 }
                 set {
-                    this[this.tableWorkQueue.RemovalOldValueColumn] = value;
+                    this[this.tableWorkQueue.ThrottlingItemsPerIntervalColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsMessageCountDisplayed {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int RetryIntervalSeconds {
                 get {
-                    return ((bool)(this[this.tableWorkQueue.IsMessageCountDisplayedColumn]));
+                    return ((int)(this[this.tableWorkQueue.RetryIntervalSecondsColumn]));
                 }
                 set {
-                    this[this.tableWorkQueue.IsMessageCountDisplayedColumn] = value;
+                    this[this.tableWorkQueue.RetryIntervalSecondsColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ReferenceCode {
+                get {
+                    return ((string)(this[this.tableWorkQueue.ReferenceCodeColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.ReferenceCodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public decimal ExponentialRetryBase {
+                get {
+                    return ((decimal)(this[this.tableWorkQueue.ExponentialRetryBaseColumn]));
+                }
+                set {
+                    this[this.tableWorkQueue.ExponentialRetryBaseColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string CreationNewValue {
                 get {
                     try {
@@ -3697,39 +3892,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string CreationFieldName {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueue.CreationFieldNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CreationFieldName\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.CreationFieldNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int CntFromMe {
-                get {
-                    try {
-                        return ((int)(this[this.tableWorkQueue.CntFromMeColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CntFromMe\' in table \'WorkQueue\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueue.CntFromMeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string ExternalSourceConnection {
                 get {
                     try {
@@ -3745,369 +3908,456 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string ExternalSourcePassword {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string RemovalCondition {
                 get {
                     try {
-                        return ((string)(this[this.tableWorkQueue.ExternalSourcePasswordColumn]));
+                        return ((string)(this[this.tableWorkQueue.RemovalConditionColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourcePassword\' in table \'WorkQueue\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'RemovalCondition\' in table \'WorkQueue\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableWorkQueue.ExternalSourcePasswordColumn] = value;
+                    this[this.tableWorkQueue.RemovalConditionColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool ReverseLookupFieldValues {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ExternalSourceUserName {
                 get {
-                    return ((bool)(this[this.tableWorkQueue.ReverseLookupFieldValuesColumn]));
+                    try {
+                        return ((string)(this[this.tableWorkQueue.ExternalSourceUserNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceUserName\' in table \'WorkQueue\' is DBNull.", e);
+                    }
                 }
                 set {
-                    this[this.tableWorkQueue.ReverseLookupFieldValuesColumn] = value;
+                    this[this.tableWorkQueue.ExternalSourceUserNameColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string ReferenceCode {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ExternalSourceLastMessage {
                 get {
-                    return ((string)(this[this.tableWorkQueue.ReferenceCodeColumn]));
+                    try {
+                        return ((string)(this[this.tableWorkQueue.ExternalSourceLastMessageColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ExternalSourceLastMessage\' in table \'WorkQueue\' is DBNull.", e);
+                    }
                 }
                 set {
-                    this[this.tableWorkQueue.ReferenceCodeColumn] = value;
+                    this[this.tableWorkQueue.ExternalSourceLastMessageColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCntExpiredNull() {
-                return this.IsNull(this.tableWorkQueue.CntExpiredColumn);
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ApiAccessRoles {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueue.ApiAccessRolesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ApiAccessRoles\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.ApiAccessRolesColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCntExpiredNull() {
-                this[this.tableWorkQueue.CntExpiredColumn] = global::System.Convert.DBNull;
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueExternalSourceTypeId {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'refWorkQueueExternalSourceTypeId\' in table \'WorkQueue\' is D" +
+                                "BNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsrefCreationOrigamStateMachineEventTypeIdNull() {
-                return this.IsNull(this.tableWorkQueue.refCreationOrigamStateMachineEventTypeIdColumn);
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordCreatedBy {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueue.RecordCreatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RecordCreatedByColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetrefCreationOrigamStateMachineEventTypeIdNull() {
-                this[this.tableWorkQueue.refCreationOrigamStateMachineEventTypeIdColumn] = global::System.Convert.DBNull;
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordUpdated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueue.RecordUpdatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueue\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueue.RecordUpdatedColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCreationConditionNull() {
-                return this.IsNull(this.tableWorkQueue.CreationConditionColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCreationConditionNull() {
-                this[this.tableWorkQueue.CreationConditionColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsrefWorkQueueExternalSourceTypeIdNull() {
-                return this.IsNull(this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetrefWorkQueueExternalSourceTypeIdNull() {
-                this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsExternalSourceStateNull() {
-                return this.IsNull(this.tableWorkQueue.ExternalSourceStateColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetExternalSourceStateNull() {
-                this[this.tableWorkQueue.ExternalSourceStateColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRolesNull() {
-                return this.IsNull(this.tableWorkQueue.RolesColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRolesNull() {
-                this[this.tableWorkQueue.RolesColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsApiAccessRolesNull() {
-                return this.IsNull(this.tableWorkQueue.ApiAccessRolesColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetApiAccessRolesNull() {
-                this[this.tableWorkQueue.ApiAccessRolesColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRemovalFieldNameNull() {
-                return this.IsNull(this.tableWorkQueue.RemovalFieldNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRemovalFieldNameNull() {
-                this[this.tableWorkQueue.RemovalFieldNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedNull() {
-                return this.IsNull(this.tableWorkQueue.RecordUpdatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedNull() {
-                this[this.tableWorkQueue.RecordUpdatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedNull() {
-                return this.IsNull(this.tableWorkQueue.RecordCreatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedNull() {
-                this[this.tableWorkQueue.RecordCreatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedByNull() {
-                return this.IsNull(this.tableWorkQueue.RecordCreatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedByNull() {
-                this[this.tableWorkQueue.RecordCreatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedByNull() {
-                return this.IsNull(this.tableWorkQueue.RecordUpdatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedByNull() {
-                this[this.tableWorkQueue.RecordUpdatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCreationOldValueNull() {
-                return this.IsNull(this.tableWorkQueue.CreationOldValueColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCreationOldValueNull() {
-                this[this.tableWorkQueue.CreationOldValueColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsExternalSourceLastTimeNull() {
-                return this.IsNull(this.tableWorkQueue.ExternalSourceLastTimeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetExternalSourceLastTimeNull() {
-                this[this.tableWorkQueue.ExternalSourceLastTimeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsExternalSourceLastMessageNull() {
-                return this.IsNull(this.tableWorkQueue.ExternalSourceLastMessageColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetExternalSourceLastMessageNull() {
-                this[this.tableWorkQueue.ExternalSourceLastMessageColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRemovalConditionNull() {
-                return this.IsNull(this.tableWorkQueue.RemovalConditionColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRemovalConditionNull() {
-                this[this.tableWorkQueue.RemovalConditionColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCntToMeNull() {
-                return this.IsNull(this.tableWorkQueue.CntToMeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCntToMeNull() {
-                this[this.tableWorkQueue.CntToMeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRemovalNewValueNull() {
-                return this.IsNull(this.tableWorkQueue.RemovalNewValueColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRemovalNewValueNull() {
-                this[this.tableWorkQueue.RemovalNewValueColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsrefRemovalOrigamStateMachineEventTypeIdNull() {
-                return this.IsNull(this.tableWorkQueue.refRemovalOrigamStateMachineEventTypeIdColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetrefRemovalOrigamStateMachineEventTypeIdNull() {
-                this[this.tableWorkQueue.refRemovalOrigamStateMachineEventTypeIdColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsCntTotalNull() {
                 return this.IsNull(this.tableWorkQueue.CntTotalColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetCntTotalNull() {
                 this[this.tableWorkQueue.CntTotalColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsExternalSourceUserNameNull() {
-                return this.IsNull(this.tableWorkQueue.ExternalSourceUserNameColumn);
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRemovalNewValueNull() {
+                return this.IsNull(this.tableWorkQueue.RemovalNewValueColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetExternalSourceUserNameNull() {
-                this[this.tableWorkQueue.ExternalSourceUserNameColumn] = global::System.Convert.DBNull;
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRemovalNewValueNull() {
+                this[this.tableWorkQueue.RemovalNewValueColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCreationOldValueNull() {
+                return this.IsNull(this.tableWorkQueue.CreationOldValueColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCreationOldValueNull() {
+                this[this.tableWorkQueue.CreationOldValueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRolesNull() {
+                return this.IsNull(this.tableWorkQueue.RolesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRolesNull() {
+                this[this.tableWorkQueue.RolesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsExternalSourceStateNull() {
+                return this.IsNull(this.tableWorkQueue.ExternalSourceStateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetExternalSourceStateNull() {
+                this[this.tableWorkQueue.ExternalSourceStateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsRemovalOldValueNull() {
                 return this.IsNull(this.tableWorkQueue.RemovalOldValueColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetRemovalOldValueNull() {
                 this[this.tableWorkQueue.RemovalOldValueColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCreationNewValueNull() {
-                return this.IsNull(this.tableWorkQueue.CreationNewValueColumn);
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCreationConditionNull() {
+                return this.IsNull(this.tableWorkQueue.CreationConditionColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCreationNewValueNull() {
-                this[this.tableWorkQueue.CreationNewValueColumn] = global::System.Convert.DBNull;
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCreationConditionNull() {
+                this[this.tableWorkQueue.CreationConditionColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCreationFieldNameNull() {
-                return this.IsNull(this.tableWorkQueue.CreationFieldNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCreationFieldNameNull() {
-                this[this.tableWorkQueue.CreationFieldNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCntFromMeNull() {
-                return this.IsNull(this.tableWorkQueue.CntFromMeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCntFromMeNull() {
-                this[this.tableWorkQueue.CntFromMeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsExternalSourceConnectionNull() {
-                return this.IsNull(this.tableWorkQueue.ExternalSourceConnectionColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetExternalSourceConnectionNull() {
-                this[this.tableWorkQueue.ExternalSourceConnectionColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsExternalSourcePasswordNull() {
                 return this.IsNull(this.tableWorkQueue.ExternalSourcePasswordColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetExternalSourcePasswordNull() {
                 this[this.tableWorkQueue.ExternalSourcePasswordColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedNull() {
+                return this.IsNull(this.tableWorkQueue.RecordCreatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedNull() {
+                this[this.tableWorkQueue.RecordCreatedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedByNull() {
+                return this.IsNull(this.tableWorkQueue.RecordUpdatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedByNull() {
+                this[this.tableWorkQueue.RecordUpdatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCreationFieldNameNull() {
+                return this.IsNull(this.tableWorkQueue.CreationFieldNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCreationFieldNameNull() {
+                this[this.tableWorkQueue.CreationFieldNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsrefCreationOrigamStateMachineEventTypeIdNull() {
+                return this.IsNull(this.tableWorkQueue.refCreationOrigamStateMachineEventTypeIdColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetrefCreationOrigamStateMachineEventTypeIdNull() {
+                this[this.tableWorkQueue.refCreationOrigamStateMachineEventTypeIdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsQueueProcessorNull() {
+                return this.IsNull(this.tableWorkQueue.QueueProcessorColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetQueueProcessorNull() {
+                this[this.tableWorkQueue.QueueProcessorColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCntFromMeNull() {
+                return this.IsNull(this.tableWorkQueue.CntFromMeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCntFromMeNull() {
+                this[this.tableWorkQueue.CntFromMeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCntToMeNull() {
+                return this.IsNull(this.tableWorkQueue.CntToMeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCntToMeNull() {
+                this[this.tableWorkQueue.CntToMeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCntExpiredNull() {
+                return this.IsNull(this.tableWorkQueue.CntExpiredColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCntExpiredNull() {
+                this[this.tableWorkQueue.CntExpiredColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRemovalFieldNameNull() {
+                return this.IsNull(this.tableWorkQueue.RemovalFieldNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRemovalFieldNameNull() {
+                this[this.tableWorkQueue.RemovalFieldNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsrefRemovalOrigamStateMachineEventTypeIdNull() {
+                return this.IsNull(this.tableWorkQueue.refRemovalOrigamStateMachineEventTypeIdColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetrefRemovalOrigamStateMachineEventTypeIdNull() {
+                this[this.tableWorkQueue.refRemovalOrigamStateMachineEventTypeIdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsExternalSourceLastTimeNull() {
+                return this.IsNull(this.tableWorkQueue.ExternalSourceLastTimeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetExternalSourceLastTimeNull() {
+                this[this.tableWorkQueue.ExternalSourceLastTimeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCreationNewValueNull() {
+                return this.IsNull(this.tableWorkQueue.CreationNewValueColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCreationNewValueNull() {
+                this[this.tableWorkQueue.CreationNewValueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsExternalSourceConnectionNull() {
+                return this.IsNull(this.tableWorkQueue.ExternalSourceConnectionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetExternalSourceConnectionNull() {
+                this[this.tableWorkQueue.ExternalSourceConnectionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRemovalConditionNull() {
+                return this.IsNull(this.tableWorkQueue.RemovalConditionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRemovalConditionNull() {
+                this[this.tableWorkQueue.RemovalConditionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsExternalSourceUserNameNull() {
+                return this.IsNull(this.tableWorkQueue.ExternalSourceUserNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetExternalSourceUserNameNull() {
+                this[this.tableWorkQueue.ExternalSourceUserNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsExternalSourceLastMessageNull() {
+                return this.IsNull(this.tableWorkQueue.ExternalSourceLastMessageColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetExternalSourceLastMessageNull() {
+                this[this.tableWorkQueue.ExternalSourceLastMessageColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsApiAccessRolesNull() {
+                return this.IsNull(this.tableWorkQueue.ApiAccessRolesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetApiAccessRolesNull() {
+                this[this.tableWorkQueue.ApiAccessRolesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsrefWorkQueueExternalSourceTypeIdNull() {
+                return this.IsNull(this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetrefWorkQueueExternalSourceTypeIdNull() {
+                this[this.tableWorkQueue.refWorkQueueExternalSourceTypeIdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedByNull() {
+                return this.IsNull(this.tableWorkQueue.RecordCreatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedByNull() {
+                this[this.tableWorkQueue.RecordCreatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedNull() {
+                return this.IsNull(this.tableWorkQueue.RecordUpdatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedNull() {
+                this[this.tableWorkQueue.RecordUpdatedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandRow[] GetWorkQueueCommandRows() {
                 if ((this.Table.ChildRelations["WorkQueueCommand"] == null)) {
                     return new WorkQueueCommandRow[0];
@@ -4118,7 +4368,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRow[] GetWorkQueueNotificationRows() {
                 if ((this.Table.ChildRelations["WorkQueueNotification"] == null)) {
                     return new WorkQueueNotificationRow[0];
@@ -4137,203 +4387,14 @@ namespace Origam.Workflow.WorkQueue {
             private WorkQueueCommandDataTable tableWorkQueueCommand;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueCommandRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
                 this.tableWorkQueueCommand = ((WorkQueueCommandDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsAutoProcessedWithErrors {
-                get {
-                    return ((bool)(this[this.tableWorkQueueCommand.IsAutoProcessedWithErrorsColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueCommand.IsAutoProcessedWithErrorsColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordCreatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueueCommand.RecordCreatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueueCommand\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueCommand.RecordCreatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int SortOrder {
-                get {
-                    return ((int)(this[this.tableWorkQueueCommand.SortOrderColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueCommand.SortOrderColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsAutoProcessed {
-                get {
-                    return ((bool)(this[this.tableWorkQueueCommand.IsAutoProcessedColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueCommand.IsAutoProcessedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordUpdatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueueCommand.RecordUpdatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueueCommand\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueCommand.RecordUpdatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordUpdated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueCommand.RecordUpdatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueCommand\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueCommand.RecordUpdatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool Selected {
-                get {
-                    return ((bool)(this[this.tableWorkQueueCommand.SelectedColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueCommand.SelectedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid Id {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueCommand.IdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueCommand.IdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordCreated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueCommand.RecordCreatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueCommand\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueCommand.RecordCreatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsDefault {
-                get {
-                    return ((bool)(this[this.tableWorkQueueCommand.IsDefaultColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueCommand.IsDefaultColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueCommand.refWorkQueueIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueCommand.refWorkQueueIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string Roles {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueueCommand.RolesColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Roles\' in table \'WorkQueueCommand\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueCommand.RolesColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string Command {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueueCommand.CommandColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Command\' in table \'WorkQueueCommand\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueCommand.CommandColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string Param1 {
-                get {
-                    try {
-                        return ((string)(this[this.tableWorkQueueCommand.Param1Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Param1\' in table \'WorkQueueCommand\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueCommand.Param1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string AutoProcessingConditionXPath {
                 get {
                     try {
@@ -4350,7 +4411,72 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid Id {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueCommand.IdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.IdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordUpdatedBy {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueueCommand.RecordUpdatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueueCommand\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueCommand.RecordUpdatedByColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordCreated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueCommand.RecordCreatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueCommand\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueCommand.RecordCreatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Selected {
+                get {
+                    return ((bool)(this[this.tableWorkQueueCommand.SelectedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.SelectedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueCommandTypeId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueCommand.refWorkQueueCommandTypeIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.refWorkQueueCommandTypeIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid refErrorWorkQueueId {
                 get {
                     try {
@@ -4367,7 +4493,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string Param2 {
                 get {
                     try {
@@ -4383,18 +4509,34 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueCommandTypeId {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordCreatedBy {
                 get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueCommand.refWorkQueueCommandTypeIdColumn]));
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueueCommand.RecordCreatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueueCommand\' is DBNull.", e);
+                    }
                 }
                 set {
-                    this[this.tableWorkQueueCommand.refWorkQueueCommandTypeIdColumn] = value;
+                    this[this.tableWorkQueueCommand.RecordCreatedByColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueCommand.refWorkQueueIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.refWorkQueueIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string Text {
                 get {
                     return ((string)(this[this.tableWorkQueueCommand.TextColumn]));
@@ -4405,7 +4547,115 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Param1 {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueueCommand.Param1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Param1\' in table \'WorkQueueCommand\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueCommand.Param1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsDefault {
+                get {
+                    return ((bool)(this[this.tableWorkQueueCommand.IsDefaultColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.IsDefaultColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int SortOrder {
+                get {
+                    return ((int)(this[this.tableWorkQueueCommand.SortOrderColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.SortOrderColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsAutoProcessed {
+                get {
+                    return ((bool)(this[this.tableWorkQueueCommand.IsAutoProcessedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.IsAutoProcessedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Command {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueueCommand.CommandColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Command\' in table \'WorkQueueCommand\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueCommand.CommandColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsAutoProcessedWithErrors {
+                get {
+                    return ((bool)(this[this.tableWorkQueueCommand.IsAutoProcessedWithErrorsColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueCommand.IsAutoProcessedWithErrorsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Roles {
+                get {
+                    try {
+                        return ((string)(this[this.tableWorkQueueCommand.RolesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Roles\' in table \'WorkQueueCommand\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueCommand.RolesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordUpdated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueCommand.RecordUpdatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueCommand\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueCommand.RecordUpdatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow WorkQueueRow {
                 get {
                     return ((WorkQueueRow)(this.GetParentRow(this.Table.ParentRelations["WorkQueueCommand"])));
@@ -4416,123 +4666,123 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedByNull() {
-                return this.IsNull(this.tableWorkQueueCommand.RecordCreatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedByNull() {
-                this[this.tableWorkQueueCommand.RecordCreatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedByNull() {
-                return this.IsNull(this.tableWorkQueueCommand.RecordUpdatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedByNull() {
-                this[this.tableWorkQueueCommand.RecordUpdatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedNull() {
-                return this.IsNull(this.tableWorkQueueCommand.RecordUpdatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedNull() {
-                this[this.tableWorkQueueCommand.RecordUpdatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedNull() {
-                return this.IsNull(this.tableWorkQueueCommand.RecordCreatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedNull() {
-                this[this.tableWorkQueueCommand.RecordCreatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRolesNull() {
-                return this.IsNull(this.tableWorkQueueCommand.RolesColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRolesNull() {
-                this[this.tableWorkQueueCommand.RolesColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsCommandNull() {
-                return this.IsNull(this.tableWorkQueueCommand.CommandColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetCommandNull() {
-                this[this.tableWorkQueueCommand.CommandColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsParam1Null() {
-                return this.IsNull(this.tableWorkQueueCommand.Param1Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetParam1Null() {
-                this[this.tableWorkQueueCommand.Param1Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsAutoProcessingConditionXPathNull() {
                 return this.IsNull(this.tableWorkQueueCommand.AutoProcessingConditionXPathColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetAutoProcessingConditionXPathNull() {
                 this[this.tableWorkQueueCommand.AutoProcessingConditionXPathColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedByNull() {
+                return this.IsNull(this.tableWorkQueueCommand.RecordUpdatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedByNull() {
+                this[this.tableWorkQueueCommand.RecordUpdatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedNull() {
+                return this.IsNull(this.tableWorkQueueCommand.RecordCreatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedNull() {
+                this[this.tableWorkQueueCommand.RecordCreatedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsrefErrorWorkQueueIdNull() {
                 return this.IsNull(this.tableWorkQueueCommand.refErrorWorkQueueIdColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetrefErrorWorkQueueIdNull() {
                 this[this.tableWorkQueueCommand.refErrorWorkQueueIdColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsParam2Null() {
                 return this.IsNull(this.tableWorkQueueCommand.Param2Column);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetParam2Null() {
                 this[this.tableWorkQueueCommand.Param2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedByNull() {
+                return this.IsNull(this.tableWorkQueueCommand.RecordCreatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedByNull() {
+                this[this.tableWorkQueueCommand.RecordCreatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsParam1Null() {
+                return this.IsNull(this.tableWorkQueueCommand.Param1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetParam1Null() {
+                this[this.tableWorkQueueCommand.Param1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsCommandNull() {
+                return this.IsNull(this.tableWorkQueueCommand.CommandColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetCommandNull() {
+                this[this.tableWorkQueueCommand.CommandColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRolesNull() {
+                return this.IsNull(this.tableWorkQueueCommand.RolesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRolesNull() {
+                this[this.tableWorkQueueCommand.RolesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedNull() {
+                return this.IsNull(this.tableWorkQueueCommand.RecordUpdatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedNull() {
+                this[this.tableWorkQueueCommand.RecordUpdatedColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -4544,25 +4794,96 @@ namespace Origam.Workflow.WorkQueue {
             private WorkQueueNotificationDataTable tableWorkQueueNotification;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueNotificationRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
                 this.tableWorkQueueNotification = ((WorkQueueNotificationDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid Id {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueNotificationEventId {
                 get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.IdColumn]));
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.refWorkQueueNotificationEventIdColumn]));
                 }
                 set {
-                    this[this.tableWorkQueueNotification.IdColumn] = value;
+                    this[this.tableWorkQueueNotification.refWorkQueueNotificationEventIdColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refOrigamNotificationTemplateId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.refOrigamNotificationTemplateIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotification.refOrigamNotificationTemplateIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Description {
+                get {
+                    return ((string)(this[this.tableWorkQueueNotification.DescriptionColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotification.DescriptionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.refWorkQueueIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotification.refWorkQueueIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool SendAttachments {
+                get {
+                    return ((bool)(this[this.tableWorkQueueNotification.SendAttachmentsColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotification.SendAttachmentsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Selected {
+                get {
+                    return ((bool)(this[this.tableWorkQueueNotification.SelectedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotification.SelectedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordCreated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueNotification.RecordCreatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueNotification\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotification.RecordCreatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid RecordUpdatedBy {
                 get {
                     try {
@@ -4579,50 +4900,18 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordCreated {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid Id {
                 get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueNotification.RecordCreatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueNotification\' is DBNull.", e);
-                    }
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.IdColumn]));
                 }
                 set {
-                    this[this.tableWorkQueueNotification.RecordCreatedColumn] = value;
+                    this[this.tableWorkQueueNotification.IdColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool Selected {
-                get {
-                    return ((bool)(this[this.tableWorkQueueNotification.SelectedColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotification.SelectedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordUpdated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueNotification.RecordUpdatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueNotification\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotification.RecordUpdatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public System.Guid RecordCreatedBy {
                 get {
                     try {
@@ -4639,40 +4928,23 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refOrigamNotificationTemplateId {
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordUpdated {
                 get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.refOrigamNotificationTemplateIdColumn]));
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueNotification.RecordUpdatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueNotification\' is DBNull.", e);
+                    }
                 }
                 set {
-                    this[this.tableWorkQueueNotification.refOrigamNotificationTemplateIdColumn] = value;
+                    this[this.tableWorkQueueNotification.RecordUpdatedColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.refWorkQueueIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotification.refWorkQueueIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueNotificationEventId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotification.refWorkQueueNotificationEventIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotification.refWorkQueueNotificationEventIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsActive {
                 get {
                     return ((bool)(this[this.tableWorkQueueNotification.IsActiveColumn]));
@@ -4683,29 +4955,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool SendAttachments {
-                get {
-                    return ((bool)(this[this.tableWorkQueueNotification.SendAttachmentsColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotification.SendAttachmentsColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string Description {
-                get {
-                    return ((string)(this[this.tableWorkQueueNotification.DescriptionColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotification.DescriptionColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow WorkQueueRow {
                 get {
                     return ((WorkQueueRow)(this.GetParentRow(this.Table.ParentRelations["WorkQueueNotification"])));
@@ -4716,55 +4966,55 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedByNull() {
-                return this.IsNull(this.tableWorkQueueNotification.RecordUpdatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedByNull() {
-                this[this.tableWorkQueueNotification.RecordUpdatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsRecordCreatedNull() {
                 return this.IsNull(this.tableWorkQueueNotification.RecordCreatedColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetRecordCreatedNull() {
                 this[this.tableWorkQueueNotification.RecordCreatedColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedNull() {
-                return this.IsNull(this.tableWorkQueueNotification.RecordUpdatedColumn);
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedByNull() {
+                return this.IsNull(this.tableWorkQueueNotification.RecordUpdatedByColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedNull() {
-                this[this.tableWorkQueueNotification.RecordUpdatedColumn] = global::System.Convert.DBNull;
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedByNull() {
+                this[this.tableWorkQueueNotification.RecordUpdatedByColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsRecordCreatedByNull() {
                 return this.IsNull(this.tableWorkQueueNotification.RecordCreatedByColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetRecordCreatedByNull() {
                 this[this.tableWorkQueueNotification.RecordCreatedByColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedNull() {
+                return this.IsNull(this.tableWorkQueueNotification.RecordUpdatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedNull() {
+                this[this.tableWorkQueueNotification.RecordUpdatedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_SendersRow[] GetWorkQueueNotificationContact_SendersRows() {
                 if ((this.Table.ChildRelations["WorkQueueNotificationContact_Senders"] == null)) {
                     return new WorkQueueNotificationContact_SendersRow[0];
@@ -4775,7 +5025,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_RecipientsRow[] GetWorkQueueNotificationContact_RecipientsRows() {
                 if ((this.Table.ChildRelations["WorkQueueNotificationContact_Recipients"] == null)) {
                     return new WorkQueueNotificationContact_RecipientsRow[0];
@@ -4794,148 +5044,14 @@ namespace Origam.Workflow.WorkQueue {
             private WorkQueueNotificationContact_SendersDataTable tableWorkQueueNotificationContact_Senders;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueNotificationContact_SendersRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
                 this.tableWorkQueueNotificationContact_Senders = ((WorkQueueNotificationContact_SendersDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid Id {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.IdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.IdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordUpdatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueueNotificationContact_Sen" +
-                                "ders\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordCreated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueNotificationContact_Sende" +
-                                "rs\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool Selected {
-                get {
-                    return ((bool)(this[this.tableWorkQueueNotificationContact_Senders.SelectedColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.SelectedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordUpdated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueNotificationContact_Sende" +
-                                "rs\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordCreatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueueNotificationContact_Sen" +
-                                "ders\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueNotificationId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecipient {
-                get {
-                    return ((bool)(this[this.tableWorkQueueNotificationContact_Senders.IsRecipientColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.IsRecipientColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refOrigamNotificationChannelTypeId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.refOrigamNotificationChannelTypeIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.refOrigamNotificationChannelTypeIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueNotificationContactTypeId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationContactTypeIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationContactTypeIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string Value {
                 get {
                     try {
@@ -4952,7 +5068,141 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueNotificationContactTypeId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationContactTypeIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationContactTypeIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refOrigamNotificationChannelTypeId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.refOrigamNotificationChannelTypeIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.refOrigamNotificationChannelTypeIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueNotificationId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.refWorkQueueNotificationIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecipient {
+                get {
+                    return ((bool)(this[this.tableWorkQueueNotificationContact_Senders.IsRecipientColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.IsRecipientColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Selected {
+                get {
+                    return ((bool)(this[this.tableWorkQueueNotificationContact_Senders.SelectedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.SelectedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordCreated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueNotificationContact_Sende" +
+                                "rs\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordUpdatedBy {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueueNotificationContact_Sen" +
+                                "ders\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid Id {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.IdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.IdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordCreatedBy {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueueNotificationContact_Sen" +
+                                "ders\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordUpdated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueNotificationContact_Sende" +
+                                "rs\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRow WorkQueueNotificationRow {
                 get {
                     return ((WorkQueueNotificationRow)(this.GetParentRow(this.Table.ParentRelations["WorkQueueNotificationContact_Senders"])));
@@ -4963,63 +5213,63 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedByNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedByNull() {
-                this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedNull() {
-                this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedNull() {
-                this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedByNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedByNull() {
-                this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsValueNull() {
                 return this.IsNull(this.tableWorkQueueNotificationContact_Senders.ValueColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetValueNull() {
                 this[this.tableWorkQueueNotificationContact_Senders.ValueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedNull() {
+                this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedByNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedByNull() {
+                this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedByNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedByNull() {
+                this[this.tableWorkQueueNotificationContact_Senders.RecordCreatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedNull() {
+                this[this.tableWorkQueueNotificationContact_Senders.RecordUpdatedColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -5031,148 +5281,14 @@ namespace Origam.Workflow.WorkQueue {
             private WorkQueueNotificationContact_RecipientsDataTable tableWorkQueueNotificationContact_Recipients;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal WorkQueueNotificationContact_RecipientsRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
                 this.tableWorkQueueNotificationContact_Recipients = ((WorkQueueNotificationContact_RecipientsDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid Id {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.IdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.IdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordUpdatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueueNotificationContact_Rec" +
-                                "ipients\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordCreated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueNotificationContact_Recip" +
-                                "ients\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool Selected {
-                get {
-                    return ((bool)(this[this.tableWorkQueueNotificationContact_Recipients.SelectedColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.SelectedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.DateTime RecordUpdated {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueNotificationContact_Recip" +
-                                "ients\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid RecordCreatedBy {
-                get {
-                    try {
-                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueueNotificationContact_Rec" +
-                                "ipients\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueNotificationId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecipient {
-                get {
-                    return ((bool)(this[this.tableWorkQueueNotificationContact_Recipients.IsRecipientColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.IsRecipientColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refOrigamNotificationChannelTypeId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.refOrigamNotificationChannelTypeIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.refOrigamNotificationChannelTypeIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public System.Guid refWorkQueueNotificationContactTypeId {
-                get {
-                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationContactTypeIdColumn]));
-                }
-                set {
-                    this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationContactTypeIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string Value {
                 get {
                     try {
@@ -5189,7 +5305,141 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueNotificationContactTypeId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationContactTypeIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationContactTypeIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refOrigamNotificationChannelTypeId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.refOrigamNotificationChannelTypeIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.refOrigamNotificationChannelTypeIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid refWorkQueueNotificationId {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationIdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.refWorkQueueNotificationIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecipient {
+                get {
+                    return ((bool)(this[this.tableWorkQueueNotificationContact_Recipients.IsRecipientColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.IsRecipientColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Selected {
+                get {
+                    return ((bool)(this[this.tableWorkQueueNotificationContact_Recipients.SelectedColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.SelectedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordCreated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreated\' in table \'WorkQueueNotificationContact_Recip" +
+                                "ients\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordUpdatedBy {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdatedBy\' in table \'WorkQueueNotificationContact_Rec" +
+                                "ipients\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid Id {
+                get {
+                    return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.IdColumn]));
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.IdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.Guid RecordCreatedBy {
+                get {
+                    try {
+                        return ((global::System.Guid)(this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordCreatedBy\' in table \'WorkQueueNotificationContact_Rec" +
+                                "ipients\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public System.DateTime RecordUpdated {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RecordUpdated\' in table \'WorkQueueNotificationContact_Recip" +
+                                "ients\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRow WorkQueueNotificationRow {
                 get {
                     return ((WorkQueueNotificationRow)(this.GetParentRow(this.Table.ParentRelations["WorkQueueNotificationContact_Recipients"])));
@@ -5200,70 +5450,70 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedByNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedByNull() {
-                this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedNull() {
-                this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordUpdatedNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordUpdatedNull() {
-                this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public bool IsRecordCreatedByNull() {
-                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void SetRecordCreatedByNull() {
-                this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsValueNull() {
                 return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.ValueColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetValueNull() {
                 this[this.tableWorkQueueNotificationContact_Recipients.ValueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedNull() {
+                this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedByNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedByNull() {
+                this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordCreatedByNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordCreatedByNull() {
+                this[this.tableWorkQueueNotificationContact_Recipients.RecordCreatedByColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsRecordUpdatedNull() {
+                return this.IsNull(this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetRecordUpdatedNull() {
+                this[this.tableWorkQueueNotificationContact_Recipients.RecordUpdatedColumn] = global::System.Convert.DBNull;
             }
         }
         
         /// <summary>
         ///Row event argument class
         ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public class WorkQueueRowChangeEvent : global::System.EventArgs {
             
             private WorkQueueRow eventRow;
@@ -5271,14 +5521,14 @@ namespace Origam.Workflow.WorkQueue {
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRowChangeEvent(WorkQueueRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueRow Row {
                 get {
                     return this.eventRow;
@@ -5286,7 +5536,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataRowAction Action {
                 get {
                     return this.eventAction;
@@ -5297,7 +5547,7 @@ namespace Origam.Workflow.WorkQueue {
         /// <summary>
         ///Row event argument class
         ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public class WorkQueueCommandRowChangeEvent : global::System.EventArgs {
             
             private WorkQueueCommandRow eventRow;
@@ -5305,14 +5555,14 @@ namespace Origam.Workflow.WorkQueue {
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandRowChangeEvent(WorkQueueCommandRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueCommandRow Row {
                 get {
                     return this.eventRow;
@@ -5320,7 +5570,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataRowAction Action {
                 get {
                     return this.eventAction;
@@ -5331,7 +5581,7 @@ namespace Origam.Workflow.WorkQueue {
         /// <summary>
         ///Row event argument class
         ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public class WorkQueueNotificationRowChangeEvent : global::System.EventArgs {
             
             private WorkQueueNotificationRow eventRow;
@@ -5339,14 +5589,14 @@ namespace Origam.Workflow.WorkQueue {
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRowChangeEvent(WorkQueueNotificationRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationRow Row {
                 get {
                     return this.eventRow;
@@ -5354,7 +5604,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataRowAction Action {
                 get {
                     return this.eventAction;
@@ -5365,7 +5615,7 @@ namespace Origam.Workflow.WorkQueue {
         /// <summary>
         ///Row event argument class
         ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public class WorkQueueNotificationContact_SendersRowChangeEvent : global::System.EventArgs {
             
             private WorkQueueNotificationContact_SendersRow eventRow;
@@ -5373,14 +5623,14 @@ namespace Origam.Workflow.WorkQueue {
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_SendersRowChangeEvent(WorkQueueNotificationContact_SendersRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_SendersRow Row {
                 get {
                     return this.eventRow;
@@ -5388,7 +5638,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataRowAction Action {
                 get {
                     return this.eventAction;
@@ -5399,7 +5649,7 @@ namespace Origam.Workflow.WorkQueue {
         /// <summary>
         ///Row event argument class
         ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public class WorkQueueNotificationContact_RecipientsRowChangeEvent : global::System.EventArgs {
             
             private WorkQueueNotificationContact_RecipientsRow eventRow;
@@ -5407,14 +5657,14 @@ namespace Origam.Workflow.WorkQueue {
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_RecipientsRowChangeEvent(WorkQueueNotificationContact_RecipientsRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public WorkQueueNotificationContact_RecipientsRow Row {
                 get {
                     return this.eventRow;
@@ -5422,7 +5672,7 @@ namespace Origam.Workflow.WorkQueue {
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataRowAction Action {
                 get {
                     return this.eventAction;

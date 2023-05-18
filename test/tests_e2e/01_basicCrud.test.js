@@ -1,8 +1,10 @@
-const puppeteer = require("puppeteer");
-const { backEndUrl} = require('./additionalConfig');
-const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount} = require('./testTools');
-const {widgetsMenuItemId, sectionsMenuItemId, masterDerailMenuItemId, topMenuHeader} = require("./modelIds");
-const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./consoleTools");
+const { sleep, xPathContainsClass, openMenuItem, login, getRowCountData, catchRequests, waitForRowCount, afterEachTest,
+  beforeEachTest
+} = require('./testTools');
+const {widgetsMenuItemId, sectionsMenuItemId, masterDetailMenuItemId,
+  topMenuHeader, masterDataViewId, detailDataViewId, detailEditorId, detailTabHandelId} = require("./modelIds");
+const { restoreWidgetSectionTestMaster, clearScreenConfiguration} = require("./dbTools");
+const {installMouseHelper} = require("./instalMouseHelper_");
 
 let browser;
 let page;
@@ -13,41 +15,13 @@ beforeAll(async() => {
 });
 
 beforeEach(async () => {
-  browser = await puppeteer.launch({
-    ignoreHTTPSErrors: true,
-    //devtools: true,
-    headless: false,
-    defaultViewport: {
-      width: 1024,
-      height: 768,
-    },
-    args: [
-        "--disable-gpu",
-        "--disable-dev-shm-usage",
-        "--disable-setuid-sandbox",
-        "--no-sandbox",
-    ]
-  });
-  page = await browser.newPage();
-  await page.goto(backEndUrl);
-  await page.evaluate(() => {
-    localStorage.setItem("debugCloseAllForms", "1");
-  });
+  [browser, page] = await beforeEachTest()
 });
 
 afterEach(async () => {
-  let pages = await browser.pages();
-  await Promise.all(pages.map(page =>page.close()));
-  await sleep(200);
-  if(browser) await browser.close();
+  await afterEachTest(browser);
   browser = undefined;
 });
-
-const masterDataViewId = "dataView_775fa5ea-fa75-40a7-8c39-7828f7cdf508";
-const detailDataViewId = "dataView_b11ffa85-7507-475c-af50-ef08fd56072c";
-const detailEditorId = "editor_89be97a4-86e8-4036-b57a-36155e3f2322";
-const detailTabHandelId = "tabHandle_823ea459-bca5-476f-ab6f-9cb07769923e";
-
 
 async function addRowToMaster(firstColumnValue, secondColumnValue) {
   const firstColumnEditorId = "editor_b2adeca9-7f20-410d-bbe5-fb78e29614c2";
@@ -107,7 +81,7 @@ async function refreshAndThrowChangesAway() {
 
 async function selectMasterRow(rowIndex) {
   const rowHeight = 30;
-  const tableArea = await page.$(`#${masterDataViewId}  [class*='Table_cellAreaContainer']`);
+  const tableArea = await page.$(`#${masterDataViewId}  [class*='_cellAreaContainer']`);
   const box = await tableArea.boundingBox();
   await page.mouse.click(
     box.x + 50,
@@ -124,7 +98,7 @@ describe("Html client", () => {
         topMenuHeader,
         widgetsMenuItemId,
         sectionsMenuItemId,
-        masterDerailMenuItemId,
+        masterDetailMenuItemId,
       ]);
 
     // Add three rows
@@ -152,7 +126,7 @@ describe("Html client", () => {
 
     // remove the second row
     await sleep(500);
-    const tableArea = await page.$(`#${masterDataViewId}  [class*='Table_cellAreaContainer']`);
+    const tableArea = await page.$(`#${masterDataViewId}  [class*='_cellAreaContainer']`);
     const box = await tableArea.boundingBox();
     await page.mouse.click(
       box.x + 50,
@@ -162,6 +136,7 @@ describe("Html client", () => {
       `//div[@id='${masterDataViewId}']//div[${xPathContainsClass("deleteRow")}]`,
       { visible: true }
     );
+    await sleep(500);
     const rowCountDataBeforeDelete = await getRowCountData(page, masterDataViewId);
     expect(rowCountDataBeforeDelete.selectedRow).toBe("2");
     expect(rowCountDataBeforeDelete.rowCount).toBe("3");
@@ -216,7 +191,7 @@ describe("Html client", () => {
         topMenuHeader,
         widgetsMenuItemId,
         sectionsMenuItemId,
-        masterDerailMenuItemId,
+        masterDetailMenuItemId,
       ]);
     // Add rows to master
     await page.waitForXPath(

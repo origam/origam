@@ -24,6 +24,7 @@ using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Rule;
 using Origam.Workbench.Services;
 using Origam.Workflow;
+using Origam.Workflow.WorkQueue;
 
 namespace Origam.OrigamEngine
 {
@@ -53,7 +54,7 @@ namespace Origam.OrigamEngine
             ServiceManager.Services.AddService(new DataLookupService());
             ServiceManager.Services.AddService(CreateParameterService());
             ServiceManager.Services.AddService(new DeploymentService());
-            ServiceManager.Services.AddService(new Origam.Workflow.WorkQueue.WorkQueueService());
+            ServiceManager.Services.AddService(CreateWorkQueueService());
             ServiceManager.Services.AddService(new AttachmentService());
             ServiceManager.Services.AddService(new RuleEngineService());
         }
@@ -85,6 +86,11 @@ namespace Origam.OrigamEngine
         protected virtual IParameterService CreateParameterService()
         {
             return new ParameterService();
+        }        
+        
+        protected virtual IWorkQueueService CreateWorkQueueService()
+        {
+            return new WorkQueueService();
         }
 
         public IPersistenceService CreatePersistenceService()

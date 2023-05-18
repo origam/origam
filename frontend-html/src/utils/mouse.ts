@@ -23,6 +23,7 @@ export function preventDoubleclickSelect() {
   const interpreter = interpret(
     createMachine(
       {
+        predictableActionArguments: true,
         id: "selectionPreventer",
         initial: "IDLE",
         states: {

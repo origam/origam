@@ -36,6 +36,7 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { getApi } from "model/selectors/getApi";
+import { ScreenFocusManager } from "model/entities/ScreenFocusManager";
 
 export class FormScreen implements IFormScreen {
 
@@ -47,7 +48,10 @@ export class FormScreen implements IFormScreen {
     this.dataViews.forEach((o) => (o.parent = this));
     this.dataSources.forEach((o) => (o.parent = this));
     this.componentBindings.forEach((o) => (o.parent = this));
+    this.focusManager.parent = this;
   }
+
+  focusManager: ScreenFocusManager = null as any;
 
   parent?: any;
 
@@ -267,11 +271,11 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
     this.formScreen = formScreen;
   }
 
-  *start(initUIResult: any, preloadIsDirty?: boolean): Generator {
-    yield*this.formScreenLifecycle.start(initUIResult);
+  *start(args: {initUIResult: any, preloadIsDirty?: boolean}): Generator {
+    yield*this.formScreenLifecycle.start(args.initUIResult);
     if (this.formScreen) {
-      this.formScreen.setDirty(!!preloadIsDirty);
-      if(preloadIsDirty && isLazyLoading(this.formScreen)){
+      this.formScreen.setDirty(!!args.preloadIsDirty);
+      if(args.preloadIsDirty && isLazyLoading(this.formScreen)){
        yield*this.loadDirtyRow(this.formScreen);
       }
     }

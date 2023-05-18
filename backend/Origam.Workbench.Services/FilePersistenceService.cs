@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.Schema;
 using System;
 using System.Collections;
@@ -173,12 +172,7 @@ namespace Origam.Workbench.Services
 
         public Maybe<XmlLoadError> Reload() => 
             schemaProvider.ReloadFiles();
-
-        public void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public Package LoadSchema(Guid schemaExtensionId, 
             bool loadDocumentation, bool loadDeploymentScripts,
             string transactionId) => LoadSchema(schemaExtensionId);
@@ -205,34 +199,6 @@ namespace Origam.Workbench.Services
             return LoadSchema(schemaExtensionId);
         }
 
-        public void LoadSchemaList()
-        {
-        }
-
-        public void UpdateRepository()
-        {
-        }
-
-        public bool IsRepositoryVersionCompatible()
-        {
-            return true;
-        }
-
-        public bool CanUpdateRepository()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ExportPackage(Guid extensionId, string fileName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MergePackage(Guid extensionId, System.Data.DataSet data, string transcationId)
-        {
-            throw new NotImplementedException();
-        }
-
         public void InitializeService()
         {
         }
@@ -249,12 +215,6 @@ namespace Origam.Workbench.Services
                 mode: MetaModelUpgradeMode.Ignore, 
                 pathToRuntimeModelConfig: pathToRuntimeModelConfig);
         }
-
-        public void MergeSchema(System.Data.DataSet schema, Key activePackage)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public void InitializeRepository()
         {

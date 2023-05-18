@@ -45,7 +45,9 @@ namespace Origam.Server.Controller
         {
             return Ok(new AboutInfo
             {
-                ServerVersion = "Placeholder to be changed at build time",
+                ServerVersion = "ServerVersion Placeholder to be changed at build time",
+                LinkToCommit = "LinkToCommit Placeholder to be changed at build time",
+                CommitId = "CommitId Placeholder to be changed at build time"
             });
         }
     }

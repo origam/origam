@@ -45,8 +45,7 @@ namespace Origam.Schema.GuiModel
 		public KeyboardShortcut(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractSchemaItem Members
-		
-		[EntityColumn("ItemType")]
+
 		public override string ItemType
 		{
 			get
@@ -59,8 +58,7 @@ namespace Origam.Schema.GuiModel
 		#region Properties
 		private bool _isShift = false;
 		[DefaultValue(false)]
-		[EntityColumn("B01")]
-        [XmlAttribute("shift")]
+		[XmlAttribute("shift")]
 		public bool IsShift
 		{
 			get
@@ -75,8 +73,7 @@ namespace Origam.Schema.GuiModel
 
 		private bool _isControl = false;
 		[DefaultValue(false)]
-		[EntityColumn("B02")]
-        [XmlAttribute("control")]
+		[XmlAttribute("control")]
 		public bool IsControl
 		{
 			get
@@ -91,8 +88,7 @@ namespace Origam.Schema.GuiModel
 
 		private bool _isAlt = false;
 		[DefaultValue(false)]
-		[EntityColumn("B03")]
-        [XmlAttribute("alt")]
+		[XmlAttribute("alt")]
 		public bool IsAlt
 		{
 			get
@@ -107,8 +103,7 @@ namespace Origam.Schema.GuiModel
 
 		private int _keyCode = 0;
 		[DefaultValue(false)]
-		[EntityColumn("I01")]
-        [XmlAttribute("keyCode")]
+		[XmlAttribute("keyCode")]
 		public int KeyCode
 		{
 			get

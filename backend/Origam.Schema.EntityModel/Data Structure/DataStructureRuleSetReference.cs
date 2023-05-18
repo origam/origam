@@ -44,7 +44,6 @@ namespace Origam.Schema.EntityModel
         public DataStructureRuleSetReference(Key primaryKey) : base(primaryKey)	{ }
 
         #region Properties
-        [EntityColumn("G01")]
         public Guid DataStructureRuleSetId;
 
         [Category("Ruleset reference")]
@@ -73,7 +72,6 @@ namespace Origam.Schema.EntityModel
         #endregion
 
         #region Overriden AbstractSchemaItem Members
-        [EntityColumn("ItemType")]
         public override string ItemType
         {
             get

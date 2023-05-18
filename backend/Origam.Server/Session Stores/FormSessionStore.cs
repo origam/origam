@@ -19,27 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-#region license
-/*
-Copyright 2005 - 2021 Advantage Solutions, s. r. o.
-
-This file is part of ORIGAM.
-
-ORIGAM is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-ORIGAM is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
-*/
-#endregion
-
 using System;
 using System.Data;
 using System.Collections;
@@ -146,17 +125,10 @@ namespace Origam.Server
             }
             else
             {
-                // delayed data loading - save after each move
-                // we initialize the full structure
-                data = InitializeFullStructure(_menuItem.DefaultSet);
-                DataSet listData = GetDataSetBuilder().InitializeListStructure(data, _menuItem.ListEntity.Name,true);
-                // we only read the list and leave the full structure empty (it will be loaded later)
-                SetDataList(
-                    GetDataSetBuilder().LoadListData(DataListLoadedColumns, listData, _menuItem.ListEntity.Name, _menuItem.ListSortSet, _menuItem, Request.QueryParameters), 
-                    _menuItem.ListEntity.Name, _menuItem.ListDataStructure, _menuItem.ListMethod);
-                this.IsDelayedLoading = true;
-                if (_menuItem.Method == null) throw new ArgumentNullException("FormReferenceMenuItem.FilterSet", "For delayed data loading you have to specify FilterSet for the main data.");
-                SetDelayedLoadingParameter(_menuItem.Method);
+                throw new Exception("A screen is lazy loaded but the client requested session data on InitUI " +
+                    "call by setting DataRequested=true. Instead the client should set DataRequested=false " +
+                    "and call GetRows in order to get the list data and then MasterRecord to load " +
+                    "one of the records and GetData to request entity data.");
             }
             if (data != null)
             {
@@ -185,7 +157,7 @@ namespace Origam.Server
 
             DataSet data;
             QueryParameterCollection qparams = Request.QueryParameters;
-            data = core.DataService.LoadData(DataStructureId, _menuItem.MethodId, 
+            data = core.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
                 _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
             return data;
         }
@@ -224,7 +196,7 @@ namespace Origam.Server
                     {
                         DataColumn col = dataset.Tables[entity].Columns[column];
                         string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
-                        core.DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+                        core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                             Guid.Empty, _menuItem.ListSortSetId, null, qparams, dataset, relationName,
                             null);
                         DataListLoadedColumns.Add(column);
@@ -244,7 +216,7 @@ namespace Origam.Server
                 finalColumns.Add(ListPrimaryKeyColumns(this.DataList, this.DataListEntity));
                 DataSet columnData = DatasetTools.CloneDataSet(DataList);
                 DataTable listTable = DataList.Tables[DataListEntity];
-                core.DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
+                core.DataService.Instance.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
                     Guid.Empty, _menuItem.ListSortSetId, null, qparams, columnData,
                     this.DataListEntity,
                     string.Join(";", (string[])finalColumns.ToArray(typeof(string))));
@@ -283,7 +255,7 @@ namespace Origam.Server
             // We use the RecordEdit filter set for single record editing.
             ResolveFormMethodParameters(_menuItem.RecordEditMethod);
             QueryParameterCollection qparams = Request.QueryParameters;
-            data = core.DataService.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
+            data = core.DataService.Instance.LoadData(DataStructureId, _menuItem.RecordEditMethodId,
                 _menuItem.DefaultSetId, _menuItem.SortSetId, null, qparams);
             return data;
         }
@@ -529,7 +501,7 @@ namespace Origam.Server
 
         private DataSet LoadDataPiece(object parentId)
         {
-            return core.DataService.LoadData(DataStructureId, _menuItem.MethodId, 
+            return core.DataService.Instance.LoadData(DataStructureId, _menuItem.MethodId, 
                 _menuItem.DefaultSetId, Guid.Empty, null, 
                 DelayedLoadingParameterName, parentId);
         }

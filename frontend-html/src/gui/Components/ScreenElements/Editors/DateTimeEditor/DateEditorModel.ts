@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-import { action, computed, observable } from "mobx";
+import { action, computed, flow, observable } from "mobx";
 import { toOrigamServerString } from "@origam/utils";
 import { getDefaultCsDateFormatDataFromCookie } from "utils/cookies";
 import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
@@ -32,25 +32,31 @@ export class DateEditorModel {
   constructor(
     private editorState: IEditorState,
     public outputFormat: string,
-    private onChange?: (event: any, isoDay: string | undefined | null) => void,
+    private onChange?: (event: any, isoDay: string | undefined | null) => Promise<void>,
     private onClick?: (event: any) => void,
     private onKeyDown?: (event: any) => void,
-    private onEditorBlur?: (event: any) => void,
+    private onEditorBlur?: (event: any) => Promise<void>,
     private onChangeByCalendar?: (event: any, isoDay: string) => void
   ) {
   }
 
-  @action.bound handleInputBlur(event: any) {
-    const dateCompleter = this.getDateCompleter();
-    const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
-    if (completedMoment) {
-      this.onChange?.(event, toOrigamServerString(completedMoment));
-    } else if (this.momentValue?.isValid()) {
-      this.onChange?.(event, toOrigamServerString(this.momentValue));
-    }
+  @action.bound
+  async handleInputBlur(event: any) {
+    const self = this;
+    await flow(function*() {
+      const dateCompleter = self.getDateCompleter();
+      const completedMoment = dateCompleter.autoComplete(self.dirtyTextualValue);
+      if (completedMoment) {
+        yield self.onChange?.(event, toOrigamServerString(completedMoment));
+      } else if (self.momentValue?.isValid()) {
+        yield self.onChange?.(event, toOrigamServerString(self.momentValue));
+      }
 
-    this.dirtyTextualValue = undefined;
-    this.onEditorBlur && this.onEditorBlur(event);
+      self.dirtyTextualValue = undefined;
+      if(self.onEditorBlur){
+        yield self.onEditorBlur(event);
+      }
+    })();
   }
 
   private get autoCompletedMoment() {

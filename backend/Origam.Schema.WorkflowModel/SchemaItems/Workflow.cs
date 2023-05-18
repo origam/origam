@@ -37,7 +37,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Sequential Workflow", "sequential-workflow.png")]
     [HelpTopic("Sequential+Workflows")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.1")]
+    [ClassMetaVersion("6.0.2")]
 	public class Workflow : AbstractSchemaItem, IWorkflow
 	{
 		public const string CategoryConst = "Workflow";
@@ -80,8 +80,7 @@ namespace Origam.Schema.WorkflowModel
         #region IWorkflowStep Members
 		[DefaultValue(WorkflowTransactionBehavior.InheritExisting)]
 		[Category("Transactions"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I02")] 
-        [DisplayName("Transaction Behavior")]
+		[DisplayName("Transaction Behavior")]
 		[XmlAttribute ("transactionBehavior")]
         [Description("Controls how will workflow interact with incoming transactions. The default behavior is to inherit them.")]
         public WorkflowTransactionBehavior TransactionBehavior { get; set; } 
@@ -89,8 +88,7 @@ namespace Origam.Schema.WorkflowModel
 		#endregion
 
         #region Overriden AbstractSchemaItem Members
-
-        [EntityColumn("ItemType")]
+        
 		public override string ItemType
 		{
 			get
@@ -109,10 +107,15 @@ namespace Origam.Schema.WorkflowModel
 				return new ArrayList();
 			}
 		}
+        
+        // It does not really make sense to change this property on Workflow.
+        // That is why it is not visible in the Architect and not persisted in XML.
+        [Browsable(false)]
+        public StepFailureMode OnFailure { get; set; } =
+	        StepFailureMode.WorkflowFails;
 
-		[DefaultValue(Trace.InheritFromParent)]
+        [DefaultValue(Trace.InheritFromParent)]
 		[Category("Tracing"), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")] 
 		[RuntimeConfigurable ("traceLevel")]
         [DisplayName("Trace Level")]
 		public Trace TraceLevel { get; set; } = Trace.InheritFromParent;

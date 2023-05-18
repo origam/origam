@@ -3,6 +3,7 @@
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
   xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:aesr="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractEntitySecurityRule/6.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0"
   xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0"
@@ -10,12 +11,14 @@
   xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0"
   xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0"
   xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0"
+  xmlns:efd1="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldDependency/6.0.0"
+  xmlns:efsr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFieldSecurityRule/6.0.0"
   xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
   xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
-  xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
+  xmlns:fc1="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0"
   xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0"
   xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
-  xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
+  xmlns:pr1="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0"
   xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
   xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
   xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
@@ -96,14 +99,14 @@
       asi:abstract="false"
       x:id="468b753a-1c8d-4eab-a6c0-ecf411771a59"
       asi:name="GetByProcessor">
-      <fc:DataEntityColumn
+      <fc1:DataEntityColumn
         asi:abstract="false"
         adec:allowNulls="true"
         adec:autoIncrement="false"
         adec:dataType="Boolean"
         adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
         x:id="e15b1c74-f771-4ce7-9984-d38247b5872e"
         adec:isPrimaryKey="false"
         asi:name="or"
@@ -114,14 +117,14 @@
           x:id="3ec1cc38-3043-4467-9b95-f2a544b2347c"
           asi:name="Arguments"
           fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
-          <fc:DataEntityColumn
+          <fc1:DataEntityColumn
             asi:abstract="false"
             adec:allowNulls="true"
             adec:autoIncrement="false"
             adec:dataType="Boolean"
             adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            fc1:forceDatabaseCalculation="false"
+            fc1:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
             x:id="61183158-9a6d-4cb0-9196-4317b8e28e25"
             adec:isPrimaryKey="false"
             asi:name="="
@@ -143,21 +146,21 @@
               x:id="e05360ad-ae7b-4860-b792-c938a2c7f461"
               asi:name="Right"
               fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-              <pr:ParameterReference
+              <pr1:ParameterReference
                 asi:abstract="false"
                 x:id="18e6f001-1f8c-4a59-9794-9a2cb1fde60a"
                 asi:name="parQueueProcessor"
-                pr:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
+                pr1:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
             </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
-          <fc:DataEntityColumn
+          </fc1:DataEntityColumn>
+          <fc1:DataEntityColumn
             asi:abstract="false"
             adec:allowNulls="true"
             adec:autoIncrement="false"
             adec:dataType="Boolean"
             adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            fc1:forceDatabaseCalculation="false"
+            fc1:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
             x:id="83e2bbef-1d54-4255-977e-e6d6ae7cc15b"
             adec:isPrimaryKey="false"
             asi:name="="
@@ -168,26 +171,26 @@
               x:id="6d8efc30-72c3-438e-8153-a448d73b9aed"
               asi:name="Left"
               fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
-              <pr:ParameterReference
+              <pr1:ParameterReference
                 asi:abstract="false"
                 x:id="3efdc71d-6212-40a7-ae85-ecba79e1fb71"
                 asi:name="parQueueProcessor"
-                pr:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
+                pr1:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parQueueProcessor/4745550b-fe53-49f1-a8d3-b50d3d0e6432" />
             </fcp:FunctionCallParameter>
             <fcp:FunctionCallParameter
               asi:abstract="false"
               x:id="d9dcc050-ac02-4b35-9201-19476832f05e"
               asi:name="Right"
               fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34" />
-          </fc:DataEntityColumn>
-          <fc:DataEntityColumn
+          </fc1:DataEntityColumn>
+          <fc1:DataEntityColumn
             asi:abstract="false"
             adec:allowNulls="true"
             adec:autoIncrement="false"
             adec:dataType="Boolean"
             adec:excludeFromAllFields="false"
-            fc:forceDatabaseCalculation="false"
-            fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+            fc1:forceDatabaseCalculation="false"
+            fc1:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
             x:id="f60bb0fb-989c-49d2-a6df-1aa97b895590"
             adec:isPrimaryKey="false"
             asi:name="="
@@ -209,22 +212,22 @@
                 x:id="fccab389-28a3-4f9a-9d43-b1a763a2b3c0"
                 asi:name="QueueProcessor" />
             </fcp:FunctionCallParameter>
-          </fc:DataEntityColumn>
+          </fc1:DataEntityColumn>
         </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
+      </fc1:DataEntityColumn>
     </ef:EntityFilter>
     <ef:EntityFilter
       asi:abstract="false"
       x:id="afed0343-4284-4afc-b147-6da5dc539de7"
       asi:name="GetByReferenceCode">
-      <fc:DataEntityColumn
+      <fc1:DataEntityColumn
         asi:abstract="false"
         adec:allowNulls="true"
         adec:autoIncrement="false"
         adec:dataType="Boolean"
         adec:excludeFromAllFields="false"
-        fc:forceDatabaseCalculation="false"
-        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        fc1:forceDatabaseCalculation="false"
+        fc1:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
         x:id="1f24ccd5-8a4e-4e9c-ae30-b05278c2d64b"
         adec:isPrimaryKey="false"
         asi:name="="
@@ -246,13 +249,13 @@
           x:id="6ae230c2-7871-419b-a2d2-dcb4c0ba0d68"
           asi:name="Right"
           fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
-          <pr:ParameterReference
+          <pr1:ParameterReference
             asi:abstract="false"
             x:id="afaffedd-9cc6-4ae1-a63d-d17307a042ca"
             asi:name="parReferenceCode"
-            pr:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parReferenceCode/dfb2875c-b203-4035-904a-9c60f62da99a" />
+            pr1:parameter="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/parReferenceCode/dfb2875c-b203-4035-904a-9c60f62da99a" />
         </fcp:FunctionCallParameter>
-      </fc:DataEntityColumn>
+      </fc1:DataEntityColumn>
     </ef:EntityFilter>
     <eri:EntityRelation
       asi:abstract="false"
@@ -299,6 +302,53 @@
         asi:name="WorkQueueCommandKey1"
         ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueCommand.origam#WorkQueueCommand/refWorkQueueId/c74dd80c-e74e-4c3c-a4a0-555b097c5859" />
     </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="dcbe1795-2d35-4b7a-b874-a1aecdc9fd18"
+      asi:name="WorkQueueState"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/Work Queue/WorkQueueState.origam#WorkQueueState/e3c6d184-8d16-4a28-ab45-3c41e754a656"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="c74d78d2-4e1e-4ef1-b388-fad663a294e5"
+        asi:name="WorkQueueStateKey1"
+        ercpi:relatedEntityField="Root/DataEntity/Work Queue/WorkQueueState.origam#WorkQueueState/refWorkQueueId/5b864691-d70b-435c-895b-ebc226bcc61b" />
+    </eri:EntityRelation>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_60.origam#_Number_60/6d2b3bb0-bb7a-4caf-a26e-394dca636e68"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="0f9ce7d6-47e4-4a13-931d-faf98fb33ae3"
+      adec:isPrimaryKey="false"
+      adec:label="Throttling Time Interval in Seconds"
+      fmi:mappedColumnName="ThrottlingIntervalSeconds"
+      asi:name="ThrottlingIntervalSeconds"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
+        x:id="b5e20094-2b88-4b8e-9dfa-321f92d4706b"
+        asi:name="EnableThrottling" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="b06cfddb-ebf7-429d-aa8d-70f7e31a2733"
+        aesr:level="100"
+        asi:name="100_Permit_ReadUpdate_A_SR_WorkQueue_ThrottlingIsEnabled_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_WorkQueue_ThrottlingIsEnabled.origam#SR_WorkQueue_ThrottlingIsEnabled/f73da2db-19d9-4029-a6d8-6188b526c2cc"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -349,6 +399,98 @@
       asi:abstract="false"
       adec:allowNulls="false"
       adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/f8d63dba-7d1b-4440-85f3-4ef52675ff52"
+      adec:defaultValue="Root/DataConstant/WorkQueueRetryType/WorkQueueRetryType_NoRetry.origam#WorkQueueRetryType_NoRetry/3e04c0f5-164e-4b89-ba02-cf2040d8e871"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueRetryType.origam#WorkQueueRetryType/8e7e0ad5-169e-41af-879d-dfb963cf17b6"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+      adec:isPrimaryKey="false"
+      adec:label="Retry Type"
+      fmi:mappedColumnName="refWorkQueueRetryTypeId"
+      asi:name="refWorkQueueRetryTypeId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_10.origam#_Number_10/33088ae6-940e-4060-afc7-21551afbc8cb"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="1d0a083e-6c93-4b6b-acda-6d62d6efbb57"
+      adec:isPrimaryKey="false"
+      adec:label="Throttling Items Per Interval"
+      fmi:mappedColumnName="ThrottlingItemsPerInterval"
+      asi:name="ThrottlingItemsPerInterval"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/EnableThrottling/931d00c6-83ef-453d-bf2d-3c69faf10052"
+        x:id="b140fd18-e148-495d-b29b-b68b01688460"
+        asi:name="EnableThrottling" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="e1fb78bc-e2c7-4e5d-b333-325d88c01bf6"
+        aesr:level="100"
+        asi:name="100_Permit_ReadUpdate_A_SR_WorkQueue_ThrottlingIsEnabled_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_WorkQueue_ThrottlingIsEnabled.origam#SR_WorkQueue_ThrottlingIsEnabled/f73da2db-19d9-4029-a6d8-6188b526c2cc"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_30.origam#_Number_30/1463511f-a52c-4043-b2b9-6373688349b8"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="1dbc7efc-428f-47fe-9fc3-d7adb3ef3e52"
+      adec:isPrimaryKey="false"
+      adec:label="Retry Time Interval in Seconds"
+      fmi:mappedColumnName="RetryIntervalSeconds"
+      asi:name="RetryIntervalSeconds"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="05a440dd-7b11-4527-86a8-8b2d0af3cb0b"
+        asi:name="refWorkQueueRetryTypeId" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="2bfb9408-48a4-4086-bf0a-636742156d4b"
+        aesr:level="100"
+        asi:name="100_Deny__A_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:type="Deny"
+        efsr:updateCredential="false"
+        aesr:valueType="ActualValue" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="51998384-b673-4cd6-bc94-e69c637e188f"
+        aesr:level="80"
+        asi:name="80_Permit_ReadUpdate_A_SR_RetryType_IsNot_NoRetry_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_RetryType_IsNot_NoRetry.origam#SR_RetryType_IsNot_NoRetry/1e598fe3-96b0-4f33-ad60-3b6e9e3a4939"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
       adec:dataLength="40"
       adec:dataType="String"
       adec:excludeFromAllFields="false"
@@ -360,6 +502,48 @@
       asi:name="ReferenceCode"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Float"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_2.origam#_Number_2/54faca0b-4eac-429e-a13d-5407ecc48afa"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="2f880296-cb4b-41ec-b65c-b240630eb679"
+      adec:isPrimaryKey="false"
+      adec:label="Exponential Retry Base"
+      fmi:mappedColumnName="ExponentialRetryBase"
+      asi:name="ExponentialRetryBase"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="1f1ef3fe-9ddb-4128-805e-25fe67195a42"
+        asi:name="refWorkQueueRetryTypeId" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="cc9a4ef7-7e47-4b89-87cf-dc13dd0ea1a8"
+        aesr:level="80"
+        asi:name="80_Permit_ReadUpdate_A_SR_RetryType_ExponentialRetry_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_RetryType_ExponentialRetry.origam#SR_RetryType_ExponentialRetry/a86154d4-b06b-44d5-a2c3-62d75eb96742"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="f3b9224c-5329-4d07-b84f-3da729445cfc"
+        aesr:level="100"
+        asi:name="100_Deny__A_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:type="Deny"
+        efsr:updateCredential="false"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"
@@ -516,6 +700,21 @@
       adec:allowNulls="false"
       adec:autoIncrement="false"
       adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="931d00c6-83ef-453d-bf2d-3c69faf10052"
+      adec:isPrimaryKey="false"
+      adec:label="Enable Throttling"
+      fmi:mappedColumnName="EnableThrottling"
+      asi:name="EnableThrottling"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
       adec:defaultValue="Root/DataConstant/_boolean/_true.origam#_true/9def84b6-ed28-48d6-bbf0-099b944355d5"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
@@ -600,6 +799,48 @@
       asi:name="ExternalSourceState"
       adec:onCopyAction="Initialize"
       adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_3.origam#_Number_3/1e4627b1-c5ec-4517-a4b2-b8c76a494bef"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="e35ae850-878e-4e54-a4ac-94559e6d6218"
+      adec:isPrimaryKey="false"
+      adec:label="Maximum Retries"
+      fmi:mappedColumnName="MaxRetries"
+      asi:name="MaxRetries"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <efd1:EntityFieldDependency
+        asi:abstract="false"
+        efd1:field="Root/DataEntity/Work Queue/WorkQueue.origam#WorkQueue/refWorkQueueRetryTypeId/18f71e86-4bbe-41a7-b4bf-a3aa109498e5"
+        x:id="0dcfa03d-5d9d-491b-943c-29d63a3cb99b"
+        asi:name="refWorkQueueRetryTypeId" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="85a3b727-89f8-43d2-ade2-1c9a58be4728"
+        aesr:level="100"
+        asi:name="100_Deny__A_*"
+        efsr:readCredential="false"
+        aesr:roles="*"
+        aesr:type="Deny"
+        efsr:updateCredential="false"
+        aesr:valueType="ActualValue" />
+      <efsr:EntitySecurityRule
+        asi:abstract="false"
+        x:id="fefeeec8-ed7e-4308-afa5-c26725e80bcf"
+        aesr:level="80"
+        asi:name="80_Permit_ReadUpdate_A_SR_RetryType_IsNot_NoRetry_*"
+        efsr:readCredential="true"
+        aesr:roles="*"
+        aesr:rule="Root/Rule/Work Queue/SR_RetryType_IsNot_NoRetry.origam#SR_RetryType_IsNot_NoRetry/1e598fe3-96b0-4f33-ad60-3b6e9e3a4939"
+        aesr:type="Permit"
+        efsr:updateCredential="true"
+        aesr:valueType="ActualValue" />
+    </fmi:DataEntityColumn>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="true"

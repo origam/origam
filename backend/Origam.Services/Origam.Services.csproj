@@ -4,6 +4,7 @@
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AssemblyName>Origam.Services</AssemblyName>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
     
   <PropertyGroup>

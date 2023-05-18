@@ -35,11 +35,18 @@ namespace Origam.Server.Configuration
     {
         Email,
         Username
+    }   
+    
+    public enum AuthenticationMethod
+    {
+        Cookie,
+        Token
     }
     
     public static class IdentityServerDefaults
     {
         public const string AzureAdScheme = "AzureAd";
+        public const string WindowsAdScheme = "Windows";
     }
     
     public class IdentityServerConfig
@@ -55,6 +62,7 @@ namespace Origam.Server.Configuration
         public bool CookieSlidingExpiration { get; } 
         public int CookieExpirationMinutes { get; }
         public string AuthenticationPostProcessor { get; }
+        public AuthenticationMethod PrivateApiAuthentication { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
@@ -66,6 +74,8 @@ namespace Origam.Server.Configuration
                     "PasswordForJwtCertificate");
             CookieSlidingExpiration = identityServerSection
                 .GetValue("CookieSlidingExpiration", true);
+            PrivateApiAuthentication = identityServerSection
+                .GetValue("PrivateApiAuthentication", AuthenticationMethod.Cookie);
             CookieExpirationMinutes = identityServerSection
                 .GetValue("CookieExpirationMinutes", 60);
             GoogleLogin = ConfigureGoogleLogin(identityServerSection);
@@ -107,8 +117,7 @@ namespace Origam.Server.Configuration
                         .GetStringArrayOrThrow(),
                     RedirectUris = mobileClientSection
                         .GetSectionOrThrow("RedirectUris")
-                        .GetStringArrayOrThrow(),
-                    ClientSecret= mobileClientSection.GetStringOrThrow("ClientSecret")
+                        .GetStringArrayOrThrow()
                 }; 
             }
             return null;
@@ -200,6 +209,8 @@ namespace Origam.Server.Configuration
                     return MicrosoftLogin;
                 case IdentityServerDefaults.AzureAdScheme:
                     return AzureAdLogin;
+                case  IdentityServerDefaults.WindowsAdScheme:
+                    return new WindowsLogin();
                 default:
                     throw new ArgumentOutOfRangeException(
                         nameof(authenticationScheme),
@@ -224,7 +235,6 @@ namespace Origam.Server.Configuration
     {
         public string[] RedirectUris { get; set; }
         public string[] PostLogoutRedirectUris { get; set; }
-        public string ClientSecret { get; set; }
     }
 
     public abstract class ExternalCallbackProcessingInfo
@@ -239,6 +249,10 @@ namespace Origam.Server.Configuration
                 "AuthenticationType", AuthenticationType.Email);
             ClaimType = configurationSection.GetValue(
                 "ClaimType", ClaimTypes.Email);
+        }
+
+        protected ExternalCallbackProcessingInfo()
+        {
         }
     }
     
@@ -272,6 +286,20 @@ namespace Origam.Server.Configuration
         public AzureAdLogin(IConfigurationSection configurationSection) 
             : base(configurationSection)
         {
+        }
+    }
+
+    public class WindowsLogin : ExternalCallbackProcessingInfo
+    {
+        public WindowsLogin(IConfigurationSection configurationSection) 
+            : base(configurationSection)
+        {
+        }
+
+        public WindowsLogin()
+        {
+            AuthenticationType = AuthenticationType.Username;
+            ClaimType = "name";
         }
     }
 }

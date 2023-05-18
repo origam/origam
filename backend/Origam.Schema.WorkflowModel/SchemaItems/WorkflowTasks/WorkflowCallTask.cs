@@ -22,36 +22,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.ComponentModel;
-using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.WorkflowModel
 {
-	/// <summary>
-	/// Summary description for WorkflowCallTask.
-	/// </summary>
 	[SchemaItemDescription("(Task) Workflow Call", "Tasks", "task-workflow-call.png")]
     [HelpTopic("Workflow+Call+Task")]
     [ClassMetaVersion("6.0.0")]
-	public class WorkflowCallTask : WorkflowTask, ISchemaItemFactory
+	public class WorkflowCallTask : WorkflowTask
 	{
-		public WorkflowCallTask() : base() {}
+		public WorkflowCallTask() {}
 
-		public WorkflowCallTask(Guid schemaExtensionId) : base(schemaExtensionId) {}
+		public WorkflowCallTask(Guid schemaExtensionId) 
+			: base(schemaExtensionId) {}
 
-		public WorkflowCallTask(Key primaryKey) : base(primaryKey)	{}
+		public WorkflowCallTask(Key primaryKey) : base(primaryKey) {}
 
 		#region Override AbstractSchemaItem Members
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.Workflow);
-
-			base.GetExtraDependencies (dependencies);
+			dependencies.Add(Workflow);
+			base.GetExtraDependencies(dependencies);
 		}
 		#endregion
 
 		#region Properties
-		[EntityColumn("G10")]  
 		public Guid WorkflowId;
 
 		[TypeConverter(typeof(WorkflowConverter))]
@@ -61,15 +57,17 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.WorkflowId;
-
-				return (IWorkflow)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+				var key = new ModelElementKey
+				{
+					Id = WorkflowId
+				};
+				return (IWorkflow)PersistenceProvider.RetrieveInstance(
+					typeof(AbstractSchemaItem), key);
 			}
 			set
 			{
 				// We delete any current parameters
-				foreach(ISchemaItem child in this.ChildItems)
+				foreach(ISchemaItem child in ChildItems)
 				{
 					if(child is ContextStoreLink)
 					{
@@ -79,11 +77,11 @@ namespace Origam.Schema.WorkflowModel
 				
 				if(value == null)
 				{
-					this.WorkflowId = Guid.Empty;
+					WorkflowId = Guid.Empty;
 				}
 				else
 				{
-					this.WorkflowId = (Guid)value.PrimaryKey["Id"];
+					WorkflowId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
 		}
@@ -91,38 +89,24 @@ namespace Origam.Schema.WorkflowModel
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(WorkflowTaskDependency),
-									  typeof(ContextStoreLink)
-								  };
-			}
-		}
+			typeof(WorkflowTaskDependency), typeof(ContextStoreLink)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(WorkflowTaskDependency))
+			string itemName = null;
+			if(typeof(T) == typeof(WorkflowTaskDependency))
 			{
-				item = new WorkflowTaskDependency(schemaExtensionId);
-				item.Name = "NewWorkflowTaskDependency";
+				itemName = "NewWorkflowTaskDependency";
 			}
-			else if(type == typeof(ContextStoreLink))
+			else if(typeof(T) == typeof(ContextStoreLink))
 			{
-				item = new ContextStoreLink(schemaExtensionId);
-				item.Name = "newContextStoreLink";
+				itemName = "NewContextStoreLink";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorUIFormTaskUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 		#endregion
 

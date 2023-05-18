@@ -2,17 +2,18 @@
 <x:file
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
-  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.1"
+  xmlns:aws="http://schemas.origam.com/Origam.Schema.WorkflowModel.AbstractWorkflowStep/6.0.2"
   xmlns:cs="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStore/6.0.0"
   xmlns:csl="http://schemas.origam.com/Origam.Schema.WorkflowModel.ContextStoreLink/6.0.0"
   xmlns:twb="http://schemas.origam.com/Origam.Schema.WorkflowModel.TransactionWorkflowBlock/6.0.0"
-  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.1"
+  xmlns:w="http://schemas.origam.com/Origam.Schema.WorkflowModel.Workflow/6.0.2"
   xmlns:wct="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowCallTask/6.0.0"
   xmlns:wt="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowTask/6.0.0">
   <w:Workflow
     asi:abstract="false"
     x:id="0fea481a-24ab-4e98-8793-617ab5bb7272"
     asi:name="SendNotification"
+    w:onFailure="WorkflowFails"
     w:transactionBehavior="InheritExisting">
     <cs:ContextStore
       asi:abstract="false"
@@ -60,6 +61,7 @@
       asi:abstract="false"
       x:id="0e2fe624-09f8-4b29-9559-b0475a4e98cc"
       asi:name="Email (queued)"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       aws:startConditionRule="Root/Rule/_common/SR_NotificationChannelType_EmailQueued.origam#SR_NotificationChannelType_EmailQueued/fcc896b2-d960-43ba-a531-efc3f4f5a48a"
       aws:startConditionRuleContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/notificationChannelTypeId/8a40dacf-1afd-40f0-baee-fb8018b27139"
@@ -68,6 +70,7 @@
         asi:abstract="false"
         x:id="cf316512-5928-4214-b273-0893dd6b24a0"
         asi:name="SendMail"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
         wt:outputMethod="Ignore"
         aws:roles="*"
@@ -126,6 +129,7 @@
       asi:abstract="false"
       x:id="b15e030b-ae0e-4eb8-b976-83d406830131"
       asi:name="Email"
+      aws:onFailure="WorkflowFails"
       aws:roles="*"
       aws:startConditionRule="Root/Rule/_common/SR_NotificationChannelType_Email.origam#SR_NotificationChannelType_Email/0f9d3c7b-7ca7-48b8-9a76-348a2ded5ff1"
       aws:startConditionRuleContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/notificationChannelTypeId/8a40dacf-1afd-40f0-baee-fb8018b27139"
@@ -134,6 +138,7 @@
         asi:abstract="false"
         x:id="37cc99c1-3d09-464b-9722-cbbc82fb983b"
         asi:name="SendMail"
+        aws:onFailure="WorkflowFails"
         wt:outputContextStore="Root/Workflow/Work Queues/SendNotification.origam#SendNotification/body/9050aead-97e0-43b9-a538-f2088c4e4a8c"
         wt:outputMethod="Ignore"
         aws:roles="*"

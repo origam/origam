@@ -22,21 +22,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for FunctionCall.
-	/// </summary>
 	[SchemaItemDescription("Function Call", "Fields", "icon_function-call.png")]
     [HelpTopic("Function+Call+Field")]
     [DefaultProperty("Function")]
     [ClassMetaVersion("6.0.0")]
-    public class FunctionCall : AbstractDataEntityColumn, ISchemaItemFactory
+    public class FunctionCall : AbstractDataEntityColumn
 	{
-		public FunctionCall() : base() {}
+		public FunctionCall() {}
 
 		public FunctionCall(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -45,69 +43,40 @@ namespace Origam.Schema.EntityModel
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[Browsable(false)]
-		public override bool UseFolders
-		{
-			get
-			{
-				return false;
-			}
-		}
+		public override bool UseFolders => false;
 
-		public override string FieldType { get; } = "FunctionCall";
+		public override string FieldType => "FunctionCall";
 
 		public override bool ReadOnly
 		{
 			get
 			{
-				if(this.Function == null)
+				if(Function == null)
 				{
 					return true;
 				}
-				else
-				{
-					return this.Function.FunctionType == OrigamFunctionType.Standard;
-				}
+				return Function.FunctionType == OrigamFunctionType.Standard;
 			}
 		}
 
-		public override string Icon
-		{
-			get
-			{
-				if(this.Function == null)
-				{
-					return "icon_function-call.png";
-				}
-				else
-				{
-					return this.Function.Icon;
-				}
-			}
-		}
+		public override string Icon 
+			=> Function == null ? "icon_function-call.png" : Function.Icon;
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 newNode)
 		{
 			// can move inside the same entity 
-			if(this.RootItem == (newNode as ISchemaItem).RootItem)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return RootItem == ((ISchemaItem)newNode).RootItem;
 		}
 
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(
+			System.Collections.ArrayList dependencies)
 		{
-			dependencies.Add(this.Function);
-
+			dependencies.Add(Function);
 			base.GetExtraDependencies (dependencies);
 		}
 		#endregion
 
 		#region Properties
-		[EntityColumn("G07")]  
 		public Guid FunctionId;
 
 		[Category("Function")]
@@ -119,12 +88,14 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.FunctionId;
-
+				var key = new ModelElementKey
+				{
+					Id = this.FunctionId
+				};
 				try
 				{
-					return (Function)this.PersistenceProvider.RetrieveInstance(typeof(Function), key);
+					return (Function)PersistenceProvider.RetrieveInstance(
+						typeof(Function), key);
 				}
 				catch
 				{
@@ -134,34 +105,31 @@ namespace Origam.Schema.EntityModel
 			set
 			{
 				// We have to delete all child items
-				foreach(ISchemaItem item in this.ChildItems)
+				foreach(ISchemaItem item in ChildItems)
 				{
 					item.IsDeleted = true;
 				}
-
-
 				if(value == null)
 				{
-					this.FunctionId = Guid.Empty;
-
-					this.Name = "";
+					FunctionId = Guid.Empty;
+					Name = "";
 				}
 				else
 				{
-					this.FunctionId = (Guid)value.PrimaryKey["Id"];
-
-					if(this.Name == null)
+					FunctionId = (Guid)value.PrimaryKey["Id"];
+					if(Name == null)
 					{
-						this.Name = this.Function.Name;
+						Name = Function.Name;
 					}
-
 					// We generate all parameters to the function
-					foreach(FunctionParameter parameter in this.Function.ChildItems)
+					foreach(var abstractSchemaItem in Function.ChildItems)
 					{
-						FunctionCallParameter parameterRef = this.NewItem(typeof(FunctionCallParameter), this.SchemaExtensionId, null) as FunctionCallParameter;
-						parameterRef.FunctionParameter = parameter;
-						parameterRef.Name = parameter.Name;
-						//parameterRef.Persist();
+						var parameter = (FunctionParameter)abstractSchemaItem;
+						var functionCallParameter 
+							= NewItem<FunctionCallParameter>(
+								SchemaExtensionId, null);
+						functionCallParameter.FunctionParameter = parameter;
+						functionCallParameter.Name = parameter.Name;
 					}
 				}
 			}
@@ -169,18 +137,11 @@ namespace Origam.Schema.EntityModel
 
 		private bool _forceDatabaseCalculation = false;
 		[Category("Function"), DefaultValue(false)]
-		[EntityColumn("B07")]
-        [XmlAttribute("forceDatabaseCalculation")]
+		[XmlAttribute("forceDatabaseCalculation")]
         public bool ForceDatabaseCalculation
 		{
-			get
-			{
-				return _forceDatabaseCalculation;
-			}
-			set
-			{
-				_forceDatabaseCalculation = value;
-			}
+			get => _forceDatabaseCalculation;
+			set => _forceDatabaseCalculation = value;
 		}
 		#endregion
 
@@ -191,35 +152,21 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				if(this.ParentItem is IDataEntity)
-				{
-					return base.NewItemTypes;
-				}
-				else
-				{
-					return new Type[1] {typeof(FunctionCallParameter)};
-				}
+				var functionCallParameterType 
+					= new[] {typeof(FunctionCallParameter)};
+				return ParentItem is IDataEntity 
+					? functionCallParameterType.Concat(base.NewItemTypes)
+						.ToArray() 
+					: functionCallParameterType;
 			}
 		}
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			if(type == typeof(FunctionCallParameter))
-			{
-				FunctionCallParameter item = new FunctionCallParameter(schemaExtensionId);
-				item.PersistenceProvider = this.PersistenceProvider;
-				item.Name = "NewFunctionCallParameter";
-
-				item.Group = group;
-				item.IsAbstract = this.IsAbstract;
-				this.ChildItems.Add(item);
-
-				return item;
-			}
-			else
-			{
-				return base.NewItem(type, schemaExtensionId, group);
-			}
+			return base.NewItem<T>(schemaExtensionId, group, 
+				typeof(T) == typeof(FunctionCallParameter) ?
+					"NewFunctionCallParameter" : null);
 		}
 
 		#endregion
@@ -231,41 +178,38 @@ namespace Origam.Schema.EntityModel
 				(
 					(
 						type == typeof(FieldMappingItem)
-						| type == typeof(DetachedField)
+						|| type == typeof(DetachedField)
 					)
-				&
+				&&
 					(
-						this.ParentItem is IDataEntity
+						ParentItem is IDataEntity
 					)
 				);
 		}
 
-		public override ISchemaItem ConvertTo(Type type)
+		protected override ISchemaItem ConvertTo<T>()
 		{
-			AbstractSchemaItem converted = this.ParentItem.NewItem(type, this.SchemaExtensionId, this.Group) as AbstractSchemaItem;
-
-			if(converted is AbstractDataEntityColumn)
+			var converted = ParentItem.NewItem<T>(SchemaExtensionId, Group);
+			if(converted is AbstractDataEntityColumn column)
 			{
-				AbstractDataEntityColumn.CopyFieldMembers(this, converted as AbstractDataEntityColumn);
+				CopyFieldMembers(this, column);
 			}
-
-			if(converted is FieldMappingItem)
+			if(converted is FieldMappingItem fieldMappingItem)
 			{
-				(converted as FieldMappingItem).MappedColumnName = this.Name;
+				fieldMappingItem.MappedColumnName = Name;
 			}
-			else if(type == typeof(DetachedField))
+			else if(typeof(T) == typeof(DetachedField))
 			{
 			}
 			else
 			{
-				return base.ConvertTo(type);
+				return base.ConvertTo<T>();
 			}
-
 			// does the common conversion tasks and persists both this and converted objects
-			AbstractSchemaItem.FinishConversion(this, converted);
-
+			FinishConversion(this, converted);
 			return converted;
 		}
+
 		#endregion
 	}
 }

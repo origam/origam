@@ -24,10 +24,14 @@ import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./TableView/shouldProceedToChangeRow";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { getFocusManager } from "model/selectors/getFocusManager";
 
 export function onCreateRowClick(ctx: any, switchToFormPerspective?: boolean) {
   return flow(function*onCreateRowClick(event: any) {
     try {
+      const focusManager = getFocusManager(ctx);
+      yield focusManager.activeEditorCloses();
       const gridId = getGridId(ctx);
       const entity = getEntity(ctx);
       const formScreenLifecycle = getFormScreenLifecycle(ctx);

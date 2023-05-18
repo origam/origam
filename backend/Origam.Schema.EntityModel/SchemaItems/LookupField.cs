@@ -30,9 +30,6 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Implementation of LookupField.
-	/// </summary>
 	[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
     [HelpTopic("Lookup+Field")]
 	[XmlModelRoot(CategoryConst)]
@@ -40,7 +37,8 @@ namespace Origam.Schema.EntityModel
 	public class LookupField : AbstractSchemaItem, IDataEntityColumn
 	{
 		public const string CategoryConst = "DataEntityColumn";
-		public LookupField() : base() {}
+		
+		public LookupField() {}
 
 		public LookupField(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
@@ -53,25 +51,21 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				if(this.Lookup == null)
+				if(Lookup == null)
 				{
 					return OrigamDataType.Boolean;
 				}
-				else if (this.Lookup.ValueDisplayMember.Contains(";"))
+				if (Lookup.ValueDisplayMember.Contains(";"))
 				{
 					// concatenated lookup field
 					return OrigamDataType.String;
 				}
-				else if (this.Lookup.ValueDisplayColumn == null)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        string.Format("ValueDisplayMember {0} not found in lookup {1}.", 
-                        Lookup.ValueDisplayMember, Lookup.NodeId));
-                }
-				else
-                {
-					return this.Lookup.ValueDisplayColumn.DataType;
+				if (Lookup.ValueDisplayColumn == null)
+				{
+					throw new ArgumentOutOfRangeException(
+						$"ValueDisplayMember {Lookup.ValueDisplayMember} not found in lookup {Lookup.NodeId}.");
 				}
+				return Lookup.ValueDisplayColumn.DataType;
 			}
 			set => throw new NotSupportedException();
 		}
@@ -81,45 +75,37 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				if(this.Lookup == null)
+				if(Lookup == null)
 				{
 					return 0;
 				}
-                else if(this.Lookup.ValueColumn == null)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        string.Format("ValueValueMember {0} not found in lookup {1}.",
-                        Lookup.ValueValueMember, Lookup.NodeId));
-                }
-                else
+				if(Lookup.ValueColumn == null)
 				{
-					return this.Lookup.ValueColumn.FinalColumn.Field.DataLength;
+					throw new ArgumentOutOfRangeException(
+						$"ValueValueMember {Lookup.ValueValueMember} not found in lookup {Lookup.NodeId}.");
 				}
+				return Lookup.ValueColumn.FinalColumn.Field.DataLength;
 			}
 			set => throw new NotSupportedException();
 		}
 
 		[Category("Entity Column"), DefaultValue(true)]
-		[EntityColumn("B01")]
 		[XmlAttribute ("allowNulls")]
 		[Description("Indicates if the field allows empty values or not. If set to False, also the database column will be generated so that it does not allow nulls. In the user interface the user will have to enter a value before saving the record.")]
 		public bool AllowNulls { get; set; } = true;
 
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B02")]
 		[XmlAttribute ("isPrimaryKey")]
 		[Description("Indicates if the field is a primary key. If set to True, also a database primary key is generated. IMPORTANT: Every entity should have a primary key specified, otherwise data merges will not be able to correlate existing records. NOTE: Multi-column primary keys are possible but GUI expects always only single-column primary keys.")]
 		public bool IsPrimaryKey { get; set; } = false;
 
 		[Category("Entity Column")]
-		[EntityColumn("SS01")]
 		[XmlAttribute ("caption")]
 		[Localizable(true)]
 		[Description("Default label for the field in a GUI. Audit log viewer also gets the field names from here.")]
 		public string Caption { get; set; } = "";
 
 		[Category("Entity Column"), DefaultValue(false)]
-		[EntityColumn("B04")]
 		[XmlAttribute ("excludeFromAllFields")]
 		[Description("If set to True, the field will not be included in the list of fields in a Data Structure if 'AllFields=True' is set in a Data Structure Entity. This is useful e.g. for database function calls that are expensive and used only for lookups that would otherwise slow down the system if loaded e.g. to forms.")]
 		public bool ExcludeFromAllFields { get; set; } = false;
@@ -145,7 +131,6 @@ namespace Origam.Schema.EntityModel
 			set => throw new NotSupportedException();
 		}
 
-		[EntityColumn("G01")]  
 		public Guid DefaultLookupId;
 
 		[Browsable(false)]
@@ -154,12 +139,14 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				ModelElementKey key = new ModelElementKey();
-				key.Id = this.DefaultLookupId;
-
+				var key = new ModelElementKey
+				{
+					Id = DefaultLookupId
+				};
 				try
 				{
-					return (IDataLookup)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), key);
+					return (IDataLookup)PersistenceProvider.RetrieveInstance(
+						typeof(AbstractSchemaItem), key);
 				}
 				catch
 				{
@@ -170,11 +157,11 @@ namespace Origam.Schema.EntityModel
 			{
 				if(value == null)
 				{
-					this.DefaultLookupId = Guid.Empty;
+					DefaultLookupId = Guid.Empty;
 				}
 				else
 				{
-					this.DefaultLookupId = (Guid)value.PrimaryKey["Id"];
+					DefaultLookupId = (Guid)value.PrimaryKey["Id"];
 				}
 			}
 		}
@@ -185,8 +172,8 @@ namespace Origam.Schema.EntityModel
 		[NotNullModelElementRule()]
 		public IDataLookup Lookup
 		{
-			get => this.DefaultLookup;
-			set => this.DefaultLookup = value;
+			get => DefaultLookup;
+			set => DefaultLookup = value;
 		}
 
 		[Browsable(false)]
@@ -219,9 +206,9 @@ namespace Origam.Schema.EntityModel
 
 
 		[Category("Entity Column"), DefaultValue(EntityColumnXmlMapping.Attribute)]
-		[EntityColumn("I03")]
 		[XmlAttribute ("xmlMappingType")]
-		public EntityColumnXmlMapping XmlMappingType { get; set; } = EntityColumnXmlMapping.Attribute;
+		public EntityColumnXmlMapping XmlMappingType { get; set; } 
+			= EntityColumnXmlMapping.Attribute;
 
 		[Browsable(false)]
 		public OnCopyActionType OnCopyAction
@@ -231,17 +218,19 @@ namespace Origam.Schema.EntityModel
 		}
 
 		[Browsable(false)]
-		public ArrayList RowLevelSecurityRules => this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
+		public ArrayList RowLevelSecurityRules 
+			=> ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 
 		[Browsable(false)]
-		public ArrayList ConditionalFormattingRules => this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
+		public ArrayList ConditionalFormattingRules 
+			=> ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 
 		[Browsable(false)]
-		public ArrayList DynamicLabels => this.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
+		public ArrayList DynamicLabels 
+			=> ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 		#endregion
 
 		#region Properties
-		[EntityColumn("G05")]  
 		public Guid FieldId;
 
 		[TypeConverter(typeof(EntityColumnReferenceConverter))]
@@ -266,86 +255,83 @@ namespace Origam.Schema.EntityModel
         [Browsable(false)]
 		public bool ReadOnly => false;
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode is IDataEntity;
+		public override bool CanMove(UI.IBrowserNode2 newNode) 
+			=> newNode is IDataEntity;
 
-		[EntityColumn("ItemType")]
 		public override string ItemType => AbstractDataEntityColumn.CategoryConst;
 
 		public override void GetExtraDependencies(ArrayList dependencies)
 		{
-			if(this.DefaultLookup != null) dependencies.Add(this.DefaultLookup);
-			if(this.DefaultValue != null) dependencies.Add(this.DefaultValue);
-			if(this.DefaultValueParameter != null) dependencies.Add(this.DefaultValueParameter);
-			if(this.Field != null) dependencies.Add(this.Field);
-
+			if(DefaultLookup != null)
+			{
+				dependencies.Add(DefaultLookup);
+			}
+			if(DefaultValue != null)
+			{
+				dependencies.Add(DefaultValue);
+			}
+			if(DefaultValueParameter != null)
+			{
+				dependencies.Add(DefaultValueParameter);
+			}
+			if(Field != null)
+			{
+				dependencies.Add(Field);
+			}
 			base.GetExtraDependencies (dependencies);
 		}
 
-		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
+		public override void GetParameterReferences(
+			AbstractSchemaItem parentItem, Hashtable list)
 		{
-			return;
 		}
 
 		public override void UpdateReferences()
 		{
-			foreach(ISchemaItem item in this.RootItem.ChildItemsRecursive)
+			foreach(ISchemaItem item in RootItem.ChildItemsRecursive)
 			{
-				if(item.OldPrimaryKey != null)
+				if(item.OldPrimaryKey?.Equals(Field.PrimaryKey) == true)
 				{
-					if(item.OldPrimaryKey.Equals(this.Field.PrimaryKey))
-					{
-						this.Field = item as IDataEntityColumn;
-						break;
-					}
+					Field = item as IDataEntityColumn;
+					break;
 				}
 			}
-
-			base.UpdateReferences ();
+			base.UpdateReferences();
 		}
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 		[Browsable(false)]
-		public override Type[] NewItemTypes =>
-			new Type[] {
+		public override Type[] NewItemTypes => new[] 
+		{
 				typeof(EntityFieldSecurityRule),
 				typeof(EntityFieldDependency),
 				typeof(EntityConditionalFormatting),
 				typeof(EntityFieldDynamicLabel)
-			};
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(EntityFieldSecurityRule))
+			string itemName = null;
+			if(typeof(T) == typeof(EntityFieldSecurityRule))
 			{
-				item = new EntityFieldSecurityRule(schemaExtensionId);
-				item.Name = "NewRowLevelSecurityRule";
+				itemName = "NewRowLevelSecurityRule";
 			}
-			else if(type == typeof(EntityFieldDependency))
+			else if(typeof(T) == typeof(EntityFieldDependency))
 			{
-				item = new EntityFieldDependency(schemaExtensionId);
-				item.Name = "NewEntityFieldDependency";
+				itemName = "NewEntityFieldDependency";
 			}
-			else if(type == typeof(EntityConditionalFormatting))
+			else if(typeof(T) == typeof(EntityConditionalFormatting))
 			{
-				item = new EntityConditionalFormatting(schemaExtensionId);
-				item.Name = "NewFormatting";
+				itemName = "NewFormatting";
 			}
-			else if(type == typeof(EntityFieldDynamicLabel))
+			else if(typeof(T) == typeof(EntityFieldDynamicLabel))
 			{
-				item = new EntityFieldDynamicLabel(schemaExtensionId);
-				item.Name = "NewDynamicLabel";
+				itemName = "NewDynamicLabel";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataEntityUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 		#endregion
 	}

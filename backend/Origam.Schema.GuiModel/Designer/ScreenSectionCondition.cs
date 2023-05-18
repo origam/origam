@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.ComponentModel;
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
@@ -12,8 +13,7 @@ namespace Origam.Schema.GuiModel
     public class ScreenSectionCondition: AbstractSchemaItem
     {
         public const string CategoryConst = "ScreenSectionCondition";
-        
-        [EntityColumn("ItemType")]
+   
         public override string ItemType => CategoryConst;
 
         public Guid ScreenSectionId;
@@ -23,7 +23,16 @@ namespace Origam.Schema.GuiModel
         public PanelControlSet ScreenSection
         {
             get => (PanelControlSet)PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
-            set => ScreenSectionId = value?.Id ?? Guid.Empty;
+            set
+            {
+                ScreenSectionId = value?.Id ?? Guid.Empty;
+                if (ScreenSectionId != null && ScreenSectionId != Guid.Empty)
+                {
+                    var panelControl = (PanelControlSet)PersistenceProvider.
+                                       RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(ScreenSectionId));
+                    Name = panelControl.Name;
+                }
+            }
         }
         public ScreenSectionCondition(Guid extensionId) : base(extensionId)
         {
@@ -35,6 +44,11 @@ namespace Origam.Schema.GuiModel
 
         public ScreenSectionCondition()
         {
+        }
+        
+        public override void GetExtraDependencies(ArrayList dependencies)
+        {
+            dependencies.Add(ScreenSection);
         }
     }
 }

@@ -20,7 +20,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using CommandLine;
-using CommandLine.Text;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
@@ -66,6 +65,9 @@ namespace Origam.Utils
             CTRL_SHUTDOWN_EVENT = 6
         }
 
+        [Verb("create-hash-index",
+            HelpText =
+                "Creates hash index file on the contents of the given folder.")]
         class CreateHashIndexOptions
         {
             [Option('i', "input", Required = true,
@@ -81,29 +83,35 @@ namespace Origam.Utils
             public string Output { get; set; }
         }
 
+        [Verb("run-scripts", HelpText = "Runs update scripts.")]
         class RunUpdateScriptsOptions
         {
         }
 
+        [Verb("restart-server", HelpText = "Invokes server restart.")]
         class RestartServerOptions
         {
         }
 
+        [Verb("compare-schema",
+            HelpText =
+                "Compares schema with database. If no comparison switches are defined, no comparison is done. More than one switch can be enabled.")]
         class CompareSchemaOptions
         {
-            [Option('d', "missing-in-db", DefaultValue = false,
+            [Option('d', "missing-in-db", Default = false,
                 HelpText = "Display elements missing in database.")]
             public bool MissingInDb { get; set; }
 
-            [Option('s', "missing-in-schema", DefaultValue = false,
+            [Option('s', "missing-in-schema", Default = false,
                 HelpText = "Display elements missing in schema.")]
             public bool MissingInSchema { get; set; }
 
-            [Option('x', "existing-but-different", DefaultValue = false,
+            [Option('x', "existing-but-different", Default = false,
                 HelpText = "Display elements, that exist but are different.")]
             public bool ExistingButDifferent { get; set; }
         }
 
+        [Verb("process-queue", HelpText = "Process a queue.")]
         private class ProcessQueueOptions
         {
             [Option('c', "queueCode", Required = true,
@@ -114,22 +122,22 @@ namespace Origam.Utils
                 HelpText = "MaxDegreeOfParallelism.")]
             public int Parallelism { get; set; }
 
-            [Option('w', "forceWait", Required = false, DefaultValue = 0,
+            [Option('w', "forceWait", Required = false, Default = 0,
                 HelpText =
                     "Delay between processing of queue items in milliseconds.")]
             public int ForceWaitMs { get; set; }
 
-            [Option('v', "verbose", DefaultValue = true,
+            [Option('v', "verbose", Default = true,
                 HelpText = "Prints all messages to standard output.")]
             public bool Verbose { get; set; }
-
-            [ParserState] public IParserState LastParserState { get; set; }
         }
 
+        [Verb("process-check-rules", HelpText = "Check rules in project.")]
         class ProcessCheckRulesOptions
         {
         }
         
+        [Verb("test-db", HelpText = "Try to connect to database and run a sql command.")]
         class DbTestOptions
         {
             [Option('a', "attempts", Required = true,
@@ -143,6 +151,8 @@ namespace Origam.Utils
             public string SqlCommand { get; set; }
         }
 
+        [Verb("process-doc-generator",
+            HelpText = "Generate Menu into output with xslt template.")]
         class ProcessDocGeneratorOptions
         {
             [Option('o', "output", Required = true,
@@ -159,77 +169,23 @@ namespace Origam.Utils
             [Option('r', "rootfilename", Required = true,
                 HelpText = "Output File")]
             public string RootFile { get; set; }
-
-            [ParserState] public IParserState LastParserState { get; set; }
         }
 
+        [Verb("normalize-file-format",
+            HelpText =
+                "Formats all files in the model according to the actual formatting rules.")]
         class NormalizeFileFormatOptions
         {
         }
 
+        [Verb("generate-password-hash",
+            HelpText =
+                "Generate hash of supplied password. The hash can be inserted into column Password in OrigamUser table as development password reset.")]
         class GeneratePassHashOptions
         {
             [Option('p', "password", Required = true,
                 HelpText = "String to hash")]
             public string Password { get; set; }
-        }
-
-        class Options
-        {
-            [VerbOption("process-check-rules",
-                HelpText = "Check rules in project.")]
-            public ProcessCheckRulesOptions ProcessCheckRules { get; set; }
-
-            [VerbOption("process-doc-generator",
-                HelpText = "Generate Menu into output with xslt template.")]
-            public ProcessDocGeneratorOptions ProcessDocGeneratorArgs { get; set; }
-
-            [VerbOption("generate-password-hash",
-                HelpText =
-                    "Generate hash of supplied password. The hash can be inserted into column Password in OrigamUser table as development password reset.")]
-            public GeneratePassHashOptions GeneratePassHashOptions { get; set; }
-            
-            [VerbOption("test-db", HelpText = "Try to connect to database and run a sql command.")]
-            public DbTestOptions DbTestArguments { get; set; }
-#if !NETCORE2_1
-            [VerbOption("process-queue",
-                HelpText = "Process a queue.")]
-            public ProcessQueueOptions ProcessQueue { get; set; }
-
-            [VerbOption("run-scripts",
-                HelpText = "Runs update scripts.")]
-            public RunUpdateScriptsOptions RunUpdateScriptsVerb { get; set; }
-
-            [VerbOption("restart-server", HelpText = "Invokes server restart.")]
-            public RestartServerOptions RestartServerVerb { get; set; }
-
-            [VerbOption("create-hash-index",
-                HelpText =
-                    "Creates hash index file on the contents of the given folder.")]
-            public CreateHashIndexOptions CreateHashIndexVerb { get; set; }
-
-            [VerbOption("compare-schema",
-                HelpText =
-                    "Compares schema with database. If no comparison switches are defined, no comparison is done. More than one switch can be enabled.")]
-            public CompareSchemaOptions CompareSchemaVerb { get; set; }
-            
-            [VerbOption("normalize-file-format",
-                HelpText =
-                    "Formats all files in the model according to the actual formatting rules.")]
-            public NormalizeFileFormatOptions NormalizeFileFormatOptions
-            {
-                get;
-                set;
-            }
-#endif
-            [ParserState] 
-            public IParserState LastParserState { get; set; }
-
-            [HelpVerbOption]
-            public string GetUsage(string verb)
-            {
-                return HelpText.AutoBuild(this, verb);
-            }
         }
 
         private static bool CancelHandler(CtrlType sig)
@@ -244,73 +200,60 @@ namespace Origam.Utils
 
         static int Main(string[] args)
         {
-            var invokedVerb = "";
-            object invokedVerbInstance = null;
-            var options = new Options();
-            if (!Parser.Default.ParseArguments(args, options,
-                (verb, subOptions) =>
-                {
-                    invokedVerb = verb;
-                    invokedVerbInstance = subOptions;
-                }))
+            return Parser.Default.ParseArguments(args, GetVerbs())
+                .MapResult(Run, errors => 1);
+        }
+
+        private static int Run(object parsedOptions)
+        {
+            switch (parsedOptions)
             {
-                return 1;
-            }
-            switch (invokedVerb)
-            {
-                case "process-checkrules":
+                case ProcessCheckRulesOptions options:
                 {
                     EntryAssembly();
-                    return ProcessRule(
-                        (ProcessCheckRulesOptions)invokedVerbInstance);
+                    return ProcessRule(options);
                 }
-                case "process-docgenerator":
+                case ProcessDocGeneratorOptions options:
                 {
                     EntryAssembly();
-                    return ProcessDocGenerator(
-                        (ProcessDocGeneratorOptions)invokedVerbInstance);
+                    return ProcessDocGenerator(options);
                 }
-                case "generate-password-hash":
+                case GeneratePassHashOptions options:
                 {
                     EntryAssembly();
-                    return HashPassword(
-                        (GeneratePassHashOptions)invokedVerbInstance);
+                    return HashPassword(options);
                 }
 #if !NETCORE2_1
-                case "process-queue":
+                case ProcessQueueOptions options:
                 {
                     EntryAssembly();
-                    return ProcessQueue(
-                        (ProcessQueueOptions)invokedVerbInstance);
+                    return ProcessQueue(options);
                 }
-                case "run-scripts":
+                case RunUpdateScriptsOptions _:
                 {
                     EntryAssembly();
                     return RunUpdateScripts();
                 }
-                case "restart-server":
+                case RestartServerOptions _:
                 {
                     EntryAssembly();
                     return RestartServer();
                 }
-                case "create-hash-index":
+                case CreateHashIndexOptions options:
                 {
                     EntryAssembly();
-                    return CreateHashIndex(
-                        (CreateHashIndexOptions)invokedVerbInstance);
+                    return CreateHashIndex(options);
                 }
-                case "compare-schema":
+                case CompareSchemaOptions options:
                 {
                     EntryAssembly();
-                    return CompareSchema(
-                        (CompareSchemaOptions)invokedVerbInstance);
+                    return CompareSchema(options);
                 }
-                case "test-db":
+                case DbTestOptions options:
                 {
-                    return TestDatabase(
-                        (DbTestOptions)invokedVerbInstance);
+                    return TestDatabase(options);
                 }
-                case "normalize-file-format":
+                case NormalizeFileFormatOptions _:
                 {
                     EntryAssembly();
                     return NormalizeFileFormat();
@@ -321,6 +264,27 @@ namespace Origam.Utils
                     return 1;
                 }
             }
+            
+        }
+
+        private static Type[] GetVerbs()
+        {
+            return new[] 
+            {
+                typeof(ProcessCheckRulesOptions),
+                typeof(ProcessDocGeneratorOptions),
+                typeof(GeneratePassHashOptions),
+                typeof(DbTestOptions)
+            #if !NETCORE2_1
+                ,
+                typeof(ProcessQueueOptions),
+                typeof(RunUpdateScriptsOptions),
+                typeof(RestartServerOptions),
+                typeof(CreateHashIndexOptions),
+                typeof(CompareSchemaOptions),
+                typeof(NormalizeFileFormatOptions)
+            #endif
+            };
         }
 
         private static void EntryAssembly()

@@ -1,318 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0"
+  xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0"
+  xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0"
+  xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0">
   <s:Service
     asi:abstract="false"
     x:id="7cad95cc-f0a3-4379-a626-133fb1738600"
     asi:name="FileSystemService">
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="dcde0489-5fcc-4d33-97f1-004cc80585f0"
-      asi:name="GetFileSystemInfo"
-      sm:returnValueDataType="Xml">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataLength="255"
-        sip:dataType="String"
-        x:id="da12b41d-9f93-4603-ba55-ba69730a69f6"
-        asi:name="Mask" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="2"
-        sip:dataType="Boolean"
-        x:id="a95b2022-f37b-4352-aad6-d0f2a00a9c09"
-        asi:name="Recursive" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="Memo"
-        x:id="182a7abc-07e9-4d67-8c91-e8bc2b2c77b8"
-        asi:name="Path" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="61353b7f-64c5-4ccc-b0f3-17c8c1c36471"
-      asi:name="LoadXml"
-      sm:returnValueDataType="Xml">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="91c5e80d-20e7-4f5f-905c-5a17399b474b"
-        asi:name="Path" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="55203595-46a8-48d4-be43-1cbecbb856fa"
-      asi:name="DeleteFile"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="ce4a560a-86de-4dfb-b984-38590d5a8859"
-        asi:name="Path" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="e698c547-5fb5-4986-bb9b-236cd29cb028"
-      asi:name="LoadText"
-      sm:returnValueDataType="String">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="ec9f3ed8-f695-458b-8497-45e3c9615db1"
-        asi:name="Encoding" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="dcd1e3fd-3ff9-4675-ae40-9c5ad6082875"
-        asi:name="Path" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="6357e96f-a5b0-4c07-83c9-4ca61fc8f96a"
-      asi:name="SaveXml"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="1"
-        sip:dataType="Xml"
-        x:id="c840feb0-f481-46a3-8a82-3b11dcc80794"
-        asi:name="Data" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="2"
-        sip:dataType="Boolean"
-        x:id="7a105221-ed0b-4cff-8b7f-53b9304a08bb"
-        asi:name="CreateDirectory" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="true"
-        sip:allowNulls="false"
-        smp:allowReportReference="true"
-        smp:allowSystemFunctionCall="true"
-        smp:allowTransformationReference="true"
-        smp:allowWorkflowReference="true"
-        smp:callElements="127"
-        sip:dataType="String"
-        x:id="0e8e635e-7bab-490e-ac44-ef69f25e730f"
-        asi:name="Path" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="f1c28680-b07e-453d-9bfd-fafa29146291"
-        asi:name="Encoding" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="5bd9f3a7-f069-4466-a448-8e9dafedd39e"
-      asi:name="SaveText"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="6fe02d86-06b0-49b5-bc2f-0275c3fc7ac2"
-        asi:name="Data" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="2"
-        sip:dataType="Boolean"
-        x:id="d6b077ef-f422-45fe-a585-14c72c51a1b5"
-        asi:name="CreateDirectory" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="b2bc4386-092b-4a32-bb0d-3fb39e59efa5"
-        asi:name="Path" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="f42f6179-aed6-487b-ae6c-64a8b1e39db0"
-        asi:name="Encoding" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="37c24d31-d4cd-4467-b7d0-977c8b8f1c5a"
-      asi:name="CopyFile"
-      sm:returnValueDataType="Boolean">
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="2"
-        sip:dataType="Boolean"
-        x:id="f9908051-f127-41f8-af53-7a7ea1ef2501"
-        asi:name="CreateDirectory" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="15341421-0736-4f56-ac09-7bd391629e00"
-        asi:name="DestinationPath" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="c6fd06ce-a3fa-4302-acdf-c16058a29485"
-        asi:name="SourcePath" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="2"
-        sip:dataType="Boolean"
-        x:id="7c02c9d0-ca94-43db-b605-c6369f755bbb"
-        asi:name="Overwrite" />
-    </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
       x:id="265b71bb-ef21-4d6a-89c4-a811730a2b05"
@@ -332,20 +29,6 @@
         sip:dataType="Boolean"
         x:id="28d19db5-dac1-4899-8a45-9218311fff5d"
         asi:name="CreateDirectory" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="3"
-        sip:dataType="String"
-        x:id="67762f0d-00c2-4b1b-8c08-a1b9e51223b5"
-        asi:name="DestinationPath" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="false"
@@ -372,14 +55,8 @@
         smp:allowWorkflowReference="false"
         smp:callElements="3"
         sip:dataType="String"
-        x:id="7f485c93-fbd0-4751-bf2d-fb1a5593e2c0"
-        asi:name="SourcePath" />
-    </sm:ServiceMethod>
-    <sm:ServiceMethod
-      asi:abstract="false"
-      x:id="f7a8e488-bab1-48e5-98a2-b12c762bf849"
-      asi:name="SaveBlob"
-      sm:returnValueDataType="Boolean">
+        x:id="67762f0d-00c2-4b1b-8c08-a1b9e51223b5"
+        asi:name="DestinationPath" />
       <smp:Parameter
         asi:abstract="false"
         smp:allowContextReference="true"
@@ -392,36 +69,8 @@
         smp:allowWorkflowReference="false"
         smp:callElements="3"
         sip:dataType="String"
-        x:id="7a753317-9f00-4591-89c8-53ca9c18ed87"
-        asi:name="Path" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="true"
-        smp:allowDataConstantReference="false"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="false"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="1"
-        sip:dataType="Blob"
-        x:id="1c941dbe-708d-4fab-99e2-71ceb281a292"
-        asi:name="Data" />
-      <smp:Parameter
-        asi:abstract="false"
-        smp:allowContextReference="false"
-        smp:allowDataConstantReference="true"
-        smp:allowDataStructureReference="false"
-        sip:allowNulls="true"
-        smp:allowReportReference="false"
-        smp:allowSystemFunctionCall="false"
-        smp:allowTransformationReference="false"
-        smp:allowWorkflowReference="false"
-        smp:callElements="2"
-        sip:dataType="Boolean"
-        x:id="b723407b-833a-4859-970e-9c0e5e12510b"
-        asi:name="CreateDirectory" />
+        x:id="7f485c93-fbd0-4751-bf2d-fb1a5593e2c0"
+        asi:name="SourcePath" />
     </sm:ServiceMethod>
     <sm:ServiceMethod
       asi:abstract="false"
@@ -462,6 +111,363 @@
         sip:dataType="String"
         x:id="cb3fb41b-8756-4dec-9fd9-ea67109407f3"
         asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="37c24d31-d4cd-4467-b7d0-977c8b8f1c5a"
+      asi:name="CopyFile"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="15341421-0736-4f56-ac09-7bd391629e00"
+        asi:name="DestinationPath" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
+        x:id="7c02c9d0-ca94-43db-b605-c6369f755bbb"
+        asi:name="Overwrite" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="c6fd06ce-a3fa-4302-acdf-c16058a29485"
+        asi:name="SourcePath" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
+        x:id="f9908051-f127-41f8-af53-7a7ea1ef2501"
+        asi:name="CreateDirectory" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="55203595-46a8-48d4-be43-1cbecbb856fa"
+      asi:name="DeleteFile"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="ce4a560a-86de-4dfb-b984-38590d5a8859"
+        asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="5bd9f3a7-f069-4466-a448-8e9dafedd39e"
+      asi:name="SaveText"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="6fe02d86-06b0-49b5-bc2f-0275c3fc7ac2"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="b2bc4386-092b-4a32-bb0d-3fb39e59efa5"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
+        x:id="d6b077ef-f422-45fe-a585-14c72c51a1b5"
+        asi:name="CreateDirectory" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="f42f6179-aed6-487b-ae6c-64a8b1e39db0"
+        asi:name="Encoding" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="61353b7f-64c5-4ccc-b0f3-17c8c1c36471"
+      asi:name="LoadXml"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="91c5e80d-20e7-4f5f-905c-5a17399b474b"
+        asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="6357e96f-a5b0-4c07-83c9-4ca61fc8f96a"
+      asi:name="SaveXml"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataType="String"
+        x:id="0e8e635e-7bab-490e-ac44-ef69f25e730f"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
+        x:id="7a105221-ed0b-4cff-8b7f-53b9304a08bb"
+        asi:name="CreateDirectory" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Xml"
+        x:id="c840feb0-f481-46a3-8a82-3b11dcc80794"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="f1c28680-b07e-453d-9bfd-fafa29146291"
+        asi:name="Encoding" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="dcde0489-5fcc-4d33-97f1-004cc80585f0"
+      asi:name="GetFileSystemInfo"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Memo"
+        x:id="182a7abc-07e9-4d67-8c91-e8bc2b2c77b8"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
+        x:id="a95b2022-f37b-4352-aad6-d0f2a00a9c09"
+        asi:name="Recursive" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="255"
+        sip:dataType="String"
+        x:id="da12b41d-9f93-4603-ba55-ba69730a69f6"
+        asi:name="Mask" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="e698c547-5fb5-4986-bb9b-236cd29cb028"
+      asi:name="LoadText"
+      sm:returnValueDataType="String">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="dcd1e3fd-3ff9-4675-ae40-9c5ad6082875"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="ec9f3ed8-f695-458b-8497-45e3c9615db1"
+        asi:name="Encoding" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
+      x:id="f7a8e488-bab1-48e5-98a2-b12c762bf849"
+      asi:name="SaveBlob"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Blob"
+        x:id="1c941dbe-708d-4fab-99e2-71ceb281a292"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
+        x:id="7a753317-9f00-4591-89c8-53ca9c18ed87"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
+        x:id="b723407b-833a-4859-970e-9c0e5e12510b"
+        asi:name="CreateDirectory" />
     </sm:ServiceMethod>
   </s:Service>
 </x:file>

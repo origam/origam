@@ -141,15 +141,7 @@ namespace Origam.Workbench.Services
 				return _isSchemaLoaded;
 			}
 		}
-
-		protected bool _isSchemaChanged = false;
-		public bool IsSchemaChanged
-		{
-			get
-			{
-				return _isSchemaChanged;
-			}
-		}
+		
 		#endregion
 
 		#region Public Methods
@@ -209,21 +201,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		public virtual void SaveSchema()
-		{
-            throw new NotImplementedException();
-		}
-
-        public virtual bool SupportsSave
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        public virtual bool UnloadSchema()
+		public virtual bool UnloadSchema()
 		{
 			CancelEventArgs e = new CancelEventArgs(false);
             _isSchemaLoaded = false;
@@ -243,9 +221,7 @@ namespace Origam.Workbench.Services
 			}
 
 			RemoveAllProviders();
-
 			
-			_isSchemaChanged = false;
 			_lastAddedNodeParent = null;
 			_lastAddedType = null;
 			_activeExtension = null;
@@ -257,53 +233,7 @@ namespace Origam.Workbench.Services
 
 			return true;
 		}
-
-		public bool LoadSchema(ArrayList extensions, Guid mainExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
-		{
-			if( ! UnloadSchema()) return false;
-		
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
-
-			ArrayList ids = new ArrayList();
-
-			for(int i = 0; i < extensions.Count; i++)
-			{
-				ids.Add(extensions[i]);
-
-				bool append = i > 24; // (i < extensionsSorted.Count-1);
-
-				if(i % 24 == 0 & i > 0)
-				{
-					persistence.LoadSchema(ids, append, loadDocumentation, loadDeploymentScripts, null);
-					ids.Clear();
-				}
-
-				//				if(statusBar != null) statusBar.SetStatusText("Loading " + loadingExtension.Name + "...");
-				//				bool append = i > 0; // (i < extensionsSorted.Count-1);
-			}
-
-			if(ids.Count > 0)
-			{
-				persistence.LoadSchema(ids, extensions.Count > 25, loadDocumentation, loadDeploymentScripts, null);
-			}
-
-			_activeSchemaExtensionId = mainExtensionId;
-
-			try
-			{
-				_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), new ModelElementKey(mainExtensionId)) as Package;
-			}
-			catch
-			{
-				throw new ArgumentOutOfRangeException("mainExtensionId", mainExtensionId, ResourceUtils.GetString("ErrorOpenModelPackage"));
-			}
-
-			OnSchemaLoaded(EventArgs.Empty);
-
-			return true;
-		}
-
+        
 		public bool LoadSchema(Guid schemaExtensionId, bool loadDocumentation, bool loadDeploymentScripts)
 		{
 			return LoadSchema(schemaExtensionId, Guid.Empty, loadDocumentation, loadDeploymentScripts);
@@ -326,23 +256,6 @@ namespace Origam.Workbench.Services
 			return true;
 		}
 		
-
-		public DataSet EmptySchema()
-		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            IDatabasePersistenceProvider dbProvider = persistence.SchemaProvider as IDatabasePersistenceProvider;
-            if (dbProvider == null)
-            {
-                throw new Exception("The configured model persistence provider does not support this command.");
-            }
-            return dbProvider.EmptyData();
-		}
-
-		public virtual void MergeSchema(DataSet schema)
-		{
-            throw new NotImplementedException();
-		}
-
 		public void AddProvider(AbstractSchemaItemProvider provider)
 		{
 			_providers.Add(provider.GetType(), provider);
@@ -514,7 +427,6 @@ namespace Origam.Workbench.Services
 
 		protected void OnSchemaLoaded(EventArgs e)
 		{
-			_isSchemaChanged = false;
 			_isSchemaLoaded = true;
 
 			if (SchemaLoaded != null) 
@@ -541,7 +453,6 @@ namespace Origam.Workbench.Services
         
         protected void OnSchemaChanged(object sender, EventArgs e)
 		{
-			_isSchemaChanged = true;
 			if (SchemaChanged != null) 
 			{
 				SchemaChanged(sender, e);

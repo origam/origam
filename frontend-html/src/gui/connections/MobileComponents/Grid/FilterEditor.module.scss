@@ -18,12 +18,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 .root {
-  height: 100%;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
   flex: auto;
-  overflow-y: clip;
+  overflow-y: auto;
 }
 
 .filterRow {
@@ -74,6 +73,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
     width: 200%;
     margin-left: -100%;
     min-height: var(--inputHeight);
+    > div{
+      width: 100%
+    }
   }
 
   > *:nth-child(3) {

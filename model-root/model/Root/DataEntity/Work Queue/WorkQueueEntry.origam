@@ -209,6 +209,14 @@
       asi:name="100_Red_SR_IsWorkQueueError_*"
       ecf:roles="*"
       ecf:rule="Root/Rule/Work Queue/SR_IsWorkQueueError.origam#SR_IsWorkQueueError/3b27ca78-9b8f-460c-a3d8-da8b43b817db" />
+    <ecf:EntityConditionalFormatting
+      asi:abstract="false"
+      ecf:backgroundColor="-10185235"
+      x:id="78c3086e-e1b0-4dd2-8df4-4661930629ed"
+      ecf:level="90"
+      asi:name="90_Blue_SR_WorkQueueEntry_InRetryIsTrue_*"
+      ecf:roles="*"
+      ecf:rule="Root/Rule/Work Queue/SR_WorkQueueEntry_InRetryIsTrue.origam#SR_WorkQueueEntry_InRetryIsTrue/f260bf57-ef9f-4660-bce7-6e18b06020d6" />
     <ef:EntityFilter
       asi:abstract="false"
       x:id="09b292b0-8a9e-4516-95e1-a3aad8b1d7cf"
@@ -1341,6 +1349,21 @@
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
       asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="8515c4dc-c84a-4680-80a1-432f46a617fe"
+      adec:isPrimaryKey="false"
+      adec:label="Number of Attempts"
+      fmi:mappedColumnName="AttemptCount"
+      asi:name="AttemptCount"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
       adec:allowNulls="true"
       adec:autoIncrement="false"
       adec:dataType="UniqueIdentifier"
@@ -1428,6 +1451,20 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="d10"
       asi:name="d10"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="95a60cea-1977-45dc-b663-3d601e8c4364"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="InRetry"
+      asi:name="InRetry"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -1538,6 +1575,20 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="g5"
       asi:name="g5"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="b6ffd643-fe5a-4397-b195-89cce5879eff"
+      adec:isPrimaryKey="false"
+      adec:label="Time of Last Attempt"
+      fmi:mappedColumnName="LastAttemptTime"
+      asi:name="LastAttemptTime"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn
@@ -1735,6 +1786,20 @@
       adec:isPrimaryKey="false"
       fmi:mappedColumnName="g19"
       asi:name="g19"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="e147e0de-0cb7-4342-b16b-7196f9b7b04f"
+      adec:isPrimaryKey="false"
+      adec:label="Time of Next Attempt"
+      fmi:mappedColumnName="NextAttemptTime"
+      asi:name="NextAttemptTime"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Attribute" />
     <fmi:DataEntityColumn

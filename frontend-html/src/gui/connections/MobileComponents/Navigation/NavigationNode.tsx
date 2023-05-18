@@ -25,6 +25,7 @@ import { BreadCrumbNode } from "gui/connections/MobileComponents/Navigation/Brea
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 
 export interface INavigationNode {
   readonly name: string;
@@ -39,17 +40,18 @@ export interface INavigationNode {
 
   equals(other: INavigationNode): boolean;
   addChild(node: INavigationNode): void;
+  addChildren(nodes: (INavigationNode | undefined)[]): void;
   removeChild(node: INavigationNode): void;
   merge(other: INavigationNode): void;
   readonly navigationDisabled: boolean;
 }
 
 export class NavigationNode implements INavigationNode {
-  private _children: NavigationNode[] = [];
+  private _children: INavigationNode[] = [];
   private _name: string = "";
   private _dataView: IDataView | undefined;
   formScreen: IFormScreen | undefined;
-  parent: NavigationNode | undefined;
+  parent: INavigationNode | undefined;
 
   get dataView(): IDataView | undefined {
     if(this._dataView){
@@ -109,12 +111,20 @@ export class NavigationNode implements INavigationNode {
       .some(prop => getFieldErrorMessage(prop!)(this.dataView!.selectedRow!, prop!))
   }
 
-  addChild(node: NavigationNode) {
+  addChild(node: INavigationNode) {
     this._children.push(node);
     node.parent = this;
   }
 
-  removeChild(node: NavigationNode) {
+  addChildren(nodes: (INavigationNode | undefined)[]) {
+    for (const node of nodes) {
+      if(node){
+        this.addChild(node);
+      }
+    }
+  }
+
+  removeChild(node: INavigationNode) {
     this._children.remove(node);
     node.parent = undefined;
   }
@@ -157,17 +167,32 @@ export class NavigatorState{
       return;
     }
     this.onNodeClick(node);
-    this.currentNode.dataView?.activateTableView?.();
+    if(!node.dataView?.isHeadless){
+      this.currentNode.dataView?.activateTableView?.();
+    }
   }
 
   @action
   private onNodeClick(node: INavigationNode){
     this.currentNode = node;
     this.mobileState.activeDataViewId = node.dataView?.id;
+    getOpenedScreen(node.dataView)
+      .activationHandler
+      .set(() => this.mobileState.activeDataViewId = node.dataView?.id);
     const nodes = this.currentNode.parentChain
-      .map(navNode => new BreadCrumbNode(navNode.name, navNode.id, () => this.onBreadCrumbClick(navNode)));
+      .map(navNode =>
+        new BreadCrumbNode(
+          navNode.name,
+          navNode.id,
+          () => this.onBreadCrumbClick(navNode),
+          false));
+    if(node.dataView?.isHeadless && nodes.length > 1){
+      nodes[nodes.length - 1 ].disabled = true;
+    }
     this.mobileState.breadCrumbsState.setActiveBreadCrumbList(nodes);
-    this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
+    if(this.currentNode.element){
+      this.mobileState.breadCrumbsState.addDetailBreadCrumbNode(this.currentNode.dataView!);
+    }
   }
 
   @action

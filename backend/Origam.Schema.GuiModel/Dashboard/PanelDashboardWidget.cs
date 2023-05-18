@@ -45,7 +45,6 @@ namespace Origam.Schema.GuiModel
 		}
 
 		#region Properties
-		[EntityColumn("G10")]  
 		public Guid PanelId;
 
 		[Category("UI")]

@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React, { useContext } from "react";
-import S from "./BreadCrumbs.module.scss";
+import S from "gui/connections/MobileComponents/Navigation/BreadCrumbs.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { BreadCrumbsState } from "model/entities/MobileState/BreadCrumbsState";
 
@@ -27,11 +27,17 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
   const breadCrumbList = breadCrumbsState.activeBreadCrumbList?.filter(node => node.isVisible()) ?? [];
 
   function makeBreadcrumb(node: IBreadCrumbNode, index: number) {
+    let className = index === breadCrumbList.length - 1 ? "" : S.breadcrumb;
+    if(node.disabled) className += " " + S.disabled
     return (
       <div
-        className={index === breadCrumbList.length - 1 ? "" : S.breadcrumb}
+        className={className}
         key={node.id}
-        onClick={node.onClick}
+        onClick={() =>{
+          if(!node.disabled){
+            node.onClick()
+          }
+        }}
       >
         {node.caption}
       </div>);
@@ -53,6 +59,7 @@ export const BreadCrumbs: React.FC<{}> = observer((props) => {
 });
 
 export interface IBreadCrumbNode {
+  disabled: boolean;
   caption: string;
   id: string;
   isVisible: () => boolean;
@@ -65,7 +72,8 @@ export class BreadCrumbNode implements IBreadCrumbNode {
   constructor(
     public caption: string,
     public id: string,
-    public onClick: () => void
+    public onClick: () => void,
+    public disabled: boolean
   ) {
   }
 }
@@ -77,6 +85,7 @@ export class RootBreadCrumbNode implements IBreadCrumbNode {
   }
 
   id = "root";
+  disabled = false;
 
   onClick = () => {
   };

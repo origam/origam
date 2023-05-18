@@ -51,7 +51,7 @@ export class TabSelector extends React.Component<{
     }
 
     const openedScreens = getOpenedNonDialogScreenItems(this.workbench);
-    const someScreenIsDirty = openedScreens.some(screen => screen.content.formScreen?.isDirty)
+    const someScreenIsDirty = openedScreens.some(screen => screen.content?.formScreen?.isDirty)
     const activeItem = openedScreens.find(item => item.isActive);
     return (
       <Dropdowner

@@ -32,15 +32,15 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Origam.DA;
 using Origam.Excel;
-using Origam.Server;
 using Origam.Workbench.Services;
+using Origam.Extensions;
 
 namespace Origam.Server
 {
     public class ExcelEntityExporter
     {
+        private static readonly int characterCellLimit = 32767;
         private ICellStyle dateCellStyle;
-
         readonly IDataLookupService lookupService = ServiceManager.Services.GetService(
             typeof(IDataLookupService)) as IDataLookupService;
 
@@ -58,7 +58,7 @@ namespace Origam.Server
             ? ExcelFormat.XLSX
             : ExcelFormat.XLS;
 
-        public IWorkbook FillWorkBook(EntityExportInfo info, IEnumerable< IEnumerable<KeyValuePair<string, object>>> rows)
+        public IWorkbook FillWorkBook(EntityExportInfo info, List<string> columns, IEnumerable<IEnumerable<object>> rows)
         {
             IWorkbook workbook = CreateWorkbook();
             SetupDateCellStyle(workbook);
@@ -75,7 +75,7 @@ namespace Origam.Server
                     break;
                 }
                 rowIndex++;
-                AddRowToSheet(info, workbook, sheet, rowIndex, row.ToList());
+                AddRowToSheet(info, workbook, sheet, rowIndex, columns, row.ToList());
             }
             return workbook;
         }
@@ -121,7 +121,7 @@ namespace Origam.Server
 
         private void AddRowToSheet(
             EntityExportInfo info, IWorkbook workbook, ISheet sheet,
-            int rowNumber, List<KeyValuePair<string, object>> row)
+            int rowNumber, List<string> columns, List<object> row)
         {
             if (ExportFormat == ExcelFormat.XLS && rowNumber >= 65536)
             {
@@ -131,24 +131,26 @@ namespace Origam.Server
             IRow excelRow = sheet.CreateRow(rowNumber);
             for (int i = 0; i < info.Fields.Count; i++)
             {
-                AddCellToRow(info, workbook, excelRow, i, row);
+                AddCellToRow(info, workbook, excelRow, i, columns, row);
             }
         }
         
         private void AddCellToRow(
             EntityExportInfo info, IWorkbook workbook, IRow excelRow,
-            int columnIndex, List<KeyValuePair<string, object>> row)
+            int columnIndex, List<string> columns, List<object> row)
         {
             EntityExportField field = info.Fields[columnIndex];
             ICell cell = excelRow.CreateCell(columnIndex);
-            object val = GetValue(field, row);
+            object val = GetValue(field, columns, row);
             SetCellValue(workbook, val, cell);
         }
 
 
-        private object GetValue(EntityExportField field, List<KeyValuePair<string, object>> row)
+        private object GetValue(EntityExportField field, List<string> columns, List<object> row)
         {
-            object val = row.First(pair => pair.Key == field.FieldName).Value;
+            int index = columns.FindIndex(column => column == field.FieldName);
+            object val = row[index];
+            //object val = row.First(pair => pair.Key == field.FieldName).Value;
             if (val == null)
             {
                 return null;
@@ -372,11 +374,11 @@ namespace Origam.Server
                     fieldValue = fieldValue.Replace("\n", "");
                     fieldValue = fieldValue.Replace("\r", Environment.NewLine);
                     fieldValue = fieldValue.Replace("\t", " ");
-                    cell.SetCellValue(fieldValue);
+                    cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
                 }
                 else
                 {
-                    cell.SetCellValue(fieldValue);
+                    cell.SetCellValue(fieldValue.Truncate(characterCellLimit));
                 }
             }
         }

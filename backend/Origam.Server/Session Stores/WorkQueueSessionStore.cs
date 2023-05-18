@@ -41,18 +41,24 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
 using System.Data;
-
+using System.Linq;
+using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Server;
+using Origam.Server.Session_Stores;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Workbench.Services;
 
 namespace Origam.Server
 {
-    class WorkQueueSessionStore : SessionStore
+    public class WorkQueueSessionStore : SessionStore
     {
+        private object _getRowDataLock = new object();
+        private DataSetBuilder datasetbuilder = new DataSetBuilder();
+        
         public WorkQueueSessionStore(IBasicUIService service, UIRequest request, string name,
             Analytics analytics)
             : base(service, request, name, analytics)
@@ -70,11 +76,81 @@ namespace Origam.Server
         {
             throw new NotImplementedException();
         }
+        
+        private void PrepareData()
+        {
+            var data = InitializeFullStructure(null);
+            SetDataSource(data);
+            IsDelayedLoading = true;
+            DataListEntity = "WorkQueueEntry";
+        }
+
+        private DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+        {
+            return datasetbuilder.InitializeFullStructure(WQClass.WorkQueueStructureId, defaultSet);
+        }
+
+        public override ArrayList GetRowData(string entity, object id, bool ignoreDirtyState)
+        {
+            ArrayList result = new ArrayList();
+            lock (_getRowDataLock)
+            {
+                if (id == null)
+                {
+                    CurrentRecordId = null;
+                    return result;
+                }
+        
+                DataRow row = GetSessionRow(entity, id);
+        
+                // for new rows we don't even try to load the data from the database
+                if (row == null || row.RowState != DataRowState.Added)
+                {
+                    if (!ignoreDirtyState && this.Data.HasChanges())
+                    {
+                        throw new Exception(Resources.ErrorDataNotSavedWhileChangingRow);
+                    }
+        
+                    this.CurrentRecordId = null;
+        
+                    SetDataSource(LoadDataPiece(id));
+                }
+        
+                this.CurrentRecordId = id;
+        
+                DataRow actualDataRow = GetSessionRow(entity, id);
+                if (actualDataRow == null)
+                {
+                    throw new RowNotFoundException();
+                }
+                UpdateListRow(actualDataRow);
+        
+                ChangeInfo ci = GetChangeInfo(null, actualDataRow, 0);
+                result.Add(ci);
+        
+                if (actualDataRow.RowState == DataRowState.Unchanged)
+                {
+                    result.Add(ChangeInfo.SavedChangeInfo());
+                }
+            }
+        
+            return result;
+        }
+       
+        private DataSet LoadDataPiece(object parentId)
+        {
+            Guid methodId = WQClass
+                .WorkQueueStructure.Methods.Cast<DataStructureFilterSet>()
+                .First(x => x.Name == "GetById")
+                .Id;
+            return core.DataService.Instance.LoadData(WQClass.WorkQueueStructureId, methodId, 
+                Guid.Empty, WQClass.WorkQueueStructureSortSetId, null, 
+                "WorkQueueEntry_parId", parentId);
+        }
 
         public override void Init()
         {
-            DataSet data = LoadWorkQueueData(this.WQClass, new Guid(this.Request.ObjectId));
-            SetDataSource(data);
+            PrepareData();
         }
 
         public override object ExecuteAction(string actionId)
@@ -91,7 +167,7 @@ namespace Origam.Server
 
         public override XmlDocument GetFormXml()
         {
-            XmlDocument formXml = Origam.OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(this.WQClass, this.Data, this.Request.Caption, new Guid(this.Request.ObjectId));
+            XmlDocument formXml = OrigamEngine.ModelXmlBuilders.FormXmlBuilder.GetXml(WQClass, Data, Request.Caption, new Guid(Request.ObjectId));
 
             return formXml;
         } 
@@ -109,12 +185,6 @@ namespace Origam.Server
         {
             get { return _wqClass; }
             set { _wqClass = value; }
-        }
-
-        private DataSet LoadWorkQueueData(WorkQueueClass wqc, Guid queueId)
-        {
-            IWorkQueueService wqs = ServiceManager.Services.GetService(typeof(IWorkQueueService)) as IWorkQueueService;
-            return wqs.LoadWorkQueueData(wqc.Name, queueId);
         }
     }
 }

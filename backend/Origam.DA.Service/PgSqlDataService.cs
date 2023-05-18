@@ -37,9 +37,9 @@ namespace Origam.DA.Service
 	{
         private const DatabaseType _PlatformName = DatabaseType.PgSql;
         private string _DbUser = "";
-        private static readonly IDetachedFieldPacker detachedFieldPacker = new DetachedFieldPackerPostgre();
+
         #region Constructors
-        public PgSqlDataService() : base(detachedFieldPacker)
+        public PgSqlDataService()
 		{
 			Init();
 		}
@@ -54,7 +54,7 @@ namespace Origam.DA.Service
 
         public PgSqlDataService(string connection, int bulkInsertThreshold,
             int updateBatchSize) : base(connection, bulkInsertThreshold,
-            updateBatchSize, detachedFieldPacker)
+            updateBatchSize)
 		{
 			Init();
 		}
@@ -62,7 +62,8 @@ namespace Origam.DA.Service
 
 		private void Init()
 		{
-			this.DbDataAdapterFactory = new PgSqlCommandGenerator(detachedFieldPacker);
+			AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
+			this.DbDataAdapterFactory = new PgSqlCommandGenerator();
         }
 
         internal override IDbConnection GetConnection(string connectionString)
@@ -181,21 +182,20 @@ namespace Origam.DA.Service
             }
         }
 
-        public override void DeleteUser(string user,bool DatabaseIntegratedAuthentication)
+        public override void DeleteUser(string user, bool DatabaseIntegratedAuthentication)
         {
-            //change owner of object  to postgres. it is not good , but for testing is ok.
-            ExecuteUpdate(string.Format("REASSIGN OWNED BY \"{0}\" TO postgres", user), null);
-            ExecuteUpdate(string.Format("DROP OWNED BY \"{0}\" ", user), null);
-            ExecuteUpdate(string.Format("DROP ROLE \"{0}\" ", user), null);
+            //The user can be dropped only after the database is dropped,
+            //so the operation is done in DeleteDatabase method
         }
         public override void UpdateDatabaseSchemaVersion(string version, string transactionId)
         {
-            ExecuteUpdate("ALTER  PROCEDURE OrigamDatabaseSchemaVersion AS SELECT '" + version + "'", transactionId);
+            ExecuteUpdate("ALTER PROCEDURE OrigamDatabaseSchemaVersion AS SELECT '" + version + "'", transactionId);
         }
         public override void DeleteDatabase(string name)
         {
             CheckDatabaseName(name);
             ExecuteUpdate(string.Format("DROP DATABASE \"{0}\"", name), null);
+            ExecuteUpdate(string.Format("DROP ROLE IF EXISTS \"{0}\" ", name), null);
         }
 
         public override void CreateDatabase(string name)
@@ -218,7 +218,7 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string GetAllTablesSQL()
+        internal override string GetAllTablesSql()
         {
             return "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where table_schema=(select current_schema) ORDER BY TABLE_NAME";
         }
@@ -494,10 +494,10 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
-            return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"IsLockedOut\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
-                "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')",
+            return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
+                "VALUES ('{0}',{1},'{2}','{3}','{4}','{5}','{6}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
-                "true", "true",
+                "true",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
                 Guid.NewGuid().ToString(),0,"false");

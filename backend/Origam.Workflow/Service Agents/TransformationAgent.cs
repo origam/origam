@@ -34,6 +34,7 @@ using Origam.Workbench.Services.CoreServices;
 using log4net;
 using Origam.Workbench.Services;
 using System.Collections.Generic;
+using Origam.Rule.Xslt;
 using Origam.Service.Core;
 
 namespace Origam.Workflow
@@ -87,7 +88,7 @@ namespace Origam.Workflow
 						_transformer.Transform(this.Parameters["Data"] as IXmlContainer, 
 						(Guid)this.Parameters["XslScript"],
 						this.Parameters["Parameters"] as Hashtable,
-						this.RuleEngine as RuleEngine,
+						(RuleEngine as RuleEngine).TransactionId,
 						this.OutputStructure as AbstractDataStructure,
 						validateOnly);
 
@@ -129,7 +130,7 @@ namespace Origam.Workflow
                 Parameters["Data"] as IXmlContainer, 
                 (string)Parameters["XslScript"],
                 Parameters["Parameters"] as Hashtable,
-                RuleEngine as RuleEngine,
+                (RuleEngine as RuleEngine).TransactionId,
                 OutputStructure as AbstractDataStructure,
                 validateOnly);
         }
@@ -168,7 +169,8 @@ namespace Origam.Workflow
                 InitializeTransformer((Guid)Parameters["XslScript"]);
                 _transformer.Transform(navigator, (Guid)Parameters["XslScript"],
                         Parameters["XslParameters"] as Hashtable,
-                        this.RuleEngine as RuleEngine, output);
+                        (RuleEngine as RuleEngine).TransactionId,
+                        output);
                 if(log.IsDebugEnabled)
                 {
                     log.Debug("Transformation finished...");
@@ -206,7 +208,7 @@ namespace Origam.Workflow
                         entry.Key as string, entry.Value));
                 }
             }
-            IDataService dataService = DataService.GetDataService();
+            IDataService dataService = DataServiceFactory.GetDataService();
             return dataService.ExecuteDataReader(
                 query, SecurityManager.CurrentPrincipal, TransactionId);
         }

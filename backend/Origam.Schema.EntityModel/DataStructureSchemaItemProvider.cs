@@ -23,113 +23,59 @@ using System;
 
 namespace Origam.Schema.EntityModel
 {
-	/// <summary>
-	/// Summary description for EntityModelSchemaItemProvider.
-	/// </summary>
-	public class DataStructureSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+	public class DataStructureSchemaItemProvider : AbstractSchemaItemProvider
 	{
-		public DataStructureSchemaItemProvider()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
+		public DataStructureSchemaItemProvider() {}
 
 		#region ISchemaItemProvider Members
 		public override string RootItemType
-		{
-			get
-			{
-				return AbstractDataStructure.CategoryConst;
-			}
-		}
-		public override bool AutoCreateFolder
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override string Group
-		{
-			get
-			{
-				return "DATA";
-			}
-		}
+			=> AbstractDataStructure.CategoryConst;
+
+		public override bool AutoCreateFolder => true;
+
+		public override string Group => "DATA";
+
 		#endregion
 
 		#region IBrowserNode Members
 
-		public override string Icon
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
-				return "icon_07_data-structures.png";
-			}
-		}
+		public override string Icon =>
+			// TODO:  Add EntityModelSchemaItemProvider.ImageIndex getter implementation
+			"icon_07_data-structures.png";
 
 		public override string NodeText
 		{
-			get
-			{
-				return "Data Structures";
-			}
-			set
-			{
-				base.NodeText = value;
-			}
+			get => "Data Structures";
+			set => base.NodeText = value;
 		}
 
-		public override string NodeToolTipText
-		{
-			get
-			{
-				// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
-				return null;
-			}
-		}
+		public override string NodeToolTipText =>
+			// TODO:  Add EntityModelSchemaItemProvider.NodeToolTipText getter implementation
+			null;
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(DataStructure), typeof(XsdDataStructure)};
-			}
-		}
+			typeof(DataStructure), typeof(XsdDataStructure)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractDataStructure item;
-
-			if(type == typeof(DataStructure))
+			string itemName = null;
+			if(typeof(T) == typeof(DataStructure))
 			{
-				item = new DataStructure(schemaExtensionId);
-				item.Name = "NewDataStructure";
-
+				itemName = "NewDataStructure";
 			}
-			else if(type == typeof(XsdDataStructure))
+			else if(typeof(T) == typeof(XsdDataStructure))
 			{
-				item = new XsdDataStructure(schemaExtensionId);
-				item.Name = "NewXsdDataStructure";
-
+				itemName = "NewXsdDataStructure";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorDataStructureUnknownType"));
-
-			item.Group = group;
-			item.RootProvider = this;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
-
 		#endregion
 	}
 }

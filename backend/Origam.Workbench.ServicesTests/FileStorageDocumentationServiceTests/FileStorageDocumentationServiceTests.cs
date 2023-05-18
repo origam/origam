@@ -22,15 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service;
-using Origam.DA.Service_net2Tests;
 using Origam.Workbench.Services;
 
 
@@ -165,9 +162,7 @@ namespace Origam.Workbench.ServicesTests
         }
 
         protected static readonly DirectoryInfo projectDir =
-            new DirectoryInfo(TestContext.CurrentContext.TestDirectory)
-                .Parent
-                .Parent;
+            new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
 
         protected DirectoryInfo WritingTestFiles {
             get

@@ -38,51 +38,55 @@ namespace Origam.Schema.WorkflowModel
         True
     }
 
-	/// <summary>
-	/// Summary description for UIFormTask.
-	/// </summary>
 	[SchemaItemDescription("(Task) User Interface", "Tasks", "task-user-interface.png")]
     [HelpTopic("User+Interface+Task")]
     [ClassMetaVersion("6.0.0")]
-	public class UIFormTask : WorkflowTask, ISchemaItemFactory
+	public class UIFormTask : WorkflowTask
 	{
-		public UIFormTask() : base()
+		public UIFormTask() 
 		{
-			this.OutputMethod = ServiceOutputMethod.FullMerge;
+			OutputMethod = ServiceOutputMethod.FullMerge;
 		}
 
 		public UIFormTask(Guid schemaExtensionId) : base(schemaExtensionId) 
 		{
-			this.OutputMethod = ServiceOutputMethod.FullMerge;
+			OutputMethod = ServiceOutputMethod.FullMerge;
 		}
 
 		public UIFormTask(Key primaryKey) : base(primaryKey)
 		{
-			this.OutputMethod = ServiceOutputMethod.FullMerge;
+			OutputMethod = ServiceOutputMethod.FullMerge;
 		}
 
 		#region Override AbstractSchemaItem Members
-		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
+		public override void GetExtraDependencies(ArrayList dependencies)
 		{
-			dependencies.Add(this.Screen);
-			if(this.RefreshDataStructure != null)
-				dependencies.Add(this.RefreshDataStructure);
-			if(this.RefreshMethod != null)
-				dependencies.Add(this.RefreshMethod);
-			if(this.RefreshSortSet != null)
-				dependencies.Add(this.RefreshSortSet);
-			if(this.SaveDataStructure != null)
-				dependencies.Add(this.SaveDataStructure);
-			if (this.SaveConfirmationRule != null)
-				dependencies.Add(this.SaveConfirmationRule);
-
-
+			dependencies.Add(Screen);
+			if(RefreshDataStructure != null)
+			{
+				dependencies.Add(RefreshDataStructure);
+			}
+			if(RefreshMethod != null)
+			{
+				dependencies.Add(RefreshMethod);
+			}
+			if(RefreshSortSet != null)
+			{
+				dependencies.Add(RefreshSortSet);
+			}
+			if(SaveDataStructure != null)
+			{
+				dependencies.Add(SaveDataStructure);
+			}
+			if(SaveConfirmationRule != null)
+			{
+				dependencies.Add(SaveConfirmationRule);
+			}
 			base.GetExtraDependencies (dependencies);
 		}
 		#endregion
 
 		#region Properties
-		[EntityColumn("G10")]  
 		public Guid ScreenId;
 
 		[TypeConverter(typeof(FormControlSetConverter))]
@@ -90,17 +94,12 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("screen", "ScreenId")]
 		public FormControlSet Screen
 		{
-			get
-			{
-				return (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenId));
-			}
-			set
-			{
-				this.ScreenId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (FormControlSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), new ModelElementKey(ScreenId));
+			set => ScreenId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
 
-		[EntityColumn("G11")]  
 		public Guid RefreshDataStructureId;
 
 		[Category("Data Refresh Parameters")]
@@ -109,27 +108,24 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("refreshDataStructure", "RefreshDataStructureId")]
 		public DataStructure RefreshDataStructure
 		{
-			get
-			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RefreshDataStructureId)) as DataStructure;
-			}
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(RefreshDataStructureId)) as DataStructure;
 			set
 			{
 				if (value == null)
 				{
-					this.RefreshDataStructureId = Guid.Empty;
+					RefreshDataStructureId = Guid.Empty;
 				}
 				else
 				{
-					this.RefreshDataStructureId = (Guid)value.PrimaryKey["Id"];
+					RefreshDataStructureId = (Guid)value.PrimaryKey["Id"];
 				}		
-
-				this.RefreshMethod = null;
-				this.RefreshSortSet = null;
+				RefreshMethod = null;
+				RefreshSortSet = null;
 			}
 		}
 		
-		[EntityColumn("G12")]  
 		public Guid RefreshMethodId;
 
 		[TypeConverter(typeof(UIFormTaskMethodConverter))]
@@ -137,17 +133,13 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("refreshMethod", "RefreshMethodId")]
 		public DataStructureMethod RefreshMethod
 		{
-			get
-			{
-				return (DataStructureMethod)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(RefreshMethodId));
-			}
-			set
-			{
-				this.RefreshMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (DataStructureMethod)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(RefreshMethodId));
+			set => RefreshMethodId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G13")]  
+		
 		public Guid RefreshSortSetId;
 
 		[TypeConverter(typeof(UIFormTaskSortSetConverter))]
@@ -155,17 +147,13 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("refreshSortSet", "RefreshSortSetId")]
 		public DataStructureSortSet RefreshSortSet
 		{
-			get
-			{
-				return (DataStructureSortSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.RefreshSortSetId));
-			}
-			set
-			{
-				this.RefreshSortSetId = (value == null? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (DataStructureSortSet)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(RefreshSortSetId));
+			set => RefreshSortSetId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("G14")]  
+		
 		public Guid SaveDataStructureId;
 
 		[Category("Save Parameters")]
@@ -174,28 +162,22 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("saveDataStructure", "SaveDataStructureId")]
 		public DataStructure SaveDataStructure
 		{
-			get
-			{
-				return (AbstractSchemaItem)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SaveDataStructureId)) as DataStructure;
-			}
-			set
-			{
-				this.SaveDataStructureId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SaveDataStructureId)) as DataStructure;
+			set => SaveDataStructureId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("B05")]  
+		
 		[DefaultValue(false)]
 		[XmlAttribute ("isFinalForm")]
 		public bool IsFinalForm { get; set; } = false;
-
-		[EntityColumn("B06")]  
+		
 		[DefaultValue(false)]
 		[Category("Save Parameters")]
 		[XmlAttribute ("allowSave")]
 		public bool AllowSave { get; set; } = false;
-
-		[EntityColumn("G15")]  
+		
 		public Guid SaveConfirmationRuleId;
 
 		[Category("Save Parameters")]
@@ -203,47 +185,41 @@ namespace Origam.Schema.WorkflowModel
 		[XmlReference("saveConfirmationRule", "SaveConfirmationRuleId")]
 		public IEndRule SaveConfirmationRule
 		{
-			get
-			{
-				return (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.SaveConfirmationRuleId));
-			}
-			set
-			{
-				this.SaveConfirmationRuleId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
-			}
+			get => (IEndRule)PersistenceProvider.RetrieveInstance(
+				typeof(AbstractSchemaItem), 
+				new ModelElementKey(SaveConfirmationRuleId));
+			set => SaveConfirmationRuleId = (value == null) 
+				? Guid.Empty : (Guid)value.PrimaryKey["Id"];
 		}
-
-		[EntityColumn("B07")]  
+		
 		[DefaultValue(false)]
 		[XmlAttribute ("autoNext")]
 		public bool AutoNext { get; set; } = false;
-
-		[EntityColumn("B04")]  
+		
 		[DefaultValue(true)]
 		[XmlAttribute ("isRefreshSuppressedBeforeFirstSave")]
 		public bool IsRefreshSuppressedBeforeFirstSave { get; set; } = true;
 
 		[DefaultValue(TrueFalseEnum.False)]
-        [EntityColumn("I06")]
-        [Description("If true, the client will refresh its menu after saving data.")]
+		[Description("If true, the client will refresh its menu after saving data.")]
 		[XmlAttribute ("refreshPortalAfterSave")]
-        public TrueFalseEnum RefreshPortalAfterSave { get; set; } = TrueFalseEnum.False;
+        public TrueFalseEnum RefreshPortalAfterSave { get; set; } 
+	        = TrueFalseEnum.False;
 
 		public ArrayList RefreshParameters
 		{
 			get
 			{
-				ArrayList result = new ArrayList();
-
-				foreach(AbstractSchemaItem item in this.ChildItems)
+				var result = new ArrayList();
+				foreach(var item in ChildItems)
 				{
-					if(item is ContextReference || item is DataConstantReference
-						|| item is SystemFunctionCall)
+					if((item is ContextReference) 
+					|| (item is DataConstantReference)
+					|| (item is SystemFunctionCall))
 					{
 						result.Add(item);
 					}
 				}
-
 				return result;
 			}
 		}
@@ -251,50 +227,35 @@ namespace Origam.Schema.WorkflowModel
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[] 
 		{
-			get
-			{
-				return new Type[] {
-									  typeof(WorkflowTaskDependency),
-									  typeof(ContextReference),
-									  typeof(DataConstantReference),
-									  typeof(SystemFunctionCall)
-								  };
-			}
-		}
+			typeof(WorkflowTaskDependency),
+			typeof(ContextReference),
+			typeof(DataConstantReference),
+			typeof(SystemFunctionCall)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(ContextReference))
+			string itemName = null;
+			if(typeof(T) == typeof(ContextReference))
 			{
-				item = new ContextReference(schemaExtensionId);
-				item.Name = "NewContextReference";
+				itemName = "NewContextReference";
 			}
-			else if(type == typeof(DataConstantReference))
+			else if(typeof(T) == typeof(DataConstantReference))
 			{
-				item = new DataConstantReference(schemaExtensionId);
-				item.Name = "NewDataConstantReference";
+				itemName = "NewDataConstantReference";
 			}
-			else if(type == typeof(SystemFunctionCall))
+			else if(typeof(T) == typeof(SystemFunctionCall))
 			{
-				item = new SystemFunctionCall(schemaExtensionId);
-				item.Name = "NewSystemFunctionCall";
+				itemName = "NewSystemFunctionCall";
 			}
-			else if(type == typeof(WorkflowTaskDependency))
+			else if(typeof(T) == typeof(WorkflowTaskDependency))
 			{
-				item = new WorkflowTaskDependency(schemaExtensionId);
-				item.Name = "NewWorkflowTaskDependency";
+				itemName = "NewWorkflowTaskDependency";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorUIFormTaskUnknownType"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 		#endregion
 	}

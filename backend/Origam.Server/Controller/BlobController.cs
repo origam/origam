@@ -160,7 +160,7 @@ namespace Origam.Server.Controller
                 }
                 Response.Headers.Add(
                     HeaderNames.ContentDisposition, disposition);
-                return File(resultStream, HttpTools.GetMimeType(filename));
+                return File(resultStream, HttpTools.Instance.GetMimeType(filename));
             }
             catch(Exception ex)
             {

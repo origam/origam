@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0"
+  xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0"
+  xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0"
+  xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -10,37 +19,21 @@
     tmi:mappedObjectName="OrigamCalendar"
     asi:name="OrigamCalendar"
     ade:readOnly="false">
-    <sia:ancestor
-      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
-      x:id="7941a3f7-e036-4de1-9718-a1c607140b40" />
-    <fmi:DataEntityColumn
+    <eri:EntityRelation
       asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="db7ecd0b-ed27-47d3-9a8f-3dd7b6430673"
-      adec:isPrimaryKey="false"
-      adec:label="Thursday"
-      fmi:mappedColumnName="IsThursdayWorkingDay"
-      asi:name="IsThursdayWorkingDay"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="a5aced01-0a45-4e17-a9cf-3deaabcf6fc9"
-      adec:isPrimaryKey="false"
-      adec:label="Wednesday"
-      fmi:mappedColumnName="IsWednesdayWorkingDay"
-      asi:name="IsWednesdayWorkingDay"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
+      x:id="4bd3b316-870b-40ce-8dfd-3d2144256140"
+      asi:name="OrigamCalendarDetail"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/5d4e1a27-b689-4202-b30c-1863b6ef632c"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="080fccf8-e6c4-4522-ad91-a41bde36f55e"
+        asi:name="OrigamCalendarDetailKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/refOrigamCalendarId/b8d81a6c-c745-4f1c-b8d7-af58a83fb613" />
+    </eri:EntityRelation>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
@@ -54,20 +47,6 @@
       adec:label="Name"
       fmi:mappedColumnName="Name"
       asi:name="Name"
-      adec:onCopyAction="Copy"
-      adec:xmlMappingType="Element" />
-    <fmi:DataEntityColumn
-      asi:abstract="false"
-      adec:allowNulls="false"
-      adec:autoIncrement="false"
-      adec:dataType="Boolean"
-      adec:excludeFromAllFields="false"
-      fmi:excludeFromAuditing="false"
-      x:id="b40c78c6-f40c-45c2-bc48-9735d81e9e40"
-      adec:isPrimaryKey="false"
-      adec:label="Friday"
-      fmi:mappedColumnName="IsFridayWorkingDay"
-      asi:name="IsFridayWorkingDay"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -91,6 +70,20 @@
       adec:dataType="Boolean"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
+      x:id="62b00c08-cf52-425a-848e-d24e64f9857a"
+      adec:isPrimaryKey="false"
+      adec:label="Monday"
+      fmi:mappedColumnName="IsMondayWorkingDay"
+      asi:name="IsMondayWorkingDay"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
       x:id="7b00ddba-864f-45db-b989-b5fdd7a17926"
       adec:isPrimaryKey="false"
       adec:label="Saturday"
@@ -105,11 +98,11 @@
       adec:dataType="Boolean"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="62b00c08-cf52-425a-848e-d24e64f9857a"
+      x:id="a5aced01-0a45-4e17-a9cf-3deaabcf6fc9"
       adec:isPrimaryKey="false"
-      adec:label="Monday"
-      fmi:mappedColumnName="IsMondayWorkingDay"
-      asi:name="IsMondayWorkingDay"
+      adec:label="Wednesday"
+      fmi:mappedColumnName="IsWednesdayWorkingDay"
+      asi:name="IsWednesdayWorkingDay"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -126,20 +119,36 @@
       asi:name="IsTuesdayWorkingDay"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
-    <eri:EntityRelation
+    <fmi:DataEntityColumn
       asi:abstract="false"
-      x:id="4bd3b316-870b-40ce-8dfd-3d2144256140"
-      asi:name="OrigamCalendarDetail"
-      eri:or="false"
-      eri:parentChild="true"
-      eri:relatedEntity="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/5d4e1a27-b689-4202-b30c-1863b6ef632c"
-      eri:selfJoin="false">
-      <ercpi:EntityRelationColumnPair
-        asi:abstract="false"
-        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
-        x:id="080fccf8-e6c4-4522-ad91-a41bde36f55e"
-        asi:name="OrigamCalendarDetailKey1"
-        ercpi:relatedEntityField="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/refOrigamCalendarId/b8d81a6c-c745-4f1c-b8d7-af58a83fb613" />
-    </eri:EntityRelation>
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="b40c78c6-f40c-45c2-bc48-9735d81e9e40"
+      adec:isPrimaryKey="false"
+      adec:label="Friday"
+      fmi:mappedColumnName="IsFridayWorkingDay"
+      asi:name="IsFridayWorkingDay"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="db7ecd0b-ed27-47d3-9a8f-3dd7b6430673"
+      adec:isPrimaryKey="false"
+      adec:label="Thursday"
+      fmi:mappedColumnName="IsThursdayWorkingDay"
+      asi:name="IsThursdayWorkingDay"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="7941a3f7-e036-4de1-9718-a1c607140b40" />
   </tmi:DataEntity>
 </x:file>

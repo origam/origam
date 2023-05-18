@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "WorkQueueRetryType_l10n" ADD CONSTRAINT "FK_WorkQueueRetryType_l10n_refWorkQueueRetryTypeId_WorkQueueRetryType"
+	FOREIGN KEY (
+		"refWorkQueueRetryTypeId"
+	)
+
+	REFERENCES "WorkQueueRetryType" (
+		"Id"
+	);
+ALTER TABLE "WorkQueueRetryType_l10n" ADD CONSTRAINT "FK_WorkQueueRetryType_l10n_refLanguageId_Language"
+	FOREIGN KEY (
+		"refLanguageId"
+	)
+
+	REFERENCES "Language" (
+		"Id"
+	);

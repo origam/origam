@@ -80,7 +80,7 @@ namespace Origam.Server.Pages
             {
                 return;
             }
-            string resultContentType = "text";
+            string resultContentType = "text/plain";
             if (Analytics.Instance.IsAnalyticsEnabled)
             {
                 RequestAnalytics(context, mimeType);

@@ -25,13 +25,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border-width: 1px 0 1px 0;
 }
 
+.navigationButtonContainer{
+  margin-left: var(--viewSideMargin);
+  margin-right: var(--viewSideMargin);
+}
+
 .navigationButton {
   height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: var(--viewSideMargin);
-  margin-right: var(--viewSideMargin);
   overflow: hidden;
 
   border-style: solid;

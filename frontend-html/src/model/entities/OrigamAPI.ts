@@ -161,7 +161,7 @@ export class OrigamAPI implements IApi {
   }
 
   async destroyUI(data: { FormSessionId: string }) {
-    return (await this.axiosInstance.get(`/UIService/DestroyUI/${data.FormSessionId}`)).data;
+    return (await this.axiosInstance.post(`/UIService/DestroyUI`, data)).data;
   }
 
   async getEntities(query: {
@@ -435,7 +435,7 @@ export class OrigamAPI implements IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
   }): Promise<any> {
     return (await this.axiosInstance.post("/UIService/ExecuteActionQuery", data)).data;
@@ -447,11 +447,17 @@ export class OrigamAPI implements IApi {
     ActionType: string;
     ActionId: string;
     ParameterMappings: { [key: string]: any };
-    SelectedItems: string[];
+    SelectedIds: string[];
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
+  }
+
+  async getReportInfo(data: {
+    ReportId: string
+  }): Promise<any> {
+    return (await this.axiosInstance.get(`/Report/GetReportInfo?reportRequestId=` + data.ReportId)).data;
   }
 
   async getFilterListValues(data: {
@@ -863,6 +869,13 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     }
 
     fileDownload(response.data, fileName);
+  }
+
+  async callUserApi(screenUrl: string): Promise<Blob>{
+    return (await this.axiosInstance.get(
+      screenUrl,
+      { responseType: 'blob'}))
+      .data;
   }
 
   async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {

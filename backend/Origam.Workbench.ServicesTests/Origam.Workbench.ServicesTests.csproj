@@ -16,6 +16,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <DefineConstants Condition="'$(TargetFramework)'=='netstandard2.0'">NETSTANDARD;NETSTANDARD2_0</DefineConstants>
@@ -135,13 +136,27 @@
     <Content Include="FilePersistenceServiceTests\TestFiles\TestWorkflow.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongCategoryName\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongGuid\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongNodeName\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\.origamDoc" />
-    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_1UpdatedItem.xml" />
-    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_2Items.xml" />
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongCategoryName\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongGuid\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\ReadingTestFiles\WrongNodeName\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\.origamDoc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_1UpdatedItem.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FileStorageDocumentationServiceTests\WritingTestFiles\inputDataSet_2Items.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -151,7 +166,7 @@
       <Version>3.13.3</Version>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter">
-      <Version>4.2.1</Version>
+      <Version>4.4.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

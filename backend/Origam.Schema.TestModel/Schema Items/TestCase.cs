@@ -21,108 +21,66 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 using System;
-using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.TestModel
 {
-	/// <summary>
-	/// Summary description for TestCase.
-	/// </summary>
 	[SchemaItemDescription("Test Case", 26)]
     [ClassMetaVersion("6.0.0")]
-	public class TestCase : AbstractSchemaItem, ISchemaItemFactory
+	public class TestCase : AbstractSchemaItem
 	{
 		public const string CategoryConst = "TestCase";
 
-		public TestCase() : base() {}
+		public TestCase() {}
 
 		public TestCase(Guid schemaExtensionId) : base(schemaExtensionId) {}
 
-		public TestCase(Key primaryKey) : base(primaryKey)	{}
+		public TestCase(Key primaryKey) : base(primaryKey) {}
 
 		#region Overriden AbstractSchemaItem Members
 		
-		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return CategoryConst;
-			}
-		}
+		public override string ItemType => CategoryConst;
 
-		public override string Icon
-		{
-			get
-			{
-				return "26";
-			}
-		}
+		public override string Icon => "26";
 
-		public override bool CanMove(Origam.UI.IBrowserNode2 newNode)
+		public override bool CanMove(UI.IBrowserNode2 newNode)
 		{
 			// can move test cases between scenarios
-			if(newNode is TestScenario)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return newNode is TestScenario;
 		}
 
 		#endregion
 
 		#region ISchemaItemFactory Members
 
-		public override Type[] NewItemTypes
+		public override Type[] NewItemTypes => new[]
 		{
-			get
-			{
-				return new Type[] {typeof(TestCaseAlternative), typeof(TestCaseStep)};
-			}
-		}
+			typeof(TestCaseAlternative), typeof(TestCaseStep)
+		};
 
-		public override AbstractSchemaItem NewItem(Type type, Guid schemaExtensionId, SchemaItemGroup group)
+		public override T NewItem<T>(
+			Guid schemaExtensionId, SchemaItemGroup group)
 		{
-			AbstractSchemaItem item;
-
-			if(type == typeof(TestCaseAlternative))
+			string itemName = null;
+			if(typeof(T) == typeof(TestCaseAlternative))
 			{
-				item = new TestCaseAlternative(schemaExtensionId);
-				item.Name = "NewTestCaseAlternative";
+				itemName = "NewTestCaseAlternative";
 			}
-			else if(type == typeof(TestCaseStep))
+			else if(typeof(T) == typeof(TestCaseStep))
 			{
-				item = new TestCaseStep(schemaExtensionId);
-				item.Name = "NewTestCaseCheck";
+				itemName = "NewTestCaseCheck";
 			}
-			else
-				throw new ArgumentOutOfRangeException("type", type, ResourceUtils.GetString("ErrorTestCaseAlternative"));
-
-			item.Group = group;
-			item.PersistenceProvider = this.PersistenceProvider;
-			this.ChildItems.Add(item);
-			return item;
+			return base.NewItem<T>(schemaExtensionId, group, itemName);
 		}
 
 		#endregion
 
 		#region Properties
 		private string _role;
-
-		[EntityColumn("LS01")]
+		
 		public string Role
 		{
-			get
-			{
-				return _role;
-			}
-			set
-			{
-				_role = value;
-			}
+			get => _role;
+			set => _role = value;
 		}
 		#endregion
 

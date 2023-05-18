@@ -24,5 +24,7 @@ namespace Origam.Server.Model.About
     public class AboutInfo
     {
         public string ServerVersion { get; set; }
+        public string LinkToCommit { get; set; }
+        public string CommitId { get; set; }
     }
 }

@@ -24,6 +24,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   overflow-x: hidden;
 }
 
+div.input:read-only {
+  border: 0;
+}
+
 .readonlyDiv {
   min-height: 23px;
 }

@@ -22,10 +22,10 @@ import { action, computed, createAtom, flow, IAtom, observable } from "mobx";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
-import { flashColor2htmlColor } from "utils/flashColorFormat";
 import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
 import { FlowBusyMonitor } from "../../utils/flow";
 import { handleError } from "model/actions/handleError";
+import { flashColor2htmlColor } from "@origam/utils";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -211,6 +211,7 @@ export class RowState implements IRowState {
       rowStateContainer.isValid = false;
       rowStateContainer.processingSate = undefined;
     }
+    this.containers.clear();
     this.firstLoadingPerformed = false;
     this.temporaryContainersValues = undefined;
     // TODO: Wait when something is currently loading.

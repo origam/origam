@@ -17,8 +17,23 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getIsAddButtonVisible } from "./getIsAddButtonVisible";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getActivePerspective } from "model/selectors/DataView/getActivePerspective";
+import { IPanelViewType } from "model/entities/types/IPanelViewType";
+import { getRelationState as getRelationRowState } from "model/selectors/RowState/getRelationState";
+import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 
 export function getIsCopyButtonVisible(ctx: any) {
-  return getIsAddButtonVisible(ctx);
+  if(!getIsAddButtonVisible(ctx)){
+    return false;
+  }
+  const dataView = getDataView(ctx);
+  if (getActivePerspective(ctx) === IPanelViewType.Map) {
+    return false;
+  }
+  const relationRowState = getRelationRowState(ctx);
+  if (relationRowState?.allowCreate !== undefined) {
+    return !dataView.hideCopyButton && relationRowState.allowCreate;
+  }
+  return !dataView.hideCopyButton
 }

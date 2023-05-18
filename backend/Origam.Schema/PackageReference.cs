@@ -33,8 +33,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for Schema.
 	/// </summary>
-	[EntityName("PackageReference")]
-    [XmlPackageRoot("packageReference")]
+	[XmlPackageRoot("packageReference")]
     [ClassMetaVersion("6.0.0")]
     public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
@@ -53,8 +52,7 @@ namespace Origam.Schema
 		#region Properties
 		
 		public bool IsFileRootElement => FileParentId == Guid.Empty;
-		
-		[EntityColumn("refPackageId")] 
+		 
 		public Guid PackageId;
 
 		public Package Package
@@ -69,7 +67,6 @@ namespace Origam.Schema
 			}
 		}
 
-		[EntityColumn("refReferencedPackageId")] 
 		public Guid ReferencedPackageId;
 
         [XmlPackageReference("referencedPackage", "ReferencedPackageId")]
@@ -85,7 +82,6 @@ namespace Origam.Schema
 			}
 		}
 
-		[EntityColumn("ReferenceType")] 
 		public int ReferenceType
 		{
 			get
@@ -98,7 +94,6 @@ namespace Origam.Schema
 			}
 		}
 
-		[EntityColumn("IncludeAllElements")] 
 		public bool IncludeAllElements
 		{
 			get

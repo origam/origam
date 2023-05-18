@@ -279,6 +279,15 @@
   <data name="ToResetPassword3" xml:space="preserve">
     <value> um Ihr Passwort zurückzusetzen.</value>
   </data>
+  <data name="ToInitialUser1" xml:space="preserve">
+    <value>Klicken Sie </value>
+  </data>
+	<data name="ToInitialUser2" xml:space="preserve">
+    <value>hier</value>
+  </data>
+	<data name="ToInitialUser3" xml:space="preserve">
+    <value> um einen neuen Benutzer anzulegen.</value>
+  </data>
   <data name="UserName" xml:space="preserve">
     <value>Benutzername</value>
   </data>
@@ -436,5 +445,14 @@
   </data>
   <data name="SignInWithAzureAd" xml:space="preserve">
     <value>Melden Sie sich mit Ihrem Azure AD an</value>
+  </data>
+  <data name="ContinueAnyway" xml:space="preserve">
+    <value>Trotzdem fortfahren</value>
+  </data>
+  <data name="BrowserNotCompatible" xml:space="preserve">
+    <value>Ihr Browser ist nicht mit unserer Anwendung kompatibel. Bitte installieren Sie die neueste Version eines der folgenden Browser:
+
+
+</value>
   </data>
 </root>

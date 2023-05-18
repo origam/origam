@@ -43,7 +43,6 @@ namespace Origam.Schema.LookupModel
 		public AbstractDataTooltip(Key primaryKey) : base(primaryKey)	{}
 
 		#region Overriden AbstractSchemaItem Members
-		[EntityColumn("ItemType")]
 		public override string ItemType
 		{
 			get
@@ -82,7 +81,6 @@ namespace Origam.Schema.LookupModel
 		#endregion
 
 		#region Properties
-		[EntityColumn("G01")]  
 		public Guid TooltipDataStructureId;
 
 		[Category("Tooltip")]
@@ -101,8 +99,7 @@ namespace Origam.Schema.LookupModel
                 this.TooltipLoadMethod = null;
 			}
 		}
-
-        [EntityColumn("G08")]
+        
         public Guid TooltipDataStructureMethodId;
 
         [TypeConverter(typeof(DataServiceDataTooltipFilterConverter))]
@@ -120,8 +117,7 @@ namespace Origam.Schema.LookupModel
                 this.TooltipDataStructureMethodId = (value == null ? Guid.Empty : (Guid)value.PrimaryKey["Id"]);
             }
         }
-        
-        [EntityColumn("G02")]  
+
 		public Guid TooltipTransformationId;
 
 		[Category("Tooltip")]
@@ -142,8 +138,7 @@ namespace Origam.Schema.LookupModel
 
 		private string _roles = "*";
 		[Category("Condition"), DefaultValue("*")]
-		[EntityColumn("LS01")]
-        [XmlAttribute("roles")]
+		[XmlAttribute("roles")]
 		public virtual string Roles
 		{
 			get
@@ -165,8 +160,7 @@ namespace Origam.Schema.LookupModel
 
 		private string _features;
 		[Category("Condition")]
-		[EntityColumn("SS02")]
-        [XmlAttribute("features")]
+		[XmlAttribute("features")]
         public virtual string Features
 		{
 			get
@@ -181,8 +175,7 @@ namespace Origam.Schema.LookupModel
 
 		private int _level = 100;
 		[Category("Condition"), DefaultValue(100), RefreshProperties(RefreshProperties.Repaint)]
-		[EntityColumn("I01")]
-        [XmlAttribute("level")]
+		[XmlAttribute("level")]
         public int Level
 		{
 			get

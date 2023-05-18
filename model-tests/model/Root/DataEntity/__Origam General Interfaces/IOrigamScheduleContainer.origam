@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0"
+  xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0"
+  xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0">
   <de:DataEntity
     asi:abstract="true"
     ade:audit="None"
@@ -10,14 +16,14 @@
       asi:abstract="true"
       adec:allowNulls="true"
       adec:autoIncrement="false"
-      adec:dataLength="8"
       adec:dataType="Date"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="78b6b11f-00ad-4e76-952d-03a49db0a54c"
+      x:id="1b8f35b6-e5f6-42bf-9f25-e47e2052fd27"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="MustBeginBefore"
-      asi:name="MustBeginBefore"
+      adec:label="Dokončení "
+      fmi:mappedColumnName="RealFinish"
+      asi:name="RealFinish"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -70,10 +76,10 @@
       adec:dataType="Date"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="eb12b90e-7ebe-42de-be9d-64c54aaf4618"
+      x:id="78b6b11f-00ad-4e76-952d-03a49db0a54c"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="MustBeginAfter"
-      asi:name="MustBeginAfter"
+      fmi:mappedColumnName="MustBeginBefore"
+      asi:name="MustBeginBefore"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -98,10 +104,10 @@
       adec:dataType="Date"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="e9596b48-38ea-4b57-a248-6c56d6c59d09"
+      x:id="b68f642f-5c82-407c-8ce4-dee2fbf237b8"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="MustFinishAfter"
-      asi:name="MustFinishAfter"
+      fmi:mappedColumnName="MustFinish"
+      asi:name="MustFinish"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
@@ -126,24 +132,24 @@
       adec:dataType="Date"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="b68f642f-5c82-407c-8ce4-dee2fbf237b8"
+      x:id="e9596b48-38ea-4b57-a248-6c56d6c59d09"
       adec:isPrimaryKey="false"
-      fmi:mappedColumnName="MustFinish"
-      asi:name="MustFinish"
+      fmi:mappedColumnName="MustFinishAfter"
+      asi:name="MustFinishAfter"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
     <fmi:DataEntityColumn
       asi:abstract="true"
       adec:allowNulls="true"
       adec:autoIncrement="false"
+      adec:dataLength="8"
       adec:dataType="Date"
       adec:excludeFromAllFields="false"
       fmi:excludeFromAuditing="false"
-      x:id="1b8f35b6-e5f6-42bf-9f25-e47e2052fd27"
+      x:id="eb12b90e-7ebe-42de-be9d-64c54aaf4618"
       adec:isPrimaryKey="false"
-      adec:label="Dokončení "
-      fmi:mappedColumnName="RealFinish"
-      asi:name="RealFinish"
+      fmi:mappedColumnName="MustBeginAfter"
+      asi:name="MustBeginAfter"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
   </de:DataEntity>

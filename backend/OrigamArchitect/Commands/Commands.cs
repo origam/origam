@@ -50,7 +50,6 @@ using System.IO;
 using System.Linq;
 using Origam.BI.CrystalReports;
 using MoreLinq;
-using Origam.DA.ObjectPersistence.Providers;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Gui;
@@ -265,7 +264,7 @@ namespace OrigamArchitect.Commands
 				{
 					Origam.BI.ReportHelper.PopulateDefaultValues(reportRef.Report, parameters);
                     Origam.BI.ReportHelper.ComputeXsltValueParameters(reportRef.Report, parameters);
-                    OpenBrowser(HttpTools.BuildUrl(webReport.Url, parameters, webReport.ForceExternalUrl, webReport.ExternalUrlScheme, webReport.IsUrlEscaped));
+                    OpenBrowser(HttpTools.Instance.BuildUrl(webReport.Url, parameters, webReport.ForceExternalUrl, webReport.ExternalUrlScheme, webReport.IsUrlEscaped));
 				}
                 else
                 {
@@ -332,7 +331,7 @@ namespace OrigamArchitect.Commands
             {
                 wf = wfRef.Workflow;
                 // set parameters
-                RuleEngine ruleEngine = new RuleEngine(null, null);
+                RuleEngine ruleEngine = RuleEngine.Create(null, null);
                 foreach (AbstractSchemaItem parameter in item.ChildItems)
                 {
                     if (parameter != null)
@@ -351,7 +350,7 @@ namespace OrigamArchitect.Commands
                 WorkflowSchedule schedule = item as WorkflowSchedule;
                 wf = schedule.Workflow;
                 // set parameters
-                RuleEngine ruleEngine = new RuleEngine(null, null);
+                RuleEngine ruleEngine = RuleEngine.Create(null, null);
                 foreach (AbstractSchemaItem parameter in schedule.ChildItems)
                 {
                     if (parameter != null)
@@ -964,7 +963,6 @@ namespace OrigamArchitect.Commands
 			if(pad != null) WorkbenchSingleton.Workbench.ShowPad(pad);
 		}		
 	}
-
 	public class SetServerRestart : AbstractMenuCommand
 	{
 		private SchemaService _schemaService = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
@@ -982,18 +980,9 @@ namespace OrigamArchitect.Commands
 
 		public override void Run()
 		{
-            if (_schemaService.IsSchemaChanged && _schemaService.SupportsSave)
-            {
-                if (MessageBox.Show(strings.SaveModelChanges_Question,
-                    strings.SavemodelChanges_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    _schemaService.SaveSchema();
-                }
-            }
 			OrigamEngine.SetRestart();
 		}		
 	}
-
     public class ShowHelp : AbstractMenuCommand
     {
         public override void Run()
@@ -1153,7 +1142,7 @@ namespace OrigamArchitect.Commands
 		}
 	}
 	
-	public class SchemaExtensionSorter : IDatasetFormater
+	public class SchemaExtensionSorter : IDatasetFormatter
 	{
 		public DataSet Format(DataSet unsortedData)
 		{

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 import { isGlobalAutoFocusDisabled } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 import { compareTabIndexOwners, ITabIndexOwner } from "model/entities/TabIndexOwner";
+import { requestFocus } from "utils/focus";
 
 export class FormFocusManager {
   autoFocusDisabled = false;
@@ -27,9 +28,8 @@ export class FormFocusManager {
     this.autoFocusDisabled = true;
   }
 
-  objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
-  focusAbleContainers: IFocusAbleObjectContainer[] = [];
-  private lastFocused: IFocusable | undefined;
+  focusableContainers: FocusableObjectContainer[] = [];
+  public lastFocused: IFocusable | undefined;
 
   setLastFocused(focusable: IFocusable) {
     this.lastFocused = focusable;
@@ -38,23 +38,25 @@ export class FormFocusManager {
   constructor(public parent: any) {
   }
 
-  subscribe(focusAbleObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
-    if (!focusAbleObject) {
+  subscribe(focusableObject: IFocusable, name: string | undefined,
+            tabIndex: string | undefined,
+            onBlur?: ()=>Promise<void>) {
+    if (!focusableObject) {
       return;
     }
-    const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex);
-    const existingContainer = this.focusAbleContainers
+    const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex, onBlur);
+    const existingContainer = this.focusableContainers
       .find(container => container.name && container.name === name ||
-        container.focusable === focusAbleObject);
+        container.focusable === focusableObject);
     if (existingContainer) {
-      this.focusAbleContainers.remove(existingContainer);
+      this.focusableContainers.remove(existingContainer);
     }
-    this.focusAbleContainers.push(focusAbleContainer);
-    this.focusAbleContainers = this.focusAbleContainers.sort(compareTabIndexOwners);
+    this.focusableContainers.push(focusableContainer);
+    this.focusableContainers = this.focusableContainers.sort(compareTabIndexOwners);
   }
 
   focus(name: string) {
-    let focusable = this.focusAbleContainers.find((container) => container.name === name)?.focusable;
+    let focusable = this.focusableContainers.find((container) => container.name === name)?.focusable;
     this.focusAndRemember(focusable);
   }
 
@@ -63,15 +65,15 @@ export class FormFocusManager {
       return;
     }
     this.lastFocused = focusable;
-    focusable.focus();
+    requestFocus(focusable as any);
   }
 
   refocusLast() {
-    this.lastFocused?.focus();
+    requestFocus(this.lastFocused as any);
   }
 
   forceAutoFocus() {
-    const focusable = this.focusAbleContainers[0].focusable;
+    const focusable = this.focusableContainers[0].focusable;
     if (focusable.disabled) {
       //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
       this.focusNext(focusable);
@@ -83,7 +85,7 @@ export class FormFocusManager {
   }
 
   autoFocus() {
-    if (this.focusAbleContainers.length === 0 || this.autoFocusDisabled || isGlobalAutoFocusDisabled(this.parent)) {
+    if (this.focusableContainers.length === 0 || this.autoFocusDisabled || isGlobalAutoFocusDisabled(this.parent)) {
       return;
     }
     this.forceAutoFocus();
@@ -97,12 +99,12 @@ export class FormFocusManager {
     if (callNumber > 20) {
       return;
     }
-    const currentContainerIndex = this.focusAbleContainers.findIndex(
+    const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
     const nextIndex =
-      this.focusAbleContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
-    const focusable = this.focusAbleContainers[nextIndex].focusable;
+      this.focusableContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
+    const focusable = this.focusableContainers[nextIndex].focusable;
     if (focusable !== activeElement && focusable.disabled) {
       this.focusNextInternal(focusable, callNumber + 1);
     } else {
@@ -113,12 +115,12 @@ export class FormFocusManager {
   }
 
   focusPrevious(activeElement: any) {
-    const currentContainerIndex = this.focusAbleContainers.findIndex(
+    const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
     const previousIndex =
-      currentContainerIndex === 0 ? this.focusAbleContainers.length - 1 : currentContainerIndex - 1;
-    const focusable = this.focusAbleContainers[previousIndex].focusable;
+      currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
+    const focusable = this.focusableContainers[previousIndex].focusable;
     if (focusable.disabled) {
       this.focusPrevious(focusable);
     } else {
@@ -127,19 +129,29 @@ export class FormFocusManager {
       });
     }
   }
+
+  async activeEditorCloses(){
+    const lastFocusedContainer = this.focusableContainers.find(x => x.focusable === this.lastFocused);
+    if(lastFocusedContainer?.onBlur){
+      await lastFocusedContainer.onBlur();
+    }
+  }
 }
 
-export interface IFocusAbleObjectContainer extends ITabIndexOwner{
-  name: string | undefined;
-  focusable: IFocusable;
-  tabIndex: string | undefined;
-}
-
-export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
+class FocusableObjectContainer {
   constructor(
     public focusable: IFocusable,
     public name: string | undefined,
-    public tabIndex: string | undefined
+    public tabIndex: string | undefined,
+    public onBlur?: ()=>Promise<void>
+  ) {
+  }
+}
+
+class EditorContainer {
+  constructor(
+    public focusable: IFocusable,
+    public onBlur: () => Promise<void>
   ) {
   }
 }

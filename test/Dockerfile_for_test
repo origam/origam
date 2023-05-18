@@ -4,12 +4,15 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /tmp
 RUN apt-get update \
-&& apt-get -y install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl
+&& apt-get -y install gnupg libodbc1 libgif-dev autoconf libtool automake build-essential gettext libglib2.0-dev libcairo2-dev libtiff-dev libexif-dev libpango1.0-dev git sudo nginx ssh curl wget
+RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
+&& dpkg -i packages-microsoft-prod.deb \
+&& rm packages-microsoft-prod.deb
 #INSTALL YARN 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \ 
 && apt-get update \
-&& apt-get -y install yarn \
+&& apt-get -y install yarn dotnet-sdk-7.0 \
 && useradd -ms /bin/bash origam \
 && usermod -aG sudo origam \
 && echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
@@ -26,7 +29,7 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 #End install ODBC
 #Install Chrome
 RUN apt-get update \
-    && apt-get install -y wget xvfb \
+    && apt-get install -y xvfb \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
@@ -55,7 +58,8 @@ RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc \
 WORKDIR /home/origam
 RUN mkdir HTML5  \
 && mkdir data \
-&& mkdir data/origam
+&& mkdir data/origam \
+&& mkdir HTML5_TESTS
 COPY --chown=origam:origam HTML5 _appsettings.template \
 _OrigamSettings.mssql.template \
 _OrigamSettings.postgres.template \
@@ -66,6 +70,10 @@ log4net.config \
 updateEnvironment.sh \
 updateEnvironmentRoot.sh \
 /home/origam/HTML5/
+COPY --chown=origam:origam HTML5_TESTS \
+_OrigamSettings.wf.mssql.template \
+log4net.config \
+/home/origam/HTML5_TESTS/
 COPY --chown=origam:origam tests_e2e /home/origam/HTML5/tests_e2e/
 COPY --chown=origam:origam model /home/origam/HTML5/data/origam/
 WORKDIR /home/origam/HTML5

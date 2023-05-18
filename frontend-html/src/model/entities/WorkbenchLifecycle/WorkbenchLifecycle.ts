@@ -52,10 +52,10 @@ import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
-import produce from "immer";
+import { produce } from "immer";
 import { IDataView } from "../types/IDataView";
 import { FormScreenEnvelope } from "model/entities/FormScreen";
-import { EventHandler } from "utils/EventHandler";
+import { EventHandler } from "@origam/utils";
 import { hexToRgb } from "utils/colorUtils";
 
 export enum IRefreshOnReturnType {
@@ -130,7 +130,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             undefined,
             args.isSingleRecordEdit
           );
-          yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+          yield*openedScreen.content!.start({
+            initUIResult: initUIResult,
+            preloadIsDirty: openedScreen.isSleepingDirty
+          });
         } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
@@ -164,6 +167,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           );
         }
       }
+    }
+    else if (type === IMainMenuItemType.ReportReferenceMenuItem) {
+      const url = (yield this.getReportTabUrl(id)) as string;
+      yield*this.openNewUrl(url, args.item.attributes["label"]);
+      return;
     } else {
       yield*this.openNewForm(
         id,
@@ -235,7 +243,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         if (openedScreen.isSleeping) {
           openedScreen.isSleeping = false;
           const initUIResult = yield*this.initUIForScreen(openedScreen, false, undefined);
-          yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+          yield*openedScreen.content!.start({
+            initUIResult: initUIResult,
+            preloadIsDirty: openedScreen.isSleepingDirty
+          });
         } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
@@ -247,10 +258,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        yield*this.openNewForm(id, type, label, false, dialogInfo, {});
+        yield*this.openNewForm(id, type, label, true, dialogInfo, {});
       }
     } else {
-      yield*this.openNewForm(id, type, label, false, dialogInfo, {});
+      yield*this.openNewForm(id, type, label, true, dialogInfo, {});
     }
   }
 
@@ -267,7 +278,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (openedScreen.isSleeping) {
         openedScreen.isSleeping = false;
         const initUIResult = yield*this.initUIForScreen(openedScreen, false);
-        yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+        yield*openedScreen.content!.start({
+          initUIResult: initUIResult,
+          preloadIsDirty: openedScreen.isSleepingDirty
+        });
       } else if (
         openedScreen.content &&
         openedScreen.content.formScreen &&
@@ -290,7 +304,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if (openedScreen.isSleeping) {
       openedScreen.isSleeping = false;
       const initUIResult = yield*this.initUIForScreen(openedScreen, false);
-      yield*openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+      yield*openedScreen.content!.start({
+        initUIResult: initUIResult,
+        preloadIsDirty: openedScreen.isSleepingDirty
+      });
     } else if (
       openedScreen.content &&
       openedScreen.content.formScreen &&
@@ -323,7 +340,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           if (screenToActivate.isSleeping) {
             screenToActivate.isSleeping = false;
             const initUIResult = yield*this.initUIForScreen(screenToActivate, false);
-            yield*screenToActivate.content!.start(initUIResult, screenToActivate.isSleepingDirty);
+            yield*screenToActivate.content!.start({
+              initUIResult: initUIResult,
+              preloadIsDirty: screenToActivate.isSleepingDirty
+            });
           }
         }
       }
@@ -335,7 +355,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           if (screenToActivate.isSleeping) {
             screenToActivate.isSleeping = false;
             const initUIResult = yield*this.initUIForScreen(screenToActivate, false);
-            yield*screenToActivate.content!.start(initUIResult, screenToActivate.isSleepingDirty);
+            yield*screenToActivate.content!.start({
+              initUIResult: initUIResult,
+              preloadIsDirty: screenToActivate.isSleepingDirty
+            });
           } else if (
             screenToActivate.content &&
             screenToActivate.content.formScreen &&
@@ -419,7 +442,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         requestParameters,
         isSingleRecordEdit
       );
-      yield*newFormScreen.start(initUIResult);
+      yield*newFormScreen.start({initUIResult: initUIResult});
       const rowIdToSelect = parameters["id"];
       yield*this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
@@ -473,9 +496,21 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   *openNewUrl(url: string, title: string) {
     const openedScreens = getOpenedScreens(this);
-    const newScreen = new WebScreen(title, url, url, 0);
+    const canRefresh = yield*this.canRefresh(url);
+    const newScreen = new WebScreen(title, url, url, 0, canRefresh);
     openedScreens.pushItem(newScreen);
     openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+  }
+
+  *canRefresh(url: string): Generator<any, boolean> {
+    if(url.startsWith("internalApi/Report")){
+      const reportId = url.split("/")[2];
+      const api = getApi(this);
+      const reportInfo = (yield api.getReportInfo({ReportId: reportId})) as any;
+      return reportInfo.isWebReport === "true";
+    }else{
+      return true;
+    }
   }
 
   assignColors(colors: {[key: string]: string}){
@@ -540,7 +575,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const menuItem = getMainMenuItemById(this, session.objectId);
         const lazyLoading = menuItem
           ? menuItem?.attributes?.lazyLoading === "true"
-          : false;
+          : session.type === IMainMenuItemType.WorkQueue;
         yield*this.openNewForm(
           session.objectId,
           session.type,
@@ -571,8 +606,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const initUIResult = yield*this.initUIForScreen(screenToOpen, false);
         if (screenToOpen.content) {
           yield*screenToOpen.content.start(
-            initUIResult,
-            screenToOpen.isSleepingDirty
+            {
+              initUIResult: initUIResult,
+              preloadIsDirty: screenToOpen.isSleepingDirty
+            }
           );
         }
       }
