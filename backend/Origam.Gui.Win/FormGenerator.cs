@@ -1485,7 +1485,7 @@ namespace Origam.Gui.Win
 	        UIActionTools.GetValidActions(
 	            formId: (Guid) _formKey["Id"],
 	            panelId: childItem.ControlItem.PanelControlSet.Id,
-	            disableActionButtons: false,
+	            disableActionButtons: panel.DisableActionButtons,
 	            entityId: entityId,
 	            validActions: validActions);
 	        panel.Actions = validActions;
