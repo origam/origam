@@ -474,7 +474,10 @@ namespace Origam.Workflow
 				Hashtable stores = new Hashtable();
 
 				// Initialize RuleEngine for this session
-				_ruleEngine = RuleEngine.Create(stores, this.TransactionId, WorkflowInstanceId);
+				Guid tracingWorkflowId = IsTrace(WorkflowBlock) 
+					? WorkflowInstanceId 
+					: Guid.Empty;
+				_ruleEngine = RuleEngine.Create(stores, TransactionId, tracingWorkflowId);
 
 				foreach (IContextStore store in this.WorkflowBlock.ChildItemsByType(
 					ContextStore.CategoryConst))
