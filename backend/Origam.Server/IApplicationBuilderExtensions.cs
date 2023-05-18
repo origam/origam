@@ -107,6 +107,20 @@ namespace Origam.Server
                 apiBranch.UseMiddleware<UserApiMiddleware>();
             });
         } 
+          public static void UseWorkQueueApi(this IApplicationBuilder app)
+        {
+            app.MapWhen(
+                context => context.Request.Path.ToString().StartsWith("/workQueue"),
+                apiBranch =>
+                {
+                    apiBranch.UseMiddleware<UserApiTokenAuthenticationMiddleware>();
+                    apiBranch.UseMvc(routes =>
+                    {
+                        routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+                    });
+                }
+            );
+        } 
         
         private static bool IsRestrictedUserApiRoute(
             StartUpConfiguration startUpConfiguration, HttpContext context)
