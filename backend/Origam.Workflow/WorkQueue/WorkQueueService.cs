@@ -901,10 +901,9 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        public void HandleAction(Guid queueEntryId, Guid commandId, bool calledFromApi, string transactionId)
+        public void HandleAction(string workQueueCode, string commandText, Guid queueEntryId)
         {
-            // get info about queue (from command)
-            Guid queueId = GetQueueId(commandId);
+            Guid queueId = GetQueueId(workQueueCode);
             // get all queue data from database (no entries)
             WorkQueueData queue = GetQueue(queueId);
             // extract WorkQueueClass name and construct WorkQueueClass from name
@@ -913,7 +912,7 @@ namespace Origam.Workflow.WorkQueue
 
             // authorize access from API
             IOrigamAuthorizationProvider auth = SecurityManager.GetAuthorizationProvider();
-            if (calledFromApi && (queueRow.IsApiAccessRolesNull() || !auth.Authorize(SecurityManager.CurrentPrincipal, queueRow.ApiAccessRoles)))
+            if (queueRow.IsApiAccessRolesNull() || !auth.Authorize(SecurityManager.CurrentPrincipal, queueRow.ApiAccessRoles))
             {
                 throw new RuleException(
                     String.Format(ResourceUtils.GetString("ErrorWorkQueueApiNotAuthorized"),
@@ -925,7 +924,7 @@ namespace Origam.Workflow.WorkQueue
             WorkQueueData.WorkQueueCommandRow commandRow = null;
             foreach (WorkQueueData.WorkQueueCommandRow cmd in queue.WorkQueueCommand.Rows)
             {
-                if (cmd.Id == commandId)
+                if (cmd.Text == commandText)
                 {
                     commandRow = cmd;
                 }
@@ -935,11 +934,11 @@ namespace Origam.Workflow.WorkQueue
             {
                 throw new RuleException(
                     String.Format(ResourceUtils.GetString("ErrorWorkQueueCommandNotAuthorized"),
-                        commandId, queueId),
+                        commandText, queueId),
                     RuleExceptionSeverity.High, "commandId", "");
             }
             // fetch a single queue entry
-            DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, transactionId);
+            DataSet queueEntryDS = FetchSingleQueueEntry(wqc, queueEntryId, null);
 
             // call handle action
             HandleAction(queueId, queueRow.WorkQueueClass, queueEntryDS.Tables[0],
@@ -949,7 +948,7 @@ namespace Origam.Workflow.WorkQueue
                 commandRow.IsParam2Null() ? null : commandRow.Param2,
                 true,
                 commandRow.IsrefErrorWorkQueueIdNull() ? (object)null : (object)commandRow.refErrorWorkQueueId,
-                transactionId);
+                null);
         }
         
         public DataRow GetNextItem(WorkQueueData.WorkQueueRow q, string transactionId,

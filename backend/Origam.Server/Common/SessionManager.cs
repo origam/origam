@@ -124,7 +124,7 @@ namespace Origam.Server
                .GetOrAdd(
                    sessionFormIdentifier, 
                    guid =>  throw new SessionExpiredException()
-                );
+               );
            
             if (ss == null)
             {
