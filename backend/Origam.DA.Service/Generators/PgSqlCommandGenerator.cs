@@ -230,7 +230,7 @@ namespace Origam.DA.Service
         {
             StringBuilder sqlExpression = new StringBuilder();
             return sqlExpression.AppendFormat(
-                "INSERT INTO {0} ({1}) VALUES ({2}) ON CONFLICT {3} DO UPDATE SET {4};",
+                "INSERT INTO {0} ({1}) VALUES ({2}) ON CONFLICT ({3}) DO UPDATE SET {4};",
                 tableName,
                 insertColumnsBuilder,
                 insertValuesBuilder,
@@ -415,5 +415,9 @@ namespace Origam.DA.Service
 			return " PRIMARY KEY";
 
 		}
+        protected override string BuildUpsertONConflictKey(string paramName, string fieldName)
+        {
+			return fieldName;
+        }
     }
 }

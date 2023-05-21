@@ -1409,9 +1409,9 @@ namespace Origam.DA.Service
                                 keysBuilder.Append(", ");
                                 searchPredicatesBuilder.Append(" AND ");
                             }
-                            keysBuilder.AppendFormat("{0} as {1}",
+                            keysBuilder.AppendFormat(BuildUpsertONConflictKey(
                                 paramName,
-                                fieldName);
+                                fieldName));
                             searchPredicatesBuilder.AppendFormat("{0}.{1} = src.{1}",
                                 tableName, fieldName);
                             keys++;
@@ -1446,6 +1446,7 @@ namespace Origam.DA.Service
             return sqlExpression.ToString();
         }
 
+        protected abstract string BuildUpsertONConflictKey(string paramName, string fieldName);
         internal abstract string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder);
 
         public string InsertSql(DataStructure ds, DataStructureEntity entity)
