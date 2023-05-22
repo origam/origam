@@ -1409,7 +1409,7 @@ namespace Origam.DA.Service
                                 keysBuilder.Append(", ");
                                 searchPredicatesBuilder.Append(" AND ");
                             }
-                            keysBuilder.AppendFormat(RenderUpsetKey(
+                            keysBuilder.AppendFormat(RenderUpsertKey(
                                 paramName,
                                 fieldName));
                             searchPredicatesBuilder.AppendFormat("{0}.{1} = src.{1}",
@@ -4042,7 +4042,7 @@ namespace Origam.DA.Service
             }
             return output;
         }
-        protected abstract string RenderUpsetKey(string paramName, string fieldName);
+        protected abstract string RenderUpsertKey(string paramName, string fieldName);
         #endregion
 
         #region Operators

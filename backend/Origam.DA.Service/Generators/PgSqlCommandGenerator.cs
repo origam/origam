@@ -415,7 +415,7 @@ namespace Origam.DA.Service
 			return " PRIMARY KEY";
 
 		}
-        protected override string RenderUpsetKey(string paramName, string fieldName)
+        protected override string RenderUpsertKey(string paramName, string fieldName)
         {
 			return fieldName;
         }
