@@ -23,7 +23,7 @@ using System.Text;
 
 namespace Origam.Workflow;
 
-public class WorkFlowStackTrace
+public class WorkFlowStackTrace_
 {
     private readonly StringBuilder messages = new("Workflow stack trace\n");
     
