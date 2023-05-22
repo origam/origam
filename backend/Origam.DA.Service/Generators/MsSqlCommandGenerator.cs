@@ -469,5 +469,9 @@ namespace Origam.DA.Service
         {
             return " PRIMARY KEY NONCLUSTERED";
         }
+        protected override string RenderUpsertKey(string paramName, string fieldName)
+        {
+            return string.Format("{0} as {1}", paramName, fieldName);
+        }
     }
 }
