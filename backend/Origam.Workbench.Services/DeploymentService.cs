@@ -87,15 +87,15 @@ namespace Origam.Workbench.Services
 
 		public void Deploy()
 		{
-			RunWithHandling(Update);
+			RunWithErrorHandling(Update);
 		}
 		
 		public void ForceDeployCurrentPackage()
 		{
-			RunWithHandling(ForceUpdateCurrentPackageOnly);
+			RunWithErrorHandling(ForceUpdateCurrentPackageOnly);
 		}
 
-		private void RunWithHandling(Action action)
+		private void RunWithErrorHandling(Action action)
 		{
 			if(_transactionId == null)
 			{

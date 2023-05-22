@@ -58,7 +58,7 @@ namespace Origam.Workbench.Services
                     .ForEach(ProcessDependent);
                 int remainingDeploymentsAfter = remainingDeployments.Count;
                 if (remainingDeployments.Count > 0 &&
-                    remainingDeployments.Count(x=>!HasActiveDependencies(x)) == 0)
+                    remainingDeployments.Count(x => !HasActiveDependencies(x)) == 0)
                 {
                     HandleInfiniteLoopError();
                     return new List<IDeploymentVersion>();
@@ -79,7 +79,8 @@ namespace Origam.Workbench.Services
 
         private void HandleDeploymentDeadlock()
         {
-            string sortedDeploymentsStr = string.Join("\r\n" ,sortedDeployments.Select(x => $"{x.PackageName} {x.Version}"));
+            string sortedDeploymentsStr = string.Join("\r\n" ,
+                sortedDeployments.Select(x => $"{x.PackageName} {x.Version}"));
             var deadlockedDeployments = remainingDeployments
                 .GroupBy(x => x.SchemaExtensionId)
                 .Select(group => 
@@ -135,8 +136,10 @@ namespace Origam.Workbench.Services
                         dependency.PackageVersion == deploymentVersion.Version);
                 if (dependsOnItSelf)
                 {
-                    throw new Exception("Deployment version: " + deploymentVersion.Version + " of package: " +
-                                        deploymentVersion.PackageName + " depends on it self! Remove the dependency to continue.");
+                    throw new Exception(
+                        $"Deployment version: {deploymentVersion.Version}" +
+                        $" of package: {deploymentVersion.PackageName} depends " +
+                        "on itself! Remove the dependency to continue.");
                 }
             }
             SortingFailed?.Invoke(this, "Infinite loop! Could not find any deployments without active dependencies.");
@@ -147,7 +150,7 @@ namespace Origam.Workbench.Services
             MoveToSorted(deployment);
  
             GetDependentDeployments(deployment)
-                .Where(x=>!HasActiveDependencies(x) && !SomeDeploymentsHaveToRunBefore(x))
+                .Where(x => !HasActiveDependencies(x) && !SomeDeploymentsHaveToRunBefore(x))
                 .OrderBy(x => x, new OtherPackagesFirst(current.SchemaExtensionId))
                 .ForEach(ProcessDependent);
         }
@@ -226,10 +229,9 @@ namespace Origam.Workbench.Services
 
         private bool IsInRemainingDeployments(DeploymentDependency dependency)
         {
-            bool isInRemaining = remainingDeployments.Any(deployment =>    
+            return remainingDeployments.Any(deployment =>    
                 deployment.Version == dependency.PackageVersion &&
                 deployment.SchemaExtensionId == dependency.PackageId);
-            return isInRemaining;
         }
     }
 

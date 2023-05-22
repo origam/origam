@@ -742,6 +742,6 @@
     <value>RuleTrace</value>
   </data>
   <data name="DeploySinglePackageQuestion" xml:space="preserve">
-    <value>It looks like this is a new package. Would you like to run the deployment scripts of this package only, disregarding any dependencies? This could be useful if there are deployment conflicts with the other packages.</value>
+    <value>It looks like this is a new package. Would you like to run the deployment scripts of this package only, disregarding any dependencies? This could be useful if there are any deployment conflicts with the other packages.</value>
   </data>
 </root>

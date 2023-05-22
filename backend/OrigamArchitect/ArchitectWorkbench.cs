@@ -2180,7 +2180,10 @@ namespace OrigamArchitect
 		private void RunDeploymentScripts(IDeploymentService deployment)
 		{
 			DeployVersion deployCommand = new DeployVersion();
-			if (!deployCommand.IsEnabled) return;
+			if (!deployCommand.IsEnabled)
+			{
+				return;
+			}
 			if (MessageBox.Show(strings.RunDeploymentScriptsQuestion,
 				    strings.DeploymentSctiptsPending_Title, MessageBoxButtons.YesNo,
 				    MessageBoxIcon.Question,
