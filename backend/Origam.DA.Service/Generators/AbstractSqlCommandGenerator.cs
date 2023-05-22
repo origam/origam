@@ -4042,7 +4042,7 @@ namespace Origam.DA.Service
             }
             return output;
         }
-        internal abstract string RenderUpsetKey(string paramName, string fieldName);
+        protected abstract string RenderUpsetKey(string paramName, string fieldName);
         #endregion
 
         #region Operators
