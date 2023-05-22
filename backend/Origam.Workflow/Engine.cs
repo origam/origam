@@ -61,7 +61,7 @@ namespace Origam.Workflow
 		private IParameterService _parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 		private Exception _exception;
 		private Exception _caughtException;
-		private readonly WorkFlowStackTrace_ workflowStackTrace = new();
+		private readonly WorkflowStackTrace workflowStackTrace = new();
         public Boolean Trace { get; set; } = false;
         private readonly OperationTimer localOperationTimer = new OperationTimer();
 
