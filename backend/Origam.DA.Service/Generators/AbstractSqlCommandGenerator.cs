@@ -1409,7 +1409,7 @@ namespace Origam.DA.Service
                                 keysBuilder.Append(", ");
                                 searchPredicatesBuilder.Append(" AND ");
                             }
-                            keysBuilder.AppendFormat(BuildUpsertONConflictKey(
+                            keysBuilder.AppendFormat(RenderUpsetKey(
                                 paramName,
                                 fieldName));
                             searchPredicatesBuilder.AppendFormat("{0}.{1} = src.{1}",
@@ -1445,8 +1445,6 @@ namespace Origam.DA.Service
                insertValuesBuilder));
             return sqlExpression.ToString();
         }
-
-        protected abstract string BuildUpsertONConflictKey(string paramName, string fieldName);
         internal abstract string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder);
 
         public string InsertSql(DataStructure ds, DataStructureEntity entity)
@@ -4044,6 +4042,7 @@ namespace Origam.DA.Service
             }
             return output;
         }
+        internal abstract string RenderUpsetKey(string paramName, string fieldName);
         #endregion
 
         #region Operators
