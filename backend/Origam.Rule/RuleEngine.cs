@@ -49,7 +49,7 @@ namespace Origam.Rule
 	/// </summary>
 	public class RuleEngine
 	{
-		private readonly Guid _workflowInstanceId;
+		private readonly Guid _tracingWorkflowId;
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private static System.Xml.Serialization.XmlSerializer _ruleExceptionSerializer = 
 			new System.Xml.Serialization.XmlSerializer(typeof(RuleExceptionDataCollection),
@@ -70,12 +70,12 @@ namespace Origam.Rule
 			SecurityManager.CurrentUserProfile); 
 		
 		public static RuleEngine Create(Hashtable contextStores, string transactionId,
-			Guid workflowInstanceId)
+			Guid tracingWorkflowId)
 		{
 			return new RuleEngine(
 				contextStores, 
 				transactionId,
-				workflowInstanceId,
+				tracingWorkflowId,
 				ServiceManager.Services.GetService<IPersistenceService>(),
 				ServiceManager.Services.GetService<IDataLookupService>(),
 				ServiceManager.Services.GetService<IParameterService>(),
@@ -106,7 +106,7 @@ namespace Origam.Rule
 		}
 		
 		private RuleEngine(Hashtable contextStores, string transactionId,
-			Guid workflowInstanceId, IPersistenceService persistence,
+			Guid tracingWorkflowId, IPersistenceService persistence,
 			IDataLookupService lookupService,
 			IParameterService parameterService,
 			ITracingService tracingService,
@@ -118,7 +118,7 @@ namespace Origam.Rule
 				authorizationProvider, userProfileGetter
 		)
 		{
-			_workflowInstanceId = workflowInstanceId;
+			_tracingWorkflowId = tracingWorkflowId;
 		}
 		
 		public RuleEngine(Hashtable contextStores, string transactionId,
@@ -290,7 +290,7 @@ namespace Origam.Rule
 						    ruleName: rule.Name, 
 						    ruleInput: xmlData?.Xml?.OuterXml, 
 						    ruleResult: ruleResult?.ToString(),
-						    workflowInstanceId: _workflowInstanceId
+						    workflowInstanceId: _tracingWorkflowId
 						);
 			    }
 
@@ -371,7 +371,7 @@ namespace Origam.Rule
 							ruleName: rule.Name, 
 							ruleInput: context?.Xml?.OuterXml, 
 							ruleResult: result.Xml.OuterXml,
-							workflowInstanceId: _workflowInstanceId
+							workflowInstanceId: _tracingWorkflowId
 						);
 				}
 				

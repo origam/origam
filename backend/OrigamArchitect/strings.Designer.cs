@@ -1519,7 +1519,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to RuleTrace.
+        ///   Looks up a localized string similar to Rule Trace.
         /// </summary>
         internal static string RuleTrace_MenuItem {
             get {
