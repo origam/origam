@@ -231,10 +231,10 @@ namespace Origam.Server.Controller
                 }
                 if(CheckMember(blobUploadRequest.ThumbnailMember, false))
                 {
-                    Image image = null;
+                    MagickImage image = null;
                     try
                     {
-                        image = Image.FromStream(new MemoryStream(input));
+                        image = new MagickImage(new MemoryStream(input));
                     }
                     catch
                     {
