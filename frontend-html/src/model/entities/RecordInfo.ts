@@ -168,11 +168,14 @@ export class RecordInfo implements IRecordInfo {
       DataStructureEntityId: dataStructureEntityId,
       RowId: rowId
     });
-
-    const info = rawInfo.cell.map(
-      (infoCellStruct: any) => infoCellStruct["#text"]
-    );
-    this.info = info;
+    if(rawInfo.cell.map){
+      this.info = rawInfo.cell.map(
+        (infoCellStruct: any) => infoCellStruct["#text"]
+      );
+    }
+    else{
+      this.info = [rawInfo.cell["#text"]];
+    }
   }
 
   parent?: any;
