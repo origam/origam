@@ -127,7 +127,7 @@
     <value>Fehler beim Schreiben der Datei {0}</value>
   </data>
   <data name="CopyPrefix" xml:space="preserve">
-    <value>Kopieren - </value>
+    <value>Kopie - </value>
   </data>
   <data name="ChildErrors" xml:space="preserve">
     <value>Untergeordnete Datensätze enthalten Fehler.</value>
