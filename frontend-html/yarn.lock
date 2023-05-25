@@ -1721,10 +1721,10 @@
   resolved "https://registry.yarnpkg.com/@origam/styles/-/styles-2.0.2.tgz#505dade3528f969895fdd931391eeae43ae51257"
   integrity sha512-MPp0M+w2f3ovN3O5jnGyvN1gWZvpzeDbOjqAEzN6Xw6lgZZeT+OFUk4Hul/Qpav0EDklDFuqHu66p9JRMhReKQ==
 
-"@origam/utils@^1.0.0", "@origam/utils@^1.1.1", "@origam/utils@^1.2.0", "@origam/utils@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.3.2.tgz#9ca3b9f35c27d37983d44622a1879db4fb7bc0ed"
-  integrity sha512-RMHddqtNLNBK23Yu3L45OUKZ1QLd9syn3s3lhfGErHnG7hQpGvA3IObmHLDEGgEOTTD6mgyN9UGvXFar/TpNZA==
+"@origam/utils@^1.0.0", "@origam/utils@^1.1.1", "@origam/utils@^1.2.0", "@origam/utils@^1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.3.4.tgz#fd09e01449401bd34aad37f1ee7e6780640aabe0"
+  integrity sha512-xjvYgMKD9iRhBvZ/mtT7eloLi4jOjO2Cml42VguNYrJBMmHyaZ7YR5p/60UaBUPEhl0UXgdiFLBAb/LYaiOLkQ==
   dependencies:
     moment "^2.29.4"
 
