@@ -1586,11 +1586,18 @@
   integrity sha512-MPp0M+w2f3ovN3O5jnGyvN1gWZvpzeDbOjqAEzN6Xw6lgZZeT+OFUk4Hul/Qpav0EDklDFuqHu66p9JRMhReKQ==
 
 "@origam/utils@^1.0.0", "@origam/utils@^1.1.1", "@origam/utils@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.2.0.tgz#2c19717654ef1566307e2f173fc83f7afe6d6f1c"
-  integrity sha512-lLVY0mAO/7M/vIzzxPXplgcY0bfe/mXNclEDXd+DFdVGG3u5C1CXhUfEFnbKqn9PP4CfYfjMOCq3Q5hkteJIlA==
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.3.2.tgz#9ca3b9f35c27d37983d44622a1879db4fb7bc0ed"
+  integrity sha512-RMHddqtNLNBK23Yu3L45OUKZ1QLd9syn3s3lhfGErHnG7hQpGvA3IObmHLDEGgEOTTD6mgyN9UGvXFar/TpNZA==
   dependencies:
-    moment "^2.29.1"
+    moment "^2.29.4"
+
+"@origam/utils@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@origam/utils/-/utils-1.3.3.tgz#858da93d5e96e3c36ff4cff7fc017d955706b9ab"
+  integrity sha512-TGS+yr/xQfqY0ARyn28Vrw9nScH9tUJvwHySionjLGCvqjA6bVXXq58B0bLwqQOrRY99hww6uQ2k3ccJNRnCOg==
+  dependencies:
+    moment "^2.29.4"
 
 "@sinclair/typebox@^0.25.16":
   version "0.25.21"
