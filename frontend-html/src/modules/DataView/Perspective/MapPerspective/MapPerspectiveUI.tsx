@@ -588,7 +588,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     this.lmap.setMinZoom(leastZoom);
 
     const maxZooms = this.layerList
-      .map(([rawLayer, tileLayer]) => tileLayer.options.maxNativeZoom ?? 0);
+      .map(([rawLayer, tileLayer]) => tileLayer.options.maxNativeZoom ?? 18);
     const maxZoom = Math.min(...maxZooms);
     this.lmap.setMaxZoom(maxZoom);
 
