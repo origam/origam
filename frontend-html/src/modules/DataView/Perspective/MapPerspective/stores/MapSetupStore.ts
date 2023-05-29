@@ -45,6 +45,7 @@ export class MapLayer {
       id: this.id,
       minZoom: rawOptions.minZoom !== undefined ? parseInt(rawOptions.minZoom) : undefined,
       maxZoom: rawOptions.maxZoom !== undefined ? parseInt(rawOptions.maxZoom) : undefined,
+      maxNativeZoom: rawOptions.maxZoom !== undefined ? parseInt(rawOptions.maxZoom) : undefined,
     };
   }
 }
