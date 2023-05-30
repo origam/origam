@@ -38,12 +38,17 @@ namespace Origam
 		public static Hashtable Context => GetContext(UserKey());
 
         public static void Reset()
+        { 
+            string currentUsername = UserKey();
+            Reset(currentUsername);
+        }
+        
+        public static void Reset(string username)
         {
             lock (_lock)
             {
-                string key = UserKey();
-                Reset(key);
-                _contexts.Remove(key);
+                DisposeCachedObjects(username);
+                _contexts.Remove(username);
             }
         }
 
@@ -53,7 +58,7 @@ namespace Origam
             {
                 foreach (var contextEntry in _contexts)
                 {
-                    Reset(contextEntry.Key);
+                    DisposeCachedObjects(contextEntry.Key);
                 }
                 _contexts.Clear();
             }
@@ -71,9 +76,9 @@ namespace Origam
             }
         }
 
-        private static void Reset(string key)
+        private static void DisposeCachedObjects(string username)
         {
-            Hashtable context = GetContext(key);
+            Hashtable context = GetContext(username);
             foreach (DictionaryEntry entry in context)
             {
                 IDisposable disposableObject = entry.Value as IDisposable;
