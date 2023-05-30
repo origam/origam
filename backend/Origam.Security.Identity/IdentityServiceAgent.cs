@@ -492,6 +492,7 @@ namespace Origam.Security.Identity
             else
             {
                 result = task.Result.Succeeded;
+                OrigamUserContext.Reset(user.UserName);
             }
         }
 
@@ -639,7 +640,8 @@ namespace Origam.Security.Identity
 			else if (!task.Result.Succeeded)
 			{
 				throw new Exception(string.Join(" ", task.Result.Errors));
-			}            
+			} 
+            OrigamUserContext.Reset(Parameters["Username"].ToString());
 			result = user.UserName;            
         }
 
