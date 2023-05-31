@@ -101,6 +101,7 @@ export function TagFilterEditor(props: {
       behavior: dropdownEditorBehavior,
       editorData: dropdownEditorData,
       editorDataTable: dropdownEditorDataTable,
+      columnDrivers: undefined,
       setup: dropdownEditorSetup
     };
   });

@@ -27,7 +27,7 @@ import { DropdownEditorBody } from "./DropdownEditorBody";
 import { DropdownEditorControl } from "./DropdownEditorControl";
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
-import { DropdownDataTable } from "./DropdownTableModel";
+import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusable } from "../../../model/entities/FormFocusManager";
 import { IWorkbench } from "model/entities/types/IWorkbench";
@@ -38,6 +38,7 @@ export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
+  columnDrivers: DropdownColumnDrivers | undefined;
   setup: DropdownEditorSetup;
 }
 
