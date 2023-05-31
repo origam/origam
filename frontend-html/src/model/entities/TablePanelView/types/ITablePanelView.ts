@@ -111,7 +111,7 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   setPropertyHidden(propertyId: string, state: boolean): void;
 
-  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle;
+  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle | undefined;
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle): void;
 

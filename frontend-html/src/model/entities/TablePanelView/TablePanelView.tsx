@@ -446,7 +446,7 @@ export class TablePanelView implements ITablePanelView {
     return getDataTable(this);
   }
 
-  getCellRectangle(rowIndex: number, columnIndex: number) {
+  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle | undefined {
     const groupingConfig = getGroupingConfiguration(this);
     let cellOffset = {row: 0, column: 0};
     if (groupingConfig.isGrouping) {
@@ -462,6 +462,9 @@ export class TablePanelView implements ITablePanelView {
       };
     }
     const rectangle = this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
+    if (!rectangle) {
+      return undefined;
+    }
     const openedScreen = getOpenedScreen(this);
 
     return {
