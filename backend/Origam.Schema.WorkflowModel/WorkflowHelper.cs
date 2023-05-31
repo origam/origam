@@ -352,7 +352,11 @@ namespace Origam.Schema.WorkflowModel
 						   && (column.Name != "RecordUpdatedBy")
 						   && (column.Name != "Id")
 						   && (column.Name != "refLockedByBusinessPartnerId")
-						   && (column.Name != "refWorkQueueId"))
+						   && (column.Name != "refWorkQueueId")
+						   && (column.Name != "AttemptCount")
+						   && (column.Name != "InRetry")
+						   && (column.Name != "LastAttemptTime")
+						   && (column.Name != "NextAttemptTime"))
 						{
 							newMapping.Name = column.Name;
 							newMapping.XPath 
