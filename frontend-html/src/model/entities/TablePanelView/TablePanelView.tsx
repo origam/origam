@@ -446,7 +446,7 @@ export class TablePanelView implements ITablePanelView {
     return getDataTable(this);
   }
 
-  getCellRectangle(rowIndex: number, columnIndex: number) {
+  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle | undefined {
     const groupingConfig = getGroupingConfiguration(this);
     let cellOffset = {row: 0, column: 0};
     if (groupingConfig.isGrouping) {
