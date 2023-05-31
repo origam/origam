@@ -462,6 +462,9 @@ export class TablePanelView implements ITablePanelView {
       };
     }
     const rectangle = this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
+    if(!rectangle){
+      return undefined;
+    }
     const openedScreen = getOpenedScreen(this);
 
     return {
