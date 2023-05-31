@@ -58,6 +58,7 @@ import { CtxDataView, DataViewContext } from "gui/Components/ScreenElements/Data
 import S from "./TableView.module.scss";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import cx from "classnames";
+import { getGridFocusManager } from "model/entities/GridFocusManager";
 
 interface ITableViewProps {
   dataView?: IDataView;
@@ -107,7 +108,12 @@ export class TableViewInner extends React.Component<ITableViewProps & { dataView
   refTable = (elmTable: RawTable | null) => {
     this.elmTable = elmTable;
     if (elmTable) {
-      const d1 = this.props.tablePanelView!.subOnFocusTable(elmTable.focusTable);
+      const d1 = this.props.tablePanelView!.subOnFocusTable(() => {
+        const gridFocusManager = getGridFocusManager(this.props.dataView);
+        if(gridFocusManager.canFocusTable){
+          elmTable.focusTable();
+        }
+      });
       const d2 = this.props.tablePanelView!.subOnScrollToCellShortest(
         elmTable.scrollToCellShortest
       );

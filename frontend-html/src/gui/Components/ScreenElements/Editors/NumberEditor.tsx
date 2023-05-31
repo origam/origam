@@ -48,7 +48,7 @@ export class NumberEditor extends React.Component<{
   subscribeToFocusManager?: (obj: IFocusable, onBlur: ()=> Promise<void>) => void;
   onTextOverflowChanged?: (toolTip: string | null | undefined) => void;
   id?: string
-}> {
+}, any> {
   state = { value: this.formatForDisplay(this.props.value), cursorPosition: 0};
   disposer: undefined | (()=> void);
   inputRef = React.createRef<HTMLInputElement>();
