@@ -403,6 +403,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It looks like this is a new package. Would you like to run the deployment scripts of this package only, disregarding any dependencies? This could be useful if there are any deployment conflicts with the other packages..
+        /// </summary>
+        internal static string DeploySinglePackageQuestion {
+            get {
+                return ResourceManager.GetString("DeploySinglePackageQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Disconnect.
         /// </summary>
         internal static string Disconnect_MenuItem {

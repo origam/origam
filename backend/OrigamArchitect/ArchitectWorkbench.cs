@@ -2137,18 +2137,8 @@ namespace OrigamArchitect
                     deployment.Deploy();
                 }
             }
-			Origam.Workbench.Commands.DeployVersion deployCommand = 
-                new Origam.Workbench.Commands.DeployVersion();
-	        if(deployCommand.IsEnabled)
-            {
-                if (MessageBox.Show(strings.RunDeploymentScriptsQuestion,
-                    strings.DeploymentSctiptsPending_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                {
-                    deployment.Deploy();
-	                GetPad<ExtensionPad>()?.LoadPackages();
-                }
-            }
+
+            RunDeploymentScripts(deployment);
 
 #endif
 			try
@@ -2187,7 +2177,42 @@ namespace OrigamArchitect
             UpdateTitle();
 		}
 
-        public void UpdateTitle()
+		private void RunDeploymentScripts(IDeploymentService deployment)
+		{
+			DeployVersion deployCommand = new DeployVersion();
+			if (!deployCommand.IsEnabled)
+			{
+				return;
+			}
+			if (MessageBox.Show(strings.RunDeploymentScriptsQuestion,
+				    strings.DeploymentSctiptsPending_Title, MessageBoxButtons.YesNo,
+				    MessageBoxIcon.Question,
+				    MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+			{
+				PackageVersion deployedPackageVersion =
+					deployment.CurrentDeployedVersion(_schema.ActiveExtension);
+				if (deployedPackageVersion == PackageVersion.Zero)
+				{
+					if (MessageBox.Show(
+						    strings.DeploySinglePackageQuestion,
+						    strings.DeploymentSctiptsPending_Title,
+						    MessageBoxButtons.YesNo,
+						    MessageBoxIcon.Question,
+						    MessageBoxDefaultButton.Button1) ==
+					    DialogResult.Yes)
+					{
+						deployment.ForceDeployCurrentPackage();
+						GetPad<ExtensionPad>()?.LoadPackages();
+						return;
+					}
+				}
+
+				deployment.Deploy();
+				GetPad<ExtensionPad>()?.LoadPackages();
+			}
+		}
+
+		public void UpdateTitle()
         {
 #if ORIGAM_CLIENT
 			Title = "";

@@ -27,6 +27,7 @@ using Origam.Workbench.Services;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Origam.Schema.DeploymentModel
@@ -44,6 +45,7 @@ namespace Origam.Schema.DeploymentModel
     [HelpTopic("Deployment+Version")]
 	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("6.0.0")]
+	[DebuggerDisplay("{PackageName} {ToString()}")]
 	public class DeploymentVersion : AbstractSchemaItem, IDeploymentVersion
 	{
 		private IPersistenceService persistenceService 
