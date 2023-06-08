@@ -3,6 +3,7 @@
   xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.1"
   xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
   xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
   xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0">
@@ -13,7 +14,7 @@
     asi:name="OrigamIdentityGrant">
     <dse:DataStructureEntity
       asi:abstract="false"
-      dse:allFields="true"
+      dse:allFields="false"
       dse:concurrencyHandling="LastWins"
       dse:entity="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/c46ae0d3-f408-48c5-8248-ddfd9572344c"
       x:id="4a7db406-ba64-4cb7-a4d2-c9f82bb7594b"
@@ -21,7 +22,104 @@
       dse:ignoreImplicitFilters="false"
       asi:name="OrigamIdentityGrant"
       dse:relationType="Normal"
-      dse:useUpsert="false" />
+      dse:useUpsert="true">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/ClientId/321a365e-541e-4f5a-bff7-f3db559fcf01"
+        dsc:hideInOutput="false"
+        x:id="15961cc9-d934-4f6f-9733-333ad7842f3b"
+        asi:name="ClientId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/SubjectId/7109d18d-b3bb-454e-ac33-de5d807ca149"
+        dsc:hideInOutput="false"
+        x:id="3526d4dd-2e8c-4888-8708-2a94bb84a257"
+        asi:name="SubjectId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/CreationTime/a23bb86b-e6eb-4ffd-af13-c96d16c494b8"
+        dsc:hideInOutput="false"
+        x:id="43347804-efa6-4c49-beb2-ac9ea222fe3e"
+        asi:name="CreationTime"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/Key/1494e750-5174-4b7f-84e8-031d111ee9f5"
+        dsc:hideInOutput="false"
+        x:id="6a20ceb1-aac4-4dfc-ad7c-2def3b61632c"
+        asi:name="Key"
+        dsc:upsertType="Key"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/Type/53c0cd25-8e49-42d9-bcd4-ea61a72acd3f"
+        dsc:hideInOutput="false"
+        x:id="8c96b253-bd8d-4aa1-8e98-537fa38b5a6b"
+        asi:name="Type"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/Data/64214e8f-80e6-4ec1-bf21-270b4070e67c"
+        dsc:hideInOutput="false"
+        x:id="98e852ab-55cd-4d31-b3e0-3b41603f96e1"
+        asi:name="Data"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/Expiration/50c5819d-fe64-4bb7-a7cc-f25f63146530"
+        dsc:hideInOutput="false"
+        x:id="c51c547b-ed5c-4b91-8331-d6aff24c3345"
+        asi:name="Expiration"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Security/DataEntity/Security/OrigamIdentityGrant.origam#OrigamIdentityGrant/SessionId/38468f29-57cb-418d-91c2-d1608c48c395"
+        dsc:hideInOutput="false"
+        x:id="ceafaff7-4055-4631-9ca1-94adda3508b5"
+        asi:name="SessionId"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
     <dsfs:DataStructureFilterSet
       asi:abstract="false"
       dsfs:dynamic="false"
