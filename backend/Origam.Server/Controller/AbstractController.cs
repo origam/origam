@@ -405,10 +405,12 @@ namespace Origam.Server.Controller
                 ColumnsInfo = new ColumnsInfo(input.ColumnNames
                         .Select(colName =>
                         {
-                            var field = entityData.Entity.Column(colName).Field;
+                            var column = entityData.Entity.Column(colName);
+                            var field = column.Field;
                             return new ColumnData(
                                 name: colName,
-                                isVirtual: (field is DetachedField),
+                                isVirtual: (field is DetachedField
+                                || column.IsWriteOnly),
                                 defaultValue: (field as DetachedField)
                                 ?.DefaultValue?.Value,
                                 hasRelation: (field as DetachedField)
