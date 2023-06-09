@@ -97,7 +97,7 @@ export function onFieldKeyDown(ctx: any) {
           });
 
           tablePanelView.setEditing(true);
-          tablePanelView.triggerOnFocusTable();
+          //tablePanelView.triggerOnFocusTable();
           tablePanelView.scrollToCurrentCell();
           break;
         }
