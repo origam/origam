@@ -120,6 +120,7 @@ export function TagLookupFilterEditor(props: {
       behavior: dropdownEditorBehavior,
       editorData: dropdownEditorData,
       editorDataTable: dropdownEditorDataTable,
+      columnDrivers: undefined,
       setup: dropdownEditorSetup
     };
   });

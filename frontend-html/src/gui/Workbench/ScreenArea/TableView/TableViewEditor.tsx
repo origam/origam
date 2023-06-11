@@ -62,7 +62,12 @@ import { flashColor2htmlColor, htmlColor2FlashColor } from "@origam/utils";
         property: actualProperty,
         value: value,
       }),
-    onEditorBlur: async () => await onFieldBlur(tablePanelView)(),
+    onEditorBlur: async () => {
+      await onFieldBlur(tablePanelView)();
+      const gridFocusManager = getGridFocusManager(tablePanelView);
+      gridFocusManager.activeEditor = undefined;
+      gridFocusManager.editorBlur = undefined;
+    },
     onEditorKeyDown: (event: any) => {
       event.persist();
       onFieldKeyDown(tablePanelView)(event);
@@ -97,7 +102,7 @@ export class TableViewEditor extends React.Component<{
       ? shadeHexColor(customBackgroundColor, -0.1)
       : customBackgroundColor;
 
-    const isFirsColumn = getTablePanelView(dataView).firstColumn === this.props.property;
+    const isFirsColumn = getTablePanelView(dataView)?.firstColumn === this.props.property;
     const gridFocusManager = getGridFocusManager(this.props.property);
     switch (this.props.property!.column) {
       case "Number":

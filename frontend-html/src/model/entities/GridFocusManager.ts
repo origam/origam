@@ -7,6 +7,9 @@ import { requestFocus } from "utils/focus";
 export class GridFocusManager {
   private _activeEditor: IFocusable | undefined;
   public focusTableOnReload: boolean = true;
+  get canFocusTable(){
+    return !this._activeEditor;
+  }
 
   constructor(public parent: any) {
   }

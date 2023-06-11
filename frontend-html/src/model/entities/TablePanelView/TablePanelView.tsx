@@ -276,7 +276,6 @@ export class TablePanelView implements ITablePanelView {
     const _this = this;
     flow(function*() {
       if (_this.isEditing) {
-        _this.setEditing(false);
         yield*flushCurrentRowData(_this)();
       }
     })();
