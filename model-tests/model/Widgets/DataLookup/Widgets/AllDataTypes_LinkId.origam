@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:dlmb="http://schemas.origam.com/Origam.Schema.LookupModel.DataLookupMenuBinding/6.0.0"
+  xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="53c6ce34-22a8-4ff4-a9af-8067b135422d"
+    adl:isFilteredServerside="true"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/71ef0806-6153-46fb-8e36-6f4c5d70cccb"
+    adl:listDisplayMember="Text1"
+    adl:listMethod="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/GetId/b7403f66-240b-4ec9-b4b0-ae11e268fda5"
+    adl:listValueMember="Id"
+    asi:name="AllDataTypes_LinkId"
+    adl:searchByFirstColumnOnly="false"
+    adl:serversideFilterParameter="AllDataTypes_parId"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/71ef0806-6153-46fb-8e36-6f4c5d70cccb"
+    adl:valueDisplayMember="Text1"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/GetId/b7403f66-240b-4ec9-b4b0-ae11e268fda5"
+    adl:valueValueMember="Id">
+    <dlmb:DataLookupMenuBinding
+      asi:abstract="false"
+      x:id="812f044f-1641-431c-a72e-6e797f5cd689"
+      dlmb:level="100"
+      dlmb:menuItem="Widgets/Menu/Menu.origam#Menu/Widgets/AllDataTypes/423a08e5-b1cf-4341-a342-d9b57667d1b9"
+      asi:name="MenuBinding"
+      dlmb:roles="*" />
+  </dsdl:DataLookup>
+</x:file>

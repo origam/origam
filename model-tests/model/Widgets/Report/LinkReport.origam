@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ar="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractReport/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:wr1="http://schemas.origam.com/Origam.Schema.GuiModel.WebReport/6.0.1">
+  <wr1:Report
+    asi:abstract="false"
+    wr1:forceExternalUrl="false"
+    x:id="1802bcc1-dff2-420c-b26a-af6041702622"
+    wr1:isUrlEscaped="false"
+    asi:name="LinkReport"
+    wr1:openMethod="OrigamTab"
+    wr1:url="/api/public/link-report" />
+</x:file>
