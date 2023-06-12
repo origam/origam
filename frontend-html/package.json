@@ -59,7 +59,7 @@
     "leaflet": "^1.8.0",
     "leaflet-draw": "^1.0.4",
     "lodash": "^4.17.21",
-    "mobx": "5",
+    "mobx": "6",
     "mobx-react": "6",
     "moment": "^2.29.4",
     "numeral": "^2.0.6",
