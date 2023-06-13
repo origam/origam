@@ -23,7 +23,7 @@ import { executeWeblink } from "./executeWeblink";
 import React from "react";
 
 export function onRootElementClick(ctx: any) {
-  return flow(function*onRootElementClick(event: React.MouseEvent<HTMLDivElement>): Generator {
+  return flow(function*onRootElementClick(event: React.MouseEvent<HTMLElement>): Generator {
     try {
       let potentialLinkNode = event.target as any;
       while(potentialLinkNode)
