@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+<x:file
+  xmlns:x="http://schemas.origam.com/model-persistence/1.0.0"
+  xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0"
+  xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
+  xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0"
+  xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0"
+  xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0"
+  xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0"
+  xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0"
+  xmlns:dsr1="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRule/6.0.0"
+  xmlns:dsrd="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleDependency/6.0.0"
+  xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0"
+  xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0"
+  xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
   <ds:DataStructure
     asi:abstract="false"
     x:id="31791c3b-7265-439e-ac96-ddd57aa82579"
@@ -54,6 +67,26 @@
         asi:name="AllDataTypes_GetId"
         dsfsf:passWhenParameterMatch="false" />
     </dsfs:DataStructureFilterSet>
+    <dsrs:DataStructureRuleSet
+      asi:abstract="false"
+      x:id="bfc820a4-2065-439b-9a25-e2bce03c1ae4"
+      asi:name="Test">
+      <dsr1:DataStructureRule
+        asi:abstract="false"
+        dsr1:entity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+        x:id="702267a6-6527-4abc-a0e3-d038e07a7119"
+        asi:name="SetBooleanToTrueRule"
+        dsr1:priority="100"
+        dsr1:targetField="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Boolean1/f5997d8d-384f-4a20-9dc3-490bdc05f791"
+        dsr1:valueRule="Widgets/Rule/Widgets/TestRule.origam#TestRule/c0985ffe-90c3-40c1-9064-c783bb169a89">
+        <dsrd:DataStructureRuleDependency
+          asi:abstract="false"
+          dsrd:entity="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/AllDataTypes/de98641d-0097-4bf7-b439-d37b07eb4a41"
+          dsrd:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+          x:id="c5b280f7-2c2d-4da7-acb3-cb06692dd380"
+          asi:name="AllDataTypes_Id" />
+      </dsr1:DataStructureRule>
+    </dsrs:DataStructureRuleSet>
     <dsss:DataStructureSortSet
       asi:abstract="false"
       x:id="a6af8408-6d99-45f8-9084-0599c1cd0518"
