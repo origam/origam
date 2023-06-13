@@ -402,7 +402,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             return;
           }
           const rootDataView = rootDataViews[0];
-          const filtersDisplayed = getTablePanelView(rootDataView).filterConfiguration
+          const filtersDisplayed = getTablePanelView(rootDataView)!.filterConfiguration
             .isFilterControlsDisplayed
           if(workFinished && !filtersDisplayed && rootDataView.isTableViewActive()){
               rootDataView.formFocusManager.refocusLast();
@@ -1015,7 +1015,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
       yield*processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
-      getTablePanelView(targetDataView).scrollToCurrentRow();
+      getTablePanelView(targetDataView)!.scrollToCurrentRow();
     } finally {
       this.monitor.inFlow--;
     }
@@ -1194,7 +1194,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   async reloadAggregations(dataView: IDataView) {
-    const aggregations = getTablePanelView(dataView).aggregations.aggregationList;
+    const aggregations = getTablePanelView(dataView)!.aggregations.aggregationList;
     if (aggregations.length === 0) {
       dataView.aggregationData.length = 0;
       return;
@@ -1398,7 +1398,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             () => {
               const tablePanelView = getTablePanelView(dataView);
               const configurationManager = getConfigurationManager(tablePanelView);
-              configurationManager.activeTableConfiguration.apply(tablePanelView);
+              configurationManager.activeTableConfiguration.apply(tablePanelView!);
             },
             {fireImmediately: true}
           )
