@@ -121,7 +121,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             richTextBoxSummary.AppendText(keyForm.ForeignKeyName);
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText("Lookup: \t\t");
-            richTextBoxSummary.AppendText(keyForm.Lookup.Name);
+            richTextBoxSummary.AppendText(keyForm.Lookup == null? "": keyForm.Lookup.Name);
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText("Caption : \t");
             richTextBoxSummary.AppendText(keyForm.Caption);
