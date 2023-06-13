@@ -4,7 +4,20 @@
   xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.2"
   xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"
   xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0"
+  xmlns:rrmi="http://schemas.origam.com/Origam.Schema.MenuModel.ReportReferenceMenuItem/6.0.0"
   xmlns:s="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0">
+  <rrmi:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="LinkReport"
+    rrmi:exportFormatType="HTML"
+    x:id="3dc51183-a78e-4663-bd41-97b230de7b7d"
+    asi:name="LinkReport"
+    ami:openExclusively="false"
+    ami:order="100"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6"
+    rrmi:report="Widgets/Report/LinkReport.origam#LinkReport/1802bcc1-dff2-420c-b26a-af6041702622"
+    ami:roles="*" />
   <s:MenuItem
     asi:abstract="false"
     ami:displayName="Widgets"
