@@ -7,7 +7,7 @@
 		<div>
 			<a href="web+origam-link://objectTag?categoryId=AllDataTypesLink&amp;objectId=0bd6ae5a-b31c-4b2f-8af5-bdd4ab7a984e">
 				<div>
-					BLE
+					TEST
 				</div>
 			</a>
 		</div>
