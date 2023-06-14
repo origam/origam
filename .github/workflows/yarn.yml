@@ -22,5 +22,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: |
             cd frontend-html
-            yarn
+            yarn install --frozen-lockfile
             yarn build
