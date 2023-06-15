@@ -917,7 +917,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       rootDataView.restoreViewState();
     } finally {
-      rootDataView.lifecycle.startSelectedRowReaction(true);
+      rootDataView.lifecycle.startSelectedRowReaction(!args.preloadIsDirty);
       this.monitor.inFlow--;
     }
   }
@@ -925,12 +925,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *ensureDirtyRowIsLoaded(args:{rootDataView: IDataView, preloadIsDirty? : boolean}){
     const formScreen = getFormScreen(args.rootDataView);
     if(!this.initialSelectedRowId || !args.preloadIsDirty || !isLazyLoading(formScreen)){
-      return;
-    }
-
-    const selectedRowIsLoaded = args.rootDataView.dataTable.allRows
-      .some(row => args.rootDataView.dataTable.getRowId(row) == this.initialSelectedRowId)
-    if(selectedRowIsLoaded){
       return;
     }
 
@@ -946,8 +940,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         return;
       }
 
-      const selectedRowExists = rootDataView.selectedRowId &&
-        rootDataView.dataTable.getRowById(rootDataView.selectedRowId);
+      const selectedRowExists = rootDataView.dataTable.getRowById(this.initialSelectedRowId);
       dirtyRowResult.operation = selectedRowExists
         ? IResponseOperation.Update
         : IResponseOperation.Create;
