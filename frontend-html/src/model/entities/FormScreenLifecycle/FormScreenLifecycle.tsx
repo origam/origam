@@ -21,7 +21,7 @@ import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
 import { action, autorun, comparer, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
-import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { ICRUDResult, IResponseOperation, processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { handleError } from "model/actions/handleError";
 import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { IAction } from "model/entities/types/IAction";
@@ -91,6 +91,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 import { isMobileLayoutActive } from "model/selectors/isMobileLayoutActive";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
+import { IFormScreen } from "model/entities/types/IFormScreen";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -368,7 +369,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
-  *start(initUIResult: any): Generator {
+  *start(initUIResult: any, preloadIsDirty?: boolean): Generator {
     let _steadyDebounceTimeout: any;
     this.disposers.push(
       reaction(
@@ -420,7 +421,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
-        yield*this.loadData();
+        yield*this.loadData(preloadIsDirty);
         yield*this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -706,7 +707,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  *loadData() {
+  *loadData(preloadIsDirty?: boolean) {
     const formScreen = getFormScreen(this);
     try {
       this.monitor.inFlow++;
@@ -722,7 +723,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         } else {
           yield this.updateTotalRowCount(rootDataView);
           yield*this.readFirstChunkOfRows({
-            rootDataView: rootDataView
+            rootDataView: rootDataView,
+            preloadIsDirty: preloadIsDirty
           });
         }
       }
@@ -872,7 +874,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *readFirstChunkOfRows(args: {
-    rootDataView: IDataView
+    rootDataView: IDataView,
+    preloadIsDirty?: boolean
   }): any {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
@@ -902,6 +905,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         });
       }
       yield rootDataView.setRecords(loadedData);
+      yield*this.ensureDirtyRowIsLoaded({
+        rootDataView: rootDataView,
+        preloadIsDirty: args.preloadIsDirty
+      });
+
       if (this.initialSelectedRowId) {
         rootDataView.setSelectedRowId(this.initialSelectedRowId);
       } else {
@@ -911,6 +919,40 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } finally {
       rootDataView.lifecycle.startSelectedRowReaction(true);
       this.monitor.inFlow--;
+    }
+  }
+
+  *ensureDirtyRowIsLoaded(args:{rootDataView: IDataView, preloadIsDirty? : boolean}){
+    const formScreen = getFormScreen(args.rootDataView);
+    if(!this.initialSelectedRowId || !args.preloadIsDirty || !isLazyLoading(formScreen)){
+      return;
+    }
+
+    const selectedRowIsLoaded = args.rootDataView.dataTable.allRows
+      .some(row => args.rootDataView.dataTable.getRowId(row) == this.initialSelectedRowId)
+    if(selectedRowIsLoaded){
+      return;
+    }
+
+    formScreen.setDirty(true);
+    for (let rootDataView of formScreen.rootDataViews) {
+      const api  = getApi(rootDataView)
+      const dirtyRowResult = (yield api.getRow({
+        SessionFormIdentifier: getSessionId(rootDataView),
+        Entity: getEntity(rootDataView),
+        RowId: this.initialSelectedRowId
+      })) as ICRUDResult;
+      if(!dirtyRowResult){
+        return;
+      }
+
+      const selectedRowExists = rootDataView.selectedRowId &&
+        rootDataView.dataTable.getRowById(rootDataView.selectedRowId);
+      dirtyRowResult.operation = selectedRowExists
+        ? IResponseOperation.Update
+        : IResponseOperation.Create;
+
+      yield*processCRUDResult(rootDataView, dirtyRowResult) as any;
     }
   }
 
