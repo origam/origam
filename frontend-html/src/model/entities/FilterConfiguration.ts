@@ -353,6 +353,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         }
         break;
       }
+      case "Checklist":
       case "TagInput": {
         const cellValues = prepareAnyForFilter(this, dataTable.getOriginalCellValue(row, prop));
         const filterValues1 = prepareAnyForFilter(this, term.setting.val1);
