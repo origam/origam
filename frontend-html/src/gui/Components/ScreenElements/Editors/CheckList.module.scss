@@ -27,7 +27,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   border: 1px solid var(--background5);
   box-sizing: border-box;
   color: var(--background8);
-  padding: 0 3px;
   border-radius: 2px;
   transition: all 300ms linear;
   display: flex;
@@ -35,15 +34,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-wrap: wrap;
   align-items: flex-start;
   align-content: flex-start;
-  //justify-content: space-between;
   overflow-x: auto;
   overflow-y: hidden;
+  padding: 5px;
 
   &:global(.isReadonly) {
     background-color: var(--background3);
     cursor: not-allowed;
     border: 1px solid var(--background3);
   }
+}
+
+.label {
+  margin-left: 5px;
+  margin-right: 20px;
 }
 
 .focusedLabel {
@@ -69,9 +73,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
   flex-shrink: 0;
   flex-direction: row;
   align-items: center;
-
   cursor: pointer;
   @include hoverItemAnimation;
+  margin-bottom: 3px;
 
   &:hover {
     color: var(--foreground1);
