@@ -18,7 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
-import S from "gui/Components/Checkbox/Checkbox.module.scss";
+import S from "gui/Components/CheckBox/Checkbox.module.scss";
 
 export const Checkbox: React.FC<{
   checked?: boolean;
