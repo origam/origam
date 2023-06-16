@@ -418,12 +418,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       this.initialSelectedRowId = initUIResult.currentRecordId;
       yield*this.applyInitUIResult({initUIResult});
+      const formScreen = getFormScreen(this);
+      formScreen.setDirty(!!preloadIsDirty)
       this.initializePlugins(initUIResult);
       if (!this.eagerLoading) {
         yield*this.clearTotalCounts();
         yield*this.loadData(preloadIsDirty);
         yield*this.updateTotalRowCounts();
-        const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
           const orderingConfiguration = getOrderingConfiguration(rootDataView);
           const filterConfiguration = getFilterConfiguration(rootDataView);
@@ -928,7 +929,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       return;
     }
 
-    formScreen.setDirty(true);
     for (let rootDataView of formScreen.rootDataViews) {
       const api  = getApi(rootDataView)
       const dirtyRowResult = (yield api.getRow({
