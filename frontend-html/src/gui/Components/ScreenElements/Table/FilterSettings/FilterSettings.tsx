@@ -103,6 +103,7 @@ export const FilterSettings: React.FC<{ autoFocus: boolean, ctx: any }> = observ
           })}
         />
       );
+    case "Checklist":
     case "TagInput":
       return (
         <FilterSettingsTagInput
