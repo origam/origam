@@ -18,6 +18,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 
 import React from "react";
+import S from "gui/Components/Checkbox/Checkbox.module.scss";
 
 export const Checkbox: React.FC<{
   checked?: boolean;
@@ -28,6 +29,7 @@ export const Checkbox: React.FC<{
   id: string;
 }> = props => (
   <input
+    className={S.root}
     id={props.id}
     type="checkbox"
     checked={props.checked}
