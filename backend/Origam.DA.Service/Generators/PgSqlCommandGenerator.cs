@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 using Npgsql;
 using NpgsqlTypes;
@@ -79,7 +80,13 @@ namespace Origam.DA.Service
 		public override void DeriveStoredProcedureParameters(IDbCommand command)
 		{
 			NpgsqlCommandBuilder.DeriveParameters(command as NpgsqlCommand);
-		}
+            // add ParameterDeclarationChar to all input parameters
+            foreach (var p in command.Parameters.OfType<NpgsqlParameter>())
+				if (p.Direction == ParameterDirection.Input)
+				{
+                    p.ParameterName = ParameterDeclarationChar + p.ParameterName;
+                }
+        }
 
 		#region Cloning
 		public override DbDataAdapter CloneAdapter(DbDataAdapter adapter)
