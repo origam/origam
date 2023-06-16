@@ -51,7 +51,7 @@ jobs:
         cd frontend-html
         yarn -version
         node --version
-        yarn
+        yarn --frozen-lockfile
         yarn build
 
     - name: Upload frontend artifact
