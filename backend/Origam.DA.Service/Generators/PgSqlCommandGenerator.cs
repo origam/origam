@@ -25,6 +25,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using MoreLinq;
 using Npgsql;
 using NpgsqlTypes;
 using Origam.DA.Service.Generators;
@@ -80,12 +81,11 @@ namespace Origam.DA.Service
 		public override void DeriveStoredProcedureParameters(IDbCommand command)
 		{
 			NpgsqlCommandBuilder.DeriveParameters(command as NpgsqlCommand);
-            // add ParameterDeclarationChar to all input parameters
-            foreach (var p in command.Parameters.OfType<NpgsqlParameter>())
-				if (p.Direction == ParameterDirection.Input)
-				{
-                    p.ParameterName = ParameterDeclarationChar + p.ParameterName;
-                }
+			// add ParameterDeclarationChar to all input parameters
+			command.Parameters.
+				OfType<NpgsqlParameter>().
+				Where(param => param.Direction == ParameterDirection.Input).
+				ForEach(param => param.ParameterName = ParameterDeclarationChar + param.ParameterName);
         }
 
 		#region Cloning
