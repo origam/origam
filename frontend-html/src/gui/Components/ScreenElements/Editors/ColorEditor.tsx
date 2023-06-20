@@ -107,11 +107,6 @@ export default class ColorEditor extends React.Component<{
                     },
                   ],
                 },
-                /*after: {
-                  100: {
-                    actions: "focusInputField",
-                  },
-                },*/
               },
               OPEN: {
                 entry: "pickValueFromApplied",
@@ -237,6 +232,16 @@ export default class ColorEditor extends React.Component<{
     this.machine.send(evt);
   }
 
+  refTrigger: any;
+  @action.bound setRefTrigger(elm: any) {
+    this.refTrigger = elm;
+  }
+
+  @action.bound refColorDiv(elm: any) {
+    this.refTrigger?.(elm);
+    this.refInput(elm);
+  }
+
   render() {
     return (
       <Dropdowner
@@ -245,63 +250,51 @@ export default class ColorEditor extends React.Component<{
         onDroppedUp={() => this.send({type: "PICKER_DROPPED_UP"})}
         onDroppedDown={() => this.send({type: "PICKER_DROPPED_DOWN"})}
         onOutsideInteraction={() => this.send({type: "PICKER_OUTSIDE_INTERACTION"})}
-        trigger={({refTrigger, setDropped}) => (
-          <div
-            className={S.editorContainer}
-            ref={this.refContainer}
-            style={{
-              zIndex: this.isDroppedDown ? 1000 : undefined,
-            }}
-          >
+        trigger={({ refTrigger, setDropped }) => {
+          this.setRefTrigger(refTrigger);
+          return (
             <div
-              className={S.colorDiv}
-              tabIndex={0}
-              ref={(elm) => {
-                refTrigger(elm);
-                this.refInput(elm);
+              className={S.editorContainer}
+              ref={this.refContainer}
+              style={{
+                zIndex: this.isDroppedDown ? 1000 : undefined,
               }}
-              onMouseDown={() => this.send({type: "DROPDOWN_SYMBOL_MOUSE_DOWN"})}
-              onFocus={() => this.send({type: "INPUT_FIELD_FOCUS"})}
-              onBlur={() => this.send({type: "INPUT_FIELD_BLUR"})}
-              onKeyDown={(event) => this.props.onKeyDown?.(event)}
             >
               <div
-                className={S.colorRect}
-                style={{
-                  backgroundColor:
-                    (this.isDroppedDown ? this.pickedColor : this.appliedValue) || "#000000",
-                }}
+                className={S.colorDiv}
+                tabIndex={0}
+                ref={this.refColorDiv}
+                onMouseDown={() => this.send({type: "DROPDOWN_SYMBOL_MOUSE_DOWN"})}
+                onFocus={() => this.send({type: "INPUT_FIELD_FOCUS"})}
+                onBlur={() => this.send({type: "INPUT_FIELD_BLUR"})}
+                onKeyDown={(event) => this.props.onKeyDown?.(event)}
+              >
+                <div
+                  className={S.colorRect}
+                  style={{
+                    backgroundColor:
+                      (this.isDroppedDown ? this.pickedColor : this.appliedValue) || "#000000",
+                  }}
+                />
+              </div>
+            </div>
+          );
+        }}
+        content={({setDropped}) => (
+            <div
+              tabIndex={0}
+              ref={this.refDroppedPanelContainer}
+              className={S.droppedPanelContainer}
+              onKeyDown={(event: any) => {
+                this.send({type: "PICKER_KEY_DOWN", payload: {event}});
+              }}
+            >
+              <SketchPicker
+                color={this.pickedColor || "#000000"}
+                onChange={this.handleColorChange}
+                disableAlpha={true}
               />
             </div>
-            {/*<input
-              style={{
-                backgroundColor:
-                  ,
-              }}
-              className={S.input}
-              type="text"
-              readOnly={true}
-              onBlur={() => this.send({ type: "INPUT_FIELD_BLUR" })}
-              onFocus={() => this.send({ type: "INPUT_FIELD_FOCUS" })}
-              ref={this.refInput}
-            />*/}
-          </div>
-        )}
-        content={({setDropped}) => (
-          <div
-            tabIndex={0}
-            ref={this.refDroppedPanelContainer}
-            className={S.droppedPanelContainer}
-            onKeyDown={(event: any) => {
-              this.send({type: "PICKER_KEY_DOWN", payload: {event}});
-            }}
-          >
-            <SketchPicker
-              color={this.pickedColor || "#000000"}
-              onChange={this.handleColorChange}
-              disableAlpha={true}
-            />
-          </div>
         )}
       />
     );
