@@ -162,36 +162,11 @@ export class DropdownEditorTable extends  React.Component<{
   }
 
   render(){
-    let columnWidthSum = 0;
-    let width = 0;
-    let widths: number[] = [];
-    for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex++) {
-      let cellWidth = 100;
-      for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
-        const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
-        const currentCellWidth = Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding;
-        if(currentCellWidth > cellWidth){
-          cellWidth = currentCellWidth;
-        }
-      }
+    let widths = this.calculateColumnWidths();
+    let {windowWidth, visibleColumnWidthSum} = this.calculateTotalWidths(widths);
+    widths = this.stretchColumnsToFitWindow(windowWidth, visibleColumnWidthSum, widths);
 
-      width = width + cellWidth;
-      widths.push(cellWidth);
-      columnWidthSum = columnWidthSum + cellWidth;
-      if (width >= window.innerWidth - 100) {
-        width = window.innerWidth - 100;
-        break;
-      }
-    }
-
-    width = Math.max(width + this.scrollbarSize.vert, this.props.rectCtrl.width!);
-    let columnGrowFactor = 1;
-    if (columnWidthSum > 0 && columnWidthSum < this.props.rectCtrl.width!) {
-      columnGrowFactor = (width - this.scrollbarSize.vert) / columnWidthSum;
-    }
-    widths = widths.map((w) => w * columnGrowFactor);
-
-    if(width === 0){
+    if(windowWidth === 0){
       return null;
     }
 
@@ -209,10 +184,50 @@ export class DropdownEditorTable extends  React.Component<{
         rowHeight={this.props.rowHeight}
         fixedRowCount={this.hasHeader ? 1 : 0}
         height={this.height}
-        width={width}
+        width={windowWidth}
         cellRenderer={args => this.renderTableCell(args)}
         onScroll={this.props.beh.handleScroll}
       />
     );
+  }
+
+  private stretchColumnsToFitWindow(windowWidth: number, visibleColumnWidthSum: number, widths: number[]) {
+    let columnGrowFactor = 1;
+    if (visibleColumnWidthSum > 0 && visibleColumnWidthSum < this.props.rectCtrl.width!) {
+      columnGrowFactor = (windowWidth - this.scrollbarSize.vert) / visibleColumnWidthSum;
+      widths = widths.map((w) => w * columnGrowFactor);
+    }
+    return  widths;
+  }
+
+  private calculateTotalWidths(widths: number[]) {
+    let windowWidth = 0;
+    let visibleColumnWidthSum = 0;
+    for (const cellWidth of widths) {
+      windowWidth = windowWidth + cellWidth;
+      visibleColumnWidthSum = visibleColumnWidthSum + cellWidth;
+      if (windowWidth >= window.innerWidth - 100) {
+        windowWidth = window.innerWidth - 100;
+        break;
+      }
+    }
+    windowWidth = Math.max(windowWidth + this.scrollbarSize.vert, this.props.rectCtrl.width!);
+    return {windowWidth, visibleColumnWidthSum};
+  }
+
+  private calculateColumnWidths() {
+    let widths: number[] = [];
+    for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex++) {
+      let cellWidth = 100;
+      for (let rowIndex = 0; rowIndex < this.rowCount - 1; rowIndex++) {
+        const cellText = this.props.drivers.getDriver(columnIndex).bodyCellDriver.formattedText(rowIndex);
+        const currentCellWidth = Math.round(getTextWidth(cellText, getCanvasFontSize())) + this.cellPadding;
+        if (currentCellWidth > cellWidth) {
+          cellWidth = currentCellWidth;
+        }
+      }
+      widths.push(cellWidth);
+    }
+    return widths;
   }
 }
