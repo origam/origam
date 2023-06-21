@@ -74,7 +74,12 @@ namespace Origam.Server
             }
 
             var cultureItem = languageConfig.CultureItems
-                .First(items => items.CultureName == requestCulture.Culture.Name);;
+                .FirstOrDefault(items => items.CultureName == requestCulture.Culture.Name);
+            if (cultureItem == null)
+            {
+                throw new Exception($"The culture \"{requestCulture.Culture.Name}\" was not found among the allowed cultures in the LanguageConfig.");
+            }
+
             return string.Join(cookieSeparator, 
                 new[]
                 {
