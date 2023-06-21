@@ -34,15 +34,7 @@ export const Dialog: React.FC<{
       <div className={S.topBar}>
         {props.heading}
       </div>
-      {/*{mobileState.dialogComponent}*/}
       {props.children}
-      <div className={S.bottomBar}>
-        <BottomIcon
-          key={"close"}
-          iconPath={"./icons/noun-close-25798.svg"}
-          onClick={() => mobileState.dialogComponent = null}
-        />
-      </div>
     </div>
   );
 }
